@@ -1,4 +1,4 @@
-coregadget
+Core Gadget
 ==========
 
-基本的 gadget
+基本的 Gadget
