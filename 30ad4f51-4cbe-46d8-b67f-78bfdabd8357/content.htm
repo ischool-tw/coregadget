@@ -1,0 +1,650 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content='text/html;charset=utf-8' />
+    <script type='text/javascript'>
+        var gadget = window.parent.getGadgetProxy((function () {
+            var vars = [], hash;
+            var p = window.location.href.slice(window.location.href.indexOf('?') + 1);
+            if (p.indexOf("#") >= 0)
+                p = p.substring(0, p.indexOf("#"));
+            var hashes = p.split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = decodeURI(hashes[i]);
+                var key = hash.substring(0, hash.indexOf("="));
+                vars.push(key);
+                vars[key] = hash.substring(hash.indexOf("=") + 1);
+            }
+            return vars;
+        } ()).id);
+        try { window.parent = null; } catch (exc) { }
+    </script>
+</head>
+<body leftmargin='0' topmargin='0' marginwidth='0' bgcolor='#FFFFFF' style='margin: 0; border: 0 none;'>
+<link href="css/bootstrap.css" rel="stylesheet"/>
+<link href="css/bootstrap-responsive.css" rel="stylesheet"/>
+<link href="css/default.less" rel="stylesheet/less"/>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/coffee-script.js"></script>
+<script src="js/less.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/default.coffee" type="text/coffeescript"></script>
+
+<div id="gadget">
+		<div class="modal hide" id="editModal">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">×</button>
+				<!-- 編輯 - 電話資訊 -->
+				<!-- 編輯 - 地址資訊 -->
+				<!-- 編輯 - 即時通訊資訊 -->
+				<!-- 編輯 - 緊急聯絡人資訊 -->
+				<!-- 編輯 - 監護人資訊 -->
+				<!-- 編輯 - 父親資訊 -->
+				<!-- 編輯 - 母親資訊 -->
+				<h3>Modal header</h3>
+			</div>
+			<div class="modal-body">
+				<!-- 編輯 - 電話資訊
+				<form class="form-horizontal">
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label">通訊</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="contact-phone" value="037-593336">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">戶籍</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="permanent-phone" value="03-5213918">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">行動電話</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="sms-phone" value="">
+							</div>
+						</div>
+					</fieldset>
+				</form>
+				-->
+				 
+				<!-- 編輯 - 地址資訊
+				<form class="form-horizontal">
+					<legend>通訊地址</legend>
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label">郵遞區號</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="contact-zip-code" value="308">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">縣市</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="contact-county" value="新竹縣">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">鄉鎮市區</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="contact-town" value="寶山鄉">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">地址</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="contact-detail" value="雙溪村雙園路2段370號">
+							</div>
+						</div>
+					</fieldset>
+				</form>
+				<form class="form-horizontal">
+					<legend>戶籍地址</legend>
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label">郵遞區號</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="permanent-zip-code" value="351">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">縣市</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="permanent-county" value="苗栗縣">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">鄉鎮市區</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="permanent-town" value="頭份鎮">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">地址</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="permanent-detail" value="民族路35號">
+							</div>
+						</div>
+					</fieldset>
+				</form>
+				-->
+				 
+				<!-- 編輯 - 即時通訊資訊
+				<form class="form-horizontal">
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label">Email</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="email" value="">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">Facebook</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="facebook" value="">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">Skype</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="skype" value="">
+							</div>
+						</div>
+					</fieldset>
+				</form>
+				-->
+				
+				<!-- 編輯 - 緊急聯絡人資訊
+				<form class="form-horizontal">
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label">姓名</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="name" value="">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">關係</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="relationship" value="">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">電話</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="phone" value="">
+							</div>
+						</div>
+					</fieldset>
+				</form>
+				-->
+				
+				<!-- 編輯 - 監護人資訊
+				<form class="form-horizontal">
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label">姓名</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="name" value="江小錦">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">關係</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="relationship" value="父">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">電話</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="phone" value="">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">Email</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="email" value="">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">職業</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="job" value="退休">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">教育程度</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="education" value="專科">
+							</div>
+						</div>
+					</fieldset>
+				</form>
+				-->
+				
+				<!-- 編輯 - 父親資訊
+				<form class="form-horizontal">
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label">姓名</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="name" value="江小錦">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">電話</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="phone" value="">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">Email</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="email" value="">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">職業</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="job" value="">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">教育程度</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="education" value="">
+							</div>
+						</div>
+					</fieldset>
+				</form>
+				-->
+				
+				<!-- 編輯 - 母親資訊
+				<form class="form-horizontal">
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label">姓名</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="name" value="邱小襄">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">電話</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="phone" value="">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">Email</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="email" value="">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">職業</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="job" value="">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">教育程度</label>
+							<div class="controls">
+								<input type="text" class="input-large" id="education" value="">
+							</div>
+						</div>
+					</fieldset>
+				</form>
+				-->
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="btn" data-dismiss="modal">離開</a>
+				<a href="#" class="btn btn-primary">儲存</a>
+			</div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="span3">
+					<div class="input-prepend">
+						<input id="filter-keyword" type="text" class="span10"><a href="#" class="add-on" id="filter-student"><i class="icon-search"></i></a>
+		            </div>
+					<ul class="nav nav-list" id="student-list">
+						<li class="nav-header">觀二甲</li>
+						<li class="active">
+							<a>
+								<img class="student-photo" src="img/photo_male.png"/>
+								<span class="student-name">江小信</span>
+								<span class="seat-no">1</span>
+								<span class="student-number">817001</span>
+							</a>
+						</li>
+						<li>
+							<a>
+								<img class="student-photo" src="img/photo_female.png"/>
+								<span class="student-name">李小欣</span>
+								<span class="seat-no">2</span>
+								<span class="student-number">817002</span>
+							</a>
+						</li>
+						<li>
+							<a>
+								<img class="student-photo" src="img/photo_female.png"/>
+								<span class="student-name">周小嘉</span>
+								<span class="seat-no">3</span>
+								<span class="student-number">817003</span>
+							</a>
+						</li>
+						<li class="nav-header">觀三甲</li>
+						<li>
+							<a>
+								<img class="student-photo" src="img/photo_female.png"/>
+								<span class="student-name">賴小允</span>
+								<span class="seat-no">1</span>
+								<span class="student-number">717002</span>
+							</a>
+						</li>
+						<li>
+							<a>
+								<img class="student-photo" src="img/photo_male.png"/>
+								<span class="student-name">蕭小偉</span>
+								<span class="seat-no">2</span>
+								<span class="student-number">717003</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="span9">
+					<div class="tabbable">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a href="#baseinfo" data-toggle="tab"><i class="icon-user"></i> 基本資訊</a>
+							</li>
+							<li>
+								<a href="#academic" data-toggle="tab"><i class="icon-tasks"></i> 學業</a>
+							</li>
+							<li>
+								<a href="#behavior" data-toggle="tab"><i class="icon-bookmark"></i> 德行</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane active" id="baseinfo">
+								<div class="baseinfo-item" id="base-content">
+									<div style="display:inline-block;vertical-align:bottom">
+										<img src="img/photo_male.png" class="photo">
+										<img src="img/photo_male.png" class="photo">
+									</div>
+									<div style="display:inline-block;vertical-align:bottom">
+										<div style="margin-bottom:8px"><span class="label label-info">江小信</span></div>
+										<div style="margin-bottom:8px"><span class="label label-info">JIANG, XIN-HUA</span></div>
+										<div style="margin-bottom:8px"><span class="label label-info">1994-06-09</span></div>
+										<div style="margin-bottom:8px"><span class="label label-info">K12256574</span></div>
+									</div>
+								</div>
+								<div class="baseinfo-item" id="phone">
+									<div class="label-title">
+										<a class="btn btn-info" edit-target="phone"><i class="icon-edit icon-white"></i> 電話資訊</a>
+									</div>
+									<table class="table">
+										<tbody>
+											<tr>
+												<td><span class="badge badge-success">通訊</span></td>
+												<td><span>037-593336</span></td>
+											</tr>
+											<tr>
+												<td><span class="badge badge-success">戶籍</span></td>
+												<td><span>03-5213918</span></td>
+											</tr>
+											<tr>
+												<td><span class="badge badge-success">行動</span></td>
+												<td><span>0912345678</span></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="baseinfo-item" id="address">
+									<div class="label-title">
+										<a class="btn btn-info" edit-target="address"><i class="icon-edit icon-white"></i> 地址資訊</a>
+									</div>
+									<table class="table">
+										<tbody>
+											<tr>
+												<td><span class="badge badge-success">通訊</span></td>
+												<td><span>308新竹縣寶山鄉雙溪村雙園路2段370號</span></td>
+											</tr>
+											<tr>
+												<td><span class="badge badge-success">戶籍</span></td>
+												<td><span>351苗栗縣頭份鎮民族路35號</span></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="baseinfo-item" id="message">
+									<div class="label-title">
+										<a class="btn btn-info" edit-target="message"><i class="icon-edit icon-white"></i> 即時通訊資訊</a>
+									</div>
+									<table class="table">
+										<tbody>
+											<tr><td><span class="badge badge-success">Email</span></td><td><span></span></td></tr>
+											<tr><td><span class="badge badge-success">Facebook</span></td><td><span></span></td></tr>
+											<tr><td><span class="badge badge-success">Skype</span></td><td><span></span></td></tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="baseinfo-item" id="emergency-contact">
+									<div class="label-title">
+										<a class="btn btn-info" edit-target="emergency-contact"><i class="icon-edit icon-white"></i> 緊急聯絡人資訊</a>
+									</div>
+									<table class="table">
+										<tbody>
+											<tr><td colspan="2"><span></span></td></tr>
+											<tr><td><span class="badge badge-success">關係</span></td><td><span></span></td></tr>
+											<tr><td><span class="badge badge-success">電話</span></td><td><span></span></td></tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="baseinfo-item" id="custodian-info">
+									<div class="label-title">
+										<a class="btn btn-info" edit-target="custodian-info"><i class="icon-edit icon-white"></i> 監護人資訊</a>
+									</div>
+									<table class="table">
+										<tbody>
+											<tr><td colspan="2"><span>江小錦</span></td></tr>
+											<tr><td><span class="badge badge-success">關係</span></td><td><span>父</span></td></tr>
+											<tr><td><span class="badge badge-success">電話</span></td><td><span></span></td></tr>
+											<tr><td><span class="badge badge-success">Email</span></td><td><span></span></td></tr>
+											<tr><td><span class="badge badge-success">職業</span></td><td><span>退休</span></td></tr>
+											<tr><td><span class="badge badge-success">教育程度</span></td><td><span>專科</span></td></tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="baseinfo-item" id="father-info">
+									<div class="label-title">
+										<a class="btn btn-info" edit-target="father-info"><i class="icon-edit icon-white"></i> 父親資訊</a>
+									</div>
+									<table class="table">
+										<tbody>
+											<tr><td colspan="2"><span>江小錦</span></td></tr>
+											<tr><td><span class="badge badge-success">電話</span></td><td><span></span></td></tr>
+											<tr><td><span class="badge badge-success">Email</span></td><td><span></span></td></tr>
+											<tr><td><span class="badge badge-success">職業</span></td><td><span></span></td></tr>
+											<tr><td><span class="badge badge-success">教育程度</span></td><td><span></span></td></tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="baseinfo-item" id="mother-info">
+									<div class="label-title">
+										<a class="btn btn-info" edit-target="mother-info"><i class="icon-edit icon-white"></i> 母親資訊</a>
+									</div>
+									<table class="table">
+										<tbody>
+											<tr><td colspan="2"><span>邱小襄</span></td></tr>
+											<tr><td><span class="badge badge-success">電話</span></td><td><span></span></td></tr>
+											<tr><td><span class="badge badge-success">Email</span></td><td><span></span></td></tr>
+											<tr><td><span class="badge badge-success">職業</span></td><td><span></span></td></tr>
+											<tr><td><span class="badge badge-success">教育程度</span></td><td><span></span></td></tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="tab-pane" id="academic">
+								<ul class="breadcrumb">
+									<li><span class="badge badge-info">1002</span> <span class="divider">:</span></li>
+									<li><a href="#" school-year="100" semester="2">1002</a> <span class="divider">|</span></li>
+									<li><a href="#" school-year="100" semester="1">1001</a> <span class="divider">|</span></li>
+									<li><a href="#" school-year="99" semester="2">992</a> <span class="divider">|</span></li>
+									<li><a href="#" school-year="99" semester="1">991</a> <span class="divider">|</span></li>
+									<li><a href="#" school-year="98" semester="2">982</a> <span class="divider">|</span></li>
+									<li><a href="#" school-year="98" semester="1">981</a></li>
+								</ul>
+								<div class="academic-item" id="subject-score">
+									<div class="label-title">
+										<span class="badge badge-info">科目成績</span>
+									</div>
+									<table class="table">
+										<tbody>
+											<tr><td><span>國文</span></td><td><span>68</span></td></tr>
+											<tr><td><span>英文</span></td><td><span>67</span></td></tr>
+											<tr><td><span>數學</span></td><td><span>82</span></td></tr>
+											<tr><td><span>地理</span></td><td><span>79</span></td></tr>
+											<tr><td><span>公民與社會</span></td><td><span>87</span></td></tr>
+											<tr><td><span>代數B</span></td><td><span>82</span></td></tr>
+											<tr><td><span>生活科技</span></td><td><span>91</span></td></tr>
+											<tr><td><span>美術</span></td><td><span>87</span></td></tr>
+											<tr><td><span>音樂</span></td><td><span>74</span></td></tr>
+											<tr><td><span>健康與護理</span></td><td><span>77</span></td></tr>
+											<tr><td><span>國防通識</span></td><td><span>74</span></td></tr>
+											<tr><td><span>基礎物理</span></td><td><span>80</span></td></tr>
+											<tr><td><span>基礎生物</span></td><td><span>77</span></td></tr>
+											<tr><td><span>餐旅英文與會話</span></td><td><span>60(補)</span></td></tr>
+											<tr><td><span>體育</span></td><td><span>83</span></td></tr>
+											<tr><td><span>觀光日語會話</span></td><td><span>86</span></td></tr>
+											<tr><td><span>客房實務</span></td><td><span>74</span></td></tr>
+											<tr><td><span>飲料與調酒</span></td><td><span>74</span></td></tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="academic-item" id="domain-score">
+									<div class="label-title">
+										<span class="badge badge-info">分項/領域成績</span>
+									</div>
+									<table class="table">
+										<tbody>
+											<tr><td><span>學業</span></td><td><span>77.2</span></td></tr>
+											<tr><td><span>德行</span></td><td><span>86.5</span></td></tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="tab-pane" id="behavior">
+								<ul class="breadcrumb">
+									<li><span class="badge badge-info">1002</span> <span class="divider">:</span></li>
+									<li><a href="#" school-year="100" semester="2">1002</a> <span class="divider">|</span></li>
+									<li><a href="#" school-year="100" semester="1">1001</a> <span class="divider">|</span></li>
+									<li><a href="#" school-year="99" semester="2">992</a> <span class="divider">|</span></li>
+									<li><a href="#" school-year="99" semester="1">991</a> <span class="divider">|</span></li>
+									<li><a href="#" school-year="98" semester="2">982</a> <span class="divider">|</span></li>
+									<li><a href="#" school-year="98" semester="1">981</a></li>
+								</ul>
+								<div class="behavior-item" id="morality">
+									<div class="label-title">
+										<span class="badge badge-info">德行/日常行為表現</span>
+									</div>
+									<table class="table">
+										<tbody>
+											<tr><td><span>黃</span></td><td><span>誠實地面對自己</span></td></tr>
+											<tr><td><span>黃</span></td><td><span>誠實地對待他人</span></td></tr>
+											<tr><td><span>橙</span></td><td><span>自我尊重</span></td></tr>
+											<tr><td><span>橙</span></td><td><span>尊重他人</span></td></tr>
+											<tr><td><span>橙</span></td><td><span>承諾</span></td></tr>
+											<tr><td><span>橙</span></td><td><span>責任</span></td></tr>
+											<tr><td><span>黃</span></td><td><span>榮譽</span></td></tr>
+											<tr><td><span>黃</span></td><td><span>感謝</span></td></tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="behavior-item" id="attendance">
+									<div class="label-title">
+										<span class="badge badge-info">缺曠記錄</span>
+									</div>
+									<div class="content">
+										<span class="badge badge-inverse">12 病假</span>
+										<span class="badge badge-inverse">1 遲到</span>
+									</div>
+								</div>
+								<div class="behavior-item" id="discipline">
+									<div class="label-title">
+										<span class="badge badge-info">獎懲記錄</span>
+									</div>
+									<div class="content">
+										<span class="badge badge-success">0 大功 1 小功 4 嘉獎</span>
+										<span class="badge badge-important">1 大過 1 小過 0 警告</span>
+									</div>
+									<table class="table">
+										<tbody>
+											<tr>
+												<td>
+													<span>2009-12-21 <span class="badge badge-success">1 嘉獎</span></span>
+													<br>
+													<span>擔任班級幹部，認真負責。</span>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<span>2010-12-27 <span class="badge badge-important">1 小過</span></span>
+													<br>
+													<span>未能準時參予女子槍隊訓練,欺騙師長。</span>
+													<br>
+													
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<span>2010-06-23 <span class="badge badge-important">1 大過</span></span>
+													<br>
+													<span>己宣導多次不可攜帶違禁品(手機),於6/21帶手機到校違反奬懲實施要點及輔導與教育學生辦法。</span>
+													<br>
+													
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<span>2010-09-28 <span class="badge badge-success">1 嘉獎</span></span>
+													<br>
+													<span>群育:負責愛心園遊會攤位準備，認真負責。</span>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<span>2010-12-26 <span class="badge badge-success">1 小功</span></span>
+													<br>
+													<span>擔任班級幹部，認真負責。</span>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<span>2010-12-23 <span class="badge badge-success">1 嘉獎</span></span>
+													<br>
+													<span>群育:忠信文化月比賽中，代表班上參賽，表現良好。</span>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<span>2009-12-21 <span class="badge badge-success">1 嘉獎</span></span>
+													<br>
+													<span>98學年度第一學期教室日誌第二次檢查學藝股長表現優良。</span>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
