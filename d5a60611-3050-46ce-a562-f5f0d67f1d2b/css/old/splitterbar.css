@@ -1,0 +1,45 @@
+.Splitter {
+/*	position: relative;*/
+}
+.SplitterBar {
+	background-color: #4D4D4D;
+	border-top: 2px solid #000;
+	background: url('../images/ellipsis.png') no-repeat 50% 50%;
+	position: absolute;
+	left: 10px;
+	right: 10px;
+	height: 10px;
+	opacity: 0.5;
+	z-index: 2;
+	margin: 100px 0px;
+	top: 50px;
+	cursor: row-resize;
+}
+.SplitterTopPane {
+/*	background: Pink;*/	
+	padding: 0;
+	position: absolute;    
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	overflow: hidden;
+	height: 150px;
+}
+.SplitterTopPane {
+	overflow-y: auto;
+}
+.SplitterBottomPane {
+/*	background: yellow;*/
+	padding: 10px 0px 0px 12px;
+	margin: 0;
+	position: absolute;
+	top: 162px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	overflow: hidden;
+	font-size: 0.8em;
+}
+.SplitterBottomPane:hover {
+	overflow-y: auto;
+}

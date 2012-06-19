@@ -1,0 +1,62 @@
+﻿<!DOCTYPE HTML >
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<title>加入親屬帳號</title>
+	<script type="text/javascript" src="http://new.iteacher.tw/devlibrary/gadget.js"></script>
+	<script type="text/javascript">
+		init({
+			application: "dev.sh_d",
+			paramValues: {}
+		});
+	</script>
+	<script type="text/javascript" src="include/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="js/Gadget-children.js"></script>
+	<script type="text/javascript" src="js/children.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/splitterbar.css" />
+	<link rel="stylesheet" type="text/css" href="css/children.css" />
+</head>
+<body>
+	<div id="pageHeader"></div>
+	<div id="leftcolumn" class="leftcolumn Splitter">
+		<div class="SplitterTopPane">
+			<ul id="menu" class="menu">
+				<li class="menu1 menu-selected">加入親屬帳號</li>
+			</ul>
+		</div>
+		<div class="SplitterBar"></div>
+		<div class="SplitterBottomPane"></div>
+	</div>
+	<div id="rightcolumn" class="rightcolumn">
+		<div class="parentContainer">
+			<div class="tabs-container">
+				<ul class="tabs">
+					<li class="tab1 tab-selected"><a href="#">加入親屬帳號</a></li>
+				</ul>
+			</div>
+
+			<div class="createRelationship">
+				<div class="tab-content">
+					<div>
+						<table class="grid">
+							<tr>
+								<th><label for="ParentCode">您的家長代碼：</label></th>
+								<td><input type="text" id="ParentCode" placeholder="您的家長代碼" /></td>
+							</tr>
+							<tr>
+								<th><label for="IDNumber">親屬身分證號：</label></th>								
+								<td><input type="text" id="IDNumber" placeholder="親屬的身分證字號" /></td>
+							</tr>
+							<tr>
+								<th><label for="Relationship">您的親屬關係：</label></th>
+								<td><input type="text" id="Relationship" placeholder="您與親屬之間的關係" /><input type="button" id="send" class="button" value="加入" /></td>
+							</tr>
+						</table>						
+					</div>
+				</div>
+			</div>
+		</div>		
+		<div class="message"></div>
+	</div>
+</body>
+</html>
