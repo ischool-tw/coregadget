@@ -1,67 +1,164 @@
-#student-list {
-	overflow: hidden;
-	.nav-header {
+@develop-overflow: hidden;
+@deepcolor: #DDD;
+@nav-color: #EEE;
+@vertical-th-align: right;
+
+.my-sidebar-nav {
+	padding: 9px 0 0;
+	background-color: @nav-color;
+}
+
+.my-sub-nav {
+	padding: 9px 9px;
+	background-color: @nav-color;
+}
+
+.my-well-deepcolor {
+	background-color: @deepcolor;
+}
+
+.my-thumbnail-white {
+	text-align:center;
+	background-color:#FFF;
+}
+.my-subthumbnail-top {
+	border-bottom: 1px solid #ccc;
+	padding: 9px;
+}
+
+.my-subthumbnail-bottom {
+	background: #DDD;
+}
+
+.my-label {
+	text-align: center;
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	padding: 4px 3px 1px;
+}
+
+.my-nav-header {
+	font-size: 16px;
+	letter-spacing: 2px;
+
+  i {
+    margin-right: 3px;
+  }
+}
+
+#student-list {		
+	height: 530px;
+	overflow: @develop-overflow;
+  &:hover{
+    overflow: auto;
+  }
+	
+  .my-seat-no {
+		font-size: 16px;
+	}
+	.my-student-number {
 		font-size: 14px;
 	}
-	.student-photo {
-		width: 21px;
-		height: 28px;
-	}
-	.student-name {
+	.my-student-name {
 		font-size: 14px;
-		margin-left: 8px;
-	}
-	.seat-no, .student-number {
-		font-size: 12px;
-		margin-left: 8px;
 	}
 }
 
 #baseinfo {
-	overflow: hidden;
-	.baseinfo-item {
+	height: 570px;
+	overflow: @develop-overflow;
+
+	.my-baseinfo-item {
 		margin-bottom: 20px;
-		.label-title {
+		.my-label-title {
 			margin-bottom: 10px;
 		}
 	}
-	.photo {
+	.my-photo {
 		width: 90px;
-		height: 120px;
 		margin-right: 20px;
-		padding: 3px;
-		border: 1px solid #999;
+		-moz-box-shadow: 0px 5px 6px #403f3f;
+		-webkit-box-shadow: 0px 5px 6px #403f3f;
+		box-shadow: 0px 5px 6px #403f3f;
 	}
-	tr td:first-child {
-		width: 60px;
+	tr th {
+		width: 70px;
+		text-align: @vertical-th-align;
+		white-space: nowrap;
 	}
 }
 
 #academic {
-	overflow: hidden;
-	.academic-item {
+	.my-overflow {
+		overflow: hidden;
+	}
+	.my-academic-item {
 		margin-bottom: 20px;
-		.label-title {
+		.my-label-title {
 			margin-bottom: 10px;
 		}
 	}
-	tr td:first-child {
-		width: 200px;
+	#subject-score tr th {
+		width: 70px;
+		white-space: nowrap;
+		text-align: @vertical-th-align;
+	}
+	#domain-score tr th {
+		width: 20px;
+		white-space: nowrap;
 	}
 }
 
 #behavior {
-	overflow: hidden;
-	.behavior-item {
+	.my-overflow {
+		overflow: hidden;
+	}
+	.my-behavior-item {
 		margin-bottom: 20px;
-		.label-title {
+		.my-label-title {
 			margin-bottom: 10px;
 		}
-		.content {
+		.my-content {
 			margin-bottom: 10px;
 		}
 	}
-	tr td:first-child {
-		width: 200px;
+	tr th {
+		width: 20px;
+		text-align: @vertical-th-align;
+		white-space: nowrap;
 	}
+	tr th[colspan] {
+		text-align: left;
+		white-space: nowrap;
+		background-color: #08C;
+		border: 1px solid #005580;
+		font-size: 16px;
+		color: #FFF;
+	}
+	#discipline tr td:nth-child(1)
+	{
+		width: 30px;
+	}
+	#discipline tr td:nth-child(2)
+	{
+		width: 30px;
+	}
+	#discipline tr td:nth-child(3)
+	{
+		width: 30px;
+	}
+}
+
+#attendance ul li[class*="span"] {
+	margin-left: 9px;
+	height: 90px;
+}
+
+#student-list i {
+  margin-top: 2px;
+}
+
+.accordion-inner {
+  padding: 2px 2px;
 }

@@ -1,0 +1,69 @@
+﻿<!DOCTYPE HTML >
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>調代課查詢小工具</title>
+  <script type="text/javascript" src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+  <script type="text/javascript">
+    init({
+      application: "http://test.iteacher.tw/cs4/test_sh_d_chhs",
+      paramValues: {}
+    });
+  </script>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css" />
+  <link rel="stylesheet/less" href="css/default.less">
+  <link rel="stylesheet" type="text/css" href="include/jquery_css/jquery.ui.all.css" />
+  <script type="text/javascript" src="js/jquery.min.js"></script>
+  <script type="text/javascript" src="js/bootstrap.js"></script>
+  <script type="text/javascript" src="js/less.min.js"></script>
+  <script type="text/javascript" src="include/jquery-ui-1.8.20.custom.min.js"></script>
+  <script type="text/javascript" src="js/api.js"></script>
+  <script type="text/javascript" src="js/Gadget-timetable.js"></script>
+  
+</head>
+<body style="margin: 0px; background-color: rgb(255, 255, 255);">
+  <div id="gadget">
+    <div id="mainMsg"></div>
+    <div id="mainContainer">
+      <div class="btn-group" data-toggle="buttons-radio">
+        <button class="btn active" id="show-myschedule">
+          我的課表</button>
+        <button class="btn" id="filter-schedule">
+          <i class="icon-search"></i>其他課表
+        </button>
+        <div class="control-group">
+          <div class="controls">
+            <input id="filter-keyword" type="text" placeholder="請輸入您要查詢的教師、班級、或場地的名稱" class="ui-autocomplete-input"
+              autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+            <span class="help-inline"></span></div>
+        </div>
+      </div>
+      <div class="btn-group" data-toggle="buttons-radio" title="請選擇學年度學期" id="choose-year-semester">
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+          <div id="function_MySchedule">
+            <h2></h2>
+            <div class="tabbable tabs-below">
+              <ul class="nav nav-tabs"></ul>
+              <div class="tab-content">
+              </div>
+            </div>
+          </div>
+          <div id="function_SearchSchedule" class="hide">
+            <h2></h2>
+            <div class="tabbable tabs-below">
+              <ul class="nav nav-tabs" id="function_SearchTab"></ul>
+              <div class="tab-content">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

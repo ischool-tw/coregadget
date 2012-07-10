@@ -1,13 +1,13 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<script src="js/gadget.js"></script>
+<!--	<script src="js/gadget.js"></script>
     <script>
     	init({
     		application: "dev.jh_kh", //"http://test.iteacher.tw/cs4/test_gadget",
     		paramValues: {}
     	});
-    </script>
+    </script>-->
 	<link href="css/bootstrap.css" rel="stylesheet"/>
 	<link href="css/bootstrap-responsive.css" rel="stylesheet"/>
 	<link href="css/default.less" rel="stylesheet/less"/>
@@ -16,12 +16,19 @@
 	<script src="js/coffee-script.js"></script>
 	<script src="js/less.min.js"></script>
 	<script src="js/bootstrap.js"></script>
-	<script src="js/default.coffee" type="text/coffeescript"></script>
-	<!--<script type="text/javascript">
+<!--	<script src="js/default.coffee" type="text/coffeescript"></script>-->
+	<script type="text/javascript">
 		$(document).ready(function () {
-			$('.tabbable li:eq(2) a').tab('show'); // Select third tab (0-indexed
+			//$('.tabbable li:eq(2) a').tab('show'); // Select third tab (0-indexed
+			$("#baseinfo .my-label-title a").click(function () {
+				$('#editModal').removeClass('hide');
+			})
+
+			$('[data-dismiss], #save-data').click(function () {
+				$('#editModal').addClass('hide');
+			})
 		});	
-	</script>-->
+	</script>
 </head>
 <body>
 	<div id="gadget">
@@ -39,7 +46,7 @@
 				<div id="errorMessage"></div>
 			</div>
 			<div class="modal-body">
-				<!-- 編輯 - 電話資訊
+				 編輯 - 電話資訊
 				<form class="form-horizontal">
 					<fieldset>
 						<div class="control-group">
@@ -62,7 +69,7 @@
 						</div>
 					</fieldset>
 				</form>
-				-->
+				
 
 				<!-- 編輯 - 地址資訊
 				<form class="form-horizontal">
@@ -317,7 +324,7 @@
 							<div class="accordion-group">
 								<div class="accordion-heading my-nav-header">
 									<a class="accordion-toggle" data-toggle="collapse" data-parent="#student-list" href="#collapse1">
-										觀三甲
+										<i class="icon-user"></i>觀三甲
 									</a>
 								</div>
 								<div id="collapse1" class="accordion-body collapse in">
@@ -354,7 +361,7 @@
 							<div class="accordion-group">
 								<div class="accordion-heading my-nav-header">
 									<a class="accordion-toggle" data-toggle="collapse" data-parent="#student-list" href="#collapse2">
-										進一丙
+										<i class="icon-user"></i>進一丙
 									</a>
 								</div>
 								<div id="collapse2" class="accordion-body collapse">

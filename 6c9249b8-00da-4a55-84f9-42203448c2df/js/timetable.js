@@ -1,77 +1,5 @@
-﻿/// <reference path="../include/jquery-1.7.2.min.js"/>
-
-$(document).ready(function () {
-	$('#function_Search, #function_history').hide();
-	$('.ExahangeCourseList').hide();
-
-	$(window).resize(function () {
-		$('.SplitterBar').css("top", 50);
-		$('.SplitterBottomPane').css("top", 162);
-	});
-
-	$('ul.tabs li').live('click', function () {
-		//1. remove tab_on class
-		$(this).parent().children('li').removeClass('tab-selected');
-		//2. add tab_on class on the current li.
-		$(this).addClass('tab-selected');
-	});
-
-	$('ul.menu li').bind('click', function () {
-		//1. remove tab_on class
-		$('ul.menu li').removeClass('menu-selected');
-		//2. add tab_on class on the current li.
-		$(this).addClass('menu-selected');
-		
-		switch ($(this).attr('id')) {
-			case 'menuSchedule':				
-				$('#function_MySchedule, #function_history').hide();
-				$('#function_Search').show();
-				break;
-			case 'menuHistory':
-				$('#function_MySchedule, #function_Search').hide();
-				$('#function_history').show();
-				break;
-			default:
-				$('#function_Search, #function_history').hide();
-				$('#function_MySchedule').show();
-		}
-	});
-
-	$('ul.historyTabs li').bind('click', function () {
-		switch ($(this).index()) {
-			case 1: //調課
-				$('.SubstituteCourseList').hide();
-				$('.ExahangeCourseList').show(); 
-				break;
-			default: //代課
-				$('.ExahangeCourseList').hide();
-				$('.SubstituteCourseList').show();
-		}
-	});
-
-	$('#scrollbar_handle').draggable({ axis: 'y', containment: 'parent' });
-	if (($('#menu').height() - $('#scrollbar_handle').height()) > 0) {
-		$('#scrollbar_handle').bind('drag', function (event, info) {
-			var height1 = $('#menu').height() - $('#scrollbar_track').height();
-			if (height1 > 0) {
-				x = ($('#menu').height() - $('#scrollbar_track').height()) / ($('#scrollbar_track').height() - $('#scrollbar_handle').height());
-				$('#menu').css("margin-top", -(info.position.top * x));
-			}
-		});
-	}
-
-	/*	Splitter start	*/
-	// $('.Splitter').height($(document).height()-200);
-	$('.SplitterBar').draggable({ axis: 'y', containment: 'parent' });
-	$('.SplitterBar').bind("drag", function (even, info) {
-		var TopPane_height = parseInt($('.SplitterBar').css("margin-top")) + info.position.top;
-		$('.SplitterTopPane').height(TopPane_height);
-		var BottomPane_height = TopPane_height + $('.SplitterBar').outerHeight();
-		$('.SplitterBottomPane').css("top", BottomPane_height);
-	});
-
-
-	/*	autocomplete start	*/
+﻿$(document).ready(function () {
+	//	autocomplete start
 	$.widget("custom.catcomplete", $.ui.autocomplete, {
 		_renderMenu: function (ul, items) {
 			var self = this,
@@ -91,7 +19,6 @@ $(document).ready(function () {
 		delay: 0,
 		source: function (req, add) {
 			doSearch(req, add);
-			// getSearch = add;
 		},
 		select: function (event, uCategory) {
 			$(".search-text, .searchTabs, .searchTabContent, #condition").html("");
@@ -111,15 +38,9 @@ $(document).ready(function () {
 		var retSearchList = [];
 
 		function doIt(add) {
-			// if( resp1 && resp2 && resp3 && (req.term==$("#search").val()) ){
 			if (resp1 && resp2 && resp3) {
-				// console.log(resp1);
-				// console.log(resp2);
-				// console.log(resp3);
 				retSearchList = resp1.concat(resp2, resp3);
-				// console.log(retSearchList);
 				autocomplete_data = retSearchList;
-				// getSearch(autocomplete_data);
 				add(autocomplete_data);
 			}
 		}
@@ -129,10 +50,10 @@ $(document).ready(function () {
 			result: function (response, error, http) {
 				var data1 = [];
 				$(response.Teachers.Teacher).each(function (index, item) {
-//					var nickname = (item.Nickname != '') ? '(' + item.Nickname + ')' : '';
+					var nickname = (item.Nickname != '') ? '(' + item.Nickname + ')' : '';
 					data1.push({
-						label: item.TeacherName,
-						value: item.TeacherName,
+					  label: item.TeacherName + nickname,
+					  value: item.TeacherName + nickname,
 						category: '教師',
 						categoryid: 'T',
 						myid: item.ID
@@ -179,9 +100,5 @@ $(document).ready(function () {
 			}
 		});
 	}
-
-	//print
-	$('.print-button').bind('click', function () { window.print(); });
-
 });
 

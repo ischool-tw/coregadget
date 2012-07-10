@@ -1,0 +1,84 @@
+@group-bgcolor: rgb(221, 221, 221);
+
+#mainContainer {
+  position: fixed;
+  top: 28px;
+  background: rgba(15, 15, 15, 0.9);
+  padding: 5px 20px;
+  border-bottom: 2px solid rgba(15, 38, 61, 0.5);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  -moz-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  -webkit-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  -moz-box-shadow: 0 0 0 #000;
+  width: 100%;
+}
+
+.table {
+	thead th, tbody th {
+		text-align: center;
+		vertical-align: middle;
+	}
+	thead th:first-child {
+		width: 50px;
+	}
+	tr td {
+    text-align: center;
+    height: 107px;
+	}
+	tr td .my-classroom {
+    text-align: right;
+	}
+}
+
+#filter-keyword {
+	width: 300px;
+}
+
+.my-td-group {
+  background-color: @group-bgcolor;
+  opacity: 1;
+  color: rgb(136, 136, 136);
+  border-top-left-radius: 9px;
+  border-top-right-radius: 9px;
+  border-bottom-right-radius: 9px;
+  border-bottom-left-radius: 9px;
+  -webkit-box-shadow: rgb(47, 79, 79) 0px 0px 19px;
+  box-shadow: rgb(47, 79, 79) 0px 0px 19px;
+}
+
+.my-empty-column {
+}
+
+/* overwrite */
+.btn-group + .btn-group {
+  margin-left: 0px;
+}
+
+
+.table tbody tr:hover td,
+.table tbody tr:hover th {
+  background: #FFF;
+}
+
+.table tbody tr:hover td.my-td-group {
+  background-color: @group-bgcolor;
+}
+
+.ui-autocomplete.ui-menu.ui-widget.ui-widget-content.ui-corner-all {
+  max-height: 370px;
+  overflow: auto;
+}
+
+.ui-autocomplete-category {
+  font-weight: bold;
+  font-size: 16px;
+  padding: 7px 0px;
+  line-height: 1.5;
+}
+
+.container-fluid {
+  margin-top: 130px;
+}
+
+.container-fluid:hover {
+}
