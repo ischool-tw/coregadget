@@ -4,9 +4,8 @@ _gg.timeTableByTTId = {};
 
 $(document).ready(function () {
     /*
-    gadget.autofit(document.getElementById("widget"));
     gadget.onSizeChanged(function (size) {
-        $(".container-fluid").height(size.height - 148);
+    $(".container-fluid").height(size.height - 148);
     });
     */
 
@@ -39,6 +38,7 @@ $(document).ready(function () {
     });
 
     // TODO: 查詢其他課表的autocomplete  
+
     $("#filter-keyword").catcomplete({
         source: function (request, response) {
             _gg.doSearch(request, response);
@@ -56,7 +56,10 @@ $(document).ready(function () {
         $("#filter-keyword").removeClass("inputerror");
         $('#mainContainer .control-group').removeClass("warning");
         $(".help-inline").html("");
-    });    
+    })
+    .bind("input.autocomplete", function () {
+        $(this).trigger('keydown.autocomplete');
+    });
 
     // TODO: 切換學年度學期
     $("#choose-year-semester button").click(function () {
@@ -312,7 +315,7 @@ _gg.GetOtherSchedule = function (setYear, setSemester, uCategory) {
 
 // TODO: 取回課程時間表
 _gg.DoGetAllTimeTables = function (usemodel, courseSectionByTTId) {
-    var run_times = 0; // TODO: 總數
+    var run_times = -1; // TODO: 總數
 
     // TDDO: 計數
     var tmpObj = {
@@ -332,11 +335,12 @@ _gg.DoGetAllTimeTables = function (usemodel, courseSectionByTTId) {
 
     $.each(courseSectionByTTId, function (ttid, value) {
         if (!_gg.timeTableByTTId[ttid]) {
-            run_times += 1;
+            if (run_times === -1) run_times = 0;
             _gg.connection.send({
                 service: "_.GetAllTimeTables",
                 body: '<Request><Condition><TimetableID>' + ttid + '</TimetableID></Condition></Request>',
                 result: function (response, error, http) {
+                    run_times += 1;
                     if (error !== null) {
                         return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetAllTimeTables)\n</div>");
                     } else {
@@ -368,6 +372,7 @@ _gg.DoGetAllTimeTables = function (usemodel, courseSectionByTTId) {
                 }
             });
         }
+        if (run_times === -1) run_times = 0;
     });
 
     if (run_times === 0) {
