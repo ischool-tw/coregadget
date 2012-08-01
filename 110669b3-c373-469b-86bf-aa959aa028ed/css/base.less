@@ -1,0 +1,266 @@
+﻿@develop-overflow: hidden;
+@deepcolor: #f0ffee;
+@nav-color: #FFF;
+@label-title-color: #360;
+
+/* 基礎框架 */
+.container-fluid {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+/* 基礎2欄框架 */
+#container-nav,
+#container-main {
+  overflow: hidden;
+
+  &:hover {
+    overflow: auto;
+  }
+}
+
+/* well */
+.well {
+  background: #F8F8F8;
+}
+
+/* 深色的well */
+.my-well-deepcolor {
+	background-color: @deepcolor;
+}
+
+/* 次項標題 */
+.my-label-title {
+  color: @label-title-color;
+}
+
+/* HR */
+.my-hr {
+  height: 1px;
+  margin: 8px 1px;
+  overflow: hidden;
+  background-color: #E5E5E5;
+  border-bottom: 1px solid white;
+}
+
+/* 特殊的well */
+.my-well {
+  background: #F8F8F8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -moz-box-shadow: 1px 1px 3px 1px rgba(186, 186, 186, 0.4);
+  -webkit-box-shadow: 1px 1px 3px 1px rgba(186, 186, 186, 0.4);
+  box-shadow: 1px 1px 3px 1px rgba(186, 186, 186, 0.4);
+  padding: 10px 20px;
+  border: 2px solid white;
+  margin: 2px 2px 20px;
+}
+
+/*自動完成*/
+.my-roster-search-widget {
+  padding-bottom: 5px;
+}
+    
+.my-roster-search-widget .my-entry-search-div {
+  position: relative;
+  padding: 0 0 2px;
+  width: 100%;
+}
+    
+.my-roster-search-widget .my-entry-search-hint {
+  position: absolute;
+  top: 9px;
+  left: 9px;
+}
+    
+.my-roster-search-widget .my-entry-search {
+  position: static;
+  width: 100%;
+  height: 36px;
+  padding: 4px 8px 4px 25px;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 0;
+  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* 一般搜尋 */
+.my-search-input {
+  height: 36px;
+  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* 學生列表 */
+.my-student-list-widget {
+  .accordion-heading {
+	  letter-spacing: 2px;
+    background: rgb(238,238,238); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(238,238,238,1) 0%, rgba(204,204,204,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(238,238,238,1)), color-stop(100%,rgba(204,204,204,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
+
+    i {
+      margin-right: 3px;
+    }
+  }
+  .nav {
+    margin-bottom: 2px;
+  }
+
+  .accordion {		
+	  height: 530px;
+    margin-bottom: 0px;
+	  overflow: @develop-overflow;
+    &:hover{
+      overflow: auto;
+    }
+	  
+    i {
+      margin-top: 2px;
+    }
+    .accordion-inner {
+      padding: 1px 3px;
+    }	
+    .my-seat-no {
+		  font-size: 16px;
+	    text-align: center;
+	    display: inline-block;
+	    width: 18px;
+	    height: 18px;
+	    padding: 4px 3px 1px;
+	  }
+  }
+}
+
+/* 選擇學年度學期 */
+.my-schoolyear-semester-widget {
+	padding: 9px 0;
+	background-color: @nav-color;
+}
+
+/* 自訂表格，無 hover */
+.my-table {
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.my-table th,
+.my-table td {
+  padding: 8px;
+  line-height: 18px;
+  text-align: left;
+  vertical-align: top;
+  border-top: 1px solid #dddddd;
+}
+
+.my-table th {
+  font-weight: bold;
+}
+
+.my-table thead th {
+  vertical-align: bottom;
+}
+
+.my-table caption + thead tr:first-child th,
+.my-table caption + thead tr:first-child td,
+.my-table colgroup + thead tr:first-child th,
+.my-table colgroup + thead tr:first-child td,
+.my-table thead:first-child tr:first-child th,
+.my-table thead:first-child tr:first-child td {
+  border-top: 0;
+}
+
+.my-table tbody + tbody {
+  border-top: 2px solid #dddddd;
+}
+
+.my-table-condensed th,
+.my-table-condensed td {
+  padding: 4px 5px;
+}
+
+.my-table-bordered {
+  border: 1px solid #dddddd;
+  border-collapse: separate;
+  *border-collapse: collapsed;
+  border-left: 0;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+}
+
+.my-table-bordered th,
+.my-table-bordered td {
+  border-left: 1px solid #dddddd;
+}
+
+.my-table-bordered caption + thead tr:first-child th,
+.my-table-bordered caption + tbody tr:first-child th,
+.my-table-bordered caption + tbody tr:first-child td,
+.my-table-bordered colgroup + thead tr:first-child th,
+.my-table-bordered colgroup + tbody tr:first-child th,
+.my-table-bordered colgroup + tbody tr:first-child td,
+.my-table-bordered thead:first-child tr:first-child th,
+.my-table-bordered tbody:first-child tr:first-child th,
+.my-table-bordered tbody:first-child tr:first-child td {
+  border-top: 0;
+}
+
+.my-table-bordered thead:first-child tr:first-child th:first-child,
+.my-table-bordered tbody:first-child tr:first-child td:first-child {
+  -webkit-border-top-left-radius: 4px;
+          border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+}
+
+.my-table-bordered thead:first-child tr:first-child th:last-child,
+.my-table-bordered tbody:first-child tr:first-child td:last-child {
+  -webkit-border-top-right-radius: 4px;
+          border-top-right-radius: 4px;
+  -moz-border-radius-topright: 4px;
+}
+
+.my-table-bordered thead:last-child tr:last-child th:first-child,
+.my-table-bordered tbody:last-child tr:last-child td:first-child {
+  -webkit-border-radius: 0 0 0 4px;
+     -moz-border-radius: 0 0 0 4px;
+          border-radius: 0 0 0 4px;
+  -webkit-border-bottom-left-radius: 4px;
+          border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+}
+
+.my-table-bordered thead:last-child tr:last-child th:last-child,
+.my-table-bordered tbody:last-child tr:last-child td:last-child {
+  -webkit-border-bottom-right-radius: 4px;
+          border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+}
+
+.my-table-striped tbody tr:nth-child(odd) td,
+.my-table-striped tbody tr:nth-child(odd) th {
+  background-color: #f9f9f9;
+}
+
+.my-well-table-striped {
+  thead td, thead th, tbody td, tbody th {
+    background-color: #ffffff;
+  }
+}
+
+.my-well-table-striped tbody tr:nth-child(odd) td,
+.my-well-table-striped tbody tr:nth-child(odd) th {
+  background-color: #f9f9f9;
+}
+
