@@ -35,14 +35,20 @@
   border-top: 1px solid #CCC;
   background: #DDD;
 }
+/* 標題次行註解文字 */
+h2 + p {
+  margin-left: 16px;
+  text-align: right;
+}
 /* 本學期分項成績 */
 #EntryScore th {
   width: 120px;
 }
-/* 本學期科目成績 */
-#SubjectScore td[rel=tooltip] {
+/* 科目屬性差異處的底色 */
+#SubjectScore td[rel=tooltip]:not([data-type=ranking]) {
   font-weight: bold;
-  background-color: #F0FFEE;
+  background-color: #59A64D;
+  color: white;
 }
 /* 科目未取得學分 */
 .lost-credit {

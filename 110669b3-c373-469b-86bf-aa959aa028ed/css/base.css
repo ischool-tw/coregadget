@@ -1,3 +1,8 @@
+/* 固定寬度 */
+body {
+  max-width: 1024px;
+  margin: 0 auto;
+}
 /* 基礎框架 */
 .container-fluid {
   padding-right: 5px;
