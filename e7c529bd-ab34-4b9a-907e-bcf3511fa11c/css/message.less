@@ -1,0 +1,116 @@
+﻿@develop-overflow: hidden;
+@copy-table-oddbgcolor: #F9F9F9;
+@copy-table-bordercolor: #DDD;
+@copy-table-evenbgcolor: transparent;
+@copy-table-hoverbgcolor: #f5f5f5;
+@message-width: 58px;
+@message-min-height: 48px;
+
+/* Modal中的輸入框 */
+#editModal .my-message-textarea-editor {
+  width: 519px;
+  height: 220px;
+}
+
+/* 收訊者清單 */
+.my-receiver-content .my-receivers {
+  min-height: 48px;
+  margin-bottom: 12px;
+  padding: 4px 0;
+  border: 1px dashed #CCC;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+
+  .label {
+    margin: 2px 2px;
+    overflow: auto;
+  }
+
+  .label, .badge {
+    white-space: normal;
+    font-size: 13px;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+}
+
+/* 訊息列 */
+.my-stream-items {
+  margin-bottom: 18px;
+  background-color: transparent;
+
+  .my-stream-item {
+    position: relative;
+    padding: 8px 0 24px 0;
+    line-height: 18px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid @copy-table-bordercolor;
+    background-color: @copy-table-evenbgcolor;
+
+    &:hover {
+      background-color: @copy-table-hoverbgcolor;
+    }
+  }
+  .my-stream-item:nth-child(odd) {
+    background-color: @copy-table-oddbgcolor;
+
+    &:hover {
+      background-color: @copy-table-hoverbgcolor;
+    }
+  }
+
+
+  /* 訊息列左方圖片 */
+  .my-stream-message-image {
+    float: left;
+    height: 48px;
+    overflow: hidden;
+    width: 48px;
+    margin-top: 3px;
+  }
+
+  /* 訊息列右方區塊 */
+  .my-stream-message-content {
+    margin-left: @message-width + 10;
+    min-height: @message-min-height;
+  }
+  .my-stream-message-text {
+    margin-bottom: 17px;
+  }
+  .my-stream-message-timestamp {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    color: #AAA;
+  }
+
+  /* 訊息列子功能 */
+  .my-stream-message-actions {
+    visibility: hidden;
+    bottom: 3px;
+    position: absolute;
+    font-size: 13px;
+
+    a {
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+
+/* 顯示更多 */
+.my-stream-more-message {
+  margin-top: 10px;
+  display: block;
+}
+
