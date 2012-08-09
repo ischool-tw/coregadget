@@ -54,7 +54,7 @@
                   <span class="my-slate-total">50</span>
 						      <span class="my-slate-text">選修</span>						
                 </div>
-                <div class="my-slate span2" credit-type="edu-required">
+                <div class="my-slate span2" credit-type="required-by-edu">
 						      <span class="my-slate-number">34</span>
                   <span class="my-slate-total">130</span>
 						      <span class="my-slate-text">部定必修</span>						
@@ -64,7 +64,7 @@
                   <span class="my-slate-total">20</span>
 						      <span class="my-slate-text">實習</span>						
                 </div>
-                <div class="my-slate span2" credit-type="school-required">
+                <div class="my-slate span2" credit-type="required-by-school">
 						      <span class="my-slate-number">37</span>
                   <span class="my-slate-total">122</span>
 						      <span class="my-slate-text">校訂必修</span>						
@@ -143,25 +143,26 @@
               </table>
             </div>
             <div id="SubjectScore">
-              <h2 class="my-label-title">本學期科目成績</h2>
+              <h2 class="my-label-title">本學期科目成績</h2>              
+              <p>(符號「--」代表不列入計算)</p>
               <table class="my-table my-table-bordered my-well-table-striped">
+                <thead>
+                  <tr>
+                    <th><span>分項類別</span></th>
+                    <th><span>科目</span></th>
+                    <th><span>級別</span></th>
+                    <th><span>學分</span></th>
+                    <th><span>校訂/部定</span></th>
+                    <th><span>必修/選修</span></th>
+                    <th><span>成績</span></th>
+                    <th><span>取得學分</span></th>
+                  </tr>
+                </thead>
                 <tbody>
-                  <thead>
-                    <tr>
-                      <th><span>分項類別</span></th>
-                      <th><span>科目</span></th>
-                      <th><span>級別</span></th>
-                      <th><span>學分</span></th>
-                      <th><span>校訂/部定</span></th>
-                      <th><span>必修/選修</span></th>
-                      <th><span>成績</span></th>
-                      <th><span>取得學分</span></th>
-                    </tr>
-                  </thead>
                   <tr>
                     <td>學業</td>
-                    <td>國文</td>
-                    <td rel="tooltip" data-original-title="在課程規劃表'97電一忠'中值為3">5</a></td>
+                    <td rel="tooltip" data-type="ranking" data-original-title="班排名：9<br/>科排名：37<br/>年排名：1143">國文</td>
+                    <td rel="tooltip" data-original-title="課程規劃表「97電一忠」<br/>設定為3">5</a></td>
                     <td>2</td>
                     <td>部定</td>
                     <td>必修</td>
@@ -169,8 +170,8 @@
                     <td><i class="icon-ok"></i></td>
                   </tr>
                   <tr>
-                    <td rel="tooltip" data-original-title="在課程規劃表'97電一忠'中值為學業">實習科目</a></td>
-                    <td>電子學實習</td>
+                    <td rel="tooltip" data-original-title="課程規劃表「97電一忠」<br/>設定為學業">實習科目</a></td>
+                    <td rel="tooltip" data-type="ranking" data-original-title="班排名：19<br/>科排名：52<br/>年排名：93">電子學實習</td>
                     <td>1</td>
                     <td>3</td>
                     <td>校訂</td>
@@ -180,7 +181,7 @@
                   </tr>
                   <tr>
                     <td>學業</td>
-                    <td>數學</td>
+                    <td rel="tooltip" data-type="ranking" data-original-title="班排名：11<br/>科排名：33<br/>年排名：924">數學</td>
                     <td>5</td>
                     <td>2</td>
                     <td>部定</td>
@@ -190,9 +191,9 @@
                   </tr>
                   <tr>
                     <td>學業</td>
-                    <td>應用英文</td>
+                    <td rel="tooltip" data-type="ranking" data-original-title="班排名：17<br/>科排名：45<br/>年排名：464">應用英文</td>
                     <td>1</td>
-                    <td rel="tooltip" data-original-title="在課程規劃表'97電一忠'中值為2">3</td>
+                    <td rel="tooltip" data-original-title="課程規劃表「97電一忠」<br/>設定為2">3</td>
                     <td>校訂</td>
                     <td>選修</td>
                     <td>81</td>
@@ -201,8 +202,8 @@
                 </tbody>
               </table>
             </div>
-          </div>
-        </div>
+          </div>          
+        </div>        
       </div>
     </div>
   </div>

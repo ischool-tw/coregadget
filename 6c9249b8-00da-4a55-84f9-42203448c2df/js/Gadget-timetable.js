@@ -3,23 +3,15 @@ _gg.connection = gadget.getContract("ischool.sunset.teacher");
 _gg.timeTableByTTId = {};
 
 $(document).ready(function () {
-    /*
     gadget.onSizeChanged(function (size) {
-    $(".container-fluid").height(size.height - 148);
+        $("#container-nav, #container-main").height(size.height - 50);
     });
-    */
 
-    // TODO: 點選我的課表
-    $('#show-myschedule').click(function () {
-        $('#function_MySchedule').removeClass("hide");
-        $('#function_SearchSchedule').addClass("hide");
-    })
-
-    // TODO: 點選其他課表
-    $('#filter-schedule').click(function () {
-        $('#filter-keyword').focus();
-        $('#function_MySchedule').addClass("hide");
-        $('#function_SearchSchedule').removeClass("hide");
+    // TODO: 點選其他課表 
+    $('#container-nav a[data-toggle="tab"]').on('shown', function (e) {
+        if ($(e.target).attr("href") === "#function_SearchSchedule") {
+            $('#filter-keyword').focus();
+        }
     })
 
     // TODO: 查詢其他課表的autocomplete分類
@@ -38,33 +30,41 @@ $(document).ready(function () {
     });
 
     // TODO: 查詢其他課表的autocomplete  
-
     $("#filter-keyword").catcomplete({
         source: function (request, response) {
             _gg.doSearch(request, response);
         },
         select: function (event, uCategory) {
             $(".help-inline").html("");
+            $("#function_SearchSchedule .control-group").removeClass("warning");
             $('#function_MySchedule').addClass("hide");
             $('#function_SearchSchedule').removeClass("hide");
-            _gg.GetOtherSchedule(_gg.ScheduledSchoolYear, _gg.ScheduledSemester, uCategory);
+            _gg.GetOtherSchedule(_gg.SearchScheduledSchoolYear, _gg.SearchScheduledSemester, uCategory);
+        },
+        open: function () {
+            $(".ui-autocomplete").css("z-index", 100);
+            return false;
         }
     })
     .focus(function () {
         $('#show-myschedule').removeClass("active");
         $('#filter-schedule').addClass("active");
         $("#filter-keyword").removeClass("inputerror");
-        $('#mainContainer .control-group').removeClass("warning");
         $(".help-inline").html("");
+        $("#function_SearchSchedule .control-group").removeClass("warning");
     })
     .bind("input.autocomplete", function () {
         $(this).trigger('keydown.autocomplete');
     });
 
     // TODO: 切換學年度學期
-    $("#choose-year-semester button").click(function () {
-        _gg.ScheduledSchoolYear = this.attr("school-year");
-        _gg.ScheduledSemester = this.attr("semester");
+    $("#function_MySchedule .my-schoolyear-semester-widget button").click(function () {
+        _gg.MyScheduledSchoolYear = this.attr("school-year");
+        _gg.MyScheduledSemester = this.attr("semester");
+    });
+    $("#function_SearchSchedule .my-schoolyear-semester-widget button").click(function () {
+        _gg.SearchScheduledSchoolYear = this.attr("school-year");
+        _gg.SearchScheduledSemester = this.attr("semester");
     });
 
     // TODO: 學年度學期選單(課表的起點)
@@ -162,8 +162,10 @@ _gg.DrwaingMyTimeTable = function () {
 
     _gg.SchoolYear = null;
     _gg.Semester = null;
-    _gg.ScheduledSchoolYear = null;
-    _gg.ScheduledSemester = null;
+    _gg.MyScheduledSchoolYear = null;
+    _gg.MyScheduledSemester = null;
+    _gg.SearchScheduledSchoolYear = null;
+    _gg.SearchScheduledSemester = null;
     var scope = null;
 
     // TODO: 取回目前學年度學期
@@ -210,22 +212,28 @@ _gg.DrwaingMyTimeTable = function () {
                 addclass = "";
                 tmp = item.SchoolYearSemester.split(',');
                 if (tmp[0] === _gg.SchoolYear && tmp[1] === _gg.Semester) {
-                    _gg.ScheduledSchoolYear = tmp[0];
-                    _gg.ScheduledSemester = tmp[1];
+                    _gg.MyScheduledSchoolYear = tmp[0];
+                    _gg.MyScheduledSemester = tmp[1];
+                    _gg.SearchScheduledSchoolYear = tmp[0];
+                    _gg.SearchScheduledSemester = tmp[1];
                     addclass = 'active';
                 }
-                itemlist.push('<button class="btn ' + addclass + '" my-school-year="' + tmp[0] + '" my-semester="' + tmp[1] + '">' + tmp[0] + tmp[1] + '</button>');
+                itemlist.push('<button class="btn btn-large ' + addclass + '" my-school-year="' + tmp[0] + '" my-semester="' + tmp[1] + '">' + tmp[0] + tmp[1] + '</button>');
             });
-            $('#choose-year-semester').html(itemlist.join(""));
+            $('#function_MySchedule .my-schoolyear-semester-widget .btn-group').html(itemlist.join(""));
+            $('#function_SearchSchedule .my-schoolyear-semester-widget .btn-group').html(itemlist.join(""));
 
             // TODO: 預設值不在可瀏覽範圍內
-            if (!(_gg.ScheduledSchoolYear && _gg.ScheduledSemester)) {
-                $('#choose-year-semester button:eq(0)').addClass("active");
-                _gg.ScheduledSchoolYear = $('#choose-year-semester button:eq(0)').attr("my-school-year");
-                _gg.ScheduledSemester = $('#choose-year-semester button:eq(0)').attr("my-semester");
+            if (!(_gg.MyScheduledSchoolYear && _gg.MyScheduledSemester)) {
+                $('#function_MySchedule .my-schoolyear-semester-widget button:eq(0)').addClass("active");
+                $('#function_SearchSchedule .my-schoolyear-semester-widget button:eq(0)').addClass("active");
+                _gg.MyScheduledSchoolYear = $('#function_MySchedule .my-schoolyear-semester-widget button:eq(0)').attr("my-school-year");
+                _gg.MyScheduledSemester = $('#function_MySchedule .my-schoolyear-semester-widget button:eq(0)').attr("my-semester");
+                _gg.SearchScheduledSchoolYear = _gg.MyScheduledSchoolYear;
+                _gg.SearchScheduledSemester = _gg.MyScheduledSemester;
             }
 
-            _gg.GetMyTimeTable(_gg.ScheduledSchoolYear, _gg.ScheduledSemester); // TODO: 取回我的課程分段表
+            _gg.GetMyTimeTable(_gg.MyScheduledSchoolYear, _gg.MyScheduledSemester); // TODO: 取回我的課程分段表
         }
     };
 
@@ -257,7 +265,7 @@ _gg.GetMyTimeTable = function (setYear, setSemester) {
                 });
 
                 // TODO: 設定標題
-                $("#function_MySchedule h2").html(setYear + "學年度第" + setSemester + "學期<small>我的課表</small>");
+                $("#function_MySchedule h2").html(setYear + "學年度第" + setSemester + "學期 <span class='label label-success'>我的課表</span>");
                 _gg.DoGetAllTimeTables("myself", courseSectionByTTId); // TODO: 取回課程時間表
             }
         }
@@ -286,8 +294,8 @@ _gg.GetOtherSchedule = function (setYear, setSemester, uCategory) {
                 return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetOtherSchedule)\n</div>");
             } else {
                 if ($(response.Schedule).size() === 0) {
-                    $('#mainContainer .control-group').addClass("warning");
                     $(".help-inline").html("尚無課表資料！");
+                    $("#function_SearchSchedule .control-group").addClass("warning");
                 } else {
                     var ttid;
                     var courseSectionByTTId = {};
@@ -305,7 +313,7 @@ _gg.GetOtherSchedule = function (setYear, setSemester, uCategory) {
                     });
 
                     // TODO: 設定標題
-                    $("#function_SearchSchedule h2").html(setYear + "學年度第" + setSemester + "學期<small>" + uCategory.item.value + "的課表</small>");
+                    $("#function_SearchSchedule h2").html(setYear + "學年度第" + setSemester + "學期 <span class='label label-success'>" + uCategory.item.value + "的課表</span>");
                     _gg.DoGetAllTimeTables(uCategory.item.categoryid, courseSectionByTTId); // TODO: 取回課程時間表
                 }
             }
@@ -334,13 +342,13 @@ _gg.DoGetAllTimeTables = function (usemodel, courseSectionByTTId) {
     };
 
     $.each(courseSectionByTTId, function (ttid, value) {
-        if (!_gg.timeTableByTTId[ttid]) {
+        if (_gg.timeTableByTTId[ttid] === undefined) {
             if (run_times === -1) run_times = 0;
-            _gg.connection.send({
+            run_times += 1;
+            _gg.connection.send({                
                 service: "_.GetAllTimeTables",
                 body: '<Request><Condition><TimetableID>' + ttid + '</TimetableID></Condition></Request>',
-                result: function (response, error, http) {
-                    run_times += 1;
+                result: function (response, error, http) {                    
                     if (error !== null) {
                         return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetAllTimeTables)\n</div>");
                     } else {
@@ -372,8 +380,8 @@ _gg.DoGetAllTimeTables = function (usemodel, courseSectionByTTId) {
                 }
             });
         }
-        if (run_times === -1) run_times = 0;
     });
+    if (run_times === -1) run_times = 0;
 
     if (run_times === 0) {
         _gg.DrawingTimeTable(usemodel, courseSectionByTTId) // TODO: 製作課表
@@ -415,10 +423,11 @@ _gg.DrawingTimeTable = function (useModel, courseSectionByTTId) {
 
             // TODO: 畫出表格
             var tmp_width = "15%";
-            tmp_width = parseInt((98 / max_Weekday), 10) + "%";
+            var tmp_total_width = $('#container-main').width() - 50;
+            tmp_width = (parseInt((parseInt((tmp_total_width / max_Weekday), 10) / tmp_total_width) * 100, 10)) + "%";
 
             for (var i = 0; i <= max_Period; i++) {
-                tbodys.push('<tr>');
+                if (i !== 0) tbodys.push('<tr>');
                 for (var j = 0; j <= max_Weekday; j++) {
                     if (i === 0) {
                         if (j === 0) {
@@ -434,12 +443,12 @@ _gg.DrawingTimeTable = function (useModel, courseSectionByTTId) {
                         }
                     }
                 }
-                tbodys.push('</tr>');
+                if (i !== 0 ) tbodys.push('</tr>');
             }
 
             content += '<div class="tab-pane my-TabContent" id="' + useModel + ttid + '">';
-            content += '<table class="table table-bordered">';
-            content += '<thead>' + theads.join("") + '</thead>';
+            content += '<table class="my-table my-table-bordered">';
+            content += '<thead><tr>' + theads.join("") + '</tr></thead>';
             content += '<tbody>' + tbodys.join("") + '</tbody>';
             content += '</table>';
             content += '</div>';

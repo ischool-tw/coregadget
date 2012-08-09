@@ -1,0 +1,117 @@
+﻿@develop-overflow: hidden;
+@copy-table-oddbgcolor: #F9F9F9;
+@copy-table-bordercolor: #DDD;
+@copy-table-evenbgcolor: transparent;
+@copy-table-hoverbgcolor: #f5f5f5;
+@note-width: 100px;
+@note-min-height: 50px;
+
+/* Modal中的輸入框 */
+#editModal .note-textarea-editor {
+  width: 519px;
+  height: 220px;
+}
+
+/* 新增訊息文字輸入框 */
+#addnew .note-textarea-editor {
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+}
+
+/* 訊息列 */
+.stream-items {
+  margin-bottom: 18px;
+  background-color: transparent;
+
+  .stream-item {
+    padding: 8px 0;
+    line-height: 18px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid @copy-table-bordercolor;
+    background-color: @copy-table-evenbgcolor;
+    display: table;
+    width: 100%;    
+
+    &:hover {
+      background-color: @copy-table-hoverbgcolor;
+    }
+
+    .my-stram-item-content {
+      display: table-row;
+    }
+  }
+
+  .stream-item:nth-child(odd) {
+    background-color: @copy-table-oddbgcolor;
+
+    &:hover {
+      background-color: @copy-table-hoverbgcolor;
+    }
+  }
+
+  /* 左方指定的學生 */
+  .my-stream-note-studentname {   
+    width: @note-width;
+    min-height: @note-min-height;
+    display: table-cell;
+    font-size: 13px;
+
+    a:hover {
+      text-decoration: none;
+    }
+
+    .my-seat-no {
+      width: 30px;
+      height: 22px;
+      display: block;
+      font-size: 20px;
+      padding-top: 8px;
+      text-align: center;
+    }
+  }  
+
+  /* 右方筆記內容 */
+  .my-stream-note-content {
+    vertical-align: top;
+    display: table-cell;
+
+    .my-stream-note-text {
+      min-height: @note-min-height;
+      margin-bottom: 15px;
+    }
+
+    .my-stream-note-row {
+      display: table;
+      width: 100%;
+
+      /* 筆記子功能 */
+      .my-stream-note-actions {
+        visibility: hidden;        
+        display: table-cell;
+
+        a {
+          &:hover {
+            text-decoration: none;
+          }
+        }
+      }
+
+      /* 最後更新時間 */
+      .my-stream-note-timestamp {
+        display: table-cell;
+        width: 200px;
+        text-align: right;
+        color: #AAA;
+      }
+    }
+  }
+}
+
+
+/* 顯示更多 */
+.my-stream-more-note {
+  display: block;
+}

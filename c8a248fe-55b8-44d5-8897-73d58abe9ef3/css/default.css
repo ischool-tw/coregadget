@@ -1,0 +1,16 @@
+/* 次項標題 */
+.my-label-title {
+  margin-bottom: 10px;
+}
+/* 家長個人資料表 */#parentProfile tr th {
+  text-align: right;
+  white-space: nowrap;
+  width: 100px;
+}
+/* 表單按鈕 */
+.form-actions {
+  padding: 17px 20px 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: transparent;
+}
