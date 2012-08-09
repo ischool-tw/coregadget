@@ -12,3 +12,7 @@ Core Gadget
 
 客製化
 * fd56eafc-3601-40a0-82d9-808f72a8272b 參加社團(學生)
+
+
+線上測試
+http://ischool-tw.github.com/coregadget/
