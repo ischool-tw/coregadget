@@ -1,70 +1,12 @@
-@develop-overflow: hidden;
-@deepcolor: #DDD;
-@nav-color: #EEE;
+﻿@develop-overflow: hidden;
 @vertical-th-align: right;
+@label-title-color: #360;
+@copy-table-oddbgcolor: #F9F9F9;
+@copy-table-bordercolor: #DDD;
+@copy-table-evenbgcolor: transparent;
+@copy-table-hoverbgcolor: #f5f5f5;
 
-.my-sidebar-nav {
-	padding: 9px 0 0;
-	background-color: @nav-color;
-}
-
-.my-sub-nav {
-	padding: 9px 9px;
-	background-color: @nav-color;
-}
-
-.my-well-deepcolor {
-	background-color: @deepcolor;
-}
-
-.my-thumbnail-white {
-	text-align:center;
-	background-color:#FFF;
-}
-.my-subthumbnail-top {
-	border-bottom: 1px solid #ccc;
-	padding: 9px;
-}
-
-.my-subthumbnail-bottom {
-	background: #DDD;
-}
-
-.my-label {
-	text-align: center;
-	display: inline-block;
-	width: 18px;
-	height: 18px;
-	padding: 4px 3px 1px;
-}
-
-.my-nav-header {
-	font-size: 16px;
-	letter-spacing: 2px;
-
-  i {
-    margin-right: 3px;
-  }
-}
-
-#student-list {		
-	height: 530px;
-	overflow: @develop-overflow;
-  &:hover{
-    overflow: auto;
-  }
-	
-  .my-seat-no {
-		font-size: 16px;
-	}
-	.my-student-number {
-		font-size: 14px;
-	}
-	.my-student-name {
-		font-size: 14px;
-	}
-}
-
+/* 基本資訊 */
 #baseinfo {
 	height: 570px;
 	overflow: @develop-overflow;
@@ -78,87 +20,237 @@
 	.my-photo {
 		width: 90px;
 		margin-right: 20px;
-		-moz-box-shadow: 0px 5px 6px #403f3f;
-		-webkit-box-shadow: 0px 5px 6px #403f3f;
-		box-shadow: 0px 5px 6px #403f3f;
+    -moz-box-shadow: 0px 0px 6px #999;
+    -webkit-box-shadow: 0px 0px 6px #999;
+    box-shadow: 0px 0px 6px #999;
 	}
 	tr th {
 		width: 70px;
 		text-align: @vertical-th-align;
 		white-space: nowrap;
 	}
+
+  /* 編輯鈕 */
+  .my-label-title {
+    color: @label-title-color;
+  }
 }
 
-#academic {
+
+/* 學業,德行共用 */
+.tmp-academic-item () {
 	.my-overflow {
 		overflow: hidden;
 	}
+}
+
+/* 學業 */
+#academic {
+  .tmp-academic-item;
+
 	.my-academic-item {
 		margin-bottom: 20px;
 		.my-label-title {
 			margin-bottom: 10px;
+      color: @label-title-color;
 		}
 	}
-	#subject-score tr th {
-		width: 70px;
-		white-space: nowrap;
-		text-align: @vertical-th-align;
-	}
-	#domain-score tr th {
-		width: 20px;
-		white-space: nowrap;
-	}
+
+  /* 科目成績 */
+  #subject-score tr th {
+	  width: 70px;
+	  white-space: nowrap;
+	  text-align: @vertical-th-align;
+  }
+
+  /* 分項/領域成績 */
+  #domain-score tr th {
+	  width: 20px;
+	  white-space: nowrap;
+  }
 }
 
+
+/* 德行 */
 #behavior {
-	.my-overflow {
-		overflow: hidden;
-	}
-	.my-behavior-item {
+  .tmp-academic-item;
+
+  .my-behavior-item {
 		margin-bottom: 20px;
 		.my-label-title {
 			margin-bottom: 10px;
-		}
-		.my-content {
-			margin-bottom: 10px;
+      color: @label-title-color;
 		}
 	}
+
 	tr th {
 		width: 20px;
 		text-align: @vertical-th-align;
 		white-space: nowrap;
 	}
 	tr th[colspan] {
-		text-align: left;
 		white-space: nowrap;
-		background-color: #08C;
-		border: 1px solid #005580;
-		font-size: 16px;
-		color: #FFF;
-	}
-	#discipline tr td:nth-child(1)
-	{
-		width: 30px;
-	}
-	#discipline tr td:nth-child(2)
-	{
-		width: 30px;
-	}
-	#discipline tr td:nth-child(3)
-	{
-		width: 30px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border: 0px solid #90EE90;
+    background-color: #5B8607;
+    padding: 11px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-align: left;
+    box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
 	}
 }
 
-#attendance ul li[class*="span"] {
-	margin-left: 9px;
-	height: 90px;
+
+.my-thumbnails () {
+  .my-thumbnail-white {
+	  text-align:center;
+	  background-color:#FFF;
+  }
+  .my-subthumbnail-top {
+	  border-bottom: 1px solid #ccc;
+	  padding: 9px;
+  }
+  .my-subthumbnail-bottom {
+	  background: #DDD;
+  }
 }
 
-#student-list i {
-  margin-top: 2px;
+/* 德行-缺曠記錄 */
+#attendance {
+  ul li[class*="span"] {
+	  margin-left: 9px;
+	  height: 90px;
+  }
+
+  .my-thumbnails;
 }
 
-.accordion-inner {
-  padding: 2px 2px;
+
+/* 德行-獎懲記錄 */
+#discipline {
+  
+  tr td:nth-child(1) {
+    width: 30px;
+    font-size: 13px;
+  }
+  tr td:nth-child(2) {
+	  width: 30px;
+    font-size: 13px;
+  }
+  tr td:nth-child(3) {
+	  width: 30px;
+    font-size: 13px;
+  }
+
+  .my-thumbnails;
+}
+
+
+/* Modal */
+#editModal {
+  .my-content-textarea-editor {
+    width: 519px;
+    height: 220px;
+  }
+
+  #update-photo-image {
+    margin-bottom: 6px;
+  }
+}
+
+/* 筆記本,聯絡簿訊息列 */
+.my-stream-items {
+  margin-bottom: 18px;
+  background-color: transparent;
+}
+
+.my-stream-item {
+  padding: 8px 0;
+  line-height: 18px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid @copy-table-bordercolor;
+  background-color: @copy-table-evenbgcolor;
+
+  &:hover {
+    background-color: @copy-table-hoverbgcolor;
+  }
+}
+
+.my-stream-item:nth-child(odd) {
+  background-color: @copy-table-oddbgcolor;
+
+  &:hover {
+    background-color: @copy-table-hoverbgcolor;
+  }
+}
+
+/* 筆記本 */
+#notebook {
+  .my-stream-note-text {
+    margin-bottom: 15px;
+  }
+
+  .my-stream-note-row {
+    display: table;
+    width: 100%;
+
+    /* 筆記子功能 */
+    .my-stream-note-actions {
+      visibility: hidden;        
+      display: table-cell;
+
+      a {
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+
+    /* 最後更新時間 */
+    .my-stream-note-timestamp {
+      display: table-cell;
+      width: 200px;
+      text-align: right;
+      color: #AAA;
+    }
+  }
+}
+
+
+
+/* 聯絡簿 */
+#message {
+  .my-stream-message-text {
+    margin-bottom: 15px;
+  }
+  .my-stream-message-row {
+    display: table;
+    width: 100%;
+
+    /* 筆記子功能 */
+    .my-stream-message-actions {
+      visibility: hidden;        
+      display: table-cell;
+
+      a {
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+
+    /* 最後更新時間 */
+    .my-stream-message-timestamp {
+      display: table-cell;
+      width: 200px;
+      text-align: right;
+      color: #AAA;
+    }
+  }
 }

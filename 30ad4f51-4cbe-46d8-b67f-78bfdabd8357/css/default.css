@@ -1,0 +1,206 @@
+/* 基本資訊 */
+#baseinfo {
+  height: 570px;
+  overflow: hidden;
+  /* 編輯鈕 */
+
+}
+#baseinfo .my-baseinfo-item {
+  margin-bottom: 20px;
+}
+#baseinfo .my-baseinfo-item .my-label-title {
+  margin-bottom: 10px;
+}
+#baseinfo .my-photo {
+  width: 90px;
+  margin-right: 20px;
+  -moz-box-shadow: 0px 0px 6px #999;
+  -webkit-box-shadow: 0px 0px 6px #999;
+  box-shadow: 0px 0px 6px #999;
+}
+#baseinfo tr th {
+  width: 70px;
+  text-align: right;
+  white-space: nowrap;
+}
+#baseinfo .my-label-title {
+  color: #336600;
+}
+/* 學業,德行共用 */
+/* 學業 */
+#academic {
+  /* 科目成績 */
+
+  /* 分項/領域成績 */
+
+}
+#academic .my-overflow {
+  overflow: hidden;
+}
+#academic .my-academic-item {
+  margin-bottom: 20px;
+}
+#academic .my-academic-item .my-label-title {
+  margin-bottom: 10px;
+  color: #336600;
+}
+#academic #subject-score tr th {
+  width: 70px;
+  white-space: nowrap;
+  text-align: right;
+}
+#academic #domain-score tr th {
+  width: 20px;
+  white-space: nowrap;
+}
+/* 德行 */
+#behavior .my-overflow {
+  overflow: hidden;
+}
+#behavior .my-behavior-item {
+  margin-bottom: 20px;
+}
+#behavior .my-behavior-item .my-label-title {
+  margin-bottom: 10px;
+  color: #336600;
+}
+#behavior tr th {
+  width: 20px;
+  text-align: right;
+  white-space: nowrap;
+}
+#behavior tr th[colspan] {
+  white-space: nowrap;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  border: 0px solid #90EE90;
+  background-color: #5B8607;
+  padding: 11px;
+  font-weight: bold;
+  color: #FFFFFF;
+  text-align: left;
+  box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+}
+/* 德行-缺曠記錄 */
+#attendance ul li[class*="span"] {
+  margin-left: 9px;
+  height: 90px;
+}
+#attendance .my-thumbnail-white {
+  text-align: center;
+  background-color: #FFF;
+}
+#attendance .my-subthumbnail-top {
+  border-bottom: 1px solid #ccc;
+  padding: 9px;
+}
+#attendance .my-subthumbnail-bottom {
+  background: #DDD;
+}
+/* 德行-獎懲記錄 */
+#discipline tr td:nth-child(1) {
+  width: 30px;
+  font-size: 13px;
+}
+#discipline tr td:nth-child(2) {
+  width: 30px;
+  font-size: 13px;
+}
+#discipline tr td:nth-child(3) {
+  width: 30px;
+  font-size: 13px;
+}
+#discipline .my-thumbnail-white {
+  text-align: center;
+  background-color: #FFF;
+}
+#discipline .my-subthumbnail-top {
+  border-bottom: 1px solid #ccc;
+  padding: 9px;
+}
+#discipline .my-subthumbnail-bottom {
+  background: #DDD;
+}
+/* Modal */
+#editModal .my-content-textarea-editor {
+  width: 519px;
+  height: 220px;
+}
+#editModal #update-photo-image {
+  margin-bottom: 6px;
+}
+/* 筆記本,聯絡簿訊息列 */
+.my-stream-items {
+  margin-bottom: 18px;
+  background-color: transparent;
+}
+.my-stream-item {
+  padding: 8px 0;
+  line-height: 18px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid #dddddd;
+  background-color: transparent;
+}
+.my-stream-item:hover {
+  background-color: #f5f5f5;
+}
+.my-stream-item:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+.my-stream-item:nth-child(odd):hover {
+  background-color: #f5f5f5;
+}
+/* 筆記本 */
+#notebook .my-stream-note-text {
+  margin-bottom: 15px;
+}
+#notebook .my-stream-note-row {
+  display: table;
+  width: 100%;
+  /* 筆記子功能 */
+
+  /* 最後更新時間 */
+
+}
+#notebook .my-stream-note-row .my-stream-note-actions {
+  visibility: hidden;
+  display: table-cell;
+}
+#notebook .my-stream-note-row .my-stream-note-actions a:hover {
+  text-decoration: none;
+}
+#notebook .my-stream-note-row .my-stream-note-timestamp {
+  display: table-cell;
+  width: 200px;
+  text-align: right;
+  color: #AAA;
+}
+/* 聯絡簿 */
+#message .my-stream-message-text {
+  margin-bottom: 15px;
+}
+#message .my-stream-message-row {
+  display: table;
+  width: 100%;
+  /* 筆記子功能 */
+
+  /* 最後更新時間 */
+
+}
+#message .my-stream-message-row .my-stream-message-actions {
+  visibility: hidden;
+  display: table-cell;
+}
+#message .my-stream-message-row .my-stream-message-actions a:hover {
+  text-decoration: none;
+}
+#message .my-stream-message-row .my-stream-message-timestamp {
+  display: table-cell;
+  width: 200px;
+  text-align: right;
+  color: #AAA;
+}
