@@ -104,15 +104,6 @@ jQuery(function () {
                                             var Startdate = new Date(item.Startdate);
                                             var Enddate = new Date(item.Enddate);
 
-                                            tmp_Date = $.formatDate(tmp_Date, 'yyyyMMdd');
-                                            tmp_Date = (Date.parse(tmp_Date)).valueOf();
-
-                                            Startdate = $.formatDate(Startdate, 'yyyyMMdd');
-                                            Startdate = (Date.parse(Startdate)).valueOf();
-
-                                            Enddate = $.formatDate(Enddate, 'yyyyMMdd');
-                                            Enddate = (Date.parse(Enddate)).valueOf();
-
                                             if (Startdate <= tmp_Date && Enddate >= tmp_Date) {
                                                 _gg.Opening = "yes";
                                             } else {
@@ -123,7 +114,7 @@ jQuery(function () {
                                 }
                             });
 
-                            // TODO: 取得個人選社資料
+                            // TODO: 取得本學年度學期個人選社資料
                             _gg.connection.send({
                                 service: "_.GetMyClub",
                                 body: '<Request><SchoolYear>' + _gg.schoolYear + '</SchoolYear><Semester>' + _gg.semester + '</Semester></Request>',
@@ -220,145 +211,147 @@ jQuery(function () {
 // TODO: 社團資料
 _gg.setClubInfo = function () {
     var club = _gg.Club;
-    _gg.connection.send({
-        service: "_.GetClubInfo",
-        body: '<Request><ID>' + club.ClubID + '</ID></Request>',
-        result: function (response, error, http) {
-            if (error !== null) {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetClubInfo)\n</div>");
-            } else {
-                var items_info, items_condition, items_summary, tmp_photo1, tmp_photo2;
-                var tmp_grade1Limit, tmp_grade2Limit, tmp_limit, tmp_genderRestrict, tmp_deptRestrict;
-                var tmp_can_add;
-
-                $(response.Response.ClubRecord).each(function (index, item) {
-                    club.About = item.About;
-                    club.ClubCategory = item.ClubCategory;
-                    club.ClubName = item.ClubName;
-                    club.ClubNumber = item.ClubNumber;
-                    club.Location = item.Location;
-                    club.Photo1 = item.Photo1;
-                    club.Photo2 = item.Photo2;
-                    club.TeacherName = item.TeacherName;
-                    club.PresidentName = item.PresidentName;
-                    club.VicePresidentName = item.VicePresidentName;
-
-                    items_info = [];
-                    items_condition = [];
-                    items_summary = [];
-                    tmp_photo1, tmp_photo2;
-                    tmp_grade1Limit = '不限', tmp_grade2Limit = '不限', tmp_limit = '不限', tmp_genderRestrict = '不限', tmp_deptRestrict = '不限';
-
-                    // TODO: 社團基本資料
-                    items_info.push('<tr><th nowrap="nowrap">學年 </th><td>' + club.SchoolYear + '</td></tr>');
-                    items_info.push('<tr><th nowrap="nowrap">學期 </th><td>' + club.Semester + '</td></tr>');
-                    items_info.push('<tr><th nowrap="nowrap">類別 </th><td>' + club.ClubCategory + '</td></tr>');
-                    items_info.push('<tr><th nowrap="nowrap">編號 </th><td>' + club.ClubNumber + '</td></tr>');
-                    items_info.push('<tr><th nowrap="nowrap">老師 </th><td>' + club.TeacherName + '</td></tr>');
-                    items_info.push('<tr><th nowrap="nowrap">場地 </th><td>' + club.Location + '</td></tr>');
-
-                    // TODO: 社團條件
-                    if (club.Grade1Limit) {
-                        if (_gg.Student.GradeYear === "1") {
-                            tmp_can_add = parseInt(club.Grade1Limit, 10) - parseInt(club.GradeYear1Count, 10);
-                        }
-                        tmp_grade1Limit = club.Grade1Limit + ' 人，現已 <span grade_year="1">' + club.GradeYear1Count + '</span> 人';
-                    }
-                    if (club.Grade2Limit) {
-                        if (_gg.Student.GradeYear === "2") {
-                            tmp_can_add = parseInt(club.Grade2Limit, 10) - parseInt(club.GradeYear2Count, 10);
-                        }
-                        tmp_grade2Limit = club.Grade2Limit + ' 人，現已 <span grade_year="1">' + club.GradeYear2Count + '</span> 人';
-                    }
-
-                    if (club.Limit) {
-                        if (!tmp_can_add) {
-                            tmp_can_add = parseInt(club.Limit, 10) - parseInt(club.TotalCount, 10);
-                        }
-
-                        tmp_limit = club.Limit + '人';
-                    } else {
-                        if (!tmp_can_add) {
-                            tmp_can_add = 1;
-                        }
-                    }
-
-                    if (club.GenderRestrict) { tmp_genderRestrict = club.GenderRestrict + '生' };
-
-                    if (club.DeptRestrict.Department) {
-                        tmp_deptRestrict = "";
-                        $(club.DeptRestrict.Department.Dept).each(function (key, value) {
-                            tmp_deptRestrict += value + '<br />';
-                        });
-                    }
-
-                    items_condition.push('<tr><th width="29%" nowrap="nowrap">年級 </th><td width="71%">一年級 ' + tmp_grade1Limit + '</td></tr>');
-                    items_condition.push('<tr><th nowrap="nowrap">&nbsp;</th><td>二年級 ' + tmp_grade2Limit + '</td></tr>');
-                    items_condition.push('<tr><th nowrap="nowrap">總額 </th><td>' + tmp_limit + ' </td></tr>');
-                    items_condition.push('<tr><th nowrap="nowrap">性別 </th><td>' + tmp_genderRestrict + '</td></tr>');
-                    items_condition.push('<tr><th nowrap="nowrap">科別 </th><td>' + tmp_deptRestrict + '</td></tr>');
-
-                    // TODO: 社團簡介
-                    items_summary.push('<p>' + club.About + '</p>');
-                    items_summary.push('<ul class="thumbnails">');
-                    tmp_photo1 = (club.Photo1 != null && club.Photo1 !== "") ? "<li class='thumbnail'><img src='data:image/png;base64," + club.Photo1 + "' alt='社團照片1' title='社團照片1'/></li>" : "";
-                    tmp_photo2 = (club.Photo2 != null && club.Photo2 !== "") ? "<li class='thumbnail'><img src='data:image/png;base64," + club.Photo2 + "' alt='社團照片2' title='社團照片2'/></li>" : "";
-                    items_summary.push(tmp_photo1);
-                    items_summary.push(tmp_photo2);
-                    items_summary.push('</ul>');
-                });
-
-                $("span[data-type=club-name]").html(club.ClubName);
-                $("div[data-type=info] tbody").html(items_info.join(""));
-                $("div[data-type=condition] tbody").html(items_condition.join(""));
-                $("div[data-type=summary] .my-widget-content").html(items_summary.join(""));
-
-
-                /*
-                1. 未開放時 => 加入社團(不能點選)
-                2. 開放期間，尚未加入，未額滿 => 加入社團
-                3. 開放期間，尚未加入，已額滿 => 額滿(不能點選)
-                4. 開放期間，已加入 => 退出
-                */
-                if (_gg.Opening === "yes") {
-                    if (_gg.Student.ClubID === club.ClubID) {
-                        $("div[data-type=add-club]").html('<a class="btn btn-success pull-right" action-type="remove"><i class="icon-minus icon-white"></i>退出社團</a>');
-                    } else {
-                        if (tmp_can_add > 0) {
-                            $("div[data-type=add-club]").html('<a class="btn btn-success pull-right" action-type="add"><i class="icon-plus icon-white"></i>加入社團</a>');
-                        } else {
-                            $("div[data-type=add-club]").html('<a class="btn btn-success pull-right disabled">已額滿</a>');
-                        }
-                    }
+    if (club.ClubID) {
+        _gg.connection.send({
+            service: "_.GetClubInfo",
+            body: '<Request><ID>' + club.ClubID + '</ID></Request>',
+            result: function (response, error, http) {
+                if (error !== null) {
+                    $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetClubInfo)\n</div>");
                 } else {
-                    $("div[data-type=add-club]").html('<a class="btn btn-success pull-right disabled"><i class="icon-plus icon-white"></i>加入社團</a>');
-                }
-                $("a[action-type=add]").bind('click', function () {
-                    $("#editModal h3").html("加入社團");
-                    if (_gg.Student.ClubID) {
-                        $("#editModal .modal-body").html("退出原社團，再加入" + club.ClubName + "嗎？");
+                    var items_info, items_condition, items_summary, tmp_photo1, tmp_photo2;
+                    var tmp_grade1Limit, tmp_grade2Limit, tmp_limit, tmp_genderRestrict, tmp_deptRestrict;
+                    var tmp_can_add;
+
+                    $(response.Response.ClubRecord).each(function (index, item) {
+                        club.About = item.About;
+                        club.ClubCategory = item.ClubCategory;
+                        club.ClubName = item.ClubName;
+                        club.ClubNumber = item.ClubNumber;
+                        club.Location = item.Location;
+                        club.Photo1 = item.Photo1;
+                        club.Photo2 = item.Photo2;
+                        club.TeacherName = item.TeacherName;
+                        club.PresidentName = item.PresidentName;
+                        club.VicePresidentName = item.VicePresidentName;
+
+                        items_info = [];
+                        items_condition = [];
+                        items_summary = [];
+                        tmp_photo1, tmp_photo2;
+                        tmp_grade1Limit = '不限', tmp_grade2Limit = '不限', tmp_limit = '不限', tmp_genderRestrict = '不限', tmp_deptRestrict = '不限';
+
+                        // TODO: 社團基本資料
+                        items_info.push('<tr><th nowrap="nowrap">學年 </th><td>' + club.SchoolYear + '</td></tr>');
+                        items_info.push('<tr><th nowrap="nowrap">學期 </th><td>' + club.Semester + '</td></tr>');
+                        items_info.push('<tr><th nowrap="nowrap">類別 </th><td>' + club.ClubCategory + '</td></tr>');
+                        items_info.push('<tr><th nowrap="nowrap">編號 </th><td>' + club.ClubNumber + '</td></tr>');
+                        items_info.push('<tr><th nowrap="nowrap">老師 </th><td>' + club.TeacherName + '</td></tr>');
+                        items_info.push('<tr><th nowrap="nowrap">場地 </th><td>' + club.Location + '</td></tr>');
+
+                        // TODO: 社團條件
+                        if (club.Grade1Limit) {
+                            if (_gg.Student.GradeYear === "1") {
+                                tmp_can_add = parseInt(club.Grade1Limit, 10) - parseInt(club.GradeYear1Count, 10);
+                            }
+                            tmp_grade1Limit = club.Grade1Limit + ' 人，現已 <span grade_year="1">' + club.GradeYear1Count + '</span> 人';
+                        }
+                        if (club.Grade2Limit) {
+                            if (_gg.Student.GradeYear === "2") {
+                                tmp_can_add = parseInt(club.Grade2Limit, 10) - parseInt(club.GradeYear2Count, 10);
+                            }
+                            tmp_grade2Limit = club.Grade2Limit + ' 人，現已 <span grade_year="1">' + club.GradeYear2Count + '</span> 人';
+                        }
+
+                        if (club.Limit) {
+                            if (!tmp_can_add) {
+                                tmp_can_add = parseInt(club.Limit, 10) - parseInt(club.TotalCount, 10);
+                            }
+
+                            tmp_limit = club.Limit + '人';
+                        } else {
+                            if (!tmp_can_add) {
+                                tmp_can_add = 1;
+                            }
+                        }
+
+                        if (club.GenderRestrict) { tmp_genderRestrict = club.GenderRestrict + '生' };
+
+                        if (club.DeptRestrict.Department) {
+                            tmp_deptRestrict = "";
+                            $(club.DeptRestrict.Department.Dept).each(function (key, value) {
+                                tmp_deptRestrict += value + '<br />';
+                            });
+                        }
+
+                        items_condition.push('<tr><th width="29%" nowrap="nowrap">年級 </th><td width="71%">一年級 ' + tmp_grade1Limit + '</td></tr>');
+                        items_condition.push('<tr><th nowrap="nowrap">&nbsp;</th><td>二年級 ' + tmp_grade2Limit + '</td></tr>');
+                        items_condition.push('<tr><th nowrap="nowrap">總額 </th><td>' + tmp_limit + ' </td></tr>');
+                        items_condition.push('<tr><th nowrap="nowrap">性別 </th><td>' + tmp_genderRestrict + '</td></tr>');
+                        items_condition.push('<tr><th nowrap="nowrap">科別 </th><td>' + tmp_deptRestrict + '</td></tr>');
+
+                        // TODO: 社團簡介
+                        items_summary.push('<p>' + club.About + '</p>');
+                        items_summary.push('<ul class="thumbnails">');
+                        tmp_photo1 = (club.Photo1 != null && club.Photo1 !== "") ? "<li class='thumbnail'><img src='data:image/png;base64," + club.Photo1 + "' alt='社團照片1' title='社團照片1'/></li>" : "";
+                        tmp_photo2 = (club.Photo2 != null && club.Photo2 !== "") ? "<li class='thumbnail'><img src='data:image/png;base64," + club.Photo2 + "' alt='社團照片2' title='社團照片2'/></li>" : "";
+                        items_summary.push(tmp_photo1);
+                        items_summary.push(tmp_photo2);
+                        items_summary.push('</ul>');
+                    });
+
+                    $("span[data-type=club-name]").html(club.ClubName);
+                    $("div[data-type=info] tbody").html(items_info.join(""));
+                    $("div[data-type=condition] tbody").html(items_condition.join(""));
+                    $("div[data-type=summary] .my-widget-content").html(items_summary.join(""));
+
+
+                    /*
+                    1. 未開放時 => 加入社團(不能點選)
+                    2. 開放期間，尚未加入，未額滿 => 加入社團
+                    3. 開放期間，尚未加入，已額滿 => 額滿(不能點選)
+                    4. 開放期間，已加入 => 退出
+                    */
+                    if (_gg.Opening === "yes") {
+                        if (_gg.Student.ClubID === club.ClubID) {
+                            $("div[data-type=add-club]").html('<a class="btn btn-success pull-right" action-type="remove"><i class="icon-minus icon-white"></i>退出社團</a>');
+                        } else {
+                            if (tmp_can_add > 0) {
+                                $("div[data-type=add-club]").html('<a class="btn btn-success pull-right" action-type="add"><i class="icon-plus icon-white"></i>加入社團</a>');
+                            } else {
+                                $("div[data-type=add-club]").html('<a class="btn btn-success pull-right disabled">已額滿</a>');
+                            }
+                        }
                     } else {
-                        $("#editModal .modal-body").html("想要加入" + club.ClubName + "嗎？");
+                        $("div[data-type=add-club]").html('<a class="btn btn-success pull-right disabled"><i class="icon-plus icon-white"></i>加入社團</a>');
                     }
+                    $("a[action-type=add]").bind('click', function () {
+                        $("#editModal h3").html("加入社團");
+                        if (_gg.Student.ClubID) {
+                            $("#editModal .modal-body").html("退出原社團，再加入" + club.ClubName + "嗎？");
+                        } else {
+                            $("#editModal .modal-body").html("想要加入" + club.ClubName + "嗎？");
+                        }
 
-                    $("#editModal #save-data").html("我要加入").attr("edit-target", "add");
-                    $("#editModal").modal("show");
-                });
+                        $("#editModal #save-data").html("我要加入").attr("edit-target", "add");
+                        $("#editModal").modal("show");
+                    });
 
-                $("a[action-type=remove]").bind('click', function () {
-                    $("#editModal h3").html("退出社團");
-                    $("#editModal .modal-body").html("想要退出" + club.ClubName + "嗎？");
-                    $("#editModal #save-data").html("我要退出").attr("edit-target", "remove"); ;
-                    $("#editModal").modal("show");
-                    
-                });
+                    $("a[action-type=remove]").bind('click', function () {
+                        $("#editModal h3").html("退出社團");
+                        $("#editModal .modal-body").html("想要退出" + club.ClubName + "嗎？");
+                        $("#editModal #save-data").html("我要退出").attr("edit-target", "remove"); ;
+                        $("#editModal").modal("show");
 
-                // TODO: 我加入的社團
-                $("#club-list .my-add-in-club").removeClass("my-add-in-club");
-                $("#club-list li[club-id=" + _gg.Student.ClubID + "]").addClass("my-add-in-club");
+                    });
+
+                    // TODO: 我加入的社團
+                    $("#club-list .my-add-in-club").removeClass("my-add-in-club");
+                    $("#club-list li[club-id=" + _gg.Student.ClubID + "]").addClass("my-add-in-club");
+                }
             }
-        }
-    });
+        });
+    }
 };
 
 
