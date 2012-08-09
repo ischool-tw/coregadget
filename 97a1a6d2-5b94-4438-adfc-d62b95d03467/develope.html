@@ -1,62 +1,77 @@
-﻿<!DOCTYPE HTML >
+﻿<!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8">
-	<title>加入親屬帳號</title>
-	<script type="text/javascript" src="http://new.iteacher.tw/devlibrary/gadget.js"></script>
-	<script type="text/javascript">
-		init({
-			application: "dev.sh_d",
-			paramValues: {}
-		});
-	</script>
-	<script type="text/javascript" src="include/jquery-1.7.2.min.js"></script>
-	<script type="text/javascript" src="js/Gadget-children.js"></script>
-	<script type="text/javascript" src="js/children.js"></script>
-	<link rel="stylesheet" type="text/css" href="css/splitterbar.css" />
-	<link rel="stylesheet" type="text/css" href="css/children.css" />
+  <title>設定帳號親屬關係</title>
+  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+  <script>
+    init({
+      application: "dev.sh_d", //"http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_kh", 
+      paramValues: {}
+    });
+  </script>
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <!--<link href="css/base.less" rel="stylesheet/less" />
+  <link href="css/default.less" rel="stylesheet/less" />-->
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <!--<script src="js/less.min.js"></script>-->
+  <script src="js/bootstrap.js"></script>
+	<script src="js/Gadget-children.js"></script>
 </head>
 <body>
-	<div id="pageHeader"></div>
-	<div id="leftcolumn" class="leftcolumn Splitter">
-		<div class="SplitterTopPane">
-			<ul id="menu" class="menu">
-				<li class="menu1 menu-selected">加入親屬帳號</li>
-			</ul>
-		</div>
-		<div class="SplitterBar"></div>
-		<div class="SplitterBottomPane"></div>
-	</div>
-	<div id="rightcolumn" class="rightcolumn">
-		<div class="parentContainer">
-			<div class="tabs-container">
-				<ul class="tabs">
-					<li class="tab1 tab-selected"><a href="#">加入親屬帳號</a></li>
-				</ul>
-			</div>
-
-			<div class="createRelationship">
-				<div class="tab-content">
-					<div>
-						<table class="grid">
-							<tr>
-								<th><label for="ParentCode">您的家長代碼：</label></th>
-								<td><input type="text" id="ParentCode" placeholder="您的家長代碼" /></td>
-							</tr>
-							<tr>
-								<th><label for="IDNumber">親屬身分證號：</label></th>								
-								<td><input type="text" id="IDNumber" placeholder="親屬的身分證字號" /></td>
-							</tr>
-							<tr>
-								<th><label for="Relationship">您的親屬關係：</label></th>
-								<td><input type="text" id="Relationship" placeholder="您與親屬之間的關係" /><input type="button" id="send" class="button" value="加入" /></td>
-							</tr>
-						</table>						
-					</div>
-				</div>
-			</div>
-		</div>		
-		<div class="message"></div>
-	</div>
+  <div id="gadget">
+    <div class="modal hide" id="editModal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h3>Modal header</h3>
+        <div id="errorMessage"></div>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer"><a href="#" class="btn" data-dismiss="modal">我知道了</a> </div>
+    </div>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+          <div id="mainMsg"></div>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span12" id="container-main">
+          <form class="well my-well-deepcolor form-horizontal">
+            <fieldset>
+              <legend>設定帳號親屬關係</legend>
+              <div class="control-group">
+                <label class="control-label" for="ParentCode">您的家長代碼</label>
+                <div class="controls">
+                  <input class="input-xlarge" id="ParentCode" type="text" placeholder="您的家長代碼">
+                  <span class="help-inline"></span>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="IDNumber">親屬身分證字號</label>
+                <div class="controls">
+                  <input class="input-xlarge" id="IDNumber" type="text" maxlength="10" placeholder="親屬的身分證字號">
+                  <span class="help-inline"></span>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="Relationship">與您的親屬關係</label>
+                <div class="controls">
+                  <input class="input-xlarge" id="Relationship" type="text" placeholder="您與親屬之間的關係">
+                  <span class="help-inline"></span>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-success" type="button" id="send">加入</button>
+              </div>
+            </fieldset>
+          </form>
+          <div class="childrenList"></div>          
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
