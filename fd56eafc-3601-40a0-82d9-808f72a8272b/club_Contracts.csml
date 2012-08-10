@@ -29,7 +29,7 @@
 		<Field Alias="Grade2Limit" Mandatory="True" Source="Grade2Limit" Target="grade2_limit" />
 		<Field Alias="Grade3Limit" Mandatory="True" Source="Grade3Limit" Target="grade3_limit" />
 		<Field Alias="Limit" Mandatory="True" Source="Limit" Target="&quot;limit&quot;" />
-		<Field Alias="TotalCount" Mandatory="True" Source="TotalCount" Target="count(*)" />
+		<Field Alias="TotalCount" Mandatory="True" Source="TotalCount" Target="count(student.id)" />
 		<Field Alias="GradeYear1Count" Mandatory="True" Source="GradeYear1Count" Target="sum(case class.grade_year when 1 then 1 else 0 end) " />
 		<Field Alias="GradeYear2Count" Mandatory="True" Source="GradeYear2Count" Target="sum(case class.grade_year when 2 then 1 else 0 end)" />
 		<Field Alias="GradeYear3Count" Mandatory="True" Source="GradeYear3Count" Target="sum(case class.grade_year when 3 then 1 else 0 end) " />
