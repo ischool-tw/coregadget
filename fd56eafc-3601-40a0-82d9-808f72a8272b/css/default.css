@@ -75,3 +75,7 @@ h2 {
 #club-list .my-add-in-club a {
   color: red;
 }
+span[data-type=Opening] {
+  font-size: 15px;
+  margin-left: 15px;
+}

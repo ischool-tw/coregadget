@@ -90,6 +90,7 @@ jQuery(function () {
                             });
 
                             var student = _gg.Student;
+                            _gg.Opening = "no";
 
                             // TODO: 取得開放時間
                             _gg.connection.send({
@@ -100,14 +101,20 @@ jQuery(function () {
                                         $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetOpeningHours)\n</div>");
                                     } else {
                                         $(response.Response.OpeningHours).each(function (index, item) {
-                                            var tmp_Date = new Date();
-                                            var Startdate = new Date(item.Startdate);
-                                            var Enddate = new Date(item.Enddate);
+                                            if (item.Startdate && item.Enddate) {
+                                                var tmp_Date = new Date();
+                                                var Startdate = new Date(item.Startdate);
+                                                var Enddate = new Date(item.Enddate);
 
-                                            if (Startdate <= tmp_Date && Enddate >= tmp_Date) {
-                                                _gg.Opening = "yes";
+                                                if (Startdate <= tmp_Date && Enddate >= tmp_Date) {
+                                                    _gg.Opening = "yes";
+                                                } else {
+                                                    _gg.Opening = "no";
+                                                }
+
+                                                $("span[data-type=Opening]").html("開放選社時間：" + $.formatDate(Startdate, "yyyyMMdd") + " " + $.formatDate(Startdate, "HHmm") + " ~ " + $.formatDate(Enddate, "yyyyMMdd") + " " + $.formatDate(Enddate, "HHmm"));
                                             } else {
-                                                _gg.Opening = "no";
+                                                $("sapn[data-type=Opening]").html("開放選社時間：未指定");
                                             }
                                         });
                                     }
@@ -323,7 +330,7 @@ _gg.setClubInfo = function () {
                             }
                         }
                     } else {
-                        $("div[data-type=add-club]").html('<a class="btn btn-success pull-right disabled"><i class="icon-plus icon-white"></i>加入社團</a>');
+                        $("div[data-type=add-club]").html('<a class="btn btn-success pull-right disabled"><i class="icon-plus icon-white"></i>未開放選社</a>');
                     }
                     $("a[action-type=add]").bind('click', function () {
                         $("#editModal h3").html("加入社團");
