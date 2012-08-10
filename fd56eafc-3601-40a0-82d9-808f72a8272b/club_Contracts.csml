@@ -10,9 +10,9 @@
 	<SQLTemplate>
 		<![CDATA[
 		select @@FieldList
-		from $k12.clubrecord.shinmin join $k12.scjoin.shinmin on $k12.clubrecord.shinmin.uid = cast($k12.scjoin.shinmin.ref_club_id as bigint)
-			join student on cast($k12.scjoin.shinmin.ref_student_id as int) = student.id
-			join class on student.ref_class_id=class.id
+		from $k12.clubrecord.shinmin left join $k12.scjoin.shinmin on $k12.clubrecord.shinmin.uid = cast($k12.scjoin.shinmin.ref_club_id as bigint)
+			left join student on cast($k12.scjoin.shinmin.ref_student_id as int) = student.id
+			left join class on student.ref_class_id=class.id
 		where @@Condition
 		group by $k12.clubrecord.shinmin.uid,club_name,school_year,semester,gender_restrict,grade1_limit,grade2_limit,grade3_limit,"limit",dept_restrict
 		]]>
@@ -146,7 +146,6 @@ WHERE name='系統設定']]>
 		<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="b.school_year" />
 		<Field Alias="Semester" Mandatory="True" Source="Semester" Target="b.semester" />
 		<Field Alias="ClubID" Mandatory="True" Source="ClubID" Target="a.ref_club_id" />
-		<Field Alias="AaasScore" Mandatory="True" Source="AaasScore" Target="a.aaas_score" />
 		<Field Alias="AasScore" Mandatory="True" Source="AasScore" Target="a.aas_score" />
 		<Field Alias="ArScore" Mandatory="True" Source="ArScore" Target="a.ar_score" />
 		<Field Alias="FarScore" Mandatory="True" Source="FarScore" Target="a.far_score" />
