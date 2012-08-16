@@ -1,179 +1,625 @@
 ﻿<!DOCTYPE html>
 <html>
-<head>
-  <link href="css/bootstrap.css" rel="stylesheet" />
-  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
-  <!--<link href="css/base.less" rel="stylesheet/less" />
-  <link href="css/default.less" rel="stylesheet/less" />-->
-  <link href="css/base.css" rel="stylesheet" />
-  <link href="css/default.css" rel="stylesheet" />
-  <script src="js/jquery.min.js"></script>
-  <!--<script src="js/less.min.js"></script>-->
-  <script src="js/bootstrap.js"></script>
-</head>
-<body>
-  <div id="gadget">
-    <div class="modal hide" id="editModal">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h3>Modal header</h3>
-        <div id="errorMessage"></div>
+  <head>
+    <link href="css/bootstrap.css" rel="stylesheet"/>
+    <link href="css/bootstrap-responsive.css" rel="stylesheet"/>
+    <!--<link href="css/base.less" rel="stylesheet/less"/> <link href="css/default.less" rel="stylesheet/less"/>-->
+    <link href="css/base.css" rel="stylesheet"/>
+    <link href="css/default.css" rel="stylesheet"/>
+    <script src="js/jquery.min.js"></script>
+    <!--<script src="js/less.min.js"></script>-->
+    <script src="js/bootstrap.js"></script>
+  </head>
+  <body>
+    <div id="gadget">
+      <div class="modal hide" id="editModal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">×</button>
+          <h3>Modal header</h3>
+          <div id="errorMessage"></div>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer"><a href="#" class="btn btn-success" id="save-data">我要加入</a>
+          <a href="#" class="btn" data-dismiss="modal">取消</a>
+        </div>
       </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer"><a href="#" class="btn btn-success" id="save-data">我要加入</a>
-        <a href="#" class="btn" data-dismiss="modal">取消</a> </div>
+      <div class="container-fluid">
+        <div class="row-fluid">
+          <div class="span12">
+            <div id="mainMsg"></div>
+          </div>
+        </div>
+        <div class="row-fluid">
+          <div class="tabbable tabs-below">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#baseinfo" data-toggle="tab">選社</a>
+              </li>
+              <li><a href="#academic" data-toggle="tab">社團紀錄</a>
+              </li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="AttendToClub">
+                <div class="span3" id="container-nav">
+                  <div class="my-roster-search-widget">
+                    <div class="my-entry-search-div">
+                      <div class="my-entry-search-hint">
+                        <i class="icon-search"></i>
+                      </div>
+                      <input id="filter-keyword" type="text" class="my-entry-search" value="" autocomplete="off" placeholder="社團名稱...">
+                    </div>
+                  </div>
+                  <div class="my-nav-widget" id="club-list">
+                    <div class="tabbable">
+                      <ul class="nav nav-tabs nav-stacked">
+                        <li class="active">
+                          <a href="#" data-toggle="tab"><span>慈幼社</span>
+                            <span class="pull-right">
+                              (25/50)</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>基服社</span>
+                            <span class="pull-right">(50/50)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>熱舞社</span>
+                            <span class="pull-right">(50/50)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>羽球社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>藍球社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>桌球社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>康輔社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>圍棋社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>國術社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>游泳社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>網球社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>有氧社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>排球社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>足球社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>基服社</span>
+                            <span class="pull-right">(50/50)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>熱舞社</span>
+                            <span class="pull-right">(50/50)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>羽球社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>藍球社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>桌球社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>康輔社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>圍棋社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>國術社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>游泳社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>網球社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>有氧社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>排球社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                        <li>
+                          <a href="#" data-toggle="tab"><span>足球社</span>
+                            <span class="pull-right">(30/60)</span></a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="span9" id="container-main">
+                  <a class="btn btn-success pull-right" href="">
+                    <i class="icon-plus icon-white"></i>加入社團</a>
+                  <h2><span class="my-slash">//</span><span data-type="club-name">慈幼社</span><span data-type="Opening">開放選社時間：2012/08/01 00:00 ~ 2012/08/30 00:00</span></h2>
+                  <div class="row-fluid">
+                    <div class="span5">
+                      <div class="my-widget" data-type="info">
+                        <div class="my-widget-header">
+                          <i class="icon-info-sign"></i>
+                          <h3>社團基本資料</h3>
+                        </div>
+                        <div class="my-widget-content">
+                          <table class="table table-condensed">
+                            <tbody>
+                              <tr>
+                                <th nowrap="nowrap">學年
+                                </th>
+                                <td>
+                                  101
+                                </td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">學期
+                                </th>
+                                <td>
+                                  1
+                                </td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">類別
+                                </th>
+                                <td>
+                                  &nbsp;
+                                </td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">編號
+                                </th>
+                                <td>
+                                  &nbsp;
+                                </td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">老師1
+                                </th>
+                                <td>
+                                  &nbsp;
+                                </td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">老師2
+                                </th>
+                                <td>
+                                  &nbsp;
+                                </td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">老師3
+                                </th>
+                                <td>
+                                  &nbsp;
+                                </td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">場地
+                                </th>
+                                <td>
+                                  &nbsp;
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div class="my-widget" data-type="condition">
+                        <div class="my-widget-header">
+                          <i class="icon-warning-sign"></i>
+                          <h3>社團條件</h3>
+                        </div>
+                        <div class="my-widget-content">
+                          <table class="table table-condensed">
+                            <tbody>
+                              <tr>
+                                <th width="29%" nowrap="nowrap">年級
+                                </th>
+                                <td width="71%">
+                                  一年級 20 人，現已
+                                  <span grade_year="1">10</span>
+                                  人
+                                </td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">&nbsp;
+                                </th>
+                                <td>
+                                  二年級 30 人，現已
+                                  <span grade_year="2">15</span>
+                                  人
+                                </td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">總額
+                                </th>
+                                <td>
+                                  50 人
+                                </td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">性別
+                                </th>
+                                <td>
+                                  女生
+                                </td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">科別
+                                </th>
+                                <td>
+                                  <p>
+                                    會計科</p>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="span7">
+                      <div class="my-widget" data-type="summary">
+                        <div class="my-widget-header">
+                          <i class="icon-file"></i>
+                          <h3>社團簡介</h3>
+                        </div>
+                        <div class="my-widget-content">
+                          <p>
+                            不同時期有不同時期的理念與服務模式，社服曾數度盛極一時，也曾遇到幾次危機，儘管社服團有這許許多多的演變，唯一不變的是我們服務人群的信念，願大家記取學長姐們努力的經驗，配合實際的情形發揮更多的服務力量，為實現理想而努力不懈。
+                          </p>
+                          <ul class="thumbnails">
+                            <li class="thumbnail">
+                              <img src="" alt="社團照片1" title="社團照片1"></li>
+                            <li class="thumbnail">
+                              <img src="" alt="社團照片2" title="社團照片2"></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane" id="ClubRecord">
+                <div class="span4">
+                  <div class="my-widget">
+                    <div class="my-widget-header">
+                      <i class="icon-th-list"></i>
+                      <h3>100 學年度第 1 學期</h3>
+                    </div>
+                    <div class="my-widget-content">
+                      <table class="table table-condensed">
+                        <tbody>
+                          <tr>
+                            <th width="29%" nowrap="nowrap">社團名稱
+                            </th>
+                            <td width="71%">
+                              康輔社
+                            </td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">指導教師
+                            </th>
+                            <td>
+                              某某某
+                            </td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">擔任幹部
+                            </th>
+                            <td>
+                              無
+                            </td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">平時活動(30%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">出缺率(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">活動力及服務(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">成品成果考驗(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="my-widget">
+                    <div class="my-widget-header">
+                      <i class="icon-th-list"></i>
+                      <h3>100 學年度第 2 學期</h3>
+                    </div>
+                    <div class="my-widget-content">
+                      <table class="table table-condensed">
+                        <tbody>
+                          <tr>
+                            <th width="29%" nowrap="nowrap">社團名稱
+                            </th>
+                            <td width="71%">
+                              康輔社
+                            </td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">指導教師
+                            </th>
+                            <td>
+                              某某某
+                            </td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">擔任幹部
+                            </th>
+                            <td>
+                              無
+                            </td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">平時活動(30%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">出缺率(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">活動力及服務(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">成品成果考驗(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="span4">
+                  <div class="my-widget my-nostart">
+                    <div class="my-widget-header">
+                      <i class="icon-th-list"></i>
+                      <h3>101 學年度第 1 學期</h3>
+                    </div>
+                    <div class="my-widget-content">
+                      <table class="table table-condensed">
+                        <tbody>
+                          <tr>
+                            <th width="29%" nowrap="nowrap">社團名稱
+                            </th>
+                            <td width="71%"></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">指導教師
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">擔任幹部
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">平時活動(30%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">出缺率(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">活動力及服務(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">成品成果考驗(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="my-widget my-nostart">
+                    <div class="my-widget-header">
+                      <i class="icon-th-list"></i>
+                      <h3>101 學年度第 2 學期</h3>
+                    </div>
+                    <div class="my-widget-content">
+                      <table class="table table-condensed">
+                        <tbody>
+                          <tr>
+                            <th width="29%" nowrap="nowrap">社團名稱
+                            </th>
+                            <td width="71%"></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">指導教師
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">擔任幹部
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">平時活動(30%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">出缺率(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">活動力及服務(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">成品成果考驗(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="span4">
+                  <div class="my-widget my-nostart">
+                    <div class="my-widget-header">
+                      <i class="icon-th-list"></i>
+                      <h3>102 學年度第 1 學期</h3>
+                    </div>
+                    <div class="my-widget-content">
+                      <table class="table table-condensed">
+                        <tbody>
+                          <tr>
+                            <th width="29%" nowrap="nowrap">社團名稱
+                            </th>
+                            <td width="71%"></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">指導教師
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">擔任幹部
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">平時活動(30%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">出缺率(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">活動力及服務(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">成品成果考驗(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="my-widget my-nostart">
+                    <div class="my-widget-header">
+                      <i class="icon-th-list"></i>
+                      <h3>102 學年度第 2 學期</h3>
+                    </div>
+                    <div class="my-widget-content">
+                      <table class="table table-condensed">
+                        <tbody>
+                          <tr>
+                            <th width="29%" nowrap="nowrap">社團名稱
+                            </th>
+                            <td width="71%"></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">指導教師
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">擔任幹部
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">平時活動(30%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">出缺率(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">活動力及服務(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">成品成果考驗(20%)
+                            </th>
+                            <td></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span12">
-          <div id="mainMsg"></div>
-        </div>
-      </div>
-      <div class="row-fluid">
-        <div class="span3" id="container-nav">
-          <div class="my-roster-search-widget">
-            <div class="my-entry-search-div">
-              <div class="my-entry-search-hint"><i class="icon-search"></i></div>
-              <input id="filter-keyword" type="text" class="my-entry-search" value="" autocomplete="off" placeholder="社團名稱...">
-            </div>
-          </div>
-          <div class="my-nav-widget" id="club-list">
-            <div class="tabbable">
-              <ul class="nav nav-tabs nav-stacked">
-                <li class="active"><a href="#" data-toggle="tab"><span>慈幼社</span> <span class="pull-right">
-                  (25/50)</span> </a></li>
-                <li><a href="#" data-toggle="tab"><span>基服社</span> <span class="pull-right">(50/50)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>熱舞社</span> <span class="pull-right">(50/50)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>羽球社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>藍球社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>桌球社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>康輔社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>圍棋社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>國術社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>游泳社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>網球社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>有氧社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>排球社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>足球社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>基服社</span> <span class="pull-right">(50/50)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>熱舞社</span> <span class="pull-right">(50/50)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>羽球社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>藍球社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>桌球社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>康輔社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>圍棋社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>國術社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>游泳社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>網球社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>有氧社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>排球社</span> <span class="pull-right">(30/60)</span></a></li>
-                <li><a href="#" data-toggle="tab"><span>足球社</span> <span class="pull-right">(30/60)</span></a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="span9" id="container-main">
-          <a class="btn btn-success pull-right" href=""><i class="icon-plus icon-white"></i>加入社團</a>
-          <h2><span class="my-slash">//</span><span data-type="club-name">慈幼社</span></h2>
-          <div class="row-fluid">
-            <div class="span5">
-              <div class="my-widget" data-type="info">
-                <div class="my-widget-header"><i class="icon-info-sign"></i>
-                  <h3>社團基本資料</h3>
-                </div>
-                <div class="my-widget-content">
-                  <table class="table table-condensed">
-                    <tbody>
-                      <tr>
-                        <th nowrap="nowrap">學年 </th>
-                        <td>101</td>
-                      </tr>
-                      <tr>
-                        <th nowrap="nowrap">學期 </th>
-                        <td>1</td>
-                      </tr>
-                      <tr>
-                        <th nowrap="nowrap">類別 </th>
-                        <td>&nbsp;</td>
-                      </tr>
-                      <tr>
-                        <th nowrap="nowrap">編號 </th>
-                        <td>&nbsp;</td>
-                      </tr>
-                      <tr>
-                        <th nowrap="nowrap">老師 </th>
-                        <td>&nbsp;</td>
-                      </tr>
-                      <tr>
-                        <th nowrap="nowrap">場地 </th>
-                        <td>&nbsp;</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div class="my-widget" data-type="condition">
-                <div class="my-widget-header"><i class="icon-warning-sign"></i>
-                  <h3>社團條件</h3>
-                </div>
-                <div class="my-widget-content">
-                  <table class="table table-condensed">
-                    <tbody>
-                      <tr>
-                        <th width="29%" nowrap="nowrap">年級 </th>
-                        <td width="71%">
-                          一年級 20 人，現已 <span grade_year="1">10</span> 人
-                        </td>
-                      </tr>
-                      <tr>
-                        <th nowrap="nowrap">&nbsp;</th>
-                        <td>
-                          二年級 30 人，現已 <span grade_year="2">15</span> 人
-                        </td>
-                      </tr>
-                      <tr>
-                        <th nowrap="nowrap">總額 </th>
-                        <td>
-                          50 人
-                        </td>
-                      </tr>
-                      <tr>
-                        <th nowrap="nowrap">性別 </th>
-                        <td>
-                          女生
-                        </td>
-                      </tr>
-                      <tr>
-                        <th nowrap="nowrap">科別 </th>
-                        <td>
-                          <p>會計科</p>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-            <div class="span7">
-              <div class="my-widget" data-type="summary">
-                <div class="my-widget-header"><i class="icon-file"></i>
-                  <h3>社團簡介</h3>
-                </div>
-                <div class="my-widget-content">
-                  <p>
-                    不同時期有不同時期的理念與服務模式，社服曾數度盛極一時，也曾遇到幾次危機，儘管社服團有這許許多多的演變，唯一不變的是我們服務人群的信念，願大家記取學長姐們努力的經驗，配合實際的情形發揮更多的服務力量，為實現理想而努力不懈。
-                  </p>
-                  <ul class="thumbnails">
-                    <li class="thumbnail"><img src="" alt="社團照片1" title="社團照片1"></li>
-                    <li class="thumbnail"><img src="" alt="社團照片2" title="社團照片2"></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</body>
+  </body>
 </html>

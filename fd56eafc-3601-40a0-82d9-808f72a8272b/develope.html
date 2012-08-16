@@ -1,95 +1,116 @@
 ﻿<!DOCTYPE html>
 <html>
-<head>
-  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
-  <script>
-    init({
-      application: "dev.sh_d", //"http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_kh", 
-      paramValues: {}
-    });
-  </script>
-  <link href="css/bootstrap.css" rel="stylesheet" />
-  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
-  <!--<link href="css/base.less" rel="stylesheet/less" />
-  <link href="css/default.less" rel="stylesheet/less" />-->
-  <link href="css/base.css" rel="stylesheet" />
-  <link href="css/default.css" rel="stylesheet" />
-  <script src="js/jquery.min.js"></script>
-  <!--<script src="js/less.min.js"></script>-->
-  <script src="js/bootstrap.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/club.js"></script>
-</head>
-<body>
-  <div id="gadget">
-    <div class="modal hide" id="editModal">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h3>Modal header</h3>
-        <div id="errorMessage"></div>
+  <head>
+    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+    <script>
+      init({
+        application: "dev.sh_d", //"h.trialschool.tw", //"http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_kh",
+        paramValues: {}
+      });
+    </script>
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+    <!--<link href="css/base.less" rel="stylesheet/less" />
+    <link href="css/default.less" rel="stylesheet/less" />-->
+    <link href="css/base.css" rel="stylesheet" />
+    <link href="css/default.css" rel="stylesheet" />
+    <script src="js/jquery.min.js"></script>
+    <!--<script src="js/less.min.js"></script>-->
+    <script src="js/bootstrap.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/club.js"></script>
+  </head>
+  <body>
+    <div id="gadget">
+      <div class="modal hide" id="editModal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">×</button>
+          <h3>Modal header</h3>
+          <div id="errorMessage"></div>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer"><a href="#" class="btn btn-success" id="save-data">我要加入</a>
+          <a href="#" class="btn" data-dismiss="modal">取消</a>
+        </div>
       </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer"><a href="#" class="btn btn-success" id="save-data">我要加入</a>
-        <a href="#" class="btn" data-dismiss="modal">取消</a> </div>
+      <div class="container-fluid">
+        <div class="row-fluid">
+          <div class="span12">
+            <div id="mainMsg"></div>
+          </div>
+        </div>
+        <div class="row-fluid">
+          <div class="tabbable tabs-below">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#AttendToClub" data-toggle="tab">選社</a>
+              </li>
+              <li><a href="#ClubRecord" data-toggle="tab">社團紀錄</a>
+              </li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="AttendToClub">
+                <div class="span3" id="container-nav">
+                  <div class="my-roster-search-widget">
+                    <div class="my-entry-search-div">
+                      <div class="my-entry-search-hint">
+                        <i class="icon-search"></i>
+                      </div>
+                      <input id="filter-keyword" type="text" class="my-entry-search" value="" autocomplete="off" placeholder="社團名稱...">
+                    </div>
+                  </div>
+                  <div class="my-nav-widget" id="club-list">
+                    <div class="tabbable"></div>
+                  </div>
+                </div>
+                <div class="span9" id="container-main">
+                  <div data-type="add-club"></div>
+                  <h2><span class="my-slash">//</span>
+                    <span data-type="club-name"></span>
+                    <span data-type="Opening"></span>
+                  </h2>
+                  <div class="row-fluid">
+                    <div class="span5">
+                      <div class="my-widget" data-type="info">
+                        <div class="my-widget-header">
+                          <i class="icon-info-sign"></i>
+                          <h3>社團基本資料</h3>
+                        </div>
+                        <div class="my-widget-content">
+                          <table class="table table-condensed">
+                            <tbody></tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div class="my-widget" data-type="condition">
+                        <div class="my-widget-header">
+                          <i class="icon-warning-sign"></i>
+                          <h3>社團條件</h3>
+                        </div>
+                        <div class="my-widget-content">
+                          <table class="table table-condensed">
+                            <tbody></tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="span7">
+                      <div class="my-widget" data-type="summary">
+                        <div class="my-widget-header">
+                          <i class="icon-file"></i>
+                          <h3>社團簡介</h3>
+                        </div>
+                        <div class="my-widget-content"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane" id="ClubRecord">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span12">
-          <div id="mainMsg"></div>
-        </div>
-      </div>
-      <div class="row-fluid">
-        <div class="span3" id="container-nav">
-          <div class="my-roster-search-widget">
-            <div class="my-entry-search-div">
-              <div class="my-entry-search-hint"><i class="icon-search"></i></div>
-              <input id="filter-keyword" type="text" class="my-entry-search" value="" autocomplete="off" placeholder="社團名稱...">
-            </div>
-          </div>
-          <div class="my-nav-widget" id="club-list">
-            <div class="tabbable"></div>
-          </div>
-        </div>
-        <div class="span9" id="container-main">
-          <div data-type="add-club"></div>
-          <h2><span class="my-slash">//</span><span data-type="club-name"></span></h2>
-          <div class="row-fluid">
-            <div class="span5">
-              <div class="my-widget" data-type="info">
-                <div class="my-widget-header"><i class="icon-info-sign"></i>
-                  <h3>社團基本資料</h3>
-                </div>
-                <div class="my-widget-content">
-                  <table class="table table-condensed">
-                    <tbody>
-                  </table>
-                </div>
-              </div>
-              <div class="my-widget" data-type="condition">
-                <div class="my-widget-header"><i class="icon-warning-sign"></i>
-                  <h3>社團條件</h3>
-                </div>
-                <div class="my-widget-content">
-                  <table class="table table-condensed">
-                    <tbody>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-            <div class="span7">
-              <div class="my-widget" data-type="summary">
-                <div class="my-widget-header"><i class="icon-file"></i>
-                  <h3>社團簡介</h3>
-                </div>
-                <div class="my-widget-content">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</body>
+  </body>
 </html>
