@@ -86,7 +86,33 @@ jQuery(function () {
                             $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMyBaseInfo)\n</div>");
                         } else {
                             $(response.Response.Student).each(function (index, item) {
-                                _gg.Student = item;
+                                _gg.Student = {
+                                    StudentID   : item.StudentID,
+                                    Name        : item.Name,
+                                    Gender      : item.Gender,
+                                    GradeYear   : item.GradeYear,
+                                    DeptName    : item.DeptName,
+                                    SemsHistory : {},
+                                    Clubs       : []
+                                };
+
+                                // TODO: 設定年級對應學年度的預設值
+                                var tmp_y = 0;
+                                for (var i=_gg.Student.GradeYear; i<=3; i++) {
+                                    _gg.Student.SemsHistory['GS'+ i +'1'] = parseInt(_gg.SchoolYear, 10) + tmp_y + ''; //上學期
+                                    _gg.Student.SemsHistory['GS'+ i +'2'] = parseInt(_gg.SchoolYear, 10) + tmp_y + ''; //下學期
+                                    tmp_y += 1;
+                                }
+
+                                // TODO: 覆寫年級對應學年度，處理學生重讀
+                                var tmp_alias;
+                                $(item.SemsHistory.History).each(function (index, item) {
+                                    tmp_alias = 'GS' + item.GradeYear + item.Semester;
+                                    _gg.Student.SemsHistory[tmp_alias] = _gg.Student.SemsHistory[tmp_alias] || 0;
+                                    if (parseInt(item.SchoolYear, 10) > parseInt(_gg.Student.SemsHistory[tmp_alias], 10)) {
+                                        _gg.Student.SemsHistory[tmp_alias] = item.SchoolYear;
+                                    }
+                                });
                             });
 
                             var student = _gg.Student;
@@ -102,9 +128,9 @@ jQuery(function () {
                                     } else {
                                         $(response.Response.OpeningHours).each(function (index, item) {
                                             if (item.Startdate && item.Enddate) {
-                                                var tmp_Date = new Date();
+                                                var tmp_Date  = new Date();
                                                 var Startdate = new Date(item.Startdate);
-                                                var Enddate = new Date(item.Enddate);
+                                                var Enddate   = new Date(item.Enddate);
 
                                                 if (Startdate <= tmp_Date && Enddate >= tmp_Date) {
                                                     _gg.Opening = "yes";
@@ -121,17 +147,21 @@ jQuery(function () {
                                 }
                             });
 
-                            // TODO: 取得本學年度學期個人選社資料
+                            // TODO: 取得各學年度學期個人選社資料
                             _gg.connection.send({
                                 service: "_.GetMyClub",
-                                body: '<Request><SchoolYear>' + _gg.SchoolYear + '</SchoolYear><Semester>' + _gg.Semester + '</Semester></Request>',
+                                body: '',
                                 result: function (response, error, http) {
                                     if (error !== null) {
                                         $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMyClub)\n</div>");
                                     } else {
                                         $(response.Response.Clubs).each(function (index, item) {
-                                            student.ClubID = item.ClubID;
-                                            student.Lock = item.Lock;
+                                            student.Clubs[index] = item;
+
+                                            if (item.SchoolYear === _gg.SchoolYear && item.Semester === _gg.Semester) {
+                                                student.ClubID = item.ClubID;
+                                                student.Lock   = item.Lock;
+                                            }
                                         });
 
 
@@ -191,6 +221,7 @@ jQuery(function () {
                                                             _gg.setClubInfo();
                                                         });
                                                         _gg.setClubInfo();
+                                                        _gg.SetClubRecord();
                                                     }
                                                 }
                                             }
@@ -211,7 +242,7 @@ jQuery(function () {
 // TODO: 社團資料
 _gg.setClubInfo = function () {
     var club = _gg.Club;
-    if (club.ClubID) {       
+    if (club.ClubID) {
 
         var showInfo = function () {
             var items_info, items_condition, items_summary, tmp_photo1, tmp_photo2;
@@ -355,7 +386,7 @@ _gg.Check_State = function () {
             break;
         case "5":
             $("div[data-type=add-club]").html('<a class="btn btn-success pull-right" disabled>選社已鎖定</a>');
-            break;            
+            break;
         default:
     }
 
@@ -425,7 +456,7 @@ _gg.RemoveToClub = function () {
                         $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>退出失敗，已過開放選社時間!</strong>\n</div>");
                     } else {
                         $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>退出失敗，請稍候重試!</strong>(RemoveClub)\n</div>");
-                    }                    
+                    }
                 } else {
                     $("#editModal").modal("hide");
                     _gg.Student.ClubID = "";
@@ -460,12 +491,146 @@ _gg.RefreshCount = function () {
                         $("span[grade_year=2]").html(item.GradeYear2Count);
                         $("span[grade_year=3]").html(item.GradeYear3Count);
                     });
-                    _gg.Check_State();                    
+                    _gg.Check_State();
                 }
             }
         });
     }
 };
+
+// TODO: 社團紀錄
+_gg.SetClubRecord = function () {
+    _gg.connection.send({
+        service: "_.GetWeight",
+        body: '',
+        result: function (response, error, http) {
+            if (error !== null) {
+                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetWeight)\n</div>");
+            } else {
+                $(response.Response.Weight).each(function (index, item) {
+                   _gg.Weight = item;
+                });
+
+                var student         = _gg.Student;
+                var items           = [];
+                var tmp_html        = '';
+                var tmp_clubid      = '';
+                var tmp_club        = {};
+                var true_schoolyear = '';
+
+                for (var i = 1; i <= 3; i++) {
+
+                    items.push('<div class="span4">');
+
+                    for (var j = 1; j <= 2; j++) {
+                        tmp_club = {
+                            CSSName         : ' my-nostart',
+                            ClubName        : '',
+                            TeacherName1    : '',
+                            CadreName       : '',
+                            PaScore         : '',
+                            ArScore         : '',
+                            AasScore        : '',
+                            FarScore        : ''
+                        };
+
+                        true_schoolyear = student.SemsHistory['GS'+i+j];
+
+                         $(student.Clubs).each(function (index, item) {
+                            if (item.SchoolYear === true_schoolyear && item.Semester === j+'') {
+                                tmp_club = {
+                                    CSSName      : '',
+                                    ClubName     : item.ClubName,
+                                    TeacherName1 : item.TeacherName1,
+                                    CadreName    : item.CadreName,
+                                    PaScore      : item.PaScore,
+                                    ArScore      : item.ArScore,
+                                    AasScore     : item.AasScore,
+                                    FarScore     : item.FarScore
+                                };
+                            }
+                        });
+
+                        tmp_html = '' +
+                            '<div class="my-widget ' + tmp_club.CSSName + '">' +
+                            '   <div class="my-widget-header">' +
+                            '       <i class="icon-th-list"></i>' +
+                            '       <h3>' + true_schoolyear + ' 學年度第 ' + j + ' 學期</h3>' +
+                            '   </div>' +
+                            '   <div class="my-widget-content">' +
+                            '       <table class="table table-condensed">' +
+                            '           <tbody>' +
+                            '               <tr>' +
+                            '                   <th width="29%" nowrap="nowrap">社團名稱</th>' +
+                            '                   <td width="71%">' + tmp_club.ClubName + '</td>' +
+                            '               </tr>' +
+                            '               <tr>' +
+                            '                   <th nowrap="nowrap">指導教師</th>' +
+                            '                   <td>' + tmp_club.TeacherName1 + '</td>' +
+                            '               </tr>' +
+                            '               <tr>' +
+                            '                   <th nowrap="nowrap">擔任幹部</th>' +
+                            '                   <td>' + tmp_club.CadreName + '</td>' +
+                            '               </tr>' +
+                            '               <tr>' +
+                            '                   <th nowrap="nowrap">平時活動(' + _gg.Weight.PaWeight + '%)</th>' +
+                            '                   <td>' + tmp_club.PaScore + '</td>' +
+                            '               </tr>' +
+                            '               <tr>' +
+                            '                   <th nowrap="nowrap">出缺率(' + _gg.Weight.ArWeight + '%)</th>' +
+                            '                   <td>' + tmp_club.ArScore + '</td>' +
+                            '               </tr>' +
+                            '               <tr>' +
+                            '                   <th nowrap="nowrap">活動力及服務(' + _gg.Weight.AasWeight + '%)</th>' +
+                            '                   <td>' + tmp_club.AasScore + '</td>' +
+                            '               </tr>' +
+                            '               <tr>' +
+                            '                   <th nowrap="nowrap">成品成果考驗(' + _gg.Weight.FarWeight + '%)</th>' +
+                            '                   <td>' + tmp_club.FarScore + '</td>' +
+                            '               </tr>' +
+                            '           </tbody>' +
+                            '       </table>' +
+                            '   </div>' +
+                            '</div>';
+                        items.push(tmp_html);
+                    }
+
+                    items.push('</div>');
+                }
+
+                $('#ClubRecord').html(items.join(''));
+            }
+        }
+    });
+};
+
+_gg.by = function (name, minor, order) {
+    return function (o, p, d) {
+        var a, b, d;
+        d = ( d ==='desc') ? d: 'asc';
+        if (o && p && typeof o === 'object' && typeof p === 'object') {
+            a = o[name];
+            b = p[name];
+            if (a === b) {
+                return typeof minor === 'function' ? minor(o, p, d) : 0;
+            }
+            if (typeof a === typeof b) {
+                if (d === 'desc') {
+                    return a - b;
+                } else {
+                    return b - a;
+                }
+            }
+            return typeof a < typeof b ? -1 : 1;
+        } else {
+            throw {
+                name: 'Error',
+                message: 'Expected an object when sorting by ' + name
+            };
+        }
+    };
+};
+
 
 // TODO: 清除資料
 _gg.ResetData = function () {

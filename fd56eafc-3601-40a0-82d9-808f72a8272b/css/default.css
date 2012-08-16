@@ -79,3 +79,10 @@ span[data-type=Opening] {
   font-size: 15px;
   margin-left: 15px;
 }
+.my-nostart {
+  filter: alpha(opacity=50);
+  opacity: .4;
+}
+.my-nostart .my-widget-content {
+  background: url(../img/forbid.png) 50% no-repeat;
+}

@@ -162,11 +162,12 @@ WHERE name='系統設定']]>
 	</SQLTemplate>
 	<ResponseRecordElement>Response/Student</ResponseRecordElement>
 	<FieldList Name="FieldList" Source="Field">
-		<Field Alias="StudentIID" Mandatory="True" Source="StudentIID" Target="student.id" />
+		<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="student.id" />
 		<Field Alias="Name" Mandatory="True" Source="Name" Target="student.name" />
 		<Field Alias="Gender" Mandatory="True" Source="Gender" Target="(case student.gender when '1' then '男' else '女' end)" />
 		<Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="class.grade_year" />
 		<Field Alias="DeptName" Mandatory="True" Source="DeptName" Target="dept.name" />
+		<Field Alias="SemsHistory" Mandatory="True" OutputType="xml" Source="SemsHistory" Target="student.sems_history" />
 	</FieldList>
 	<Conditions Name="Condition" Required="False" Source="">
 		<Condition Required="True" Source="StudentID" SourceType="Variable" Target="student.id" />
@@ -185,9 +186,12 @@ WHERE name='系統設定']]>
 		<![CDATA[
 		SELECT @@FieldList
 		FROM $k12.scjoin.shinmin a
-			Left join $k12.clubrecord.shinmin b on b.uid = cast(a.ref_club_id as bigint)
-			Left join student on student.id = cast(a.ref_student_id as bigint)
-		WHERE @@Condition
+			join $k12.clubrecord.shinmin b on b.uid = cast(a.ref_club_id as bigint)
+			join student on student.id = cast(a.ref_student_id as bigint)
+			Left join $k12.cadresrecord.shinmin c on cast(c.ref_club_id as bigint)=b.uid and c.ref_student_id = a.ref_student_id
+			Left join teacher t1 on t1.id = cast(b.ref_teacher_id as bigint) 
+		WHERE @@Condition			
+		order by b.school_year, b.semester
 		]]>
 	</SQLTemplate>
 	<ResponseRecordElement>Response/Clubs</ResponseRecordElement>
@@ -196,11 +200,14 @@ WHERE name='系統設定']]>
 		<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="b.school_year" />
 		<Field Alias="Semester" Mandatory="True" Source="Semester" Target="b.semester" />
 		<Field Alias="ClubID" Mandatory="True" Source="ClubID" Target="a.ref_club_id" />
+		<Field Alias="ClubName" Mandatory="True" Source="ClubName" Target="b.club_name" />
+		<Field Alias="TeacherName1" Mandatory="True" Source="TeacherName1" Target="t1.teacher_name" />
 		<Field Alias="Lock" Mandatory="True" Source="Lock" Target="(case a.lock when 't' then '是' else '否' end)" />
 		<Field Alias="AasScore" Mandatory="True" Source="AasScore" Target="a.aas_score" />
 		<Field Alias="ArScore" Mandatory="True" Source="ArScore" Target="a.ar_score" />
 		<Field Alias="FarScore" Mandatory="True" Source="FarScore" Target="a.far_score" />
 		<Field Alias="PaScore" Mandatory="True" Source="PaScore" Target="a.pa_score" />
+		<Field Alias="CadreName" Mandatory="True" Source="CadreName" Target="c.cadre_name" />
 	</FieldList>
 	<Conditions Name="Condition" Required="False" Source="">
 		<Condition Required="True" Source="StudentID" SourceType="Variable" Target="a.ref_student_id" />
@@ -228,6 +235,25 @@ WHERE name='系統設定']]>
 	</FieldList>
 	<Conditions Name="Condition" Required="False" Source="">
 		<Condition Source="GradeYear" Target="gradeyear" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetWeight">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[SELECT @@FieldList FROM $k12.weightproportion.shinmin WHERE @@Condition order by uid limit 1]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Response/Weight</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="AasWeight" Mandatory="True" Source="AasWeight" Target="aas_weight" />
+		<Field Alias="ArWeight" Mandatory="True" Source="ArWeight" Target="ar_weight" />
+		<Field Alias="FarWeight" Mandatory="True" Source="FarWeight" Target="far_weight" />
+		<Field Alias="PaWeight" Mandatory="True" Source="PaWeight" Target="pa_weight" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
 	</Conditions>
 	<Orders Name="Order" Source="Order" />
 	<Pagination Allow="True" />
