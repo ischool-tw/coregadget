@@ -56,7 +56,8 @@ myparent.setParentRelationship = function (parentCode, idNumber, relationship) {
 
                 $('#editModal').modal("show");
                 $('#editModal h3').html("設定成功")
-                $('#editModal .modal-body').html('設定完成，建議您重新登入本系統，以獲得完整的功能，謝謝您。');                
+                $('#editModal .modal-body').html('設定完成');
+                $('#editModal #iknow').bind('click', window.parent.appsLoader.reflashApplicationList());
             }
         }
     });
