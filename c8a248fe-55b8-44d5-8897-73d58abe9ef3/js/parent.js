@@ -33,9 +33,10 @@ $(document).ready(function () {
                     Name: $('#edit_Name').val(),
                     CellPhone: $('#edit_CellPhone').val(),
                     EMail: $('#edit_EMail').val()
-                }
+                };
 
                 myparent.parentInto.set_ParentInfo('#parentProfile', tmp_request);
+                break;
         }
     });
 });
