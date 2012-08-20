@@ -2,19 +2,12 @@
 <html>
 <head>
   <title>設定帳號親屬關係</title>
-  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
-  <script>
-    init({
-      application: "h.trialschool.tw", //"dev.sh_d", //"http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_kh",
-      paramValues: {}
-    });
-  </script>
-  <link href="css/bootstrap.css" rel="stylesheet" />
-  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <link href="css/bootstrap.css" rel="stylesheet">
+  <link href="css/bootstrap-responsive.css" rel="stylesheet">
   <!--<link href="css/base.less" rel="stylesheet/less" />
   <link href="css/default.less" rel="stylesheet/less" />-->
-  <link href="css/base.css" rel="stylesheet" />
-  <link href="css/default.css" rel="stylesheet" />
+  <link href="css/base.css" rel="stylesheet">
+  <link href="css/default.css" rel="stylesheet">
   <script src="js/jquery.min.js"></script>
   <!--<script src="js/less.min.js"></script>-->
   <script src="js/bootstrap.js"></script>
@@ -51,16 +44,16 @@
         <div class="span12" id="container-main">
           <div class="tabbable tabs-below">
             <ul class="nav nav-tabs">
-              <li class="active"><a href="#parentProfile" data-toggle="tab">家長個人資料</a> </li>
-              <li><a href="#childrenList" data-toggle="tab">已建立的親子關係</a> </li>
-              <li><a href="#setRelationship" data-toggle="tab">新增親子關係</a> </li>
+              <li class=""><a href="#parentProfile" data-toggle="tab">家長個人資料</a> </li>
+              <li class=""><a href="#childrenList" data-toggle="tab">已建立的親子關係</a> </li>
+              <li class="active"><a href="#setRelationship" data-toggle="tab">新增親子關係</a> </li>
             </ul>
             <div class="tab-content">
-              <div class="tab-pane active" id="parentProfile"></div>
+              <div class="tab-pane" id="parentProfile"><div class="well"><div class="my-label-title"><a class="btn btn-success" edit-target="profile"><i class="icon-edit icon-white"></i>個人資料</a> </div><table class="table table-condensed table-striped"><tbody><tr><th>姓名</th><td><span> </span></td></tr><tr><th>電話</th><td><span> </span></td></tr><tr><th>電子信箱</th><td><span> </span></td></tr></tbody></table></div></div>
 
-              <div class="tab-pane" id="childrenList"></div>
+              <div class="tab-pane" id="childrenList"><div class="well"><table class="table table-condensed table-striped"><thead><tr><th>姓名</th><th>班級</th><th>座號</th><th>關係</th></tr></thead><tbody><tr><td>吳小奕</td><td>汽二丙</td><td>2</td><td>父子</td></tr><tr><td>李小兆</td><td>汽二乙</td><td>2</td><td>父子</td></tr></tbody></table></div></div>
 
-              <div class="tab-pane" id="setRelationship">
+              <div class="tab-pane active" id="setRelationship">
                 <form class="well my-well-deepcolor form-horizontal">
                   <fieldset>
                     <legend>設定帳號親屬關係</legend>
