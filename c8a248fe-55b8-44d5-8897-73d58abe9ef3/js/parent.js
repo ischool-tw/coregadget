@@ -40,13 +40,7 @@ $(document).ready(function () {
     });
 });
 
-/* 取回基本資料、關係表 */
 myparent.parent_connection = gadget.getContract("auth.parent");
-myparent.parent_connection.ready(function () {
-    myparent.childrenList('#childrenList');
-    myparent.parentInto.get_ParentInfo('#parentProfile');
-});
-
 
 /* 設定關係 */
 myparent.setParentRelationship = function (parentCode, idNumber, relationship) {
@@ -124,7 +118,7 @@ myparent.childrenList = function (e) {
 };
 
 /* 個人資料 */
-myparent.parentInto = function () {    
+myparent.parentInto = function () {
     var funSetParentInfo = function (e, updateValue) {
         myparent.parent_connection.send({
             service: 'My.UpdatePersonalInfo',
@@ -214,3 +208,10 @@ myparent.setParentInfo = function () {
     $("#editModal #save-data").attr("edit-target", "profile")
     $("#editModal").modal("show");
 };
+
+
+/* 取回基本資料、關係表 */
+myparent.parent_connection.ready(function () {
+    myparent.childrenList('#childrenList');
+    myparent.parentInto.get_ParentInfo('#parentProfile');
+});
