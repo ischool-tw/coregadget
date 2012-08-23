@@ -12,6 +12,7 @@ jQuery(function () {
         show: false
     });
     $("#editModal").on("hidden", function () {
+        $("#editModal a[data-dismiss=modal]").html("取消");
         $("#editModal #errorMessage").html("");
     });
     $("#editModal").on("show", function () {
@@ -292,18 +293,33 @@ _gg.setClubInfo = function () {
 
             // TODO: 社團簡介
             items_summary.push('<p>' + club.About + '</p>');
-            items_summary.push('<ul class="thumbnails">');
-            tmp_photo1 = (club.Photo1 != null && club.Photo1 !== "") ? "<li class='thumbnail'><img src='data:image/png;base64," + club.Photo1 + "' alt='社團照片1' title='社團照片1'/></li>" : "";
-            tmp_photo2 = (club.Photo2 != null && club.Photo2 !== "") ? "<li class='thumbnail'><img src='data:image/png;base64," + club.Photo2 + "' alt='社團照片2' title='社團照片2'/></li>" : "";
+            if (club.Photo1 != null && club.Photo1 !== "") {
+                tmp_photo1 = "<a href='data:image/png;base64," + club.Photo1 + "' target='_black'><img class='thumbnail' src='data:image/png;base64," + club.Photo1 + "' alt='社團照片1' title='社團照片1' /></a>";
+            } else {
+                tmp_photo1 = "";
+            }
+
+            if (club.Photo2 != null && club.Photo2 !== "") {
+                tmp_photo2 = "<br /><a href='data:image/png;base64," + club.Photo2 + "' target='_black'><img class='thumbnail' src='data:image/png;base64," + club.Photo2 + "' alt='社團照片2' title='社團照片2' /></a>";
+            }
+
+            if ( tmp_photo1 || tmp_photo2) {
+                if ($.browser.msie ) {
+                    items_summary.push(
+                        '<div class="alert alert-error">' +
+                        '  <a class="close" data-dismiss="alert" href="#">×</a>' +
+                        '  若社團照片無法完整呈現，請改用其他瀏覽器' +
+                        '</div>'
+                    );
+                }
+            }
             items_summary.push(tmp_photo1);
             items_summary.push(tmp_photo2);
-            items_summary.push('</ul>');
 
             $("span[data-type=club-name]").html(club.ClubName);
             $("div[data-type=info] tbody").html(items_info.join(""));
             $("div[data-type=condition] tbody").html(items_condition.join(""));
             $("div[data-type=summary] .my-widget-content").html(items_summary.join(""));
-
             _gg.Check_State();
         };
 
@@ -432,7 +448,8 @@ _gg.AddToClub = function () {
                         $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>加入失敗，請稍候重試!</strong>(SetMyClub)\n</div>");
                     }
                 } else {
-                    $("#editModal").modal("hide");
+                    $("#editModal .modal-body").html("加入" + club.ClubName + "成功");
+                    $("#editModal a[data-dismiss=modal]").html("關閉");
                     _gg.Student.ClubID = club.ClubID;
                     _gg.RefreshCount();
                 }
@@ -458,7 +475,8 @@ _gg.RemoveToClub = function () {
                         $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>退出失敗，請稍候重試!</strong>(RemoveClub)\n</div>");
                     }
                 } else {
-                    $("#editModal").modal("hide");
+                    $("#editModal .modal-body").html("退出成功");
+                    $("#editModal a[data-dismiss=modal]").html("關閉");
                     _gg.Student.ClubID = "";
                     _gg.RefreshCount();
                 }
