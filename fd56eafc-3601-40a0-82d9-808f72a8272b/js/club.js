@@ -293,8 +293,26 @@ _gg.setClubInfo = function () {
 
             // TODO: 社團簡介
             items_summary.push('<p>' + club.About + '</p>');
-            tmp_photo1 = (club.Photo1 != null && club.Photo1 !== "") ? "<a href='data:image/png;base64," + club.Photo1 + "' target='_black'><img class='thumbnail' src='data:image/png;base64," + club.Photo1 + "' alt='社團照片1' title='社團照片1' /></a>" : "";
-            tmp_photo2 = (club.Photo2 != null && club.Photo2 !== "") ? "<br /><a href='data:image/png;base64," + club.Photo2 + "' target='_black'><img class='thumbnail' src='data:image/png;base64," + club.Photo2 + "' alt='社團照片2' title='社團照片2' /></a>" : "";
+            if (club.Photo1 != null && club.Photo1 !== "") {
+                tmp_photo1 = "<a href='data:image/png;base64," + club.Photo1 + "' target='_black'><img class='thumbnail' src='data:image/png;base64," + club.Photo1 + "' alt='社團照片1' title='社團照片1' /></a>";
+            } else {
+                tmp_photo1 = "";
+            }
+
+            if (club.Photo2 != null && club.Photo2 !== "") {
+                tmp_photo2 = "<br /><a href='data:image/png;base64," + club.Photo2 + "' target='_black'><img class='thumbnail' src='data:image/png;base64," + club.Photo2 + "' alt='社團照片2' title='社團照片2' /></a>";
+            }
+
+            if ( tmp_photo1 || tmp_photo2) {
+                if ($.browser.msie ) {
+                    items_summary.push(
+                        '<div class="alert alert-error">' +
+                        '  <a class="close" data-dismiss="alert" href="#">×</a>' +
+                        '  若社團照片無法完整呈現，請改用其他瀏覽器' +
+                        '</div>'
+                    );
+                }
+            }
             items_summary.push(tmp_photo1);
             items_summary.push(tmp_photo2);
 
