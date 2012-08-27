@@ -529,6 +529,15 @@ _gg.SetClubRecord = function () {
                    _gg.Weight = item;
                 });
 
+                if (!_gg.Weight) {
+                    _gg.Weight = {
+                        PaWeight  : '',
+                        ArWeight  : '',
+                        AasWeight : '',
+                        FarWeight : ''
+                    }
+                }
+
                 var student         = _gg.Student;
                 var items           = [];
                 var tmp_html        = '';
