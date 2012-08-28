@@ -320,7 +320,7 @@ _gg.SetModifyData = function () {
     // TODO: 學習
     var set_learn = function (questions) {
         var tmp_items = [];
-        $(questions2).each(function (index, value) {
+        $(questions).each(function (index, value) {
             tmp_items.push(
                 '<div class="control-group">' +
                 '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
