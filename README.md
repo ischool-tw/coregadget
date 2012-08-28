@@ -9,6 +9,11 @@ Core Gadget
 * e7c529bd-ab34-4b9a-907e-bcf3511fa11c 聯絡簿
 * a41e8f19-c169-4a17-86ca-f9d18a324086 筆記本
 * 110669b3-c373-469b-86bf-aa959aa028ed 歷年成績查詢(學生)
+* 47fbe213-53e2-4338-a312-1dbf962c48f3 輔導系統
 
 客製化
 * fd56eafc-3601-40a0-82d9-808f72a8272b 參加社團(學生)
+
+
+線上測試
+http://ischool-tw.github.com/coregadget/
