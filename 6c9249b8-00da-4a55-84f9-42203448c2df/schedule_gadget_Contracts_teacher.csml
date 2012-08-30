@@ -1,0 +1,310 @@
+<Content>
+	<Contract Name="ischool.sunset.teacher" Enabled="True">
+	<Definition>
+	<Authentication Extends="auth.teacher" />
+</Definition>
+	<Package Name="_">
+		<Service Enabled="true" Name="GetAllTimeTables">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
+			SELECT @@FieldList 
+			FROM $scheduler.timetable_section ttb inner join $scheduler.timetable tt on tt.uid = ttb.ref_timetable_id
+			WHERE @@Condition 
+ORDER BY ttb.begin_time]]>
+	</SQLTemplate>
+	<ResponseRecordElement>TimeTableSections/TimeTableSection</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field Alias="SectionID" Mandatory="True" Source="Uid" Target="ttb.uid" />
+		<Field Alias="BeginTime" Mandatory="True" Source="BeginTime" Target="ttb.begin_time" />
+		<Field Alias="Disable" Mandatory="True" Source="Disable" Target="ttb.disable" />
+		<Field Alias="DisableMessage" Mandatory="True" Source="DisableMessage" Target="ttb.disable_message" />
+		<Field Alias="DisplayPeriod" Mandatory="True" Source="DisplayPeriod" Target="ttb.display_period" />
+		<Field Alias="Duration" Mandatory="True" Source="Duration" Target="ttb.duration" />
+		<Field Alias="Period" Mandatory="True" Source="Period" Target="ttb.period" />
+		<Field Alias="TimetableID" Mandatory="True" Source="RefTimetableId" Target="ttb.ref_timetable_id" />
+		<Field Alias="TimetableName" Mandatory="True" Source="TimetableName" Target="tt.name" />
+		<Field Alias="Weekday" Mandatory="True" Source="Weekday" Target="ttb.weekday" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+		<Condition Source="TimetableID" Target="ttb.ref_timetable_id" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetClasses">
+			<Definition Type="DBHelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[SELECT @@FieldList 
+FROM class 
+WHERE @@Condition 
+@@Order]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Classes/Class</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field Alias="ID" Mandatory="True" Source="ID" Target="id" />
+		<Field Alias="ClassName" Mandatory="True" Source="ClassName" Target="class_name" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="">
+		<Condition Comparer="ILIKE" Source="ClassName" Target="class_name" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetClassrooms">
+			<Definition Type="DBHelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[SELECT @@FieldList 
+FROM $scheduler.classroom 
+WHERE @@Condition 
+@@Order]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Classrooms/Classroom</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field Alias="Uid" Mandatory="True" Source="Uid" Target="uid" />
+		<Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="">
+		<Condition Comparer="ILIKE" Source="ClassroomName" Target="name" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetCurrentSemester">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[SELECT @@FieldList 
+FROM list 
+WHERE name='系統設定']]>
+	</SQLTemplate>
+	<ResponseRecordElement />
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="Result" Mandatory="True" OutputType="Xml" Source="Content" Target="content" />
+	</FieldList>
+	<Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetMySchedule">
+			<Definition Type="DBHelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[SELECT @@FieldList
+FROM course c inner join tc_instruct  ins on ins.ref_course_id = c.id
+        inner join $scheduler.course_section c_sec on c.id = c_sec.ref_course_id
+        inner join $scheduler.course_extension c_ext on c_ext.ref_course_id=c_sec.ref_course_id
+        inner join teacher t on t.id = ins.ref_teacher_id
+		left outer join class on class.id = c.ref_class_id
+        left outer join $scheduler.classroom room on c_sec.ref_classroom_id = room.uid
+WHERE ins.sequence=1 and c_sec.weekday!=0 and @@Condition
+order by c_sec.weekday, c_sec.period]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Schedule/CourseSection</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field Alias="CourseSectionID" Mandatory="True" Source="CourseSectionID" Target="c_sec.uid" />
+		<Field Alias="CourseID" Mandatory="True" Source="CoureseID" Target="c.id" />
+		<Field Alias="CourseName" Mandatory="True" Source="CourseName" Target="c.course_name" />
+		<Field Alias="Subject" Mandatory="True" Source="Subject" Target="c.subject" />
+		<Field Alias="TeacherID" Mandatory="True" Source="TeacherID" Target="t.id" />
+		<Field Alias="TeacherName" Mandatory="True" Source="TeacherName" Target="t.teacher_name" />
+		<Field Alias="ClassName" Mandatory="True" Source="ClassName" Target="class.class_name" />
+		<Field Alias="ClassroomID" Mandatory="True" Source="ClassroomID" Target="room.uid" />
+		<Field Alias="ClassroomName" Mandatory="True" Source="ClassroomName" Target="room.name" />
+		<Field Alias="Weekday" Mandatory="True" Source="Weekday" Target="c_sec.weekday" />
+		<Field Alias="Period" Mandatory="True" Source="Period" Target="c_sec.period" />
+		<Field Alias="Length" Mandatory="True" Source="Length" Target="c_sec.length" />
+		<Field Alias="TimetableID" Mandatory="True" Source="TimetableID" Target="c_ext.ref_timetable_id" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="">
+		<Condition Required="True" Source="SchoolYear" Target="c.school_year" />
+		<Condition Required="True" Source="Semester" Target="c.semester" />
+		<Condition Required="True" Source="TeacherID" SourceType="Variable" Target="ins.ref_teacher_id" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+	</InternalVariable>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetMyTimeTable">
+			<Definition Type="DBHelper">
+        <Action>Select</Action>
+        <SQLTemplate>
+                <![CDATA[select @@FieldList from $scheduler.timetable tt inner join
+$scheduler.timetable_section ttb on tt.uid = ttb.ref_timetable_id
+where tt.uid in
+        (select $scheduler.course_extension.ref_timetable_id from
+$scheduler.course_section inner join course on course.id
+=$scheduler.course_section.ref_course_id inner join
+$scheduler.course_extension on
+$scheduler.course_extension.ref_course_id=course.id inner join
+$scheduler.timetable on
+$scheduler.timetable.uid=$scheduler.course_extension.ref_timetable_id
+inner join tc_instruct on course.id = tc_instruct.ref_course_id inner
+join teacher on teacher.id=tc_instruct.ref_teacher_id where
+tc_instruct.sequence=1 and $scheduler.course_section.weekday<>0 and
+@@Condition)
+ORDER BY ttb.begin_time]]>
+        </SQLTemplate>
+        <ResponseRecordElement>TimeTableSections/TimeTableSection</ResponseRecordElement>
+        <FieldList Name="FieldList" Source="">
+                <Field Alias="SectionID" Mandatory="True" Source="Uid" Target="ttb.uid" />
+                <Field Alias="BeginTime" Mandatory="True" Source="BeginTime" Target="ttb.begin_time" />
+                <Field Alias="Disable" Mandatory="True" Source="Disable" Target="ttb.disable" />
+                <Field Alias="DisableMessage" Mandatory="True" Source="DisableMessage" Target="ttb.disable_message" />
+                <Field Alias="DisplayPeriod" Mandatory="True" Source="DisplayPeriod" Target="ttb.display_period" />
+                <Field Alias="Duration" Mandatory="True" Source="Duration" Target="ttb.duration" />
+                <Field Alias="Period" Mandatory="True" Source="Period" Target="ttb.period" />
+                <Field Alias="TimetableID" Mandatory="True" Source="RefTimetableId" Target="ttb.ref_timetable_id" />
+                <Field Alias="TimetableName" Mandatory="True" Source="TimetableName" Target="tt.name" />
+                <Field Alias="Weekday" Mandatory="True" Source="Weekday" Target="ttb.weekday" />
+        </FieldList>
+        <Conditions Name="Condition" Required="False" Source="">
+                <Condition Required="True" Source="TeacherID" SourceType="Variable" Target="teacher.id" />
+        </Conditions>
+        <Orders Name="Order" Source="Order" />
+        <Pagination Allow="True" />
+        <InternalVariable>
+                <Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+        </InternalVariable>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetOtherSchedule">
+			<Definition Type="DBHelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[SELECT @@FieldList
+        FROM  course c inner join $scheduler.course_section c_sec on c.id = c_sec.ref_course_id
+                left outer join $scheduler.course_extension c_ext on c.id = c_ext.ref_course_id
+                left outer join $scheduler.classroom room on c_sec.ref_classroom_id = room.uid
+                left outer join (select * from tc_instruct where sequence=1) ins on
+ins.ref_course_id = c.id
+                left outer join teacher t on  t.id = ins.ref_teacher_id
+                left outer join class cls on cls.id = c.ref_class_id
+        WHERE @@Condition
+order by c_sec.weekday, c_sec.period]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Schedule/CourseSection</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field Alias="CourseSectionID" Mandatory="True" Source="CourseSectionID" Target="c_sec.uid" />
+		<Field Alias="CourseID" Mandatory="True" Source="CoureseID" Target="c.id" />
+		<Field Alias="CourseName" Mandatory="True" Source="CourseName" Target="c.course_name" />
+		<Field Alias="Subject" Mandatory="True" Source="Subject" Target="c.subject" />
+		<Field Alias="TeacherID" Mandatory="True" Source="TeacherID" Target="t.id" />
+		<Field Alias="TeacherName" Mandatory="True" Source="TeacherName" Target="t.teacher_name" />
+		<Field Alias="ClassroomID" Mandatory="True" Source="ClassroomID" Target="room.uid" />
+		<Field Alias="ClassroomName" Mandatory="True" Source="ClassroomName" Target="room.name" />
+		<Field Alias="ClassID" Mandatory="True" Source="ClassID" Target="cls.id" />
+		<Field Alias="ClassName" Mandatory="True" Source="ClassName" Target="cls.class_name" />
+		<Field Alias="Weekday" Mandatory="True" Source="Weekday" Target="c_sec.weekday" />
+		<Field Alias="Period" Mandatory="True" Source="Period" Target="c_sec.period" />
+		<Field Alias="TimetableID" Mandatory="True" Source="TimetableID" Target="c_ext.ref_timetable_id" />
+		<Field Alias="Length" Mandatory="True" Source="Length" Target="c_sec.length" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="">
+		<Condition Required="True" Source="SchoolYear" Target="c.school_year" />
+		<Condition Required="True" Source="Semester" Target="c.semester" />
+		<Condition Source="ClassID" Target="c.ref_class_id" />
+		<Condition Source="TeacherID" Target="t.id" />
+		<Condition Source="ClassroomID" Target="room.uid" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetSchedule">
+			<Definition Type="DBHelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[SELECT @@FieldList
+FROM course
+LEFT OUTER JOIN $scheduler.course_section ON $scheduler.course_section.ref_course_id = course.id
+LEFT OUTER JOIN class ON class.id = course.ref_class_id
+LEFT OUTER JOIN tc_instruct ON tc_instruct.ref_course_id = course.id
+LEFT OUTER JOIN teacher ON teacher.id = tc_instruct.ref_teacher_id
+LEFT OUTER JOIN $scheduler.classroom ON $scheduler.classroom.uid = $scheduler.course_section.ref_classroom_id
+LEFT OUTER JOIN $scheduler.location ON $scheduler.location.uid = $scheduler.classroom.ref_location_id
+WHERE @@Condition]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Result/Event</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field Alias="CourseID" Mandatory="True" Source="CourseID" Target="course.id" />
+		<Field Alias="CourseName" Mandatory="True" Source="CourseName" Target="course.course_name" />
+		<Field Alias="ClassID" Mandatory="True" Source="ClassID" Target="class.id" />
+		<Field Alias="ClassName" Mandatory="True" Source="ClassName" Target="class.class_name" />
+		<Field Alias="TeacherID" Mandatory="True" Source="TeacherID" Target="teacher.id" />
+		<Field Alias="TeacherName" Mandatory="True" Source="TeacherName" Target="teacher.teacher_name" />
+		<Field Alias="ClassroomID" Mandatory="True" Source="ClassroomID" Target="$scheduler.classroom.uid" />
+		<Field Alias="ClassroomName" Mandatory="True" Source="ClassroomName" Target="$scheduler.classroom.name" />
+		<Field Alias="LocationOnly" Mandatory="True" Source="LocationOnly" Target="$scheduler.classroom.location_only" />
+		<Field Alias="LocationID" Mandatory="True" Source="LocationID" Target="$scheduler.location.uid" />
+		<Field Alias="LocationName" Mandatory="True" Source="LocationName" Target="$scheduler.location.name" />
+		<Field Alias="Length" Mandatory="True" Source="Length" Target="$scheduler.course_section.length" />
+		<Field Alias="Period" Mandatory="True" Source="Period" Target="$scheduler.course_section.period" />
+		<Field Alias="Weekday" Mandatory="True" Source="Weekday" Target="$scheduler.course_section.weekday" />
+	</FieldList>
+	<Conditions Name="Condition" Required="True" Source="">
+		<Condition Source="CourseID" Target="course.id" />
+		<Condition Source="ClassID" Target="class.id" />
+		<Condition Source="TeacherID" Target="teacher.id" />
+		<Condition Source="ClassroomID" Target="$scheduler.classroom.uid" />
+		<Condition Source="LocationID" Target="$scheduler.location.uid" />
+		<Condition Source="SchoolYear" Target="course.school_year" />
+		<Condition Source="Semester" Target="course.semester" />
+	</Conditions>
+	<Orders Name="" Source="" />
+	<Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetScheduledSchoolYearSemester">
+			<Definition Type="DBHelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[select  @@FieldList from $scheduler.course_section inner join course on course.id=$scheduler.course_section.ref_course_id where weekday != 0 group by (course.school_year ||  ',' ||course.semester) ]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Response</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="SchoolYearSemester" Mandatory="True" Source="schoolyear_semester" Target=" (course.school_year ||  ','  ||course.semester)" />
+	</FieldList>
+	<Conditions Name="" Required="False" Source="" />
+	<Orders Name="" Source="" />
+	<Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetTeachers">
+			<Definition Type="DBHelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[SELECT @@FieldList 
+FROM teacher 
+WHERE @@Condition]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Teachers/Teacher</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="ID" Mandatory="True" Source="Id" Target="id" />
+		<Field Alias="TeacherName" Mandatory="True" Source="TeacherName" Target="teacher_name" />
+		<Field Alias="Nickname" Mandatory="True" Source="Nickname" Target="nickname" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="">
+		<Condition Comparer="ILIKE" Source="TeacherName" Target="teacher_name" />
+		<Condition Required="True" Source="Active" SourceType="Variable" Target="status" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Name="Active" Source="Literal">
+			<![CDATA[1]]>
+		</Variable>
+	</InternalVariable>
+</Definition>
+		</Service>
+	</Package>
+</Contract>
+</Content>
