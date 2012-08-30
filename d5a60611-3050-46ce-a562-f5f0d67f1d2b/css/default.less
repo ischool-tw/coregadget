@@ -1,0 +1,68 @@
+﻿@group-bgcolor: #eee;
+
+/* 搜尋 */
+#filter-keyword {
+	width: 300px;
+}
+
+/* 課表 */
+.my-table {
+	thead th, tbody th {
+		text-align: center;
+		vertical-align: middle;
+	}
+	thead th:first-child {
+		min-width: 50px;
+	}
+  
+	tr td {
+    text-align: center;
+    height: 107px;
+	}
+	tr td .my-classroom {
+    text-align: right;
+	}
+  tbody tr:hover td.my-td-group {
+    background-color: @group-bgcolor;
+  }  
+
+  .my-td-group {
+    background-color: @group-bgcolor;
+    opacity: 1;
+    color: rgb(136, 136, 136);
+    border-top-left-radius: 9px;
+    border-top-right-radius: 9px;
+    border-bottom-right-radius: 9px;
+    border-bottom-left-radius: 9px;
+    -webkit-box-shadow: #2f4f4f 0px 0px 3px inset;
+    box-shadow: #2f4f4f 0px 0px 3px inset;
+  }
+}
+
+.my-table-bordered th {
+  background: #f0ffee;
+}
+
+.my-empty-column {
+}
+
+/* overwrite */
+.btn-group + .btn-group {
+  margin-left: 0px;
+}
+
+
+/* 自動完成 */
+.ui-autocomplete.ui-menu.ui-widget.ui-widget-content.ui-corner-all {
+  max-height: 370px;
+  overflow: auto;
+}
+
+/* 自動完成分類項目 */
+.ui-autocomplete-category {
+  font-weight: bold;
+  font-size: 18px;
+  padding: 7px 4px;
+  line-height: 1.5;
+  color: #5B8607;
+}

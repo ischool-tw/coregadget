@@ -126,7 +126,7 @@ $.widget( "ui.autocomplete", {
 					self.close( event );
 					self._change( event );
 				}, 150 );
-			});
+            });
 		this._initSource();
 		this.menu = $( "<ul></ul>" )
 			.addClass( "ui-autocomplete" )

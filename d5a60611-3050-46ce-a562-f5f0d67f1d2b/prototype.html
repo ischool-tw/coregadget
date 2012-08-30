@@ -1,0 +1,706 @@
+﻿<!DOCTYPE HTML >
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>我的課表</title>
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <link href="css/default.less" rel="stylesheet/less" />
+  <link rel="stylesheet" type="text/css" href="include/jquery_css/jquery.ui.all.css" />
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script type="text/javascript" src="include/jquery-ui-1.8.20.custom.min.js"></script>
+  <script src="js/less.min.js"></script>
+  <script type="text/javascript">
+    jQuery(function () {
+      $('#show-myschedule').click(function () {
+        $('#function_MySchedule').removeClass("hide");
+        $('#function_SearchSchedule').addClass("hide");
+        $('small').html("我的課表");
+      })
+      $('#filter-schedule').click(function () {
+        $('#filter-keyword').focus();
+        $('#function_MySchedule, #function_SearchSchedule').addClass("hide");
+        $('small').html("");
+      })
+      $('#filter-keyword').keyup(function () {
+        $('#show-myschedule').removeClass("active");
+        $('#filter-schedule').addClass("active");
+        if ($('#filter-keyword').val() === "s") {
+          $('#function_MySchedule').addClass("hide");
+          $('#function_SearchSchedule').removeClass("hide");
+          $('#mainContainer .control-group').removeClass("warning");
+          $('#mainContainer .help-inline').html("");
+          $('small').html("Steve的課表");
+        } else {
+          $('#mainContainer .control-group').addClass("warning");
+          $('#mainContainer .help-inline').html("<strong>查無此課表!</strong> 請輸入其他關鍵字");
+        }
+      })
+
+      $.widget("custom.catcomplete", $.ui.autocomplete, {
+        _renderMenu: function (ul, items) {
+          var self = this,
+				currentCategory = "";
+          $.each(items, function (index, item) {
+            if (item.category != currentCategory) {
+              ul.append("<li class='ui-autocomplete-category'>" + item.category + "</li>");
+              currentCategory = item.category;
+            }
+            self._renderItem(ul, item);
+          });
+        }
+      });
+      $(function () {
+        var data = [
+			    { label: "Lish", category: "教師" },
+			    { label: "Steve", category: "教師" },
+			    { label: "Alex Moises", category: "教師" },
+			    { label: "AUSTIN", category: "教師" },
+		    ];
+
+        $("#filter-keyword").catcomplete({
+          delay: 0,
+          source: data
+        });
+      });
+
+      $("td").hover(
+        function () {
+          $("td[my-group=" + $(this).attr("my-group") + "]").addClass("my-td-group");
+        },
+        function () {
+          $("td[my-group=" + $(this).attr("my-group") + "]").removeClass("my-td-group");
+        }
+      );
+    });
+  </script>
+  <style>
+    .ui-autocomplete-category {
+      font-weight: bold;
+      padding: .2em .4em;
+      margin: .8em 0 .2em;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body style="margin: 0px; background-color: rgb(255, 255, 255);">
+  <div id="gadget">
+    <div id="mainMsg"></div>
+    <div id="mainContainer">
+      <div class="btn-group" data-toggle="buttons-radio">
+        <button class="btn active" id="show-myschedule">
+          我的課表</button>
+        <button class="btn" id="filter-schedule">
+          <i class="icon-search"></i>其他課表
+        </button>
+        <div class="control-group">
+          <div class="controls">
+            <input id="filter-keyword" type="text" placeholder="請輸入您要查詢的教師、班級、或場地的名稱" class="ui-autocomplete-input"
+              autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+            <span class="help-inline"></span></div>
+        </div>
+      </div>
+      <div class="btn-group" data-toggle="buttons-radio" title="請選擇學年度學期" id="choose-year-semester">
+        <button class="btn active" school-year="100" semester="2">
+          1002</button>
+        <button class="btn" school-year="100" semester="1">
+          1001</button>
+        <button class="btn" school-year="99" semester="2">
+          992</button>
+        <button class="btn" school-year="99" semester="1">
+          991</button>
+        <button class="btn" school-year="98" semester="2">
+          982</button>
+        <button class="btn" school-year="98" semester="1">
+          981</button>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+          <div id="function_MySchedule">
+            <h2>
+              100學年度第2學期<small>我的課表</small></h2>
+            <div class="tabbable tabs-below">
+              <ul class="nav nav-tabs">
+                <li class="active"><a href="#myself107244" data-toggle="tab">寒暑假增廣教學(十節)</a></li></ul>
+              <div class="tab-content">
+                <div class="tab-pane my-TabContent active" id="myself107244">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>
+                          <span>星期</span>
+                          <span>節次</span>
+                        </th>
+                        <th>一</th>
+                        <th>二</th>
+                        <th>三</th>
+                        <th>四</th>
+                        <th>五</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                      </tr>
+                      <tr>
+                        <th>1</th>
+                        <td class="my-empty-column" width="19%" my-period="1" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="1" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="1" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="1" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="1" my-weekday="5" my-group="LIP四信">
+                          <div>
+                            <div>LIP四信</div>
+                            <div>國文</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>2</th>
+                        <td width="19%" my-period="2" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="2" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="2" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="2" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="2" my-weekday="5" my-group="LIP四信">
+                          <div>
+                            <div>LIP四信</div>
+                            <div>國文</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>3</th>
+                        <td width="19%" my-period="3" my-weekday="1">
+                          <div>
+                            <div>綜二電B</div>
+                            <div>國文</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="3" my-weekday="2">
+                          <div>
+                            <div>綜二觀A</div>
+                            <div>國文</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="3" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="3" my-weekday="4" my-group="LIP四信">
+                          <div>
+                            <div>LIP四信</div>
+                            <div>國文</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="3" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>4</th>
+                        <td width="19%" my-period="4" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="4" my-weekday="2">
+                          <div>
+                            <div>綜二觀A</div>
+                            <div>國文</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="4" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="4" my-weekday="4" my-group="LIP四信">
+                          <div>
+                            <div>LIP四信</div>
+                            <div>國文</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="4" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>5</th>
+                        <td width="19%" my-period="5" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="5" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="5" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="5" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="5" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>6</th>
+                        <td width="19%" my-period="6" my-weekday="1">
+                          <div>
+                            <div>綜二觀A</div>
+                            <div>國文</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="6" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="6" my-weekday="3">
+                          <div>
+                            <div>綜二電B</div>
+                            <div>國文</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="6" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="6" my-weekday="5">
+                          <div>
+                            <div>綜二觀A</div>
+                            <div>國文</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                          <div>
+                            <div>綜二電B</div>
+                            <div>國文</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>7</th>
+                        <td width="19%" my-period="7" my-weekday="1">
+                          <div>
+                            <div>綜二觀A</div>
+                            <div>國文</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="7" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="7" my-weekday="3">
+                          <div>
+                            <div>綜二電B</div>
+                            <div>國文</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="7" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="7" my-weekday="5">
+                          <div>
+                            <div>綜二觀A</div>
+                            <div>國文</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>8</th>
+                        <td width="19%" my-period="8" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="8" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="8" my-weekday="3" my-group="LIP四信">
+                          <div>
+                            <div>LIP四信</div>
+                            <div>國文</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="8" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="8" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>9</th>
+                        <td width="19%" my-period="9" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="9" my-weekday="2">
+                          <div>
+                            <div>綜二電B</div>
+                            <div>國文</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="9" my-weekday="3" my-group="LIP四信">
+                          <div>
+                            <div>LIP四信</div>
+                            <div>國文</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="9" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="9" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>10</th>
+                        <td width="19%" my-period="10" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="10" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="10" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="10" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="10" my-weekday="5">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="function_SearchSchedule" class="hide">
+            <h2>
+              100學年度第2學期<small>Steve的課表</small></h2>
+            <div class="tabbable tabs-below">
+              <ul class="nav nav-tabs" id="function_SearchTab">
+                <li class="active"><a href="#T107057" data-toggle="tab">寒暑假增廣教學(八節)</a></li><li><a
+                  href="#T107244" data-toggle="tab">寒暑假增廣教學(十節)</a></li></ul>
+              <div class="tab-content">
+                <div class="tab-pane my-TabContent active" id="T107057">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>節次\<br>
+                          星期</th>
+                        <th>一</th>
+                        <th>二</th>
+                        <th>三</th>
+                        <th>四</th>
+                        <th>五</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                      </tr>
+                      <tr>
+                        <th>1</th>
+                        <td width="19%" my-period="1" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="1" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="1" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="1" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="1" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>2</th>
+                        <td width="19%" my-period="2" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="2" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="2" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="2" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="2" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>3</th>
+                        <td width="19%" my-period="3" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="3" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="3" my-weekday="3">
+                          <div>
+                            <div>綜一英A 語文協同</div>
+                            <div>英文閱讀與寫作-協同</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="3" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="3" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>4</th>
+                        <td width="19%" my-period="4" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="4" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="4" my-weekday="3">
+                          <div>
+                            <div>綜一英A 語文協同</div>
+                            <div>英文閱讀與寫作-協同</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="4" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="4" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>5</th>
+                        <td width="19%" my-period="5" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="5" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="5" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="5" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="5" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>6</th>
+                        <td width="19%" my-period="6" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="6" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="6" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="6" my-weekday="4">
+                          <div>
+                            <div>準LIP四仁</div>
+                            <div>Active Skills協同</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="6" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>7</th>
+                        <td width="19%" my-period="7" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="7" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="7" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="7" my-weekday="4">
+                          <div>
+                            <div>準LIP四仁</div>
+                            <div>Active Skills協同</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="7" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>8</th>
+                        <td width="19%" my-period="8" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="8" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="8" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="8" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="8" my-weekday="5">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="tab-pane my-TabContent" id="T107244">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>節次\<br>
+                          星期</th>
+                        <th>一</th>
+                        <th>二</th>
+                        <th>三</th>
+                        <th>四</th>
+                        <th>五</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                      </tr>
+                      <tr>
+                        <th>1</th>
+                        <td width="19%" my-period="1" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="1" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="1" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="1" my-weekday="4">
+                          <div>
+                            <div>LIP四仁</div>
+                            <div>Active Skills 協同</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="1" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>2</th>
+                        <td width="19%" my-period="2" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="2" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="2" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="2" my-weekday="4">
+                          <div>
+                            <div>LIP四仁</div>
+                            <div>Active Skills 協同</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="2" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>3</th>
+                        <td width="19%" my-period="3" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="3" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="3" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="3" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="3" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>4</th>
+                        <td width="19%" my-period="4" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="4" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="4" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="4" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="4" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>5</th>
+                        <td width="19%" my-period="5" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="5" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="5" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="5" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="5" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>6</th>
+                        <td width="19%" my-period="6" my-weekday="1">
+                          <div>
+                            <div>LIP五忠</div>
+                            <div>Active Skills協同</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="6" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="6" my-weekday="3">
+                          <div>
+                            <div>LIP四忠</div>
+                            <div>Active Skills 協同</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="6" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="6" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>7</th>
+                        <td width="19%" my-period="7" my-weekday="1">
+                          <div>
+                            <div>LIP五忠</div>
+                            <div>Active Skills協同</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="7" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="7" my-weekday="3">
+                          <div>
+                            <div>LIP四忠</div>
+                            <div>Active Skills 協同</div>
+                            <div class="my-classroom">&nbsp;</div>
+                          </div>
+                        </td>
+                        <td width="19%" my-period="7" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="7" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>8</th>
+                        <td width="19%" my-period="8" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="8" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="8" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="8" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="8" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>9</th>
+                        <td width="19%" my-period="9" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="9" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="9" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="9" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="9" my-weekday="5">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>10</th>
+                        <td width="19%" my-period="10" my-weekday="1">
+                        </td>
+                        <td width="19%" my-period="10" my-weekday="2">
+                        </td>
+                        <td width="19%" my-period="10" my-weekday="3">
+                        </td>
+                        <td width="19%" my-period="10" my-weekday="4">
+                        </td>
+                        <td width="19%" my-period="10" my-weekday="5">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
