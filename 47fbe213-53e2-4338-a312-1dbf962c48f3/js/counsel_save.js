@@ -574,14 +574,22 @@ _gg.SetSaveData = function (data_scope) {
             body: '<Request><SingleRecord>' + tmp_del_request.join("") + '</SingleRecord></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelSingleRecord)\n</div>");
+                    if (error.dsaError.status === "504") {
+                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
+                    } else {
+                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelSingleRecord)\n</div>");
+                    }
                 } else {
                     _gg.connection.send({
                         service: "_.InsertSingleRecord",
                         body: '<Request>' + tmp_singleRecord.join("") + '</Request>',
                         result: function (response, error, http) {
                             if (error !== null) {
-                                $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(InsertSingleRecord)\n</div>");
+                                if (error.dsaError.status === "504") {
+                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
+                                } else {
+                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(InsertSingleRecord)\n</div>");
+                                }
                             } else {
                                 save_singleRecord = true;
                                 reset_data();
@@ -608,14 +616,22 @@ _gg.SetSaveData = function (data_scope) {
             body: '<Request><MultipleRecord>' + tmp_del_request.join("") + '</MultipleRecord></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelMultipleRecord)\n</div>");
+                    if (error.dsaError.status === "504") {
+                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
+                    } else {
+                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelMultipleRecord)\n</div>");
+                    }
                 } else {
                     _gg.connection.send({
                         service: "_.InsertMultipleRecord",
                         body: '<Request>' + tmp_multipleRecord.join("") + '</Request>',
                         result: function (response, error, http) {
                             if (error !== null) {
-                                $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(InsertMultipleRecord)\n</div>");
+                                if (error.dsaError.status === "504") {
+                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
+                                } else {
+                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(InsertMultipleRecord)\n</div>");
+                                }
                             } else {
                                 save_multipleRecord = true;
                                 reset_data();
@@ -642,14 +658,22 @@ _gg.SetSaveData = function (data_scope) {
             body: '<Request><SemesterData>' + tmp_del_request.join("") + '</SemesterData></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelSemesterData)\n</div>");
+                    if (error.dsaError.status === "504") {
+                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
+                    } else {
+                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelSemesterData)\n</div>");
+                    }
                 } else {
                     _gg.connection.send({
                         service: "_.InsertSemesterData",
                         body: '<Request>' + tmp_semesterData.join("") + '</Request>',
                         result: function (response, error, http) {
                             if (error !== null) {
-                                $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(InsertSemesterData)\n</div>");
+                                if (error.dsaError.status === "504") {
+                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
+                                } else {
+                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(InsertSemesterData)\n</div>");
+                                }
                             } else {
                                 save_semesterData = true;
                                 reset_data();
@@ -676,14 +700,22 @@ _gg.SetSaveData = function (data_scope) {
             body: '<Request><YearlyData>' + tmp_del_request.join("") + '</YearlyData></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelYearlyData)\n</div>");
+                    if (error.dsaError.status === "504") {
+                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
+                    } else {
+                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelYearlyData)\n</div>");
+                    }
                 } else {
                     _gg.connection.send({
                         service: "_.InsertYearlyData",
                         body: '<Request>' + tmp_yearlyData.join("") + '</Request>',
                         result: function (response, error, http) {
                             if (error !== null) {
-                                $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(InsertYearlyData)\n</div>");
+                                if (error.dsaError.status === "504") {
+                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
+                                } else {
+                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(InsertYearlyData)\n</div>");
+                                }
                             } else {
                                 save_yearlyData = true;
                                 reset_data();
@@ -710,14 +742,22 @@ _gg.SetSaveData = function (data_scope) {
             body: '<Request><PriorityData>' + tmp_del_request.join("") + '</PriorityData></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelPriorityData)\n</div>");
+                    if (error.dsaError.status === "504") {
+                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
+                    } else {
+                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelPriorityData)\n</div>");
+                    }
                 } else {
                     _gg.connection.send({
                         service: "_.InsertPriorityData",
                         body: '<Request>' + tmp_priorityData.join("") + '</Request>',
                         result: function (response, error, http) {
                             if (error !== null) {
-                                $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(InsertPriorityData)\n</div>");
+                                if (error.dsaError.status === "504") {
+                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
+                                } else {
+                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(InsertPriorityData)\n</div>");
+                                }
                             } else {
                                 save_priorityData = true;
                                 reset_data();
@@ -737,7 +777,11 @@ _gg.SetSaveData = function (data_scope) {
             body: '<Request>' + tmp_relative.join("") + '</Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(UpdateRelative)\n</div>");
+                    if (error.dsaError.status === "504") {
+                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
+                    } else {
+                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(UpdateRelative)\n</div>");
+                    }
                 } else {
                     save_relative = true;
                     reset_data();
@@ -754,7 +798,11 @@ _gg.SetSaveData = function (data_scope) {
             body: '<Request><Sibling></Sibling></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelSibling)\n</div>");
+                    if (error.dsaError.status === "504") {
+                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
+                    } else {
+                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelSibling)\n</div>");
+                    }
                 } else {
                     _gg.connection.send({
                         service: "_.InsertSibling",
@@ -762,7 +810,7 @@ _gg.SetSaveData = function (data_scope) {
                         result: function (response, error, http) {
                             if (error !== null) {
                                 if (error.dsaError.status === "504") {
-                                     $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，兄弟姊妹的姓名重複!</strong>\n</div>");
+                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
                                 } else {
                                     $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(InsertSibling)\n</div>");
                                 }
