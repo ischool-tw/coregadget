@@ -28,14 +28,24 @@ jQuery(function () {
          _gg.SetModifyData.addSibling();
     });
 
-    $(".modal").on("hidden", function () {
-        $(this).find("#errorMessage").html("");
+    $('#plan [name=future_planning]').bind('click', function (e) {
+        if (e.target.value === 'learning') {
+            $('#plan [plan-data-group=learning]').show();
+            $('#plan [plan-data-group=job]').hide();
+        } else {
+            $('#plan [plan-data-group=learning]').hide();
+            $('#plan [plan-data-group=job]').show();
+        }
     });
 
     $('.modal').modal({
         keyboard: false,
         show: false
-    })
+    });
+
+    $(".modal").on("hidden", function () {
+        $(this).find("#errorMessage").html("");
+    });
 
     $(".modal").on("show", function (e) {
 _gg.Opening = "yes";
@@ -57,8 +67,12 @@ _gg.Opening = "yes";
 
     // TODO: 編輯畫面按下儲存鈕
     $('.modal [edit-target]').bind('click', function(e) {
-        $(this).hide(); // 隱藏儲存鈕
-        _gg.SetSaveData($(this).closest(".modal").attr("id"));
+        // alert("Valid: " + $("#" + $(this).closest(".modal").attr("id") + " form").valid());
+        var data_scope = $(this).closest(".modal").attr("id");
+        // if ($("#" + data_scope + " form").valid()) {
+            $(this).hide(); // 隱藏儲存鈕
+            _gg.SetSaveData(data_scope);
+        // }
     });
 
     // TODO: 切換年級
@@ -80,7 +94,7 @@ _gg.Opening = "yes";
             if (qtype) {
                 switch (qtype.toLowerCase()) {
                     case 'single_answer':
-                        tmp_data = (qvalue.Data || '') + (qvalue.Remark || '');
+                        tmp_data = (qvalue.Data || '') + ((qvalue.Remark) || '');
                         break;
                     case 'multi_answer':
                         $.each(qvalue, function (index, item) {
@@ -88,7 +102,7 @@ _gg.Opening = "yes";
                                 tmp_data += ", ";
                             }
 
-                            tmp_data += (item.Data || '') + (item.Remark || '');
+                            tmp_data += (item.Data || '') + ($.HTMLEncode(item.Remark) || '');
                         });
                         break;
                     case 'yearly':
@@ -175,8 +189,8 @@ _gg.Opening = "yes";
                 tmp_html = '' +
                     '<td>' + (item.Title || '') + '</td>' +
                     '<td>' + (item.Name || '') + '</td>' +
-                    '<td>' + (item.SchoolName || '') + '</td>' +
                     '<td>' + (item.BirthYear || '') + '</td>' +
+                    '<td>' + (item.SchoolName || '') + '</td>' +
                     '<td>' + (item.Remark || '') + '</td>';
                 tmp_items.push('<tr>' +tmp_html+ '</tr>');
             });
@@ -191,12 +205,14 @@ _gg.Opening = "yes";
             $.each(questions, function (index, item) {
                 tmp_key = item.GroupName + '_' + item.Name;
                 tmp_data = item.SelectValue;
-                $('#A5 [data-type=' + tmp_key + 'S1a]').html(tmp_data.S1a || '');
-                $('#A5 [data-type=' + tmp_key + 'S1b]').html(tmp_data.S1b || '');
-                $('#A5 [data-type=' + tmp_key + 'S2a]').html(tmp_data.S2a || '');
-                $('#A5 [data-type=' + tmp_key + 'S2b]').html(tmp_data.S2b || '');
-                $('#A5 [data-type=' + tmp_key + 'S3a]').html(tmp_data.S3a || '');
-                $('#A5 [data-type=' + tmp_key + 'S3b]').html(tmp_data.S3b || '');
+                if (tmp_data) {
+                    $('#A5 [data-type=' + tmp_key + 'S1a]').html(tmp_data.S1a || '');
+                    $('#A5 [data-type=' + tmp_key + 'S1b]').html(tmp_data.S1b || '');
+                    $('#A5 [data-type=' + tmp_key + 'S2a]').html(tmp_data.S2a || '');
+                    $('#A5 [data-type=' + tmp_key + 'S2b]').html(tmp_data.S2b || '');
+                    $('#A5 [data-type=' + tmp_key + 'S3a]').html(tmp_data.S3a || '');
+                    $('#A5 [data-type=' + tmp_key + 'S3b]').html(tmp_data.S3b || '');
+                }
             });
         };
 
@@ -238,9 +254,11 @@ _gg.Opening = "yes";
             $.each(questions, function (index, item) {
                 tmp_key = item.GroupName + '_' + item.Name;
                 tmp_data = item.SelectValue;
-                $('#B3 [data-type=' + tmp_key + 'S' + tmp_grade + 'a]').html(tmp_data['S' + tmp_grade + 'a'] || '');
-                $('#B3 [data-type=' + tmp_key + 'S' + tmp_grade + 'b]').html(tmp_data['S' + tmp_grade + 'b'] || '');
-                $('#B3 [data-type=grade]').html(tmp_chinese_grade);
+                if (tmp_data) {
+                    $('#B3 [data-type=' + tmp_key + 'a]').html(tmp_data['S' + tmp_grade + 'a'] || '');
+                    $('#B3 [data-type=' + tmp_key + 'b]').html(tmp_data['S' + tmp_grade + 'b'] || '');
+                    $('#B3 [data-type=grade]').html(tmp_chinese_grade);
+                }
             });
         };
 
@@ -256,7 +274,10 @@ _gg.Opening = "yes";
                 if (item.Name.slice(-1) === tmp_grade) { // ex.個性_1
                     tmp_key = item.GroupName + '_' + item.Name;
                     tmp_data = input_value(item.QuestionType, item.SelectValue);
-                    tmp_items.push('<tr><th>' + item.Alias + '</th><td>' + tmp_data+ '</td></tr>');
+                    if (item.Name.indexOf("填寫日期") !== -1) {
+                        tmp_data = $.formatDate(new Date(tmp_data), "yyyyMMdd");
+                    }
+                    tmp_items.push('<tr><th>' + item.Alias + '</th><td>' + tmp_data + '</td></tr>');
                 }
             });
             $('#B4 tbody').html(tmp_items.join(""));
@@ -274,6 +295,9 @@ _gg.Opening = "yes";
                 if (item.Name.slice(-1) === tmp_grade) { // ex.內容1_1
                     tmp_key = item.GroupName + '_' + item.Name;
                     tmp_data = input_value(item.QuestionType, item.SelectValue);
+                    if (item.Name.indexOf("填寫日期") !== -1) {
+                        tmp_data = $.formatDate(new Date(tmp_data), "yyyyMMdd");
+                    }
                     tmp_items.push(
                         '<div class="accordion-group">' +
                         '  <div class="accordion-heading">' +
@@ -311,6 +335,9 @@ _gg.Opening = "yes";
             $.each(questions, function (index, item) {
                 tmp_key = item.GroupName + '_' + item.Name;
                 tmp_data = input_value(item.QuestionType, item.SelectValue);
+                if (item.Name.indexOf("填寫日期") !== -1) {
+                    tmp_data = $.formatDate(new Date(tmp_data), "yyyyMMdd");
+                }
                 $('#D1 [data-type=' + tmp_key + ']').html(tmp_data);
             });
         };

@@ -5146,12 +5146,3 @@ textarea {
   font-weight: normal;
   line-height: 18px;
 }
-
-
-/*------------------------------------------------*/
-.accordion-heading .accordion-toggle {
-  font-size: 15px;
-  font-weight: bolder;
-  color:#333;
-  text-decoration: none;
-}

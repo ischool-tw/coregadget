@@ -32,3 +32,6 @@
 .my-right {
   text-align: right;
 }
+label.error {
+  color: red;
+}

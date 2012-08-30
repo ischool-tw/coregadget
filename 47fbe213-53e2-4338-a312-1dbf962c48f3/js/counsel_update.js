@@ -12,6 +12,7 @@ _gg.SetModifyData = function () {
             var usecontrol   = question.ControlType;
             qplaceholder = qplaceholder || question.Title || question.Alias || '請輸入';
             qplaceholder = qplaceholder + '...';
+            var qValidator   = (question.Validator) ? ' ' + question.Validator : '';
             var tmp_class = '', tmp_defaultState = '', tmp_remark_class = 'input-large';
             var tmp_html = '', tmp_remark_html = '', ret_html = '';
             var tmp_index = -1, qdata = '', qremark = '';
@@ -36,7 +37,7 @@ _gg.SetModifyData = function () {
                             } else {
                                 tmp_defaultState = ' checked="checked"';
                             }
-                            qremark = aryremark[tmp_index];
+                            qremark = (aryremark[tmp_index]);
                         }
 
                         if (opt.has_remark === "True") {
@@ -47,29 +48,33 @@ _gg.SetModifyData = function () {
                             tmp_html += '<option value="' + opt.key + '"' + tmp_defaultState + '>' + opt.key + '</option>';
                         } else  {
                             tmp_html += '<label class="' + usecontrol + tmp_class +'">' +
-                                '<input type="' + usecontrol + '" name="' + qkey + '" data-type="' + qkey + '" data-index="' + index + '" value="' + opt.key + '"' + tmp_defaultState + '>' + opt.key + tmp_remark_html +
+                                '<input type="' + usecontrol + '" class="" name="' + qkey + '" data-type="' + qkey + '" data-index="' + index + '" value="' + opt.key + '"' + tmp_defaultState + '>' + opt.key + tmp_remark_html +
                                 '</label>';
                         }
                     });
 
                     if (usecontrol === 'select') {
-                        ret_html += '<select name="' + qkey + '" data-type="' + qkey + '"><option>' + qplaceholder + '</option>' + tmp_html + '</select>' + tmp_remark_html;
+                        ret_html += '<select class="" name="' + qkey + '" data-type="' + qkey + '"><option value="">' + qplaceholder + '</option>' + tmp_html + '</select>' + tmp_remark_html;
 
                     } else  {
                         ret_html += tmp_html;
 
                     }
                 } else {
-                    qdata = arydata[0];
+                    qdata = $.HTMLDecode(arydata[0]);
                     if (usecontrol === 'textarea') {
                       ret_html = '<textarea class="input-xlarge" name="' + qkey + '" data-type="' + qkey + '" placeholder="' + qplaceholder + '" rows="3">' + qdata + '</textarea>';
                     } else {
-                      ret_html = '<input type="text" class="input-large" name="' + qkey + '" data-type="' + qkey + '" placeholder="' + qplaceholder + '" value="' + qdata + '">';
+                      ret_html = '<input type="text" class="' +qValidator+ ' input-large" name="' + qkey + '" data-type="' + qkey + '" placeholder="' + qplaceholder + '" value="' + qdata + '">';
                     }
                 }
             } else {
-                qdata = arydata[0];
-                ret_html = '<input type="text" class="input-large" name="' + qkey + '" data-type="' + qkey + '" placeholder="' + qplaceholder + '" value="' + qdata + '">';
+                qdata = $.HTMLDecode(arydata[0]);
+                if (usecontrol === 'textarea') {
+                  ret_html = '<textarea class="input-xlarge" name="' + qkey + '" data-type="' + qkey + '" placeholder="' + qplaceholder + '" rows="3">' + qdata + '</textarea>';
+                } else {
+                  ret_html = '<input type="text" class="' +qValidator+ ' input-large" name="' + qkey + '" data-type="' + qkey + '" placeholder="' + qplaceholder + '" value="' + qdata + '">';
+                }
             }
             return ret_html;
         };
@@ -77,24 +82,34 @@ _gg.SetModifyData = function () {
         // TODO: 依題目類型決定控制項要執行的方式
         var qvalue = (question.SelectValue || '');
         var qtype  = (question.QuestionType || '');
+        var qplaceholder = (question.Placeholder || '');
         var control_html = '';
         var alldata = [], allremark = [];
         switch (qtype.toLowerCase()) {
             case 'single_answer':
                 alldata.push(qvalue.Data || '');
                 allremark.push(qvalue.Remark || '');
-                control_html += get_cotrol(question, alldata, allremark);
+                control_html += get_cotrol(question, alldata, allremark, qplaceholder);
                 break;
             case 'multi_answer':
                 $.each(qvalue, function (index, item) {
                     alldata.push(item.Data || '');
                     allremark.push(item.Remark || '');
                 });
-                control_html += get_cotrol(question, alldata, allremark);
+                control_html += get_cotrol(question, alldata, allremark, qplaceholder);
                 break;
             case 'yearly':
-                alldata.push(qvalue['G'+_gg.grade] || '');
-                control_html += get_cotrol(question, alldata, allremark);
+                if (question.ControlType === 'radio' || question.ControlType === 'checkbox') {
+                    if (qvalue['G'+_gg.grade]) {
+                        alldata = qvalue['G'+_gg.grade].split(',');
+                    } else {
+                        alldata.push('');
+                    }
+                } else {
+                    alldata.push(qvalue['G'+_gg.grade] || '');
+                }
+
+                control_html += get_cotrol(question, alldata, allremark, qplaceholder);
                 break;
             case 'priority':
                 var tmp_limit = (question.Limit || 10);
@@ -116,12 +131,12 @@ _gg.SetModifyData = function () {
                 } else {
                     alldata.push(relative_data[question.TagName] || '');
                 }
-                control_html += get_cotrol(question, alldata, allremark);
+                control_html += get_cotrol(question, alldata, allremark, qplaceholder);
                 break;
             case 'sibling':
                 if (question.TagName) {
                     alldata.push(relative_data[question.TagName] || '');
-                    control_html += get_cotrol(question, alldata, allremark);
+                    control_html += get_cotrol(question, alldata, allremark, qplaceholder);
                 }
                 break;
         }
@@ -132,15 +147,17 @@ _gg.SetModifyData = function () {
     var set_personal = function (questions) {
         var tmp_items = [];
         $(questions).each(function (index, value) {
-            tmp_items.push(
-                '<div class="control-group">' +
-                '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
-                '    <div class="controls">' +
-                set_form(value) +
-                '    </div>' +
-                '  </label>' +
-                '</div>'
-            );
+            if (value.CanStudentEdit === "是") {
+                tmp_items.push(
+                    '<div class="control-group">' +
+                    '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
+                    '    <div class="controls">' +
+                    set_form(value) +
+                    '    </div>' +
+                    '  </label>' +
+                    '</div>'
+                );
+            }
         });
         $('#' + data_scope + ' fieldset').html(tmp_items.join(""));
     };
@@ -149,15 +166,17 @@ _gg.SetModifyData = function () {
     var set_guardian = function (questions) {
         var tmp_items = [];
         $(questions).each(function (index, value) {
-            tmp_items.push(
-                '<div class="control-group">' +
-                '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
-                '    <div class="controls">' +
-                set_form(value) +
-                '    </div>' +
-                '  </label>' +
-                '</div>'
-            );
+            if (value.CanStudentEdit === "是") {
+                tmp_items.push(
+                    '<div class="control-group">' +
+                    '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
+                    '    <div class="controls">' +
+                    set_form(value) +
+                    '    </div>' +
+                    '  </label>' +
+                    '</div>'
+                );
+            }
         });
         $('#' + data_scope + ' fieldset').html(tmp_items.join(""));
     };
@@ -184,16 +203,18 @@ _gg.SetModifyData = function () {
             );
 
             $(questions).each(function (index, value) {
-                if (value.TagName !== 'Title') {
-                    tmp_items.push(
-                        '<div class="control-group">' +
-                        '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
-                        '    <div class="controls">' +
-                        set_form(value, relatives) +
-                        '    </div>' +
-                        '  </label>' +
-                        '</div>'
-                    );
+                if (value.CanStudentEdit === "是") {
+                    if (value.TagName !== 'Title') {
+                        tmp_items.push(
+                            '<div class="control-group">' +
+                            '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
+                            '    <div class="controls">' +
+                            set_form(value, relatives) +
+                            '    </div>' +
+                            '  </label>' +
+                            '</div>'
+                        );
+                    }
                 }
             });
 
@@ -219,8 +240,10 @@ _gg.SetModifyData = function () {
         if (run_model === 'add') {
             var tmp_obj = {};
             $(questions).each(function (index, value) {
-                if (value.TagName) {
-                    tmp_obj[value.TagName] = '';
+                if (value.CanStudentEdit === "是") {
+                    if (value.TagName) {
+                        tmp_obj[value.TagName] = '';
+                    }
                 }
             });
             tmp_resource = [];
@@ -239,7 +262,8 @@ _gg.SetModifyData = function () {
                 '    <div class="accordion-heading">' +
                 '      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion' + data_scope + '" href="#collapse' + data_scope + key + '">' +
                 '        <i class="icon-chevron-down pull-right"></i>' +
-                '        <input type="text" class="input-large" data-type="家庭狀況_兄弟姊妹_姓名" placeholder="請輸入姓名" value="' + siblings.Name + '">' +
+                '        <input type="text" class="input-large" data-type="Name" placeholder="請輸入姓名" value="' + siblings.Name + '">' +
+                '        <button class="btn" data-action="del"><i class="icon-minus-sign"></i>刪除</button>' +
                 '      </a>' +
                 '    </div>' +
                 '    <div id="collapse' + data_scope + key + '" class="accordion-body collapse">' +
@@ -248,7 +272,7 @@ _gg.SetModifyData = function () {
 
             $(questions).each(function (index, value) {
                 if (value.Name === '兄弟姊妹_排行') {
-                    if (value.SelectValue && value.SelectValue.Data) {
+                    if (value.SelectValue && value.SelectValue[0].Data) {
                         $('#' + data_scope + ' [name=AnySiblings][value=more]').trigger('click');
                         $('#' + data_scope + ' [data-type=家庭狀況_兄弟姊妹_排行]').val(value.SelectValue.Data);
                     } else {
@@ -256,15 +280,17 @@ _gg.SetModifyData = function () {
                     }
                 } else if (value.TagName === 'Name') {
                 } else {
-                    tmp_items.push(
-                        '<div class="control-group">' +
-                        '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
-                        '    <div class="controls">' +
-                        set_form(value, siblings) +
-                        '    </div>' +
-                        '  </label>' +
-                        '</div>'
-                    );
+                    if (value.CanStudentEdit === "是") {
+                        tmp_items.push(
+                            '<div class="control-group">' +
+                            '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
+                            '    <div class="controls">' +
+                            set_form(value, siblings) +
+                            '    </div>' +
+                            '  </label>' +
+                            '</div>'
+                        );
+                    }
                 }
             });
 
@@ -280,23 +306,30 @@ _gg.SetModifyData = function () {
         } else {
             $('#accordionsiblings').html(tmp_items.join(""));
         }
+
+        // TODO: 兄弟姊妹刪除鈕
+        $('#accordionsiblings [data-action=del]').bind('click', function () {
+            $(this).closest(".accordion-group").remove();
+        });
     };
 
     // TODO: 身高體重
     var set_psize = function (questions) {
 
-        var tmp_data = '', tmp_key = '';
-
         $(questions).each(function (key, value) {
-            tmp_data  = value.SelectValue;
-            tmp_key   = value.GroupName + '_' + value.Name;
+            if (value.CanStudentEdit === "是") {
+                var tmp_data  = value.SelectValue;
+                var tmp_key   = value.GroupName + '_' + value.Name;
 
-            $('#' + data_scope + ' [data-type=' + tmp_key + 'S1a]').attr("value", tmp_data.S1a);
-            $('#' + data_scope + ' [data-type=' + tmp_key + 'S1b]').attr("value", tmp_data.S1b);
-            $('#' + data_scope + ' [data-type=' + tmp_key + 'S2a]').attr("value", tmp_data.S2a);
-            $('#' + data_scope + ' [data-type=' + tmp_key + 'S2b]').attr("value", tmp_data.S2b);
-            $('#' + data_scope + ' [data-type=' + tmp_key + 'S3a]').attr("value", tmp_data.S3a);
-            $('#' + data_scope + ' [data-type=' + tmp_key + 'S3b]').attr("value", tmp_data.S3b);
+                if (tmp_data) {
+                    $('#' + data_scope + ' [data-type=' + tmp_key + 'S1a]').val(tmp_data.S1a);
+                    $('#' + data_scope + ' [data-type=' + tmp_key + 'S1b]').val(tmp_data.S1b);
+                    $('#' + data_scope + ' [data-type=' + tmp_key + 'S2a]').val(tmp_data.S2a);
+                    $('#' + data_scope + ' [data-type=' + tmp_key + 'S2b]').val(tmp_data.S2b);
+                    $('#' + data_scope + ' [data-type=' + tmp_key + 'S3a]').val(tmp_data.S3a);
+                    $('#' + data_scope + ' [data-type=' + tmp_key + 'S3b]').val(tmp_data.S3b);
+                }
+            }
         });
     };
 
@@ -304,15 +337,17 @@ _gg.SetModifyData = function () {
     var set_home = function (questions) {
         var tmp_items = [];
         $(questions).each(function (index, value) {
-            tmp_items.push(
-                '<div class="control-group">' +
-                '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
-                '    <div class="controls">' +
-                set_form(value) +
-                '    </div>' +
-                '  </label>' +
-                '</div>'
-            );
+            if (value.CanStudentEdit === "是") {
+                tmp_items.push(
+                    '<div class="control-group">' +
+                    '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
+                    '    <div class="controls">' +
+                    set_form(value) +
+                    '    </div>' +
+                    '  </label>' +
+                    '</div>'
+                );
+            }
         });
         $('#' + data_scope + ' fieldset').html(tmp_items.join(""));
     };
@@ -321,15 +356,17 @@ _gg.SetModifyData = function () {
     var set_learn = function (questions) {
         var tmp_items = [];
         $(questions).each(function (index, value) {
-            tmp_items.push(
-                '<div class="control-group">' +
-                '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
-                '    <div class="controls">' +
-                set_form(value) +
-                '    </div>' +
-                '  </label>' +
-                '</div>'
-            );
+            if (value.CanStudentEdit === "是") {
+                tmp_items.push(
+                    '<div class="control-group">' +
+                    '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
+                    '    <div class="controls">' +
+                    set_form(value) +
+                    '    </div>' +
+                    '  </label>' +
+                    '</div>'
+                );
+            }
         });
         $('#' + data_scope + ' fieldset').html(tmp_items.join(""));
     };
@@ -337,15 +374,17 @@ _gg.SetModifyData = function () {
     // TODO: 幹部資訊
     var set_cadre = function (questions) {
 
-        var tmp_data = '', tmp_key = '';
-
         $(questions).each(function (key, value) {
-            tmp_data  = value.SelectValue;
-            tmp_key   = value.GroupName + '_' + value.Name;
-
-            $('#' + data_scope + ' [data-type=' + tmp_key + 'a]').html(tmp_data['S' + _gg.grade + 'a'] || '');
-            $('#' + data_scope + ' [data-type=' + tmp_key + 'b]').html(tmp_data['S' + _gg.grade + 'b'] || '');
+            if (value.CanStudentEdit === "是") {
+                var tmp_data  = value.SelectValue;
+                var tmp_key   = value.GroupName + '_' + value.Name;
+                if (tmp_data) {
+                    $('#' + data_scope + ' [data-type=' + tmp_key + 'a]').val(tmp_data['S' + _gg.grade + 'a'] || '');
+                    $('#' + data_scope + ' [data-type=' + tmp_key + 'b]').val(tmp_data['S' + _gg.grade + 'b'] || '');
+                }
+            }
         });
+
         var tmp_chinese_grade;
         switch (_gg.grade) {
             case 1:
@@ -366,17 +405,19 @@ _gg.SetModifyData = function () {
         var tmp_items = [];
         var tmp_grade = (_gg.grade || 1);
         $(questions).each(function (index, value) {
-             if (value.Name.slice(-1) === tmp_grade) { // ex.個性_1
-                if (value.Name.indexOf("填寫日期") === -1) {
-                    tmp_items.push(
-                        '<div class="control-group">' +
-                        '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
-                        '    <div class="controls">' +
-                        set_form(value) +
-                        '    </div>' +
-                        '  </label>' +
-                        '</div>'
-                    );
+            if (value.CanStudentEdit === "是") {
+                if (value.Name.slice(-1) === tmp_grade) { // ex.個性_1
+                    if (value.Name.indexOf("填寫日期") === -1) {
+                        tmp_items.push(
+                            '<div class="control-group">' +
+                            '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
+                            '    <div class="controls">' +
+                            set_form(value) +
+                            '    </div>' +
+                            '  </label>' +
+                            '</div>'
+                        );
+                    }
                 }
             }
         });
@@ -386,52 +427,53 @@ _gg.SetModifyData = function () {
     // TODO: 生活感想
     var set_life = function (questions) {
 
-        var tmp_data = '', tmp_key = '', tmp_html = '', tmp_items = [];
+        var tmp_items = [];
         var tmp_grade = (_gg.grade || 1);
 
         $(questions).each(function (key, value) {
-            if (value.Name.slice(-1) === tmp_grade) { // ex.內容1_1
-                if (value.Name.indexOf("填寫日期") === -1) {
-                    tmp_data    = value.SelectValue;
-                    tmp_key   = value.GroupName + '_' + value.Name;
-                    tmp_html    = '';
+            if (value.CanStudentEdit === "是") {
+                if (value.Name.slice(-1) === tmp_grade) { // ex.內容1_1
+                    if (value.Name.indexOf("填寫日期") === -1) {
+                        var tmp_key = value.GroupName + '_' + value.Name;
 
-                    tmp_html = '' +
-                        '<div class="control-group">' +
-                        '    <label>' + value.Alias + '</label>' +
-                        '    <textarea class="input-xxlarge" data-type="' + tmp_key + '" placeholder="請輸入..." rows="3">' + (value.Data || '') + '</textarea>' +
-                        '</div>';
+                        var tmp_html = '' +
+                            '<div class="control-group">' +
+                            '    <label>' + value.Alias + '</label>' +
+                            set_form(value) +
+                            '</div>';
 
-                    tmp_items.push(tmp_html);
+                        tmp_items.push(tmp_html);
+                    }
                 }
+                $('#' + data_scope + ' fieldset').html(tmp_items.join(""));
             }
-
-            $('#' + data_scope + ' fieldset').html(tmp_items.join(""));
         });
 
     };
 
     // TODO: 畢業後規劃
     var set_plan = function (questions) {
-        var tmp_items = [];
-        $(_gg.col_Question.C1).each(function (index, value) {
-            tmp_items.push(
-                '<div class="control-group">' +
-                '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
-                '    <div class="controls">' +
-                set_form(value) +
-                '    </div>' +
-                '  </label>' +
-                '</div>'
-            );
+        $(questions).each(function (index, value) {
+            if (value.CanStudentEdit === "是") {
+                var tmp_key = value.GroupName + '_' + value.Name;
+
+                if (value.Name === '就業意願') {
+                    if (value.SelectValue && value.SelectValue[0].Data) {
+                        $('#' + data_scope + ' [name=future_planning][value=job]').trigger('click');
+                    } else {
+                        $('#' + data_scope + ' [name=future_planning][value=learning]').trigger('click');
+                    }
+                }
+
+                $('#' + data_scope + ' [data-type=' + tmp_key + ']').html(set_form(value));
+            }
         });
-        $('#' + data_scope + ' fieldset').html(tmp_items.join(""));
     };
 
     // TODO: 自傳
     var set_memoir = function (questions) {
         var tmp_items = [];
-        $(_gg.col_Question.D1).each(function (index, value) {
+        $(questions).each(function (index, value) {
             if (value.CanStudentEdit === '是') {
                 if (value.Name === '喜歡的人' ||
                     value.Name === '最要好的朋友' ||
@@ -503,10 +545,12 @@ _gg.SetModifyData = function () {
                 }
             }
 
+            $("#" + data_scope + " form").validate();
         },
         addSibling: function () {
             data_scope = 'siblings';
             set_siblings(_gg.col_Question.A4, 'add');
+            $("#" + data_scope + " form").validate();
         }
     }
 }();

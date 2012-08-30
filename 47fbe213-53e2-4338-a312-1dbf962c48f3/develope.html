@@ -16,6 +16,10 @@
   <link href="css/default.css" rel="stylesheet" />
   <script src="js/jquery.min.js"></script>
   <!--<script src="js/less.min.js"></script>-->
+  <script src="js/jquery.validate.min.js"></script>
+  <script src="js/jquery.metadata.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/messages_tw.js"></script>
   <script src="js/bootstrap.js"></script>
   <script src="js/counsel.js"></script>
   <script src="js/counsel_data.js"></script>
@@ -83,21 +87,21 @@
                       <tbody>
                         <tr>
                           <th width="59">姓名</th>
-                          <td colspan="3" data-type="監護人資料_姓名"></td>
+                          <td colspan="3" data-type="家庭狀況_監護人_姓名"></td>
                         </tr>
                         <tr>
                           <th>性別</th>
-                          <td width="139" data-type="監護人資料_性別"></td>
+                          <td width="139" data-type="家庭狀況_監護人_性別"></td>
                           <th width="62">關係</th>
-                          <td width="87" data-type="監護人資料_關係"></td>
+                          <td width="87" data-type="家庭狀況_監護人_關係"></td>
                         </tr>
                         <tr>
                           <th>電話</th>
-                          <td colspan="3" data-type="監護人資料_電話"></td>
+                          <td colspan="3" data-type="家庭狀況_監護人_電話"></td>
                         </tr>
                         <tr>
                           <th>地址</th>
-                          <td colspan="3" data-type="監護人資料_地址"></td>
+                          <td colspan="3" data-type="家庭狀況_監護人_通訊地址"></td>
                         </tr>
                       </tbody>
                     </table>
@@ -315,16 +319,16 @@
                 <table class="table my-lineheight">
                   <tbody>
                     <tr>
-                      <td>家中最了解我的人是<strong data-type="自傳_家中最了解我的人是"></strong></td>
+                      <td>家中最了解我的人是<strong data-type="自傳_家中最了解我的人"></strong></td>
                     </tr>
                     <tr>
-                      <td>常指導我做功課的人是<strong data-type="自傳_常指導我做功課的人是"></strong></td>
+                      <td>常指導我做功課的人是<strong data-type="自傳_常指導我做功課的人"></strong></td>
                     </tr>
                     <tr>
-                      <td>讀過且印象最深的課外讀物是<strong data-type="自傳_我讀過且印象最深刻的課外書是"></strong></td>
+                      <td>讀過且印象最深的課外讀物是<strong data-type="自傳_讀過且印象最深刻的課外書"></strong></td>
                     </tr>
                     <tr>
-                      <td>最喜歡的人是<strong data-type="自傳_我喜歡的人是"></strong>，因為<strong data-type="自傳_喜歡的人_因為"></strong></td>
+                      <td>最喜歡的人是<strong data-type="自傳_喜歡的人"></strong>，因為<strong data-type="自傳_喜歡的人_因為"></strong></td>
                     </tr>
                     <tr>
                       <td>最要好的朋友是<strong data-type="自傳_最要好的朋友"></strong>，他<strong data-type="自傳_他是怎樣的人"></strong></td>
@@ -623,14 +627,14 @@
           <label class="control-label">
             <span data-type="grade"></span>上班級幹部</label>
           <div class="controls">
-            <input type="text" class="input-large" data-type="學習狀況_班級幹部1" placeholder="">
+            <input type="text" class="input-large" data-type="學習狀況_班級幹部a" placeholder="">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">
             <span data-type="grade"></span>上社團幹部</label>
           <div class="controls">
-            <input type="text" class="input-large" data-type="學習狀況_社團幹部1" placeholder="">
+            <input type="text" class="input-large" data-type="學習狀況_社團幹部a" placeholder="">
           </div>
         </div>
         <hr/>
@@ -638,14 +642,14 @@
           <label class="control-label">
             <span data-type="grade"></span>下班級幹部</label>
           <div class="controls">
-            <input type="text" class="input-large" data-type="學習狀況_班級幹部2" placeholder="">
+            <input type="text" class="input-large" data-type="學習狀況_班級幹部b" placeholder="">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">
             <span data-type="grade"></span>下社團幹部</label>
           <div class="controls">
-            <input type="text" class="input-large" data-type="學習狀況_社團幹部2" placeholder="">
+            <input type="text" class="input-large" data-type="學習狀況_社團幹部b" placeholder="">
           </div>
         </div>
       </fieldset>
@@ -706,41 +710,35 @@
     <form class="form-horizontal">
       <fieldset>
         <label class="radio inline">
-          <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">我要升學</label>
+          <input type="radio" name="future_planning" value="learning">我要升學</label>
         <label class="radio inline">
-          <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2" checked="">我要就業</label>
+          <input type="radio" name="future_planning" value="job">我要就業</label>
         <hr/>
-        <div class="control-group">
+        <div class="control-group" plan-data-group="learning">
           <label class="control-label">升學意願</label>
-          <div class="controls">
-          </div>
+          <div class="controls" data-type="畢業後計畫_升學意願"></div>
         </div>
-        <div class="control-group">
+        <div class="control-group" plan-data-group="job">
           <label class="control-label">就業意願</label>
-          <div class="controls">
-          </div>
+          <div class="controls" data-type="畢業後計畫_就業意願"></div>
         </div>
         <hr/>
         <div class="control-group">
           <label class="control-label">希望職業訓練種類</label>
-          <div class="controls">
-          </div>
+          <div class="controls" data-type="畢業後計畫_參加職業訓練"></div>
         </div>
         <div class="control-group">
           <label class="control-label">希望職業訓練地區</label>
-          <div class="controls">
-          </div>
+          <div class="controls" data-type="畢業後計畫_受訓地區"></div>
         </div>
         <hr/>
         <div class="control-group">
-          <label class="control-label">將來職業意願</label>
-          <div class="controls">
-          </div>
+          <label class="control-label">將來職業意願<br/>(請依優先順序)</label>
+          <div class="controls" data-type="畢業後計畫_將來職業"></div>
         </div>
         <div class="control-group">
-          <label class="control-label">將來就業地區</label>
-          <div class="controls">
-          </div>
+          <label class="control-label">將來就業地區<br/>(請依優先順序)</label>
+          <div class="controls" data-type="畢業後計畫_就業地區"></div>
         </div>
       </fieldset>
     </form>
