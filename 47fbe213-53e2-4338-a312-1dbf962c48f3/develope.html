@@ -369,7 +369,7 @@
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
     <h3>個人資料</h3>
-    <div id="errorMessage"></div>
+    <div id="personal_errorMessage"></div>
   </div>
   <div class="modal-body">
     <form class="form-horizontal">
@@ -378,7 +378,7 @@
     </form>
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn btn-success" edit-target="A1">儲存變更</a>
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="A1">儲存變更</button>
     <a href="#" class="btn" data-dismiss="modal">離開</a>
   </div>
 </div>
@@ -388,7 +388,7 @@
     <button type="button" class="close" data-dismiss="modal">×</button>
     <h3>
       身高及體重</h3>
-    <div id="errorMessage"></div>
+    <div id="psize_errorMessage"></div>
   </div>
   <div class="modal-body">
     <form class="form-horizontal">
@@ -399,7 +399,7 @@
               <label class="control-label">
                 一上身高</label>
               <div class="controls">
-                <input type="text" class="input-mini" data-type="本人概況_身高S1a" placeholder="一上身高">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS1a" data-type="本人概況_身高S1a" placeholder="一上身高">
                 cm
               </div>
             </div>
@@ -407,7 +407,7 @@
               <label class="control-label">
                 一上體重</label>
               <div class="controls">
-                <input type="text" class="input-mini" data-type="本人概況_體重S1a" placeholder="一上體重">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS1a" data-type="本人概況_體重S1a" placeholder="一上體重">
                 kg
               </div>
             </div>
@@ -416,7 +416,7 @@
               <label class="control-label">
                 二上身高</label>
               <div class="controls">
-                <input type="text" class="input-mini" data-type="本人概況_身高S2a" placeholder="二上身高">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS2a" data-type="本人概況_身高S2a" placeholder="二上身高">
                 cm
               </div>
             </div>
@@ -424,7 +424,7 @@
               <label class="control-label">
                 二上體重</label>
               <div class="controls">
-                <input type="text" class="input-mini" data-type="本人概況_體重S2a" placeholder="二上體重">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS2a" data-type="本人概況_體重S2a" placeholder="二上體重">
                 kg
               </div>
             </div>
@@ -433,7 +433,7 @@
               <label class="control-label">
                 三上身高</label>
               <div class="controls">
-                <input type="text" class="input-mini" data-type="本人概況_身高S3a" placeholder="三上身高">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS3a" data-type="本人概況_身高S3a" placeholder="三上身高">
                 cm
               </div>
             </div>
@@ -441,7 +441,7 @@
               <label class="control-label">
                 三上體重</label>
               <div class="controls">
-                <input type="text" class="input-mini" data-type="本人概況_體重S3a" placeholder="三上體重">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS3a" data-type="本人概況_體重S3a" placeholder="三上體重">
                 kg
               </div>
             </div>
@@ -453,7 +453,7 @@
               <label class="control-label">
                 一下身高</label>
               <div class="controls">
-                <input type="text" class="input-mini" data-type="本人概況_身高S1b" placeholder="一下身高">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS1b" data-type="本人概況_身高S1b" placeholder="一下身高">
                 cm
               </div>
             </div>
@@ -461,7 +461,7 @@
               <label class="control-label">
                 一下體重</label>
               <div class="controls">
-                <input type="text" class="input-mini" data-type="本人概況_體重S1b" placeholder="一下體重">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS1b" data-type="本人概況_體重S1b" placeholder="一下體重">
                 kg
               </div>
             </div>
@@ -470,7 +470,7 @@
               <label class="control-label">
                 二下身高</label>
               <div class="controls">
-                <input type="text" class="input-mini" data-type="本人概況_身高S2b" placeholder="二下身高">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS2b" data-type="本人概況_身高S2b" placeholder="二下身高">
                 cm
               </div>
             </div>
@@ -478,7 +478,7 @@
               <label class="control-label">
                 二下體重</label>
               <div class="controls">
-                <input type="text" class="input-mini" data-type="本人概況_體重S2b" placeholder="二下體重">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS2b" data-type="本人概況_體重S2b" placeholder="二下體重">
                 kg
               </div>
             </div>
@@ -487,7 +487,7 @@
               <label class="control-label">
                 三下身高</label>
               <div class="controls">
-                <input type="text" class="input-mini" data-type="本人概況_身高S3b" placeholder="三下身高">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS3b" data-type="本人概況_身高S3b" placeholder="三下身高">
                 cm
               </div>
             </div>
@@ -495,7 +495,7 @@
               <label class="control-label">
                 三下體重</label>
               <div class="controls">
-                <input type="text" class="input-mini" data-type="本人概況_體重S3b" placeholder="三下體重">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS3b" data-type="本人概況_體重S3b" placeholder="三下體重">
                 kg
               </div>
             </div>
@@ -505,7 +505,7 @@
     </form>
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn btn-success" edit-target="A2">儲存變更</a>
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="A2">儲存變更</button>
     <a href="#" class="btn" data-dismiss="modal">離開</a>
   </div>
 </div>
@@ -516,7 +516,7 @@
       ×</button>
     <h3>
       監護人資料</h3>
-    <div id="errorMessage"></div>
+    <div id="guardian_errorMessage"></div>
   </div>
   <div class="modal-body">
     <form class="form-horizontal">
@@ -525,7 +525,7 @@
     </form>
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn btn-success" edit-target="A3">儲存變更</a>
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="A3">儲存變更</button>
     <a href="#" class="btn" data-dismiss="modal">離開</a>
   </div>
 </div>
@@ -534,7 +534,7 @@
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
     <h3>尊親屬資料</h3>
-    <div id="errorMessage"></div>
+    <div id="parents_errorMessage"></div>
   </div>
   <div class="modal-body">
     <form class="form-horizontal">
@@ -543,7 +543,7 @@
     </form>
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn btn-success" edit-target="A4">儲存變更</a>
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="A4">儲存變更</button>
     <a href="#" class="btn" data-dismiss="modal">離開</a>
   </div>
 </div>
@@ -552,7 +552,7 @@
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
     <h3>兄弟姊妹資料</h3>
-    <div id="errorMessage"></div>
+    <div id="siblings_errorMessage"></div>
   </div>
   <div class="modal-body">
     <form class="form-horizontal">
@@ -562,7 +562,7 @@
         <label class="radio inline">
           <input type="radio" name="AnySiblings" value="more">我有兄弟姊妹，我排行第
         </label>
-        <input type="text" class="input-mini" data-type="家庭狀況_兄弟姊妹_排行" placeholder="排行">
+        <input type="text" class="input-mini" data-type="家庭狀況_兄弟姊妹_排行" placeholder="排行" disabled >
         <a href="#" class="btn pull-right" id="siblings-add-data">
           <i class="icon-plus-sign"></i>添加欄位</a>
         <hr/>
@@ -572,7 +572,7 @@
     </form>
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn btn-success" edit-target="A5">儲存變更</a>
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="A5">儲存變更</button>
     <a href="#" class="btn" data-dismiss="modal">離開</a>
   </div>
 </div>
@@ -581,7 +581,7 @@
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
     <h3>家庭訊息</h3>
-    <div id="errorMessage"></div>
+    <div id="home_errorMessage"></div>
   </div>
   <div class="modal-body">
     <form class="form-horizontal">
@@ -590,7 +590,7 @@
     </form>
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn btn-success" edit-target="B1">儲存變更</a>
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="B1">儲存變更</button>
     <a href="#" class="btn" data-dismiss="modal">離開</a>
   </div>
 </div>
@@ -600,7 +600,7 @@
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
     <h3>學習</h3>
-    <div id="errorMessage"></div>
+    <div id="learn_errorMessage"></div>
   </div>
   <div class="modal-body">
     <form class="form-horizontal">
@@ -609,7 +609,7 @@
     </form>
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn btn-success" edit-target="B2">儲存變更</a>
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="B2">儲存變更</button>
     <a href="#" class="btn" data-dismiss="modal">離開</a>
   </div>
 </div>
@@ -618,7 +618,7 @@
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
     <h3>幹部資訊</h3>
-    <div id="errorMessage"></div>
+    <div id="cadre_errorMessage"></div>
   </div>
   <div class="modal-body">
     <form class="form-horizontal">
@@ -656,7 +656,7 @@
     </form>
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn btn-success" edit-target="B3">儲存變更</a>
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="B3">儲存變更</button>
     <a href="#" class="btn" data-dismiss="modal">離開</a>
   </div>
 </div>
@@ -665,7 +665,7 @@
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
     <h3>自我認識</h3>
-    <div id="errorMessage"></div>
+    <div id="oneself_errorMessage"></div>
   </div>
   <div class="modal-body">
     <form class="form-horizontal">
@@ -674,7 +674,7 @@
     </form>
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn btn-success" edit-target="B4">儲存變更</a>
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="B4">儲存變更</button>
     <a href="#" class="btn" data-dismiss="modal">離開</a>
   </div>
 </div>
@@ -683,7 +683,7 @@
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
     <h3>生活感想</h3>
-    <div id="errorMessage"></div>
+    <div id="life_errorMessage"></div>
   </div>
   <div class="modal-body">
     <form class="form-horizontal">
@@ -692,7 +692,7 @@
     </form>
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn btn-success" edit-target="B5">儲存變更</a>
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="B5">儲存變更</button>
     <a href="#" class="btn" data-dismiss="modal">離開</a>
   </div>
 </div>
@@ -704,7 +704,7 @@
       ×</button>
     <h3>
       畢業後規劃</h3>
-    <div id="errorMessage"></div>
+    <div id="plan_errorMessage"></div>
   </div>
   <div class="modal-body">
     <form class="form-horizontal">
@@ -744,7 +744,7 @@
     </form>
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn btn-success" edit-target="C1">儲存變更</a>
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="C1">儲存變更</button>
     <a href="#" class="btn" data-dismiss="modal">離開</a>
   </div>
 </div>
@@ -754,7 +754,7 @@
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
     <h3>自傳</h3>
-    <div id="errorMessage"></div>
+    <div id="memoir_errorMessage"></div>
   </div>
   <div class="modal-body">
     <form class="form-horizontal">
@@ -763,7 +763,7 @@
     </form>
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn btn-success" edit-target="D1">儲存變更</a>
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="D1">儲存變更</button>
     <a href="#" class="btn" data-dismiss="modal">離開</a>
   </div>
 </div>

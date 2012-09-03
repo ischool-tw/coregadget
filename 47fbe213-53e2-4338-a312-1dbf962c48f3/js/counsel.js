@@ -1,12 +1,20 @@
 ﻿var _gg = _gg || {};
-_gg.connection = gadget.getContract("ischool.counsel101.student");
+_gg.connection = gadget.getContract("ischool.counsel.student");
 _gg.schoolYear = '';
 _gg.grade = '';
 _gg.chineseGrade = '';
 _gg.init = false;
 
 jQuery(function () {
+    // TODO: 預設編輯鈕為 disabled
+    $('a[data-toggle=modal]').addClass("disabled");
+
     _gg.loadCounselData();
+
+    // TODO: 點選 checkbox 後的註解輸入框時，使事件失效，才不會影響 checkbox
+    $('input:text[data-type$=remark]').live("click", function(e) {
+        e.preventDefault();
+    });
 
     // TODO: 家中排行
     $('#siblings [name=AnySiblings]').bind('click', function (e) {
@@ -28,6 +36,7 @@ jQuery(function () {
          _gg.SetModifyData.addSibling();
     });
 
+    // TODO: 畢業後規劃我要升學、我要就業的 radio
     $('#plan [name=future_planning]').bind('click', function (e) {
         if (e.target.value === 'learning') {
             $('#plan [plan-data-group=learning]').show();
@@ -38,41 +47,53 @@ jQuery(function () {
         }
     });
 
+    // TODO: 編輯視窗的相關設定
     $('.modal').modal({
         keyboard: false,
         show: false
     });
 
     $(".modal").on("hidden", function () {
-        $(this).find("#errorMessage").html("");
+        $(this).find("[id$=_errorMessage]").html("");
     });
 
     $(".modal").on("show", function (e) {
-_gg.Opening = "yes";
-        // TODO: 資料尚未載入完成、開放期限外，使 modal.show 失效
-        if (_gg.init && _gg.Opening === "yes") {
+        var that = this;
+        var show_model = function () {
+            $(that).find("button[edit-target]").button('reset'); // TODO: 重設按鈕
 
-            $(this).find("[edit-target]").show(); // 顯示儲存鈕
-
-            _gg.SetModifyData.setForm(this.id);
+            _gg.SetModifyData.setForm(that.id);
 
             // TODO: 修正 modal 中有 Collapse，Collapse 展開時會觸發 modal 的 show
-            $(this).find('.accordion').on('show', function (event) {
+            $(that).find('.accordion').on('show', function (event) {
                 event.stopPropagation();
             });
+        };
+
+        // TODO: 資料尚未載入完成、開放期限外，使 modal.show 失效
+        if (_gg.init && _gg.Opening === "yes") {
+            if ($(this).find("[edit-target]").attr("edit-target").slice(0, 1) === 'B') {
+                if (_gg.student.GradeYear && _gg.grade && (_gg.student.GradeYear === _gg.grade)) {
+                    show_model();
+                } else {
+                    e.preventDefault();
+                }
+            } else {
+                show_model();
+            }
         } else {
             e.preventDefault();
         }
     });
 
     // TODO: 編輯畫面按下儲存鈕
-    $('.modal [edit-target]').bind('click', function(e) {
-        // alert("Valid: " + $("#" + $(this).closest(".modal").attr("id") + " form").valid());
+    $('.modal button[edit-target]').bind('click', function(e) {
         var data_scope = $(this).closest(".modal").attr("id");
-        // if ($("#" + data_scope + " form").valid()) {
-            $(this).hide(); // 隱藏儲存鈕
+
+        if ($("#" + data_scope + " form").valid()) {
+            $(this).button('loading'); // TODO: 按鈕為處理中
             _gg.SetSaveData(data_scope);
-        // }
+        }
     });
 
     // TODO: 切換年級
@@ -84,6 +105,11 @@ _gg.Opening = "yes";
         _gg.SetData('B3');
         _gg.SetData('B4');
         _gg.SetData('B5');
+        if (_gg.student.GradeYear && _gg.grade && (_gg.student.GradeYear === _gg.grade)) {
+            $('#B1 a[data-toggle=modal], #B2 a[data-toggle=modal], #B3 a[data-toggle=modal], #B4 a[data-toggle=modal], #B5 a[data-toggle=modal]').removeClass("disabled");
+        } else {
+            $('#B1 a[data-toggle=modal], #B2 a[data-toggle=modal], #B3 a[data-toggle=modal], #B4 a[data-toggle=modal], #B5 a[data-toggle=modal]').addClass("disabled");
+        }
     });
 
     // TODO: 顯示資料
@@ -94,7 +120,7 @@ _gg.Opening = "yes";
             if (qtype) {
                 switch (qtype.toLowerCase()) {
                     case 'single_answer':
-                        tmp_data = (qvalue.Data || '') + ((qvalue.Remark) || '');
+                        tmp_data = (qvalue.Data || '') + (qvalue.Remark || '');
                         break;
                     case 'multi_answer':
                         $.each(qvalue, function (index, item) {
@@ -102,7 +128,7 @@ _gg.Opening = "yes";
                                 tmp_data += ", ";
                             }
 
-                            tmp_data += (item.Data || '') + ($.HTMLEncode(item.Remark) || '');
+                            tmp_data += (item.Data || '') + (item.Remark || '');
                         });
                         break;
                     case 'yearly':
@@ -246,7 +272,7 @@ _gg.Opening = "yes";
         var input_B3_value = function() {
             var questions = _gg.col_Question.B3;
             var tmp_key, tmp_data;
-            var tmp_grade = (_gg.grade || 1);
+            var tmp_grade = (_gg.grade || "1");
             var tmp_chinese_grade = (_gg.chineseGrade || '一');
 
             $('#B3 [data-type]').html('');
@@ -266,7 +292,7 @@ _gg.Opening = "yes";
         var input_B4_value = function() {
             var questions = _gg.col_Question.B4;
             var tmp_key, tmp_data, tmp_items = [];
-            var tmp_grade = (_gg.grade || 1);
+            var tmp_grade = (_gg.grade || "1");
 
             $('#B4 tbody').html('');
 
@@ -275,7 +301,9 @@ _gg.Opening = "yes";
                     tmp_key = item.GroupName + '_' + item.Name;
                     tmp_data = input_value(item.QuestionType, item.SelectValue);
                     if (item.Name.indexOf("填寫日期") !== -1) {
-                        tmp_data = $.formatDate(new Date(tmp_data), "yyyyMMdd");
+                        if (tmp_data) {
+                            tmp_data = $.formatDate(new Date(tmp_data), "yyyyMMdd");
+                        }
                     }
                     tmp_items.push('<tr><th>' + item.Alias + '</th><td>' + tmp_data + '</td></tr>');
                 }
@@ -287,7 +315,7 @@ _gg.Opening = "yes";
         var input_B5_value = function() {
             var questions = _gg.col_Question.B5;
             var tmp_key, tmp_data, tmp_items = [];
-            var tmp_grade = (_gg.grade || 1);
+            var tmp_grade = (_gg.grade || "1");
 
             $('#B5 tbody').html('');
 
@@ -296,7 +324,9 @@ _gg.Opening = "yes";
                     tmp_key = item.GroupName + '_' + item.Name;
                     tmp_data = input_value(item.QuestionType, item.SelectValue);
                     if (item.Name.indexOf("填寫日期") !== -1) {
-                        tmp_data = $.formatDate(new Date(tmp_data), "yyyyMMdd");
+                        if (tmp_data) {
+                            tmp_data = $.formatDate(new Date(tmp_data), "yyyyMMdd");
+                        }
                     }
                     tmp_items.push(
                         '<div class="accordion-group">' +
@@ -336,19 +366,24 @@ _gg.Opening = "yes";
                 tmp_key = item.GroupName + '_' + item.Name;
                 tmp_data = input_value(item.QuestionType, item.SelectValue);
                 if (item.Name.indexOf("填寫日期") !== -1) {
-                    tmp_data = $.formatDate(new Date(tmp_data), "yyyyMMdd");
+                    if (tmp_data) {
+                        tmp_data = $.formatDate(new Date(tmp_data), "yyyyMMdd");
+                    }
                 }
                 $('#D1 [data-type=' + tmp_key + ']').html(tmp_data);
             });
         };
 
         // 如果未指定範圍，就重新顯示全部資料
-        if (data_scope === 'All') {
-            $.each(_gg.col_Question, function(key, value) {
-                eval('input_' + key + '_value()');
-            });
-        } else {
-            eval('input_' + data_scope + '_value()');
+        if (_gg.init && _gg.Opening === "yes") {
+            $('a[data-toggle=modal]').removeClass("disabled");
+            if (data_scope === 'All') {
+                $.each(_gg.col_Question, function(key, value) {
+                    eval('input_' + key + '_value()');
+                });
+            } else {
+                eval('input_' + data_scope + '_value()');
+            }
         }
     };
 });

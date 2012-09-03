@@ -37,7 +37,7 @@ _gg.SetModifyData = function () {
                             } else {
                                 tmp_defaultState = ' checked="checked"';
                             }
-                            qremark = (aryremark[tmp_index]);
+                            qremark = aryremark[tmp_index];
                         }
 
                         if (opt.has_remark === "True") {
@@ -54,14 +54,14 @@ _gg.SetModifyData = function () {
                     });
 
                     if (usecontrol === 'select') {
-                        ret_html += '<select class="" name="' + qkey + '" data-type="' + qkey + '"><option value="">' + qplaceholder + '</option>' + tmp_html + '</select>' + tmp_remark_html;
+                        ret_html += '<select class="" name="' + qkey + '" data-type="' + qkey + '"><option value=""></option>' + tmp_html + '</select>' + tmp_remark_html;
 
                     } else  {
                         ret_html += tmp_html;
 
                     }
                 } else {
-                    qdata = $.HTMLDecode(arydata[0]);
+                    qdata = arydata[0];
                     if (usecontrol === 'textarea') {
                       ret_html = '<textarea class="input-xlarge" name="' + qkey + '" data-type="' + qkey + '" placeholder="' + qplaceholder + '" rows="3">' + qdata + '</textarea>';
                     } else {
@@ -69,7 +69,7 @@ _gg.SetModifyData = function () {
                     }
                 }
             } else {
-                qdata = $.HTMLDecode(arydata[0]);
+                qdata = arydata[0];
                 if (usecontrol === 'textarea') {
                   ret_html = '<textarea class="input-xlarge" name="' + qkey + '" data-type="' + qkey + '" placeholder="' + qplaceholder + '" rows="3">' + qdata + '</textarea>';
                 } else {
@@ -205,11 +205,15 @@ _gg.SetModifyData = function () {
             $(questions).each(function (index, value) {
                 if (value.CanStudentEdit === "是") {
                     if (value.TagName !== 'Title') {
+                        var tmp_x = set_form(value, relatives);
+                        var tmp_searchvalue = ' name="' + $(tmp_x).attr("name") + '"';
+                        var tmp_newvalue = ' name="' + $(tmp_x).attr("name") + key + '"';
+                        tmp_x = tmp_x.replace(tmp_searchvalue, tmp_newvalue);
                         tmp_items.push(
                             '<div class="control-group">' +
                             '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
                             '    <div class="controls">' +
-                            set_form(value, relatives) +
+                            tmp_x +
                             '    </div>' +
                             '  </label>' +
                             '</div>'
@@ -253,20 +257,24 @@ _gg.SetModifyData = function () {
         }
 
         $(tmp_resource).each(function (key, siblings) {
+            var tmp_number;
             if (run_model === 'add') {
-                key = $('#' + data_scope + ' .accordion-group').size();
+                tmp_number = $('#siblings-add-data').attr("new-id");
+            } else {
+                tmp_number = key;
             }
+            $('#siblings-add-data').attr("new-id", parseInt(tmp_number, 10) + 1);
 
             tmp_items.push(
                 '  <div class="accordion-group">' +
                 '    <div class="accordion-heading">' +
-                '      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion' + data_scope + '" href="#collapse' + data_scope + key + '">' +
+                '      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion' + data_scope + '" href="#collapse' + data_scope + tmp_number + '">' +
                 '        <i class="icon-chevron-down pull-right"></i>' +
-                '        <input type="text" class="input-large" data-type="Name" placeholder="請輸入姓名" value="' + siblings.Name + '">' +
+                '        <input type="text" class="input-large" name="Name' + tmp_number + '" data-type="Name" placeholder="請輸入姓名" value="' + siblings.Name + '">' +
                 '        <button class="btn" data-action="del"><i class="icon-minus-sign"></i>刪除</button>' +
                 '      </a>' +
                 '    </div>' +
-                '    <div id="collapse' + data_scope + key + '" class="accordion-body collapse">' +
+                '    <div id="collapse' + data_scope + tmp_number + '" class="accordion-body collapse">' +
                 '      <div class="accordion-inner">'
             );
 
@@ -281,11 +289,15 @@ _gg.SetModifyData = function () {
                 } else if (value.TagName === 'Name') {
                 } else {
                     if (value.CanStudentEdit === "是") {
+                        var tmp_x = set_form(value, siblings);
+                        var tmp_searchvalue = ' name="' + $(tmp_x).attr("name") + '"';
+                        var tmp_newvalue = ' name="' + $(tmp_x).attr("name") + tmp_number + '"';
+                        tmp_x = tmp_x.replace(tmp_searchvalue, tmp_newvalue);
                         tmp_items.push(
                             '<div class="control-group">' +
                             '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
                             '    <div class="controls">' +
-                            set_form(value, siblings) +
+                            tmp_x +
                             '    </div>' +
                             '  </label>' +
                             '</div>'
@@ -387,13 +399,13 @@ _gg.SetModifyData = function () {
 
         var tmp_chinese_grade;
         switch (_gg.grade) {
-            case 1:
+            case "1":
                 tmp_chinese_grade = "一";
                 break;
-            case 2:
+            case "2":
                 tmp_chinese_grade = "二";
                 break;
-            case 3:
+            case "3":
                 tmp_chinese_grade = "三";
                 break;
         }
@@ -403,7 +415,7 @@ _gg.SetModifyData = function () {
     // TODO: 自我認識
     var set_oneself = function (questions) {
         var tmp_items = [];
-        var tmp_grade = (_gg.grade || 1);
+        var tmp_grade = (_gg.grade || "1");
         $(questions).each(function (index, value) {
             if (value.CanStudentEdit === "是") {
                 if (value.Name.slice(-1) === tmp_grade) { // ex.個性_1
@@ -428,7 +440,7 @@ _gg.SetModifyData = function () {
     var set_life = function (questions) {
 
         var tmp_items = [];
-        var tmp_grade = (_gg.grade || 1);
+        var tmp_grade = (_gg.grade || "1");
 
         $(questions).each(function (key, value) {
             if (value.CanStudentEdit === "是") {
@@ -545,12 +557,30 @@ _gg.SetModifyData = function () {
                 }
             }
 
-            $("#" + data_scope + " form").validate();
+            $("#" + data_scope + " form").validate({
+                errorElement: "span",
+                errorClass: "help-inline",
+                highlight: function(element) {
+                    $(element).parent().parent().addClass("error");
+                },
+                unhighlight: function(element) {
+                    $(element).parent().parent().removeClass("error");
+                }
+            });
         },
         addSibling: function () {
             data_scope = 'siblings';
             set_siblings(_gg.col_Question.A4, 'add');
-            $("#" + data_scope + " form").validate();
+            $("#" + data_scope + " form").validate({
+                errorElement: "span",
+                errorClass: "help-inline",
+                highlight: function(element) {
+                    $(element).parent().parent().addClass("error");
+                },
+                unhighlight: function(element) {
+                    $(element).parent().parent().removeClass("error");
+                }
+            });
         }
     }
 }();

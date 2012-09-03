@@ -1,5 +1,4 @@
-<Content>
-	<Contract Name="ischool.counsel.student" Enabled="True">
+<Project Name="counsel"><Property Name="UDT"></Property><Property Name="UDS"><Contract Name="ischool.counsel.student" Enabled="True">
 	<Definition>
 		<Authentication Extends="auth.student" />
 	</Definition>
@@ -711,5 +710,4 @@ and name = 'ABCardAccessStartingDate'
 			</Definition>
 		</Service>
 	</Package>
-</Contract>
-</Content>
+</Contract></Property></Project>

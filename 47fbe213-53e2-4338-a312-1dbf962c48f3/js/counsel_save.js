@@ -16,7 +16,8 @@ _gg.SetSaveData = function (data_scope) {
             var qkey         = question.TagName || (question.GroupName + '_' + question.Name);
             var qoption      = question.Options;
             var usecontrol   = question.ControlType;
-            var ret_value = [], tmp_value = {};
+            var ret_value = [];
+            var tmp_value = { Data: '', Remark: ''};
             contents = contents || $('#' + data_scope);
 
             if (qoption && qoption.item) {
@@ -33,7 +34,7 @@ _gg.SetSaveData = function (data_scope) {
                             tmp_value = {};
                             tmp_value.Data   = $(this).val() || '';
                             tmp_value.Remark = contents.find('[data-index=' + $(this).attr('data-index') + '][data-type=' + qkey + '_remark]').val() || '';
-                            tmp_value.Remark = $.HTMLEncode(tmp_value.Remark);
+                            tmp_value.Remark = tmp_value.Remark;
                             ret_value.push(tmp_value);
                         });
                         break;
@@ -341,12 +342,10 @@ _gg.SetSaveData = function (data_scope) {
 
     // TODO: 自我認識
     var set_oneself = function (questions) {
-        var tmp_grade = (_gg.grade || 1);
+        var tmp_grade = (_gg.grade || "1");
         $(questions).each(function (index, value) {
             if (value.CanStudentEdit === "是") {
                 if (value.Name.slice(-1) === tmp_grade) { // ex.內容1_1
-                    get_request(value);
-                } else {
                     if (value.Name.indexOf("填寫日期") === -1) {
                         get_request(value);
                     } else {
@@ -368,7 +367,7 @@ _gg.SetSaveData = function (data_scope) {
 
     // TODO: 生活感想
     var set_life = function (questions) {
-        var tmp_grade = (_gg.grade || 1);
+        var tmp_grade = (_gg.grade || "1");
         $(questions).each(function (key, value) {
             if (value.CanStudentEdit === "是") {
                 if (value.Name.slice(-1) === tmp_grade) { // ex.內容1_1
@@ -436,7 +435,7 @@ _gg.SetSaveData = function (data_scope) {
         });
     };
 
-    // TODO: 編輯畫面
+    // TODO: 儲存範圍
     var tmp_colID;
     switch (data_scope) {
         case 'personal':
@@ -488,14 +487,6 @@ _gg.SetSaveData = function (data_scope) {
             set_memoir(_gg.col_Question.D1);
             break;
     }
-
-    // console.log(tmp_singleRecord.join(''));
-    // console.log(tmp_multipleRecord.join(''));
-    // console.log(tmp_semesterData.join(''));
-    // console.log(tmp_yearlyData.join(''));
-    // console.log(tmp_priorityData.join(''));
-    // console.log(tmp_relative.join(''));
-    // console.log(tmp_sibling.join(''));
 
     var save_singleRecord = false;
     var save_multipleRecord = false;
@@ -549,9 +540,18 @@ _gg.SetSaveData = function (data_scope) {
                     });
                     break;
                 default:
+                    var tmp_grade = (_gg.grade || "1");
                     $(_gg.col_Question[tmp_colID]).each(function (key, value) {
                         if (value.CanStudentEdit === "是") {
-                            value.SelectValue = tmp_reset_data[value.Name];
+                            if (this.CanStudentEdit === "是") {
+                                if (tmp_colID === 'B4' ||  tmp_colID === 'B5') {
+                                    if (this.Name.slice(-1) === tmp_grade) { // ex.內容1_1
+                                        value.SelectValue = tmp_reset_data[value.Name];
+                                    }
+                                } else {
+                                    value.SelectValue = tmp_reset_data[value.Name];
+                                }
+                            }
                         }
                     });
                     _gg.SetData(tmp_colID);
@@ -561,11 +561,35 @@ _gg.SetSaveData = function (data_scope) {
     };
 
 
+    var set_error_message = function(serviceName, error) {
+        if (error.dsaError.status === "504") {
+            if (error.dsaError.message === "已過開放填寫時間") {
+                $("#" + data_scope + "_errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
+            } else {
+                $("#" + data_scope + "_errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>\n</div>");
+                $("#" + data_scope + " button[edit-target]").button('reset'); // TODO: 重設按鈕
+            }
+        } else {
+            $("#" + data_scope + "_errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(" + serviceName +")\n</div>");
+            $("#" + data_scope + " button[edit-target]").button('reset'); // TODO: 重設按鈕
+        }
+    };
+
+
     if (tmp_singleRecord.join("")) {
         tmp_del_request = [];
+        var tmp_grade = (_gg.grade || "1");
         $(_gg.col_Question[tmp_colID]).each(function(){
-            if (((this.QuestionType || '').toLowerCase()) === 'single_answer') {
-                tmp_del_request.push('<Key>' + this.GroupName + '_' + this.Name + '</Key>');
+            if (this.CanStudentEdit === "是") {
+                if (((this.QuestionType || '').toLowerCase()) === 'single_answer') {
+                    if (tmp_colID === 'B4' ||  tmp_colID === 'B5') {
+                        if (this.Name.slice(-1) === tmp_grade) { // ex.內容1_1
+                            tmp_del_request.push('<Key>' + this.GroupName + '_' + this.Name + '</Key>');
+                        }
+                    } else {
+                        tmp_del_request.push('<Key>' + this.GroupName + '_' + this.Name + '</Key>');
+                    }
+                }
             }
         });
 
@@ -574,22 +598,14 @@ _gg.SetSaveData = function (data_scope) {
             body: '<Request><SingleRecord>' + tmp_del_request.join("") + '</SingleRecord></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    if (error.dsaError.status === "504") {
-                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
-                    } else {
-                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelSingleRecord)\n</div>");
-                    }
+                    set_error_message('DelSingleRecord', error);
                 } else {
                     _gg.connection.send({
                         service: "_.InsertSingleRecord",
                         body: '<Request>' + tmp_singleRecord.join("") + '</Request>',
                         result: function (response, error, http) {
                             if (error !== null) {
-                                if (error.dsaError.status === "504") {
-                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
-                                } else {
-                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(InsertSingleRecord)\n</div>");
-                                }
+                                set_error_message('InsertSingleRecord', error);
                             } else {
                                 save_singleRecord = true;
                                 reset_data();
@@ -605,9 +621,18 @@ _gg.SetSaveData = function (data_scope) {
 
     if (tmp_multipleRecord.join("")) {
         tmp_del_request = [];
+        var tmp_grade = (_gg.grade || "1");
         $(_gg.col_Question[tmp_colID]).each(function(){
-            if (((this.QuestionType || '').toLowerCase()) === 'multi_answer') {
-                tmp_del_request.push('<Key>' + this.GroupName + '_' + this.Name + '</Key>');
+            if (this.CanStudentEdit === "是") {
+                if (((this.QuestionType || '').toLowerCase()) === 'multi_answer') {
+                    if (tmp_colID === 'B4' ||  tmp_colID === 'B5') {
+                        if (this.Name.slice(-1) === tmp_grade) { // ex.內容1_1
+                            tmp_del_request.push('<Key>' + this.GroupName + '_' + this.Name + '</Key>');
+                        }
+                    } else {
+                        tmp_del_request.push('<Key>' + this.GroupName + '_' + this.Name + '</Key>');
+                    }
+                }
             }
         });
 
@@ -616,22 +641,14 @@ _gg.SetSaveData = function (data_scope) {
             body: '<Request><MultipleRecord>' + tmp_del_request.join("") + '</MultipleRecord></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    if (error.dsaError.status === "504") {
-                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
-                    } else {
-                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelMultipleRecord)\n</div>");
-                    }
+                    set_error_message('DelMultipleRecord', error);
                 } else {
                     _gg.connection.send({
                         service: "_.InsertMultipleRecord",
                         body: '<Request>' + tmp_multipleRecord.join("") + '</Request>',
                         result: function (response, error, http) {
                             if (error !== null) {
-                                if (error.dsaError.status === "504") {
-                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
-                                } else {
-                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(InsertMultipleRecord)\n</div>");
-                                }
+                                set_error_message('InsertMultipleRecord', error);
                             } else {
                                 save_multipleRecord = true;
                                 reset_data();
@@ -649,7 +666,9 @@ _gg.SetSaveData = function (data_scope) {
         tmp_del_request = [];
         $(_gg.col_Question[tmp_colID]).each(function(){
             if (((this.QuestionType || '').toLowerCase()) === 'semester') {
-                tmp_del_request.push('<Key>' + this.GroupName + '_' + this.Name + '</Key>');
+                if (this.CanStudentEdit === "是") {
+                    tmp_del_request.push('<Key>' + this.GroupName + '_' + this.Name + '</Key>');
+                }
             }
         });
 
@@ -658,22 +677,14 @@ _gg.SetSaveData = function (data_scope) {
             body: '<Request><SemesterData>' + tmp_del_request.join("") + '</SemesterData></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    if (error.dsaError.status === "504") {
-                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
-                    } else {
-                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelSemesterData)\n</div>");
-                    }
+                    set_error_message('DelSemesterData', error);
                 } else {
                     _gg.connection.send({
                         service: "_.InsertSemesterData",
                         body: '<Request>' + tmp_semesterData.join("") + '</Request>',
                         result: function (response, error, http) {
                             if (error !== null) {
-                                if (error.dsaError.status === "504") {
-                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
-                                } else {
-                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(InsertSemesterData)\n</div>");
-                                }
+                                set_error_message('InsertSemesterData', error);
                             } else {
                                 save_semesterData = true;
                                 reset_data();
@@ -691,7 +702,9 @@ _gg.SetSaveData = function (data_scope) {
         tmp_del_request = [];
         $(_gg.col_Question[tmp_colID]).each(function(){
             if (((this.QuestionType || '').toLowerCase()) === 'yearly') {
-                tmp_del_request.push('<Key>' + this.GroupName + '_' + this.Name + '</Key>');
+                if (this.CanStudentEdit === "是") {
+                    tmp_del_request.push('<Key>' + this.GroupName + '_' + this.Name + '</Key>');
+                }
             }
         });
 
@@ -700,22 +713,14 @@ _gg.SetSaveData = function (data_scope) {
             body: '<Request><YearlyData>' + tmp_del_request.join("") + '</YearlyData></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    if (error.dsaError.status === "504") {
-                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
-                    } else {
-                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelYearlyData)\n</div>");
-                    }
+                    set_error_message('DelYearlyData', error);
                 } else {
                     _gg.connection.send({
                         service: "_.InsertYearlyData",
                         body: '<Request>' + tmp_yearlyData.join("") + '</Request>',
                         result: function (response, error, http) {
                             if (error !== null) {
-                                if (error.dsaError.status === "504") {
-                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
-                                } else {
-                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(InsertYearlyData)\n</div>");
-                                }
+                                set_error_message('InsertYearlyData', error);
                             } else {
                                 save_yearlyData = true;
                                 reset_data();
@@ -733,7 +738,9 @@ _gg.SetSaveData = function (data_scope) {
         tmp_del_request = [];
         $(_gg.col_Question[tmp_colID]).each(function(){
             if (((this.QuestionType || '').toLowerCase()) === 'priority') {
-                tmp_del_request.push('<Key>' + this.GroupName + '_' + this.Name + '</Key>');
+                if (this.CanStudentEdit === "是") {
+                    tmp_del_request.push('<Key>' + this.GroupName + '_' + this.Name + '</Key>');
+                }
             }
         });
 
@@ -742,22 +749,14 @@ _gg.SetSaveData = function (data_scope) {
             body: '<Request><PriorityData>' + tmp_del_request.join("") + '</PriorityData></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    if (error.dsaError.status === "504") {
-                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
-                    } else {
-                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelPriorityData)\n</div>");
-                    }
+                    set_error_message('DelPriorityData', error);
                 } else {
                     _gg.connection.send({
                         service: "_.InsertPriorityData",
                         body: '<Request>' + tmp_priorityData.join("") + '</Request>',
                         result: function (response, error, http) {
                             if (error !== null) {
-                                if (error.dsaError.status === "504") {
-                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
-                                } else {
-                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(InsertPriorityData)\n</div>");
-                                }
+                                set_error_message('InsertPriorityData', error);
                             } else {
                                 save_priorityData = true;
                                 reset_data();
@@ -777,11 +776,7 @@ _gg.SetSaveData = function (data_scope) {
             body: '<Request>' + tmp_relative.join("") + '</Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    if (error.dsaError.status === "504") {
-                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
-                    } else {
-                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(UpdateRelative)\n</div>");
-                    }
+                    set_error_message('UpdateRelative', error);
                 } else {
                     save_relative = true;
                     reset_data();
@@ -792,28 +787,20 @@ _gg.SetSaveData = function (data_scope) {
         save_relative = true;
     }
 
-    if (tmp_sibling.join("")) {
+    if (tmp_colID === 'A4') {
         _gg.connection.send({
             service: "_.DelSibling",
             body: '<Request><Sibling></Sibling></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    if (error.dsaError.status === "504") {
-                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
-                    } else {
-                        $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(DelSibling)\n</div>");
-                    }
+                    set_error_message('DelSibling', error);
                 } else {
                     _gg.connection.send({
                         service: "_.InsertSibling",
                         body: '<Request>' + tmp_sibling.join("") + '</Request>',
                         result: function (response, error, http) {
                             if (error !== null) {
-                                if (error.dsaError.status === "504") {
-                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
-                                } else {
-                                    $("#" + data_scope + " #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>(InsertSibling)\n</div>");
-                                }
+                                set_error_message('InsertSibling', error);
                             } else {
                                 save_sibling = true;
                                 reset_data();

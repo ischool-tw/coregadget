@@ -384,7 +384,7 @@ _gg.loadCounselData = function () {
                                         _gg.grade = i + '';
                                         _gg.chineseGrade = tmp_chinese_grade;
 
-                                        tmp_html += '<button class="btn btn-large" grade="' +i+ '" chinese-grade="' +tmp_chinese_grade+ '">' +tmp_chinese_grade+ '年(' +tmp_school_year+ ')</button>';
+                                        tmp_html += '<button class="btn btn-large" grade="' +i+ '" chinese-grade="' +tmp_chinese_grade+ '">' +tmp_chinese_grade+ '年級(' +tmp_school_year+ ')</button>';
                                     }
                                 }
 
@@ -422,6 +422,7 @@ _gg.loadCounselData = function () {
                                                         return false;
                                                     }
                                                 });
+                                                _gg.SetData("All");
                                             }
                                         }
                                     }
