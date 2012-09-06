@@ -248,20 +248,22 @@ WHERE @@Condition @@Order</SQLTemplate>
 		</Service>
 		<Service Enabled="true" Name="GetOpeningHours">
 			<Definition Type="dbhelper">
-				<Action>Select</Action>
-				<SQLTemplate>SELECT @@FieldList
-FROM $counsel.system_list
-WHERE @@Condition
-and name = 'ABCardAccessStartingDate'
-@@Order</SQLTemplate>
-				<ResponseRecordElement>Response/OpeningHours</ResponseRecordElement>
-				<FieldList Name="FieldList" Source="Field">
-					<Field Alias="Content" Mandatory="True" OutputType="xml" Source="Content" Target="content" />
-				</FieldList>
-				<Conditions Name="Condition" Required="False" Source="Condition" />
-				<Orders Name="Order" Source="Order" />
-				<Pagination Allow="True" />
-			</Definition>
+	<Action>Select</Action>
+	<SQLTemplate>SELECT @@FieldList
+		FROM $counsel.system_list
+		WHERE @@Condition
+		and name = 'ABCardAccessStartingDate'
+		@@Order
+		limit 1
+	</SQLTemplate>
+	<ResponseRecordElement>Response/OpeningHours</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="Content" Mandatory="True" OutputType="xml" Source="Content" Target="content" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition" />
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+</Definition>
 		</Service>
 		<Service Enabled="true" Name="GetPriorityData">
 			<Definition Type="dbhelper">
@@ -519,26 +521,25 @@ and name = 'ABCardAccessStartingDate'
 		</Service>
 		<Service Enabled="true" Name="InsertRelative">
 			<Definition Type="dbhelper">
-	<Action>Insert</Action>
-	<SQLTemplate>
-		<![CDATA[INSERT INTO $ischool.counsel.relative @@FieldList]]></SQLTemplate>
-	<RequestRecordElement>Relative</RequestRecordElement>
-	<FieldList Name="FieldList" Source="">
-		<Field Source="BirthYear" Target="birth_year" />
-		<Field Source="EduDegree" Target="edu_degree" />
-		<Field Source="Institute" Target="institute" />
-		<Field Source="IsAlive" Target="is_alive" />
-		<Field Source="Job" Target="job" />
-		<Field Source="JobTitle" Target="job_title" />
-		<Field Source="Name" Target="name" />
-		<Field Source="Phone" Target="phone" />
-		<Field Source="StudentID" SourceType="Variable" Target="ref_student_id" />
-		<Field Source="Title" Target="title" />
-	</FieldList>
-	<InternalVariable>
-		<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
-	</InternalVariable>
-</Definition>
+				<Action>Insert</Action>
+				<SQLTemplate><![CDATA[INSERT INTO $ischool.counsel.relative @@FieldList]]></SQLTemplate>
+				<RequestRecordElement>Relative</RequestRecordElement>
+				<FieldList Name="FieldList" Source="">
+					<Field Source="BirthYear" Target="birth_year" />
+					<Field Source="EduDegree" Target="edu_degree" />
+					<Field Source="Institute" Target="institute" />
+					<Field Source="IsAlive" Target="is_alive" />
+					<Field Source="Job" Target="job" />
+					<Field Source="JobTitle" Target="job_title" />
+					<Field Source="Name" Target="name" />
+					<Field Source="Phone" Target="phone" />
+					<Field Source="StudentID" SourceType="Variable" Target="ref_student_id" />
+					<Field Source="Title" Target="title" />
+				</FieldList>
+				<InternalVariable>
+					<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+				</InternalVariable>
+			</Definition>
 		</Service>
 		<Service Enabled="true" Name="InsertSemesterData">
 			<Definition Type="dbhelper">

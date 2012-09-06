@@ -362,7 +362,9 @@ jQuery(function () {
             if (qtype) {
                 switch (qtype.toLowerCase()) {
                     case 'single_answer':
-                        tmp_data = (qvalue.Data || '') + (qvalue.Remark || '');
+                        if (qvalue.Remark) {
+                            tmp_data += ":" + qvalue.Remark;
+                        }
                         break;
                     case 'multi_answer':
                         $.each(qvalue, function (index, item) {
@@ -370,7 +372,10 @@ jQuery(function () {
                                 tmp_data += ", ";
                             }
 
-                            tmp_data += (item.Data || '') + (item.Remark || '');
+                            tmp_data += (item.Data || '');
+                            if (item.Remark) {
+                                tmp_data += ":" + item.Remark;
+                            };
                         });
                         break;
                     case 'yearly':
@@ -623,6 +628,9 @@ jQuery(function () {
                 $(content.Item).each(function(index, item){
                     if (index !== 0) ret_str += ", ";
                     ret_str += item.name;
+                    if (item.remark) {
+                        ret_str += ":" + item.remark;
+                    }
                 });
                 return ret_str;
             }

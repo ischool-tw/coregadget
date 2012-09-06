@@ -434,7 +434,7 @@ _gg.SetSaveData = function (data_scope) {
         }
 
         tmp_interviewRecord.push('<Cause>' + $("#Cause").val() + '</Cause>');
-        tmp_interviewRecord.push('<ContentDigest>' + $("#ContentDigest").html() + '</ContentDigest>');
+        tmp_interviewRecord.push('<ContentDigest>' + $("#ContentDigest").val() + '</ContentDigest>');
         tmp_interviewRecord.push('<InterviewDate>' + $("#InterviewDate").val() + '</InterviewDate>');
         tmp_interviewRecord.push('<InterviewTime>' + $("#InterviewTime").val() + '</InterviewTime>');
         tmp_interviewRecord.push('<InterviewNo>' + $("#InterviewNo").val() + '</InterviewNo>');
@@ -485,7 +485,6 @@ _gg.SetSaveData = function (data_scope) {
             tmp_attr=' name="' + this.value + '"';
             if (this.value === '其他') {
                 tmp_attr += ' remark="' + $("#CounselTypeKindOtherRemark").val() + '"';
-
             }
 
             tmp_interviewRecord.push('<Item' + tmp_attr + '></Item>');
@@ -877,18 +876,23 @@ _gg.SetSaveData = function (data_scope) {
                 if (error !== null) {
                     set_error_message('DelSibling', error);
                 } else {
-                    _gg.connection.send({
-                        service: "_.InsertSibling",
-                        body: '<Request><StudentID>' + student.StudentID + '</StudentID>' + tmp_sibling.join("") + '</Request>',
-                        result: function (response, error, http) {
-                            if (error !== null) {
-                                set_error_message('InsertSibling', error);
-                            } else {
-                                save_sibling = true;
-                                reset_data();
+                    if (tmp_sibling.join("")) {
+                        _gg.connection.send({
+                            service: "_.InsertSibling",
+                            body: '<Request><StudentID>' + student.StudentID + '</StudentID>' + tmp_sibling.join("") + '</Request>',
+                            result: function (response, error, http) {
+                                if (error !== null) {
+                                    set_error_message('InsertSibling', error);
+                                } else {
+                                    save_sibling = true;
+                                    reset_data();
+                                }
                             }
-                        }
-                    });
+                        });
+                    } else {
+                        save_sibling = true;
+                        reset_data();
+                    }
                 }
             }
         });
