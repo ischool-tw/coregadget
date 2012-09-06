@@ -237,6 +237,15 @@ _gg.SetSaveData = function (data_scope) {
 
     // TODO: 兄弟姊妹資料
     var set_siblings = function (questions) {
+        $(questions).each(function (index, value) {
+            if (value.Name === '兄弟姊妹_排行') {
+                if (value.CanStudentEdit === "是") {
+                    get_request(value);
+                }
+                return false;
+            }
+        });
+
         $('#' + data_scope + ' .accordion-group').each(function (a, b) {
 
             tmp_sibling.push('<Sibling>');
@@ -247,8 +256,6 @@ _gg.SetSaveData = function (data_scope) {
                         tmp_sibling.push('<' + value.TagName + '>');
                         get_request(value, $(b));
                         tmp_sibling.push('</' + value.TagName + '>');
-                    } else {
-                        get_request(value);
                     }
                 }
             });
