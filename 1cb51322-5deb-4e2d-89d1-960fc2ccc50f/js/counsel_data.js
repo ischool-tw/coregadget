@@ -224,7 +224,6 @@ _gg.loadCounselData = function () {
                             if (error !== null) {
                                 $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetQuestionsData)\n</div>");
                             } else {
-                                debugger
                                 if (response.Response.QuestionsData && response.Response.QuestionsData.Items && response.Response.QuestionsData.Items.Items && response.Response.QuestionsData.Items.Items.item) {
                                     var tmp_str = '';
                                     $(response.Response.QuestionsData.Items.Items.item).each(function(key, value) {
