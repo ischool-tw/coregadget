@@ -379,9 +379,9 @@
                   <div class="control-group">
                     <label class="control-label">晤談紀錄查詢：</label>
                     <div class="controls">
-                      <input class="input-small {date:true}" placeholder="年/月/日" type="text" id="filter-interview-start">
+                      <input class="input-small {date:true, dateISO:true}" placeholder="例:2012/01/01" type="text" id="filter-interview-start">
                       ~
-                      <input class="input-small {date:true}" placeholder="年/月/日" type="text" id="filter-interview-end">
+                      <input class="input-small {date:true, dateISO:true}" placeholder="例:2012/01/01" type="text" id="filter-interview-end">
                       <button class="btn" type="button" id="search-interview">
                         <i class="icon-search"></i>
                         開始搜尋</button>
@@ -845,7 +845,7 @@
         <div class="control-group">
           <label class="control-label">*日期</label>
           <div class="controls">
-            <input class="input-large {required:true, date: true}" name="InterviewDate" id="InterviewDate" placeholder="年/月/日" type="text">
+            <input class="input-large {required:true, date:true, dateISO:true}" name="InterviewDate" id="InterviewDate" placeholder="例:2012/01/01" type="text">
           </div>
         </div>
         <div class="control-group">

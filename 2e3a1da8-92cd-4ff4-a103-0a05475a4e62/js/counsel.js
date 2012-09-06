@@ -224,7 +224,6 @@ jQuery(function () {
     // TODO: 晤談紀錄查詢
     $("#filter-interview").validate();
     $("#search-interview").bind("click", function(e) {
-        debugger
         var start_date = $('#filter-interview-start').val();
         var end_date = $('#filter-interview-end').val();
 
