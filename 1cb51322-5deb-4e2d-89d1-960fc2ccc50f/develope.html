@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+  <script>
+    init({
+      application: "dev.sh_d", //"h.trialschool.tw", //"http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_kh",
+      paramValues: {}
+    });
+  </script>
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <!--<link href="css/base.less" rel="stylesheet/less" />
+  <link href="css/default.less" rel="stylesheet/less" />-->
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <!--<script src="js/less.min.js"></script>-->
+  <script src="js/jquery.validate.min.js"></script>
+  <script src="js/jquery.metadata.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/messages_tw.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/counsel.js"></script>
+  <script src="js/counsel_data.js"></script>
+  <script src="js/counsel_update.js"></script>
+  <script src="js/counsel_save.js"></script>
+</head>
+<body>
+  <div id="gadget">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+          <div id="mainMsg"></div>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="tabbable tabs-below">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#baseinfo" data-toggle="tab">個人及親屬資料</a></li>
+            <li><a href="#tab2" data-toggle="tab">家庭、學習、生活</a></li>
+            <li><a href="#tab3" data-toggle="tab">畢業後規劃</a></li>
+            <li><a href="#tab4" data-toggle="tab">自傳</a></li>
+          </ul>
+          <span id="opening"></span>
+          <div class="tab-content">
+            <!--個人及親屬資料-->
+            <div class="tab-pane active" id="baseinfo">
+              <div class="row-fluid">
+                <!--個人資料-->
+                <div class="span5">
+                  <div class="my-baseinfo-item well" id="A1">
+                    <div class="my-label-title">
+                      <a data-toggle="modal" href="#personal" class="btn btn-success">
+                        <i class="icon-edit icon-white"></i>個人資料</a>
+                    </div>
+                    <table class="table">
+                      <tbody>
+                        <tr>
+                          <th width="42%">血型</th>
+                          <td width="58%" data-type="本人概況_血型"></td>
+                        </tr>
+                        <tr>
+                          <th>宗教</th>
+                          <td data-type="本人概況_宗教"></td>
+                        </tr>
+                        <tr>
+                          <th>生理缺陷</th>
+                          <td data-type="本人概況_生理缺陷"></td>
+                        </tr>
+                        <tr>
+                          <th>曾患特殊疾病</th>
+                          <td data-type="本人概況_曾患特殊疾病"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!--監護人資料-->
+                <div class="span7">
+                  <div class="my-baseinfo-item well" id="A2">
+                    <div class="my-label-title">
+                      <a data-toggle="modal" href="#guardian" class="btn btn-success">
+                        <i class="icon-edit icon-white"></i>監護人資料</a>
+                    </div>
+                    <table class="table">
+                      <tbody>
+                        <tr>
+                          <th width="59">姓名</th>
+                          <td colspan="3" data-type="家庭狀況_監護人_姓名"></td>
+                        </tr>
+                        <tr>
+                          <th>性別</th>
+                          <td width="139" data-type="家庭狀況_監護人_性別"></td>
+                          <th width="62">關係</th>
+                          <td width="87" data-type="家庭狀況_監護人_關係"></td>
+                        </tr>
+                        <tr>
+                          <th>電話</th>
+                          <td colspan="3" data-type="家庭狀況_監護人_電話"></td>
+                        </tr>
+                        <tr>
+                          <th>地址</th>
+                          <td colspan="3" data-type="家庭狀況_監護人_通訊地址"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <!--尊親屬資料-->
+              <div class="my-baseinfo-item well" id="A3">
+                <div class="my-label-title">
+                  <a data-toggle="modal" href="#parents" class="btn btn-success">
+                    <i class="icon-edit icon-white"></i>尊親屬資料</a>
+                </div>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th width="7%">稱謂</th>
+                      <th width="10%">姓名</th>
+                      <th width="7%">出生年</th>
+                      <th>存歿</th>
+                      <th>電話</th>
+                      <th>職業</th>
+                      <th>工作機構</th>
+                      <th>職稱</th>
+                      <th>教育程度</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+              <div class="row-fluid">
+                <!--兄弟姊妹資料-->
+                <div class="span7">
+                  <div class="my-baseinfo-item well" id="A4">
+                    <div class="my-label-title">
+                      <a data-toggle="modal" href="#siblings" class="btn btn-success">
+                        <i class="icon-edit icon-white"></i>兄弟姊妹資料</a>
+                    </div>
+                    <p data-type="家庭狀況_兄弟姊妹_排行"></p>
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th width="12%">稱謂</th>
+                          <th width="18%">姓名</th>
+                          <th width="13%">出生年</th>
+                          <th width="37%">畢業學校</th>
+                          <th width="14%">備註</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+                <!--身高及體重-->
+                <div class="span5">
+                  <div class="my-baseinfo-item well" id="A5">
+                    <div class="my-label-title">
+                      <a data-toggle="modal" href="#psize" class="btn btn-success">
+                        <i class="icon-edit icon-white"></i>身高及體重</a>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span6">
+                        <table class="table">
+                          <tbody>
+                            <tr>
+                              <th width="27%">&nbsp;</th>
+                              <th>身高</th>
+                              <th>體重</th>
+                            </tr>
+                            <tr>
+                              <th nowrap>一上</th>
+                              <td width="36%" data-type="本人概況_身高S1a"></td>
+                              <td width="37%" data-type="本人概況_體重S1a"></td>
+                            </tr>
+                            <tr>
+                              <th nowrap>二上</th>
+                              <td data-type="本人概況_身高S2a"></td>
+                              <td data-type="本人概況_體重S2a"></td>
+                            </tr>
+                            <tr>
+                              <th nowrap>三上</th>
+                              <td data-type="本人概況_身高S3a"></td>
+                              <td data-type="本人概況_體重S3a"></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="span6">
+                        <table class="table">
+                          <tbody>
+                            <tr>
+                              <th width="27%">&nbsp;</th>
+                              <th>身高</th>
+                              <th>體重</th>
+                            </tr>
+                            <tr>
+                              <th nowrap>一下</th>
+                              <td width="36%" data-type="本人概況_身高S1b"></td>
+                              <td width="37%" data-type="本人概況_體重S1b"></td>
+                            </tr>
+                            <tr>
+                              <th nowrap>二下
+                              </th>
+                              <td data-type="本人概況_身高S2b"></td>
+                              <td data-type="本人概況_體重S2b"></td>
+                            </tr>
+                            <tr>
+                              <th nowrap>三下</th>
+                              <td data-type="本人概況_身高S3b"></td>
+                              <td data-type="本人概況_體重S3b"></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--家庭、學習、生活-->
+            <div class="tab-pane" id="tab2">
+              <div class="btn-group my-schoolyear-semester-widget" data-toggle="buttons-radio">
+              </div>
+              <div class="row-fluid">
+                <div class="span6">
+                  <!--家庭訊息-->
+                  <div class="my-baseinfo-item well" id="B1">
+                    <div class="my-label-title">
+                      <a data-toggle="modal" href="#home" class="btn btn-success">
+                        <i class="icon-edit icon-white"></i>家庭訊息</a>
+                    </div>
+                    <table class="table table-striped">
+                      <tbody>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="span6">
+                  <div class="my-baseinfo-item well" id="B2">
+                    <div class="my-label-title">
+                      <a data-toggle="modal" href="#learn" class="btn btn-success">
+                        <i class="icon-edit icon-white"></i>學習</a>
+                    </div>
+                    <table class="table">
+                      <tbody>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="my-baseinfo-item well" id="B3">
+                    <div class="my-label-title">
+                      <a data-toggle="modal" href="#cadre" class="btn btn-success">
+                        <i class="icon-edit icon-white"></i>幹部資訊</a>
+                    </div>
+                    <table class="table">
+                      <tbody>
+                        <tr>
+                          <th></th>
+                          <th><span data-type="grade"></span>上(第一學期)</th>
+                          <th><span data-type="grade"></span>下(第二學期)</th>
+                        </tr>
+                        <tr>
+                          <th width="31%">班級幹部</th>
+                          <td data-type="學習狀況_班級幹部a"></td>
+                          <td data-type="學習狀況_班級幹部b"></td>
+                        </tr>
+                        <tr>
+                          <th>社團幹部</th>
+                          <td data-type="學習狀況_社團幹部a"></td>
+                          <td data-type="學習狀況_社團幹部b"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="row-fluid">
+                <div class="my-baseinfo-item well" id="B4">
+                  <div class="my-label-title">
+                    <a data-toggle="modal" href="#oneself" class="btn btn-success">
+                      <i class="icon-edit icon-white"></i>自我認識</a>
+                  </div>
+                  <table class="table">
+                    <tbody>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="my-baseinfo-item well" id="B5">
+                  <div class="my-label-title">
+                    <a data-toggle="modal" href="#life" class="btn btn-success">
+                      <i class="icon-edit icon-white"></i>生活感想</a>
+                  </div>
+                  <div class="accordion" id="accordion2">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--畢業後規劃-->
+            <div class="tab-pane" id="tab3">
+              <div class="my-baseinfo-item well" id="C1">
+                <div class="my-label-title">
+                  <a data-toggle="modal" href="#plan" class="btn btn-success">
+                    <i class="icon-edit icon-white"></i>畢業後規劃</a>
+                </div>
+                <table class="table">
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+            <!--自傳-->
+            <div class="tab-pane" id="tab4">
+              <div class="my-baseinfo-item well" id="D1">
+                <div class="my-label-title">
+                  <a data-toggle="modal" href="#memoir" class="btn btn-success">
+                    <i class="icon-edit icon-white"></i>自傳</a>
+                </div>
+                <table class="table my-lineheight">
+                  <tbody>
+                    <tr>
+                      <td>家中最了解我的人是<strong data-type="自傳_家中最了解我的人"></strong></td>
+                    </tr>
+                    <tr>
+                      <td>常指導我做功課的人是<strong data-type="自傳_常指導我做功課的人"></strong></td>
+                    </tr>
+                    <tr>
+                      <td>讀過且印象最深的課外讀物是<strong data-type="自傳_讀過且印象最深刻的課外書"></strong></td>
+                    </tr>
+                    <tr>
+                      <td>最喜歡的人是<strong data-type="自傳_喜歡的人"></strong>，因為<strong data-type="自傳_喜歡的人_因為"></strong></td>
+                    </tr>
+                    <tr>
+                      <td>最要好的朋友是<strong data-type="自傳_最要好的朋友"></strong>，他<strong data-type="自傳_他是怎樣的人"></strong></td>
+                    </tr>
+                    <tr>
+                      <td>最喜歡做的事是<strong data-type="自傳_最喜歡做的事"></strong>，因為<strong data-type="自傳_最喜歡做的事_因為"></strong></td>
+                    </tr>
+                    <tr>
+                      <td>最不喜歡做的事是<strong data-type="自傳_最不喜歡做的事"></strong>，因為<strong data-type="自傳_最不喜歡做的事_因為"></strong></td>
+                    </tr>
+                    <tr>
+                      <td>國中時的學校生活是 <strong data-type="自傳_國中時的學校生活"></strong></td>
+                    </tr>
+                    <tr>
+                      <td>最快樂的回憶是 <strong data-type="自傳_最快樂的回憶"></strong></td>
+                    </tr>
+                    <tr>
+                      <td>最痛苦的回憶是 <strong data-type="自傳_最痛苦的回憶"></strong></td>
+                    </tr>
+                    <tr>
+                      <td>最足以描述自己的幾句話是 <strong data-type="自傳_最足以描述自己的幾句話"></strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <hr/>
+                <p class="pull-right">填寫日期：<span data-type="自傳_填寫日期"></span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!------------------------------------->
+<!--編輯-個人資料-->
+<div class="modal hide" id="personal">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>個人資料</h3>
+    <div id="personal_errorMessage"></div>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal">
+      <fieldset>
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="A1">儲存變更</button>
+    <a href="#" class="btn" data-dismiss="modal">離開</a>
+  </div>
+</div>
+<!--編輯-監護人資料-->
+<div class="modal hide" id="guardian">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">
+      ×</button>
+    <h3>
+      監護人資料</h3>
+    <div id="guardian_errorMessage"></div>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal">
+      <fieldset>
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="A3">儲存變更</button>
+    <a href="#" class="btn" data-dismiss="modal">離開</a>
+  </div>
+</div>
+<!--編輯-尊親屬資料-->
+<div class="modal hide" id="parents">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>尊親屬資料</h3>
+    <div id="parents_errorMessage"></div>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal">
+      <fieldset>
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="A4">儲存變更</button>
+    <a href="#" class="btn" data-dismiss="modal">離開</a>
+  </div>
+</div>
+<!--編輯-兄弟姊妹資料-->
+<div class="modal hide" id="siblings">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>兄弟姊妹資料</h3>
+    <div id="siblings_errorMessage"></div>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal">
+      <fieldset>
+        <label class="radio inline">
+          <input type="radio" name="AnySiblings" value="1" checked>我是獨子</label>
+        <label class="radio inline">
+          <input type="radio" name="AnySiblings" value="more">我有兄弟姊妹，我排行第
+        </label>
+        <input type="text" class="input-mini" data-type="家庭狀況_兄弟姊妹_排行" placeholder="排行" disabled >
+        <a href="#" class="btn pull-right" id="siblings-add-data">
+          <i class="icon-plus-sign"></i>添加欄位</a>
+        <hr/>
+        <div class="accordion" id="accordionsiblings">
+        </div>
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="A5">儲存變更</button>
+    <a href="#" class="btn" data-dismiss="modal">離開</a>
+  </div>
+</div>
+<!--編輯-身高及體重-->
+<div class="modal hide" id="psize">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>
+      身高及體重</h3>
+    <div id="psize_errorMessage"></div>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal">
+      <div class="row-fluid">
+        <div class="span6">
+          <fieldset>
+            <div class="control-group">
+              <label class="control-label">
+                一上身高</label>
+              <div class="controls">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS1a" data-type="本人概況_身高S1a" placeholder="一上身高">
+                cm
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">
+                一上體重</label>
+              <div class="controls">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS1a" data-type="本人概況_體重S1a" placeholder="一上體重">
+                kg
+              </div>
+            </div>
+            <hr/>
+            <div class="control-group">
+              <label class="control-label">
+                二上身高</label>
+              <div class="controls">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS2a" data-type="本人概況_身高S2a" placeholder="二上身高">
+                cm
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">
+                二上體重</label>
+              <div class="controls">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS2a" data-type="本人概況_體重S2a" placeholder="二上體重">
+                kg
+              </div>
+            </div>
+            <hr/>
+            <div class="control-group">
+              <label class="control-label">
+                三上身高</label>
+              <div class="controls">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS3a" data-type="本人概況_身高S3a" placeholder="三上身高">
+                cm
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">
+                三上體重</label>
+              <div class="controls">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS3a" data-type="本人概況_體重S3a" placeholder="三上體重">
+                kg
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="span6">
+          <fieldset>
+            <div class="control-group">
+              <label class="control-label">
+                一下身高</label>
+              <div class="controls">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS1b" data-type="本人概況_身高S1b" placeholder="一下身高">
+                cm
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">
+                一下體重</label>
+              <div class="controls">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS1b" data-type="本人概況_體重S1b" placeholder="一下體重">
+                kg
+              </div>
+            </div>
+            <hr/>
+            <div class="control-group">
+              <label class="control-label">
+                二下身高</label>
+              <div class="controls">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS2b" data-type="本人概況_身高S2b" placeholder="二下身高">
+                cm
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">
+                二下體重</label>
+              <div class="controls">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS2b" data-type="本人概況_體重S2b" placeholder="二下體重">
+                kg
+              </div>
+            </div>
+            <hr/>
+            <div class="control-group">
+              <label class="control-label">
+                三下身高</label>
+              <div class="controls">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS3b" data-type="本人概況_身高S3b" placeholder="三下身高">
+                cm
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">
+                三下體重</label>
+              <div class="controls">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS3b" data-type="本人概況_體重S3b" placeholder="三下體重">
+                kg
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="A2">儲存變更</button>
+    <a href="#" class="btn" data-dismiss="modal">離開</a>
+  </div>
+</div>
+<!--編輯-家庭訊息-->
+<div class="modal hide" id="home">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>家庭訊息</h3>
+    <div id="home_errorMessage"></div>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal">
+      <fieldset>
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="B1">儲存變更</button>
+    <a href="#" class="btn" data-dismiss="modal">離開</a>
+  </div>
+</div>
+<!------------------------------------->
+<!--編輯-學習-->
+<div class="modal hide" id="learn">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>學習</h3>
+    <div id="learn_errorMessage"></div>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal">
+      <fieldset>
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="B2">儲存變更</button>
+    <a href="#" class="btn" data-dismiss="modal">離開</a>
+  </div>
+</div>
+<!--編輯-幹部資訊-->
+<div class="modal hide" id="cadre">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>幹部資訊</h3>
+    <div id="cadre_errorMessage"></div>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal">
+      <fieldset>
+        <div class="control-group">
+          <label class="control-label">
+            <span data-type="grade"></span>上班級幹部</label>
+          <div class="controls">
+            <input type="text" class="input-large" data-type="學習狀況_班級幹部a" placeholder="">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">
+            <span data-type="grade"></span>上社團幹部</label>
+          <div class="controls">
+            <input type="text" class="input-large" data-type="學習狀況_社團幹部a" placeholder="">
+          </div>
+        </div>
+        <hr/>
+        <div class="control-group">
+          <label class="control-label">
+            <span data-type="grade"></span>下班級幹部</label>
+          <div class="controls">
+            <input type="text" class="input-large" data-type="學習狀況_班級幹部b" placeholder="">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">
+            <span data-type="grade"></span>下社團幹部</label>
+          <div class="controls">
+            <input type="text" class="input-large" data-type="學習狀況_社團幹部b" placeholder="">
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="B3">儲存變更</button>
+    <a href="#" class="btn" data-dismiss="modal">離開</a>
+  </div>
+</div>
+<!--編輯-自我認識-->
+<div class="modal hide" id="oneself">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>自我認識</h3>
+    <div id="oneself_errorMessage"></div>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal">
+      <fieldset>
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="B4">儲存變更</button>
+    <a href="#" class="btn" data-dismiss="modal">離開</a>
+  </div>
+</div>
+<!--編輯-生活感想-->
+<div class="modal hide" id="life">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>生活感想</h3>
+    <div id="life_errorMessage"></div>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal">
+      <fieldset>
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="B5">儲存變更</button>
+    <a href="#" class="btn" data-dismiss="modal">離開</a>
+  </div>
+</div>
+<!------------------------------------->
+<!--編輯-畢業後規劃-->
+<div class="modal hide" id="plan">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">
+      ×</button>
+    <h3>
+      畢業後規劃</h3>
+    <div id="plan_errorMessage"></div>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal">
+      <fieldset>
+        <div class="control-group">
+          <label class="control-label">升學意願</label>
+          <div class="controls" data-type="畢業後計畫_升學意願"></div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">就業意願</label>
+          <div class="controls" data-type="畢業後計畫_就業意願"></div>
+        </div>
+        <hr/>
+        <div class="control-group">
+          <label class="control-label">希望職業訓練種類</label>
+          <div class="controls" data-type="畢業後計畫_參加職業訓練"></div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">希望職業訓練地區</label>
+          <div class="controls" data-type="畢業後計畫_受訓地區"></div>
+        </div>
+        <hr/>
+        <div class="control-group">
+          <label class="control-label">將來職業意願<br/>(請依優先順序)</label>
+          <div class="controls" data-type="畢業後計畫_將來職業"></div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">將來就業地區<br/>(請依優先順序)</label>
+          <div class="controls" data-type="畢業後計畫_就業地區"></div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="C1">儲存變更</button>
+    <a href="#" class="btn" data-dismiss="modal">離開</a>
+  </div>
+</div>
+<!------------------------------------->
+<!--編輯-自傳-->
+<div class="modal hide" id="memoir">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>自傳</h3>
+    <div id="memoir_errorMessage"></div>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal">
+      <fieldset>
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." edit-target="D1">儲存變更</button>
+    <a href="#" class="btn" data-dismiss="modal">離開</a>
+  </div>
+</div>
+</body>
+</html>
+
