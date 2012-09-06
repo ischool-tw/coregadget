@@ -294,23 +294,26 @@ and name = 'ABCardAccessStartingDate'
 		</Service>
 		<Service Enabled="true" Name="GetQuestionsData">
 			<Definition Type="dbhelper">
-				<Action>Select</Action>
-				<SQLTemplate>SELECT @@FieldList FROM $ischool.counsel.questions_data WHERE @@Condition @@Order</SQLTemplate>
-				<ResponseRecordElement>Response/QuestionsData</ResponseRecordElement>
-				<FieldList Name="FieldList" Source="Field">
-					<Field Alias="GroupName" Mandatory="True" Source="GroupName" Target="group_name" />
-					<Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
-					<Field Alias="QuestionType" Mandatory="True" Source="QuestionType" Target="question_type" />
-					<Field Alias="Items" Mandatory="True" OutputType="xml" Source="Items" Target="items" />
-					<Field Alias="CanStudentEdit" Mandatory="True" Source="CanStudentEdit" Target="(case can_student_edit when 't' then '是' else '否' end)" />
-				</FieldList>
-				<Conditions Name="Condition" Required="False" Source="Condition" />
-				<Orders Name="Order" Source="Order">
-					<Order Source="GroupName" Target="group_name" />
-					<Order Source="GroupName" Target="display_order" />
-				</Orders>
-				<Pagination Allow="True" />
-			</Definition>
+	<Action>Select</Action>
+	<SQLTemplate>SELECT @@FieldList FROM $ischool.counsel.questions_data WHERE @@Condition @@Order</SQLTemplate>
+	<ResponseRecordElement>Response/QuestionsData</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="GroupName" Mandatory="True" Source="GroupName" Target="group_name" />
+		<Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
+		<Field Alias="QuestionType" Mandatory="True" Source="QuestionType" Target="question_type" />
+		<Field Alias="Items" Mandatory="True" OutputType="xml" Source="Items" Target="items" />
+		<Field Alias="CanStudentEdit" Mandatory="True" Source="CanStudentEdit" Target="(case can_student_edit when 't' then '是' else '否' end)" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+		<Condition Required="False" Source="GroupName" Target="group_name" />
+		<Condition Required="False" Source="Name" Target="Name" />
+	</Conditions>
+	<Orders Name="Order" Source="Order">
+		<Order Source="GroupName" Target="group_name" />
+		<Order Source="GroupName" Target="display_order" />
+	</Orders>
+	<Pagination Allow="True" />
+</Definition>
 		</Service>
 		<Service Enabled="true" Name="GetRelative">
 			<Definition Type="dbhelper">
@@ -514,6 +517,49 @@ and name = 'ABCardAccessStartingDate'
 				</Preprocesses>
 			</Definition>
 		</Service>
+		<Service Enabled="true" Name="InsertRelative">
+			<Definition Type="dbhelper">
+	<Action>Insert</Action>
+	<SQLTemplate>
+		<![CDATA[INSERT INTO $ischool.counsel.relative @@FieldList]]>
+	</SQLTemplate>
+	<RequestRecordElement>Relative</RequestRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field Source="BirthYear" Target="birth_year" />
+		<Field Source="EduDegree" Target="edu_degree" />
+		<Field Source="Institute" Target="institute" />
+		<Field Source="IsAlive" Target="is_alive" />
+		<Field Source="Job" Target="job" />
+		<Field Source="JobTitle" Target="job_title" />
+		<Field Source="Name" Target="name" />
+		<Field Source="Phone" Target="phone" />
+		<Field Source="StudentID" SourceType="Variable" Target="ref_student_id" />
+		<Field Source="Title" Target="title" />
+	</FieldList>
+	<InternalVariable>
+		<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="已過開放填寫時間" Name="validDate" Type="validate">
+			<![CDATA[
+					            SELECT count(*)>0
+					            FROM xpath_table('uid',
+					                    'content',
+					                    '$counsel.system_list',
+					                    '/Content/Item/@GradeYear|/Content/Item/@StartDateTime|/Content/Item/@EndDateTime',
+					                    'name=''ABCardAccessStartingDate''')
+					            AS t(uid integer, "GradeYear" integer, "StartDateTime" timestamp, "EndDateTime" timestamp)
+					            WHERE "GradeYear"= (
+					                select c.grade_year From student s
+					                join class c on c.id = s.ref_class_id
+					                where s.id='@@StudentID'
+					            )
+					            and "StartDateTime"<=Now() and "EndDateTime">=Now()
+					            ]]>
+		</Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
 		<Service Enabled="true" Name="InsertSemesterData">
 			<Definition Type="dbhelper">
 				<Action>Insert</Action>
@@ -709,6 +755,1034 @@ and name = 'ABCardAccessStartingDate'
 					            ]]></Preprocess>
 				</Preprocesses>
 			</Definition>
+		</Service>
+	</Package>
+</Contract>
+	<Contract Name="ischool.counsel.teacher" Enabled="True">
+	<Definition>
+	<Authentication Extends="auth.teacher" />
+</Definition>
+	<Package Name="_">
+		<Service Enabled="true" Name="AddInterviewRecord">
+			<Definition Type="DBHelper">
+	<Action>Insert</Action>
+	<SQLTemplate>
+		<![CDATA[INSERT INTO $counsel.interview_record @@FieldList]]>
+	</SQLTemplate>
+	<RequestRecordElement>Record</RequestRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field Quote="False" Source="LastUpdate" SourceType="Variable" Target="last_update" />
+		<Field Source="TeacherID" SourceType="Variable" Target="teacher_id" />
+		<Field Required="True" Source="StudentID" Target="ref_student_id" />
+		<Field Source="InterviewNo" Target="interview_no" />
+		<Field Source="InterviewType" Target="interview_type" />
+		<Field Source="IntervieweeType" Target="interviewee_type" />
+		<Field Source="InterviewDate" Target="interview_date" />
+		<Field Source="InterviewTime" Target="interview_time" />
+		<Field Source="Place" Target="place" />
+		<Field Source="Cause" Target="cause" />
+		<Field InputType="Xml" Source="Attendees" Target="attendees" />
+		<Field InputType="Xml" Source="CounselType" Target="counsel_type" />
+		<Field InputType="Xml" Source="CounselTypeKind" Target="counsel_type_kind" />
+		<Field Source="ContentDigest" Target="content_digest" />
+		<Field Source="AuthorId" SourceType="Variable" Target="author_id" />
+		<Field Source="Authorname" SourceType="Variable" Target="author_name" />
+	</FieldList>
+	<InternalVariable>
+		<Variable Key="UserName" Name="AuthorId" Source="UserInfo" />
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="Record/StudentID" Name="StudentID" Source="Request" />
+		<Variable Name="LastUpdate" Source="Literal">
+			<![CDATA[now()]]>
+		</Variable>
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                from $counsel.student_list stud_list
+                join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                join tag on tag_teacher.ref_tag_id = tag.id
+                join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                union
+                select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                where c.status=1 and c.ref_teacher_id='@@TeacherID'
+            ]]>
+		</Preprocess>
+		<Preprocess Name="Authorname" Type="variable">
+			<![CDATA[
+		SELECT teacher_name as "Authorname"  FROM teacher where id='@@TeacherID'
+		]]>
+		</Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="DelMultipleRecord">
+			<Definition Type="dbhelper">
+	<Action>Delete</Action>
+	<SQLTemplate>DELETE FROM $ischool.counsel.multiple_record WHERE @@Condition</SQLTemplate>
+	<RequestRecordElement>MultipleRecord</RequestRecordElement>
+	<Conditions Name="Condition" Required="True" Source="">
+		<Condition Comparer="in" EmptyReplacement="" InputConverter="" Quote="True" Required="True" Source="Key" SourceType="Request" Target="key" />
+		<Condition Quote="True" Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</Conditions>
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="MultipleRecord/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]></Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="DelPriorityData">
+			<Definition Type="dbhelper">
+	<Action>Delete</Action>
+	<SQLTemplate>DELETE FROM $ischool.counsel.priority_data WHERE @@Condition</SQLTemplate>
+	<RequestRecordElement>PriorityData</RequestRecordElement>
+	<Conditions Name="Condition" Required="True" Source="">
+		<Condition Comparer="in" EmptyReplacement="" InputConverter="" Quote="True" Required="True" Source="Key" SourceType="Request" Target="key" />
+		<Condition Quote="True" Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</Conditions>
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="PriorityData/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]></Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="DelSemesterData">
+			<Definition Type="dbhelper">
+	<Action>Delete</Action>
+	<SQLTemplate>DELETE FROM $ischool.counsel.semester_data WHERE @@Condition</SQLTemplate>
+	<RequestRecordElement>SemesterData</RequestRecordElement>
+	<Conditions Name="Condition" Required="True" Source="">
+		<Condition Comparer="in" EmptyReplacement="" InputConverter="" Quote="True" Required="True" Source="Key" SourceType="Request" Target="key" />
+		<Condition Quote="True" Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</Conditions>
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="SemesterData/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]></Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="DelSibling">
+			<Definition Type="dbhelper">
+	<Action>Delete</Action>
+	<SQLTemplate>DELETE FROM $ischool.counsel.sibling WHERE @@Condition</SQLTemplate>
+	<RequestRecordElement>Sibling</RequestRecordElement>
+	<Conditions Name="Condition" Required="False" Source="">
+		<Condition Quote="True" Required="False" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
+	</Conditions>
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="Sibling/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]></Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="DelSingleRecord">
+			<Definition Type="dbhelper">
+	<Action>Delete</Action>
+	<SQLTemplate>DELETE FROM $ischool.counsel.single_record WHERE @@Condition</SQLTemplate>
+	<RequestRecordElement>SingleRecord</RequestRecordElement>
+	<Conditions Name="Condition" Required="True" Source="">
+		<Condition Comparer="in" EmptyReplacement="" InputConverter="" Quote="True" Required="True" Source="Key" SourceType="Request" Target="key" />
+		<Condition Quote="True" Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</Conditions>
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="SingleRecord/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]>
+		</Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="DelYearlyData">
+			<Definition Type="dbhelper">
+	<Action>Delete</Action>
+	<SQLTemplate>DELETE FROM $ischool.counsel.yearly_data WHERE @@Condition</SQLTemplate>
+	<RequestRecordElement>YearlyData</RequestRecordElement>
+	<Conditions Name="Condition" Required="True" Source="">
+		<Condition Comparer="in" EmptyReplacement="" InputConverter="" Quote="True" Required="True" Source="Key" SourceType="Request" Target="key" />
+		<Condition Quote="True" Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</Conditions>
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="YearlyData/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]></Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="DeleteInterviewRecord">
+			<Definition Type="DBHelper">
+	<Action>Delete</Action>
+	<SQLTemplate>
+		<![CDATA[DELETE FROM $counsel.interview_record WHERE @@Condition]]></SQLTemplate>
+	<RequestRecordElement>Record</RequestRecordElement>
+	<Conditions Name="Condition" Required="True" Source="">
+		<Condition Required="True" Source="UID" Target="uid" />
+		<Condition Required="True" Source="UserName" SourceType="Variable" Target="author_id" />
+	</Conditions>
+	<InternalVariable>
+		<Variable Key="UserName" Name="UserName" Source="UserInfo" />
+	</InternalVariable>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetClassStudent">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>SELECT @@FieldList FROM class c
+		Left join student s on s.ref_class_id = c.id and s.status in (1, 2)
+		WHERE @@Condition
+		and c.status=1
+		order by c.id, s.seat_no
+	</SQLTemplate>
+	<ResponseRecordElement>Response/Student</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="ClassID" Mandatory="True" Source="ClassID" Target="c.id" />
+		<Field Alias="ClassName" Mandatory="True" Source="ClassName" Target="c.class_name" />
+		<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="s.id" />
+		<Field Alias="StudentNumber" Mandatory="True" Source="StudentNumber" Target="s.student_number" />
+		<Field Alias="StudentName" Mandatory="True" Source="StudentName" Target="s.name" />
+		<Field Alias="SeatNo" Mandatory="True" Source="SeatNo" Target="s.seat_no" />
+		<Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="c.grade_year" />
+		<Field Alias="SemsHistory" Mandatory="True" OutputType="xml" Source="SemsHistory" Target="s.sems_history" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="">
+		<Condition Required="False" Source="StudentID" Target="s.id" />
+		<Condition Required="True" Source="TeacherID" SourceType="Variable" Target="c.ref_teacher_id" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+	</InternalVariable>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetCounselStudent">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		select @@FieldList
+		from $counsel.student_list stud_list
+		join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+		join tag on tag_teacher.ref_tag_id = tag.id
+		join student s on s.id = stud_list.ref_student_id and s.status in (1, 2)
+		join class c on c.id = s.ref_class_id
+		where @@Condition
+		and tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+		order by s.student_number
+	</SQLTemplate>
+	<ResponseRecordElement>Response/Student</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="s.id" />
+		<Field Alias="StudentNumber" Mandatory="True" Source="StudentNumber" Target="s.student_number" />
+		<Field Alias="StudentName" Mandatory="True" Source="StudentName" Target="s.name" />
+		<Field Alias="SeatNo" Mandatory="True" Source="SeatNo" Target="s.seat_no" />
+		<Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="c.grade_year" />
+		<Field Alias="SemsHistory" Mandatory="True" OutputType="xml" Source="SemsHistory" Target="s.sems_history" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="">
+		<Condition Required="False" Source="StudentID" Target="stud_list.ref_student_id" />
+		<Condition Required="True" Source="TeacherID" SourceType="Variable" Target="tag_teacher.ref_teacher_id" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+	</InternalVariable>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetCurrentSemester">
+			<Definition Type="dbhelper">
+				<Action>Select</Action>
+				<SQLTemplate>SELECT @@FieldList
+FROM list
+WHERE name='系統設定'</SQLTemplate>
+				<ResponseRecordElement />
+				<FieldList Name="FieldList" Source="Field">
+					<Field Alias="Result" Mandatory="True" OutputType="Xml" Source="Content" Target="content" />
+				</FieldList>
+				<Pagination Allow="True" />
+			</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetInterviewRecord">
+			<Definition Type="DBHelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[SELECT @@FieldList
+            FROM $counsel.interview_record ir
+            Left join teacher t on t.id = ir.teacher_id
+            WHERE @@Condition
+            ORDER BY ir.interview_date DESC, ir.interview_time]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Result/Record</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field Alias="UID" Mandatory="True" Source="UID" Target="uid" />
+		<Field Alias="Attendees" Mandatory="True" OutputType="Xml" Source="Attendees" Target="attendees" />
+		<Field Alias="Cause" Mandatory="True" Source="Cause" Target="cause" />
+		<Field Alias="ContentDigest" Mandatory="True" Source="ContentDigest" Target="content_digest" />
+		<Field Alias="CounselType" Mandatory="True" OutputType="Xml" Source="CounselType" Target="counsel_type" />
+		<Field Alias="CounselTypeKind" Mandatory="True" OutputType="Xml" Source="CounselTypeKind" Target="counsel_type_kind" />
+		<Field Alias="InterviewDate" Mandatory="True" Source="InterviewDate" Target="interview_date" />
+		<Field Alias="InterviewTime" Mandatory="True" Source="InterviewTime" Target="interview_time" />
+		<Field Alias="InterviewNo" Mandatory="True" Source="InterviewNo" Target="interview_no" />
+		<Field Alias="InterviewType" Mandatory="True" Source="InterviewType" Target="interview_type" />
+		<Field Alias="IntervieweeType" Mandatory="True" Source="IntervieweeType" Target="interviewee_type" />
+		<Field Alias="Place" Mandatory="True" Source="Place" Target="place" />
+		<Field Alias="AuthorID" Mandatory="True" Source="AuthorID" Target="author_id" />
+		<Field Alias="AuthorName" Mandatory="True" Source="AuthorName" Target="author_name" />
+		<Field Alias="TeacherID" Mandatory="True" Source="TeacherID" Target="teacher_id" />
+		<Field Alias="TeacherName" Mandatory="True" Source="TeacherName" Target="t.teacher_name" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+		<Condition Required="True" Source="StudentID" Target="ir.ref_student_id" />
+		<Condition Required="True" Source="AuthorID" SourceType="Variable" Target="ir.author_id" />
+	</Conditions>
+	<Orders Name="" Source="" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="UserName" Name="AuthorID" Source="UserInfo" />
+	</InternalVariable>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetMultipleRecord">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>SELECT @@FieldList FROM $ischool.counsel.multiple_record WHERE @@Condition @@Order</SQLTemplate>
+	<ResponseRecordElement>Response/MultipleRecord</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="UID" Mandatory="True" Source="UID" Target="uid" />
+		<Field Alias="Key" Mandatory="True" Source="Key" Target="key" />
+		<Field Alias="Data" Mandatory="True" Source="Data" Target="data" />
+		<Field Alias="Remark" Mandatory="True" Source="Remark" Target="remark" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+		<Condition Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="Condition/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]>
+		</Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetPriorityData">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>SELECT @@FieldList FROM $ischool.counsel.priority_data WHERE @@Condition @@Order</SQLTemplate>
+	<ResponseRecordElement>Response/PriorityData</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="UID" Mandatory="True" Source="UID" Target="uid" />
+		<Field Alias="Key" Mandatory="True" Source="Key" Target="key" />
+		<Field Alias="P1" Mandatory="True" Source="P1" Target="p1" />
+		<Field Alias="P2" Mandatory="True" Source="P2" Target="p2" />
+		<Field Alias="P3" Mandatory="True" Source="P3" Target="p3" />
+		<Field Alias="P4" Mandatory="True" Source="P4" Target="p4" />
+		<Field Alias="P5" Mandatory="True" Source="P5" Target="p5" />
+		<Field Alias="P6" Mandatory="True" Source="P6" Target="p6" />
+		<Field Alias="P7" Mandatory="True" Source="P7" Target="p7" />
+		<Field Alias="P8" Mandatory="True" Source="P8" Target="p8" />
+		<Field Alias="P9" Mandatory="True" Source="P9" Target="p9" />
+		<Field Alias="P10" Mandatory="True" Source="P10" Target="p10" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+		<Condition Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="Condition/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]></Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetQuestionsData">
+			<Definition Type="dbhelper">
+				<Action>Select</Action>
+				<SQLTemplate>SELECT @@FieldList FROM $ischool.counsel.questions_data WHERE @@Condition @@Order</SQLTemplate>
+				<ResponseRecordElement>Response/QuestionsData</ResponseRecordElement>
+				<FieldList Name="FieldList" Source="Field">
+					<Field Alias="GroupName" Mandatory="True" Source="GroupName" Target="group_name" />
+					<Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
+					<Field Alias="QuestionType" Mandatory="True" Source="QuestionType" Target="question_type" />
+					<Field Alias="Items" Mandatory="True" OutputType="xml" Source="Items" Target="items" />
+					<Field Alias="CanStudentEdit" Mandatory="True" Source="CanStudentEdit" Target="(case can_student_edit when 't' then '是' else '否' end)" />
+				</FieldList>
+				<Conditions Name="Condition" Required="False" Source="Condition" />
+				<Orders Name="Order" Source="Order">
+					<Order Source="GroupName" Target="group_name" />
+					<Order Source="GroupName" Target="display_order" />
+				</Orders>
+				<Pagination Allow="True" />
+			</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetRelative">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>SELECT @@FieldList FROM $ischool.counsel.relative WHERE @@Condition @@Order</SQLTemplate>
+	<ResponseRecordElement>Response/Relative</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="UID" Mandatory="True" Source="UID" Target="uid" />
+		<Field Alias="Title" Mandatory="True" Source="Title" Target="title" />
+		<Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
+		<Field Alias="IsAlive" Mandatory="True" Source="IsAlive" Target="is_alive" />
+		<Field Alias="BirthYear" Mandatory="True" Source="BirthYear" Target="birth_year" />
+		<Field Alias="Job" Mandatory="True" Source="Job" Target="job" />
+		<Field Alias="Institute" Mandatory="True" Source="Institute" Target="institute" />
+		<Field Alias="JobTitle" Mandatory="True" Source="JobTitle" Target="job_title" />
+		<Field Alias="EduDegree" Mandatory="True" Source="EduDegree" Target="edu_degree" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+		<Condition Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="Condition/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]></Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetSemesterData">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>SELECT @@FieldList FROM $ischool.counsel.semester_data WHERE @@Condition @@Order</SQLTemplate>
+	<ResponseRecordElement>Response/SemesterData</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="UID" Mandatory="True" Source="UID" Target="uid" />
+		<Field Alias="Key" Mandatory="True" Source="Key" Target="key" />
+		<Field Alias="S1a" Mandatory="True" Source="S1a" Target="s1a" />
+		<Field Alias="S1b" Mandatory="True" Source="S1b" Target="s1b" />
+		<Field Alias="S2a" Mandatory="True" Source="S2a" Target="s2a" />
+		<Field Alias="S2b" Mandatory="True" Source="S2b" Target="s2b" />
+		<Field Alias="S3a" Mandatory="True" Source="S3a" Target="s3a" />
+		<Field Alias="S3b" Mandatory="True" Source="S3b" Target="s3b" />
+		<Field Alias="S4a" Mandatory="True" Source="S4a" Target="s4a" />
+		<Field Alias="S4b" Mandatory="True" Source="S4b" Target="s4b" />
+		<Field Alias="S5a" Mandatory="True" Source="S5a" Target="s5a" />
+		<Field Alias="S5b" Mandatory="True" Source="S5b" Target="s5b" />
+		<Field Alias="S6a" Mandatory="True" Source="S6a" Target="s6a" />
+		<Field Alias="S6b" Mandatory="True" Source="S6b" Target="s6b" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+		<Condition Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="Condition/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]></Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetSibling">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>SELECT @@FieldList FROM $ischool.counsel.sibling WHERE @@Condition @@Order</SQLTemplate>
+	<ResponseRecordElement>Response/Sibling</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="UID" Mandatory="True" Source="UID" Target="uid" />
+		<Field Alias="Title" Mandatory="True" Source="Title" Target="title" />
+		<Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
+		<Field Alias="SchoolName" Mandatory="True" Source="SchoolName" Target="school_name" />
+		<Field Alias="BirthYear" Mandatory="True" Source="BirthYear" Target="birth_year" />
+		<Field Alias="Remark" Mandatory="True" Source="Remark" Target="remark" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+		<Condition Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="Condition/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]></Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetSingleRecord">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>SELECT @@FieldList FROM $ischool.counsel.single_record WHERE @@Condition @@Order</SQLTemplate>
+	<ResponseRecordElement>Response/SingleRecord</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="UID" Mandatory="True" Source="UID" Target="uid" />
+		<Field Alias="Key" Mandatory="True" Source="Key" Target="key" />
+		<Field Alias="Data" Mandatory="True" Source="Data" Target="data" />
+		<Field Alias="Remark" Mandatory="True" Source="Remark" Target="remark" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+		<Condition Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="Condition/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]></Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetStudentQuizData">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
+			SELECT @@FieldList 
+			FROM $counsel.quiz a join $counsel.student_quiz_data b on b.ref_quiz_uid = a.uid 
+	 		WHERE  @@Condition @@Order
+		]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Response/StudentQuizData</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="Uid" Mandatory="True" Source="Uid" Target="a.uid" />
+		<Field Alias="QuizName" Mandatory="True" Source="QuizName" Target="a.quiz_name" />
+		<Field Alias="QuizDataField" Mandatory="True" OutputType="xml" Source="QuizDataField" Target="a.quiz_data_field" />
+		<Field Alias="Content" Mandatory="True" OutputType="xml" Source="Content" Target="b.content" />
+		<Field Alias="AnalysisDate" Mandatory="True" Source="AnalysisDate" Target="b.analysis_date" />
+		<Field Alias="ImplementationDate" Mandatory="True" Source="ImplementationDate" Target="b.implementation_date" />
+		<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="b.ref_student_id" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+		<Condition Required="True" Source="StudentID" SourceType="Request" Target="b.ref_student_id" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="Condition/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]>
+		</Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetYearlyData">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>SELECT @@FieldList FROM $ischool.counsel.yearly_data WHERE @@Condition @@Order</SQLTemplate>
+	<ResponseRecordElement>Response/YearlyData</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="UID" Mandatory="True" Source="UID" Target="uid" />
+		<Field Alias="Key" Mandatory="True" Source="Key" Target="key" />
+		<Field Alias="G1" Mandatory="True" Source="G1" Target="g1" />
+		<Field Alias="G2" Mandatory="True" Source="G2" Target="g2" />
+		<Field Alias="G3" Mandatory="True" Source="G3" Target="g3" />
+		<Field Alias="G4" Mandatory="True" Source="G4" Target="g4" />
+		<Field Alias="G5" Mandatory="True" Source="G5" Target="g5" />
+		<Field Alias="G6" Mandatory="True" Source="G6" Target="g6" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+		<Condition Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="Condition/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]></Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="InsertMultipleRecord">
+			<Definition Type="dbhelper">
+	<Action>Insert</Action>
+	<SQLTemplate>INSERT INTO $ischool.counsel.multiple_record @@FieldList</SQLTemplate>
+	<RequestRecordElement>MultipleRecord</RequestRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field AutoNumber="True" InputType="Element" Quote="False" Required="False" Source="Uid" SourceType="Request" Target="uid" />
+		<Field InputType="Element" Quote="True" Required="True" Source="Key" Target="key" />
+		<Field InputType="Element" Quote="True" Required="True" Source="Data" Target="data" />
+		<Field InputType="Element" Quote="True" Required="False" Source="Remark" Target="remark" />
+		<Field InputType="Element" Quote="True" Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</FieldList>
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="MultipleRecord/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]>
+		</Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="InsertPriorityData">
+			<Definition Type="dbhelper">
+	<Action>Insert</Action>
+	<SQLTemplate>INSERT INTO $ischool.counsel.priority_data @@FieldList</SQLTemplate>
+	<RequestRecordElement>PriorityData</RequestRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field AutoNumber="True" InputType="Element" Quote="False" Required="False" Source="Uid" SourceType="Request" Target="uid" />
+		<Field InputType="Element" Quote="True" Required="True" Source="Key" Target="key" />
+		<Field InputType="Element" Quote="True" Required="False" Source="P1" Target="p1" />
+		<Field InputType="Element" Quote="True" Required="False" Source="P2" Target="p2" />
+		<Field InputType="Element" Quote="True" Required="False" Source="P3" Target="p3" />
+		<Field InputType="Element" Quote="True" Required="False" Source="P4" Target="p4" />
+		<Field InputType="Element" Quote="True" Required="False" Source="P5" Target="p5" />
+		<Field InputType="Element" Quote="True" Required="False" Source="P6" Target="p6" />
+		<Field InputType="Element" Quote="True" Required="False" Source="P7" Target="p7" />
+		<Field InputType="Element" Quote="True" Required="False" Source="P8" Target="p8" />
+		<Field InputType="Element" Quote="True" Required="False" Source="P9" Target="p9" />
+		<Field InputType="Element" Quote="True" Required="False" Source="P10" Target="p10" />
+		<Field InputType="Element" Quote="True" Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</FieldList>
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="PriorityData/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]></Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="InsertSemesterData">
+			<Definition Type="dbhelper">
+	<Action>Insert</Action>
+	<SQLTemplate>INSERT INTO $ischool.counsel.semester_data @@FieldList</SQLTemplate>
+	<RequestRecordElement>SemesterData</RequestRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field AutoNumber="True" InputType="Element" Quote="False" Required="False" Source="Uid" SourceType="Request" Target="uid" />
+		<Field InputType="Element" Quote="True" Required="True" Source="Key" Target="key" />
+		<Field InputType="Element" Quote="True" Required="False" Source="S1a" Target="s1a" />
+		<Field InputType="Element" Quote="True" Required="False" Source="S1b" Target="s1b" />
+		<Field InputType="Element" Quote="True" Required="False" Source="S2a" Target="s2a" />
+		<Field InputType="Element" Quote="True" Required="False" Source="S2b" Target="s2b" />
+		<Field InputType="Element" Quote="True" Required="False" Source="S3a" Target="s3a" />
+		<Field InputType="Element" Quote="True" Required="False" Source="S3b" Target="s3b" />
+		<Field InputType="Element" Quote="True" Required="False" Source="S4a" Target="s4a" />
+		<Field InputType="Element" Quote="True" Required="False" Source="S4b" Target="s4b" />
+		<Field InputType="Element" Quote="True" Required="False" Source="S5a" Target="s5a" />
+		<Field InputType="Element" Quote="True" Required="False" Source="S5b" Target="s5b" />
+		<Field InputType="Element" Quote="True" Required="False" Source="S6a" Target="s6a" />
+		<Field InputType="Element" Quote="True" Required="False" Source="S6b" Target="s6b" />
+		<Field InputType="Element" Quote="True" Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</FieldList>
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="SemesterData/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]></Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="InsertSibling">
+			<Definition Type="dbhelper">
+	<Action>Insert</Action>
+	<SQLTemplate>INSERT INTO $ischool.counsel.sibling @@FieldList</SQLTemplate>
+	<RequestRecordElement>Sibling</RequestRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field AutoNumber="True" InputType="Element" Quote="False" Required="False" Source="Uid" SourceType="Request" Target="uid" />
+		<Field InputType="Element" Quote="True" Required="True" Source="Name" Target="name" />
+		<Field InputType="Element" Quote="True" Required="False" Source="BirthYear" Target="birth_year" />
+		<Field InputType="Element" Quote="True" Required="False" Source="Remark" Target="remark" />
+		<Field InputType="Element" Quote="True" Required="False" Source="SchoolName" Target="school_name" />
+		<Field InputType="Element" Quote="True" Required="False" Source="Title" Target="title" />
+		<Field InputType="Element" Quote="True" Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</FieldList>
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="Sibling/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]></Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="InsertSingleRecord">
+			<Definition Type="dbhelper">
+	<Action>Insert</Action>
+	<SQLTemplate>INSERT INTO $ischool.counsel.single_record @@FieldList</SQLTemplate>
+	<RequestRecordElement>SingleRecord</RequestRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field AutoNumber="True" InputType="Element" Quote="False" Required="False" Source="Uid" SourceType="Request" Target="uid" />
+		<Field InputType="Element" Quote="True" Required="True" Source="Data" Target="data" />
+		<Field InputType="Element" Quote="True" Required="True" Source="Key" Target="key" />
+		<Field InputType="Element" Quote="True" Required="False" Source="Remark" Target="remark" />
+		<Field InputType="Element" Quote="True" Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</FieldList>
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="SingleRecord/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]></Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="InsertYearlyData">
+			<Definition Type="dbhelper">
+	<Action>Insert</Action>
+	<SQLTemplate>INSERT INTO $ischool.counsel.yearly_data @@FieldList</SQLTemplate>
+	<RequestRecordElement>YearlyData</RequestRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field AutoNumber="True" InputType="Element" Quote="False" Required="False" Source="Uid" SourceType="Request" Target="uid" />
+		<Field InputType="Element" Quote="True" Required="True" Source="Key" Target="key" />
+		<Field InputType="Element" Quote="True" Required="False" Source="G1" Target="g1" />
+		<Field InputType="Element" Quote="True" Required="False" Source="G2" Target="g2" />
+		<Field InputType="Element" Quote="True" Required="False" Source="G3" Target="g3" />
+		<Field InputType="Element" Quote="True" Required="False" Source="G4" Target="g4" />
+		<Field InputType="Element" Quote="True" Required="False" Source="G5" Target="g5" />
+		<Field InputType="Element" Quote="True" Required="False" Source="G6" Target="g6" />
+		<Field InputType="Element" Quote="True" Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</FieldList>
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Key="YearlyData/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]></Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="UpdateInterviewRecord">
+			<Definition Type="DBHelper">
+				<Action>Update</Action>
+				<SQLTemplate><![CDATA[UPDATE $counsel.interview_record SET @@FieldList  WHERE @@Condition]]></SQLTemplate>
+				<RequestRecordElement>Record</RequestRecordElement>
+				<FieldList Name="FieldList" Source="">
+					<Field Quote="False" Source="LastUpdate" SourceType="Variable" Target="last_update" />
+					<Field InputType="Xml" Source="Attendees" Target="attendees" />
+					<Field Source="Cause" Target="cause" />
+					<Field Source="ContentDigest" Target="content_digest" />
+					<Field InputType="Xml" Source="CounselType" Target="counsel_type" />
+					<Field InputType="Xml" Source="CounselTypeKind" Target="counsel_type_kind" />
+					<Field Source="InterviewDate" Target="interview_date" />
+					<Field Source="InterviewTime" Target="interview_time" />
+					<Field Source="InterviewNo" Target="interview_no" />
+					<Field Source="InterviewType" Target="interview_type" />
+					<Field Source="IntervieweeType" Target="interviewee_type" />
+					<Field Source="IsPublic" Target="is_public" />
+					<Field Source="Place" Target="place" />
+				</FieldList>
+				<Conditions Name="Condition" Required="True" Source="">
+					<Condition Required="True" Source="UID" Target="uid" />
+					<Condition Required="True" Source="TeacherID" SourceType="Variable" Target="teacher_id" />
+				</Conditions>
+				<InternalVariable>
+					<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+					<Variable Name="LastUpdate" Source="Literal"><![CDATA[now()]]></Variable>
+				</InternalVariable>
+			</Definition>
+		</Service>
+		<Service Enabled="true" Name="UpdateRelative">
+			<Definition Type="dbhelper">
+	<Action>Update</Action>
+	<SQLTemplate>UPDATE $ischool.counsel.relative SET @@FieldList   WHERE @@Condition</SQLTemplate>
+	<RequestRecordElement>Relative</RequestRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field Source="Title" Target="title" />
+		<Field Source="Name" Target="name" />
+		<Field Source="IsAlive" Target="is_alive" />
+		<Field Source="Phone" Target="phone" />
+		<Field Source="BirthYear" Target="birth_year" />
+		<Field Source="Job" Target="job" />
+		<Field Source="Institute" Target="institute" />
+		<Field Source="JobTitle" Target="job_title" />
+		<Field Source="EduDegree" Target="edu_degree" />
+		<Field Source="LastUpdate" SourceType="Variable" Target="last_update" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+		<Condition Required="True" Source="Uid" Target="uid" />
+		<Condition Required="True" Source="StudentID" SourceType="Request" Target="ref_student_id" />
+	</Conditions>
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Name="LastUpdate" Source="Literal">now()</Variable>
+		<Variable Key="Relative/Condition/StudentID" Name="StudentID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from $counsel.student_list stud_list
+                            join tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id
+                            join tag on tag_teacher.ref_tag_id = tag.id
+                            join student s on s.id = stud_list.ref_student_id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where tag.name = '認輔老師' and tag_teacher.ref_teacher_id = '@@TeacherID'
+                            union
+                            select s.id as sid, s.student_number, s.name, s.seat_no, s.status
+                            from class c join student s on s.ref_class_id = c.id and s.status in (1, 2) and s.id = '@@StudentID'
+                            where c.status=1 and c.ref_teacher_id='@@TeacherID'
+                    ]]></Preprocess>
+	</Preprocesses>
+</Definition>
 		</Service>
 	</Package>
 </Contract>
