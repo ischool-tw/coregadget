@@ -786,8 +786,8 @@ jQuery(function () {
 
                     if (((_ref = item.QuizDataField) != null ? _ref.Field : void 0) != null) {
                         $(item.QuizDataField.Field).each(function(key, value){
-                            tmp_items.push('<p>' + value.name + '</p>' +
-                                '<p class="my-lineheight">' + (tmp_content[value.name] || '') + '</p>'
+                            tmp_items.push('<p class="my-lineheight"><b>' + value.name + '</b>：' +
+                                '' + (tmp_content[value.name] || '') + '</p>'
                             );
                         });
                     }
