@@ -259,7 +259,7 @@ _gg.setClubInfo = function () {
             items_info.push('<tr><th nowrap="nowrap">學年 </th><td>' + club.SchoolYear + '</td></tr>');
             items_info.push('<tr><th nowrap="nowrap">學期 </th><td>' + club.Semester + '</td></tr>');
             items_info.push('<tr><th nowrap="nowrap">類別 </th><td>' + club.ClubCategory + '</td></tr>');
-            items_info.push('<tr><th nowrap="nowrap">編號 </th><td>' + club.ClubNumber + '</td></tr>');
+            items_info.push('<tr><th nowrap="nowrap">代碼 </th><td>' + club.ClubNumber + '</td></tr>');
             items_info.push('<tr><th nowrap="nowrap">老師1 </th><td>' + club.TeacherName1 + '</td></tr>');
             items_info.push('<tr><th nowrap="nowrap">老師2 </th><td>' + club.TeacherName2 + '</td></tr>');
             items_info.push('<tr><th nowrap="nowrap">老師3 </th><td>' + club.TeacherName3 + '</td></tr>');
@@ -575,6 +575,19 @@ _gg.SetClubRecord = function () {
                                     AasScore     : item.AasScore,
                                     FarScore     : item.FarScore
                                 };
+                                var tmp_CadreName = '';
+                                if (item.President && item.President === item.StudentID) {
+                                    tmp_CadreName += "社長";
+                                }
+                                if (item.VicePresident && item.VicePresident === item.StudentID) {
+                                    tmp_CadreName += ((tmp_CadreName) ? '、' : '');
+                                    tmp_CadreName += "副社長";
+                                }
+                                if (tmp_club.CadreName) {
+                                    tmp_CadreName += ((tmp_CadreName) ? '、' : '');
+                                    tmp_CadreName += tmp_club.CadreName;
+                                }
+                                tmp_club.CadreName = tmp_CadreName;
                             }
                         });
 
