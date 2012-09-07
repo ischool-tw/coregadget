@@ -201,6 +201,8 @@ WHERE name='系統設定']]>
 		<Field Alias="Semester" Mandatory="True" Source="Semester" Target="b.semester" />
 		<Field Alias="ClubID" Mandatory="True" Source="ClubID" Target="a.ref_club_id" />
 		<Field Alias="ClubName" Mandatory="True" Source="ClubName" Target="b.club_name" />
+		<Field Alias="President" Mandatory="True" Source="President" Target="b.president" />
+		<Field Alias="VicePresident" Mandatory="True" Source="VicePresident" Target="b.vice_president" />
 		<Field Alias="TeacherName1" Mandatory="True" Source="TeacherName1" Target="t1.teacher_name" />
 		<Field Alias="Lock" Mandatory="True" Source="Lock" Target="(case a.lock when 't' then '是' else '否' end)" />
 		<Field Alias="AasScore" Mandatory="True" Source="AasScore" Target="a.aas_score" />
