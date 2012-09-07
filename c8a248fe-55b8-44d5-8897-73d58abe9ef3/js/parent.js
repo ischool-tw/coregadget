@@ -3,14 +3,14 @@ var myparent = myparent || {};
 myparent.public_connection;
 
 $(document).ready(function () {
-    $('#send').bind('click', function () {
+    $('a[data-toggle=modal]').bind('click', function () {
         $("div .control-group").removeClass("error");
         $(".help-inline").html("");
-        myparent.setParentRelationship($('#ParentCode').val(), $('#IDNumber').val(), $('#Relationship').val());
-    });
-
-    $('#parentProfile .btn').live('click', function () {
-        myparent.setParentInfo();
+        if ($(this).attr("action-type") === "profile") {
+            myparent.setParentInfo();
+        } else {
+            myparent.setRelationship();
+        }
     });
 
     $("#editModal").modal({ show: false });
@@ -20,13 +20,14 @@ $(document).ready(function () {
     });
 
     $("#editModal").on("show", function () {
-        return $("#editModal #save-data").show();
+        return $("#editModal #save-data").button('reset');
     });
 
     $("#editModal #save-data").click(function () {
-        var edit_target;
-        $("#editModal #save-data").hide();
-        edit_target = $(this).attr("edit-target");
+        $("div .control-group").removeClass("error");
+        $(".help-inline").html("");
+        $("#editModal #save-data").button('loading');
+        var edit_target = $(this).attr("edit-target");
         switch (edit_target) {
             case "profile":
                 var tmp_request = {
@@ -35,7 +36,10 @@ $(document).ready(function () {
                     EMail: $('#edit_EMail').val()
                 };
 
-                myparent.parentInto.set_ParentInfo('#parentProfile', tmp_request);
+                myparent.parentInto.set_ParentInfo(tmp_request);
+                break;
+            case 'relationship':
+                myparent.saveParentRelationship($('#ParentCode').val(), $('#IDNumber').val(), $('#Relationship').val());
                 break;
         }
     });
@@ -44,7 +48,7 @@ $(document).ready(function () {
 myparent.parent_connection = gadget.getContract("auth.parent");
 
 /* 設定關係 */
-myparent.setParentRelationship = function (parentCode, idNumber, relationship) {
+myparent.saveParentRelationship = function (parentCode, idNumber, relationship) {
     myparent.public_connection = gadget.getContract("parentguest");
     myparent.public_connection.send({
         service: 'Parent.SetParentRelationship',
@@ -77,15 +81,16 @@ myparent.setParentRelationship = function (parentCode, idNumber, relationship) {
                         $('#errorMessage').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><strong>設定失敗！</strong> ' + error.dsaError.message + '</div>');
                 }
             } else {
-                    myparent.childrenList('#childrenList');
-                    $('#mainMsg').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><strong>設定成功！</strong> </div>');
+                myparent.childrenList();
+                $("#editModal").modal("hide");
             }
+            $("#editModal #save-data").button('reset');
         }
     });
 };
 
 /* 關係表 */
-myparent.childrenList = function (e) {
+myparent.childrenList = function () {
     //	parent_connection.ready(function () {
     myparent.parent_connection.send({
         service: 'My.Children',
@@ -95,7 +100,7 @@ myparent.childrenList = function (e) {
                 return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>\n</div>");
 
             } else {
-                var tempHtmlA = '', tempHtmlB = '', tempHtml = '';
+                var tempHtml = '';
                 $(response.Children.Child).each(function (index, item) {
                     tempHtml += '<tr>';
                     tempHtml += '<td>' + item.Name + '</td>';
@@ -105,12 +110,7 @@ myparent.childrenList = function (e) {
                     tempHtml += '</tr>';
                 });
 
-                tempHtmlA = '<div class="well">' +
-                    '<table class="table table-condensed table-striped"><thead><tr><th>姓名</th><th>班級</th><th>座號</th><th>關係</th></tr></thead>';
-                tempHtmlA += '<tbody>';
-                tempHtmlB = '</tbody></table></div>';
-
-                $(e).html(tempHtmlA + tempHtml + tempHtmlB);
+                $('#childrenList tbody').html(tempHtml);
             }
         }
     });
@@ -120,7 +120,30 @@ myparent.childrenList = function (e) {
 
 /* 個人資料 */
 myparent.parentInto = function () {
-    var funSetParentInfo = function (e, updateValue) {
+    var funGetParentInfo = function () {
+        myparent.parent_connection.send({
+            service: 'My.GetPersonalInfo',
+            body: '',
+            result: function (response, error, http) {
+                if (error != null) {
+                    return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>\n</div>");
+                } else {
+                    var tempHtml = '';
+                    myparent.parentProfile = response.Parent;
+                    $(response.Parent).each(function (index, item) {
+                        tempHtml += '<tr><th>姓名</th><td><span>' + item.Name + ' </span></td></tr>';
+                        tempHtml += '<tr><th>電話</th><td><span>' + item.CellPhone + ' </span></td></tr>';
+                        tempHtml += '<tr><th>電子信箱</th><td><span >' + item.EMail + ' </span></td></tr>';
+                        //自訂欄位 item.Extension.Field1
+                    });
+
+                    $('#parentProfile tbody').html(tempHtml);
+                }
+            }
+        });
+    };
+
+    var funSetParentInfo = function (updateValue) {
         myparent.parent_connection.send({
             service: 'My.UpdatePersonalInfo',
             body: {
@@ -133,46 +156,18 @@ myparent.parentInto = function () {
                     return $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>\n</div>");
                 } else {
                     $("#editModal").modal("hide");
-                    funGetParentInfo(e);
-                }
-            }
-        });
-    };
-
-    var funGetParentInfo = function (e) {
-        myparent.parent_connection.send({
-            service: 'My.GetPersonalInfo',
-            body: '',
-            result: function (response, error, http) {
-                if (error != null) {
-                    return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>\n</div>");
-                } else {
-                    var tempHtmlA = '', tempHtmlB = '', tempHtml = '';
-                    myparent.parentProfile = response.Parent;
-                    $(response.Parent).each(function (index, item) {
-                        tempHtml += '<tr><th>姓名</th><td><span>' + item.Name + ' </span></td></tr>';
-                        tempHtml += '<tr><th>電話</th><td><span>' + item.CellPhone + ' </span></td></tr>';
-                        tempHtml += '<tr><th>電子信箱</th><td><span >' + item.EMail + ' </span></td></tr>';
-                        //自訂欄位 item.Extension.Field1
-                    });
-
-                    tempHtmlA = '<div class="well"><table class="table table-condensed table-striped">' +
-                                '<div class="my-label-title"><a class="btn btn-success" edit-target="profile">' +
-                                '<i class="icon-edit icon-white"></i>個人資料</a> </div>'
-                    tempHtmlB = '</table></div>';
-
-                    $(e).html(tempHtmlA + tempHtml + tempHtmlB);
+                    funGetParentInfo();
                 }
             }
         });
     };
 
     return {
-        set_ParentInfo: function (e, updateValue) {
-            funSetParentInfo(e, updateValue);
+        set_ParentInfo: function (updateValue) {
+            funSetParentInfo(updateValue);
         },
-        get_ParentInfo: function (e) {
-            funGetParentInfo(e);
+        get_ParentInfo: function () {
+            funGetParentInfo();
         }
     };
 } ();
@@ -186,33 +181,71 @@ myparent.setParentInfo = function () {
         '<div class="control-group">' +
           '<label class="control-label" for="edit_Name">姓名</label>' +
           '<div class="controls">' +
-            '<input type="text" class="input-large" id="edit_Name" value="' + pProfile.Name + '">' +
+            '<input type="text" class="input-large" id="edit_Name" placeholder="姓名..." value="' + pProfile.Name + '">' +
+            '<span class="help-inline"></span>' +
           '</div>' +
         '</div>' +
         '<div class="control-group">' +
           '<label class="control-label" for="edit_CellPhone">電話</label>' +
           '<div class="controls">' +
-            '<input type="text" class="input-large" id="edit_CellPhone" value="' + pProfile.CellPhone + '">' +
+            '<input type="text" class="input-large" id="edit_CellPhone" placeholder="電話..." value="' + pProfile.CellPhone + '">' +
+            '<span class="help-inline"></span>' +
           '</div>' +
         '</div>' +
         '<div class="control-group">' +
           '<label class="control-label" for="edit_EMail">電子信箱</label>' +
           '<div class="controls">' +
-            '<input type="text" class="input-large" id="edit_EMail" value="' + pProfile.EMail + '">' +
+            '<input type="text" class="input-large" id="edit_EMail" placeholder="電子信箱..." value="' + pProfile.EMail + '">' +
+            '<span class="help-inline"></span>' +
           '</div>' +
         '</div>' +
       '</fieldset>' +
     '</form>'
 
-    $("#editModal h3").html("編輯 - 個人資料");
+    $("#editModal h3").html("家長基本資料");
     $("#editModal .modal-body").html(tmp_editProfile);
     $("#editModal #save-data").attr("edit-target", "profile")
+    $("#editModal").modal("show");
+};
+
+myparent.setRelationship = function () {
+    var pProfile = myparent.parentProfile;
+    var tmp_editProfile = '';
+    tmp_editProfile = '<form class="form-horizontal">' +
+      '<fieldset>' +
+        '<div class="control-group">' +
+          '<label class="control-label" for="ParentCode">請輸入家長代碼</label>' +
+          '<div class="controls">' +
+            '<input type="text" class="input-large" id="ParentCode" placeholder="家長代碼..." value="">' +
+            '<span class="help-inline"></span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="control-group">' +
+          '<label class="control-label" for="IDNumber">孩子身分證字號</label>' +
+          '<div class="controls">' +
+            '<input type="text" class="input-large" id="IDNumber" maxlength="10" placeholder="孩子身分證字號..." value="">' +
+            '<span class="help-inline"></span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="control-group">' +
+          '<label class="control-label" for="relationship">請輸入親子關係</label>' +
+          '<div class="controls">' +
+            '<input type="text" class="input-large" id="relationship" placeholder="親子關係..." value="">' +
+            '<span class="help-inline"></span>' +
+          '</div>' +
+        '</div>' +
+      '</fieldset>'
+    '</form>'
+
+    $("#editModal h3").html("設定帳號親屬關係");
+    $("#editModal .modal-body").html(tmp_editProfile);
+    $("#editModal #save-data").attr("edit-target", "relationship")
     $("#editModal").modal("show");
 };
 
 
 /* 取回基本資料、關係表 */
 myparent.parent_connection.ready(function () {
-    myparent.childrenList('#childrenList');
-    myparent.parentInto.get_ParentInfo('#parentProfile');
+    myparent.childrenList();
+    myparent.parentInto.get_ParentInfo();
 });
