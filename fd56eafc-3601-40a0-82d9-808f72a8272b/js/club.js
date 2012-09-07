@@ -6,6 +6,9 @@ _gg.Student = {};
 _gg.SchoolYear = '';
 _gg.Semester = '';
 
+_gg.set_error_message = function(serviceName, error) {
+    $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(" + serviceName + ")\n</div>");
+};
 
 jQuery(function () {
     $("#editModal").modal({
@@ -48,7 +51,22 @@ jQuery(function () {
         $(_gg.Clubs).each(function (index, item) {
             if (item) {
                 if (item.ClubName.indexOf($("#filter-keyword").val()) !== -1) {
-                    items.push("<li club-id='" + item.ClubID + "'><a href='#' club-index='" + index + "' data-toggle='tab'><span>" + this.ClubName + "</span> <span class='pull-right'>(<span data-type='club-man-count'>" + this.TotalCount + "</span>/<span>" + (item.Limit ? item.Limit : '不限') + "</span>)</span></a></li>");
+                    var limit_str = '不限';
+                    var tmp_attendCount = 0;
+                    if (item.Limit) {
+                        limit_str = item.Limit;
+                        if (parseInt(this.TotalCount, 10) > parseInt(item.Limit, 10)) {
+                            tmp_attendCount = item.Limit;
+                        } else {
+                            tmp_attendCount = this.TotalCount;
+                        }
+                    }
+
+                    items.push("<li club-id='" + item.ClubID + "'>" +
+                        "<a href='#' club-index='" + index + "' data-toggle='tab'>" +
+                        "<span>" + this.ClubName + "</span>" +
+                        " <span class='pull-right'>(<span data-type='club-man-count'>" + tmp_attendCount + "</span>/<span>" + limit_str + "</span>)" +
+                        "</span></a></li>");
                 }
             }
         });
@@ -64,14 +82,13 @@ jQuery(function () {
         });
     };
 
-
     // TODO: 取得目前學年度學期
     _gg.connection.send({
         service: "_.GetCurrentSemester",
         body: '',
         result: function (response, error, http) {
             if (error !== null) {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetCurrentSemester)\n</div>");
+                _gg.set_error_message("GetCurrentSemester", error);
             } else {
                 $(response.Result.SystemConfig).each(function (index, item) {
                     _gg.SchoolYear = item.DefaultSchoolYear;
@@ -84,7 +101,7 @@ jQuery(function () {
                     body: '',
                     result: function (response, error, http) {
                         if (error !== null) {
-                            $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMyBaseInfo)\n</div>");
+                            _gg.set_error_message("GetMyBaseInfo", error);
                         } else {
                             $(response.Response.Student).each(function (index, item) {
                                 _gg.Student = {
@@ -125,7 +142,7 @@ jQuery(function () {
                                 body: '<Request><GradeYear>' + student.GradeYear + '</GradeYear></Request>',
                                 result: function (response, error, http) {
                                     if (error !== null) {
-                                        $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetOpeningHours)\n</div>");
+                                        _gg.set_error_message("GetOpeningHours", error);
                                     } else {
                                         $(response.Response.OpeningHours).each(function (index, item) {
                                             if (item.Startdate && item.Enddate) {
@@ -154,7 +171,7 @@ jQuery(function () {
                                 body: '',
                                 result: function (response, error, http) {
                                     if (error !== null) {
-                                        $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMyClub)\n</div>");
+                                        _gg.set_error_message("GetMyClub", error);
                                     } else {
                                         $(response.Response.Clubs).each(function (index, item) {
                                             student.Clubs[index] = item;
@@ -172,7 +189,7 @@ jQuery(function () {
                                             body: '<Request><SchoolYear>' + _gg.SchoolYear + '</SchoolYear><Semester>' + _gg.Semester + '</Semester></Request>',
                                             result: function (response, error, http) {
                                                 if (error !== null) {
-                                                    $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetClubStatus)\n</div>");
+                                                    _gg.set_error_message("GetAllClubs", error);
                                                 } else {
                                                     var tmp_HTML, items, tmp_class, tmp_show;
                                                     _gg.ResetData();
@@ -207,7 +224,24 @@ jQuery(function () {
                                                                     _gg.Clubs[index] = item;
                                                                     item.getInfo = "false";
                                                                 }
-                                                                items.push("<li club-id='" + item.ClubID + "'" + tmp_class + "><a href='#' club-index='" + index + "' data-toggle='tab'><span>" + item.ClubName + "</span> <span class='pull-right'>(<span data-type='club-man-count'>" + item.TotalCount + "</span>/<span>" + (item.Limit ? item.Limit : '不限') + "</span>)</span></a></li>");
+
+                                                                var limit_str = '不限';
+                                                                var tmp_attendCount = 0;
+                                                                if (item.Limit) {
+                                                                    limit_str = item.Limit;
+                                                                    if (parseInt(item.TotalCount, 10) > parseInt(item.Limit, 10)) {
+                                                                        tmp_attendCount = item.Limit;
+                                                                    } else {
+                                                                        tmp_attendCount = item.TotalCount;
+                                                                    }
+                                                                }
+
+                                                                items.push("<li club-id='" + item.ClubID + "'" + tmp_class + ">" +
+                                                                    "<a href='#' club-index='" + index + "' data-toggle='tab'>" +
+                                                                    "<span>" + item.ClubName + "</span>" +
+                                                                    " <span class='pull-right'>(<span data-type='club-man-count'>" + tmp_attendCount + "</span>/<span>" + limit_str + "</span>)" +
+                                                                    "</span></a></li>");
+
                                                             }
                                                         });
 
@@ -266,11 +300,14 @@ _gg.setClubInfo = function () {
             items_info.push('<tr><th nowrap="nowrap">場地 </th><td>' + club.Location + '</td></tr>');
 
             // TODO: 社團條件
+            var tmp_attendCount = 0;
             if (club.Grade1Limit) {
-                tmp_grade1Limit = club.Grade1Limit + ' 人，現已 <span grade_year="1">' + club.GradeYear1Count + '</span> 人';
+                tmp_attendCount = (parseInt(club.GradeYear1Count, 10) > parseInt(club.Grade1Limit)) ? club.Grade1Limit : club.GradeYear1Count;
+                tmp_grade1Limit = club.Grade1Limit + ' 人，現已 <span grade_year="1">' + tmp_attendCount + '</span> 人';
             }
             if (club.Grade2Limit) {
-                tmp_grade2Limit = club.Grade2Limit + ' 人，現已 <span grade_year="2">' + club.GradeYear2Count + '</span> 人';
+                tmp_attendCount = (parseInt(club.GradeYear2Count, 10) > parseInt(club.Grade2Limit)) ? club.Grade2Limit : club.GradeYear2Count;
+                tmp_grade2Limit = club.Grade2Limit + ' 人，現已 <span grade_year="2">' + tmp_attendCount + '</span> 人';
             }
             if (club.Limit) {
                 tmp_limit = club.Limit + '人';
@@ -294,13 +331,15 @@ _gg.setClubInfo = function () {
             // TODO: 社團簡介
             items_summary.push('<p>' + club.About + '</p>');
             if (club.Photo1 != null && club.Photo1 !== "") {
-                tmp_photo1 = "<a href='data:image/png;base64," + club.Photo1 + "' target='_black'><img class='thumbnail' src='data:image/png;base64," + club.Photo1 + "' alt='社團照片1' title='社團照片1' /></a>";
+                tmp_photo1 = "<a href='data:image/png;base64," + club.Photo1 + "' target='_black'>" +
+                             "<img class='thumbnail' src='data:image/png;base64," + club.Photo1 + "' alt='社團照片1' title='社團照片1' /></a>";
             } else {
                 tmp_photo1 = "";
             }
 
             if (club.Photo2 != null && club.Photo2 !== "") {
-                tmp_photo2 = "<br /><a href='data:image/png;base64," + club.Photo2 + "' target='_black'><img class='thumbnail' src='data:image/png;base64," + club.Photo2 + "' alt='社團照片2' title='社團照片2' /></a>";
+                tmp_photo2 = "<br /><a href='data:image/png;base64," + club.Photo2 + "' target='_black'>" +
+                             "<img class='thumbnail' src='data:image/png;base64," + club.Photo2 + "' alt='社團照片2' title='社團照片2' /></a>";
             }
 
             if ( tmp_photo1 || tmp_photo2) {
@@ -329,7 +368,7 @@ _gg.setClubInfo = function () {
                 body: '<Request><ClubID>' + club.ClubID + '</ClubID></Request>',
                 result: function (response, error, http) {
                     if (error !== null) {
-                        $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetClubInfo)\n</div>");
+                        _gg.set_error_message("GetClubInfo", error);
                     } else {
                         $(response.Response.ClubRecord).each(function (index, item) {
                             $.each(item, function (key, value) {
@@ -456,7 +495,7 @@ _gg.AddToClub = function () {
             }
         });
     } else {
-        $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>加入社團的資料不正確，請重新操作!</strong>(RemoveClub)\n</div>");
+        $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>加入社團的資料不正確，請重新操作!</strong>(RemoveClub)\n</div>");
     }
 };
 
@@ -483,7 +522,7 @@ _gg.RemoveToClub = function () {
             }
         });
     } else {
-        $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>退出社團的資料不正確，請重新操作!</strong>(RemoveClub)\n</div>");
+        $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>退出社團的資料不正確，請重新操作!</strong>(RemoveClub)\n</div>");
     }
 };
 
@@ -497,7 +536,7 @@ _gg.RefreshCount = function () {
             body: '<Request><ClubID>' + club.ClubID + '</ClubID></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetClubAttendNumber)\n</div>");
+                    _gg.set_error_message("GetClubAttendNumber", error);
                 } else {
                     $(response.Response.ClubRecord).each(function (index, item) {
                         club.TotalCount = item.TotalCount;
@@ -523,7 +562,7 @@ _gg.SetClubRecord = function () {
         body: '',
         result: function (response, error, http) {
             if (error !== null) {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetWeight)\n</div>");
+                _gg.set_error_message("GetWeight", error);
             } else {
                 $(response.Response.Weight).each(function (index, item) {
                    _gg.Weight = item;
