@@ -94,10 +94,12 @@ jQuery(function () {
         _gg.SetData('B3');
         _gg.SetData('B4');
         _gg.SetData('B5');
-        if (_gg.student.GradeYear && _gg.grade && (_gg.student.GradeYear === _gg.grade)) {
-            $('#B1 a[data-toggle=modal], #B2 a[data-toggle=modal], #B3 a[data-toggle=modal], #B4 a[data-toggle=modal], #B5 a[data-toggle=modal]').removeClass("disabled");
-        } else {
-            $('#B1 a[data-toggle=modal], #B2 a[data-toggle=modal], #B3 a[data-toggle=modal], #B4 a[data-toggle=modal], #B5 a[data-toggle=modal]').addClass("disabled");
+        if (_gg.Opening === "yes") {
+            if (_gg.student.GradeYear && _gg.grade && (_gg.student.GradeYear === _gg.grade)) {
+                $('#B1 a[data-toggle=modal], #B2 a[data-toggle=modal], #B3 a[data-toggle=modal], #B4 a[data-toggle=modal], #B5 a[data-toggle=modal]').removeClass("disabled");
+            } else {
+                $('#B1 a[data-toggle=modal], #B2 a[data-toggle=modal], #B3 a[data-toggle=modal], #B4 a[data-toggle=modal], #B5 a[data-toggle=modal]').addClass("disabled");
+            }
         }
     });
 
@@ -109,7 +111,10 @@ jQuery(function () {
             if (qtype) {
                 switch (qtype.toLowerCase()) {
                     case 'single_answer':
-                        tmp_data = (qvalue.Data || '') + (qvalue.Remark || '');
+                        tmp_data = (qvalue.Data || '');
+                        if (qvalue.Remark) {
+                            tmp_data += ":" + qvalue.Remark;
+                        }
                         break;
                     case 'multi_answer':
                         $.each(qvalue, function (index, item) {
@@ -117,7 +122,10 @@ jQuery(function () {
                                 tmp_data += ", ";
                             }
 
-                            tmp_data += (item.Data || '') + (item.Remark || '');
+                            tmp_data += (item.Data || '');
+                            if (item.Remark) {
+                                tmp_data += ":" + item.Remark;
+                            };
                         });
                         break;
                     case 'yearly':

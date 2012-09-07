@@ -789,18 +789,23 @@ _gg.SetSaveData = function (data_scope) {
                 if (error !== null) {
                     set_error_message('DelSibling', error);
                 } else {
-                    _gg.connection.send({
-                        service: "_.InsertSibling",
-                        body: '<Request>' + tmp_sibling.join("") + '</Request>',
-                        result: function (response, error, http) {
-                            if (error !== null) {
-                                set_error_message('InsertSibling', error);
-                            } else {
-                                save_sibling = true;
-                                reset_data();
+                    if (tmp_sibling.join("")) {
+                        _gg.connection.send({
+                            service: "_.InsertSibling",
+                            body: '<Request>' + tmp_sibling.join("") + '</Request>',
+                            result: function (response, error, http) {
+                                if (error !== null) {
+                                    set_error_message('InsertSibling', error);
+                                } else {
+                                    save_sibling = true;
+                                    reset_data();
+                                }
                             }
-                        }
-                    });
+                        });
+                    } else {
+                        save_sibling = true;
+                        reset_data();
+                    }
                 }
             }
         });
