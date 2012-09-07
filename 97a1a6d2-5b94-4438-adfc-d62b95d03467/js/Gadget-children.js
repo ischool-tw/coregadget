@@ -1,12 +1,12 @@
 ﻿/// <reference path="../include/jquery-1.7.2.min.js"/>
 var myparent = myparent || {};
 
-/// <reference path="../include/jquery-1.7.2.min.js"/>
+
 $(document).ready(function () {
     $('#ParentCode').focus();
 
     myparent.DrawingChildrenList = function () {
-        myparent.childrenList('.childrenList');
+        myparent.childrenList();
     };
 
     myparent.DrawingChildrenList();
@@ -52,8 +52,6 @@ myparent.setParentRelationship = function (parentCode, idNumber, relationship) {
                         $('#errorMessage').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><strong>設定失敗！</strong> ' + error.dsaError.message + '</div>');
                 }
             } else {
-                myparent.DrawingChildrenList();
-
                 $('#editModal').modal("show");
                 $('#editModal h3').html("設定成功")
                 $('#editModal .modal-body').html('設定完成');
@@ -63,7 +61,7 @@ myparent.setParentRelationship = function (parentCode, idNumber, relationship) {
     });
 };
 
-myparent.childrenList = function (e) {
+myparent.childrenList = function () {
     myparent.parent_connection = gadget.getContract("auth.parent");
     myparent.parent_connection.ready(function () {
         myparent.parent_connection.send({
@@ -73,7 +71,7 @@ myparent.childrenList = function (e) {
                 if (error) {
                     console.log(error);
                 } else {
-                    var tempHtmlA = '', tempHtmlB = '', tempHtml = '';
+                    var tempHtml = '';
                     $(response.Children.Child).each(function (index, item) {
                         tempHtml += '<tr>';
                         tempHtml += '<td>' + item.Name + '</td>';
@@ -82,11 +80,8 @@ myparent.childrenList = function (e) {
                         tempHtml += '<td>' + item.Relationship + '</td>';
                         tempHtml += '</tr>';
                     });
-                    tempHtmlA = '<div class="well"><table class="table table-condensed table-striped"><thead><tr><th>姓名</th><th>班級</th><th>座號</th><th>關係</th></tr></thead>';
-                    tempHtmlA += '<tbody>';
-                    tempHtmlB = '</tbody></table></div>';
 
-                    $(e).html(tempHtmlA + tempHtml + tempHtmlB);
+                    $('.childrenList tbody').html(tempHtml);
                 }
             }
         });
