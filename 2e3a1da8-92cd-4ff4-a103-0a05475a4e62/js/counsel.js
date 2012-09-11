@@ -4,12 +4,20 @@ _gg.schoolYear = '';
 _gg.grade = '';
 _gg.chineseGrade = '';
 _gg.init = false;
+_gg.students = [];
 
 jQuery(function () {
     // TODO: 點選 checkbox 後的註解輸入框時，使事件失效，才不會影響 checkbox
-    $("body").on("click", "input:text[data-type$=remark]", function(e) {
+    $("body").on("click", "input:text[valide-type$=remark]", function(e) {
         e.preventDefault();
     });
+
+    // TODO: datepicker 中文化
+    $.datepicker.setDefaults({
+        dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"]
+        ,monthNames: ["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]
+    });
+
 
     $("#filter-keyword").keyup(function() {
       _gg.resetStudentList();
@@ -144,13 +152,22 @@ jQuery(function () {
 
     // TODO: 設定驗證錯誤時的樣式
     $.validator.setDefaults({
+        debug: true,
         errorElement: "span",
         errorClass: "help-inline",
         highlight: function(element) {
-            $(element).parentsUntil('.control-group').parent().addClass("error");
+            if ($(element).attr("valide-type") === 'remark') {
+                $(element).addClass("error-remark");
+            } else {
+                $(element).parentsUntil('.control-group').parent().addClass("error");
+            }
         },
         unhighlight: function(element) {
-            $(element).parentsUntil('.control-group').parent().removeClass("error");
+            if ($(element).attr("valide-type") === 'remark') {
+                $(element).removeClass("error-remark");
+            } else {
+                $(element).parentsUntil('.control-group').parent().removeClass("error");
+            }
         },
         errorPlacement: function (error, element) {
             if (element.is(':radio') || element.is(':checkbox')) {
@@ -162,6 +179,11 @@ jQuery(function () {
             }
         }
     });
+
+    // TODO: 驗證時間格式 hh:mm
+    jQuery.validator.addMethod("time", function(value, element) {
+        return this.optional(element) || /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/i.test(value);
+    }, "請輸入正確格式，如「12:00」");
 
     // TODO: 家中排行
     $('#siblings [name=AnySiblings]').bind('click', function (e) {
@@ -178,7 +200,12 @@ jQuery(function () {
         }
     });
 
-    // TODO: 兄弟姊妹新增鈕
+    // TODO: 尊親屬新增鈕
+    $('#parents-add-data').bind('click', function () {
+         _gg.SetModifyData.addParent();
+    });
+
+     // TODO: 兄弟姊妹新增鈕
     $('#siblings-add-data').bind('click', function () {
          _gg.SetModifyData.addSibling();
     });
@@ -196,65 +223,54 @@ jQuery(function () {
     // TODO: 晤談紀錄設定
     _gg.SetModifyData.setTalkValidRules();
 
-    // TODO: 晤談紀錄分頁
-    $("#tab5 .pagination").on("click", "a", function(e) {
-        var before_page = $("#tab5 .pagination a.active").html();
-        var this_page = $(this).html();
+    // TODO: 晤談紀錄查詢
+    $("#filter-interview-start").datepicker({ dateFormat: "yy/mm/dd" });
+    $("#filter-interview-end").datepicker({ dateFormat: "yy/mm/dd" });
+    $("#filter-interview").validate();
+    $("#search-interview").bind("click", function(e) {
+        var startD = $('#filter-interview-start').val();
+        var endD = $('#filter-interview-end').val();
+        var start_date = startD + " 00:00:00";
+        var end_date = endD + " 00:00:00";
 
-        switch (this_page) {
-            case 'Prev':
-                this_page = parseInt(this_page, 10) - 1;
-                $("#E1 .my-baseinfo-item").pager(5, this_page);
-                $("#tab5 .pagination li").removeClass("active");
-                $("#tab5 .pagination li:eq(' + this_page + ')").addClass("active");
-                break;
-            case 'Next':
-                this_page = parseInt(this_page, 10) + 1;
-                $("#E1 .my-baseinfo-item").pager(5, this_page);
-                $("#tab5 .pagination li").removeClass("active");
-                $("#tab5 .pagination li:eq(' + this_page + ')").addClass("active");
-                break;
-            default:
-                $("#E1 .my-baseinfo-item").pager(5, this_page);
-                $("#tab5 .pagination li").removeClass("active");
-                $(this).parent().addClass("active");
+        if (startD || endD) {
+            $(_gg.interviewRecord).each(function() {
+                var iDate = new Date(this.InterviewDate);
+                var iNode = $('#interview-' + this.UID);
+                iNode.hide();
+
+                if (iDate) {
+
+                    if (startD && endD)  {
+                        // TODO: 限制區間
+                        if (new Date(start_date) <= iDate && new Date(end_date) >= iDate) {
+                            iNode.show();
+                        }
+                    } else if (startD) {
+                        // TODO: 開始日之後
+                        if (new Date(start_date) <= iDate) {
+                            iNode.show();
+                        }
+                    } else if (endD) {
+                        // TODO: 結束日之前
+                        if (new Date(end_date) >= iDate) {
+                            iNode.show();
+                        }
+                    }
+                }
+            });
+
+            // TODO: 搜尋結果不分頁
+            $("#E1Page").hide();
+        } else {
+            $('#E1 div.my-baseinfo-item').show();
+            $('#E1Page a:eq(1)').triggerHandler('click');
+            $("#E1Page").show();
         }
     });
 
-    // TODO: 晤談紀錄查詢
-    $("#filter-interview").validate();
-    $("#search-interview").bind("click", function(e) {
-        var start_date = $('#filter-interview-start').val();
-        var end_date = $('#filter-interview-end').val();
-
-        $(_gg.interviewRecord).each(function() {
-            var iDate = new Date(this.InterviewDate);
-            var iNode = $('#interview-' + this.UID);
-            iNode.removeClass("hide");
-
-            if (iDate) {
-
-                if (start_date && end_date)  {
-                    // TODO: 限制區間
-                    if (!(new Date(start_date) <= iDate && new Date(end_date) >= iDate)) {
-                        iNode.addClass("hide");
-                    }
-                } else if (start_date) {
-                    // TODO: 開始日之後
-                    if (!(new Date(start_date) <= iDate)) {
-                        iNode.addClass("hide");
-                    }
-                } else if (end_date) {
-                    // TODO: 結束日之前
-                    if (!(new Date(end_date) >= iDate)) {
-                        iNode.addClass("hide");
-                    }
-                }
-            }
-        });
-
-    });
-
+    // TODO: 晤談新增編輯日期
+    $("#InterviewDate").datepicker({ dateFormat: "yy/mm/dd" });
 
     // TODO: 編輯視窗的相關設定
     $('.modal').modal({
@@ -288,39 +304,23 @@ jQuery(function () {
 
         // TODO: 資料尚未載入完成，使 modal.show 失效
         if (_gg.init) {
-            if ($(this).find("[edit-target]").attr("edit-target") === 'E1') {
-                if (_gg.editInterview) {
+            if ($(this).find("[edit-target]").attr("edit-target").slice(0, 1) === 'B') {
+                if (_gg.student.GradeYear && _gg.grade && (_gg.student.GradeYear === _gg.grade)) {
                     show_model();
                 } else {
-                    $(that).find("button[edit-target]").button('reset'); // TODO: 重設按鈕
-                    // TODO: 移除表單驗證訊息
-                    var validator = $(that).find('form').validate();
-                    validator.resetForm();
-                    $(that).find('.error').removeClass("error");
-                    _gg.SetModifyData.addTalk(); // TOODO: 新增晤談紀錄
+                    e.preventDefault();
                 }
+            } else if ($(this).find("[edit-target]").attr("edit-target") === 'E1' && !_gg.editInterview) {
+                $(that).find("button[edit-target]").button('reset'); // TODO: 重設按鈕
+                // TODO: 移除表單驗證訊息
+                var validator = $(that).find('form').validate();
+                validator.resetForm();
+                $(that).find('.error').removeClass("error");
+
+                _gg.SetModifyData.addTalk(); // TOODO: 新增晤談紀錄
             } else {
-                e.preventDefault();
+                show_model();
             }
-
-            // TODO: ooooxxxx
-            // if ($(this).find("[edit-target]").attr("edit-target").slice(0, 1) === 'B') {
-            //     if (_gg.student.GradeYear && _gg.grade && (_gg.student.GradeYear === _gg.grade)) {
-            //         show_model();
-            //     } else {
-            //         e.preventDefault();
-            //     }
-            // } else if ($(this).find("[edit-target]").attr("edit-target") === 'E1' && !_gg.editInterview) {
-            //     $(that).find("button[edit-target]").button('reset'); // TODO: 重設按鈕
-            //     // TODO: 移除表單驗證訊息
-            //     var validator = $(that).find('form').validate();
-            //     validator.resetForm();
-            //     $(that).find('.error').removeClass("error");
-
-            //     _gg.SetModifyData.addTalk(); // TOODO: 新增晤談紀錄
-            // } else {
-            //     show_model();
-            // }
         } else {
             e.preventDefault();
         }
@@ -346,12 +346,12 @@ jQuery(function () {
         _gg.SetData('B4');
         _gg.SetData('B5');
 
-        // TODO: ooooxxxx
-        // if (_gg.student.GradeYear && _gg.grade && (_gg.student.GradeYear === _gg.grade)) {
-        //     $('#B1 a[data-toggle=modal], #B2 a[data-toggle=modal], #B3 a[data-toggle=modal], #B4 a[data-toggle=modal], #B5 a[data-toggle=modal]').removeClass("disabled");
-        // } else {
-        //     $('#B1 a[data-toggle=modal], #B2 a[data-toggle=modal], #B3 a[data-toggle=modal], #B4 a[data-toggle=modal], #B5 a[data-toggle=modal]').addClass("disabled");
-        // }
+
+        if (_gg.student.GradeYear && _gg.grade && (_gg.student.GradeYear === _gg.grade)) {
+            $('#B1 a[data-toggle=modal], #B2 a[data-toggle=modal], #B3 a[data-toggle=modal], #B4 a[data-toggle=modal], #B5 a[data-toggle=modal]').removeClass("disabled");
+        } else {
+            $('#B1 a[data-toggle=modal], #B2 a[data-toggle=modal], #B3 a[data-toggle=modal], #B4 a[data-toggle=modal], #B5 a[data-toggle=modal]').addClass("disabled");
+        }
     });
 
     // TODO: 顯示資料
@@ -362,6 +362,7 @@ jQuery(function () {
             if (qtype) {
                 switch (qtype.toLowerCase()) {
                     case 'single_answer':
+                        tmp_data = (qvalue.Data || '');
                         if (qvalue.Remark) {
                             tmp_data += ":" + qvalue.Remark;
                         }
@@ -689,7 +690,7 @@ jQuery(function () {
                           '<table class="table my-lineheight">' +
                             '<tr>' +
                               '<th width="40%">日期</th>' +
-                              '<td width="60%">' + date1 + '</td>' +
+                              '<td width="60%" class="my-Date">' + date1 + '</td>' +
                             '</tr>' +
                             '<tr>' +
                               '<th>時間</th>' +
@@ -742,23 +743,7 @@ jQuery(function () {
                 $('#E1').html(tmp_items.join(""));
 
                 // TODO: 分頁
-                /*
-                var totalpage = $("#E1 .my-baseinfo-item").pager(5);
-
-                if (totalpage > 1) {
-                    var tmp_page = [];
-                    for (var i=1; i<=totalpage; i+=1) {
-                        tmp_page.push('<li' + ((i === 1) ? 'class="active"' : '') + '><a href="#">' + i + '</a></li>');
-                    }
-
-                    var page_str = '<ul>' + tmp_page.join("") + '</ul>';
-
-                    $("#tab5 .pagination").html(page_str);
-                    $("#tab5 .pagination:eq(1)").triggle();
-                } else {
-                    $('#E1 .hide').removeClass("hide");
-                }
-                */
+                $("#E1").pager('div.my-baseinfo-item', {navId: 'E1Page'});
             }
         };
 
@@ -792,7 +777,7 @@ jQuery(function () {
                     }
 
                     if (((_ref = item.QuizDataField) != null ? _ref.Field : void 0) != null) {
-                        $(item.QuizDataField.Field).each(function(key, value){
+                        $(item.QuizDataField.Field).sort(by('asc', 'order')).each(function(key, value){
                             tmp_items.push('<p class="my-lineheight"><b>' + value.name + '</b>：' +
                                 '' + (tmp_content[value.name] || '') + '</p>'
                             );
@@ -808,11 +793,7 @@ jQuery(function () {
         // 如果未指定範圍，就重新顯示全部資料
         if (_gg.init) {
             if (data_scope === 'All') {
-                // TODO: ooooxxxx
-                //$('a[data-toggle=modal]').removeClass("disabled");
-                // TODO: ooooxxxx
-                $('#talk-add-data').removeClass("disabled");
-
+                $('a[data-toggle=modal]').removeClass("disabled");
 
                 $.each(_gg.col_Question, function(key, value) {
                     eval('input_' + key + '_value()');
@@ -823,48 +804,3 @@ jQuery(function () {
         }
     };
 });
-
-
-(function($) {
-
-    //EX1 回傳頁數:
-    //$(Xml).find('xml或html').pager(指定一頁的數量)
-
-    //EX2 回傳指定頁數的內容:
-    //$(Xml).find('xml或html').pager(指定一頁的數量,指定的頁數)
-
-    $.fn.pager = function(page, number) {
-
-        //取得內容
-        var t = this.text();
-
-        //取得數量
-        var _length = $(this).length;
-
-        page = parseInt(page, 10);
-
-        //共幾頁
-        var pageTotal = Math.ceil(_length / page);
-
-        //回傳指定頁數內容
-        if (number != null) {
-            $(this).filter(".my-baseinfo-item").addClass("hide");
-
-            number = parseInt(number, 10);
-            (number < 0) ? 0 : number;
-            number = number - 1;
-            var w = number * page;
-            var a = w + page;
-            if (a > _length) {
-                a = _length;
-            }
-            /*return $(this).slice(w, a);*/
-            for (var s=w; s<a; s+=1) {
-                $(this).filter(':eq(' + s + ')').removeClass("hide");
-            }
-        } else {
-        //回傳頁數量
-            return pageTotal;
-        }
-    }
-})(jQuery);

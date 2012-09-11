@@ -41,7 +41,7 @@ _gg.SetModifyData = function () {
                         }
 
                         if (opt.has_remark === "True") {
-                            tmp_remark_html = '<input type="text" class="' + tmp_remark_class + '" name="' + qkey + '_remark" data-type="' + qkey + '_remark" data-index="' + index + '" placeholder="' + qplaceholder + '" value="' + qremark + '">';
+                            tmp_remark_html = '<input type="text" class="' + tmp_remark_class + '" name="' + qkey + '_remark" data-type="' + qkey + '_remark" valide-type="remark" data-index="' + index + '" placeholder="' + qplaceholder + '" value="' + qremark + '">';
                         }
 
                         if (usecontrol === 'select') {
@@ -127,7 +127,7 @@ _gg.SetModifyData = function () {
                 break;
             case 'relative':
                 if (question.TagName === 'IsAlive') {
-                    alldata.push((relative_data[question.TagName] === 't') ? '存':'歿');
+                    alldata.push((relative_data[question.TagName] === 'f') ? '歿':'存');
                 } else {
                     alldata.push(relative_data[question.TagName] || '');
                 }
@@ -147,7 +147,7 @@ _gg.SetModifyData = function () {
     var set_personal = function (questions) {
         var tmp_items = [];
         $(questions).each(function (index, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 tmp_items.push(
                     '<div class="control-group">' +
                     '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
@@ -166,7 +166,7 @@ _gg.SetModifyData = function () {
     var set_guardian = function (questions) {
         var tmp_items = [];
         $(questions).each(function (index, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 tmp_items.push(
                     '<div class="control-group">' +
                     '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
@@ -182,29 +182,75 @@ _gg.SetModifyData = function () {
     };
 
     // TODO: 尊親屬資料資料
-    var set_parents = function (questions) {
+    var set_parents = function (questions, run_model) {
+
         var tmp_items = [];
 
-        tmp_items.push(
-            '<div class="accordion" id="accordion' + data_scope + '">'
-        );
+        var tmp_resource;
 
-        $(_gg.relative).each(function (key, relatives) {
+        if (run_model === 'edit') {
+            tmp_resource = _gg.relative;
+        }
+
+        var tmp_name_edit = false, tmp_name_obj = {};
+        $(questions).each(function (index, value) {
+            if (run_model === 'add') {
+                var tmp_obj = {};
+                $(questions).each(function (index, value) {
+                    if (value.CanTeacherEdit === "是") {
+                        if (value.TagName) {
+                            tmp_obj[value.TagName] = '';
+                        }
+                    }
+                });
+                tmp_resource = [];
+                tmp_resource.push(tmp_obj);
+            }
+
+            if (value.Name === '直系血親_姓名') {
+                if (value.CanTeacherEdit === "是") {
+                    tmp_name_edit = true;
+                    tmp_name_obj = value;
+                }
+            }
+
+        });
+
+        $(tmp_resource).each(function (key, relatives) {
+            var tmp_number;
+            if (run_model === 'add') {
+                tmp_number = ($('#parents-add-data').attr("new-id") || 0);
+            } else {
+                tmp_number = key;
+            }
+            $('#parents-add-data').attr("new-id", parseInt(tmp_number, 10) + 1);
+
             tmp_items.push(
                 '  <div class="accordion-group">' +
                 '    <div class="accordion-heading">' +
-                '      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion' + data_scope + '" href="#collapse' + data_scope + key + '">' +
-                '        <i class="icon-chevron-down pull-right"></i>' +
-                relatives.Title +
+                '      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion' + data_scope + '" href="#collapse' + data_scope + tmp_number + '">' +
+                '        <i class="icon-chevron-down pull-right"></i>'
+            );
+
+            if (tmp_name_edit) {
+                tmp_items.push(
+                    set_form(tmp_name_obj, relatives) +
+                    '        <button class="btn" data-action="del"><i class="icon-minus-sign"></i>刪除</button>'
+                );
+            } else {
+                tmp_items.push(relatives.Title || '&nbsp;');
+            }
+
+            tmp_items.push(
                 '      </a>' +
                 '    </div>' +
-                '    <div id="collapse' + data_scope + key + '" class="accordion-body collapse" unique-value="' + relatives.UID + '">' +
+                '    <div id="collapse' + data_scope + tmp_number + '" class="accordion-body collapse" unique-value="' + relatives.UID + '">' +
                 '      <div class="accordion-inner">'
             );
 
             $(questions).each(function (index, value) {
-                if (value.CanStudentEdit === "是") {
-                    if (value.TagName !== 'Title') {
+                if (value.CanTeacherEdit === "是") {
+                    if (value.Name !== '直系血親_姓名') {
                         var tmp_x = set_form(value, relatives);
                         var tmp_searchvalue = ' name="' + $(tmp_x).attr("name") + '"';
                         var tmp_newvalue = ' name="' + $(tmp_x).attr("name") + key + '"';
@@ -229,8 +275,16 @@ _gg.SetModifyData = function () {
             );
         });
 
-        tmp_items.push('</div>');
-        $('#' + data_scope + ' fieldset').html(tmp_items.join(""));
+        if (run_model === 'add') {
+            $('#accordionparents').append(tmp_items.join(""));
+        } else {
+            $('#accordionparents').html(tmp_items.join(""));
+        }
+
+        // TODO: 尊親屬刪除鈕
+        $('#accordionparents [data-action=del]').bind('click', function () {
+            $(this).closest(".accordion-group").remove();
+        });
 
     };
 
@@ -241,22 +295,25 @@ _gg.SetModifyData = function () {
 
         var tmp_resource;
 
-        if (run_model === 'add') {
-            var tmp_obj = {};
-            $(questions).each(function (index, value) {
-                if (value.CanStudentEdit === "是") {
-                    if (value.TagName) {
-                        tmp_obj[value.TagName] = '';
-                    }
-                }
-            });
-            tmp_resource = [];
-            tmp_resource.push(tmp_obj);
-        } else {
+        if (run_model === 'edit') {
             tmp_resource = _gg.sibling;
         }
 
+        var tmp_name_edit = false, tmp_name_obj = {};
         $(questions).each(function (index, value) {
+            if (run_model === 'add') {
+                var tmp_obj = {};
+                $(questions).each(function (index, value) {
+                    if (value.CanTeacherEdit === "是") {
+                        if (value.TagName) {
+                            tmp_obj[value.TagName] = '';
+                        }
+                    }
+                });
+                tmp_resource = [];
+                tmp_resource.push(tmp_obj);
+            }
+
             if (value.Name === '兄弟姊妹_排行') {
                 if (value.SelectValue && value.SelectValue.Data) {
                     $('#' + data_scope + ' [name=AnySiblings][value=more]').trigger('click');
@@ -264,14 +321,19 @@ _gg.SetModifyData = function () {
                 } else {
                     $('#' + data_scope + ' [name=AnySiblings][value=1]').trigger('click');
                 }
-                return false;
+            } else if (value.Name === '兄弟姊妹_姓名') {
+                if (value.CanTeacherEdit === "是") {
+                    tmp_name_edit = true;
+                    tmp_name_obj = value;
+                }
             }
-        })
+
+        });
 
         $(tmp_resource).each(function (key, siblings) {
             var tmp_number;
             if (run_model === 'add') {
-                tmp_number = $('#siblings-add-data').attr("new-id");
+                tmp_number = $('#siblings-add-data').attr("new-id") || 0;
             } else {
                 tmp_number = key;
             }
@@ -281,9 +343,20 @@ _gg.SetModifyData = function () {
                 '  <div class="accordion-group">' +
                 '    <div class="accordion-heading">' +
                 '      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion' + data_scope + '" href="#collapse' + data_scope + tmp_number + '">' +
-                '        <i class="icon-chevron-down pull-right"></i>' +
-                '        <input type="text" class="input-large" name="Name' + tmp_number + '" data-type="Name" placeholder="請輸入姓名" value="' + siblings.Name + '">' +
-                '        <button class="btn" data-action="del"><i class="icon-minus-sign"></i>刪除</button>' +
+                '        <i class="icon-chevron-down pull-right"></i>'
+            );
+
+            if (tmp_name_edit) {
+                tmp_items.push(
+                    set_form(tmp_name_obj, siblings) +
+                    '        <button class="btn" data-action="del"><i class="icon-minus-sign"></i>刪除</button>'
+                );
+            } else {
+                tmp_items.push(siblings.Name || '&nbsp;');
+            }
+
+
+            tmp_items.push(
                 '      </a>' +
                 '    </div>' +
                 '    <div id="collapse' + data_scope + tmp_number + '" class="accordion-body collapse">' +
@@ -292,9 +365,9 @@ _gg.SetModifyData = function () {
 
             $(questions).each(function (index, value) {
                 if (value.Name === '兄弟姊妹_排行') {
-                } else if (value.TagName === 'Name') {
+                } else if (value.Name === '兄弟姊妹_姓名') {
                 } else {
-                    if (value.CanStudentEdit === "是") {
+                    if (value.CanTeacherEdit === "是") {
                         var tmp_x = set_form(value, siblings);
                         var tmp_searchvalue = ' name="' + $(tmp_x).attr("name") + '"';
                         var tmp_newvalue = ' name="' + $(tmp_x).attr("name") + tmp_number + '"';
@@ -335,7 +408,7 @@ _gg.SetModifyData = function () {
     var set_psize = function (questions) {
 
         $(questions).each(function (key, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 var tmp_data  = value.SelectValue;
                 var tmp_key   = value.GroupName + '_' + value.Name;
 
@@ -355,7 +428,7 @@ _gg.SetModifyData = function () {
     var set_home = function (questions) {
         var tmp_items = [];
         $(questions).each(function (index, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 tmp_items.push(
                     '<div class="control-group">' +
                     '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
@@ -374,7 +447,7 @@ _gg.SetModifyData = function () {
     var set_learn = function (questions) {
         var tmp_items = [];
         $(questions).each(function (index, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 tmp_items.push(
                     '<div class="control-group">' +
                     '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
@@ -393,7 +466,7 @@ _gg.SetModifyData = function () {
     var set_cadre = function (questions) {
 
         $(questions).each(function (key, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 var tmp_data  = value.SelectValue;
                 var tmp_key   = value.GroupName + '_' + value.Name;
                 if (tmp_data) {
@@ -423,7 +496,7 @@ _gg.SetModifyData = function () {
         var tmp_items = [];
         var tmp_grade = (_gg.grade || "1");
         $(questions).each(function (index, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 if (value.Name.slice(-1) === tmp_grade) { // ex.個性_1
                     if (value.Name.indexOf("填寫日期") === -1) {
                         tmp_items.push(
@@ -449,7 +522,7 @@ _gg.SetModifyData = function () {
         var tmp_grade = (_gg.grade || "1");
 
         $(questions).each(function (key, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 if (value.Name.slice(-1) === tmp_grade) { // ex.內容1_1
                     if (value.Name.indexOf("填寫日期") === -1) {
                         var tmp_key = value.GroupName + '_' + value.Name;
@@ -472,7 +545,7 @@ _gg.SetModifyData = function () {
     // TODO: 畢業後規劃
     var set_plan = function (questions) {
         $(questions).each(function (index, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 var tmp_key = value.GroupName + '_' + value.Name;
                 $('#' + data_scope + ' [data-type=' + tmp_key + ']').html(set_form(value));
             }
@@ -483,7 +556,7 @@ _gg.SetModifyData = function () {
     var set_memoir = function (questions) {
         var tmp_items = [];
         $(questions).each(function (index, value) {
-            if (value.CanStudentEdit === '是') {
+            if (value.CanTeacherEdit === '是') {
                 if (value.Name === '喜歡的人' ||
                     value.Name === '最要好的朋友' ||
                     value.Name === '最喜歡做的事' ||
@@ -588,7 +661,7 @@ _gg.SetModifyData = function () {
                         set_guardian(_gg.col_Question.A2);
                         break;
                     case 'parents':
-                        set_parents(_gg.col_Question.A3);
+                        set_parents(_gg.col_Question.A3, 'edit');
                         break;
                     case 'siblings':
                         set_siblings(_gg.col_Question.A4, 'edit');
@@ -622,11 +695,19 @@ _gg.SetModifyData = function () {
                         break;
                 }
             }
+            $("#" + data_scope + " form").validate();
+        },
+        addParent: function () {
+            // TODO: 新增尊親屬
+            data_scope = 'parents';
+            set_parents(_gg.col_Question.A3, 'add');
+            $("#" + data_scope + " form").validate();
         },
         addSibling: function() {
             // TODO: 新增兄弟姐妹
             data_scope = 'siblings';
             set_siblings(_gg.col_Question.A4, 'add');
+            $("#" + data_scope + " form").validate();
         },
         addTalk: function() {
             // TODO: 新增晤談紀錄
