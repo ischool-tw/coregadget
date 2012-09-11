@@ -175,7 +175,7 @@ _gg.SetSaveData = function (data_scope) {
                 $(form_value).each(function() {
                     if (this.Data) {
                         if (question.TagName === 'IsAlive') {
-                            tmp_relative.push((this.Data === '存') ? 't':'f');
+                            tmp_relative.push((this.Data === '歿') ? 'f':'t');
                         } else {
                             tmp_relative.push(this.Data);
                         }
@@ -216,17 +216,15 @@ _gg.SetSaveData = function (data_scope) {
 
     // TODO: 尊親屬資料資料
     var set_parents = function (questions) {
-        $(_gg.relative).each(function (key, relatives) {
+        $('#' + data_scope + ' .accordion-group').each(function (a, b) {
+
             tmp_relative.push('<Relative>');
-            tmp_relative.push('<Condition><Uid>' + relatives.UID + '</Uid></Condition>');
 
             $(questions).each(function (index, value) {
                 if (value.CanStudentEdit === "是") {
-                    if (value.TagName !== 'Title') {
-                        tmp_relative.push('<' + value.TagName + '>');
-                        get_request(value, $('#' + data_scope + ' [unique-value=' + relatives.UID + ']'));
-                        tmp_relative.push('</' + value.TagName + '>');
-                    }
+                    tmp_relative.push('<' + value.TagName + '>');
+                    get_request(value, $(b));
+                    tmp_relative.push('</' + value.TagName + '>');
                 }
             });
 
@@ -476,6 +474,21 @@ _gg.SetSaveData = function (data_scope) {
             break;
     }
 
+    // TODO: 錯誤訊息
+    var set_error_message = function(serviceName, error) {
+        if (error.dsaError.status === "504") {
+            if (error.dsaError.message === "已過開放填寫時間") {
+                $("#" + data_scope + "_errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
+            } else {
+                $("#" + data_scope + "_errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>\n</div>");
+                $("#" + data_scope + " button[edit-target]").button('reset'); // TODO: 重設按鈕
+            }
+        } else {
+            $("#" + data_scope + "_errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(" + serviceName +")\n</div>");
+            $("#" + data_scope + " button[edit-target]").button('reset'); // TODO: 重設按鈕
+        }
+    };
+
     var save_singleRecord = false;
     var save_multipleRecord = false;
     var save_semesterData = false;
@@ -496,7 +509,7 @@ _gg.SetSaveData = function (data_scope) {
                         body: '',
                         result: function (response, error, http) {
                             if (error !== null) {
-                                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetRelative)\n</div>");
+                                set_error_message("GetRelative", error);
                             } else {
                                 _gg.relative = [];
                                 $(response.Response.Relative).each(function (index, item) {
@@ -523,7 +536,7 @@ _gg.SetSaveData = function (data_scope) {
                         body: '',
                         result: function (response, error, http) {
                             if (error !== null) {
-                                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetSibling)\n</div>");
+                                set_error_message("GetSibling", error);
                             } else {
                                 _gg.sibling = [];
                                 $(response.Response.Sibling).each(function (index, item) {
@@ -551,21 +564,6 @@ _gg.SetSaveData = function (data_scope) {
                     _gg.SetData(tmp_colID);
                     $(".modal").modal("hide");
             }
-        }
-    };
-
-
-    var set_error_message = function(serviceName, error) {
-        if (error.dsaError.status === "504") {
-            if (error.dsaError.message === "已過開放填寫時間") {
-                $("#" + data_scope + "_errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，目前未開放填寫!</strong>\n</div>");
-            } else {
-                $("#" + data_scope + "_errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>儲存失敗，請稍候重試!</strong>\n</div>");
-                $("#" + data_scope + " button[edit-target]").button('reset'); // TODO: 重設按鈕
-            }
-        } else {
-            $("#" + data_scope + "_errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>x</button>\n  <strong>儲存失敗，請稍候重試!</strong>(" + serviceName +")\n</div>");
-            $("#" + data_scope + " button[edit-target]").button('reset'); // TODO: 重設按鈕
         }
     };
 
@@ -764,16 +762,31 @@ _gg.SetSaveData = function (data_scope) {
         save_priorityData = true;
     }
 
-    if (tmp_relative.join("")) {
+    if (tmp_colID === 'A3') {
         _gg.connection.send({
-            service: "_.UpdateRelative",
-            body: '<Request>' + tmp_relative.join("") + '</Request>',
+            service: "_.DelRelative",
+            body: '<Request><Relative></Relative></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    set_error_message('UpdateRelative', error);
+                    set_error_message('DelRelative', error);
                 } else {
-                    save_relative = true;
-                    reset_data();
+                    if (tmp_relative.join("")) {
+                        _gg.connection.send({
+                            service: "_.InsertRelative",
+                            body: '<Request>' + tmp_relative.join("") + '</Request>',
+                            result: function (response, error, http) {
+                                if (error !== null) {
+                                    set_error_message('InsertRelative', error);
+                                } else {
+                                    save_relative = true;
+                                    reset_data();
+                                }
+                            }
+                        });
+                    } else {
+                        save_relative = true;
+                        reset_data();
+                    }
                 }
             }
         });

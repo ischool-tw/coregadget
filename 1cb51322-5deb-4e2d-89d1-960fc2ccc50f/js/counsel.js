@@ -6,15 +6,42 @@ _gg.chineseGrade = '';
 _gg.init = false;
 
 jQuery(function () {
-    // TODO: 預設編輯鈕為 disabled
-    $('a[data-toggle=modal]').addClass("disabled");
-
-    _gg.loadCounselData();
-
     // TODO: 點選 checkbox 後的註解輸入框時，使事件失效，才不會影響 checkbox
-    $('input:text[data-type$=remark]').live("click", function(e) {
+    $("body").on("click", "input:text[valide-type$=remark]", function(e) {
         e.preventDefault();
     });
+
+    // TODO: 設定驗證錯誤時的樣式
+    $.validator.setDefaults({
+        debug: true,
+        errorElement: "span",
+        errorClass: "help-inline",
+        highlight: function(element) {
+            if ($(element).attr("valide-type") === 'remark') {
+                $(element).addClass("error-remark");
+            } else {
+                $(element).parentsUntil('.control-group').parent().addClass("error");
+            }
+        },
+        unhighlight: function(element) {
+            if ($(element).attr("valide-type") === 'remark') {
+                $(element).removeClass("error-remark");
+            } else {
+                $(element).parentsUntil('.control-group').parent().removeClass("error");
+            }
+        },
+        errorPlacement: function (error, element) {
+            if (element.is(':radio') || element.is(':checkbox')) {
+                var eid = element.attr('name');
+                $('input[name=' + eid + ']:last').next().after(error);
+            }
+            else {
+                error.insertAfter(element);
+            }
+        }
+    });
+
+    _gg.loadCounselData();
 
     // TODO: 家中排行
     $('#siblings [name=AnySiblings]').bind('click', function (e) {
@@ -31,7 +58,12 @@ jQuery(function () {
         }
     });
 
-    // TODO: 兄弟姊妹新增鈕
+    // TODO: 尊親屬新增鈕
+    $('#parents-add-data').bind('click', function () {
+         _gg.SetModifyData.addParent();
+    });
+
+     // TODO: 兄弟姊妹新增鈕
     $('#siblings-add-data').bind('click', function () {
          _gg.SetModifyData.addSibling();
     });
@@ -341,7 +373,7 @@ jQuery(function () {
             $('#B5 #accordion2').html(tmp_items.join(""));
         };
 
-        // TDOO: 畢業後規劃
+        // TODO: 畢業後規劃
         var input_C1_value = function() {
             var questions = _gg.col_Question.C1;
             var tmp_key, tmp_data, tmp_items = [];

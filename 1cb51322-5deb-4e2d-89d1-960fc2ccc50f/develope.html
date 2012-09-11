@@ -413,6 +413,12 @@
   <div class="modal-body">
     <form class="form-horizontal">
       <fieldset>
+        <div class="my-emptyline"></div>
+        <a href="#" class="btn pull-right" id="parents-add-data">
+          <i class="icon-plus-sign"></i>添加欄位</a>
+        <hr/>
+        <div class="accordion" id="accordionparents">
+        </div>
       </fieldset>
     </form>
   </div>
@@ -436,7 +442,7 @@
         <label class="radio inline">
           <input type="radio" name="AnySiblings" value="more">我有兄弟姊妹，我排行第
         </label>
-        <input type="text" class="input-mini" data-type="家庭狀況_兄弟姊妹_排行" placeholder="排行" disabled >
+        <input type="text" class="{number:true, min:0} input-mini" name="birthorder" data-type="家庭狀況_兄弟姊妹_排行" placeholder="排行" disabled valide-type="remark">
         <a href="#" class="btn pull-right" id="siblings-add-data">
           <i class="icon-plus-sign"></i>添加欄位</a>
         <hr/>
@@ -628,14 +634,14 @@
           <label class="control-label">
             <span data-type="grade"></span>上班級幹部</label>
           <div class="controls">
-            <input type="text" class="input-large" data-type="學習狀況_班級幹部a" placeholder="">
+            <input type="text" class="input-large" name="cadrea1" data-type="學習狀況_班級幹部a" placeholder="">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">
             <span data-type="grade"></span>上社團幹部</label>
           <div class="controls">
-            <input type="text" class="input-large" data-type="學習狀況_社團幹部a" placeholder="">
+            <input type="text" class="input-large" name="cadreb1" data-type="學習狀況_社團幹部a" placeholder="">
           </div>
         </div>
         <hr/>
@@ -643,14 +649,14 @@
           <label class="control-label">
             <span data-type="grade"></span>下班級幹部</label>
           <div class="controls">
-            <input type="text" class="input-large" data-type="學習狀況_班級幹部b" placeholder="">
+            <input type="text" class="input-large" name="cadrea2" data-type="學習狀況_班級幹部b" placeholder="">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">
             <span data-type="grade"></span>下社團幹部</label>
           <div class="controls">
-            <input type="text" class="input-large" data-type="學習狀況_社團幹部b" placeholder="">
+            <input type="text" class="input-large" name="cadreb2" data-type="學習狀況_社團幹部b" placeholder="">
           </div>
         </div>
       </fieldset>

@@ -27,7 +27,7 @@ _gg.col_Question = {
             { ID: 'A2', GroupName: '家庭狀況', Name: '監護人_通訊地址', Alias: '地址' }
         ],
         'A3' : [
-            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_稱謂', Alias: '稱謂', TagName: 'Title' },
+            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_稱謂', Alias: '稱謂', TagName: 'Title', ControlType: 'select' },
             { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_姓名', Alias: '姓名', TagName: 'Name' },
             { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_出生年', Alias: '出生年', TagName: 'BirthYear', Validator: '{number:true, range:[1, ' + (new Date().getFullYear()-1911) + ']}' },
             { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_存、歿', Alias: '存歿', TagName: 'IsAlive', ControlType: 'select' },
@@ -39,7 +39,7 @@ _gg.col_Question = {
         ],
         'A4' :[
             { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_排行', Alias: '排行' },
-            { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_稱謂', Alias: '稱謂', TagName: 'Title' },
+            { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_稱謂', Alias: '稱謂', TagName: 'Title', ControlType: 'select' },
             { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_姓名', Alias: '姓名', TagName: 'Name', Validator: 'required="true"' },
             { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_出生年次', Alias: '出生年次', TagName: 'BirthYear', Validator: '{number:true, range:[1, ' + (new Date().getFullYear()-1911) + ']}' },
             { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_畢肆業學校', Alias: '畢業學校', TagName: 'SchoolName' },
@@ -123,13 +123,22 @@ _gg.col_Question = {
 };
 
 _gg.loadCounselData = function () {
+    _gg.init = false;
+    // TODO: 預設編輯鈕為 disabled
+    $('a[data-toggle=modal]').addClass("disabled");
+
+    // TODO: 錯誤訊息
+    var set_error_message = function(serviceName, error) {
+        $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(" + serviceName + ")\n</div>");
+    };
+
     // TODO: 取得單一紀錄
     _gg.connection.send({
         service: "_.GetSingleRecord",
         body: '',
         result: function (response, error, http) {
             if (error !== null) {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetSingleRecord)\n</div>");
+                set_error_message('GetSingleRecord', error);
             } else {
                 if (!_gg.singleRecord) { _gg.singleRecord = {}; }
                 $(response.Response.SingleRecord).each(function (index, item) {
@@ -149,7 +158,7 @@ _gg.loadCounselData = function () {
         body: '',
         result: function (response, error, http) {
             if (error !== null) {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetSemesterData)\n</div>");
+                set_error_message('GetSemesterData', error);
             } else {
                 if (!_gg.semesterData) { _gg.semesterData = {}; }
                 $(response.Response.SemesterData).each(function (index, item) {
@@ -169,7 +178,7 @@ _gg.loadCounselData = function () {
         body: '',
         result: function (response, error, http) {
             if (error !== null) {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMultipleRecord)\n</div>");
+                set_error_message('GetMultipleRecord', error);
             } else {
                 if (!_gg.multipleRecord) { _gg.multipleRecord = {}; }
                 $(response.Response.MultipleRecord).each(function (index, item) {
@@ -189,7 +198,7 @@ _gg.loadCounselData = function () {
         body: '',
         result: function (response, error, http) {
             if (error !== null) {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetGetYearlyData)\n</div>");
+                set_error_message('GetYearlyData', error);
             } else {
                 if (!_gg.yearlyData) { _gg.yearlyData = {}; }
                 $(response.Response.YearlyData).each(function (index, item) {
@@ -209,60 +218,13 @@ _gg.loadCounselData = function () {
         body: '',
         result: function (response, error, http) {
             if (error !== null) {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetRelative)\n</div>");
+                set_error_message('GetRelative', error);
             } else {
                 if (!_gg.relative) { _gg.relative = []; }
                 $(response.Response.Relative).each(function (index, item) {
                     _gg.relative.push(item);
                 });
-
-                if (_gg.relative.length === 0) {
-                    _gg.connection.send({
-                        service: "_.GetQuestionsData",
-                        body: '<Request><Condition><GroupName>家庭狀況</GroupName><Name>直系血親_稱謂</Name></Condition></Request>',
-                        result: function (response, error, http) {
-                            if (error !== null) {
-                                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetQuestionsData)\n</div>");
-                            } else {
-                                if (response.Response.QuestionsData && response.Response.QuestionsData.Items && response.Response.QuestionsData.Items.Items && response.Response.QuestionsData.Items.Items.item) {
-                                    var tmp_str = '';
-                                    $(response.Response.QuestionsData.Items.Items.item).each(function(key, value) {
-                                        tmp_str += '<Relative><Title>' + value.key + '</Title><IsAlive>true</IsAlive></Relative>';
-                                    });
-                                    if (tmp_str) {
-                                        _gg.connection.send({
-                                            service: "_.InsertRelative",
-                                            body: '<Request>' + tmp_str + '</Request>',
-                                            result: function (response, error, http) {
-                                                if (error !== null) {
-                                                    $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(InsertRelative)\n</div>");
-                                                } else {
-                                                     _gg.connection.send({
-                                                        service: "_.GetRelative",
-                                                        body: '',
-                                                        result: function (response, error, http) {
-                                                            if (error !== null) {
-                                                                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetRelative)\n</div>");
-                                                            } else {
-                                                                $(response.Response.Relative).each(function (index, item) {
-                                                                    _gg.relative.push(item);
-                                                                });
-                                                                _gg.GetData();
-                                                            }
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
-
-                            }
-                        }
-                    });
-                } else {
-                    _gg.GetData();
-                }
+                _gg.GetData();
             }
         }
     });
@@ -273,7 +235,7 @@ _gg.loadCounselData = function () {
         body: '',
         result: function (response, error, http) {
             if (error !== null) {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetSibling)\n</div>");
+                set_error_message('GetSibling', error);
             } else {
                 if (!_gg.sibling) { _gg.sibling = []; }
                 $(response.Response.Sibling).each(function (index, item) {
@@ -290,7 +252,7 @@ _gg.loadCounselData = function () {
         body: '',
         result: function (response, error, http) {
             if (error !== null) {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetPriorityData)\n</div>");
+                set_error_message('GetPriorityData', error);
             } else {
                 if (!_gg.priorityData) { _gg.priorityData = {}; }
                 $(response.Response.PriorityData).each(function (index, item) {
