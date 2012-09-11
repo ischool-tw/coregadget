@@ -225,3 +225,36 @@ function funGetNearWeekday(date1, weekset) {
 	}
 	return ret;
 }
+
+// sort
+var by = function (model, name, minor) {
+    return function (o, p) {
+        var a, b;
+        if (o && p && typeof o === 'object' && typeof p === 'object') {
+            a = o[name];
+            b = p[name];
+            if (a === b) {
+                return typeof minor === 'function' ? minor(o, p) : 0;
+            }
+            if (typeof a === typeof b) {
+            	if (parseInt(a, 10) && parseInt(b, 10)) {
+            		a = parseInt(a, 10);
+            		b = parseInt(b, 10)
+            	}
+
+            	if (model === 'desc') {
+                	return a > b ? -1 : 1;
+                } else {
+                	return a < b ? -1 : 1;
+                }
+            }
+            return typeof a < typeof b ? -1 : 1;
+        } else {
+            throw {
+                name: 'Error',
+                message: 'Expected an object when sorting by ' + name
+            }
+        }
+    };
+};
+//ex: s.sort(by('desc', 'last', by('first')));

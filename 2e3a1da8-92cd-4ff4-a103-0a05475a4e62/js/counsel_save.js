@@ -1,5 +1,7 @@
 // TODO: 設定編輯時資料
 _gg.SetSaveData = function (data_scope) {
+    var student = _gg.student;
+    var studentID = student.StudentID;
     var tmp_singleRecord = [];
     var tmp_multipleRecord = [];
     var tmp_semesterData = [];
@@ -75,6 +77,7 @@ _gg.SetSaveData = function (data_scope) {
                 form_value = get_part(question);
                 $(form_value).each(function() {
                     tmp_singleRecord.push('<SingleRecord>');
+                    tmp_singleRecord.push('<StudentID>' + studentID + '</StudentID>');
                     tmp_singleRecord.push('<Key>' + qkey + '</Key>');
                     tmp_singleRecord.push('<Data>' + this.Data  + '</Data>');
                     if (this.Remark) {
@@ -98,6 +101,7 @@ _gg.SetSaveData = function (data_scope) {
 
                 $(form_value).each(function() {
                     tmp_multipleRecord.push('<MultipleRecord>');
+                    tmp_multipleRecord.push('<StudentID>' + studentID + '</StudentID>');
                     tmp_multipleRecord.push('<Key>' + qkey + '</Key>');
                     tmp_multipleRecord.push('<Data>' + this.Data  + '</Data>');
                     if (this.Remark) {
@@ -121,6 +125,7 @@ _gg.SetSaveData = function (data_scope) {
                 form_value = get_part(question);
 
                 tmp_yearlyData.push('<YearlyData>');
+                tmp_yearlyData.push('<StudentID>' + studentID + '</StudentID>');
                 tmp_yearlyData.push('<Key>' + qkey + '</Key>');
 
                 for (var i=1; i<=6 ; i+=1) {
@@ -152,6 +157,7 @@ _gg.SetSaveData = function (data_scope) {
                 tmp_x.Key = qkey;
 
                 tmp_priorityData.push('<PriorityData>');
+                tmp_priorityData.push('<StudentID>' + studentID + '</StudentID>');
                 tmp_priorityData.push('<Key>' + qkey + '</Key>');
 
                 $(form_value).each(function(index, value) {
@@ -176,7 +182,7 @@ _gg.SetSaveData = function (data_scope) {
                 $(form_value).each(function() {
                     if (this.Data) {
                         if (question.TagName === 'IsAlive') {
-                            tmp_relative.push((this.Data === '存') ? 't':'f');
+                            tmp_relative.push((this.Data === '歿') ? 'f':'t');
                         } else {
                             tmp_relative.push(this.Data);
                         }
@@ -200,7 +206,7 @@ _gg.SetSaveData = function (data_scope) {
     // TODO: 個人資料
     var set_personal = function (questions) {
         $(questions).each(function (index, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 get_request(value);
             }
         });
@@ -209,7 +215,7 @@ _gg.SetSaveData = function (data_scope) {
     // TODO: 監護人資料
     var set_guardian = function (questions) {
         $(questions).each(function (index, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 get_request(value);
             }
         });
@@ -217,17 +223,16 @@ _gg.SetSaveData = function (data_scope) {
 
     // TODO: 尊親屬資料資料
     var set_parents = function (questions) {
-        $(_gg.relative).each(function (key, relatives) {
+        $('#' + data_scope + ' .accordion-group').each(function (a, b) {
+
             tmp_relative.push('<Relative>');
-            tmp_relative.push('<Condition><Uid>' + relatives.UID + '</Uid></Condition>');
+            tmp_relative.push('<StudentID>' + studentID + '</StudentID>');
 
             $(questions).each(function (index, value) {
-                if (value.CanStudentEdit === "是") {
-                    if (value.TagName !== 'Title') {
-                        tmp_relative.push('<' + value.TagName + '>');
-                        get_request(value, $('#' + data_scope + ' [unique-value=' + relatives.UID + ']'));
-                        tmp_relative.push('</' + value.TagName + '>');
-                    }
+                if (value.CanTeacherEdit === "是") {
+                    tmp_relative.push('<' + value.TagName + '>');
+                    get_request(value, $(b));
+                    tmp_relative.push('</' + value.TagName + '>');
                 }
             });
 
@@ -239,7 +244,7 @@ _gg.SetSaveData = function (data_scope) {
     var set_siblings = function (questions) {
         $(questions).each(function (index, value) {
             if (value.Name === '兄弟姊妹_排行') {
-                if (value.CanStudentEdit === "是") {
+                if (value.CanTeacherEdit === "是") {
                     get_request(value);
                 }
                 return false;
@@ -249,9 +254,10 @@ _gg.SetSaveData = function (data_scope) {
         $('#' + data_scope + ' .accordion-group').each(function (a, b) {
 
             tmp_sibling.push('<Sibling>');
+            tmp_sibling.push('<StudentID>' + studentID + '</StudentID>');
 
             $(questions).each(function (index, value) {
-                if (value.CanStudentEdit === "是") {
+                if (value.CanTeacherEdit === "是") {
                     if (value.Name !== '兄弟姊妹_排行') {
                         tmp_sibling.push('<' + value.TagName + '>');
                         get_request(value, $(b));
@@ -268,10 +274,11 @@ _gg.SetSaveData = function (data_scope) {
     var set_psize = function (questions) {
 
         $(questions).each(function (key, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 var tmp_key = value.GroupName + '_' + value.Name;
 
                 tmp_semesterData.push('<SemesterData>');
+                tmp_semesterData.push('<StudentID>' + studentID + '</StudentID>');
                 tmp_semesterData.push('<Key>' + tmp_key + '</Key>');
                 tmp_semesterData.push('<S1a>' + ($('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S1a]').val() || '') + '</S1a>');
                 tmp_semesterData.push('<S1b>' + ($('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S1b]').val() || '') + '</S1b>');
@@ -296,7 +303,7 @@ _gg.SetSaveData = function (data_scope) {
     // TODO: 家庭訊息
     var set_home = function (questions) {
         $(questions).each(function (index, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 get_request(value);
             }
         });
@@ -305,7 +312,7 @@ _gg.SetSaveData = function (data_scope) {
     // TODO: 學習
     var set_learn = function (questions) {
         $(questions).each(function (index, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 get_request(value);
             }
         });
@@ -314,9 +321,10 @@ _gg.SetSaveData = function (data_scope) {
     // TODO: 幹部資訊
     var set_cadre = function (questions) {
         $(questions).each(function (key, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 var tmp_key = value.GroupName + '_' + value.Name;
                 tmp_semesterData.push('<SemesterData>');
+                tmp_semesterData.push('<StudentID>' + studentID + '</StudentID>');
                 tmp_semesterData.push('<Key>' + tmp_key + '</Key>');
                 var tmp_x = {};
 
@@ -347,7 +355,7 @@ _gg.SetSaveData = function (data_scope) {
     var set_oneself = function (questions) {
         var tmp_grade = (_gg.grade || "1");
         $(questions).each(function (index, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 if (value.Name.slice(-1) === tmp_grade) { // ex.內容1_1
                     if (value.Name.indexOf("填寫日期") === -1) {
                         get_request(value);
@@ -355,6 +363,7 @@ _gg.SetSaveData = function (data_scope) {
                         var tmp_key = value.GroupName + '_' + value.Name;
                         var d = $.formatDate(new Date(), "yyyyMMdd");
                         tmp_singleRecord.push('<SingleRecord>');
+                        tmp_singleRecord.push('<StudentID>' + studentID + '</StudentID>');
                         tmp_singleRecord.push('<Key>' + tmp_key + '</Key>');
                         tmp_singleRecord.push('<Data>' + d + '</Data>');
                         tmp_singleRecord.push('</SingleRecord>');
@@ -372,7 +381,7 @@ _gg.SetSaveData = function (data_scope) {
     var set_life = function (questions) {
         var tmp_grade = (_gg.grade || "1");
         $(questions).each(function (key, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 if (value.Name.slice(-1) === tmp_grade) { // ex.內容1_1
                     if (value.Name.indexOf("填寫日期") === -1) {
                         get_request(value);
@@ -380,6 +389,7 @@ _gg.SetSaveData = function (data_scope) {
                         var tmp_key  = value.TagName || (value.GroupName + '_' + value.Name);
                         var d = $.formatDate(new Date(), "yyyyMMdd");
                         tmp_singleRecord.push('<SingleRecord>');
+                        tmp_singleRecord.push('<StudentID>' + studentID + '</StudentID>');
                         tmp_singleRecord.push('<Key>' + tmp_key + '</Key>');
                         tmp_singleRecord.push('<Data>' + d + '</Data>');
                         tmp_singleRecord.push('</SingleRecord>');
@@ -396,7 +406,7 @@ _gg.SetSaveData = function (data_scope) {
     // TODO: 畢業後規劃
     var set_plan = function (questions) {
         $(questions).each(function (index, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 get_request(value);
             }
         });
@@ -405,13 +415,14 @@ _gg.SetSaveData = function (data_scope) {
     // TODO: 自傳
     var set_memoir = function (questions) {
         $(questions).each(function (index, value) {
-            if (value.CanStudentEdit === "是") {
+            if (value.CanTeacherEdit === "是") {
                 if (value.Name.indexOf("填寫日期") === -1) {
                     get_request(value);
                 } else {
                     var tmp_key  = value.TagName || (value.GroupName + '_' + value.Name);
                     var d = $.formatDate(new Date(), "yyyyMMdd");
                     tmp_singleRecord.push('<SingleRecord>');
+                    tmp_singleRecord.push('<StudentID>' + studentID + '</StudentID>');
                     tmp_singleRecord.push('<Key>' + tmp_key + '</Key>');
                     tmp_singleRecord.push('<Data>' + d + '</Data>');
                     tmp_singleRecord.push('</SingleRecord>');
@@ -594,7 +605,7 @@ _gg.SetSaveData = function (data_scope) {
                     break;
                 case 'A4':
                     $(_gg.col_Question[tmp_colID]).each(function (key, value) {
-                        if (value.CanStudentEdit === "是") {
+                        if (value.CanTeacherEdit === "是") {
                             if (value.Name === "兄弟姊妹_排行") {
                                 value.SelectValue = tmp_reset_data[value.Name];
                             }
@@ -633,6 +644,7 @@ _gg.SetSaveData = function (data_scope) {
                                 });
                                 _gg.SetData(tmp_colID);
                                 $(".modal").modal("hide");
+                                $('#E1Page a:eq(' + (pagerState['E1Page'] || 1) + ')').triggerHandler('click');
                             }
                         }
                     });
@@ -640,7 +652,7 @@ _gg.SetSaveData = function (data_scope) {
                 default:
                     var tmp_grade = (_gg.grade || "1");
                     $(_gg.col_Question[tmp_colID]).each(function (key, value) {
-                        if (value.CanStudentEdit === "是") {
+                        if (value.CanTeacherEdit === "是") {
                             if (tmp_colID === 'B4' ||  tmp_colID === 'B5') {
                                 if (this.Name.slice(-1) === tmp_grade) { // ex.內容1_1
                                     value.SelectValue = tmp_reset_data[value.Name];
@@ -661,7 +673,7 @@ _gg.SetSaveData = function (data_scope) {
         tmp_del_request = [];
         var tmp_grade = (_gg.grade || "1");
         $(_gg.col_Question[tmp_colID]).each(function(){
-            if (this.CanStudentEdit === "是") {
+            if (this.CanTeacherEdit === "是") {
                 if (((this.QuestionType || '').toLowerCase()) === 'single_answer') {
                     if (tmp_colID === 'B4' ||  tmp_colID === 'B5') {
                         if (this.Name.slice(-1) === tmp_grade) { // ex.內容1_1
@@ -683,7 +695,7 @@ _gg.SetSaveData = function (data_scope) {
                 } else {
                     _gg.connection.send({
                         service: "_.InsertSingleRecord",
-                        body: '<Request><StudentID>' + student.StudentID + '</StudentID>' + tmp_singleRecord.join("") + '</Request>',
+                        body: '<Request>' + tmp_singleRecord.join("") + '</Request>',
                         result: function (response, error, http) {
                             if (error !== null) {
                                 set_error_message('InsertSingleRecord', error);
@@ -704,7 +716,7 @@ _gg.SetSaveData = function (data_scope) {
         tmp_del_request = [];
         var tmp_grade = (_gg.grade || "1");
         $(_gg.col_Question[tmp_colID]).each(function(){
-            if (this.CanStudentEdit === "是") {
+            if (this.CanTeacherEdit === "是") {
                 if (((this.QuestionType || '').toLowerCase()) === 'multi_answer') {
                     if (tmp_colID === 'B4' ||  tmp_colID === 'B5') {
                         if (this.Name.slice(-1) === tmp_grade) { // ex.內容1_1
@@ -726,7 +738,7 @@ _gg.SetSaveData = function (data_scope) {
                 } else {
                     _gg.connection.send({
                         service: "_.InsertMultipleRecord",
-                        body: '<Request><StudentID>' + student.StudentID + '</StudentID>' + tmp_multipleRecord.join("") + '</Request>',
+                        body: '<Request>' + tmp_multipleRecord.join("") + '</Request>',
                         result: function (response, error, http) {
                             if (error !== null) {
                                 set_error_message('InsertMultipleRecord', error);
@@ -747,7 +759,7 @@ _gg.SetSaveData = function (data_scope) {
         tmp_del_request = [];
         $(_gg.col_Question[tmp_colID]).each(function(){
             if (((this.QuestionType || '').toLowerCase()) === 'semester') {
-                if (this.CanStudentEdit === "是") {
+                if (this.CanTeacherEdit === "是") {
                     tmp_del_request.push('<Key>' + this.GroupName + '_' + this.Name + '</Key>');
                 }
             }
@@ -762,7 +774,7 @@ _gg.SetSaveData = function (data_scope) {
                 } else {
                     _gg.connection.send({
                         service: "_.InsertSemesterData",
-                        body: '<Request><StudentID>' + student.StudentID + '</StudentID>' + tmp_semesterData.join("") + '</Request>',
+                        body: '<Request>' + tmp_semesterData.join("") + '</Request>',
                         result: function (response, error, http) {
                             if (error !== null) {
                                 set_error_message('InsertSemesterData', error);
@@ -783,7 +795,7 @@ _gg.SetSaveData = function (data_scope) {
         tmp_del_request = [];
         $(_gg.col_Question[tmp_colID]).each(function(){
             if (((this.QuestionType || '').toLowerCase()) === 'yearly') {
-                if (this.CanStudentEdit === "是") {
+                if (this.CanTeacherEdit === "是") {
                     tmp_del_request.push('<Key>' + this.GroupName + '_' + this.Name + '</Key>');
                 }
             }
@@ -798,7 +810,7 @@ _gg.SetSaveData = function (data_scope) {
                 } else {
                     _gg.connection.send({
                         service: "_.InsertYearlyData",
-                        body: '<Request><StudentID>' + student.StudentID + '</StudentID>' + tmp_yearlyData.join("") + '</Request>',
+                        body: '<Request>' + tmp_yearlyData.join("") + '</Request>',
                         result: function (response, error, http) {
                             if (error !== null) {
                                 set_error_message('InsertYearlyData', error);
@@ -819,7 +831,7 @@ _gg.SetSaveData = function (data_scope) {
         tmp_del_request = [];
         $(_gg.col_Question[tmp_colID]).each(function(){
             if (((this.QuestionType || '').toLowerCase()) === 'priority') {
-                if (this.CanStudentEdit === "是") {
+                if (this.CanTeacherEdit === "是") {
                     tmp_del_request.push('<Key>' + this.GroupName + '_' + this.Name + '</Key>');
                 }
             }
@@ -851,16 +863,31 @@ _gg.SetSaveData = function (data_scope) {
         save_priorityData = true;
     }
 
-    if (tmp_relative.join("")) {
+    if (tmp_colID === 'A3') {
         _gg.connection.send({
-            service: "_.UpdateRelative",
-            body: '<Request><StudentID>' + student.StudentID + '</StudentID>' + tmp_relative.join("") + '</Request>',
+            service: "_.DelRelative",
+            body: '<Request><Relative><StudentID>' + student.StudentID + '</StudentID></Relative></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    set_error_message('UpdateRelative', error);
+                    set_error_message('DelRelative', error);
                 } else {
-                    save_relative = true;
-                    reset_data();
+                    if (tmp_relative.join("")) {
+                        _gg.connection.send({
+                            service: "_.InsertRelative",
+                            body: '<Request>' + tmp_relative.join("") + '</Request>',
+                            result: function (response, error, http) {
+                                if (error !== null) {
+                                    set_error_message('InsertRelative', error);
+                                } else {
+                                    save_relative = true;
+                                    reset_data();
+                                }
+                            }
+                        });
+                    } else {
+                        save_relative = true;
+                        reset_data();
+                    }
                 }
             }
         });
@@ -879,7 +906,7 @@ _gg.SetSaveData = function (data_scope) {
                     if (tmp_sibling.join("")) {
                         _gg.connection.send({
                             service: "_.InsertSibling",
-                            body: '<Request><StudentID>' + student.StudentID + '</StudentID>' + tmp_sibling.join("") + '</Request>',
+                            body: '<Request>' + tmp_sibling.join("") + '</Request>',
                             result: function (response, error, http) {
                                 if (error !== null) {
                                     set_error_message('InsertSibling', error);
@@ -927,9 +954,11 @@ _gg.SetSaveData = function (data_scope) {
                         } else {
                             save_interviewRecord = true;
                             reset_data();
+
                         }
                     }
                 });
+                pagerState['E1Page'] = 1;
             }
         } else {
             save_interviewRecord = true;

@@ -15,8 +15,10 @@
   <link href="css/default.less" rel="stylesheet/less" />-->
   <link href="css/base.css" rel="stylesheet" />
   <link href="css/default.css" rel="stylesheet" />
+  <link href="css/jquery-ui-1.8.7.custom.css" rel="stylesheet" />
   <script src="js/jquery.min.js"></script>
   <!--<script src="js/less.min.js"></script>-->
+  <script src="js/jquery-ui-1.8.7.custom.min.js"></script>
   <script src="js/jquery.validate.min.js"></script>
   <script src="js/jquery.metadata.js"></script>
   <script src="js/api.js"></script>
@@ -26,6 +28,7 @@
   <script src="js/counsel_data.js"></script>
   <script src="js/counsel_update.js"></script>
   <script src="js/counsel_save.js"></script>
+  <script src="js/pager.js"></script>
 </head>
 <body>
   <div id="gadget">
@@ -58,7 +61,6 @@
               <li><a href="#tab5" data-toggle="tab">晤談紀錄</a></li>
               <li><a href="#tab6" data-toggle="tab">心理測驗</a></li>
             </ul>
-            <span id="opening"></span>
             <div class="tab-content">
               <!--個人及親屬資料-->
               <div class="tab-pane active" id="baseinfo">
@@ -457,6 +459,12 @@
   <div class="modal-body">
     <form class="form-horizontal">
       <fieldset>
+        <div class="my-emptyline"></div>
+        <a href="#" class="btn pull-right" id="parents-add-data">
+          <i class="icon-plus-sign"></i>添加欄位</a>
+        <hr/>
+        <div class="accordion" id="accordionparents">
+        </div>
       </fieldset>
     </form>
   </div>
@@ -480,7 +488,7 @@
         <label class="radio inline">
           <input type="radio" name="AnySiblings" value="more">我有兄弟姊妹，我排行第
         </label>
-        <input type="text" class="input-mini" data-type="家庭狀況_兄弟姊妹_排行" placeholder="排行" disabled >
+        <input type="text" class="{number:true, min:0} input-mini" name="birthorder" data-type="家庭狀況_兄弟姊妹_排行" placeholder="排行" disabled valide-type="remark">
         <a href="#" class="btn pull-right" id="siblings-add-data">
           <i class="icon-plus-sign"></i>添加欄位</a>
         <hr/>
@@ -672,14 +680,14 @@
           <label class="control-label">
             <span data-type="grade"></span>上班級幹部</label>
           <div class="controls">
-            <input type="text" class="input-large" data-type="學習狀況_班級幹部a" placeholder="">
+            <input type="text" class="input-large" name="cadrea1" data-type="學習狀況_班級幹部a" placeholder="">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">
             <span data-type="grade"></span>上社團幹部</label>
           <div class="controls">
-            <input type="text" class="input-large" data-type="學習狀況_社團幹部a" placeholder="">
+            <input type="text" class="input-large" name="cadreb1" data-type="學習狀況_社團幹部a" placeholder="">
           </div>
         </div>
         <hr/>
@@ -687,14 +695,14 @@
           <label class="control-label">
             <span data-type="grade"></span>下班級幹部</label>
           <div class="controls">
-            <input type="text" class="input-large" data-type="學習狀況_班級幹部b" placeholder="">
+            <input type="text" class="input-large" name="cadrea2" data-type="學習狀況_班級幹部b" placeholder="">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">
             <span data-type="grade"></span>下社團幹部</label>
           <div class="controls">
-            <input type="text" class="input-large" data-type="學習狀況_社團幹部b" placeholder="">
+            <input type="text" class="input-large" name="cadreb2" data-type="學習狀況_社團幹部b" placeholder="">
           </div>
         </div>
       </fieldset>
@@ -754,11 +762,11 @@
   <div class="modal-body">
     <form class="form-horizontal">
       <fieldset>
-        <div class="control-group" plan-data-group="learning">
+        <div class="control-group">
           <label class="control-label">升學意願</label>
           <div class="controls" data-type="畢業後計畫_升學意願"></div>
         </div>
-        <div class="control-group" plan-data-group="job">
+        <div class="control-group">
           <label class="control-label">就業意願</label>
           <div class="controls" data-type="畢業後計畫_就業意願"></div>
         </div>
@@ -851,7 +859,7 @@
         <div class="control-group">
           <label class="control-label">時間</label>
           <div class="controls">
-            <input class="input-mini" name="InterviewTime" id="InterviewTime" placeholder="時:分" type="text">
+            <input class="input-mini {time:true}" name="InterviewTime" id="InterviewTime" placeholder="時:分" type="text">
           </div>
         </div>
         <div class="control-group">
@@ -915,7 +923,7 @@
             <label class="checkbox inline">
               <input name="Attendees" type="checkbox" value="其他" id="AttendeesOther">
               其他
-              <input class="input-large" name="AttendeesOtherRemark" id="AttendeesOtherRemark" placeholder="需填寫其他人" type="text" data-type="remark">
+              <input class="input-large" name="AttendeesOtherRemark" id="AttendeesOtherRemark" placeholder="需填寫其他人" type="text" valide-type="remark">
             </label>
           </div>
         </div>
@@ -938,17 +946,17 @@
             <label class="checkbox inline">
               <input name="CounselType" type="checkbox" value="轉介" id="CounselType1">
               轉介
-              <input class="input-large" name="CounselType1Remark" id="CounselType1Remark" placeholder="需填寫轉介單位" type="text" data-type="remark">
+              <input class="input-large" name="CounselType1Remark" id="CounselType1Remark" placeholder="需填寫轉介單位" type="text" valide-type="remark">
             </label>
             <label class="checkbox inline">
               <input name="CounselType" type="checkbox" value="就醫" id="CounselType2">
               就醫
-              <input class="input-large" name="CounselType2Remark" id="CounselType2Remark" placeholder="需填寫就醫單位" type="text" data-type="remark">
+              <input class="input-large" name="CounselType2Remark" id="CounselType2Remark" placeholder="需填寫就醫單位" type="text" valide-type="remark">
             </label>
             <label class="checkbox inline">
               <input name="CounselType" type="checkbox" value="其他" id="CounselTypeOther">
               其他
-              <input class="input-large" name="CounselTypeOtherRemark" id="CounselTypeOtherRemark" placeholder="需註明其他事項" type="text" data-type="remark">
+              <input class="input-large" name="CounselTypeOtherRemark" id="CounselTypeOtherRemark" placeholder="需註明其他事項" type="text" valide-type="remark">
             </label>
           </div>
         </div>
@@ -1027,7 +1035,7 @@
             <label class="checkbox inline">
               <input name="CounselTypeKind" type="checkbox" value="其他" id="CounselTypeKindOther">
               其他
-              <input class="input-large" name="CounselTypeKindOtherRemark" id="CounselTypeKindOtherRemark" placeholder="需註明其他事項" type="text" data-type="remark">
+              <input class="input-large" name="CounselTypeKindOtherRemark" id="CounselTypeKindOtherRemark" placeholder="需註明其他事項" type="text" valide-type="remark">
             </label>
           </div>
         </div>

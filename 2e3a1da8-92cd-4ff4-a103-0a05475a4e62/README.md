@@ -74,6 +74,7 @@ gadget-輔導系統
  - 可能為同一位學生的導師、認輔老師。
  - 新增時不需設定「晤談老師」，預設為「自己」。
  - 新增、編輯界面中的「*」代表必填值。必填項目有：晤談對象、晤談方式、日期、晤談事由、參與人員、輔導方式、輔導歸類。
+ - 依「晤談日期、晤談時間」遞減排序
 
 **心理測驗**
 
@@ -114,6 +115,8 @@ js/jquery.validate.min.js：驗證用主程式
 
 js/messages_tw.js：提示訊息中文化
 
+jquery-ui-1.8.7.custom.min.js：選擇日期
 
+js/pager.js：分頁
 
   [1]: http://bassistance.de/jquery-plugins/jquery-plugin-validation/
