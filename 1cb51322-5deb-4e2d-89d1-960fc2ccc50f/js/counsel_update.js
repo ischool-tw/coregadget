@@ -127,7 +127,13 @@ _gg.SetModifyData = function () {
                 break;
             case 'relative':
                 if (question.TagName === 'IsAlive') {
-                    alldata.push((relative_data[question.TagName] === 'f') ? '歿':'存');
+                    if (relative_data[question.TagName] === 't') {
+                        alldata.push('存');
+                    } else if (relative_data[question.TagName] === 'f') {
+                        alldata.push('歿');
+                    } else {
+                        alldata.push('');
+                    }
                 } else {
                     alldata.push(relative_data[question.TagName] || '');
                 }
