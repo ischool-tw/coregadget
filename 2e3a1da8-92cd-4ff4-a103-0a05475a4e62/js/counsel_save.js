@@ -182,9 +182,19 @@ _gg.SetSaveData = function (data_scope) {
                 $(form_value).each(function() {
                     if (this.Data) {
                         if (question.TagName === 'IsAlive') {
-                            tmp_relative.push((this.Data === '歿') ? 'f':'t');
+                            if (this.Data === '存') {
+                                tmp_relative.push('<' + question.TagName + '>');
+                                tmp_relative.push('t');
+                                tmp_relative.push('</' + question.TagName + '>');
+                            } else if (this.Data === '歿') {
+                                tmp_relative.push('<' + question.TagName + '>');
+                                tmp_relative.push('f');
+                                tmp_relative.push('</' + question.TagName + '>');
+                            }
                         } else {
+                            tmp_relative.push('<' + question.TagName + '>');
                             tmp_relative.push(this.Data);
+                            tmp_relative.push('</' + question.TagName + '>');
                         }
                     }
                 });
@@ -230,9 +240,7 @@ _gg.SetSaveData = function (data_scope) {
 
             $(questions).each(function (index, value) {
                 if (value.CanTeacherEdit === "是") {
-                    tmp_relative.push('<' + value.TagName + '>');
                     get_request(value, $(b));
-                    tmp_relative.push('</' + value.TagName + '>');
                 }
             });
 
@@ -328,19 +336,17 @@ _gg.SetSaveData = function (data_scope) {
                 tmp_semesterData.push('<Key>' + tmp_key + '</Key>');
                 var tmp_x = {};
 
-                if (value.SelectValue) {
-                    for (var i=1; i<=3 ; i+=1) {
-                        if ((i + '') === _gg.grade) {
-                                tmp_semesterData.push('<S' + i + 'a>' + ($('#' + data_scope + ' [data-type=' + tmp_key + 'a]').val() || '') + '</S' + i + 'a>');
-                                tmp_semesterData.push('<S' + i + 'b>' + ($('#' + data_scope + ' [data-type=' + tmp_key + 'b]').val() || '') + '</S' + i + 'b>');
-                                tmp_x['S' + i + 'a'] = $('#' + data_scope + ' [data-type=' + tmp_key + 'a]').val() || '';
-                                tmp_x['S' + i + 'b'] = $('#' + data_scope + ' [data-type=' + tmp_key + 'b]').val() || '';
-                        } else {
-                            tmp_semesterData.push('<S' + i + 'a>' + (value.SelectValue['S' + i + 'a'] || '') + '</S' + i + 'a>');
-                            tmp_semesterData.push('<S' + i + 'b>' + (value.SelectValue['S' + i + 'b'] || '') + '</S' + i + 'b>');
-                            tmp_x['S' + i + 'a'] = value.SelectValue['S' + i + 'a'] || '';
-                            tmp_x['S' + i + 'b'] = value.SelectValue['S' + i + 'b'] || '';
-                        }
+                for (var i=1; i<=3 ; i+=1) {
+                    if ((i + '') === _gg.grade) {
+                            tmp_semesterData.push('<S' + i + 'a>' + ($('#' + data_scope + ' [data-type=' + tmp_key + 'a]').val() || '') + '</S' + i + 'a>');
+                            tmp_semesterData.push('<S' + i + 'b>' + ($('#' + data_scope + ' [data-type=' + tmp_key + 'b]').val() || '') + '</S' + i + 'b>');
+                            tmp_x['S' + i + 'a'] = $('#' + data_scope + ' [data-type=' + tmp_key + 'a]').val() || '';
+                            tmp_x['S' + i + 'b'] = $('#' + data_scope + ' [data-type=' + tmp_key + 'b]').val() || '';
+                    } else {
+                        tmp_semesterData.push('<S' + i + 'a>' + (value.SelectValue['S' + i + 'a'] || '') + '</S' + i + 'a>');
+                        tmp_semesterData.push('<S' + i + 'b>' + (value.SelectValue['S' + i + 'b'] || '') + '</S' + i + 'b>');
+                        tmp_x['S' + i + 'a'] = value.SelectValue['S' + i + 'a'] || '';
+                        tmp_x['S' + i + 'b'] = value.SelectValue['S' + i + 'b'] || '';
                     }
                 }
 
@@ -435,7 +441,7 @@ _gg.SetSaveData = function (data_scope) {
         });
     };
 
-    // TODO: 晤談紀錄
+    // TODO: 晤談紀錄(新增、編輯)
     var set_talk = function () {
 
         if (_gg.editInterview) {
@@ -503,6 +509,7 @@ _gg.SetSaveData = function (data_scope) {
         tmp_interviewRecord.push('</CounselTypeKind>');
     };
 
+
     // TODO: 儲存範圍
     var tmp_colID;
     switch (data_scope) {
@@ -557,6 +564,10 @@ _gg.SetSaveData = function (data_scope) {
         case 'talk':
             tmp_colID = 'E1';
             set_talk();
+            break;
+        case 'deltalk':
+            tmp_colID = 'DelE1';
+            break;
     }
 
     // TODO: 錯誤訊息
@@ -577,12 +588,13 @@ _gg.SetSaveData = function (data_scope) {
     var save_relative = false;
     var save_sibling = false;
     var save_interviewRecord = false;
+    var del_interviewRecord = false;
     var tmp_del_request;
     var student = _gg.student;
 
     // TODO: 重設表單結果
     var reset_data = function () {
-        if (save_singleRecord && save_multipleRecord && save_semesterData && save_yearlyData && save_priorityData && save_relative && save_sibling && save_interviewRecord) {
+        if (save_singleRecord && save_multipleRecord && save_semesterData && save_yearlyData && save_priorityData && save_relative && save_sibling && save_interviewRecord && del_interviewRecord) {
             switch (tmp_colID) {
                 case 'A3':
                     // TODO: 取得親屬資訊
@@ -954,7 +966,6 @@ _gg.SetSaveData = function (data_scope) {
                         } else {
                             save_interviewRecord = true;
                             reset_data();
-
                         }
                     }
                 });
@@ -965,5 +976,28 @@ _gg.SetSaveData = function (data_scope) {
         }
     } else {
         save_interviewRecord = true;
+    }
+
+    if (tmp_colID === 'DelE1') {
+        if (_gg.editInterview) {
+            // TODO: 晤談紀錄刪除
+            _gg.connection.send({
+                service: "_.DeleteInterviewRecord",
+                body: '<Request><Record><UID>' + _gg.editInterview.UID + '</UID></Record></Request>',
+                result: function (response, error, http) {
+                    if (error !== null) {
+                        set_error_message('DeleteInterviewRecord', error);
+                    } else {
+                        del_interviewRecord = true;
+                        tmp_colID = 'E1';
+                        reset_data();
+                    }
+                }
+            });
+        } else {
+            del_interviewRecord = true;
+        }
+    } else {
+        del_interviewRecord = true;
     }
 };
