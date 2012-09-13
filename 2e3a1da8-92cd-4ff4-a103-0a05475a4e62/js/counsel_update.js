@@ -127,7 +127,13 @@ _gg.SetModifyData = function () {
                 break;
             case 'relative':
                 if (question.TagName === 'IsAlive') {
-                    alldata.push((relative_data[question.TagName] === 'f') ? '歿':'存');
+                    if (relative_data[question.TagName] === 't') {
+                        alldata.push('存');
+                    } else if (relative_data[question.TagName] === 'f') {
+                        alldata.push('歿');
+                    } else {
+                        alldata.push('');
+                    }
                 } else {
                     alldata.push(relative_data[question.TagName] || '');
                 }
@@ -406,6 +412,7 @@ _gg.SetModifyData = function () {
 
     // TODO: 身高體重
     var set_psize = function (questions) {
+        $('#' + data_scope + ' input:text').val('');
 
         $(questions).each(function (key, value) {
             if (value.CanTeacherEdit === "是") {
@@ -464,6 +471,7 @@ _gg.SetModifyData = function () {
 
     // TODO: 幹部資訊
     var set_cadre = function (questions) {
+        $('#' + data_scope + ' input:text').val('');
 
         $(questions).each(function (key, value) {
             if (value.CanTeacherEdit === "是") {
