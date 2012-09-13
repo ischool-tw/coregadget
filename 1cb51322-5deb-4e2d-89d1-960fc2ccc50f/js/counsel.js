@@ -127,6 +127,12 @@ jQuery(function () {
         _gg.SetData('B4');
         _gg.SetData('B5');
         if (_gg.Opening === "yes") {
+            if (_gg.grade === "3") {
+                $('#B5').hide();
+            } else {
+                $('#B5').show();
+            }
+
             if (_gg.student.GradeYear && _gg.grade && (_gg.student.GradeYear === _gg.grade)) {
                 $('#B1 a[data-toggle=modal], #B2 a[data-toggle=modal], #B3 a[data-toggle=modal], #B4 a[data-toggle=modal], #B5 a[data-toggle=modal]').removeClass("disabled");
             } else {
@@ -207,11 +213,19 @@ jQuery(function () {
         var input_A3_value = function() {
             var tmp_html, tmp_items = [];
             $.each(_gg.relative, function (index, item) {
+                var tmp_isAlive = '';
+
+                if (item.IsAlive === 't') {
+                    tmp_isAlive = '存';
+                } else if (item.IsAlive === 'f') {
+                    tmp_isAlive = '歿';
+                }
+
                 tmp_html = '' +
                     '<td>' + (item.Title || '') + '</td>' +
                     '<td>' + (item.Name || '') + '</td>' +
                     '<td>' + (item.BirthYear || '') + '</td>' +
-                    '<td>' + (item.IsAlive === 't' ? '存':'歿') + '</td>' +
+                    '<td>' + tmp_isAlive + '</td>' +
                     '<td>' + (item.Phone || '') + '</td>' +
                     '<td>' + (item.Job || '') + '</td>' +
                     '<td>' + (item.Institute || '') + '</td>' +
@@ -312,9 +326,9 @@ jQuery(function () {
                 if (tmp_data) {
                     $('#B3 [data-type=' + tmp_key + 'a]').html(tmp_data['S' + tmp_grade + 'a'] || '');
                     $('#B3 [data-type=' + tmp_key + 'b]').html(tmp_data['S' + tmp_grade + 'b'] || '');
-                    $('#B3 [data-type=grade]').html(tmp_chinese_grade);
                 }
             });
+            $('#B3 [data-type=grade]').html(tmp_chinese_grade);
         };
 
         // TODO: 自我認識，題目可能因為年級而不同

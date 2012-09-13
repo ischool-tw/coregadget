@@ -400,6 +400,13 @@ _gg.loadCounselData = function () {
                                 $(".my-schoolyear-semester-widget").html(tmp_html);
                                 $(".my-schoolyear-semester-widget button:last").addClass("active");
 
+                                // TODO: 關閉三年級的生活感想
+                                if (_gg.grade === "3") {
+                                    $('#B5').hide();
+                                } else {
+                                    $('#B5').show();
+                                }
+
 
                                 // TODO: 開放時間
                                 _gg.connection.send({

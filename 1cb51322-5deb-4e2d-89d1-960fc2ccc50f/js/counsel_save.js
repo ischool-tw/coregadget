@@ -175,7 +175,15 @@ _gg.SetSaveData = function (data_scope) {
                 $(form_value).each(function() {
                     if (this.Data) {
                         if (question.TagName === 'IsAlive') {
-                            tmp_relative.push((this.Data === '歿') ? 'f':'t');
+                            if (this.Data === '存') {
+                                tmp_relative.push('<' + question.TagName + '>');
+                                tmp_relative.push('t');
+                                tmp_relative.push('</' + question.TagName + '>');
+                            } else if (this.Data === '歿') {
+                                tmp_relative.push('<' + question.TagName + '>');
+                                tmp_relative.push('f');
+                                tmp_relative.push('</' + question.TagName + '>');
+                            }
                         } else {
                             tmp_relative.push(this.Data);
                         }
@@ -317,19 +325,17 @@ _gg.SetSaveData = function (data_scope) {
                 tmp_semesterData.push('<Key>' + tmp_key + '</Key>');
                 var tmp_x = {};
 
-                if (value.SelectValue) {
-                    for (var i=1; i<=3 ; i+=1) {
-                        if ((i + '') === _gg.grade) {
-                                tmp_semesterData.push('<S' + i + 'a>' + ($('#' + data_scope + ' [data-type=' + tmp_key + 'a]').val() || '') + '</S' + i + 'a>');
-                                tmp_semesterData.push('<S' + i + 'b>' + ($('#' + data_scope + ' [data-type=' + tmp_key + 'b]').val() || '') + '</S' + i + 'b>');
-                                tmp_x['S' + i + 'a'] = $('#' + data_scope + ' [data-type=' + tmp_key + 'a]').val() || '';
-                                tmp_x['S' + i + 'b'] = $('#' + data_scope + ' [data-type=' + tmp_key + 'b]').val() || '';
-                        } else {
-                            tmp_semesterData.push('<S' + i + 'a>' + (value.SelectValue['S' + i + 'a'] || '') + '</S' + i + 'a>');
-                            tmp_semesterData.push('<S' + i + 'b>' + (value.SelectValue['S' + i + 'b'] || '') + '</S' + i + 'b>');
-                            tmp_x['S' + i + 'a'] = value.SelectValue['S' + i + 'a'] || '';
-                            tmp_x['S' + i + 'b'] = value.SelectValue['S' + i + 'b'] || '';
-                        }
+                for (var i=1; i<=3 ; i+=1) {
+                    if ((i + '') === _gg.grade) {
+                            tmp_semesterData.push('<S' + i + 'a>' + ($('#' + data_scope + ' [data-type=' + tmp_key + 'a]').val() || '') + '</S' + i + 'a>');
+                            tmp_semesterData.push('<S' + i + 'b>' + ($('#' + data_scope + ' [data-type=' + tmp_key + 'b]').val() || '') + '</S' + i + 'b>');
+                            tmp_x['S' + i + 'a'] = $('#' + data_scope + ' [data-type=' + tmp_key + 'a]').val() || '';
+                            tmp_x['S' + i + 'b'] = $('#' + data_scope + ' [data-type=' + tmp_key + 'b]').val() || '';
+                    } else {
+                        tmp_semesterData.push('<S' + i + 'a>' + (value.SelectValue['S' + i + 'a'] || '') + '</S' + i + 'a>');
+                        tmp_semesterData.push('<S' + i + 'b>' + (value.SelectValue['S' + i + 'b'] || '') + '</S' + i + 'b>');
+                        tmp_x['S' + i + 'a'] = value.SelectValue['S' + i + 'a'] || '';
+                        tmp_x['S' + i + 'b'] = value.SelectValue['S' + i + 'b'] || '';
                     }
                 }
 
