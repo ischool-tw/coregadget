@@ -261,6 +261,13 @@ _gg.SetModifyData = function () {
                         var tmp_searchvalue = ' name="' + $(tmp_x).attr("name") + '"';
                         var tmp_newvalue = ' name="' + $(tmp_x).attr("name") + key + '"';
                         tmp_x = tmp_x.replace(tmp_searchvalue, tmp_newvalue);
+
+                        if (value.Name === '直系血親_稱謂') {
+                            var tmp_class1 = ' class="' + $(tmp_x).attr("class") + '"';
+                            var tmp_class2 = ' class="' + $(tmp_x).attr("class") + " distincttitles {notEqualToGroup: ['.distincttitles']}" + '"';
+                            tmp_x = tmp_x.replace(tmp_class1, tmp_class2);
+                        }
+
                         tmp_items.push(
                             '<div class="control-group">' +
                             '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
@@ -648,3 +655,27 @@ _gg.SetModifyData = function () {
         }
     }
 }();
+
+jQuery.validator.addMethod("notEqualToGroup", function(value, element, options) {
+  // get all the elements passed here with the same class
+  var elems = $(element).parents('form').find(options[0]);
+  // the value of the current element
+  var valueToCompare = value;
+  // count
+  var matchesFound = 0;
+  // loop each element and compare its value with the current value
+  // and increase the count every time we find one
+  jQuery.each(elems, function(){
+    thisVal = $(this).val();
+    if(thisVal == valueToCompare){
+      matchesFound++;
+    }
+  });
+  // count should be either 0 or 1 max
+  if(this.optional(element) || matchesFound <= 1) {
+          elems.removeClass('error');
+          return true;
+      } else {
+          elems.addClass('error');
+      }
+}, jQuery.format("請輸入不重複的數值"))
