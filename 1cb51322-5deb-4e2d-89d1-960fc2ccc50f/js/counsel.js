@@ -76,7 +76,9 @@ jQuery(function () {
 
     $(".modal").on("hidden", function () {
         $(this).find("[id$=_errorMessage]").html("");
+        $(this).find("button[edit-target]").removeClass('btn-danger').addClass('btn-success');
     });
+
 
     $(".modal").on("show", function (e) {
         var that = this;
@@ -112,8 +114,10 @@ jQuery(function () {
         var data_scope = $(this).closest(".modal").attr("id");
 
         if ($("#" + data_scope + " form").valid()) {
-            $(this).button('loading'); // TODO: 按鈕為處理中
+            $(this).removeClass('btn-danger').addClass('btn-success').button('loading'); // TODO: 按鈕為處理中
             _gg.SetSaveData(data_scope);
+        } else {
+            $(this).removeClass('btn-success').addClass('btn-danger');
         }
     });
 
