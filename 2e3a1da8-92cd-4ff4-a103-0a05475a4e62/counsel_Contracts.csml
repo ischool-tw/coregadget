@@ -24,13 +24,13 @@
 					                    '$counsel.system_list',
 					                    '/Content/Item/@GradeYear|/Content/Item/@StartDateTime|/Content/Item/@EndDateTime',
 					                    'name=''ABCardAccessStartingDate''')
-					            AS t(uid integer, "GradeYear" integer, "StartDateTime" timestamp, "EndDateTime" timestamp)
+					            AS t(uid integer, "GradeYear" integer, "StartDateTime" character varying, "EndDateTime" character varying)
 					            WHERE "GradeYear"= (
 					                select c.grade_year From student s
 					                join class c on c.id = s.ref_class_id
 					                where s.id='@@StudentID'
 					            )
-					            and "StartDateTime"<=Now() and "EndDateTime">=Now()
+					            and "StartDateTime"!='' and "EndDateTime"!='' and cast("StartDateTime" as timestamp)<=Now() and cast("EndDateTime" as timestamp)>=Now()
 					            ]]></Preprocess>
 				</Preprocesses>
 			</Definition>
@@ -55,13 +55,13 @@
 					                    '$counsel.system_list',
 					                    '/Content/Item/@GradeYear|/Content/Item/@StartDateTime|/Content/Item/@EndDateTime',
 					                    'name=''ABCardAccessStartingDate''')
-					            AS t(uid integer, "GradeYear" integer, "StartDateTime" timestamp, "EndDateTime" timestamp)
+					            AS t(uid integer, "GradeYear" integer, "StartDateTime" character varying, "EndDateTime" character varying)
 					            WHERE "GradeYear"= (
 					                select c.grade_year From student s
 					                join class c on c.id = s.ref_class_id
 					                where s.id='@@StudentID'
 					            )
-					            and "StartDateTime"<=Now() and "EndDateTime">=Now()
+					            and "StartDateTime"!='' and "EndDateTime"!='' and cast("StartDateTime" as timestamp)<=Now() and cast("EndDateTime" as timestamp)>=Now()
 					            ]]></Preprocess>
 				</Preprocesses>
 			</Definition>
@@ -87,13 +87,13 @@
 					                    '$counsel.system_list',
 					                    '/Content/Item/@GradeYear|/Content/Item/@StartDateTime|/Content/Item/@EndDateTime',
 					                    'name=''ABCardAccessStartingDate''')
-					            AS t(uid integer, "GradeYear" integer, "StartDateTime" timestamp, "EndDateTime" timestamp)
+					            AS t(uid integer, "GradeYear" integer, "StartDateTime" character varying, "EndDateTime" character varying)
 					            WHERE "GradeYear"= (
 					                select c.grade_year From student s
 					                join class c on c.id = s.ref_class_id
 					                where s.id='@@StudentID'
 					            )
-					            and "StartDateTime"<=Now() and "EndDateTime">=Now()
+					            and "StartDateTime"!='' and "EndDateTime"!='' and cast("StartDateTime" as timestamp)<=Now() and cast("EndDateTime" as timestamp)>=Now()
 					            ]]></Preprocess>
 	</Preprocesses>
 </Definition>
@@ -118,13 +118,13 @@
 					                    '$counsel.system_list',
 					                    '/Content/Item/@GradeYear|/Content/Item/@StartDateTime|/Content/Item/@EndDateTime',
 					                    'name=''ABCardAccessStartingDate''')
-					            AS t(uid integer, "GradeYear" integer, "StartDateTime" timestamp, "EndDateTime" timestamp)
+					            AS t(uid integer, "GradeYear" integer, "StartDateTime" character varying, "EndDateTime" character varying)
 					            WHERE "GradeYear"= (
 					                select c.grade_year From student s
 					                join class c on c.id = s.ref_class_id
 					                where s.id='@@StudentID'
 					            )
-					            and "StartDateTime"<=Now() and "EndDateTime">=Now()
+					            and "StartDateTime"!='' and "EndDateTime"!='' and cast("StartDateTime" as timestamp)<=Now() and cast("EndDateTime" as timestamp)>=Now()
 					            ]]></Preprocess>
 				</Preprocesses>
 			</Definition>
@@ -148,13 +148,13 @@
 					                    '$counsel.system_list',
 					                    '/Content/Item/@GradeYear|/Content/Item/@StartDateTime|/Content/Item/@EndDateTime',
 					                    'name=''ABCardAccessStartingDate''')
-					            AS t(uid integer, "GradeYear" integer, "StartDateTime" timestamp, "EndDateTime" timestamp)
+					            AS t(uid integer, "GradeYear" integer, "StartDateTime" character varying, "EndDateTime" character varying)
 					            WHERE "GradeYear"= (
 					                select c.grade_year From student s
 					                join class c on c.id = s.ref_class_id
 					                where s.id='@@StudentID'
 					            )
-					            and "StartDateTime"<=Now() and "EndDateTime">=Now()
+					            and "StartDateTime"!='' and "EndDateTime"!='' and cast("StartDateTime" as timestamp)<=Now() and cast("EndDateTime" as timestamp)>=Now()
 					            ]]></Preprocess>
 				</Preprocesses>
 			</Definition>
@@ -179,13 +179,13 @@
 					                    '$counsel.system_list',
 					                    '/Content/Item/@GradeYear|/Content/Item/@StartDateTime|/Content/Item/@EndDateTime',
 					                    'name=''ABCardAccessStartingDate''')
-					            AS t(uid integer, "GradeYear" integer, "StartDateTime" timestamp, "EndDateTime" timestamp)
+					            AS t(uid integer, "GradeYear" integer, "StartDateTime" character varying, "EndDateTime" character varying)
 					            WHERE "GradeYear"= (
 					                select c.grade_year From student s
 					                join class c on c.id = s.ref_class_id
 					                where s.id='@@StudentID'
 					            )
-					            and "StartDateTime"<=Now() and "EndDateTime">=Now()
+					            and "StartDateTime"!='' and "EndDateTime"!='' and cast("StartDateTime" as timestamp)<=Now() and cast("EndDateTime" as timestamp)>=Now()
 					            ]]></Preprocess>
 				</Preprocesses>
 			</Definition>
@@ -210,13 +210,13 @@
 					                    '$counsel.system_list',
 					                    '/Content/Item/@GradeYear|/Content/Item/@StartDateTime|/Content/Item/@EndDateTime',
 					                    'name=''ABCardAccessStartingDate''')
-					            AS t(uid integer, "GradeYear" integer, "StartDateTime" timestamp, "EndDateTime" timestamp)
+					            AS t(uid integer, "GradeYear" integer, "StartDateTime" character varying, "EndDateTime" character varying)
 					            WHERE "GradeYear"= (
 					                select c.grade_year From student s
 					                join class c on c.id = s.ref_class_id
 					                where s.id='@@StudentID'
 					            )
-					            and "StartDateTime"<=Now() and "EndDateTime">=Now()
+					            and "StartDateTime"!='' and "EndDateTime"!='' and cast("StartDateTime" as timestamp)<=Now() and cast("EndDateTime" as timestamp)>=Now()
 					            ]]></Preprocess>
 				</Preprocesses>
 			</Definition>
@@ -499,13 +499,13 @@ WHERE @@Condition @@Order</SQLTemplate>
 					                    '$counsel.system_list',
 					                    '/Content/Item/@GradeYear|/Content/Item/@StartDateTime|/Content/Item/@EndDateTime',
 					                    'name=''ABCardAccessStartingDate''')
-					            AS t(uid integer, "GradeYear" integer, "StartDateTime" timestamp, "EndDateTime" timestamp)
+					            AS t(uid integer, "GradeYear" integer, "StartDateTime" character varying, "EndDateTime" character varying)
 					            WHERE "GradeYear"= (
 					                select c.grade_year From student s
 					                join class c on c.id = s.ref_class_id
 					                where s.id='@@StudentID'
 					            )
-					            and "StartDateTime"<=Now() and "EndDateTime">=Now()
+					            and "StartDateTime"!='' and "EndDateTime"!='' and cast("StartDateTime" as timestamp)<=Now() and cast("EndDateTime" as timestamp)>=Now()
 					            ]]></Preprocess>
 				</Preprocesses>
 			</Definition>
@@ -541,13 +541,13 @@ WHERE @@Condition @@Order</SQLTemplate>
 					                    '$counsel.system_list',
 					                    '/Content/Item/@GradeYear|/Content/Item/@StartDateTime|/Content/Item/@EndDateTime',
 					                    'name=''ABCardAccessStartingDate''')
-					            AS t(uid integer, "GradeYear" integer, "StartDateTime" timestamp, "EndDateTime" timestamp)
+					            AS t(uid integer, "GradeYear" integer, "StartDateTime" character varying, "EndDateTime" character varying)
 					            WHERE "GradeYear"= (
 					                select c.grade_year From student s
 					                join class c on c.id = s.ref_class_id
 					                where s.id='@@StudentID'
 					            )
-					            and "StartDateTime"<=Now() and "EndDateTime">=Now()
+					            and "StartDateTime"!='' and "EndDateTime"!='' and cast("StartDateTime" as timestamp)<=Now() and cast("EndDateTime" as timestamp)>=Now()
 					            ]]></Preprocess>
 				</Preprocesses>
 			</Definition>
@@ -607,13 +607,13 @@ WHERE @@Condition @@Order</SQLTemplate>
 					                    '$counsel.system_list',
 					                    '/Content/Item/@GradeYear|/Content/Item/@StartDateTime|/Content/Item/@EndDateTime',
 					                    'name=''ABCardAccessStartingDate''')
-					            AS t(uid integer, "GradeYear" integer, "StartDateTime" timestamp, "EndDateTime" timestamp)
+					            AS t(uid integer, "GradeYear" integer, "StartDateTime" character varying, "EndDateTime" character varying)
 					            WHERE "GradeYear"= (
 					                select c.grade_year From student s
 					                join class c on c.id = s.ref_class_id
 					                where s.id='@@StudentID'
 					            )
-					            and "StartDateTime"<=Now() and "EndDateTime">=Now()
+					            and "StartDateTime"!='' and "EndDateTime"!='' and cast("StartDateTime" as timestamp)<=Now() and cast("EndDateTime" as timestamp)>=Now()
 					            ]]></Preprocess>
 				</Preprocesses>
 			</Definition>
@@ -643,13 +643,13 @@ WHERE @@Condition @@Order</SQLTemplate>
 					                    '$counsel.system_list',
 					                    '/Content/Item/@GradeYear|/Content/Item/@StartDateTime|/Content/Item/@EndDateTime',
 					                    'name=''ABCardAccessStartingDate''')
-					            AS t(uid integer, "GradeYear" integer, "StartDateTime" timestamp, "EndDateTime" timestamp)
+					            AS t(uid integer, "GradeYear" integer, "StartDateTime" character varying, "EndDateTime" character varying)
 					            WHERE "GradeYear"= (
 					                select c.grade_year From student s
 					                join class c on c.id = s.ref_class_id
 					                where s.id='@@StudentID'
 					            )
-					            and "StartDateTime"<=Now() and "EndDateTime">=Now()
+					            and "StartDateTime"!='' and "EndDateTime"!='' and cast("StartDateTime" as timestamp)<=Now() and cast("EndDateTime" as timestamp)>=Now()
 					            ]]></Preprocess>
 				</Preprocesses>
 			</Definition>
@@ -677,13 +677,13 @@ WHERE @@Condition @@Order</SQLTemplate>
 					                    '$counsel.system_list',
 					                    '/Content/Item/@GradeYear|/Content/Item/@StartDateTime|/Content/Item/@EndDateTime',
 					                    'name=''ABCardAccessStartingDate''')
-					            AS t(uid integer, "GradeYear" integer, "StartDateTime" timestamp, "EndDateTime" timestamp)
+					            AS t(uid integer, "GradeYear" integer, "StartDateTime" character varying, "EndDateTime" character varying)
 					            WHERE "GradeYear"= (
 					                select c.grade_year From student s
 					                join class c on c.id = s.ref_class_id
 					                where s.id='@@StudentID'
 					            )
-					            and "StartDateTime"<=Now() and "EndDateTime">=Now()
+					            and "StartDateTime"!='' and "EndDateTime"!='' and cast("StartDateTime" as timestamp)<=Now() and cast("EndDateTime" as timestamp)>=Now()
 					            ]]></Preprocess>
 				</Preprocesses>
 			</Definition>
@@ -715,13 +715,13 @@ WHERE @@Condition @@Order</SQLTemplate>
 					                    '$counsel.system_list',
 					                    '/Content/Item/@GradeYear|/Content/Item/@StartDateTime|/Content/Item/@EndDateTime',
 					                    'name=''ABCardAccessStartingDate''')
-					            AS t(uid integer, "GradeYear" integer, "StartDateTime" timestamp, "EndDateTime" timestamp)
+					            AS t(uid integer, "GradeYear" integer, "StartDateTime" character varying, "EndDateTime" character varying)
 					            WHERE "GradeYear"= (
 					                select c.grade_year From student s
 					                join class c on c.id = s.ref_class_id
 					                where s.id='@@StudentID'
 					            )
-					            and "StartDateTime"<=Now() and "EndDateTime">=Now()
+					            and "StartDateTime"!='' and "EndDateTime"!='' and cast("StartDateTime" as timestamp)<=Now() and cast("EndDateTime" as timestamp)>=Now()
 					            ]]></Preprocess>
 				</Preprocesses>
 			</Definition>
@@ -759,13 +759,13 @@ WHERE @@Condition @@Order</SQLTemplate>
 					                    '$counsel.system_list',
 					                    '/Content/Item/@GradeYear|/Content/Item/@StartDateTime|/Content/Item/@EndDateTime',
 					                    'name=''ABCardAccessStartingDate''')
-					            AS t(uid integer, "GradeYear" integer, "StartDateTime" timestamp, "EndDateTime" timestamp)
+					            AS t(uid integer, "GradeYear" integer, "StartDateTime" character varying, "EndDateTime" character varying)
 					            WHERE "GradeYear"= (
 					                select c.grade_year From student s
 					                join class c on c.id = s.ref_class_id
 					                where s.id='@@StudentID'
 					            )
-					            and "StartDateTime"<=Now() and "EndDateTime">=Now()
+					            and "StartDateTime"!='' and "EndDateTime"!='' and cast("StartDateTime" as timestamp)<=Now() and cast("EndDateTime" as timestamp)>=Now()
 					            ]]></Preprocess>
 				</Preprocesses>
 			</Definition>
@@ -1427,8 +1427,8 @@ WHERE name='系統設定'</SQLTemplate>
 			<Definition Type="dbhelper">
 				<Action>Select</Action>
 				<SQLTemplate><![CDATA[
-			SELECT @@FieldList 
-			FROM $counsel.quiz a join $counsel.student_quiz_data b on b.ref_quiz_uid = a.uid 
+			SELECT @@FieldList
+			FROM $counsel.quiz a join $counsel.student_quiz_data b on b.ref_quiz_uid = a.uid
 	 		WHERE  @@Condition @@Order
 		]]></SQLTemplate>
 				<ResponseRecordElement>Response/StudentQuizData</ResponseRecordElement>
