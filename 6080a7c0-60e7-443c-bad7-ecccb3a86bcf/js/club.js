@@ -41,8 +41,10 @@ jQuery(function () {
     });
     $("#editModal #save-data").click(function () {
         if ($("#editModal form").valid()) {
-            $("#editModal #save-data").button("loading");
+            $(this).removeClass('btn-danger').addClass('btn-success').button('loading'); // TODO: 按鈕為處理中
             _gg.SaveSorce();
+        } else {
+            $(this).removeClass('btn-success').addClass('btn-danger');
         }
     });
 
@@ -206,11 +208,86 @@ _gg.loadData = function () {
                                 AasScore       : item.AasScore,
                                 ClubID         : item.ClubID,
                                 ClubName       : item.ClubName,
-                                CadreName      : tmp_cadreName
+                                CadreName      : tmp_cadreName,
+                                ResultScore    : item.ResultScore,
+                                SCUID          : item.SCUID
                             };
                             tmp_this_semes[semeid].Students.push(tmp_student);
                         }
 
+                    });
+
+
+                    // TODO: 轉學生的社團紀錄
+                    _gg.connection.send({
+                        service: "_.GetNoClubResultScore",
+                        body: '',
+                        result: function (response, error, http) {
+                            if (error !== null) {
+                                _gg.set_error_message('#mainMsg', 'GetNoClubResultScore', error);
+                            } else {
+                                var _ref;
+                                if (!_gg.col_class) { _gg.col_class = {}; }
+
+                                if (((_ref = response.Response) != null ? _ref.ResultScore : void 0) != null) {
+
+                                    var tmp_col_class = {};
+
+                                    $(response.Response.ResultScore).each(function (index, item) {
+                                        var classid = item.ClassID;
+
+                                        if (!tmp_col_class[classid]) {
+                                            var tmp_class = {
+                                                ClassID   : item.ClassID,
+                                                ClassName : item.ClassName,
+                                                Semes     : {}
+                                            };
+                                            tmp_col_class[classid] = tmp_class;
+                                        }
+
+                                        var tmp_this_semes = tmp_col_class[classid].Semes;
+                                        var semeid = ('' + item.ClubSchoolYear + item.ClubSemester) || '0';
+
+                                        if (semeid !== '0') {
+
+                                            if (!tmp_this_semes[semeid]) {
+                                                tmp_this_semes[semeid] = {
+                                                    Students : []
+                                                };
+                                            }
+
+                                            var tmp_cadreName = '';
+                                            var tmp_cn = item.CadreName.split(',');
+                                            $(tmp_cn).each(function(key, value) {
+                                                if (value) {
+                                                    if (tmp_cadreName) tmp_cadreName += ', ';
+                                                    tmp_cadreName += value;
+                                                }
+                                            });
+
+                                            var tmp_student = {
+                                                StudentID      : item.StudentID,
+                                                StudentName    : item.StudentName,
+                                                StudentNumber  : item.StudentNumber,
+                                                SeatNo         : item.SeatNo,
+                                                SemsHistory    : item.SemsHistory,
+                                                PaScore        : item.PaScore,
+                                                ArScore        : item.ArScore,
+                                                FarScore       : item.FarScore,
+                                                AasScore       : item.AasScore,
+                                                ClubID         : item.ClubID,
+                                                ClubName       : item.ClubName,
+                                                CadreName      : tmp_cadreName,
+                                                ResultScore    : item.ResultScore,
+                                                SCUID          : ''
+                                                                                            };
+                                            tmp_this_semes[semeid].Students.push(tmp_student);
+                                        }
+
+                                    });
+                                }
+                            }
+                        }
                     });
                     _gg.col_class = tmp_col_class;
                     _gg.SetClass();
@@ -248,16 +325,17 @@ _gg.loadData = function () {
                         }
 
                         var tmp_student = {
-                            SCUID : item.SCUID,
-                            PaScore : item.PaScore,
-                            ArScore : item.ArScore,
-                            FarScore : item.FarScore,
-                            AasScore : item.AasScore,
-                            StudentID : item.StudentID,
-                            StudentName : item.StudentName,
+                            SCUID         : item.SCUID,
+                            PaScore       : item.PaScore,
+                            ArScore       : item.ArScore,
+                            FarScore      : item.FarScore,
+                            AasScore      : item.AasScore,
+                            StudentID     : item.StudentID,
+                            StudentName   : item.StudentName,
                             StudentNumber : item.StudentNumber,
-                            SeatNo : item.SeatNo,
-                            ClassName : item.ClassName
+                            SeatNo        : item.SeatNo,
+                            ClassName     : item.ClassName,
+                            ResultScore   : item.ResultScore
                         };
 
                         tmp_col_club[clubid].Students.push(tmp_student);
@@ -362,7 +440,7 @@ _gg.SetClass = function () {
                     '            <th>出缺席(' +       (_gg.weight.ArWeight || '')  + '%)</th>' +
                     '            <th>活動力及服務(' + (_gg.weight.AasWeight || '')  + '%)</th>' +
                     '            <th>成品成果考驗(' + (_gg.weight.FarWeight || '')  + '%)</th>' +
-                    '            <th nowrap>總成績</th>' +
+                    '            <th nowrap>學期成績</th>' +
                     '          </tr>' +
                     '        </thead>' +
                     '        <tbody>');
@@ -373,11 +451,11 @@ _gg.SetClass = function () {
                         '  <td>' + (value.StudentName || '')   + '</td>' +
                         '  <td>' + (value.ClubName || '')      + '</td>' +
                         '  <td>' + (value.CadreName || '')     + '</td>' +
-                        '  <td>' + (value.PaScore || '')       + '</td>' +
-                        '  <td>' + (value.ArScore || '')       + '</td>' +
-                        '  <td>' + (value.AasScore || '')      + '</td>' +
-                        '  <td>' + (value.FarScore || '')      + '</td>' +
-                        '  <td>' + _gg.funWeightScore(value.PaScore, value.ArScore, value.AasScore, value.FarScore) + '</td>' +
+                        '  <td id="PaScore' + (value.SCUID || '') + '">' + (value.PaScore || '')       + '</td>' +
+                        '  <td id="ArScore' + (value.SCUID || '') + '">' + (value.ArScore || '')       + '</td>' +
+                        '  <td id="AasScore' + (value.SCUID || '') + '">' + (value.AasScore || '')     + '</td>' +
+                        '  <td id="FarScore' + (value.SCUID || '') + '">' + (value.FarScore || '')     + '</td>' +
+                        '  <td>' + (value.ResultScore || '')   + '</td>' +
                         '</tr>');
                 });
                 arys.push('</tbody></table></div></div></div>');
@@ -417,6 +495,7 @@ _gg.SetScore = function (clubid) {
                     '  <td>' + (value.AasScore || '') + '</td>' +
                     '  <td>' + (value.FarScore || '') + '</td>' +
                     '  <td>' + _gg.funWeightScore(value.PaScore, value.ArScore, value.AasScore, value.FarScore) + '</td>' +
+                    '  <td>' + (value.ResultScore || '') + '</td>' +
                     '</tr>');
             });
 
@@ -475,6 +554,7 @@ _gg.SaveSorce = function () {
                         } else {
                             $(students).each(function(key, value) {
                                 value[scoreType] = $('#'+(value.SCUID)).val();
+                                $('#' + scoreType + value.SCUID).html($('#'+(value.SCUID)).val());
                             });
 
                             _gg.SetScore(clubid);
