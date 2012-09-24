@@ -165,7 +165,7 @@ jQuery(function () {
                                 }
                             });
 
-                            // TODO: 取得各學年度學期個人選社資料
+                            // TODO: 取得所有學年度學期個人選社資料
                             _gg.connection.send({
                                 service: "_.GetMyClub",
                                 body: '',
@@ -174,14 +174,43 @@ jQuery(function () {
                                         _gg.set_error_message("GetMyClub", error);
                                     } else {
                                         $(response.Response.Clubs).each(function (index, item) {
-                                            student.Clubs[index] = item;
+                                            if (item.RSClubID) {
+                                                // TODO: 轉學生未連結選社紀錄
+                                                student.Clubs[index] = {
+                                                    'SchoolYear'   : item.RSSchoolYear,
+                                                    'Semester'     : item.RSSemester,
+                                                    'ClubName'     : item.RSClubName,
+                                                    'TeacherName1' : '',
+                                                    'Lock'         : '否',
+                                                    'AasScore'     : '',
+                                                    'ArScore'      : '',
+                                                    'FarScore'     : '',
+                                                    'PaScore'      : '',
+                                                    'CadreName'    : item.RSCadreName,
+                                                    'ResultScore'  : item.ResultScore
+                                                };
+                                            } else {
+                                                student.Clubs[index] = {
+                                                    'SchoolYear'   : item.SchoolYear,
+                                                    'Semester'     : item.Semester,
+                                                    'ClubName'     : item.ClubName,
+                                                    'TeacherName1' : item.TeacherName1,
+                                                    'Lock'         : item.Lock,
+                                                    'AasScore'     : item.AasScore,
+                                                    'ArScore'      : item.ArScore,
+                                                    'FarScore'     : item.FarScore,
+                                                    'PaScore'      : item.PaScore,
+                                                    'CadreName'    : item.CadreName,
+                                                    'ResultScore'  : item.ResultScore
+                                                };
+                                            }
 
+                                            // 現在學年度、學期社團
                                             if (item.SchoolYear === _gg.SchoolYear && item.Semester === _gg.Semester) {
                                                 student.ClubID = item.ClubID;
                                                 student.Lock   = item.Lock;
                                             }
                                         });
-
 
                                         // TODO: 目前學年度學期社團資料(已過濾性別、總人數=0、科別條件)
                                         _gg.connection.send({
@@ -578,139 +607,87 @@ _gg.SetClubRecord = function () {
                     }
                 }
 
-                var student         = _gg.Student;
-                var items           = [];
-                var tmp_html        = '';
-                var tmp_clubid      = '';
-                var tmp_club        = {};
-                var true_schoolyear = '';
+                var student  = _gg.Student;
+                var items    = [];
+                var tmp_html = '';
 
-                for (var i = 1; i <= 3; i++) {
+                $(student.Clubs.sort($.by('SchoolYear', $.by('Semester', '', 'desc'), 'desc'))).each(function (index, item) {
+                    tmp_html = '' +
+                        '<div class="span6">' +
+                        '    <div class="my-widget">' +
+                        '       <div class="my-widget-header">' +
+                        '           <i class="icon-th-list"></i>' +
+                        '           <h3>' + (item.SchoolYear || '') + ' 學年度第 ' + (item.Semester || '') + ' 學期</h3>' +
+                        '       </div>' +
+                        '       <div class="my-widget-content">' +
+                        '           <div class="row-fluid">' +
+                        '               <div class="span6">' +
+                        '                   <table class="table table-condensed">' +
+                        '                       <tbody>' +
+                        '                           <tr>' +
+                        '                               <th width="29%" nowrap="nowrap">社團名稱</th>' +
+                        '                               <td width="71%">' + (item.ClubName || '') + '</td>' +
+                        '                           </tr>' +
+                        '                           <tr>' +
+                        '                               <th nowrap="nowrap">指導教師</th>' +
+                        '                               <td>' + (item.TeacherName1 || '') + '</td>' +
+                        '                           </tr>' +
+                        '                           <tr>' +
+                        '                               <th nowrap="nowrap">擔任幹部</th>' +
+                        '                               <td>' + (item.CadreName || '') + '</td>' +
+                        '                           </tr>' +
+                        '                           <tr>' +
+                        '                               <th nowrap="nowrap">學期成績</th>' +
+                        '                               <td>' + (item.ResultScore || '') + '</td>' +
+                        '                           </tr>' +
+                        '                       </tbody>' +
+                        '                   </table>' +
+                        '                </div>' +
+                        '               <div class="span6">' +
+                        '                   <table class="table table-condensed">' +
+                        '                       <tbody>' +
+                        '                           <tr>' +
+                        '                               <th nowrap="nowrap">平時活動(' + _gg.Weight.PaWeight + '%)</th>' +
+                        '                               <td>' + (item.PaScore || '') + '</td>' +
+                        '                           </tr>' +
+                        '                           <tr>' +
+                        '                               <th nowrap="nowrap">出缺率(' + _gg.Weight.ArWeight + '%)</th>' +
+                        '                               <td>' + (item.ArScore || '') + '</td>' +
+                        '                           </tr>' +
+                        '                           <tr>' +
+                        '                               <th nowrap="nowrap">活動力及服務(' + _gg.Weight.AasWeight + '%)</th>' +
+                        '                               <td>' + (item.AasScore || '') + '</td>' +
+                        '                           </tr>' +
+                        '                           <tr>' +
+                        '                               <th nowrap="nowrap">成品成果考驗(' + _gg.Weight.FarWeight + '%)</th>' +
+                        '                               <td>' + (item.FarScore || '') + '</td>' +
+                        '                           </tr>' +
+                        '                       </tbody>' +
+                        '                   </table>' +
+                        '                </div>' +
+                        '            </div>' +
+                        '       </div>' +
+                        '    </div>' +
+                        '</div>';
 
-                    items.push('<div class="span4">');
-
-                    for (var j = 1; j <= 2; j++) {
-                        tmp_club = {
-                            CSSName         : ' my-nostart',
-                            ClubName        : '',
-                            TeacherName1    : '',
-                            CadreName       : '',
-                            PaScore         : '',
-                            ArScore         : '',
-                            AasScore        : '',
-                            FarScore        : ''
-                        };
-
-                        true_schoolyear = student.SemsHistory['GS'+i+j];
-
-                         $(student.Clubs).each(function (index, item) {
-                            if (item.SchoolYear === true_schoolyear && item.Semester === j+'') {
-                                tmp_club = {
-                                    CSSName      : '',
-                                    ClubName     : item.ClubName,
-                                    TeacherName1 : item.TeacherName1,
-                                    CadreName    : item.CadreName,
-                                    PaScore      : item.PaScore,
-                                    ArScore      : item.ArScore,
-                                    AasScore     : item.AasScore,
-                                    FarScore     : item.FarScore
-                                };
-                                var tmp_CadreName = '';
-                                if (item.President && item.President === item.StudentID) {
-                                    tmp_CadreName += "社長";
-                                }
-                                if (item.VicePresident && item.VicePresident === item.StudentID) {
-                                    tmp_CadreName += ((tmp_CadreName) ? '、' : '');
-                                    tmp_CadreName += "副社長";
-                                }
-                                if (tmp_club.CadreName) {
-                                    tmp_CadreName += ((tmp_CadreName) ? '、' : '');
-                                    tmp_CadreName += tmp_club.CadreName;
-                                }
-                                tmp_club.CadreName = tmp_CadreName;
-                            }
-                        });
-
-                        tmp_html = '' +
-                            '<div class="my-widget ' + tmp_club.CSSName + '">' +
-                            '   <div class="my-widget-header">' +
-                            '       <i class="icon-th-list"></i>' +
-                            '       <h3>' + true_schoolyear + ' 學年度第 ' + j + ' 學期</h3>' +
-                            '   </div>' +
-                            '   <div class="my-widget-content">' +
-                            '       <table class="table table-condensed">' +
-                            '           <tbody>' +
-                            '               <tr>' +
-                            '                   <th width="29%" nowrap="nowrap">社團名稱</th>' +
-                            '                   <td width="71%">' + tmp_club.ClubName + '</td>' +
-                            '               </tr>' +
-                            '               <tr>' +
-                            '                   <th nowrap="nowrap">指導教師</th>' +
-                            '                   <td>' + tmp_club.TeacherName1 + '</td>' +
-                            '               </tr>' +
-                            '               <tr>' +
-                            '                   <th nowrap="nowrap">擔任幹部</th>' +
-                            '                   <td>' + tmp_club.CadreName + '</td>' +
-                            '               </tr>' +
-                            '               <tr>' +
-                            '                   <th nowrap="nowrap">平時活動(' + _gg.Weight.PaWeight + '%)</th>' +
-                            '                   <td>' + tmp_club.PaScore + '</td>' +
-                            '               </tr>' +
-                            '               <tr>' +
-                            '                   <th nowrap="nowrap">出缺率(' + _gg.Weight.ArWeight + '%)</th>' +
-                            '                   <td>' + tmp_club.ArScore + '</td>' +
-                            '               </tr>' +
-                            '               <tr>' +
-                            '                   <th nowrap="nowrap">活動力及服務(' + _gg.Weight.AasWeight + '%)</th>' +
-                            '                   <td>' + tmp_club.AasScore + '</td>' +
-                            '               </tr>' +
-                            '               <tr>' +
-                            '                   <th nowrap="nowrap">成品成果考驗(' + _gg.Weight.FarWeight + '%)</th>' +
-                            '                   <td>' + tmp_club.FarScore + '</td>' +
-                            '               </tr>' +
-                            '           </tbody>' +
-                            '       </table>' +
-                            '   </div>' +
-                            '</div>';
-                        items.push(tmp_html);
+                    if (index % 2 === 0) {
+                        items.push('<div class="row-fluid">');
                     }
+                    items.push(tmp_html);
+                    if (index % 2 === 1) {
+                        items.push('</div>');
+                    }
+                });
 
+                if (student.Clubs.length %2 === 1) {
                     items.push('</div>');
                 }
 
-                $('#ClubRecord').html(items.join(''));
+                $('#ClubRecord').html('<div class="row-fluid">' + items.join('') + '</div>');
             }
         }
     });
 };
-
-_gg.by = function (name, minor, order) {
-    return function (o, p, d) {
-        var a, b, d;
-        d = ( d ==='desc') ? d: 'asc';
-        if (o && p && typeof o === 'object' && typeof p === 'object') {
-            a = o[name];
-            b = p[name];
-            if (a === b) {
-                return typeof minor === 'function' ? minor(o, p, d) : 0;
-            }
-            if (typeof a === typeof b) {
-                if (d === 'desc') {
-                    return a - b;
-                } else {
-                    return b - a;
-                }
-            }
-            return typeof a < typeof b ? -1 : 1;
-        } else {
-            throw {
-                name: 'Error',
-                message: 'Expected an object when sorting by ' + name
-            };
-        }
-    };
-};
-
 
 // TODO: 清除資料
 _gg.ResetData = function () {
