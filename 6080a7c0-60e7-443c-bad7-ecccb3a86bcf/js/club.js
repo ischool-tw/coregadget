@@ -521,7 +521,7 @@ _gg.SetScore = function (clubid) {
     }
 };
 
-// TODO: 計算總成績
+// TODO: 試算學期成績
 _gg.funWeightScore = function (paScore, arScore, aasScore, farScore) {
     if (_gg.weight) {
         var a = 0, b = 0, c = 0, d = 0;
@@ -538,7 +538,7 @@ _gg.funWeightScore = function (paScore, arScore, aasScore, farScore) {
             d = parseInt(farScore, 10) * parseInt(_gg.weight.FarWeight, 10);
         }
 
-        return (a + b + c + d) / 100;
+        return Math.round((a + b + c + d) / 100);
     }
     return 0;
 };
