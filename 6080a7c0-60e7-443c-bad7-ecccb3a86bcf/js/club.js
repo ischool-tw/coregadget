@@ -111,16 +111,20 @@ jQuery(function () {
 _gg.set_error_message = function(select_str, serviceName, error) {
     var tmp_msg = '';
     if (error !== null) {
-        if (error.dsaError.status === "504") {
-            switch (error.dsaError.message) {
-                case '501':
-                    tmp_msg = '<strong>很抱歉，您無存取資料權限！</strong>';
-                    break;
-                case '502':
-                    tmp_msg = '<strong>儲存失敗，目前未開放填寫!</strong>';
-                    break;
-                default:
-                    tmp_msg = '<strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
+        if (error.dsaError) {
+            if (error.dsaError.status === "504") {
+                switch (error.dsaError.message) {
+                    case '501':
+                        tmp_msg = '<strong>很抱歉，您無存取資料權限！</strong>';
+                        break;
+                    case '502':
+                        tmp_msg = '<strong>儲存失敗，目前未開放填寫!</strong>';
+                        break;
+                    default:
+                        tmp_msg = '<strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
+                }
+            } else {
+                tmp_msg = '<strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
             }
         } else {
             tmp_msg = '<strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
@@ -149,6 +153,15 @@ _gg.loadData = function () {
         }
     });
 
+
+    // TODO: 取回全部社團紀錄資料後，呼叫社團紀錄呈現
+    var getClassStudent_data, getNoClubResultScore_data;
+    var check_ClassData = function() {
+        if (getClassStudent_data && getNoClubResultScore_data) {
+            _gg.SetClass();
+        }
+    };
+
     // TODO: 取得社團紀錄
     _gg.connection.send({
         service: "_.GetClassStudent",
@@ -162,7 +175,7 @@ _gg.loadData = function () {
 
                 if (((_ref = response.Response) != null ? _ref.Students : void 0) != null) {
 
-                    var tmp_col_class = {};
+                    var tmp_col_class = _gg.col_class;
 
                     $(response.Response.Students).each(function (index, item) {
                         var classid = item.ClassID;
@@ -217,84 +230,86 @@ _gg.loadData = function () {
 
                     });
 
-
-                    // TODO: 轉學生的社團紀錄
-                    _gg.connection.send({
-                        service: "_.GetNoClubResultScore",
-                        body: '',
-                        result: function (response, error, http) {
-                            if (error !== null) {
-                                _gg.set_error_message('#mainMsg', 'GetNoClubResultScore', error);
-                            } else {
-                                var _ref;
-                                if (!_gg.col_class) { _gg.col_class = {}; }
-
-                                if (((_ref = response.Response) != null ? _ref.ResultScore : void 0) != null) {
-
-                                    var tmp_col_class = {};
-
-                                    $(response.Response.ResultScore).each(function (index, item) {
-                                        var classid = item.ClassID;
-
-                                        if (!tmp_col_class[classid]) {
-                                            var tmp_class = {
-                                                ClassID   : item.ClassID,
-                                                ClassName : item.ClassName,
-                                                Semes     : {}
-                                            };
-                                            tmp_col_class[classid] = tmp_class;
-                                        }
-
-                                        var tmp_this_semes = tmp_col_class[classid].Semes;
-                                        var semeid = ('' + item.ClubSchoolYear + item.ClubSemester) || '0';
-
-                                        if (semeid !== '0') {
-
-                                            if (!tmp_this_semes[semeid]) {
-                                                tmp_this_semes[semeid] = {
-                                                    Students : []
-                                                };
-                                            }
-
-                                            var tmp_cadreName = '';
-                                            var tmp_cn = item.CadreName.split(',');
-                                            $(tmp_cn).each(function(key, value) {
-                                                if (value) {
-                                                    if (tmp_cadreName) tmp_cadreName += ', ';
-                                                    tmp_cadreName += value;
-                                                }
-                                            });
-
-                                            var tmp_student = {
-                                                StudentID      : item.StudentID,
-                                                StudentName    : item.StudentName,
-                                                StudentNumber  : item.StudentNumber,
-                                                SeatNo         : item.SeatNo,
-                                                SemsHistory    : item.SemsHistory,
-                                                PaScore        : item.PaScore,
-                                                ArScore        : item.ArScore,
-                                                FarScore       : item.FarScore,
-                                                AasScore       : item.AasScore,
-                                                ClubID         : item.ClubID,
-                                                ClubName       : item.ClubName,
-                                                CadreName      : tmp_cadreName,
-                                                ResultScore    : item.ResultScore,
-                                                SCUID          : ''
-                                                                                            };
-                                            tmp_this_semes[semeid].Students.push(tmp_student);
-                                        }
-
-                                    });
-                                }
-                            }
-                        }
-                    });
-                    _gg.col_class = tmp_col_class;
-                    _gg.SetClass();
                 }
             }
+            getClassStudent_data = true;
+            check_ClassData();
         }
     });
+
+    // TODO: 轉學生的社團紀錄
+    _gg.connection.send({
+        service: "_.GetNoClubResultScore",
+        body: '',
+        result: function (response, error, http) {
+            if (error !== null) {
+                _gg.set_error_message('#mainMsg', 'GetNoClubResultScore', error);
+            } else {
+                var _ref;
+                if (!_gg.col_class) { _gg.col_class = {}; }
+
+                if (((_ref = response.Response) != null ? _ref.ResultScore : void 0) != null) {
+
+                    var tmp_col_class = _gg.col_class;
+
+                    $(response.Response.ResultScore).each(function (index, item) {
+                        var classid = item.ClassID;
+
+                        if (!tmp_col_class[classid]) {
+                            var tmp_class = {
+                                ClassID   : item.ClassID,
+                                ClassName : item.ClassName,
+                                Semes     : {}
+                            };
+                            tmp_col_class[classid] = tmp_class;
+                        }
+
+                        var tmp_this_semes = tmp_col_class[classid].Semes;
+                        var semeid = ('' + item.ClubSchoolYear + item.ClubSemester) || '0';
+                        if (semeid !== '0') {
+
+                            if (!tmp_this_semes[semeid]) {
+                                tmp_this_semes[semeid] = {
+                                    Students : []
+                                };
+                            }
+
+                            var tmp_cadreName = '';
+                            var tmp_cn = item.CadreName.split(',');
+                            $(tmp_cn).each(function(key, value) {
+                                if (value) {
+                                    if (tmp_cadreName) tmp_cadreName += ', ';
+                                    tmp_cadreName += value;
+                                }
+                            });
+
+                            var tmp_student = {
+                                StudentID      : item.StudentID,
+                                StudentName    : item.StudentName,
+                                StudentNumber  : item.StudentNumber,
+                                SeatNo         : item.SeatNo,
+                                SemsHistory    : item.SemsHistory,
+                                PaScore        : item.PaScore,
+                                ArScore        : item.ArScore,
+                                FarScore       : item.FarScore,
+                                AasScore       : item.AasScore,
+                                ClubID         : item.ClubID,
+                                ClubName       : item.ClubName,
+                                CadreName      : tmp_cadreName,
+                                ResultScore    : item.ResultScore,
+                                SCUID          : ''
+                            };
+                            tmp_this_semes[semeid].Students.push(tmp_student);
+                        }
+
+                    });
+                }
+            }
+            getNoClubResultScore_data = true;
+            check_ClassData();
+        }
+    });
+
 
     // TODO: 成績登錄
     _gg.connection.send({
@@ -392,6 +407,8 @@ _gg.loadData = function () {
                                                                     '</div>';
                                                                 $('#opening').html(tmp_html);
                                                                 $('a[data-toggle=modal]').removeClass("disabled");
+                                                            } else {
+                                                                $('#opening').html('<div class="alert alert-error">未開放登錄</div>');
                                                             }
                                                         }
                                                     }
