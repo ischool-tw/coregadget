@@ -192,7 +192,7 @@ WHERE name='系統設定']]></SQLTemplate>
 						) ca on ca.ref_club_id=a.ref_club_id and ca.ref_student_id = a.ref_student_id
 				WHERE a.ref_student_id = '@@StudentID'
 			) aaa
-		FULL OUTER JOIN $k12.resultscore.shinmin rs on rs.ref_student_id = aaa.ref_student_id and rs.school_year = aaa.school_year and rs.semester = aaa.semester
+		FULL OUTER JOIN $k12.resultscore.shinmin rs on rs.ref_student_id = aaa.ref_student_id and rs.school_year = aaa.school_year and rs.semester = aaa.semester and rs.ref_club_id = aaa.ref_club_id
 		where rs.ref_student_id='@@StudentID' or aaa.ref_student_id = '@@StudentID' 
 		order by rs.school_year desc, rs.semester desc
 		]]>
@@ -211,11 +211,11 @@ WHERE name='系統設定']]></SQLTemplate>
 		<Field Alias="FarScore" Mandatory="True" Source="FarScore" Target="aaa.far_score" />
 		<Field Alias="PaScore" Mandatory="True" Source="PaScore" Target="aaa.pa_score" />
 		<Field Alias="CadreName" Mandatory="True" Source="CadreName" Target="aaa.my_cadre_name" />
-		<Field Alias="ResultScore" Mandatory="True" Source="ResultScore" Target="rs.result_score" />		
+		<Field Alias="ResultScore" Mandatory="True" Source="ResultScore" Target="rs.result_score" />
 		<Field Alias="RSClubID" Mandatory="True" Source="RSClubID" Target="rs.ref_club_id" />
 		<Field Alias="RSClubName" Mandatory="True" Source="RSClubName" Target="rs.club_name" />
 		<Field Alias="RSSchoolYear" Mandatory="True" Source="RSSchoolYear" Target="rs.school_year" />
-		<Field Alias="RSSemester" Mandatory="True" Source="RSSemester" Target="rs.semester" />		
+		<Field Alias="RSSemester" Mandatory="True" Source="RSSemester" Target="rs.semester" />
 		<Field Alias="RSCadreName" Mandatory="True" Source="RSCadreName" Target="rs.cadre_name" />
 	</FieldList>
 	<Conditions Name="Condition" Required="False" Source="">
@@ -375,7 +375,7 @@ WHERE name='系統設定']]></SQLTemplate>
 					FROM $k12.cadresrecord.shinmin
 					GROUP BY ref_student_id, ref_club_id
 				) ca on cast(ca.ref_student_id as integer) = s.id and cast(ca.ref_club_id as integer) = club.uid
-			left join $k12.resultscore.shinmin  rs on cast(rs.ref_student_id as integer) = s.id
+			left join $k12.resultscore.shinmin  rs on cast(rs.ref_student_id as integer) = s.id and cast(rs.ref_club_id as integer) = club.uid and rs.school_year = 100 and rs.semester = 2 
 		WHERE @@Condition
 			and c.status=1
 		order by c.id, s.seat_no, club.school_year desc, club.semester desc
@@ -422,9 +422,9 @@ WHERE name='系統設定']]></SQLTemplate>
         from $k12.clubrecord.shinmin club left join $k12.scjoin.shinmin sc on cast(sc.ref_club_id as integer) = club.uid
         left join student s on s.id = cast(sc.ref_student_id as integer) and s.status in (1, 2)
         left join class c on c.id = s.ref_class_id
-		left join $k12.resultscore.shinmin rs on cast(rs.ref_student_id as integer) = s.id
+		left join $k12.resultscore.shinmin rs on cast(rs.ref_student_id as integer) = s.id and cast(rs.ref_club_id as integer) = club.uid and rs.school_year = '@@tmp_schoolyear' and rs.semester = '@@tmp_semester'
         where @@Condition
-        and club.school_year = @@tmp_schoolyear and club.semester = @@tmp_semester
+        and club.school_year = '@@tmp_schoolyear' and club.semester = '@@tmp_semester'
         order by s.student_number
 	]]>
 	</SQLTemplate>
