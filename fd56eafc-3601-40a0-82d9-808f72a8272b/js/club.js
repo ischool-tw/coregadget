@@ -174,7 +174,36 @@ jQuery(function () {
                                         _gg.set_error_message("GetMyClub", error);
                                     } else {
                                         $(response.Response.Clubs).each(function (index, item) {
-                                            if (item.RSClubID) {
+                                            var tmp_cadreName = '';
+                                            if (item.ClubID) {
+                                                var tmp_cn = item.CadreName.split(',');
+                                                $(tmp_cn).each(function(key, value) {
+                                                    if (value) {
+                                                        if (tmp_cadreName) tmp_cadreName += ', ';
+                                                        tmp_cadreName += value;
+                                                    }
+                                                });
+                                                student.Clubs[index] = {
+                                                    'SchoolYear'   : item.SchoolYear,
+                                                    'Semester'     : item.Semester,
+                                                    'ClubName'     : item.ClubName,
+                                                    'TeacherName1' : item.TeacherName1,
+                                                    'Lock'         : item.Lock,
+                                                    'AasScore'     : item.AasScore,
+                                                    'ArScore'      : item.ArScore,
+                                                    'FarScore'     : item.FarScore,
+                                                    'PaScore'      : item.PaScore,
+                                                    'CadreName'    : tmp_cadreName,
+                                                    'ResultScore'  : item.ResultScore
+                                                };
+                                            } else {
+                                                var tmp_cn = item.RSCadreName.split(',');
+                                                $(tmp_cn).each(function(key, value) {
+                                                    if (value) {
+                                                        if (tmp_cadreName) tmp_cadreName += ', ';
+                                                        tmp_cadreName += value;
+                                                    }
+                                                });
                                                 // TODO: 轉學生未連結選社紀錄
                                                 student.Clubs[index] = {
                                                     'SchoolYear'   : item.RSSchoolYear,
@@ -186,21 +215,7 @@ jQuery(function () {
                                                     'ArScore'      : '',
                                                     'FarScore'     : '',
                                                     'PaScore'      : '',
-                                                    'CadreName'    : item.RSCadreName,
-                                                    'ResultScore'  : item.ResultScore
-                                                };
-                                            } else {
-                                                student.Clubs[index] = {
-                                                    'SchoolYear'   : item.SchoolYear,
-                                                    'Semester'     : item.Semester,
-                                                    'ClubName'     : item.ClubName,
-                                                    'TeacherName1' : item.TeacherName1,
-                                                    'Lock'         : item.Lock,
-                                                    'AasScore'     : item.AasScore,
-                                                    'ArScore'      : item.ArScore,
-                                                    'FarScore'     : item.FarScore,
-                                                    'PaScore'      : item.PaScore,
-                                                    'CadreName'    : item.CadreName,
+                                                    'CadreName'    : tmp_cadreName,
                                                     'ResultScore'  : item.ResultScore
                                                 };
                                             }
