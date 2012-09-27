@@ -8,7 +8,7 @@
 			<Definition Type="dbhelper">
 	<Action>Select</Action>
 	<SQLTemplate>
-		<![CDATA[SELECT @@FieldList FROM $shinmin.retake.select_course_date WHERE 1=2 and @@Condition @@Order]]>
+		<![CDATA[SELECT @@FieldList FROM $shinmin.retake.select_course_date WHERE @@Condition @@Order]]>
 	</SQLTemplate>
 	<ResponseRecordElement>SelectCourseDate</ResponseRecordElement>
 	<FieldList Name="FieldList" Source="Field">
