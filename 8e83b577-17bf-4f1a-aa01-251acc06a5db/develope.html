@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+  <script>
+    init({
+      application: "dev.sh_d", //"h.trialschool.tw", //"http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_kh",
+      paramValues: {}
+    });
+  </script>
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <!--<link href="css/base.less" rel="stylesheet/less" />
+  <link href="css/default.less" rel="stylesheet/less" />-->
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <!--<script src="js/less.min.js"></script>-->
+  <script src="js/bootstrap.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/retake.js"></script>
+</head>
+<body>
+    <div id="gadget">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="mainMsg">
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span12" id="opening">
+                </div>
+                <div class="row-fluid">
+                  <div class="span7" id="subject">
+                  </div>
+                  <div class="span5" id="selectlist">
+                    <div class="my-widget well hide">
+                          <table class="table">
+                              <tbody>
+                                  <tr>
+                                    <th width="18%">節次</th>
+                                    <th>科目名稱</th>
+                                  </tr>
+                                  <tr id="period1">
+                                      <th>一</th>
+                                      <td></td>
+                                  </tr>
+                                  <tr id="period2">
+                                      <th>二</th>
+                                      <td></td>
+                                  </tr>
+                                  <tr id="period3">
+                                      <th>三</th>
+                                      <td></td>
+                                  </tr>
+                                  <tr id="period4">
+                                      <th>四</th>
+                                      <td></td>
+                                  </tr>
+                                  <tr id="period5">
+                                      <th>五</th>
+                                      <td></td>
+                                  </tr>
+                                  <tr id="period6">
+                                      <th>六</th>
+                                      <td></td>
+                                  </tr>
+                                  <tr id="period7">
+                                      <th>七</th>
+                                      <td></td>
+                                  </tr>
+                                  <tr id="period8">
+                                      <th>八</th>
+                                      <td></td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      <button id="save-data" class="btn btn-success pull-right disabled" data-loading-text="儲存中...">
+                        <i class="icon-check icon-white"></i> <span id="btn-text">選好了，送出</span></button>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
