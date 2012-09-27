@@ -94,7 +94,7 @@ jQuery(function () {
                     arys.push('<div class="control-group">' +
                         '    <label class="control-label">' + (value.StudentNumber || '') + ' ' + (value.StudentName || '') + '</label>' +
                         '    <div class="controls">' +
-                        '        <input type="text" name="s' + (value.StudentNumber || '') + '" class="{digits:true, range:[1, 100]} input-large" id="' + (value.SCUID || '') + '"' +
+                        '        <input type="text" name="s' + (value.StudentNumber || '') + '" class="{digits:true, range:[0, 100]} input-large" id="' + (value.SCUID || '') + '"' +
                         ' placeholder="成績..." value="' + (value[scoreType] || '') + '">' +
                         '    </div>' +
                         '</div>');
@@ -558,7 +558,7 @@ _gg.SaveSorce = function () {
                 var arys = [];
                 $(students).each(function(key, value) {
                     arys.push('<Students><Condition><UID>' + (value.SCUID || '0')  + '</UID></Condition>');
-                    arys.push('<' + scoreType + '>' + $('#'+(value.SCUID)).val() + '</' + scoreType + '>');
+                    arys.push('<' + scoreType + '>' + parseInt($('#'+(value.SCUID)).val(), 10) + '</' + scoreType + '>');
                     arys.push('</Students>');
                 });
 
@@ -570,8 +570,9 @@ _gg.SaveSorce = function () {
                             _gg.set_error_message('#errorMessage', 'UpdateScore', error);
                         } else {
                             $(students).each(function(key, value) {
-                                value[scoreType] = $('#'+(value.SCUID)).val();
-                                $('#' + scoreType + value.SCUID).html($('#'+(value.SCUID)).val());
+                                 var tmp_val = parseInt($('#'+(value.SCUID)).val(), 10);
+                                value[scoreType] = tmp_val;
+                                $('#' + scoreType + value.SCUID).html(tmp_val);
                             });
 
                             _gg.SetScore(clubid);
