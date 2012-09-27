@@ -2,6 +2,7 @@
 _gg.connection = gadget.getContract("ischool.sunset.teacher");
 _gg.timeTableByTTId = {};
 
+//開始載入文件時
 $(document).ready(function () {
     gadget.onSizeChanged(function (size) {
         $("#container-nav, #container-main").height(size.height - 50);
@@ -160,10 +161,10 @@ _gg.doSearch = function (req, add) {
 // TODO: 學年度學期選單
 _gg.DrwaingMyTimeTable = function () {
 
-    _gg.SchoolYear = null;
-    _gg.Semester = null;
-    _gg.MyScheduledSchoolYear = null;
-    _gg.MyScheduledSemester = null;
+    _gg.SchoolYear = null;                //系統預設學年度
+    _gg.Semester = null;                  //系統預設學期
+    _gg.MyScheduledSchoolYear = null;     //使用者選取學年度
+    _gg.MyScheduledSemester = null;       //使用者選取學期
     _gg.SearchScheduledSchoolYear = null;
     _gg.SearchScheduledSemester = null;
     var scope = null;
@@ -175,9 +176,11 @@ _gg.DrwaingMyTimeTable = function () {
             body: '',
             result: function (response, error, http) {
                 if (error !== null) {
-                    return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetCurrentSemester)\n</div>");
+                    return $("#mainMsg")
+                        .html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetCurrentSemester)\n</div>");
                 } else {
                     $(response.Result.SystemConfig).each(function (index, item) {
+                        //設定預設學年度學期
                         _gg.SchoolYear = item.DefaultSchoolYear;
                         _gg.Semester = item.DefaultSemester;
                     });
@@ -209,13 +212,18 @@ _gg.DrwaingMyTimeTable = function () {
             // TODO: 可瀏覽的學年度學期清單，目前學年度學期，做為預設值
             var itemlist = [], tmp = [], addclass = "";
             $(_gg.scope).each(function (index, item) {
+                //是否選取
                 addclass = "";
+                //解析已排課的學年度學期
+                //<SchoolYearSemester>101,1</SchoolYearSemester>
                 tmp = item.SchoolYearSemester.split(',');
-                if (tmp[0] === _gg.SchoolYear && tmp[1] === _gg.Semester) {
-                    _gg.MyScheduledSchoolYear = tmp[0];
-                    _gg.MyScheduledSemester = tmp[1];
-                    _gg.SearchScheduledSchoolYear = tmp[0];
-                    _gg.SearchScheduledSemester = tmp[1];
+                //若已排課學年度學期等於系統預設學年度學期
+                if (tmp[0] === _gg.SchoolYear && tmp[1] === _gg.Semester)
+                {
+                    _gg.MyScheduledSchoolYear = tmp[0];      //選取學年度
+                    _gg.MyScheduledSemester = tmp[1];        //選取學期
+                    _gg.SearchScheduledSchoolYear = tmp[0];  //搜尋學年度
+                    _gg.SearchScheduledSemester = tmp[1];    //搜尋學期
                     addclass = 'active';
                 }
                 itemlist.push('<button class="btn btn-large ' + addclass + '" my-school-year="' + tmp[0] + '" my-semester="' + tmp[1] + '">' + tmp[0] + tmp[1] + '</button>');
@@ -233,7 +241,9 @@ _gg.DrwaingMyTimeTable = function () {
                 _gg.SearchScheduledSemester = _gg.MyScheduledSemester;
             }
 
-            _gg.GetMyTimeTable(_gg.MyScheduledSchoolYear, _gg.MyScheduledSemester); // TODO: 取回我的課程分段表
+            // TODO: 取回我的課程分段表
+            //根據選取學年度及學期取得課程分段
+            _gg.GetMyTimeTable(_gg.MyScheduledSchoolYear, _gg.MyScheduledSemester); 
         }
     };
 
@@ -248,14 +258,16 @@ _gg.GetMyTimeTable = function (setYear, setSemester) {
         body: '<Request><SchoolYear>' + setYear + '</SchoolYear><Semester>' + setSemester + '</Semester></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMySchedule)\n</div>");
+                return $("#mainMsg")
+                    .html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMySchedule)\n</div>");
             } else {
                 var ttid;
                 var courseSectionByTTId = {};
                 $(response.Schedule.CourseSection).each(function (index, item) {
-                    // TODO: 以 TimetableID 分類                            
-                    ttid = item.TimetableID;
-                    if (!courseSectionByTTId[ttid]) {
+                    // TODO: 將課程分段以 TimetableID 分類                            
+                    ttid = item.TimeTableID;  //取得時間表系統編號
+                    if (!courseSectionByTTId[ttid])
+                    {
                         var tmp_ColTimeTable = {
                             Schedule: []
                         };
@@ -341,6 +353,7 @@ _gg.DoGetAllTimeTables = function (usemodel, courseSectionByTTId) {
         }
     };
 
+    //依序取得時間表
     $.each(courseSectionByTTId, function (ttid, value) {
         if (_gg.timeTableByTTId[ttid] === undefined) {
             if (run_times === -1) run_times = 0;
@@ -354,23 +367,29 @@ _gg.DoGetAllTimeTables = function (usemodel, courseSectionByTTId) {
                     } else {
                         $(response.TimeTableSections.TimeTableSection).each(function (index, item) {
                             var that_ttid = item.TimetableID;
-                            if (!_gg.timeTableByTTId[that_ttid]) {
-                                var objTT = {
-                                    TimetableID: item.TimetableID,
-                                    TimetableName: item.TimetableName,
-                                    MaxWeekday: parseInt(item.Weekday, 10),
-                                    MaxPeriod: parseInt(item.Period, 10),
-                                    Sections: []
+                            //判斷是否有包含此時間表
+                            if (!_gg.timeTableByTTId[that_ttid])
+                            {
+                                var objTT =
+                                {
+                                    TimetableID: item.TimetableID,          //時間表系統編號
+                                    TimetableName: item.TimetableName,      //時間表名稱
+                                    MaxWeekday: parseInt(item.Weekday, 10), //最大星期
+                                    MaxPeriod: parseInt(item.Period, 10),   //最大節次
+                                    Sections: []                            //時間表分段          
                                 };
                                 _gg.timeTableByTTId[that_ttid] = objTT;
                             }
 
+                            //將時間表分段加入集合中
                             var targetTT = _gg.timeTableByTTId[that_ttid];
                             targetTT.Sections.push(item);
 
+                            //判斷最大星期
                             if (parseInt(item.Weekday, 10) > targetTT.MaxWeekday) {
                                 targetTT.MaxWeekday = parseInt(item.Weekday, 10);
                             }
+                            //判斷最大節次
                             if (parseInt(item.Period, 10) > targetTT.MaxPeriod) {
                                 targetTT.MaxPeriod = parseInt(item.Period, 10);
                             }
