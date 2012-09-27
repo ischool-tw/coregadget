@@ -8,9 +8,9 @@ jQuery ->
     $("#notebook").height size.height - 110
     $("#message").height size.height - 110
     $("#academic").height size.height - 110
-    $("#behavior").height size.height - 110      
+    $("#behavior").height size.height - 110
 
-  
+
   $("#filter-keyword").keyup () ->
     resetStudentList()
 
@@ -27,7 +27,7 @@ jQuery ->
       if @StudentName.indexOf($("#filter-keyword").val()) isnt -1
         if @ClassName isnt className
           className = @ClassName
-          (accordionHTML += items.join "" 
+          (accordionHTML += items.join ""
           accordionHTML += """
                   </ul>
                 </div>
@@ -47,19 +47,19 @@ jQuery ->
           """
 
           firstClassName = @ClassName if firstClassName is ''
-              
+
         items.push """
           <li>
             <a href='#' student-index='#{index}'>
               <span class='my-seat-no label label-inverse my-label'>#{@SeatNo}</span>
-              <span class='my-student-name'>#{@StudentName}</span>								
+              <span class='my-student-name'>#{@StudentName}</span>
               <span class='my-student-number'>#{@StudentNumber}</span>
               <i class='icon-chevron-right pull-right'></i>
             </a>
           </li>
         """
-    
-    accordionHTML += items.join "" 
+
+    accordionHTML += items.join ""
     accordionHTML += """
             </ul>
           </div>
@@ -84,7 +84,7 @@ jQuery ->
       getDiscipline()
       get_notes()
       get_message_about_one_student()
-      
+
   $("#notebook textarea").bind "keyup", (event) ->
     if parseInt($("#notebook textarea").val().length, 10) is 0
       $("#notebook .btn").addClass("disabled").attr "disabled", "disabled"
@@ -104,11 +104,11 @@ jQuery ->
                 <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>
               </div>
             """
-          else          
+          else
             get_notes response.Result.NewID  unless response.Result.NewID is 'undefined'
             $("#notebook textarea").val ""
             $("#notebook #save-add-notebook").addClass("disabled").attr "disabled", "disabled"
-    
+
 
   gadget.getContract("ischool.message").send
     service: "message.GetMyInfo"
@@ -177,10 +177,10 @@ jQuery ->
   $("#editModal").on "hidden", () ->
     $("#editModal #errorMessage").html ""
   $("#editModal").on "show", () ->
-    $("#editModal #save-data").show()
-  
+    $("#editModal #save-data").button "reset"
+
   $("#editModal #save-data").click () ->
-    $("#editModal #save-data").hide()
+    $("#editModal #save-data").button "loading"
     edit_target = $(@).attr("edit-target")
     switch edit_target
       when "update-note"
@@ -193,7 +193,7 @@ jQuery ->
         delete_message()
       else
         saveBaseInfo edit_target
-    
+
   $("#baseinfo .my-label-title a").live 'click', ->
     if global.student
       if $(@).attr("edit-target") is "detail"
@@ -218,7 +218,7 @@ jQuery ->
 							      <span class='update-item-label'>僅支援 PNG (*.png) 與 JPEG (*.jpg) 格式</span>
 						      </div>
                 </div>
-              </div>              
+              </div>
             </fieldset>
           </form>
         """
@@ -522,16 +522,16 @@ jQuery ->
             </fieldset>
           </form>
         """
-        
+
       $("#editModal #save-data").html "儲存變更"
       $("#editModal").modal "show"
-  
+
   $("#student-list").hover(
     () -> $(@).css("overflow", "auto")
     ,
     () -> $(@).css("overflow", "hidden")
   )
-  
+
   $("#baseinfo").hover(
     () -> $(@).css("overflow", "auto")
     ,
@@ -549,19 +549,19 @@ jQuery ->
     ,
     () -> $(@).css("overflow", "hidden")
   )
-  
+
   $("#academic").hover(
     () -> $(@).css("overflow", "auto")
     ,
     () -> $(@).css("overflow", "hidden")
   )
-  
+
   $("#behavior").hover(
     () -> $(@).css("overflow", "auto")
     ,
     () -> $(@).css("overflow", "hidden")
   )
-  
+
   gadget.getContract("ta").send {
     service: "TeacherAccess.GetCurrentSemester",
     body: "",
@@ -582,8 +582,8 @@ jQuery ->
         global.behavior =
           schoolYear: response.Current.SchoolYear
           semester: response.Current.Semester
-      
-        items = """				
+
+        items = """
           #{if global.semester is '2' then "<button class='btn btn-large active' school-year='#{global.schoolYear}' semester='2'>#{global.schoolYear}2</button>" else ""}
           <button class='btn btn-large' #{if global.semester is '2' then '' else 'active'} school-year='#{global.schoolYear}' semester='1'>#{global.schoolYear}1</button>
           <button class='btn btn-large' school-year='#{global.schoolYear - 1}' semester='2'>#{global.schoolYear - 1}2</button>
@@ -591,27 +591,27 @@ jQuery ->
           <button class='btn btn-large' school-year='#{global.schoolYear - 2}' semester='2'>#{global.schoolYear - 2}2</button>
           <button class='btn btn-large' school-year='#{global.schoolYear - 2}' semester='1'>#{global.schoolYear - 2}1</button>
         """
-      
-        $("#academic .btn-group").html items			
+
+        $("#academic .btn-group").html items
         $("#academic .btn-group button").click (e) ->
-          e.preventDefault()				
+          e.preventDefault()
           if global.student?
             global.academic =
               schoolYear: $(@).attr("school-year")
               semester: $(@).attr("semester")
-          
+
             $("#academic #subject-score tbody").html ""
             $("#academic #domain-score tbody").html ""
             getAcademic()
-        
-        $("#behavior .btn-group").html items			
+
+        $("#behavior .btn-group").html items
         $("#behavior .btn-group button").click (e) ->
           e.preventDefault()
           if global.student?
             global.behavior =
               schoolYear: $(@).attr("school-year")
               semester: $(@).attr("semester")
-          
+
             $("#behavior #morality tbody").html ""
             $("#behavior #attendance .my-content").html ""
             $("#behavior #discipline tbody").html ""
@@ -619,7 +619,7 @@ jQuery ->
             getAttendance()
             getDiscipline()
   }
-  
+
   gadget.getContract("ischool.addressbook").send {
     service: "addressbook.GetStudentInfo",
     body: "",
@@ -634,7 +634,7 @@ jQuery ->
       else
         if response.Result?.Student?
           resetData()
-        
+
           global.students = $(response.Result.Student)
           className = ""
           items = []
@@ -643,7 +643,7 @@ jQuery ->
             if @ClassName isnt className
               className = @ClassName
 
-              (accordionHTML += items.join "" 
+              (accordionHTML += items.join ""
               accordionHTML += """
                       </ul>
                     </div>
@@ -666,13 +666,13 @@ jQuery ->
               <li #{if index is 0 then " class='active'" else ''}>
                 <a href='#' student-index='#{index}'>
                   <span class='my-seat-no label label-inverse my-label'>#{@SeatNo}</span>
-                  <span class='my-student-name'>#{@StudentName}</span>								
-                  <span class='my-student-number'>#{@StudentNumber}</span>                  
+                  <span class='my-student-name'>#{@StudentName}</span>
+                  <span class='my-student-number'>#{@StudentNumber}</span>
                   <i class='icon-chevron-right pull-right'></i>
                 </a>
               </li>
             """
-          
+
             if index is 0
               global.student = student
               setBaseInfo()
@@ -683,15 +683,15 @@ jQuery ->
               get_notes()
               get_message_about_one_student()
 
-            
-          accordionHTML += items.join "" 
+
+          accordionHTML += items.join ""
           accordionHTML += """
                   </ul>
                 </div>
               </div>
             </div>
           """
-        
+
           $("#student-list").html accordionHTML
 
           $("#student-list .accordion-body a").click (e) ->
@@ -723,16 +723,16 @@ resetData = () ->
   $("#baseinfo #mother-info tbody").html ""
 
   $(".my-notebook-manager .my-stream-items").html ""
-  
+
   $(".my-message-manager .my-stream-items").html ""
-  
+
   $("#academic #subject-score tbody").html ""
   $("#academic #domain-score tbody").html ""
-  
+
   $("#behavior #morality tbody").html ""
   $("#behavior #attendance .my-content").html ""
   $("#behavior #discipline tbody").html ""
-  
+
 setBaseInfo = () ->
   student = global.student
   freshmanPhoto = if student.FreshmanPhoto? and student.FreshmanPhoto isnt "" then "<img src='data:image/png;base64,#{student.FreshmanPhoto}' class='my-photo' alt='入學照' title='入學照'/>" else ""
@@ -743,13 +743,13 @@ setBaseInfo = () ->
       freshmanPhoto = "<img src='img/photo_male.png' class='my-photo' alt='入學照' title='入學照' />"
     else
       freshmanPhoto = "<img src='img/photo_female.png' class='my-photo' alt='入學照' title='入學照'/>"
-  
+
   if graduatePhoto is ""
     if student.Gender is "1"
       graduatePhoto = "<img src='img/photo_male.png' class='my-photo' alt='畢業照' title='畢業照'/>"
     else
       graduatePhoto = "<img src='img/photo_female.png' class='my-photo' alt='畢業照' title='畢業照'/>"
-        
+
   mailingAddress =
     student.MailingAddress?.AddressList?.Address?.ZipCode +
     student.MailingAddress?.AddressList?.Address?.County +
@@ -760,7 +760,7 @@ setBaseInfo = () ->
     student.PermanentAddress?.AddressList?.Address?.County +
     student.PermanentAddress?.AddressList?.Address?.Town +
     student.PermanentAddress?.AddressList?.Address?.DetailAddress
-  
+
   $("#baseinfo #base-content").html """
     <div class='span6'>
       <div class="my-label-title">
@@ -819,7 +819,7 @@ setBaseInfo = () ->
     <tr><th><span>職業</span></th><td><span>#{student.MotherOtherInfo?.MotherOtherInfo?.Job ? ""}</span></td></tr>
     <tr><th><span>教育程度</span></th><td><span>#{student.MotherOtherInfo?.MotherOtherInfo?.EducationDegree ? ""}</span></td></tr>
   """
-  
+
 getAcademic = () ->
   gadget.getContract("ischool.addressbook").send {
     service: "addressbook.GetSubjectSemesterScore",
@@ -879,7 +879,7 @@ getAcademic = () ->
               score = score + "(重)" if score is parseInt(@重修成績, 10)
               score = score + "(手)" if score is parseInt(@擇優採計成績, 10)
               score = score + "(調)" if score is parseInt(@學年調整成績, 10)
-            
+
               items.push """
                 <tr>
                   <th>
@@ -892,7 +892,7 @@ getAcademic = () ->
               """
             $("#academic #subject-score tbody").html items.join ""
             $("#academic #subject-score h2").html "科目成績"
-          
+
           gadget.getContract("ischool.addressbook").send {
             service: "addressbook.GetEntryScore",
             body: """
@@ -972,7 +972,7 @@ getMorality = () ->
                     <td><span>#{@Name} #{@Index}</span></td>
                   </tr>
                 """
-        
+
             if @GroupActivity?
               items.push "<tr><th colspan='2'><span>#{@GroupActivity.Name ? '團體活動表現'}</span></th></tr>"
               $(@GroupActivity.Item).each () ->
@@ -982,7 +982,7 @@ getMorality = () ->
                     <td><span>#{@Name}</span></td>
                   </tr>
                 """
-        
+
             if @PublicService?
               items.push "<tr><th colspan='2'><span>#{@PublicService.Name ? '公共服務表現'}</span></th></tr>"
               $(@PublicService.Item).each () ->
@@ -992,7 +992,7 @@ getMorality = () ->
                     <td><span>#{@Name}</span></td>
                   </tr>
                 """
-        
+
             if @SchoolSpecial?
               items.push "<tr><th colspan='2'><span>#{@SchoolSpecial.Name ? '校內外特殊表現'}</span></th></tr>"
               $(@SchoolSpecial.Item).each () ->
@@ -1002,15 +1002,15 @@ getMorality = () ->
                     <td><span>#{@Name}</span></td>
                   </tr>
                 """
-        
+
             if @DailyLifeRecommend?
               items.push "<tr><th colspan='2'><span>#{@DailyLifeRecommend.Name ? '日常生活表現具體建議'}</span></th></tr>"
               items.push "<tr><td colspan='2'><span>#{@DailyLifeRecommend.Description ? @DailyLifeRecommend['#text']}</span></td></tr>"
-        
+
             if @OtherRecommend?
               items.push "<tr><th colspan='2'><span>#{@OtherRecommend.Name ? '其他具體建議'}</span></th></tr>"
               items.push "<tr><td colspan='2'><span>#{@OtherRecommend['#text'] ? ''}</span></td></tr>"
-      
+
           $("#behavior #morality tbody").html items.join ""
           $("#behavior #morality h2").html "日常生活表現"
   }
@@ -1041,7 +1041,7 @@ getAttendance = () ->
               if not absences[@['AbsenceType']]?
                 absences[@['AbsenceType']] = 0
               absences[@['AbsenceType']] += 1
-      
+
         items = []
         for name of absences
           items.push """
@@ -1056,7 +1056,7 @@ getAttendance = () ->
               </div>
             </li>
           """
-        
+
         $("#behavior #attendance .my-content").html """
           <ul class='thumbnails'>
             #{items.join ""}
@@ -1090,7 +1090,7 @@ getDiscipline = () ->
               sum_merit.ma += merit.a = parseInt(@Detail.Discipline.Merit.A, 10) if not isNaN(parseInt(@Detail.Discipline.Merit.A, 10))
               sum_merit.mb += merit.b = parseInt(@Detail.Discipline.Merit.B, 10) if not isNaN(parseInt(@Detail.Discipline.Merit.B, 10))
               sum_merit.mc += merit.c = parseInt(@Detail.Discipline.Merit.C, 10) if not isNaN(parseInt(@Detail.Discipline.Merit.C, 10))
-            
+
               items.push """
                 <tr>
                   <td>
@@ -1116,7 +1116,7 @@ getDiscipline = () ->
               sum_merit.da += merit.a = parseInt(@Detail.Discipline.Demerit.A, 10) if not isNaN(parseInt(@Detail.Discipline.Demerit.A, 10))
               sum_merit.db += merit.b = parseInt(@Detail.Discipline.Demerit.B, 10) if not isNaN(parseInt(@Detail.Discipline.Demerit.B, 10))
               sum_merit.dc += merit.c = parseInt(@Detail.Discipline.Demerit.C, 10) if not isNaN(parseInt(@Detail.Discipline.Demerit.C, 10))
-            
+
               items.push """
                 <tr>
                   <td>
@@ -1140,7 +1140,7 @@ getDiscipline = () ->
                   </td>
                 </tr>
               """
-        
+
           $("#merit-a").html """<span class='badge #{if sum_merit.ma isnt 0 then "badge-success" else ""}'>#{sum_merit.ma}</span>"""
           $("#merit-b").html """<span class='badge #{if sum_merit.mb isnt 0 then "badge-success" else ""}'>#{sum_merit.mb}</span>"""
           $("#merit-c").html """<span class='badge #{if sum_merit.mc isnt 0 then "badge-success" else ""}'>#{sum_merit.mc}</span>"""
@@ -1287,7 +1287,7 @@ saveBaseInfo = (edit_target) ->
         </StudentInfo>
       </Request>
     """
-    
+
   if request isnt ""
     gadget.getContract("ischool.addressbook").send {
       service: "addressbook.UpdateStudentInfo",
@@ -1300,18 +1300,18 @@ saveBaseInfo = (edit_target) ->
               <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>
             </div>
           """
-          $("#editModal #save-data").show()
+          $("#editModal #save-data").button "reset"
         else
           if response.Result.ExecuteCount is "1"
             if edit_target is "detail"
               global.student.EnglishName = $('#editModal #english-name').val()
               global.student.FreshmanPhoto = $('#editModal #update-photo-image').attr("photo-base64")
-              
+
             if edit_target is "phone"
               global.student.ContactPhone = $('#editModal #contact-phone').val()
               global.student.PermanentPhone = $('#editModal #permanent-phone').val()
               global.student.SMSPhone = $('#editModal #sms-phone').val()
-              
+
             if edit_target is "address"
               global.student.MailingAddress = {
                 AddressList: {
@@ -1333,10 +1333,10 @@ saveBaseInfo = (edit_target) ->
                   }
                 }
               }
-              
+
             if edit_target is "instant-messaging"
               global.student.EmailAddress = $('#editModal #email').val()
-              
+
             if edit_target is "custodian-info"
               global.student.CustodianName = $('#editModal #name').val()
               global.student.CustodianRelationship = $('#editModal #relationship').val()
@@ -1349,7 +1349,7 @@ saveBaseInfo = (edit_target) ->
                   EducationDegree: $('#editModal #education').val()
                 }
               }
-              
+
             if edit_target is "father-info"
               global.student.FatherName = $('#editModal #name').val()
               global.student.FatherOtherInfo = {
@@ -1361,7 +1361,7 @@ saveBaseInfo = (edit_target) ->
                   EducationDegree: $('#editModal #education').val()
                 }
               }
-              
+
             if edit_target is "mother-info"
               global.student.MotherName = $('#editModal #name').val()
               global.student.MotherOtherInfo = {
@@ -1373,9 +1373,9 @@ saveBaseInfo = (edit_target) ->
                   EducationDegree: $('#editModal #education').val()
                 }
               }
-                
-            setBaseInfo()		
-              
+
+            setBaseInfo()
+
             if request_udt isnt ""
               gadget.getContract("ischool.addressbook").send {
                 service: if global.student.UID is "" then "addressbook.AddUDTStudentInfo" else "addressbook.UpdateUDTStudentInfo",
@@ -1388,26 +1388,26 @@ saveBaseInfo = (edit_target) ->
                         <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>
                       </div>
                     """
-                    $("#editModal #save-data").show()
+                    $("#editModal #save-data").button "reset"
                   else
                     if response.Result.ExecuteCount is "1"
                       if edit_target is "instant-messaging"
                         global.student.FacebookID = $('#editModal #facebook').val()
                         global.student.SkypeID = $('#editModal #skype').val()
-                          
+
                       if edit_target is "emergency-contact"
                         global.student.EmergencyContactName = $('#editModal #name').val()
                         global.student.EmergencyContactRelationship = $('#editModal #relationship').val()
                         global.student.EmergencyContactTel = $('#editModal #phone').val()
 
                       setBaseInfo()
-                      
+
                     $("#editModal").modal "hide"
-              }																
-                                            
+              }
+
             else
               $("#editModal").modal "hide"
-              
+
           $("#editModal").modal "hide"
 
     }
@@ -1430,12 +1430,12 @@ saveBaseInfo = (edit_target) ->
                 global.student.FacebookID = $('#editModal #facebook').val()
                 global.student.SkypeID = $('#editModal #skype').val()
 
-                  
+
               if edit_target is "emergency-contact"
                 global.student.EmergencyContactName = $('#editModal #name').val()
                 global.student.EmergencyContactRelationship = $('#editModal #relationship').val()
                 global.student.EmergencyContactTel = $('#editModal #phone').val()
-                  
+
               setBaseInfo()
 
             $("#editModal").modal "hide"
@@ -1443,7 +1443,7 @@ saveBaseInfo = (edit_target) ->
     else
       $("#editModal").modal "hide"
 
-get_notes = (uid) ->  
+get_notes = (uid) ->
   UID = ""
   UID = "<UID>#{uid}</UID>"  if uid?
   gadget.getContract("ischool.notebook").send
@@ -1456,10 +1456,10 @@ get_notes = (uid) ->
             <button class='close' data-dismiss='alert'>×</button>
             <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>
           </div>
-        """        
+        """
       else
         if $(response.Result.Note).size() is 0
-          $(".my-notebook-manager .my-stream-items").html "目前無資料" 
+          $(".my-notebook-manager .my-stream-items").html "目前無資料"
         else
           if response.Result.Note?
             $(response.Result.Note).each ->
@@ -1468,7 +1468,7 @@ get_notes = (uid) ->
                   <div class='my-stram-item-content my-stream-note-item'>
                     <div class='my-stream-note-content'>
                       <div class='my-stream-note-text'>#{@Content}</div>
-                      <div class='my-stream-note-row'>                        
+                      <div class='my-stream-note-row'>
                         <span class='btn-group my-stream-note-actions'>
                           <a href='editModal' class='btn my-update-action' title='更新' data-toggle='modal' note-id='#{@UID}' note-content='#{@Content.replace(/'/g, "")}'><span><i class='icon-edit'></i></span></a>
                           <a href='editModal' class='btn my-delete-action' title='刪除' data-toggle='modal' note-id='#{@UID}' note-content='#{@Content.replace(/'/g, "")}'><span><i class='icon-trash'></i></span></a>
@@ -1492,7 +1492,7 @@ get_notes = (uid) ->
           .html "儲存變更"
         $("#editModal .modal-header h3").html "更新筆記"
         $("#editModal .modal-body").html "<textarea class='my-content-textarea-editor'></textarea>"
-        $("#editModal .my-content-textarea-editor").val $(@).attr("note-content")        
+        $("#editModal .my-content-textarea-editor").val $(@).attr("note-content")
         $("#editModal").modal "show"
 
       $(".my-notebook-manager .my-delete-action").bind 'click', ->
@@ -1501,7 +1501,7 @@ get_notes = (uid) ->
           .attr("edit-target", "delete-note")
           .html "刪除"
         $("#editModal .modal-header h3").html "是否確定刪除此筆記？"
-        $("#editModal .modal-body").html $(@).attr("note-content")  
+        $("#editModal .modal-body").html $(@).attr("note-content")
         $("#editModal .my-content-textarea-editor").val $(@).attr("note-content")
         $("#editModal").modal "show"
 
@@ -1509,7 +1509,7 @@ get_notes = (uid) ->
         $(@).find(".my-stream-note-actions").css "visibility", "visible"
       ), ->
         $(@).find(".my-stream-note-actions").css "visibility", "hidden"
-update_note = ->  
+update_note = ->
   note_id = $("#editModal #save-data").attr("note-id")
   note_content = $("#editModal .my-content-textarea-editor").val()
   gadget.getContract("ischool.notebook").send
@@ -1523,15 +1523,15 @@ update_note = ->
             <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>
           </div>
         """
-        $("#editModal #save-data").show()
+        $("#editModal #save-data").button "reset"
       else
         $(".my-stream-item[note-id='" + note_id + "'] .my-stream-note-text").html note_content
-        $(".my-stream-item[note-id='" + note_id + "']").effect "pulsate", {}, 500, ->          
+        $(".my-stream-item[note-id='" + note_id + "']").effect "pulsate", {}, 500, ->
           $(".my-stream-item[note-id='" + note_id + "'] .my-update-action").attr "note-content", note_content
           $(".my-stream-item[note-id='" + note_id + "'] .my-delete-action").attr "note-content", note_content
 
         $("#editModal").modal "hide"
-delete_note = ->  
+delete_note = ->
   note_id = $("#editModal #save-data").attr("note-id")
   gadget.getContract("ischool.notebook").send
     service: "notebook.DeleteNote"
@@ -1544,7 +1544,7 @@ delete_note = ->
             <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>
           </div>
         """
-        $("#editModal #save-data").show()
+        $("#editModal #save-data").button "reset"
       else
         $(".my-stream-item[note-id='" + note_id + "']").effect "drop", {}, 500, ->
           $(".my-stream-item[note-id='" + note_id + "']").detach()
@@ -1574,13 +1574,13 @@ get_message_about_one_student = (uid) ->
                 <div class='my-stram-item-content my-stream-message-item'>
                   <div class='my-stream-message-content'>
                     <div class='my-stream-message-text'>#{@Content}</div>
-                    <div class='my-stream-message-row'>                      
+                    <div class='my-stream-message-row'>
                       <span class='btn-group my-stream-message-actions'>
                         <a href='#' class='btn my-addnote-action' title='加入筆記本' message-id='#{@UID}' message-content='#{@Content.replace(/'/g, "")}'><i class='icon-plus'></i></a>
                         #{
                           if (global._myInfo[0].UserID is @Author)
-                            "<a href='#' class='btn my-delete-action' message-id='#{@UID}' title='刪除' message-content='#{@Content.replace(/'/g, "")}'><i class='icon-trash'></i></a>" 
-                          else 
+                            "<a href='#' class='btn my-delete-action' message-id='#{@UID}' title='刪除' message-content='#{@Content.replace(/'/g, "")}'><i class='icon-trash'></i></a>"
+                          else
                             ""
                         }
                       </span>
@@ -1605,7 +1605,7 @@ get_message_about_one_student = (uid) ->
             $("#editModal .my-content-textarea-editor").val $(@).attr("note-content")
             $("#editModal").modal "show"
 
-          $(".my-message-manager .my-delete-action").bind "click", ->       
+          $(".my-message-manager .my-delete-action").bind "click", ->
             $("#editModal #save-data")
               .attr("message-id", $(@).attr("message-id"))
               .attr("edit-target", "delete-message")
@@ -1633,7 +1633,7 @@ delete_message = () ->
             <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>
           </div>
         """
-        $("#editModal #save-data").show()
+        $("#editModal #save-data").button "reset"
       else
         $(".my-stream-item[message-id='" + message_id + "']").effect "drop", {}, 500, ->
           $(".my-stream-item[message-id='" + message_id + "']").detach()
@@ -1654,8 +1654,8 @@ add_note = () ->
             <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>
           </div>
         """
-        $("#editModal #save-data").show()
+        $("#editModal #save-data").button "reset"
       else
         get_notes response.Result.NewID  unless response.Result.NewID is 'undefined'
         $("#mainMsg").html "<div class='alert alert-success'><button class='close' data-dismiss='alert'>×</button><strong>加入成功!</strong></div>"
-        $("#editModal").modal "hide"    
+        $("#editModal").modal "hide"

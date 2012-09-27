@@ -1,132 +1,171 @@
 <Content>
 	<Contract Name="ischool.club.student" Enabled="True">
 	<Definition>
-	<Authentication Extends="auth.student" />
-</Definition>
+      <Authentication Extends="auth.student" />
+    </Definition>
 	<Package Name="_">
-		<Service Enabled="true" Name="GetAllClub">
+		<Service Enabled="true" Name="GetAllClubs">
 			<Definition Type="dbhelper">
-	<Action>Select</Action>
-	<SQLTemplate>
-		<![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
+        select @@FieldList
+        from $k12.clubrecord.shinmin left join $k12.scjoin.shinmin on $k12.clubrecord.shinmin.uid = cast($k12.scjoin.shinmin.ref_club_id as bigint)
+            left join student on cast($k12.scjoin.shinmin.ref_student_id as int) = student.id and student.status in (1, 2)
+            left join class on student.ref_class_id=class.id
+        where @@Condition            
+            and ($k12.clubrecord.shinmin."limit" IS NULL or $k12.clubrecord.shinmin."limit" <> 0 )
+            and ($k12.clubrecord.shinmin.gender_restrict IS NULL or $k12.clubrecord.shinmin.gender_restrict = '@@gender')
+            and ($k12.clubrecord.shinmin.dept_restrict = '<Department />' or $k12.clubrecord.shinmin.dept_restrict like '%<Dept>@@deptname</Dept>%')
+        group by $k12.clubrecord.shinmin.uid,club_name,school_year,semester,gender_restrict,grade1_limit,grade2_limit,grade3_limit,"limit",dept_restrict
+        ]]></SQLTemplate>
+          <ResponseRecordElement>Response/ClubRecord</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="ClubID" Mandatory="True" Source="ClubID" Target="$k12.clubrecord.shinmin.uid" />
+            <Field Alias="ClubName" Mandatory="True" Source="ClubName" Target="club_name" />
+            <Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="school_year" />
+            <Field Alias="Semester" Mandatory="True" Source="Semester" Target="semester" />
+            <Field Alias="GenderRestrict" Mandatory="True" Source="GenderRestrict" Target="gender_restrict" />
+            <Field Alias="DeptRestrict" Mandatory="True" OutputType="xml" Source="DeptRestrict" Target="dept_restrict" />
+            <Field Alias="Grade1Limit" Mandatory="True" Source="Grade1Limit" Target="grade1_limit" />
+            <Field Alias="Grade2Limit" Mandatory="True" Source="Grade2Limit" Target="grade2_limit" />
+            <Field Alias="Grade3Limit" Mandatory="True" Source="Grade3Limit" Target="grade3_limit" />
+            <Field Alias="Limit" Mandatory="True" Source="Limit" Target="&quot;limit&quot;" />
+            <Field Alias="TotalCount" Mandatory="True" Source="TotalCount" Target="count(student.id)" />
+            <Field Alias="GradeYear1Count" Mandatory="True" Source="GradeYear1Count" Target="sum(case class.grade_year when 1 then 1 else 0 end) " />
+            <Field Alias="GradeYear2Count" Mandatory="True" Source="GradeYear2Count" Target="sum(case class.grade_year when 2 then 1 else 0 end)" />
+            <Field Alias="GradeYear3Count" Mandatory="True" Source="GradeYear3Count" Target="sum(case class.grade_year when 3 then 1 else 0 end) " />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="">
+            <Condition Source="SchoolYear" Target="school_year" />
+            <Condition Source="Semester" Target="semester" />
+          </Conditions>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+          <InternalVariable>
+            <Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+          </InternalVariable>
+          <Preprocesses>
+            <Preprocess Name="GetMyInfo" Type="variable"><![CDATA[
+            select 
+                case s.gender when '1' then '男' else '女' end AS gender,
+                case when position(':' in d.name)>0 then substring(d.name from 0 for position(':' in d.name)) else d.name end AS deptname
+            from student s
+                join class c on c.id = s.ref_class_id
+                join dept d on d.id = c.ref_dept_id
+            where s.id = @@StudentID;
+            ]]></Preprocess>
+          </Preprocesses>
+        </Definition>
+		</Service>
+		<Service Enabled="true" Name="GetClubAttendNumber">
+			<Definition Type="dbhelper">
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
 		select @@FieldList
-		from $k12.clubrecord.shinmin join $k12.scjoin.shinmin on $k12.clubrecord.shinmin.uid = cast($k12.scjoin.shinmin.ref_club_id as bigint)
-			join student on cast($k12.scjoin.shinmin.ref_student_id as int) = student.id
-			join class on student.ref_class_id=class.id
+		from $k12.clubrecord.shinmin left join $k12.scjoin.shinmin on $k12.clubrecord.shinmin.uid = cast($k12.scjoin.shinmin.ref_club_id as bigint)
+			left join student on cast($k12.scjoin.shinmin.ref_student_id as int) = student.id and student.status in (1, 2)
+			left join class on student.ref_class_id=class.id
 		where @@Condition
-		group by $k12.clubrecord.shinmin.uid,club_name,school_year,semester,gender_restrict,grade1_limit,grade2_limit,grade3_limit,"limit",dept_restrict
-		]]>
-	</SQLTemplate>
-	<ResponseRecordElement>Response/ClubRecord</ResponseRecordElement>
-	<FieldList Name="FieldList" Source="Field">
-		<Field Alias="ClubID" Mandatory="True" Source="ClubID" Target="$k12.clubrecord.shinmin.uid" />
-		<Field Alias="ClubName" Mandatory="True" Source="ClubName" Target="club_name" />
-		<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="school_year" />
-		<Field Alias="Semester" Mandatory="True" Source="Semester" Target="semester" />
-		<Field Alias="GenderRestrict" Mandatory="True" Source="GenderRestrict" Target="gender_restrict" />
-		<Field Alias="DeptRestrict" Mandatory="True" OutputType="xml" Source="DeptRestrict" Target="dept_restrict" />
-		<Field Alias="Grade1Limit" Mandatory="True" Source="Grade1Limit" Target="grade1_limit" />
-		<Field Alias="Grade2Limit" Mandatory="True" Source="Grade2Limit" Target="grade2_limit" />
-		<Field Alias="Grade3Limit" Mandatory="True" Source="Grade3Limit" Target="grade3_limit" />
-		<Field Alias="Limit" Mandatory="True" Source="Limit" Target="&quot;limit&quot;" />
-		<Field Alias="TotalCount" Mandatory="True" Source="TotalCount" Target="count(*)" />
-		<Field Alias="GradeYear1Count" Mandatory="True" Source="GradeYear1Count" Target="sum(case class.grade_year when 1 then 1 else 0 end) " />
-		<Field Alias="GradeYear2Count" Mandatory="True" Source="GradeYear2Count" Target="sum(case class.grade_year when 2 then 1 else 0 end)" />
-		<Field Alias="GradeYear3Count" Mandatory="True" Source="GradeYear3Count" Target="sum(case class.grade_year when 3 then 1 else 0 end) " />
-	</FieldList>
-	<Conditions Name="Condition" Required="False" Source="">
-		<Condition Source="SchoolYear" Target="school_year" />
-		<Condition Source="Semester" Target="semester" />
-		<Condition Source="ClubID" Target="$k12.clubrecord.shinmin.uid" />
-	</Conditions>
-	<Orders Name="Order" Source="Order" />
-	<Pagination Allow="True" />
-</Definition>
+		group by $k12.clubrecord.shinmin.uid,grade1_limit,grade2_limit,grade3_limit,"limit"
+		]]></SQLTemplate>
+          <ResponseRecordElement>Response/ClubRecord</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="ClubID" Mandatory="True" Source="ClubID" Target="$k12.clubrecord.shinmin.uid" />
+            <Field Alias="TotalCount" Mandatory="True" Source="TotalCount" Target="count(student.id)" />
+            <Field Alias="GradeYear1Count" Mandatory="True" Source="GradeYear1Count" Target="sum(case class.grade_year when 1 then 1 else 0 end) " />
+            <Field Alias="GradeYear2Count" Mandatory="True" Source="GradeYear2Count" Target="sum(case class.grade_year when 2 then 1 else 0 end)" />
+            <Field Alias="GradeYear3Count" Mandatory="True" Source="GradeYear3Count" Target="sum(case class.grade_year when 3 then 1 else 0 end) " />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="">
+            <Condition Required="true" Source="ClubID" Target="$k12.clubrecord.shinmin.uid" />
+          </Conditions>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetClubInfo">
 			<Definition Type="dbhelper">
-	<Action>Select</Action>
-	<SQLTemplate>
-		<![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
 		SELECT @@FieldList FROM $k12.clubrecord.shinmin
-		Left join teacher on teacher.id = cast(ref_teacher_id as bigint)
+		Left join teacher t1 on t1.id = cast(ref_teacher_id as bigint) 
+		Left join teacher t2 on t2.id = cast(ref_teacher_id_2 as bigint)
+		Left join teacher t3 on t3.id = cast(ref_teacher_id_3 as bigint)
 		Left join student s1 on s1.id = cast(president as bigint)
 		Left join student s2 on s2.id = cast(vice_president as bigint)
 		WHERE @@Condition @@Order		
-		]]>
-	</SQLTemplate>
-	<ResponseRecordElement>Response/ClubRecord</ResponseRecordElement>
-	<FieldList Name="FieldList" Source="Field">
-		<Field Alias="ClubID" Mandatory="True" Source="ClubID" Target="uid" />
-		<Field Alias="About" Mandatory="True" Source="About" Target="about" />
-		<Field Alias="ClubCategory" Mandatory="True" Source="ClubCategory" Target="club_category" />
-		<Field Alias="ClubName" Mandatory="True" Source="ClubName" Target="club_name" />
-		<Field Alias="ClubNumber" Mandatory="True" Source="ClubNumber" Target="club_number" />
-		<Field Alias="DeptRestrict" Mandatory="True" OutputType="xml" Source="DeptRestrict" Target="dept_restrict" />
-		<Field Alias="GenderRestrict" Mandatory="True" Source="GenderRestrict" Target="gender_restrict" />
-		<Field Alias="Grade1Limit" Mandatory="True" Source="Grade1Limit" Target="grade1_limit" />
-		<Field Alias="Grade2Limit" Mandatory="True" Source="Grade2Limit" Target="grade2_limit" />
-		<Field Alias="Grade3Limit" Mandatory="True" Source="Grade3Limit" Target="grade3_limit" />
-		<Field Alias="Limit" Mandatory="True" Source="Limit" Target="&quot;limit&quot;" />
-		<Field Alias="Location" Mandatory="True" Source="Location" Target="location" />
-		<Field Alias="Photo1" Mandatory="True" Source="Photo1" Target="photo1" />
-		<Field Alias="Photo2" Mandatory="True" Source="Photo2" Target="photo2" />
-		<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="school_year" />
-		<Field Alias="Semester" Mandatory="True" Source="Semester" Target="semester" />
-		<Field Alias="TeacherName" Mandatory="True" Source="TeacherName" Target="teacher.teacher_name" />
-		<Field Alias="PresidentName" Mandatory="True" Source="PresidentName" Target="s1.name" />
-		<Field Alias="VicePresidentName" Mandatory="True" Source="VicePresidentName" Target="s2.name" />
-	</FieldList>
-	<Conditions Name="Condition" Required="False" Source="">
-		<Condition Required="true" Source="ID" Target="uid" />
-	</Conditions>
-	<Orders Name="Order" Source="Order" />
-	<Pagination Allow="True" />
-</Definition>
+		]]></SQLTemplate>
+          <ResponseRecordElement>Response/ClubRecord</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="ClubID" Mandatory="True" Source="ClubID" Target="uid" />
+            <Field Alias="About" Mandatory="True" Source="About" Target="about" />
+            <Field Alias="ClubCategory" Mandatory="True" Source="ClubCategory" Target="club_category" />
+            <Field Alias="ClubName" Mandatory="True" Source="ClubName" Target="club_name" />
+            <Field Alias="ClubNumber" Mandatory="True" Source="ClubNumber" Target="club_number" />
+            <Field Alias="DeptRestrict" Mandatory="True" OutputType="xml" Source="DeptRestrict" Target="dept_restrict" />
+            <Field Alias="GenderRestrict" Mandatory="True" Source="GenderRestrict" Target="gender_restrict" />
+            <Field Alias="Grade1Limit" Mandatory="True" Source="Grade1Limit" Target="grade1_limit" />
+            <Field Alias="Grade2Limit" Mandatory="True" Source="Grade2Limit" Target="grade2_limit" />
+            <Field Alias="Grade3Limit" Mandatory="True" Source="Grade3Limit" Target="grade3_limit" />
+            <Field Alias="Limit" Mandatory="True" Source="Limit" Target="&quot;limit&quot;" />
+            <Field Alias="Location" Mandatory="True" Source="Location" Target="location" />
+            <Field Alias="Photo1" Mandatory="True" Source="Photo1" Target="photo1" />
+            <Field Alias="Photo2" Mandatory="True" Source="Photo2" Target="photo2" />
+            <Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="school_year" />
+            <Field Alias="Semester" Mandatory="True" Source="Semester" Target="semester" />
+            <Field Alias="TeacherName1" Mandatory="True" Source="TeacherName1" Target="t1.teacher_name" />
+            <Field Alias="TeacherName2" Mandatory="True" Source="TeacherName2" Target="t2.teacher_name" />
+            <Field Alias="TeacherName3" Mandatory="True" Source="TeacherName3" Target="t3.teacher_name" />
+            <Field Alias="PresidentName" Mandatory="True" Source="PresidentName" Target="s1.name" />
+            <Field Alias="VicePresidentName" Mandatory="True" Source="VicePresidentName" Target="s2.name" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="">
+            <Condition Required="true" Source="ClubID" Target="uid" />
+          </Conditions>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetCurrentSemester">
 			<Definition Type="dbhelper">
-	<Action>Select</Action>
-	<SQLTemplate>
-		<![CDATA[SELECT @@FieldList
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[SELECT @@FieldList
 FROM list
-WHERE name='系統設定']]>
-	</SQLTemplate>
-	<ResponseRecordElement />
-	<FieldList Name="FieldList" Source="Field">
-		<Field Alias="Result" Mandatory="True" OutputType="Xml" Source="Content" Target="content" />
-	</FieldList>
-	<Pagination Allow="True" />
-</Definition>
+WHERE name='系統設定']]></SQLTemplate>
+          <ResponseRecordElement />
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="Result" Mandatory="True" OutputType="Xml" Source="Content" Target="content" />
+          </FieldList>
+          <Pagination Allow="True" />
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetMyBaseInfo">
 			<Definition Type="dbhelper">
-	<Action>Select</Action>
-	<SQLTemplate>
-		<![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
 		SELECT @@FieldList FROM student 
 		Left join class on class.id = student.ref_class_id
 		Left join dept on dept.id = class.ref_dept_id
 		WHERE @@Condition @@Order
-		]]>
-	</SQLTemplate>
-	<ResponseRecordElement>Response/Student</ResponseRecordElement>
-	<FieldList Name="FieldList" Source="Field">
-		<Field Alias="StudentIID" Mandatory="True" Source="StudentIID" Target="student.id" />
-		<Field Alias="Name" Mandatory="True" Source="Name" Target="student.name" />
-		<Field Alias="Gender" Mandatory="True" Source="Gender" Target="(case student.gender when '1' then '男' else '女' end)" />
-		<Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="class.grade_year" />
-		<Field Alias="DeptName" Mandatory="True" Source="DeptName" Target="dept.name" />
-	</FieldList>
-	<Conditions Name="Condition" Required="False" Source="">
-		<Condition Required="True" Source="StudentID" SourceType="Variable" Target="student.id" />
-	</Conditions>
-	<Orders Name="Order" Source="Order" />
-	<Pagination Allow="True" />
-	<InternalVariable>
-		<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
-	</InternalVariable>
-</Definition>
+		]]></SQLTemplate>
+          <ResponseRecordElement>Response/Student</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="student.id" />
+            <Field Alias="Name" Mandatory="True" Source="Name" Target="student.name" />
+            <Field Alias="Gender" Mandatory="True" Source="Gender" Target="(case student.gender when '1' then '男' else '女' end)" />
+            <Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="class.grade_year" />
+            <Field Alias="DeptName" Mandatory="True" Source="DeptName" Target="dept.name" />
+            <Field Alias="SemsHistory" Mandatory="True" OutputType="xml" Source="SemsHistory" Target="student.sems_history" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="">
+            <Condition Required="True" Source="StudentID" SourceType="Variable" Target="student.id" />
+          </Conditions>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+          <InternalVariable>
+            <Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+          </InternalVariable>
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetMyClub">
 			<Definition Type="dbhelper">
@@ -134,28 +173,53 @@ WHERE name='系統設定']]>
 	<SQLTemplate>
 		<![CDATA[
 		SELECT @@FieldList
-		FROM $k12.scjoin.shinmin a
-			Left join $k12.clubrecord.shinmin b on b.uid = cast(a.ref_club_id as bigint)
-			Left join student on student.id = cast(a.ref_student_id as bigint)
-		WHERE @@Condition
+		from (
+			select a.ref_student_id, a.ref_club_id, a.lock, a.aas_score, a.ar_score, a.far_score, a.pa_score
+				,b.school_year, b.semester, b.club_name, b.president, b.vice_president
+				,t1.teacher_name
+				, (CASE WHEN (cast(b.president as integer) = s.id) THEN '社長' ELSE '' END)
+					|| ',' || (CASE WHEN (cast(b.vice_president as integer) = s.id) THEN '副社長' ELSE '' END)
+					|| ',' || (CASE WHEN (ca.cadre_name1 is null) THEN '' ELSE ca.cadre_name1 END) as my_cadre_name
+				FROM $k12.scjoin.shinmin a
+					join $k12.clubrecord.shinmin b on b.uid = cast(a.ref_club_id as bigint)
+					join student s on s.id = cast(a.ref_student_id as bigint)
+					Left join teacher t1 on t1.id = cast(b.ref_teacher_id as bigint) 
+					Left join
+						(
+							SELECT ref_student_id, ref_club_id, array_to_string(array_agg(cadre_name), ',') as cadre_name1
+							FROM $k12.cadresrecord.shinmin
+							GROUP BY ref_student_id, ref_club_id
+						) ca on ca.ref_club_id=a.ref_club_id and ca.ref_student_id = a.ref_student_id
+				WHERE a.ref_student_id = '@@StudentID'
+			) aaa
+		FULL OUTER JOIN $k12.resultscore.shinmin rs on rs.ref_student_id = aaa.ref_student_id and rs.school_year = aaa.school_year and rs.semester = aaa.semester and rs.ref_club_id = aaa.ref_club_id
+		where rs.ref_student_id='@@StudentID' or aaa.ref_student_id = '@@StudentID' 
+		order by rs.school_year desc, rs.semester desc
 		]]>
 	</SQLTemplate>
 	<ResponseRecordElement>Response/Clubs</ResponseRecordElement>
 	<FieldList Name="FieldList" Source="Field">
-		<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="a.ref_student_id" />
-		<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="b.school_year" />
-		<Field Alias="Semester" Mandatory="True" Source="Semester" Target="b.semester" />
-		<Field Alias="ClubID" Mandatory="True" Source="ClubID" Target="a.ref_club_id" />
-		<Field Alias="AaasScore" Mandatory="True" Source="AaasScore" Target="a.aaas_score" />
-		<Field Alias="AasScore" Mandatory="True" Source="AasScore" Target="a.aas_score" />
-		<Field Alias="ArScore" Mandatory="True" Source="ArScore" Target="a.ar_score" />
-		<Field Alias="FarScore" Mandatory="True" Source="FarScore" Target="a.far_score" />
-		<Field Alias="PaScore" Mandatory="True" Source="PaScore" Target="a.pa_score" />
+		<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="aaa.ref_student_id" />
+		<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="aaa.school_year" />
+		<Field Alias="Semester" Mandatory="True" Source="Semester" Target="aaa.semester" />
+		<Field Alias="ClubID" Mandatory="True" Source="ClubID" Target="aaa.ref_club_id" />
+		<Field Alias="ClubName" Mandatory="True" Source="ClubName" Target="aaa.club_name" />
+		<Field Alias="TeacherName1" Mandatory="True" Source="TeacherName1" Target="aaa.teacher_name" />
+		<Field Alias="Lock" Mandatory="True" Source="Lock" Target="(case aaa.lock when 't' then '是' else '否' end)" />
+		<Field Alias="AasScore" Mandatory="True" Source="AasScore" Target="aaa.aas_score" />
+		<Field Alias="ArScore" Mandatory="True" Source="ArScore" Target="aaa.ar_score" />
+		<Field Alias="FarScore" Mandatory="True" Source="FarScore" Target="aaa.far_score" />
+		<Field Alias="PaScore" Mandatory="True" Source="PaScore" Target="aaa.pa_score" />
+		<Field Alias="CadreName" Mandatory="True" Source="CadreName" Target="aaa.my_cadre_name" />
+		<Field Alias="ResultScore" Mandatory="True" Source="ResultScore" Target="rs.result_score" />
+		<Field Alias="RSClubID" Mandatory="True" Source="RSClubID" Target="rs.ref_club_id" />
+		<Field Alias="RSClubName" Mandatory="True" Source="RSClubName" Target="rs.club_name" />
+		<Field Alias="RSSchoolYear" Mandatory="True" Source="RSSchoolYear" Target="rs.school_year" />
+		<Field Alias="RSSemester" Mandatory="True" Source="RSSemester" Target="rs.semester" />
+		<Field Alias="RSCadreName" Mandatory="True" Source="RSCadreName" Target="rs.cadre_name" />
 	</FieldList>
 	<Conditions Name="Condition" Required="False" Source="">
-		<Condition Required="True" Source="StudentID" SourceType="Variable" Target="a.ref_student_id" />
-		<Condition Source="SchoolYear" Target="b.school_year" />
-		<Condition Source="Semester" Target="b.semester" />
+
 	</Conditions>
 	<Orders Name="Order" Source="Order" />
 	<Pagination Allow="True" />
@@ -166,53 +230,365 @@ WHERE name='系統設定']]>
 		</Service>
 		<Service Enabled="true" Name="GetOpeningHours">
 			<Definition Type="dbhelper">
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[SELECT @@FieldList FROM $k12.dtclub.shinmin WHERE @@Condition @@Order]]></SQLTemplate>
+          <ResponseRecordElement>Response/OpeningHours</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="Gradeyear" Mandatory="True" Source="Gradeyear" Target="gradeyear" />
+            <Field Alias="Startdate" Mandatory="True" OutputConverter="datetime" Source="Startdate" Target="startdate" />
+            <Field Alias="Enddate" Mandatory="True" OutputConverter="datetime" Source="Enddate" Target="enddate" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="">
+            <Condition Source="GradeYear" Target="gradeyear" />
+          </Conditions>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+        </Definition>
+		</Service>
+		<Service Enabled="true" Name="GetWeight">
+			<Definition Type="dbhelper">
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[SELECT @@FieldList FROM $k12.weightproportion.shinmin WHERE @@Condition order by uid limit 1]]></SQLTemplate>
+          <ResponseRecordElement>Response/Weight</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="AasWeight" Mandatory="True" Source="AasWeight" Target="aas_weight" />
+            <Field Alias="ArWeight" Mandatory="True" Source="ArWeight" Target="ar_weight" />
+            <Field Alias="FarWeight" Mandatory="True" Source="FarWeight" Target="far_weight" />
+            <Field Alias="PaWeight" Mandatory="True" Source="PaWeight" Target="pa_weight" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition" />
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+        </Definition>
+		</Service>
+		<Service Enabled="true" Name="RemoveClub">
+			<Definition Type="dbhelper">
+          <Action>Delete</Action>
+          <SQLTemplate><![CDATA[DELETE FROM $k12.scjoin.shinmin WHERE @@Condition]]></SQLTemplate>
+          <RequestRecordElement>SCJoin</RequestRecordElement>
+          <Conditions Name="Condition" Required="True" Source="">
+            <Condition Comparer="=" EmptyReplacement="" InputConverter="" Quote="True" Required="True" Source="ClubID" SourceType="Request" Target="ref_club_id" />
+            <Condition Comparer="=" EmptyReplacement="" InputConverter="" Quote="True" Required="False" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
+          </Conditions>
+          <InternalVariable>
+            <Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+          </InternalVariable>
+          <Preprocesses>
+            <Preprocess InvalidMessage="已過開放選社時間" Name="validDate" Type="validate"><![CDATA[
+			select count(*)>0 from (
+				select * from $k12.dtclub.shinmin where gradeyear=(
+					select c.grade_year From student s
+					join class c on c.id = s.ref_class_id
+					where s.id='@@StudentID')) ss
+			where ss.startdate<=Now() and ss.enddate>=Now()
+			]]></Preprocess>
+          </Preprocesses>
+        </Definition>
+		</Service>
+		<Service Enabled="true" Name="SetMyClub">
+			<Definition Type="dbhelper">
+          <Action>Insert</Action>
+          <SQLTemplate><![CDATA[INSERT INTO $k12.scjoin.shinmin @@FieldList]]></SQLTemplate>
+          <RequestRecordElement>SCJoin</RequestRecordElement>
+          <FieldList Name="FieldList" Source="">
+            <Field AutoNumber="True" InputType="Element" Quote="False" Required="False" Source="Uid" SourceType="Request" Target="uid" />
+            <Field InputType="Element" Quote="True" Required="True" Source="ClubID" SourceType="Request" Target="ref_club_id" />
+            <Field InputType="Element" Quote="True" Required="True" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
+          </FieldList>
+          <InternalVariable>
+            <Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+            <Variable Key="SCJoin/ClubID" Name="TmpClubID" Source="Request" />
+          </InternalVariable>
+          <Preprocesses>
+            <Preprocess InvalidMessage="已過開放選社時間" Name="validDate" Type="validate"><![CDATA[
+			select count(*)>0 from (
+				select * from $k12.dtclub.shinmin where gradeyear=(
+					select c.grade_year From student s
+					join class c on c.id = s.ref_class_id
+					where s.id='@@StudentID')) ss
+			where ss.startdate<=Now() and ss.enddate>=Now()
+			]]></Preprocess>
+            <Preprocess Name="GetMyInfo" Type="variable"><![CDATA[
+			select
+				'grade' || c.grade_year ||'_limit' as tmp_gradelimit, 
+				'g'||c.grade_year as tmp_gradecount
+			from student s
+				join class c on c.id = s.ref_class_id
+			where s.id = @@StudentID;
+			]]></Preprocess>
+            <Preprocess InvalidMessage="社團已額滿" Name="validDate" Type="validate"><![CDATA[
+			select
+				count(*) > 0
+			from (		
+					select
+						case when grade1_limit Is NULL then -1 else grade1_limit end AS grade1_limit,
+						case when grade2_limit Is NULL then -1 else grade2_limit end AS grade2_limit,
+						case when grade3_limit Is NULL then -1 else grade3_limit end AS grade3_limit,
+						case when "limit" Is NULL then -1 else "limit" end AS totallimit,
+						sum(case class.grade_year when 1 then 1 else 0 end) AS g1,
+						sum(case class.grade_year when 2 then 1 else 0 end) AS g2,
+						sum(case class.grade_year when 3 then 1 else 0 end) AS g3,
+						count(student.id) AS counts
+					from $k12.clubrecord.shinmin left join $k12.scjoin.shinmin on $k12.clubrecord.shinmin.uid = cast($k12.scjoin.shinmin.ref_club_id as bigint)
+						left join student on cast($k12.scjoin.shinmin.ref_student_id as int) = student.id
+						left join class on student.ref_class_id=class.id
+					where $k12.clubrecord.shinmin.uid='@@TmpClubID'
+						group by $k12.clubrecord.shinmin.uid,grade1_limit,grade2_limit,grade3_limit,"limit"
+				) cc
+			where
+				(totallimit=-1 or totallimit > counts)
+				and (@@tmp_gradelimit=-1 or @@tmp_gradelimit > @@tmp_gradecount)					
+			]]></Preprocess>
+            <Preprocess Name="GetSemester" Type="variable"><![CDATA[
+			Select (xpath_string(content, '/SystemConfig/DefaultSchoolYear')) as tmp_schoolyear, 
+					   (xpath_string(content, '/SystemConfig/DefaultSemester')) as tmp_semester
+			FROM list
+			WHERE name='系統設定'
+			]]></Preprocess>
+            <Preprocess Name="RemoveProcess" Type="update"><![CDATA[
+			delete from  $k12.scjoin.shinmin a where a.ref_student_id = '@@StudentID'
+			and cast(a.ref_club_id as int) in (select uid from $k12.clubrecord.shinmin b where b.school_year = '@@tmp_schoolyear' and b.semester = '@@tmp_semester')
+		]]></Preprocess>
+          </Preprocesses>
+        </Definition>
+		</Service>
+	</Package>
+</Contract>
+	<Contract Name="ischool.club.teacher" Enabled="True">
+	<Definition>
+	<Authentication Extends="auth.teacher" />
+</Definition>
+	<Package Name="_">
+		<Service Enabled="true" Name="GetClassStudent">
+			<Definition Type="dbhelper">
 	<Action>Select</Action>
 	<SQLTemplate>
-		<![CDATA[SELECT @@FieldList FROM $k12.dtclub.shinmin WHERE @@Condition @@Order]]>
+		<![CDATA[
+		SELECT @@FieldList
+		FROM class c
+			join student s on s.ref_class_id = c.id and s.status in (1, 2)
+			left join $k12.scjoin.shinmin sc on cast(sc.ref_student_id as integer) = s.id
+			left join $k12.clubrecord.shinmin club on club.uid = cast(sc.ref_club_id as integer)
+			left join
+				(
+					SELECT ref_student_id, ref_club_id, array_to_string(array_agg(cadre_name), ',') as cadre_name1
+					FROM $k12.cadresrecord.shinmin
+					GROUP BY ref_student_id, ref_club_id
+				) ca on cast(ca.ref_student_id as integer) = s.id and cast(ca.ref_club_id as integer) = club.uid
+			left join $k12.resultscore.shinmin  rs on cast(rs.ref_student_id as integer) = s.id and cast(rs.ref_club_id as integer) = club.uid and rs.school_year = 100 and rs.semester = 2 
+		WHERE @@Condition
+			and c.status=1
+		order by c.id, s.seat_no, club.school_year desc, club.semester desc
+		]]>
 	</SQLTemplate>
-	<ResponseRecordElement>Response/OpeningHours</ResponseRecordElement>
-	<FieldList Name="FieldList" Source="Field">
-		<Field Alias="Gradeyear" Mandatory="True" Source="Gradeyear" Target="gradeyear" />
-		<Field Alias="Startdate" Mandatory="True" OutputConverter="datetime" Source="Startdate" Target="startdate" />
-		<Field Alias="Enddate" Mandatory="True" OutputConverter="datetime" Source="Enddate" Target="enddate" />
+	<ResponseRecordElement>Response/Students</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field Alias="ClassID" Mandatory="True" Source="ClassID" Target="c.id" />
+		<Field Alias="ClassName" Mandatory="True" Source="ClassName" Target="c.class_name" />
+		<Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="c.grade_year" />
+		<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="s.id" />
+		<Field Alias="StudentName" Mandatory="True" Source="StudentName" Target="s.name" />
+		<Field Alias="StudentNumber" Mandatory="True" Source="StudentNumber" Target="s.student_number" />
+		<Field Alias="SeatNo" Mandatory="True" Source="SeatNo" Target="s.seat_no" />
+		<Field Alias="SemsHistory" Mandatory="True" OutputType="xml" Source="SemsHistory" Target="s.sems_history" />
+		<Field Alias="PaScore" Mandatory="True" Source="PaScore" Target="sc.pa_score" />
+		<Field Alias="ArScore" Mandatory="True" Source="ArScore" Target="sc.ar_score" />
+		<Field Alias="FarScore" Mandatory="True" Source="FarScore" Target="sc.far_score" />
+		<Field Alias="AasScore" Mandatory="True" Source="AasScore" Target="sc.aas_Score" />
+		<Field Alias="SCUID" Mandatory="True" Source="SCUID" Target="sc.uid" />
+		<Field Alias="ClubID" Mandatory="True" Source="ClubID" Target="club.uid" />
+		<Field Alias="ClubName" Mandatory="True" Source="ClubName" Target="club.club_name" />
+		<Field Alias="ClubSchoolYear" Mandatory="True" Source="ClubSchoolYear" Target="club.school_year" />
+		<Field Alias="ClubSemester" Mandatory="True" Source="ClubSemester" Target="club.semester" />
+		<Field Alias="CadreName" Mandatory="True" Source="CadreName" Target=" (CASE WHEN (cast(club.president as integer) = s.id) THEN '社長' ELSE '' END)&#xD;&#xA;    || ',' || (CASE WHEN (cast(club.vice_president as integer) = s.id) THEN '副社長' ELSE '' END)&#xD;&#xA;    || ',' || (CASE WHEN (ca.cadre_name1 is null) THEN '' ELSE ca.cadre_name1 END)" />
+		<Field Alias="ResultScore" Mandatory="True" Source="ResultScore" Target="rs.result_score" />
 	</FieldList>
 	<Conditions Name="Condition" Required="False" Source="">
-		<Condition Source="GradeYear" Target="gradeyear" />
+		<Condition Required="True" Source="TeacherID" SourceType="Variable" Target="c.ref_teacher_id" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+	</InternalVariable>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetClubStudent">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
+		select  @@FieldList
+        from $k12.clubrecord.shinmin club left join $k12.scjoin.shinmin sc on cast(sc.ref_club_id as integer) = club.uid
+        left join student s on s.id = cast(sc.ref_student_id as integer) and s.status in (1, 2)
+        left join class c on c.id = s.ref_class_id
+		left join $k12.resultscore.shinmin rs on cast(rs.ref_student_id as integer) = s.id and cast(rs.ref_club_id as integer) = club.uid and rs.school_year = '@@tmp_schoolyear' and rs.semester = '@@tmp_semester'
+        where @@Condition
+        and club.school_year = '@@tmp_schoolyear' and club.semester = '@@tmp_semester'
+        order by s.student_number
+	]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Response/Students</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field Alias="ClubID" Mandatory="True" Source="ClubID" Target="club.uid" />
+		<Field Alias="ClubName" Mandatory="True" Source="ClubName" Target="club.club_name" />
+		<Field Alias="SCUID" Mandatory="True" Source="SCUID" Target="sc.uid" />
+		<Field Alias="PaScore" Mandatory="True" Source="PaScore" Target="sc.pa_score" />
+		<Field Alias="ArScore" Mandatory="True" Source="ArScore" Target="sc.ar_score" />
+		<Field Alias="FarScore" Mandatory="True" Source="FarScore" Target="sc.far_score" />
+		<Field Alias="AasScore" Mandatory="True" Source="AasScore" Target="sc.aas_Score" />
+		<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="s.id" />
+		<Field Alias="StudentName" Mandatory="True" Source="StudentName" Target="s.name" />
+		<Field Alias="StudentNumber" Mandatory="True" Source="StudentNumber" Target="s.student_number" />
+		<Field Alias="SeatNo" Mandatory="True" Source="SeatNo" Target="s.seat_no" />
+		<Field Alias="ClassName" Mandatory="True" Source="ClassName" Target="c.class_name" />
+		<Field Alias="ResultScore" Mandatory="True" Source="ResultScore" Target="rs.result_score" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="">
+		<Condition Required="True" Source="TeacherID" SourceType="Variable" Target="club.ref_teacher_id" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess Name="GetSemester" Type="variable">
+			<![CDATA[
+			Select (xpath_string(content, '/SystemConfig/DefaultSchoolYear')) as tmp_schoolyear, 
+			(xpath_string(content, '/SystemConfig/DefaultSemester')) as tmp_semester
+			FROM list
+			WHERE name='系統設定'
+			]]>
+		</Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetCurrentSemester">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[SELECT @@FieldList
+		FROM list
+		WHERE name='系統設定']]>
+	</SQLTemplate>
+	<ResponseRecordElement />
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="Result" Mandatory="True" OutputType="Xml" Source="Content" Target="content" />
+	</FieldList>
+	<Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetDTScore">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[SELECT @@FieldList FROM $k12.dtscore.shinmin WHERE @@Condition @@Order limit 1]]>
+	</SQLTemplate>
+	<ResponseRecordElement>DTScore</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="Start" Mandatory="True" Source="Start" Target="start" />
+		<Field Alias="End" Mandatory="True" Source="End" Target="&quot;end&quot;" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
 	</Conditions>
 	<Orders Name="Order" Source="Order" />
 	<Pagination Allow="True" />
 </Definition>
 		</Service>
-		<Service Enabled="true" Name="RemoveClub">
+		<Service Enabled="true" Name="GetNoClubResultScore">
 			<Definition Type="dbhelper">
-	<Action>Delete</Action>
+	<Action>Select</Action>
 	<SQLTemplate>
-		<![CDATA[DELETE FROM $k12.scjoin.shinmin WHERE @@Condition]]></SQLTemplate>
-	<RequestRecordElement>SCJoin</RequestRecordElement>
-	<Conditions Name="Condition" Required="True" Source="">
-		<Condition Comparer="=" EmptyReplacement="" InputConverter="" Quote="True" Required="True" Source="ClubID" SourceType="Request" Target="ref_club_id" />
-		<Condition Comparer="=" EmptyReplacement="" InputConverter="" Quote="True" Required="False" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
+		<![CDATA[
+		SELECT @@FieldList
+		FROM class c
+			join student s on s.ref_class_id = c.id and s.status in (1, 2)
+			join $k12.resultscore.shinmin rs on cast(rs.ref_student_id as integer) = s.id and (rs.ref_club_id = '' or rs.ref_club_id IS NULL)
+		WHERE @@Condition
+			and c.status=1
+		]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Response/ResultScore</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="ClassID" Mandatory="True" Source="ClassID" Target="c.id" />
+		<Field Alias="ClassName" Mandatory="True" Source="ClassName" Target="c.class_name" />
+		<Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="c.grade_year" />
+		<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="s.id" />
+		<Field Alias="StudentName" Mandatory="True" Source="StudentName" Target="s.name" />
+		<Field Alias="StudentNumber" Mandatory="True" Source="StudentNumber" Target="s.student_number" />
+		<Field Alias="SeatNo" Mandatory="True" Source="SeatNo" Target="s.seat_no" />
+		<Field Alias="SemsHistory" Mandatory="True" OutputType="xml" Source="SemsHistory" Target="s.sems_history" />
+		<Field Alias="ClubName" Mandatory="True" Source="ClubName" Target="rs.club_name" />
+		<Field Alias="ClubSchoolYear" Mandatory="True" Source="ClubSchoolYear" Target="rs.school_year" />
+		<Field Alias="ClubSemester" Mandatory="True" Source="ClubSemester" Target="rs.semester" />
+		<Field Alias="CadreName" Mandatory="True" Source="CadreName" Target="rs.cadre_name" />
+		<Field Alias="ResultScore" Mandatory="True" Source="ResultScore" Target="rs.result_score" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+		<Condition Required="True" Source="TeacherID" SourceType="Variable" Target="c.ref_teacher_id" />
 	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
 	<InternalVariable>
-		<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
 	</InternalVariable>
 </Definition>
 		</Service>
-		<Service Enabled="true" Name="SetMyClub">
+		<Service Enabled="true" Name="GetWeight">
 			<Definition Type="dbhelper">
-	<Action>Insert</Action>
+	<Action>Select</Action>
 	<SQLTemplate>
-		<![CDATA[INSERT INTO $k12.scjoin.shinmin @@FieldList]]>
-	</SQLTemplate>
-	<RequestRecordElement>SCJoin</RequestRecordElement>
-	<FieldList Name="FieldList" Source="">
-		<Field AutoNumber="True" InputType="Element" Quote="False" Required="False" Source="Uid" SourceType="Request" Target="uid" />
-		<Field InputType="Element" Quote="True" Required="True" Source="ClubID" SourceType="Request" Target="ref_club_id" />
-		<Field InputType="Element" Quote="True" Required="True" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
+		<![CDATA[SELECT @@FieldList FROM $k12.weightproportion.shinmin WHERE @@Condition order by uid limit 1]]></SQLTemplate>
+	<ResponseRecordElement>Response/Weight</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="AasWeight" Mandatory="True" Source="AasWeight" Target="aas_weight" />
+		<Field Alias="ArWeight" Mandatory="True" Source="ArWeight" Target="ar_weight" />
+		<Field Alias="FarWeight" Mandatory="True" Source="FarWeight" Target="far_weight" />
+		<Field Alias="PaWeight" Mandatory="True" Source="PaWeight" Target="pa_weight" />
 	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition" />
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="UpdateScore">
+			<Definition Type="dbhelper">
+	<Action>Update</Action>
+	<SQLTemplate>
+		<![CDATA[UPDATE $k12.scjoin.shinmin SET @@FieldList WHERE @@Condition]]>
+	</SQLTemplate>
+	<RequestRecordElement>Students</RequestRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field Source="LastUpdate" SourceType="Variable" Target="last_update" />
+		<Field Source="AasScore" Target="aas_score" />
+		<Field Source="ArScore" Target="ar_score" />
+		<Field Source="FarScore" Target="far_score" />
+		<Field Source="PaScore" Target="pa_score" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+		<Condition Required="True" Source="UID" Target="uid" />
+	</Conditions>
 	<InternalVariable>
-		<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+		<Variable Key="TeacherID" Name="TeacherID" Source="UserInfo" />
+		<Variable Name="LastUpdate" Source="Literal">now()</Variable>
+		<Variable Key="Students/Condition/UID" Name="UID" Source="Request" />
 	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="validDate" Type="validate">
+			<![CDATA[
+                               select count(*)>0 from $k12.clubrecord.shinmin
+								where uid = cast((select ref_club_id from $k12.scjoin.shinmin where uid = '@@UID') as integer)
+								and ref_teacher_id = '@@TeacherID' 
+                                ]]>
+		</Preprocess>
+		<Preprocess InvalidMessage="502" Name="validDate" Type="validate">
+			<![CDATA[
+                                select count(*)>0 from $k12.dtscore.shinmin 
+                                where start <= now() and "end" >= now()
+                                ]]>
+		</Preprocess>
+	</Preprocesses>
 </Definition>
 		</Service>
 	</Package>

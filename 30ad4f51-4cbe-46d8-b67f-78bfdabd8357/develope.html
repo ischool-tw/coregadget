@@ -6,7 +6,7 @@
   <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
   <script>
     init({
-      application: "dev.sh_d", //"http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_hs", //"dev.jh_kh",  
+      application: "dev.sh_d", //"http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_hs", //"dev.jh_kh",
       paramValues: {}
     });
   </script>
@@ -25,7 +25,7 @@
   <!--<script type="text/javascript">
 		$(document).ready(function () {
 			$('.tabbable li:eq(2) a').tab('show'); // Select third tab (0-indexed
-		});	
+		});
 	</script>-->
 </head>
 <body>
@@ -44,7 +44,7 @@
         <div id="errorMessage"></div>
       </div>
       <div class="modal-body"></div>
-      <div class="modal-footer"><a href="#" class="btn btn-success" id="save-data">儲存變更</a> <a href="#"
+      <div class="modal-footer"><button class="btn btn-success" id="save-data" autocomplete="off" data-loading-text="儲存中...">儲存變更</button> <a href="#"
         class="btn" data-dismiss="modal">離開</a> </div>
     </div>
     <div class="container-fluid">
@@ -62,7 +62,7 @@
                 <input id="filter-keyword" type="text" class="my-entry-search" value="" autocomplete="off"
                   placeholder="學生姓名...">
               </div>
-            </div>  
+            </div>
             <div class="accordion" id="student-list"></div>
           </div>
         </div>
@@ -186,7 +186,7 @@
               </div>
               <div class="tab-pane" id="behavior">
                 <div class="my-schoolyear-semester-widget" title="請選擇學年度學期">
-                  <div class="btn-group" data-toggle="buttons-radio">				
+                  <div class="btn-group" data-toggle="buttons-radio">
                   </div>
                 </div>
                 <div class="my-behavior-item well" id="morality">

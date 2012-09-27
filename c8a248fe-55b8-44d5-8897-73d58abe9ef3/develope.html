@@ -5,7 +5,7 @@
   <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
   <script>
     init({
-      application: "dev.sh_d", //"http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_kh", 
+      application: "dev.sh_d", //"http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_kh",
       paramValues: {}
     });
   </script>
@@ -18,19 +18,21 @@
   <script src="js/jquery.min.js"></script>
   <!--<script src="js/less.min.js"></script>-->
   <script src="js/bootstrap.js"></script>
-	<script src="js/parent.js"></script>
+  <script src="js/parent.js"></script>
 </head>
 <body>
   <div id="gadget">
     <div class="modal hide" id="editModal">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
+        <button class="close" data-dismiss="modal" type="button">×</button>
         <h3>Modal header</h3>
         <div id="errorMessage"></div>
       </div>
       <div class="modal-body"></div>
-      <div class="modal-footer"><a href="#" class="btn btn-success" id="save-data">儲存變更</a>
-        <a href="#" class="btn" data-dismiss="modal">離開</a> </div>
+      <div class="modal-footer">
+        <button class="btn btn-success" autocomplete="off" data-loading-text="儲存中..." id="save-data">儲存變更</button>
+        <a class="btn" data-dismiss="modal" href="#">離開</a>
+      </div>
     </div>
     <div class="container-fluid">
       <div class="row-fluid">
@@ -39,59 +41,36 @@
         </div>
       </div>
       <div class="row-fluid">
-<!--        <div class="span3" id="container-nav">
-          <div class="my-nav-widget" id="function-list">
-            <ul class="nav nav-tabs nav-stacked">
-              <li class="active">
-                <a href="#baseinfo" data-toggle="tab"><span>基本資料</span><i class="icon-chevron-right pull-right"></i></a>
-              </li>
-            </ul>
-          </div>
-        </div>-->
         <div class="span12" id="container-main">
-          <div class="tabbable tabs-below">
-            <ul class="nav nav-tabs">
-              <li class="active"><a href="#parentProfile" data-toggle="tab">家長個人資料</a> </li>
-              <li><a href="#childrenList" data-toggle="tab">已建立的親屬關係表</a> </li>
-              <li><a href="#setRelationship" data-toggle="tab">設定親屬帳號</a> </li>
-            </ul>
-            <div class="tab-content">
-              <div class="tab-pane active" id="parentProfile"></div>
-
-              <div class="tab-pane" id="childrenList"></div>  
-
-              <div class="tab-pane" id="setRelationship">
-                <form class="well my-well-deepcolor form-horizontal">
-                  <fieldset>
-                    <legend>設定帳號親屬關係</legend>
-                    <div class="control-group">
-                      <label class="control-label" for="ParentCode">您的家長代碼</label>
-                      <div class="controls">
-                        <input class="input-xlarge" id="ParentCode" type="text" placeholder="您的家長代碼">
-                        <span class="help-inline"></span>
-                      </div>
-                    </div>
-                    <div class="control-group">
-                      <label class="control-label" for="IDNumber">親屬身分證字號</label>
-                      <div class="controls">
-                        <input class="input-xlarge" id="IDNumber" type="text" maxlength="10" placeholder="親屬的身分證字號">
-                        <span class="help-inline"></span>
-                      </div>
-                    </div>
-                    <div class="control-group">
-                      <label class="control-label" for="Relationship">與您的親屬關係</label>
-                      <div class="controls">
-                        <input class="input-xlarge" id="Relationship" type="text" placeholder="您與親屬之間的關係">
-                        <span class="help-inline"></span>
-                      </div>
-                    </div>
-                    <div class="form-actions">
-                      <button class="btn btn-success" type="button" id="send">加入</button>
-                    </div>
-                  </fieldset>
-                </form>
-              </div>  
+          <div class="well" id="parentProfile">
+            <div class="my-label-title">
+              <a class="btn btn-success" data-toggle="modal" action-type="profile">
+                <i class="icon-edit icon-white"></i>
+                家長個人資料</a>
             </div>
+            <table class="table table-condensed table-striped">
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+          <div class="well" id="childrenList">
+            <div class="my-label-title">
+              <a class="btn btn-success" data-toggle="modal" action-type="relationship">
+                <i class="icon-edit icon-white"></i>
+                帳號親屬關係</a>
+            </div>
+            <table class="table table-condensed table-striped">
+              <thead>
+                <tr>
+                  <th>姓名</th>
+                  <th>班級</th>
+                  <th>座號</th>
+                  <th>關係</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

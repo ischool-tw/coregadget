@@ -42,7 +42,7 @@
               firstClassName = this.ClassName;
             }
           }
-          return items.push("<li>\n  <a href='#' student-index='" + index + "'>\n    <span class='my-seat-no label label-inverse my-label'>" + this.SeatNo + "</span>\n    <span class='my-student-name'>" + this.StudentName + "</span>								\n    <span class='my-student-number'>" + this.StudentNumber + "</span>\n    <i class='icon-chevron-right pull-right'></i>\n  </a>\n</li>");
+          return items.push("<li>\n  <a href='#' student-index='" + index + "'>\n    <span class='my-seat-no label label-inverse my-label'>" + this.SeatNo + "</span>\n    <span class='my-student-name'>" + this.StudentName + "</span>\n    <span class='my-student-number'>" + this.StudentNumber + "</span>\n    <i class='icon-chevron-right pull-right'></i>\n  </a>\n</li>");
         }
       });
       accordionHTML += items.join("");
@@ -156,11 +156,11 @@
       return $("#editModal #errorMessage").html("");
     });
     $("#editModal").on("show", function() {
-      return $("#editModal #save-data").show();
+      return $("#editModal #save-data").button("reset");
     });
     $("#editModal #save-data").click(function() {
       var edit_target;
-      $("#editModal #save-data").hide();
+      $("#editModal #save-data").button("loading");
       edit_target = $(this).attr("edit-target");
       switch (edit_target) {
         case "update-note":
@@ -181,7 +181,7 @@
         if ($(this).attr("edit-target") === "detail") {
           $("#editModal #save-data").attr("edit-target", "detail");
           $("#editModal .modal-header h3").html("編輯 - 基本資訊");
-          $("#editModal .modal-body").html("<form class='form-horizontal'>\n  <fieldset>\n    <div class='control-group'>\n      <label class='control-label' for='english-name'>英文姓名</label>\n      <div class='controls'>\n        <input type='text' class='input-large' id='english-name' value='" + ((_ref = global.student.EnglishName) != null ? _ref : "") + "'>\n      </div>\n    </div>\n    <div class='control-group'>\n      <label class='control-label'>入學照</label>\n      <div class='controls'>\n        <img id='update-photo-image' src='data:image/png;base64," + global.student.FreshmanPhoto + "' photo-base64='" + global.student.FreshmanPhoto + "'>\n						      <div>\n							      <input type='file' id='files' name='files[]'/>\n							      <br/>\n							      <span class='update-item-label'>僅支援 PNG (*.png) 與 JPEG (*.jpg) 格式</span>\n						      </div>\n      </div>\n    </div>              \n  </fieldset>\n</form>");
+          $("#editModal .modal-body").html("<form class='form-horizontal'>\n  <fieldset>\n    <div class='control-group'>\n      <label class='control-label' for='english-name'>英文姓名</label>\n      <div class='controls'>\n        <input type='text' class='input-large' id='english-name' value='" + ((_ref = global.student.EnglishName) != null ? _ref : "") + "'>\n      </div>\n    </div>\n    <div class='control-group'>\n      <label class='control-label'>入學照</label>\n      <div class='controls'>\n        <img id='update-photo-image' src='data:image/png;base64," + global.student.FreshmanPhoto + "' photo-base64='" + global.student.FreshmanPhoto + "'>\n						      <div>\n							      <input type='file' id='files' name='files[]'/>\n							      <br/>\n							      <span class='update-item-label'>僅支援 PNG (*.png) 與 JPEG (*.jpg) 格式</span>\n						      </div>\n      </div>\n    </div>\n  </fieldset>\n</form>");
           node = document.getElementById("files");
           if (node) {
             if (node.addEventListener) {
@@ -311,7 +311,7 @@
             schoolYear: response.Current.SchoolYear,
             semester: response.Current.Semester
           };
-          items = "				\n" + (global.semester === '2' ? "<button class='btn btn-large active' school-year='" + global.schoolYear + "' semester='2'>" + global.schoolYear + "2</button>" : "") + "\n<button class='btn btn-large' " + (global.semester === '2' ? '' : 'active') + " school-year='" + global.schoolYear + "' semester='1'>" + global.schoolYear + "1</button>\n<button class='btn btn-large' school-year='" + (global.schoolYear - 1) + "' semester='2'>" + (global.schoolYear - 1) + "2</button>\n<button class='btn btn-large' school-year='" + (global.schoolYear - 1) + "' semester='1'>" + (global.schoolYear - 1) + "1</button>\n<button class='btn btn-large' school-year='" + (global.schoolYear - 2) + "' semester='2'>" + (global.schoolYear - 2) + "2</button>\n<button class='btn btn-large' school-year='" + (global.schoolYear - 2) + "' semester='1'>" + (global.schoolYear - 2) + "1</button>";
+          items = "" + (global.semester === '2' ? "<button class='btn btn-large active' school-year='" + global.schoolYear + "' semester='2'>" + global.schoolYear + "2</button>" : "") + "\n<button class='btn btn-large' " + (global.semester === '2' ? '' : 'active') + " school-year='" + global.schoolYear + "' semester='1'>" + global.schoolYear + "1</button>\n<button class='btn btn-large' school-year='" + (global.schoolYear - 1) + "' semester='2'>" + (global.schoolYear - 1) + "2</button>\n<button class='btn btn-large' school-year='" + (global.schoolYear - 1) + "' semester='1'>" + (global.schoolYear - 1) + "1</button>\n<button class='btn btn-large' school-year='" + (global.schoolYear - 2) + "' semester='2'>" + (global.schoolYear - 2) + "2</button>\n<button class='btn btn-large' school-year='" + (global.schoolYear - 2) + "' semester='1'>" + (global.schoolYear - 2) + "1</button>";
           $("#academic .btn-group").html(items);
           $("#academic .btn-group button").click(function(e) {
             e.preventDefault();
@@ -368,7 +368,7 @@
                 }
                 accordionHTML += "<div class='accordion-group'>\n  <div class='accordion-heading'>\n    <a class='accordion-toggle' data-toggle='collapse' data-parent='#student-list' href='#collapse" + index + "'><i class='icon-user'></i>" + this.ClassName + "</a>\n  </div>\n  <div id='collapse" + index + "' class='accordion-body collapse " + (index === 0 ? 'in' : '') + "'>\n    <div class='accordion-inner'>\n      <ul class='nav nav-pills nav-stacked'>";
               }
-              items.push("<li " + (index === 0 ? " class='active'" : '') + ">\n  <a href='#' student-index='" + index + "'>\n    <span class='my-seat-no label label-inverse my-label'>" + this.SeatNo + "</span>\n    <span class='my-student-name'>" + this.StudentName + "</span>								\n    <span class='my-student-number'>" + this.StudentNumber + "</span>                  \n    <i class='icon-chevron-right pull-right'></i>\n  </a>\n</li>");
+              items.push("<li " + (index === 0 ? " class='active'" : '') + ">\n  <a href='#' student-index='" + index + "'>\n    <span class='my-seat-no label label-inverse my-label'>" + this.SeatNo + "</span>\n    <span class='my-student-name'>" + this.StudentName + "</span>\n    <span class='my-student-number'>" + this.StudentNumber + "</span>\n    <i class='icon-chevron-right pull-right'></i>\n  </a>\n</li>");
               if (index === 0) {
                 global.student = student;
                 setBaseInfo();
@@ -731,7 +731,7 @@
         result: function(response, error, xhr) {
           if (error != null) {
             $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>\n</div>");
-            return $("#editModal #save-data").show();
+            return $("#editModal #save-data").button("reset");
           } else {
             if (response.Result.ExecuteCount === "1") {
               if (edit_target === "detail") {
@@ -813,7 +813,7 @@
                   result: function(response, error, xhr) {
                     if (error != null) {
                       $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>\n</div>");
-                      return $("#editModal #save-data").show();
+                      return $("#editModal #save-data").button("reset");
                     } else {
                       if (response.Result.ExecuteCount === "1") {
                         if (edit_target === "instant-messaging") {
@@ -889,7 +889,7 @@
             if (response.Result.Note != null) {
               $(response.Result.Note).each(function() {
                 var stream_item;
-                stream_item = "<div class='my-stream-item' note-id='" + this.UID + "'>\n  <div class='my-stram-item-content my-stream-note-item'>\n    <div class='my-stream-note-content'>\n      <div class='my-stream-note-text'>" + this.Content + "</div>\n      <div class='my-stream-note-row'>                        \n        <span class='btn-group my-stream-note-actions'>\n          <a href='editModal' class='btn my-update-action' title='更新' data-toggle='modal' note-id='" + this.UID + "' note-content='" + (this.Content.replace(/'/g, "")) + "'><span><i class='icon-edit'></i></span></a>\n          <a href='editModal' class='btn my-delete-action' title='刪除' data-toggle='modal' note-id='" + this.UID + "' note-content='" + (this.Content.replace(/'/g, "")) + "'><span><i class='icon-trash'></i></span></a>\n        </span>\n        <span class='my-stream-note-timestamp'>" + (this.LastUpdate.substr(0, 16)) + "</span>\n      </div>\n    </div>\n  </div>\n</div>";
+                stream_item = "<div class='my-stream-item' note-id='" + this.UID + "'>\n  <div class='my-stram-item-content my-stream-note-item'>\n    <div class='my-stream-note-content'>\n      <div class='my-stream-note-text'>" + this.Content + "</div>\n      <div class='my-stream-note-row'>\n        <span class='btn-group my-stream-note-actions'>\n          <a href='editModal' class='btn my-update-action' title='更新' data-toggle='modal' note-id='" + this.UID + "' note-content='" + (this.Content.replace(/'/g, "")) + "'><span><i class='icon-edit'></i></span></a>\n          <a href='editModal' class='btn my-delete-action' title='刪除' data-toggle='modal' note-id='" + this.UID + "' note-content='" + (this.Content.replace(/'/g, "")) + "'><span><i class='icon-trash'></i></span></a>\n        </span>\n        <span class='my-stream-note-timestamp'>" + (this.LastUpdate.substr(0, 16)) + "</span>\n      </div>\n    </div>\n  </div>\n</div>";
                 if (uid == null) {
                   return $(stream_item).appendTo($(".my-notebook-manager .my-stream-items"));
                 } else {
@@ -932,7 +932,7 @@
       result: function(response, error, http) {
         if (error != null) {
           $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>\n</div>");
-          return $("#editModal #save-data").show();
+          return $("#editModal #save-data").button("reset");
         } else {
           $(".my-stream-item[note-id='" + note_id + "'] .my-stream-note-text").html(note_content);
           $(".my-stream-item[note-id='" + note_id + "']").effect("pulsate", {}, 500, function() {
@@ -954,7 +954,7 @@
       result: function(response, error, http) {
         if (error != null) {
           $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>\n</div>");
-          return $("#editModal #save-data").show();
+          return $("#editModal #save-data").button("reset");
         } else {
           $(".my-stream-item[note-id='" + note_id + "']").effect("drop", {}, 500, function() {
             return $(".my-stream-item[note-id='" + note_id + "']").detach();
@@ -981,7 +981,7 @@
           if (response.Result.Message != null) {
             $(response.Result.Message).each(function() {
               var stream_item;
-              stream_item = "<div class='my-stream-item' message-id='" + this.UID + "'>\n  <div class='my-stram-item-content my-stream-message-item'>\n    <div class='my-stream-message-content'>\n      <div class='my-stream-message-text'>" + this.Content + "</div>\n      <div class='my-stream-message-row'>                      \n        <span class='btn-group my-stream-message-actions'>\n          <a href='#' class='btn my-addnote-action' title='加入筆記本' message-id='" + this.UID + "' message-content='" + (this.Content.replace(/'/g, "")) + "'><i class='icon-plus'></i></a>\n          " + (global._myInfo[0].UserID === this.Author ? "<a href='#' class='btn my-delete-action' message-id='" + this.UID + "' title='刪除' message-content='" + (this.Content.replace(/'/g, "")) + "'><i class='icon-trash'></i></a>" : "") + "\n        </span>\n        <span class='my-stream-message-timestamp'>" + (this.CreateTime.substr(0, 16)) + "</span>\n      </div>\n    </div>\n  </div>\n</div>";
+              stream_item = "<div class='my-stream-item' message-id='" + this.UID + "'>\n  <div class='my-stram-item-content my-stream-message-item'>\n    <div class='my-stream-message-content'>\n      <div class='my-stream-message-text'>" + this.Content + "</div>\n      <div class='my-stream-message-row'>\n        <span class='btn-group my-stream-message-actions'>\n          <a href='#' class='btn my-addnote-action' title='加入筆記本' message-id='" + this.UID + "' message-content='" + (this.Content.replace(/'/g, "")) + "'><i class='icon-plus'></i></a>\n          " + (global._myInfo[0].UserID === this.Author ? "<a href='#' class='btn my-delete-action' message-id='" + this.UID + "' title='刪除' message-content='" + (this.Content.replace(/'/g, "")) + "'><i class='icon-trash'></i></a>" : "") + "\n        </span>\n        <span class='my-stream-message-timestamp'>" + (this.CreateTime.substr(0, 16)) + "</span>\n      </div>\n    </div>\n  </div>\n</div>";
               if (uid == null) {
                 return $(stream_item).appendTo($(".my-message-manager .my-stream-items"));
               } else {
@@ -1022,7 +1022,7 @@
       result: function(response, error, http) {
         if (error != null) {
           $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>\n</div>");
-          return $("#editModal #save-data").show();
+          return $("#editModal #save-data").button("reset");
         } else {
           $(".my-stream-item[message-id='" + message_id + "']").effect("drop", {}, 500, function() {
             return $(".my-stream-item[message-id='" + message_id + "']").detach();
@@ -1042,7 +1042,7 @@
       result: function(response, error, http) {
         if (error != null) {
           $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>\n</div>");
-          return $("#editModal #save-data").show();
+          return $("#editModal #save-data").button("reset");
         } else {
           if (response.Result.NewID !== 'undefined') {
             get_notes(response.Result.NewID);

@@ -125,103 +125,133 @@
 		}
 	};
 
+
+	/*
+	 * 取得某天當周的星期幾是幾月幾日
+	 * Properties：某日期, 要取得的星期(1~7，7代表星期日), 回傳的樣式
+	 * 樣式0: 不處理
+	 * 樣式1: yyyy/m/d 不補0
+	 * 樣式2: yyyy/mm/dd 補0
+	 * reutrn: 日期
+	*/
+	$.funGetWeekday = function(date1, x, style) {
+		var ret;
+
+		// 現在日期
+		var myDate = new Date(date1);
+
+		// 現在是星期幾，日為0、一為1、二為2、三為3、四為4、五為5、六為6
+		var myDay = myDate.getDay();
+
+		// 設成日為7
+		if (myDay == 0) {
+			myDay = 7;
+		}
+
+		var myStartDate = new Date(date1);
+		// 將日期變成目前禮拜的星期一，再加減日期
+		myStartDate.setDate(myStartDate.getDate() + (0 - (myDay - 1)) + (x - 1));
+
+		switch (style) {
+			case 1:
+				ret = $.formatDate(myStartDate, 'yyyyMd');
+				break;
+			case 2:
+				ret = $.formatDate(myStartDate, 'yyyyMMdd');
+				break;
+			default:
+				ret = myStartDate;
+		}
+		return ret;
+	};
+
+	$.funStr2Date = function(str1) {
+		var ret, strDate, strTime;
+		var n = str1.split(" "); //分成日期、時間2012-01-04 00:00:00
+		var strDate = n[0].split("-"); //拆解日期
+		ret = new Date(strDate[1] + "/" + strDate[2] + "/" + strDate[0] + " " + n[1]);
+		return ret;
+	};
+
+	//瀏覽的當周
+	$.funInThisWeek = function(scopedate, checkdate) {
+		var weekMonday = funGetWeekday(scopedate, 1, 1);
+		weekMonday = (Date.parse(weekMonday)).valueOf();
+
+		var weekSunday = funGetWeekday(scopedate, 7, 1);
+		weekSunday = (Date.parse(weekSunday)).valueOf();
+
+		var MycheckDate = checkdate;
+		MycheckDate = $.formatDate(MycheckDate, 'yyyyMMdd');
+		MycheckDate = (Date.parse(MycheckDate)).valueOf();
+
+		return (MycheckDate >= weekMonday && MycheckDate <= weekSunday);
+	};
+
+	//大於等於瀏覽的當周
+	$.funInAfterWeek = function(scopedate, checkdate) {
+		var weekMonday = funGetWeekday(scopedate, 1, 1);
+		weekMonday = (Date.parse(weekMonday)).valueOf();
+
+		var MycheckDate = checkdate;
+		MycheckDate = $.formatDate(MycheckDate, 'yyyyMMdd');
+		MycheckDate = (Date.parse(MycheckDate)).valueOf();
+
+		// TODO: 還原成非測試版本
+		//return (MycheckDate >= weekMonday);
+		return true;
+	};
+
+	$.funGetDayName = function(x) {
+		dayNames = ['', '一', '二', '三', '四', '五', '六', '日'];
+		return dayNames[x];
+	};
+
+	$.funGetNearWeekday = function(date1, weekset) {
+		var myDate = date1;
+		var ret;
+		switch (weekset.toLowerCase()) {
+			case 'prev':
+				myDate.setDate(myDate.getDate() - 7);
+				ret = myDate;
+				break;
+			case 'next':
+				myDate.setDate(myDate.getDate() + 7);
+				ret = myDate;
+				break;
+			default:
+				ret = date1;
+		}
+		return ret;
+	};
+
+	// 排序
+	$.by = function(name, minor, order) {
+	    return function (o, p, d) {
+	        var a, b, d;
+	        d = ( d ==='desc') ? d: 'asc';
+	        if (o && p && typeof o === 'object' && typeof p === 'object') {
+	            a = o[name];
+	            b = p[name];
+	            if (a === b) {
+	                return typeof minor === 'function' ? minor(o, p, d) : 0;
+	            }
+	            if (typeof a === typeof b) {
+	                if (d === 'desc') {
+	                    return a - b;
+	                } else {
+	                    return b - a;
+	                }
+	            }
+	            return typeof a < typeof b ? -1 : 1;
+	        } else {
+	            throw {
+	                name: 'Error',
+	                message: 'Expected an object when sorting by ' + name
+	            };
+	        }
+	    };
+	};
+
 })(jQuery);
 
-/*
- * 取得某天當周的星期幾是幾月幾日
- * Properties：某日期, 要取得的星期(1~7，7代表星期日), 回傳的樣式
- * 樣式0: 不處理 
- * 樣式1: yyyy/m/d 不補0
- * 樣式2: yyyy/mm/dd 補0
- * reutrn: 日期
-*/
-function funGetWeekday(date1, x, style) {
-	var ret;
-
-	// 現在日期
-	var myDate = new Date(date1);
-
-	// 現在是星期幾，日為0、一為1、二為2、三為3、四為4、五為5、六為6
-	var myDay = myDate.getDay();
-
-	// 設成日為7
-	if (myDay == 0) {
-		myDay = 7;
-	}
-
-	var myStartDate = new Date(date1);
-	// 將日期變成目前禮拜的星期一，再加減日期
-	myStartDate.setDate(myStartDate.getDate() + (0 - (myDay - 1)) + (x - 1));
-
-	switch (style) {
-		case 1:
-			ret = $.formatDate(myStartDate, 'yyyyMd');
-			break;
-		case 2:
-			ret = $.formatDate(myStartDate, 'yyyyMMdd');
-			break;
-		default:
-			ret = myStartDate;
-	}
-	return ret;
-}
-
-function funStr2Date(str1) {
-	var ret, strDate, strTime;
-	var n = str1.split(" "); //分成日期、時間2012-01-04 00:00:00
-	var strDate = n[0].split("-"); //拆解日期
-	ret = new Date(strDate[1] + "/" + strDate[2] + "/" + strDate[0] + " " + n[1]);
-	return ret;
-}
-
-//瀏覽的當周
-function funInThisWeek(scopedate, checkdate) {
-	var weekMonday = funGetWeekday(scopedate, 1, 1);
-	weekMonday = (Date.parse(weekMonday)).valueOf();
-
-	var weekSunday = funGetWeekday(scopedate, 7, 1);
-	weekSunday = (Date.parse(weekSunday)).valueOf();
-
-	var MycheckDate = checkdate;
-	MycheckDate = $.formatDate(MycheckDate, 'yyyyMMdd');
-	MycheckDate = (Date.parse(MycheckDate)).valueOf();
-
-	return (MycheckDate >= weekMonday && MycheckDate <= weekSunday);
-}
-
-//大於等於瀏覽的當周
-function funInAfterWeek(scopedate, checkdate) {
-	var weekMonday = funGetWeekday(scopedate, 1, 1);
-	weekMonday = (Date.parse(weekMonday)).valueOf();
-
-	var MycheckDate = checkdate;
-	MycheckDate = $.formatDate(MycheckDate, 'yyyyMMdd');
-	MycheckDate = (Date.parse(MycheckDate)).valueOf();
-
-	// TODO: 還原成非測試版本
-	//return (MycheckDate >= weekMonday);
-	return true;
-}
-
-function funGetDayName(x) {
-	dayNames = ['', '一', '二', '三', '四', '五', '六', '日'];
-	return dayNames[x];
-}
-
-function funGetNearWeekday(date1, weekset) {
-	var myDate = date1;
-	var ret;
-	switch (weekset.toLowerCase()) {
-		case 'prev':
-			myDate.setDate(myDate.getDate() - 7);
-			ret = myDate;
-			break;
-		case 'next':
-			myDate.setDate(myDate.getDate() + 7);
-			ret = myDate;
-			break;
-		default:
-			ret = date1;
-	}
-	return ret;
-}

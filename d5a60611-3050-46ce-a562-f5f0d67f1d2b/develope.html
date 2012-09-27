@@ -1,109 +1,90 @@
-﻿<!DOCTYPE HTML >
+﻿<!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="content-type" content="text/html; charset=utf-8">
-		<title>調代課查詢小工具</title>
-		<script type="text/javascript" src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
-		<script type="text/javascript">
-			init({
-				application: "http://test.iteacher.tw/cs4/test_sh_d",//dev.sh_d
-				paramValues: {}
-			});
-		</script>		
-		<script type="text/javascript" src="include/jquery-1.7.2.min.js"></script>
-		<script type="text/javascript" src="include/jquery-ui-1.8.20.custom.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="include/jquery_css/jquery.ui.all.css"/>
-		
-		<script type="text/javascript" src="js/timetable.js"></script>
-		<script type="text/javascript" src="js/api.js"></script>
-		<script type="text/javascript" src="js/Gadget-timetable.js"></script>
-		<link rel="stylesheet" type="text/css" href="css/timetable.css" />
-		<link rel="stylesheet" type="text/css" href="css/splitterbar.css" />
-		<link rel="stylesheet" type="text/css" href="css/print.css"/>		
-	</head>
-	<body>
-		<div id="pageHeader">
-			<div>
-				<p class="subtitle"></p>
-				<button class="print-button">列印</button>
-			</div>
-		</div>
-		<div id="leftcolumn" class="leftcolumn Splitter">
-			<div class="SplitterTopPane">
-				<ul id="menu" class="menu">
-					<li id="menuMySchedule" class="menu1 menu-selected">學期課表</li>
-					<li id="menuSchedule" class="menu1">查詢課表</li>
-					<li id="menuHistory" class="menu1">調代課歷程</li>
-				</ul>
-				<p style="color:#FFF;">實驗</p>
-			</div>
-			<div class="SplitterBar"></div>	
-			<div class="SplitterBottomPane"></div>
-		</div>
-		<div id="rightcolumn" class="rightcolumn">
-			<div id="function_MySchedule">
-				
-				<div class="tabs-container">
-					<ul class="tabs myTabs"></ul>
-				</div>
-				<div class="tab-content myTabContent"></div>
-			</div>
-			<div id="function_Search">
-				<div class="searchBar">
-					<input id="search1" type="text" size="50" placeholder="請輸入您要查詢的教師、班級、或場地的名稱" />
-					<span id="condition"></span>
-				</div>
-
-				<div class="search-text"></div>
-				
-				<div class="tabs-container">
-					<ul class="tabs searchTabs"></ul>
-				</div>
-				<div class="tab-content searchTabContent"></div>
-			</div>
-			<div id="function_history">
-				<div class="tabs-container">
-					<ul class="tabs historyTabs">
-						<li class="tab1 tab-selected">
-							<a href="#">代課記錄</a>
-						</li>
-						<li class="tab1">
-							<a href="#">調課記錄</a>
-						</li>
-					</ul>
-				</div>
-				<div class="tab-content">
-					<div>
-						<table class="linear SubstituteCourseList">
-							<thead>
-								<tr>
-									<td>日期</td>
-									<td>星期</td>
-									<td>節次</td>
-									<td>課程名稱</td>
-									<td>假別</td>
-									<td>代課資訊</td>
-									<td>節數</td>
-								</tr>
-							</thead>
-							<tbody></tbody>
-						</table>					
-						<table class="linear ExahangeCourseList">
-							<thead>
-								<tr>
-									<td>日期</td>
-									<td>星期</td>
-									<td>節次</td>
-									<td>課程名稱</td>
-									<td>調課資訊</td>
-									<td>節數</td>
-								</tr>
-							</thead>
-							<tbody></tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-	</body>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>調代課查詢小工具</title>
+  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+  <script>
+    init({
+      application: "http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_kh", //"http://test.iteacher.tw/cs4/test_gadget",
+      paramValues: {}
+    });
+  </script>
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <!--<link href="css/base.less" rel="stylesheet/less" />
+  <link href="css/default.less" rel="stylesheet/less" />-->
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <link href="include/jquery_css/jquery.ui.all.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <!--<script src="js/less.min.js"></script>-->  
+  <script src="js/api.js"></script>
+  <script src="js/Gadget-timetable.js"></script>  
+  <script src="include/jquery-ui-1.8.20.custom.min.js"></script>
+</head>
+<body>
+  <div id="gadget">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+          <div id="mainMsg"></div>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span3" id="container-nav">
+          <div class="my-nav-widget" id="functions">
+            <ul class="nav nav-tabs nav-stacked">
+              <li class="active">
+                <a href="#function_MySchedule" data-toggle="tab"><span>我的課表</span><i class="icon-chevron-right pull-right"></i></a>
+              </li>
+              <li>
+                <a href="#function_SearchSchedule" data-toggle="tab"><span>其他課表</span><i class="icon-chevron-right pull-right"></i></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="span9" id="container-main">
+          <div class="tab-content">
+            <div class="tab-pane active" id="function_MySchedule">
+              <div class="my-schoolyear-semester-widget" title="請選擇學年度學期">
+                <div class="btn-group" data-toggle="buttons-radio">
+                </div>
+              </div>
+              <h2></h2>
+              <div class="tabbable tabs-below">
+                <ul class="nav nav-tabs"></ul>
+                <div class="tab-content">
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="function_SearchSchedule">
+              <div class="my-roster-search-widget">
+                <div class="control-group my-entry-search-div">
+                  <div class="my-entry-search-hint"><i class="icon-search"></i></div>
+                  <div class="controls">
+                    <input id="filter-keyword" type="text" class="my-entry-search" value="" autocomplete="off"
+                      placeholder="教師、班級、或場地..." role="textbox" aria-autocomplete="list" aria-haspopup="true">                  
+                      <span class="help-inline"></span>
+                    </div>
+                  </div>            
+              </div>    
+              <div class="my-schoolyear-semester-widget" title="請選擇學年度學期">
+                <div class="btn-group" data-toggle="buttons-radio">
+                </div>
+              </div>
+              <h2></h2>
+              <div class="tabbable tabs-below">
+                <ul class="nav nav-tabs" id="function_SearchTab"></ul>
+                <div class="tab-content">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
 </html>
