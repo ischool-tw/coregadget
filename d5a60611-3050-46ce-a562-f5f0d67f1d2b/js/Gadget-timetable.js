@@ -254,7 +254,7 @@ _gg.GetMyTimeTable = function (setYear, setSemester) {
                 var courseSectionByTTId = {};
                 $(response.Schedule.CourseSection).each(function (index, item) {
                     // TODO: 以 TimetableID 分類                            
-                    ttid = item.TimetableID;
+                    ttid = item.TimeTableID;
                     if (!courseSectionByTTId[ttid]) {
                         var tmp_ColTimeTable = {
                             Schedule: []
@@ -301,7 +301,7 @@ _gg.GetOtherSchedule = function (setYear, setSemester, uCategory) {
                     var courseSectionByTTId = {};
                     $(response.Schedule.CourseSection).each(function (index, item) {
                         // TODO: 以 TimetableID 分類                            
-                        ttid = item.TimetableID;
+                        ttid = item.TimeTableID;
                         if (!courseSectionByTTId[ttid]) {
                             var tmp_ColTimeTable = {
                                 TimetableID: ttid,
@@ -358,6 +358,7 @@ _gg.DoGetAllTimeTables = function (usemodel, courseSectionByTTId) {
                                 var objTT = {
                                     TimetableID: item.TimetableID,
                                     TimetableName: item.TimetableName,
+                                    DisableMessage : item.DisableMessage,
                                     MaxWeekday: parseInt(item.Weekday, 10),
                                     MaxPeriod: parseInt(item.Period, 10),
                                     Sections: []
@@ -460,7 +461,7 @@ _gg.DrawingTimeTable = function (useModel, courseSectionByTTId) {
             // TODO: 不排課、移除在課程時間表中有排課之css
             $(theTimeTable.Sections).each(function (index, item) {
                 if (item.Disable === 't') {
-                    $(set_selector + ' #' + useModel + ttid + ' td[my-period=' + item.Period + '][my-weekday=' + item.Weekday + ']').html("item.DisableMessage");
+                    $(set_selector + ' #' + useModel + ttid + ' td[my-period=' + item.Period + '][my-weekday=' + item.Weekday + ']').html(item.DisableMessage);
                 }
                 $(set_selector + ' #' + useModel + ttid + ' td[my-period=' + item.Period + '][my-weekday=' + item.Weekday + ']').removeClass("my-empty-column");
             });
