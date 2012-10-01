@@ -124,6 +124,24 @@ jQuery(function () {
                             }
                         }
                     });
+
+                    _gg.connection.send({
+                        service: "_.GetSSSelect",
+                        body: '<Request><Condition></Condition></Request>',
+                        result: function (response, error, http) {
+                            if (error !== null) {
+                                _gg.set_error_message('#mainMsg', 'GetSSSelect', error);
+                            } else {
+                                $(response.SSSelect).each(function(index, item) {
+                                    if (item.LastUpdate) {
+                                        var last_update = $.formatDate(new Date(item.LastUpdate), 'yyyy/MM/dd');
+                                        $('#last_update').html('上次儲存時間：' + last_update);
+                                    }
+                                });
+                            }
+                        }
+                    });
+
                 } else {
                     $('#opening').html('目前未開放重補修');
                 }
@@ -227,7 +245,7 @@ _gg.SetSubject = function() {
                         $('#save-data').removeClass('disabled').removeAttr('disabled');
                     }
                 } else {
-                    $('#subject').html('無資料');
+                    $('#subject').html('目前無資料');
                 }
             }
         }
@@ -279,7 +297,7 @@ _gg.SaveData = function() {
             }
         });
 
-
+        var last_update = $.formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss');
         _gg.connection.send({
             service: "_.InsertSSSelect",
             body: '<Request>' + requests.join('') + '</Request>',
@@ -288,6 +306,7 @@ _gg.SaveData = function() {
                     _gg.set_error_message('#mainMsg', 'InsertSSSelect', error);
                 } else {
                     $("#save-data").button("reset");
+                    $('#last_update').html('上次儲存時間：' + last_update);
                 }
             }
         });
