@@ -558,7 +558,13 @@ _gg.SaveSorce = function () {
                 var arys = [];
                 $(students).each(function(key, value) {
                     arys.push('<Students><Condition><UID>' + (value.SCUID || '0')  + '</UID></Condition>');
-                    arys.push('<' + scoreType + '>' + parseInt($('#'+(value.SCUID)).val(), 10) + '</' + scoreType + '>');
+                    var tmp_score = $('#'+(value.SCUID)).val();
+                    if (tmp_score) {
+                        tmp_score = parseInt($('#'+(value.SCUID)).val(), 10);
+                    } else {
+                        tmp_score = '';
+                    }
+                    arys.push('<' + scoreType + '>' + tmp_score + '</' + scoreType + '>');
                     arys.push('</Students>');
                 });
 
@@ -570,9 +576,14 @@ _gg.SaveSorce = function () {
                             _gg.set_error_message('#errorMessage', 'UpdateScore', error);
                         } else {
                             $(students).each(function(key, value) {
-                                 var tmp_val = parseInt($('#'+(value.SCUID)).val(), 10);
-                                value[scoreType] = tmp_val;
-                                $('#' + scoreType + value.SCUID).html(tmp_val);
+                                var tmp_score = $('#'+(value.SCUID)).val();
+                                if (tmp_score) {
+                                    tmp_score = parseInt($('#'+(value.SCUID)).val(), 10);
+                                } else {
+                                    tmp_score = '';
+                                }
+                                value[scoreType] = tmp_score;
+                                $('#' + scoreType + value.SCUID).html(tmp_score);
                             });
 
                             _gg.SetScore(clubid);
