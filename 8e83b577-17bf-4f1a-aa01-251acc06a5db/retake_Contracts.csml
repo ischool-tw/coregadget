@@ -1,25 +1,56 @@
 <Content>
 	<Contract Name="ischool.retake.student" Enabled="True">
 	<Definition>
-		<Authentication Extends="sa" />
-	</Definition>
+      <Authentication Extends="sa" />
+    </Definition>
 	<Package Name="_">
-		<Service Enabled="true" Name="GetSelectCourseDate">
+		<Service Enabled="true" Name="GetSSSelect">
 			<Definition Type="dbhelper">
 	<Action>Select</Action>
 	<SQLTemplate>
-		<![CDATA[SELECT @@FieldList FROM $shinmin.retake.select_course_date WHERE @@Condition @@Order]]>
+		<![CDATA[
+            SELECT @@FieldList FROM $shinmin.retake.ssselect
+            WHERE @@Condition
+            and school_year = '@@SchoolYear' and semester = '@@Semester' and month = '@@Month'
+            Order by last_update desc
+			limit 1
+        ]]>
 	</SQLTemplate>
-	<ResponseRecordElement>SelectCourseDate</ResponseRecordElement>
+	<ResponseRecordElement>SSSelect</ResponseRecordElement>
 	<FieldList Name="FieldList" Source="Field">
-		<Field Alias="EndDate" Mandatory="True" Source="EndDate" Target="end_date" />
-		<Field Alias="StartDate" Mandatory="True" Source="StartDate" Target="start_date" />
+		<Field Alias="LastUpdate" Mandatory="True" Source="LastUpdate" Target="last_update" />
 	</FieldList>
 	<Conditions Name="Condition" Required="False" Source="Condition">
+		<Condition Required="True" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
 	</Conditions>
+	<InternalVariable>
+		<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+	</InternalVariable>
 	<Orders Name="Order" Source="Order" />
 	<Pagination Allow="True" />
+	<Preprocesses>
+		<Preprocess Name="GetData" Type="variable">
+			<![CDATA[		
+				select school_year as "SchoolYear", semester as "Semester", month as "Month"
+				from $shinmin.retake.time_list where active='true'
+			]]>
+		</Preprocess>
+	</Preprocesses>
 </Definition>
+		</Service>
+		<Service Enabled="true" Name="GetSelectCourseDate">
+			<Definition Type="dbhelper">
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[SELECT @@FieldList FROM $shinmin.retake.select_course_date WHERE @@Condition @@Order]]></SQLTemplate>
+          <ResponseRecordElement>SelectCourseDate</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="EndDate" Mandatory="True" Source="EndDate" Target="end_date" />
+            <Field Alias="StartDate" Mandatory="True" Source="StartDate" Target="start_date" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition" />
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetSubject">
 			<Definition Type="dbhelper">
@@ -36,7 +67,7 @@
 				from student s
 					join class c on c.id = s.ref_class_id
 					join dept d on d.id = c.ref_dept_id
-				where s.id = '@@StudentID'
+				where s.id = '@@StudentID' and s.status in (1, 2)
 			)
 			join (SELECT * FROM
 				xpath_table('uid',
@@ -49,8 +80,7 @@
 			left join (select distinct ref_subject_id from $shinmin.retake.ssselect ssselect where ref_student_id = '@@StudentID') ssselect on subject.uid = ssselect.ref_subject_id
 			WHERE @@Condition 
 			order by subject.course_timetable_id
-		]]>
-	</SQLTemplate>
+		]]></SQLTemplate>
 	<ResponseRecordElement>Response/Subject</ResponseRecordElement>
 	<FieldList Name="FieldList" Source="Field">
 		<Field Alias="Uid" Mandatory="True" Source="Uid" Target="subject.uid" />
@@ -62,8 +92,7 @@
 		<Field Alias="TimetableName" Mandatory="True" Source="TimetableName" Target="timetable.name" />
 		<Field Alias="Selected" Mandatory="True" Source="Selected" Target="CASE WHEN ssselect.ref_subject_id IS NULL THEN 'no' ELSE 'yes' END" />
 	</FieldList>
-	<Conditions Name="Condition" Required="False" Source="Condition">
-	</Conditions>
+	<Conditions Name="Condition" Required="False" Source="Condition" />
 	<InternalVariable>
 		<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
 	</InternalVariable>
@@ -73,67 +102,61 @@
 		</Service>
 		<Service Enabled="true" Name="GetSuggestList">
 			<Definition Type="dbhelper">
-	<Action>Select</Action>
-	<SQLTemplate>
-		<![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
 			SELECT @@FieldList FROM $shinmin.retake.suggest_list 
 			WHERE @@Condition
 			and ref_time_list_id=(select uid from $shinmin.retake.time_list where active='true')
 			@@Order
-		]]>
-	</SQLTemplate>
-	<ResponseRecordElement>SuggestList</ResponseRecordElement>
-	<FieldList Name="FieldList" Source="Field">
-		<Field Alias="SubjectContent" Mandatory="True" OutputType="xml" Source="SubjectContent" Target="subject_content" />
-	</FieldList>
-	<Conditions Name="Condition" Required="False" Source="Condition">
-		<Condition Required="True" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
-	</Conditions>
-	<InternalVariable>
-		<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
-	</InternalVariable>
-	<Orders Name="Order" Source="Order" />
-	<Pagination Allow="True" />
-</Definition>
+		]]></SQLTemplate>
+          <ResponseRecordElement>SuggestList</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="SubjectContent" Mandatory="True" OutputType="xml" Source="SubjectContent" Target="subject_content" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition">
+            <Condition Required="True" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
+          </Conditions>
+          <InternalVariable>
+            <Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+          </InternalVariable>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetTimeList">
 			<Definition Type="dbhelper">
-	<Action>Select</Action>
-	<SQLTemplate>
-		<![CDATA[SELECT @@FieldList FROM $shinmin.retake.time_list WHERE @@Condition and active='true' @@Order]]>
-	</SQLTemplate>
-	<ResponseRecordElement>TimeList</ResponseRecordElement>
-	<FieldList Name="FieldList" Source="Field">
-		<Field Alias="Uid" Mandatory="True" Source="Uid" Target="uid" />
-		<Field Alias="BeginDate" Mandatory="True" Source="BeginDate" Target="begin_date" />
-		<Field Alias="EndDate" Mandatory="True" Source="EndDate" Target="end_date" />
-		<Field Alias="Month" Mandatory="True" Source="Month" Target="month" />
-		<Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
-		<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="school_year" />
-		<Field Alias="Semester" Mandatory="True" Source="Semester" Target="semester" />
-	</FieldList>
-	<Conditions Name="Condition" Required="False" Source="Condition">
-	</Conditions>
-	<Orders Name="Order" Source="Order" />
-	<Pagination Allow="True" />
-</Definition>
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[SELECT @@FieldList FROM $shinmin.retake.time_list WHERE @@Condition and active='true' @@Order]]></SQLTemplate>
+          <ResponseRecordElement>TimeList</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="Uid" Mandatory="True" Source="Uid" Target="uid" />
+            <Field Alias="BeginDate" Mandatory="True" Source="BeginDate" Target="begin_date" />
+            <Field Alias="EndDate" Mandatory="True" Source="EndDate" Target="end_date" />
+            <Field Alias="Month" Mandatory="True" Source="Month" Target="month" />
+            <Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
+            <Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="school_year" />
+            <Field Alias="Semester" Mandatory="True" Source="Semester" Target="semester" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition" />
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="InsertSSSelect">
 			<Definition Type="dbhelper">
 	<Action>Insert</Action>
 	<SQLTemplate>
-		<![CDATA[INSERT INTO $shinmin.retake.ssselect @@FieldList]]>
-	</SQLTemplate>
+		<![CDATA[INSERT INTO $shinmin.retake.ssselect @@FieldList]]></SQLTemplate>
 	<RequestRecordElement>SSSelect</RequestRecordElement>
 	<FieldList Name="FieldList" Source="">
 		<Field AutoNumber="True" InputType="Element" Quote="False" Required="False" Source="Uid" SourceType="Request" Target="uid" />
 		<Field Source="SchoolYear" SourceType="Variable" Target="school_year" />
 		<Field Source="Semester" SourceType="Variable" Target="semester" />
-		<Field Source="Month" SourceType="Variable" Target="month" />	
+		<Field Source="Month" SourceType="Variable" Target="month" />
 		<Field Source="SubjectLevel" Target="subject_level" />
 		<Field Source="SubjectName" Target="subject_name" />
 		<Field Source="SubjectType" Target="subject_type" />
-		<Field Source="Credit" Target="credit" />		
+		<Field Source="Credit" Target="credit" />
 		<Field Source="Period" Target="period" />
 		<Field Source="PeriodCount" Target="period_count" />
 		<Field Source="Weekly" Target="weekly" />
@@ -147,23 +170,20 @@
 		<Preprocess InvalidMessage="502" Name="validDate" Type="validate">
 			<![CDATA[
 				select count(*)>0 from $shinmin.retake.select_course_date where start_date<=Now() and end_date>=Now()
-			]]>
-		</Preprocess>
-		<Preprocess Name="RemoveProcess" Type="update">
-			<![CDATA[		
-				DELETE FROM $shinmin.retake.ssselect 
-				WHERE ref_student_id='@@StudentID' 
-				and school_year = (select school_year from $shinmin.retake.time_list where active='true')
-				and semester = (select semester from $shinmin.retake.time_list where active='true')
-				and month = (select month from $shinmin.retake.time_list where active='true')
-			]]>
-		</Preprocess>
+			]]></Preprocess>
 		<Preprocess Name="GetData" Type="variable">
 			<![CDATA[		
 				select school_year as "SchoolYear", semester as "Semester", month as "Month"
 				from $shinmin.retake.time_list where active='true'
-			]]>
-		</Preprocess>
+			]]></Preprocess>
+			<Preprocess Name="RemoveProcess" Type="update">
+			<![CDATA[		
+				DELETE FROM $shinmin.retake.ssselect 
+				WHERE ref_student_id='@@StudentID' 
+				and school_year ='@@SchoolYear'
+				and semester = '@@Semester'
+				and month = '@@Month'
+			]]></Preprocess>
 	</Preprocesses>
 </Definition>
 		</Service>
