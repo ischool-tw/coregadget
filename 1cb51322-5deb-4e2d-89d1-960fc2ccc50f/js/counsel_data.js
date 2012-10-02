@@ -29,7 +29,7 @@ _gg.col_Question = {
         'A3' : [
             { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_稱謂', Alias: '稱謂', TagName: 'Title', ControlType: 'select' },
             { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_姓名', Alias: '姓名', TagName: 'Name' },
-            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_出生年', Alias: '出生年', TagName: 'BirthYear', Validator: '{number:true, range:[1, ' + (new Date().getFullYear()-1911) + ']}' },
+            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_出生年', Alias: '出生年', TagName: 'BirthYear', Validator: '{digits:true, range:[1, ' + (new Date().getFullYear()-1911) + ']}' },
             { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_存、歿', Alias: '存歿', TagName: 'IsAlive', ControlType: 'select' },
             { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_電話', Alias: '電話', TagName: 'Phone' },
             { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_職業', Alias: '職業', TagName: 'Job' },
@@ -41,7 +41,7 @@ _gg.col_Question = {
             { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_排行', Alias: '排行' },
             { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_稱謂', Alias: '稱謂', TagName: 'Title', ControlType: 'select' },
             { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_姓名', Alias: '姓名', TagName: 'Name', Validator: 'required="true"' },
-            { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_出生年次', Alias: '出生年次', TagName: 'BirthYear', Validator: '{number:true, range:[1, ' + (new Date().getFullYear()-1911) + ']}' },
+            { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_出生年次', Alias: '出生年次', TagName: 'BirthYear', Validator: '{digits:true, range:[1, ' + (new Date().getFullYear()-1911) + ']}' },
             { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_畢肆業學校', Alias: '畢業學校', TagName: 'SchoolName' },
             { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_備註', Alias: '備註', TagName: 'Remark' }
         ],
@@ -419,21 +419,25 @@ _gg.loadCounselData = function () {
                                             if (response.Response.OpeningHours && response.Response.OpeningHours.Content && response.Response.OpeningHours.Content.Content) {
                                                 $(response.Response.OpeningHours.Content.Content.Item).each(function (index, item) {
                                                     if (item.GradeYear === _gg.student.GradeYear) {
-                                                        var tmp_Date  = new Date();
-                                                        var Startdate = new Date(item.StartDateTime);
-                                                        var Enddate   = new Date(item.EndDateTime);
+                                                        if (item.StartDateTime && item.EndDateTime) {
+                                                            var tmp_Date  = new Date();
+                                                            var Startdate = $.parseDate(item.StartDateTime);
+                                                            var Enddate   = $.parseDate(item.EndDateTime);
 
-                                                        if (Startdate <= tmp_Date && Enddate >= tmp_Date) {
-                                                            _gg.Opening = "yes";
+                                                            if (Startdate <= tmp_Date && Enddate >= tmp_Date) {
+                                                                _gg.Opening = "yes";
+                                                            } else {
+                                                                _gg.Opening = "no";
+                                                            }
+
+                                                            var tmp_html = '' +
+                                                                '<div class="alert alert-error">' +
+                                                                    '開放填寫時間： ' + item.StartDateTime + ' ~  ' + item.EndDateTime +
+                                                                '</div>';
+                                                            $('#opening').html(tmp_html);
                                                         } else {
                                                             _gg.Opening = "no";
                                                         }
-
-                                                        var tmp_html = '' +
-                                                            '<div class="alert alert-error">' +
-                                                                '開放填寫時間： ' + item.StartDateTime + ' ~  ' + item.EndDateTime +
-                                                            '</div>';
-                                                        $('#opening').html(tmp_html);
 
                                                         return false;
                                                     }
