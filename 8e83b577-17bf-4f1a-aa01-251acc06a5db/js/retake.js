@@ -97,8 +97,8 @@ jQuery(function () {
                                 $(response.SelectCourseDate).each(function(index, item) {
                                     if (item.StartDate && item.EndDate) {
                                         var tmp_Date  = new Date();
-                                        var Startdate = new Date(item.StartDate);
-                                        var Enddate   = new Date(item.EndDate);
+                                        var Startdate = $.parseDate(item.StartDate);
+                                        var Enddate   = $.parseDate(item.EndDate);
 
                                         if (Startdate <= tmp_Date && Enddate >= tmp_Date) {
                                             _gg.opening_state = 'yes';
@@ -124,24 +124,6 @@ jQuery(function () {
                             }
                         }
                     });
-
-                    _gg.connection.send({
-                        service: "_.GetSSSelect",
-                        body: '<Request><Condition></Condition></Request>',
-                        result: function (response, error, http) {
-                            if (error !== null) {
-                                _gg.set_error_message('#mainMsg', 'GetSSSelect', error);
-                            } else {
-                                $(response.SSSelect).each(function(index, item) {
-                                    if (item.LastUpdate) {
-                                        var last_update = $.formatDate(new Date(item.LastUpdate), 'yyyy/MM/dd');
-                                        $('#last_update').html('上次儲存時間：' + last_update);
-                                    }
-                                });
-                            }
-                        }
-                    });
-
                 } else {
                     $('#opening').html('目前未開放重補修');
                 }
@@ -306,8 +288,7 @@ _gg.SaveData = function() {
                     _gg.set_error_message('#mainMsg', 'InsertSSSelect', error);
                 } else {
                     $("#save-data").button("reset");
-                    $('#last_update').html('上次儲存時間：' + last_update);
-                    $('#save-success').html('~選課成功~').effect('pulsate');
+                    $('#save-success').html('選課成功！').effect('pulsate');
                 }
             }
         });

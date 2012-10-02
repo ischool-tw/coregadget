@@ -4,40 +4,6 @@
       <Authentication Extends="sa" />
     </Definition>
 	<Package Name="_">
-		<Service Enabled="true" Name="GetSSSelect">
-			<Definition Type="dbhelper">
-	<Action>Select</Action>
-	<SQLTemplate>
-		<![CDATA[
-            SELECT @@FieldList FROM $shinmin.retake.ssselect
-            WHERE @@Condition
-            and school_year = '@@SchoolYear' and semester = '@@Semester' and month = '@@Month'
-            Order by last_update desc
-			limit 1
-        ]]>
-	</SQLTemplate>
-	<ResponseRecordElement>SSSelect</ResponseRecordElement>
-	<FieldList Name="FieldList" Source="Field">
-		<Field Alias="LastUpdate" Mandatory="True" Source="LastUpdate" Target="last_update" />
-	</FieldList>
-	<Conditions Name="Condition" Required="False" Source="Condition">
-		<Condition Required="True" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
-	</Conditions>
-	<InternalVariable>
-		<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
-	</InternalVariable>
-	<Orders Name="Order" Source="Order" />
-	<Pagination Allow="True" />
-	<Preprocesses>
-		<Preprocess Name="GetData" Type="variable">
-			<![CDATA[		
-				select school_year as "SchoolYear", semester as "Semester", month as "Month"
-				from $shinmin.retake.time_list where active='true'
-			]]>
-		</Preprocess>
-	</Preprocesses>
-</Definition>
-		</Service>
 		<Service Enabled="true" Name="GetSelectCourseDate">
 			<Definition Type="dbhelper">
           <Action>Select</Action>
