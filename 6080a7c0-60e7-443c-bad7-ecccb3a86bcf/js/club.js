@@ -9,7 +9,10 @@ _gg.opening = {
 };
 
 jQuery(function () {
+    // TODO: 載入資料
     _gg.loadData();
+
+    // TODO: 驗證提示樣式設定
     $.validator.setDefaults({
         debug: true,
         errorElement: "span",
@@ -25,7 +28,7 @@ jQuery(function () {
         }
     });
 
-
+    // TODO: 編輯畫面
     $("#editModal").modal({
         show: false
     });
@@ -103,6 +106,17 @@ jQuery(function () {
 
             $('#editModal').find('h3').html(edit_title).end().find('fieldset').html(arys.join(''));
             $("#save-data").attr('score-type', scoreType);
+            $('#editModal input:text:first').focus();
+        }
+    });
+
+    // TODO: 載入資料上下鍵切換輸入框
+    $('#editModal').on('keydown', 'input:text', function(e) {
+        if (e.which === 38) {
+            $(this).parent().parent().prev().find('input:text').focus();
+        }
+        if (e.which === 40) {
+            $(this).parent().parent().next().find('input:text').focus();
         }
     });
 });
@@ -148,6 +162,7 @@ _gg.loadData = function () {
                     $(response.Response.Weight).each(function (index, item) {
                         _gg.weight = item;
                     });
+                    check_ClassData();
                 }
             }
         }
@@ -157,7 +172,7 @@ _gg.loadData = function () {
     // TODO: 取回全部社團紀錄資料後，呼叫社團紀錄呈現
     var getClassStudent_data, getNoClubResultScore_data;
     var check_ClassData = function() {
-        if (getClassStudent_data && getNoClubResultScore_data) {
+        if (getClassStudent_data && getNoClubResultScore_data && _gg.weight) {
             _gg.SetClass();
         }
     };
@@ -395,8 +410,8 @@ _gg.loadData = function () {
                                                      if (_gg.opening) {
                                                         if (_gg.opening.Start && _gg.opening.End) {
                                                             var tmp_Date  = new Date();
-                                                            var Startdate = new Date(_gg.opening.Start);
-                                                            var Enddate   = new Date(_gg.opening.End);
+                                                            var Startdate = $.parseDate(_gg.opening.Start);
+                                                            var Enddate   = $.parseDate(_gg.opening.End);
 
                                                             if (Startdate <= tmp_Date && Enddate >= tmp_Date) {
                                                                 _gg.opening.state = "yes";
@@ -559,8 +574,8 @@ _gg.SaveSorce = function () {
                 $(students).each(function(key, value) {
                     arys.push('<Students><Condition><UID>' + (value.SCUID || '0')  + '</UID></Condition>');
                     var tmp_score = $('#'+(value.SCUID)).val();
-                    if (tmp_score) {
-                        tmp_score = parseInt($('#'+(value.SCUID)).val(), 10);
+                    if (tmp_score !== '') {
+                        tmp_score = parseInt(tmp_score, 10) + '';
                     } else {
                         tmp_score = '';
                     }
@@ -577,8 +592,8 @@ _gg.SaveSorce = function () {
                         } else {
                             $(students).each(function(key, value) {
                                 var tmp_score = $('#'+(value.SCUID)).val();
-                                if (tmp_score) {
-                                    tmp_score = parseInt($('#'+(value.SCUID)).val(), 10);
+                                if (tmp_score !== '') {
+                                    tmp_score = parseInt(tmp_score, 10) + '';
                                 } else {
                                     tmp_score = '';
                                 }
