@@ -307,6 +307,7 @@ _gg.SaveData = function() {
                 } else {
                     $("#save-data").button("reset");
                     $('#last_update').html('上次儲存時間：' + last_update);
+                    $('#save-success').html('~選課成功~').effect('pulsate');
                 }
             }
         });
