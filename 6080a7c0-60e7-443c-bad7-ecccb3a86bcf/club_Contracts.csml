@@ -419,8 +419,9 @@ WHERE name='系統設定']]></SQLTemplate>
 		left join $k12.resultscore.shinmin rs on cast(rs.ref_student_id as integer) = s.id and cast(rs.ref_club_id as integer) = club.uid and rs.school_year = '@@tmp_schoolyear' and rs.semester = '@@tmp_semester'
         where @@Condition
         and club.school_year = '@@tmp_schoolyear' and club.semester = '@@tmp_semester'
-        order by s.ref_class_id, s.seat_no
-	]]></SQLTemplate>
+        order by club.uid, c.grade_year, c.id, s.seat_no;
+	]]>
+	</SQLTemplate>
 	<ResponseRecordElement>Response/Students</ResponseRecordElement>
 	<FieldList Name="FieldList" Source="">
 		<Field Alias="ClubID" Mandatory="True" Source="ClubID" Target="club.uid" />
@@ -452,7 +453,8 @@ WHERE name='系統設定']]></SQLTemplate>
 			(xpath_string(content, '/SystemConfig/DefaultSemester')) as tmp_semester
 			FROM list
 			WHERE name='系統設定'
-			]]></Preprocess>
+			]]>
+		</Preprocess>
 	</Preprocesses>
 </Definition>
 		</Service>
@@ -471,17 +473,18 @@ WHERE name='系統設定']]></SQLTemplate>
 		</Service>
 		<Service Enabled="true" Name="GetDTScore">
 			<Definition Type="dbhelper">
-          <Action>Select</Action>
-          <SQLTemplate><![CDATA[SELECT @@FieldList FROM $k12.dtscore.shinmin WHERE @@Condition @@Order limit 1]]></SQLTemplate>
-          <ResponseRecordElement>DTScore</ResponseRecordElement>
-          <FieldList Name="FieldList" Source="Field">
-            <Field Alias="Start" Mandatory="True" Source="Start" Target="start" />
-            <Field Alias="End" Mandatory="True" Source="End" Target="&quot;end&quot;" />
-          </FieldList>
-          <Conditions Name="Condition" Required="False" Source="Condition" />
-          <Orders Name="Order" Source="Order" />
-          <Pagination Allow="True" />
-        </Definition>
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[SELECT @@FieldList FROM $k12.dtscore.shinmin WHERE @@Condition @@Order limit 1]]></SQLTemplate>
+	<ResponseRecordElement>DTScore</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="Start" Mandatory="True" Source="Start" Target="start" />
+		<Field Alias="End" Mandatory="True" Source="End" Target="&quot;end&quot;" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition" />
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+</Definition>
 		</Service>
 		<Service Enabled="true" Name="GetNoClubResultScore">
 			<Definition Type="dbhelper">
