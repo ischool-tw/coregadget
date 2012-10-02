@@ -40,3 +40,21 @@ gadget-重補修
 **其他**
 
  - 級別以羅馬數字呈現
+
+----------
+
+
+檔案說明
+-------
+
+**驗證用 ([jQuery plugin: Validation][1] 版本1.9.0)**
+
+js/jquery.metadata.js：驗證規則使用 class={} 時需引用的檔
+
+js/jquery.validate.min.js：驗證用主程式
+
+js/messages_tw.js：提示訊息中文化
+
+js/jquery-ui-1.7.3.custom.min.js：提示選課成功特效 Effect "Pulsate"
+
+  [1]: http://bassistance.de/jquery-plugins/jquery-plugin-validation/
