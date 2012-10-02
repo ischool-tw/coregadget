@@ -125,6 +125,22 @@
 		}
 	};
 
+	/*
+	 * 解析日期為 ie、safari 可支援的格式
+	*/
+	$.parseDate = function (input) {
+		var parts = input.match(/(\d+)/g);
+		if (parts) {
+			if (parts[3] && parts[4] && parts[5]) {
+				return new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]);
+			} else {
+				return new Date(parts[0], parts[1]-1, parts[2]);
+			}
+		} else {
+			return '';
+		}
+	};
+
 })(jQuery);
 
 /*
