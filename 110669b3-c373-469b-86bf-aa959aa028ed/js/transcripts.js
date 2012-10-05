@@ -9,10 +9,6 @@ _gg.semester = '';
 
 
 $(document).ready(function () {
-//    gadget.onSizeChanged(function (size) {
-//        $("#container-nav, #container-main").height(size.height - 50);
-//    });
-
     $('.my-schoolyear-semester-widget .btn').live("click", function () {
         _gg.schoolYear = $(this).attr("school-year");
         _gg.semester = $(this).attr("semester");
@@ -64,10 +60,10 @@ $(document).ready(function () {
                     _gg.semester = item.Semester;     // TODO: 呈現的學期
 
                     if (key !== $(student.SemsHistory.History).size()) {
-                        $(student.SemsHistory.History).slice(key + 1).each(function () {  
+                        $(student.SemsHistory.History).slice(key + 1).each(function () {
                             if (item.GradeYear === this.GradeYear && item.Semester === this.Semester) {
-                                item.UseRereadIgnoreIt = "true"; // TODO: 重讀時原學期不列入計算                                                             
-                                return false;                                
+                                item.UseRereadIgnoreIt = "true"; // TODO: 重讀時原學期不列入計算
+                                return false;
                             }
                         });
                     }
@@ -247,7 +243,7 @@ _gg.SetScoreData = function () {
     var fun_SubjectScore_tooltip = function (mainData, compareData) {
         if (compareData) {
             if (mainData !== compareData) {
-                return '<td rel="tooltip" data-original-title="課程規劃表「' + student.MyGraduationPlanName + '」<br/>設定為' + compareData + '">' + mainData + '</td>';
+                return '<td rel="tooltip" data-original-title="課程規劃表「' + student.MyGraduationPlan.Name + '」<br/>設定為' + compareData + '">' + mainData + '</td>';
             } else {
                 return '<td>' + mainData + '</td>';
             }
