@@ -7,6 +7,7 @@
   <link href="css/default.less" rel="stylesheet/less" />-->
   <link href="css/base.css" rel="stylesheet" />
   <link href="css/default.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
   <script src="js/jquery.min.js"></script>
   <!--<script src="js/less.min.js"></script>-->
   <script src="js/bootstrap.js"></script>
@@ -14,7 +15,7 @@
     $(document).ready(function () {
       $('td[rel=tooltip]').tooltip("show").tooltip("toggle");
     });
-    
+
   </script>
 </head>
 <body>
@@ -26,51 +27,7 @@
         </div>
       </div>
       <div class="row-fluid">
-        <div class="span3" id="container-nav">
-          <div class="my-nav-widget" id="function-list">
-            <ul class="nav nav-tabs nav-stacked">
-              <li class="active"><a href="#preview" data-toggle="tab"><span>瀏覽訊息</span><i class="icon-chevron-right pull-right"></i></a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="span9" id="container-main">
-          <div class="well my-well-deepcolor" id="graduation">
-            <h2 class="my-label-title">畢業條件<small>以課程規劃表內容為準</small></h2>
-              <p>(累計實得學分數 / <span class="my-slate-text-color">應修學分數</span>)</p>
-              <div class="row-fluid">
-                <div class="my-slate span2" credit-type="total">
-						      <span class="my-slate-number">100</span>
-                  <span class="my-slate-total">200</span>
-						      <span class="my-slate-text">總學分</span>						
-                </div>
-                <div class="my-slate span2" credit-type="required">
-						      <span class="my-slate-number">60</span>
-                  <span class="my-slate-total">150</span>
-						      <span class="my-slate-text">必修</span>						
-                </div>
-                <div class="my-slate span2" credit-type="choose">
-						      <span class="my-slate-number">25</span>
-                  <span class="my-slate-total">50</span>
-						      <span class="my-slate-text">選修</span>						
-                </div>
-                <div class="my-slate span2" credit-type="required-by-edu">
-						      <span class="my-slate-number">34</span>
-                  <span class="my-slate-total">130</span>
-						      <span class="my-slate-text">部定必修</span>						
-                </div>
-                <div class="my-slate span2" credit-type="internships">
-						      <span class="my-slate-number">5</span>
-                  <span class="my-slate-total">20</span>
-						      <span class="my-slate-text">實習</span>						
-                </div>
-                <div class="my-slate span2" credit-type="required-by-school">
-						      <span class="my-slate-number">37</span>
-                  <span class="my-slate-total">122</span>
-						      <span class="my-slate-text">校訂必修</span>						
-                </div>
-              </div>
-          </div>
+        <div class="span12" id="container-main">
           <div class="my-schoolyear-semester-widget" title="請選擇學年度學期">
             <div class="btn-group" data-toggle="buttons-radio">
               <button class="btn btn-large active" school-year="100" semester="2">1002</button>
@@ -88,7 +45,7 @@
                   <div class="my-slate span12">
 						        <span class="my-slate-number">23</span>
                     <span class="my-slate-total">25</span>
-						        <span class="my-slate-text">實得</span>						
+						        <span class="my-slate-text">實得</span>
                   </div>
                 </div>
                 <div class="span9">
@@ -118,13 +75,15 @@
                         <th><span>實習</span> </th>
                         <td>
                           <span>1</span>
-                        </td>                        
+                        </td>
                       </tr>
                     </tbody>
-                  </table>			
+                  </table>
                 </div>
-              </div> 
+              </div>
             </div>
+          </div>
+          <div class="well">
             <div id="EntryScore">
               <h2 class="my-label-title">本學期分項成績</h2>
               <table class="table table-striped">
@@ -142,8 +101,10 @@
                 </tbody>
               </table>
             </div>
+          </div>
+          <div class="well">
             <div id="SubjectScore">
-              <h2 class="my-label-title">本學期科目成績</h2>              
+              <h2 class="my-label-title">本學期科目成績</h2>
               <p>(符號「--」代表不列入計算)</p>
               <table class="my-table my-table-bordered my-well-table-striped">
                 <thead>
@@ -202,8 +163,8 @@
                 </tbody>
               </table>
             </div>
-          </div>          
-        </div>        
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -16,7 +16,7 @@
   text-align: center;
   background-color: white;
   display: table-cell;
-      
+
 
   span {
     display: block;
@@ -34,7 +34,7 @@
     padding: 5px;
     color: #CCC;
   }
- 
+
   .my-slate-text {
     padding: 5px;
     border-top: 1px solid #CCC;
@@ -60,12 +60,21 @@ h2 + p {
 #SubjectScore {
   td[rel=tooltip]:not([data-type=ranking]) {
     font-weight: bold;
-    background-color: #59A64D;
+    background-color: #d07f49;
     color: white;
-  }    
+  }
 }
 
 /* 科目未取得學分 */
-.lost-credit {
+.my-lost-credit {
   color: red;
+}
+
+/* 本學期學分資訊 成績靠右*/
+#Credit table td {
+  text-align: right;
+}
+
+.my-ignore {
+  color: #88A200;
 }
