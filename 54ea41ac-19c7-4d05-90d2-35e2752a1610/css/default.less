@@ -1,0 +1,105 @@
+﻿@develop-overflow: hidden;
+@vertical-th-align: right;
+@label-title-color: #360;
+@detention-bgcolor: #B94A48;
+
+
+/* 學業,德行共用 */
+.tmp-academic-item () {
+	.my-overflow {
+		overflow: hidden;
+	}
+}
+
+/* 德行 */
+#behavior {
+  .tmp-academic-item;
+
+  .my-behavior-item {
+		margin-bottom: 20px;
+		.my-label-title {
+			margin-bottom: 10px;
+      color: @label-title-color;
+		}
+	}
+
+	tr th {
+		width: 20px;
+		text-align: @vertical-th-align;
+		white-space: nowrap;
+	}
+	tr th[colspan] {
+		white-space: nowrap;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border: 0px solid #90EE90;
+    background-color: #5B8607;
+    padding: 11px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-align: left;
+    box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+	}
+}
+
+
+.my-thumbnails () {
+  .my-thumbnail-white {
+	  text-align:center;
+	  background-color:#FFF;
+  }
+  .my-subthumbnail-top {
+	  border-bottom: 1px solid #ccc;
+	  padding: 9px;
+  }
+  .my-subthumbnail-bottom {
+	  background: #DDD;
+  }
+  .my-surveillance {
+  	color: #fff;
+    background: @detention-bgcolor;
+  }
+}
+
+/* 德行-缺曠記錄 */
+#attendance {
+  ul li[class*="span"] {
+	  margin-left: 9px;
+	  height: 90px;
+  }
+
+  .my-thumbnails;
+}
+
+
+/* 德行-獎懲記錄 */
+#discipline {
+  .my-thumbnails;
+
+  .my-flags {
+    width: 30px;
+    font-size: 13px;
+  }
+
+  .my-detention {
+    background: @detention-bgcolor;
+    color: white;
+    text-align: center;
+  }
+
+  .my-offset {
+    color: #F89406;
+  }
+
+  .my-detention-text {
+    color: @detention-bgcolor;
+  }
+}
+
+.thumbnails a {
+	color:#333;
+	text-decoration:none;
+}

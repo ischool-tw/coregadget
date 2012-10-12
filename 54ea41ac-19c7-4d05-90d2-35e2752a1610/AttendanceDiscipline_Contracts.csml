@@ -1,0 +1,339 @@
+<Content>
+	<Contract Name="ischool.AD.parent" Enabled="True">
+	<Definition>
+		<Authentication Extends="auth.parent" />
+	</Definition>
+	<Package Name="_">
+		<Service Enabled="true" Name="GetAttendanceRecord">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
+        SELECT @@FieldList
+        FROM student_parent sp
+        join student s on sp.ref_student_id=s.id and status in (1, 2)
+        join attendance att on att.ref_student_id = sp.ref_student_id
+        WHERE @@Condition
+        ORDER BY att.ref_student_id, att.occur_date]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Result/Attendance</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field Alias="ID" Mandatory="True" OutputType="Element" Source="Id" Target="att.id" />
+		<Field Alias="StudentID" Mandatory="True" OutputType="Element" Source="StudentID" Target="att.ref_student_id" />
+		<Field Alias="SchoolYear" Mandatory="True" OutputType="Element" Source="SchoolYear" Target="att.school_year" />
+		<Field Alias="Semester" Mandatory="True" OutputType="Element" Source="Semester" Target="att.semester" />
+		<Field Alias="OccurDate" Mandatory="True" OutputType="Element" Source="OccurDate" Target="to_char(att.occur_date, 'YYYY/MM/DD')" />
+		<Field Alias="Detail" Mandatory="True" OutputType="Xml" Source="Detail" Target="att.detail" />
+		<Field Alias="WeekDay" Mandatory="True" OutputType="Element" Source="WeekDay" Target="date_part('dow', att.occur_date) " />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="">
+		<Condition Required="True" Source="Account" SourceType="Variable" Target="sp.account" />
+		<Condition Source="StudentID" Target="att.ref_student_id" />
+		<Condition Source="SchoolYear" SourceType="Request" Target="att.school_year" />
+		<Condition Source="Semester" SourceType="Request" Target="att.semester" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="Account" Name="Account" Source="UserInfo" />
+	</InternalVariable>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetCurrentSemester">
+			<Definition Type="dbhelper">
+    <Action>Select</Action>
+    <SQLTemplate>
+        <![CDATA[
+            select @@FieldList
+            from xpath_table('list_id','content','list','DefaultSchoolYear|DefaultSemester','name=''系統設定''') 
+            as t(id integer,schoolyear text,semester text)
+        ]]>
+    </SQLTemplate>
+    <ResponseRecordElement>Current</ResponseRecordElement>
+    <FieldList Name="FieldList" Source="Field">
+        <Field Mandatory="True" Source="SchoolYear" Target="t.schoolyear" />
+        <Field Mandatory="True" Source="Semester" Target="t.semester" />
+    </FieldList>
+    <Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetDisciplineRecord">
+			<Definition Type="DBHelper">
+    <Action>Select</Action>
+    <SQLTemplate>
+        <![CDATA[
+        SELECT @@FieldList
+        FROM student_parent sp
+        join student s on sp.ref_student_id=s.id and status in (1, 2)
+        join discipline dis on dis.ref_student_id = sp.ref_student_id
+        WHERE @@Condition @@Order
+        ]]>
+    </SQLTemplate>
+    <ResponseRecordElement>Result/Discipline</ResponseRecordElement>
+    <FieldList Name="FieldList" Source="">
+        <Field Alias="Id" Mandatory="True" Source="Id" Target="dis.id" />
+        <Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="dis.school_year" />
+        <Field Alias="Semester" Mandatory="True" Source="Semester" Target="dis.semester" />
+        <Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="dis.grade_year" />
+        <Field Alias="OccurDate" Mandatory="True" Source="OccurDate" Target="dis.occur_date" />
+        <Field Alias="OccurPlace" Mandatory="True" Source="OccurPlace" Target="dis.occur_place" />
+        <Field Alias="Reason" Mandatory="True" Source="Reason" Target="dis.reason" />
+        <Field Alias="Detail" Mandatory="True" OutputType="Xml" Source="Detail" Target="dis.detail" />
+        <Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="dis.ref_student_id" />
+        <Field Alias="Type" Mandatory="True" Source="Type" Target="dis.type" />
+        <Field Alias="MeritFlag" Mandatory="True" Source="MeritFlag" Target="dis.merit_flag" />
+        <Field Alias="LastUpdateDate" Mandatory="True" Source="LastUpdateDate" Target="dis.last_update_date" />
+        <Field Alias="RegisterDate" Mandatory="True" Source="RegisterDate" Target="dis.register_date" />
+    </FieldList>
+    <Conditions Name="Condition" Required="False" Source="">
+        <Condition Required="True" Source="Account" SourceType="Variable" Target="sp.account" />
+        <Condition Required="True" Source="StudentID" Target="dis.ref_student_id" />
+        <Condition Source="SchoolYear" Target="dis.school_year" />
+        <Condition Source="Semester" Target="dis.semester" />        
+    </Conditions>
+    <Orders Name="Order" Source="Order" />
+    <Pagination Allow="True" />
+    <InternalVariable>
+        <Variable Key="Account" Name="Account" Source="UserInfo" />
+    </InternalVariable>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetMoralScore">
+			<Definition Type="DBHelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[SELECT @@FieldList
+        FROM student_parent sp
+        join student s on sp.ref_student_id=s.id and status in (1, 2)
+        join sems_moral_score sms on sms.ref_student_id = sp.ref_student_id
+        WHERE @@Condition @@Order]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Result</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field Alias="ID" Mandatory="True" Source="ID" Target="sms.id" />
+		<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="sms.ref_student_id" />
+		<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="sms.school_year" />
+		<Field Alias="Semester" Mandatory="True" Source="Semester" Target="sms.semester" />
+		<Field Alias="SbDiff" Mandatory="True" Source="SbDiff" Target="sms.sb_diff" />
+		<Field Alias="SbComment" Mandatory="True" Source="SbComment" Target="sms.sb_comment" />
+		<Field Alias="OtherDiff" Mandatory="True" OutputType="Xml" Source="OtherDiff" Target="sms.other_diff" />
+		<Field Alias="DailyLifeScore" Mandatory="True" OutputType="Xml" Source="TextScore" Target="sms.text_score" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="">
+		<Condition Required="True" Source="Account" SourceType="Variable" Target="sp.account" />
+		<Condition Required="True" Source="StudentID" Target="sms.ref_student_id" />
+		<Condition Required="True" Source="SchoolYear" Target="sms.school_year" />
+		<Condition Required="True" Source="Semester" Target="sms.semester" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="Account" Name="Account" Source="UserInfo" />
+	</InternalVariable>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetSemester">
+			<Definition Type="DBHelper">
+				<Action>Select</Action>
+				<SQLTemplate><![CDATA[SELECT @@FieldList
+FROM list
+WHERE name='系統設定']]></SQLTemplate>
+				<ResponseRecordElement />
+				<FieldList Name="FieldList" Source="Field">
+					<Field Alias="Result" Mandatory="True" OutputType="Xml" Source="Content" Target="content" />
+				</FieldList>
+				<Conditions Name="Condition" Required="False" Source="Condition" />
+				<Orders Name="Order" Source="Order" />
+				<Pagination Allow="True" />
+			</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetStudentInfo">
+			<Definition Type="DBHelper">
+				<Action>Select</Action>
+				<SQLTemplate><![CDATA[
+        SELECT @@FieldList
+        FROM student_parent sp
+        join student s on sp.ref_student_id=s.id and status in (1, 2)
+        WHERE @@Condition @@Order
+        ]]></SQLTemplate>
+				<ResponseRecordElement>Result/Student</ResponseRecordElement>
+				<FieldList Name="FieldList" Source="">
+					<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="s.id" />
+					<Field Alias="StudentName" Mandatory="True" Source="StudentName" Target="s.name" />
+					<Field Alias="StudentNumber" Mandatory="True" Source="StudentNumber" Target="s.student_number" />
+					<Field Alias="SeatNo" Mandatory="True" Source="SeatNo" Target="s.seat_no" />
+					<Field Alias="SemsHistory" Mandatory="True" OutputType="xml" Source="SemsHistory" Target="s.sems_history" />
+				</FieldList>
+				<Conditions Name="Condition" Required="False" Source="Condition">
+					<Condition Required="True" Source="Account" SourceType="Variable" Target="sp.account" />
+				</Conditions>
+				<Orders Name="Order" Source="Order" />
+				<Pagination Allow="True" />
+				<InternalVariable>
+					<Variable Key="Account" Name="Account" Source="UserInfo" />
+				</InternalVariable>
+			</Definition>
+		</Service>
+	</Package>
+</Contract>
+	<Contract Name="ischool.AD.student" Enabled="True">
+	<Definition>
+		<Authentication Extends="auth.student" />
+	</Definition>
+	<Package Name="_">
+		<Service Enabled="true" Name="GetAttendanceRecord">
+			<Definition Type="dbhelper">
+				<Action>Select</Action>
+				<SQLTemplate><![CDATA[SELECT @@FieldList
+FROM attendance
+WHERE @@Condition
+ORDER BY occur_date asc]]></SQLTemplate>
+				<ResponseRecordElement>Result/Attendance</ResponseRecordElement>
+				<FieldList Name="FieldList" Source="">
+					<Field Alias="ID" Mandatory="True" OutputType="Element" Source="Id" Target="id" />
+					<Field Alias="StudentID" Mandatory="True" OutputType="Element" Source="StudentID" Target="ref_student_id" />
+					<Field Alias="SchoolYear" Mandatory="True" OutputType="Element" Source="SchoolYear" Target="school_year" />
+					<Field Alias="Semester" Mandatory="True" OutputType="Element" Source="Semester" Target="semester" />
+					<Field Alias="OccurDate" Mandatory="True" OutputType="Element" Source="OccurDate" Target="to_char(occur_date, 'YYYY/MM/DD')" />
+					<Field Alias="Detail" Mandatory="True" OutputType="Xml" Source="Detail" Target="detail" />
+					<Field Alias="WeekDay" Mandatory="True" OutputType="Element" Source="WeekDay" Target="date_part('dow', occur_date) " />
+				</FieldList>
+				<Conditions Name="Condition" Required="False" Source="">
+					<Condition Required="True" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
+					<Condition Source="SchoolYear" SourceType="Request" Target="school_year" />
+					<Condition Source="Semester" SourceType="Request" Target="semester" />
+				</Conditions>
+				<Orders Name="Order" Source="Order" />
+				<Pagination Allow="True" />
+				<InternalVariable>
+					<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+				</InternalVariable>
+			</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetCurrentSemester">
+			<Definition Type="dbhelper">
+    <Action>Select</Action>
+    <SQLTemplate>
+        <![CDATA[
+            select @@FieldList
+            from xpath_table('list_id','content','list','DefaultSchoolYear|DefaultSemester','name=''系統設定''') 
+            as t(id integer,schoolyear text,semester text)
+        ]]>
+    </SQLTemplate>
+    <ResponseRecordElement>Current</ResponseRecordElement>
+    <FieldList Name="FieldList" Source="Field">
+        <Field Mandatory="True" Source="SchoolYear" Target="t.schoolyear" />
+        <Field Mandatory="True" Source="Semester" Target="t.semester" />
+    </FieldList>
+    <Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetDisciplineRecord">
+			<Definition Type="DBHelper">
+    <Action>Select</Action>
+    <SQLTemplate>
+        <![CDATA[
+        SELECT @@FieldList
+        FROM discipline
+        WHERE @@Condition @@Order
+        ]]>
+    </SQLTemplate>
+    <ResponseRecordElement>Result/Discipline</ResponseRecordElement>
+    <FieldList Name="FieldList" Source="">
+        <Field Alias="Id" Mandatory="True" Source="Id" Target="id" />
+        <Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="school_year" />
+        <Field Alias="Semester" Mandatory="True" Source="Semester" Target="semester" />
+        <Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="grade_year" />
+        <Field Alias="OccurDate" Mandatory="True" Source="OccurDate" Target="occur_date" />
+        <Field Alias="OccurPlace" Mandatory="True" Source="OccurPlace" Target="occur_place" />
+        <Field Alias="Reason" Mandatory="True" Source="Reason" Target="reason" />
+        <Field Alias="Detail" Mandatory="True" OutputType="Xml" Source="Detail" Target="detail" />
+        <Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="ref_student_id" />
+        <Field Alias="Type" Mandatory="True" Source="Type" Target="type" />
+        <Field Alias="MeritFlag" Mandatory="True" Source="MeritFlag" Target="merit_flag" />
+        <Field Alias="LastUpdateDate" Mandatory="True" Source="LastUpdateDate" Target="last_update_date" />
+        <Field Alias="RegisterDate" Mandatory="True" Source="RegisterDate" Target="register_date" />
+    </FieldList>
+    <Conditions Name="Condition" Required="False" Source="">
+        <Condition Required="True" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
+        <Condition Source="SchoolYear" Target="school_year" />
+        <Condition Source="Semester" Target="semester" />        
+    </Conditions>
+    <Orders Name="Order" Source="Order" />
+    <Pagination Allow="True" />
+    <InternalVariable>
+        <Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+    </InternalVariable>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetMoralScore">
+			<Definition Type="DBHelper">
+				<Action>Select</Action>
+				<SQLTemplate><![CDATA[SELECT @@FieldList
+FROM sems_moral_score
+WHERE @@Condition
+@@Order]]></SQLTemplate>
+				<ResponseRecordElement>Result</ResponseRecordElement>
+				<FieldList Name="FieldList" Source="">
+					<Field Alias="ID" Mandatory="True" Source="ID" Target="id" />
+					<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="school_year" />
+					<Field Alias="Semester" Mandatory="True" Source="Semester" Target="semester" />
+					<Field Alias="SbDiff" Mandatory="True" Source="SbDiff" Target="sb_diff" />
+					<Field Alias="SbComment" Mandatory="True" Source="SbComment" Target="sb_comment" />
+					<Field Alias="OtherDiff" Mandatory="True" OutputType="Xml" Source="OtherDiff" Target="other_diff" />
+					<Field Alias="DailyLifeScore" Mandatory="True" OutputType="Xml" Source="TextScore" Target="text_score" />
+				</FieldList>
+				<Conditions Name="Condition" Required="False" Source="">
+					<Condition Source="SchoolYear" Target="school_year" />
+					<Condition Source="Semester" Target="semester" />
+					<Condition Required="True" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
+				</Conditions>
+				<Orders Name="Order" Source="Order" />
+				<Pagination Allow="True" />
+				<InternalVariable>
+					<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+				</InternalVariable>
+			</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetSemester">
+			<Definition Type="DBHelper">
+				<Action>Select</Action>
+				<SQLTemplate><![CDATA[SELECT @@FieldList
+FROM list
+WHERE name='系統設定']]></SQLTemplate>
+				<ResponseRecordElement />
+				<FieldList Name="FieldList" Source="Field">
+					<Field Alias="Result" Mandatory="True" OutputType="Xml" Source="Content" Target="content" />
+				</FieldList>
+				<Conditions Name="Condition" Required="False" Source="Condition" />
+				<Orders Name="Order" Source="Order" />
+				<Pagination Allow="True" />
+			</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetStudentInfo">
+			<Definition Type="DBHelper">
+				<Action>Select</Action>
+				<SQLTemplate><![CDATA[
+		SELECT @@FieldList  FROM student s WHERE @@Condition @@Order
+		]]></SQLTemplate>
+				<ResponseRecordElement>Result/Student</ResponseRecordElement>
+				<FieldList Name="FieldList" Source="">
+					<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="s.id" />
+					<Field Alias="StudentName" Mandatory="True" Source="StudentName" Target="s.name" />
+					<Field Alias="StudentNumber" Mandatory="True" Source="StudentNumber" Target="s.student_number" />
+					<Field Alias="SeatNo" Mandatory="True" Source="SeatNo" Target="s.seat_no" />
+					<Field Alias="SemsHistory" Mandatory="True" OutputType="xml" Source="SemsHistory" Target="s.sems_history" />
+				</FieldList>
+				<Conditions Name="Condition" Required="False" Source="Condition">
+					<Condition Required="True" Source="StudentID" SourceType="Variable" Target="s.id" />
+				</Conditions>
+				<Orders Name="Order" Source="Order" />
+				<Pagination Allow="True" />
+				<InternalVariable>
+					<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+				</InternalVariable>
+			</Definition>
+		</Service>
+	</Package>
+</Contract>
+</Content>

@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <!--<link href="css/base.less" rel="stylesheet/less" />
+  <link href="css/default.less" rel="stylesheet/less" />-->
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <!--<script src="js/less.min.js"></script>-->
+  <script src="js/bootstrap.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('td[rel=tooltip]').tooltip("show").tooltip("toggle");
+    });
+
+  </script>
+</head>
+<body>
+  <div id="gadget">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+          <div id="mainMsg"></div>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span12" id="container-main">
+        	<ul class="nav nav-pills">
+              <li class="active"><a href="#">江小信</a></li>
+              <li><a href="#">江中信</a></li>
+              <li><a href="#">江大信</a></li>
+            </ul>
+          <div class="my-schoolyear-semester-widget" title="請選擇學年度學期">
+            <div class="btn-group" data-toggle="buttons-radio">
+              <button class="btn btn-large active" school-year="100" semester="2">1002</button>
+              <button class="btn btn-large" school-year="100" semester="1">1001</button>
+              <button class="btn btn-large" school-year="99" semester="2">992</button>
+              <button class="btn btn-large" school-year="99" semester="1">991</button>
+            </div>
+          </div>
+          <div class="well">
+            <div id="Credit">
+              <h2 class="my-label-title">本學期學分資訊</h2>
+              <p>(實得學分數 / <span class="my-slate-text-color">已修學分數</span>)</p>
+              <div class="row-fluid">
+                <div class="span3">
+                  <div class="my-slate span12">
+						        <span class="my-slate-number">23</span>
+                    <span class="my-slate-total">25</span>
+						        <span class="my-slate-text">實得</span>
+                  </div>
+                </div>
+                <div class="span9">
+                  <table class="table table-striped">
+                    <tbody>
+                      <tr>
+                        <th><span>必修</span> </th>
+                        <td>
+                          <span>30</span>
+                        </td>
+                        <th><span>選修</span> </th>
+                        <td>
+                          <span>13</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th><span>部定必修</span> </th>
+                        <td>
+                          <span>5</span>
+                        </td>
+                        <th><span>校定必修</span> </th>
+                        <td>
+                          <span>1</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th><span>實習</span> </th>
+                        <td>
+                          <span>1</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="well">
+            <div id="EntryScore">
+              <h2 class="my-label-title">本學期分項成績</h2>
+              <table class="table table-striped">
+                <tbody>
+                  <tr>
+                    <th><span>學業成績</span> </th>
+                    <td>
+                      <span entry-type="academic">89</span>
+                    </td>
+                    <th><span>實習科目</span></th>
+                    <td>
+                      <span entry-type="internship">86</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="well">
+            <div id="SubjectScore">
+              <h2 class="my-label-title">本學期科目成績</h2>
+              <p>(符號「--」代表不列入計算)</p>
+              <table class="my-table my-table-bordered my-well-table-striped">
+                <thead>
+                  <tr>
+                    <th><span>分項類別</span></th>
+                    <th><span>科目</span></th>
+                    <th><span>級別</span></th>
+                    <th><span>學分</span></th>
+                    <th><span>校訂/部定</span></th>
+                    <th><span>必修/選修</span></th>
+                    <th><span>成績</span></th>
+                    <th><span>取得學分</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>學業</td>
+                    <td rel="tooltip" data-type="ranking" data-original-title="班排名：9<br/>科排名：37<br/>年排名：1143">國文</td>
+                    <td rel="tooltip" data-original-title="課程規劃表「97電一忠」<br/>設定為3">5</a></td>
+                    <td>2</td>
+                    <td>部定</td>
+                    <td>必修</td>
+                    <td>77</td>
+                    <td><i class="icon-ok"></i></td>
+                  </tr>
+                  <tr>
+                    <td rel="tooltip" data-original-title="課程規劃表「97電一忠」<br/>設定為學業">實習科目</a></td>
+                    <td rel="tooltip" data-type="ranking" data-original-title="班排名：19<br/>科排名：52<br/>年排名：93">電子學實習</td>
+                    <td>1</td>
+                    <td>3</td>
+                    <td>校訂</td>
+                    <td>選修</td>
+                    <td>35</td>
+                    <td><i class="icon-remove"></i></td>
+                  </tr>
+                  <tr>
+                    <td>學業</td>
+                    <td rel="tooltip" data-type="ranking" data-original-title="班排名：11<br/>科排名：33<br/>年排名：924">數學</td>
+                    <td>5</td>
+                    <td>2</td>
+                    <td>部定</td>
+                    <td>必修</td>
+                    <td>76(補)</td>
+                    <td><i class="icon-ok"></i></td>
+                  </tr>
+                  <tr>
+                    <td>學業</td>
+                    <td rel="tooltip" data-type="ranking" data-original-title="班排名：17<br/>科排名：45<br/>年排名：464">應用英文</td>
+                    <td>1</td>
+                    <td rel="tooltip" data-original-title="課程規劃表「97電一忠」<br/>設定為2">3</td>
+                    <td>校訂</td>
+                    <td>選修</td>
+                    <td>81</td>
+                    <td><i class="icon-ok"></i></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
