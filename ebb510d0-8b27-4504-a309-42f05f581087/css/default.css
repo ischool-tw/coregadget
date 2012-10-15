@@ -1,0 +1,87 @@
+/* 學業,德行共用 */
+/* 德行 */
+#behavior .my-overflow {
+  overflow: hidden;
+}
+#behavior .my-behavior-item {
+  margin-bottom: 20px;
+}
+#behavior .my-behavior-item .my-label-title {
+  margin-bottom: 10px;
+  color: #336600;
+}
+#behavior tr th {
+  width: 20px;
+  text-align: right;
+  white-space: nowrap;
+}
+#behavior tr th[colspan] {
+  white-space: nowrap;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  border: 0px solid #90EE90;
+  background-color: #5B8607;
+  padding: 11px;
+  font-weight: bold;
+  color: #FFFFFF;
+  text-align: left;
+  box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+}
+/* 德行-缺曠記錄 */
+#attendance ul li[class*="span"] {
+  margin-left: 9px;
+  height: 90px;
+}
+#attendance .my-thumbnail-white {
+  text-align: center;
+  background-color: #FFF;
+}
+#attendance .my-subthumbnail-top {
+  border-bottom: 1px solid #ccc;
+  padding: 9px;
+}
+#attendance .my-subthumbnail-bottom {
+  background: #DDD;
+}
+#attendance .my-surveillance {
+  color: #fff;
+  background: #b94a48;
+}
+/* 德行-獎懲記錄 */
+#discipline .my-thumbnail-white {
+  text-align: center;
+  background-color: #FFF;
+}
+#discipline .my-subthumbnail-top {
+  border-bottom: 1px solid #ccc;
+  padding: 9px;
+}
+#discipline .my-subthumbnail-bottom {
+  background: #DDD;
+}
+#discipline .my-surveillance {
+  color: #fff;
+  background: #b94a48;
+}
+#discipline .my-flags {
+  width: 30px;
+  font-size: 13px;
+}
+#discipline .my-detention {
+  background: #b94a48;
+  color: white;
+  text-align: center;
+}
+#discipline .my-offset {
+  color: #F89406;
+}
+#discipline .my-detention-text {
+  color: #b94a48;
+}
+.thumbnails a {
+  color: #333;
+  text-decoration: none;
+}
