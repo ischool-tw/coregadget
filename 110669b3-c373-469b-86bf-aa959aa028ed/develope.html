@@ -10,10 +10,11 @@
   </script>
   <link href="css/bootstrap.css" rel="stylesheet" />
   <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
   <!--<link href="css/base.less" rel="stylesheet/less" />
   <link href="css/default.less" rel="stylesheet/less" />-->
   <link href="css/base.css" rel="stylesheet" />
-  <link href="css/default.css" rel="stylesheet" /> 
+  <link href="css/default.css" rel="stylesheet" />
   <script src="js/jquery.min.js"></script>
   <!--<script src="js/less.min.js"></script>-->
   <script src="js/bootstrap.js"></script>
@@ -28,104 +29,30 @@
         </div>
       </div>
       <div class="row-fluid">
-        <!--<div class="span3" id="container-nav">
-          <div class="my-nav-widget" id="function-list">
-            <ul class="nav nav-tabs nav-stacked">
-              <li class="active"><a href="#preview" data-toggle="tab"><span>瀏覽訊息</span><i class="icon-chevron-right pull-right"></i></a>
-              </li>
-            </ul>
-          </div>
-        </div>-->
         <div class="span12" id="container-main">
-          <div class="well my-well-deepcolor" id="graduation">
-            <h2 class="my-label-title">畢業條件<small>以課程規劃表內容為準</small></h2>
-              <p>(累計實得學分數 / <span class="my-slate-text-color">應修學分數</span>)</p>
-              <div class="row-fluid">
-                <div class="my-slate span2" credit-type="total">
-						      <span class="my-slate-number">100</span>
-                  <span class="my-slate-total">200</span>
-						      <span class="my-slate-text">總學分</span>						
-                </div>
-                <div class="my-slate span2" credit-type="required">
-						      <span class="my-slate-number">60</span>
-                  <span class="my-slate-total">150</span>
-						      <span class="my-slate-text">必修</span>						
-                </div>
-                <div class="my-slate span2" credit-type="choose">
-						      <span class="my-slate-number">25</span>
-                  <span class="my-slate-total">50</span>
-						      <span class="my-slate-text">選修</span>						
-                </div>
-                <div class="my-slate span2" credit-type="required-by-edu">
-						      <span class="my-slate-number">34</span>
-                  <span class="my-slate-total">130</span>
-						      <span class="my-slate-text">部定必修</span>						
-                </div>
-                <div class="my-slate span2" credit-type="internships">
-						      <span class="my-slate-number">5</span>
-                  <span class="my-slate-total">20</span>
-						      <span class="my-slate-text">實習</span>						
-                </div>
-                <div class="my-slate span2" credit-type="required-by-school">
-						      <span class="my-slate-number">37</span>
-                  <span class="my-slate-total">122</span>
-						      <span class="my-slate-text">校訂必修</span>						
-                </div>
-              </div>
-          </div>
           <div class="my-schoolyear-semester-widget" title="請選擇學年度學期">
             <div class="btn-group" data-toggle="buttons-radio">
-              <button class="btn btn-large active" school-year="100" semester="2">1002</button>
-              <button class="btn btn-large" school-year="100" semester="1">1001</button>
-              <button class="btn btn-large" school-year="99" semester="2">992</button>
-              <button class="btn btn-large" school-year="99" semester="1">991</button>
             </div>
           </div>
           <div class="well">
             <div id="Credit">
               <h2 class="my-label-title">本學期學分資訊</h2>
-              <p>(實得學分數 / <span class="my-slate-text-color">已修學分數</span>)</p>
+              <p>(以學生個人修習為主)</p>
               <div class="row-fluid">
                 <div class="span3">
                   <div class="my-slate span12">
-						        <span class="my-slate-number">23</span>
-                    <span class="my-slate-total">25</span>
-						        <span class="my-slate-text">實得</span>						
+						        <span class="my-slate-number"></span>
+                    <span class="my-slate-total"></span>
+						        <span class="my-slate-text">實得 / 已修</span>
                   </div>
                 </div>
                 <div class="span9">
                   <table class="table table-striped">
                     <tbody>
-                      <tr>
-                        <th><span>必修</span> </th>
-                        <td>
-                          <span>30</span>
-                        </td>
-                        <th><span>選修</span> </th>
-                        <td>
-                          <span>13</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th><span>部定必修</span> </th>
-                        <td>
-                          <span>5</span>
-                        </td>
-                        <th><span>校定必修</span> </th>
-                        <td>
-                          <span>1</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th><span>實習</span> </th>
-                        <td>
-                          <span>1</span>
-                        </td>                        
-                      </tr>
                     </tbody>
-                  </table>			
+                  </table>
                 </div>
-              </div> 
+              </div>
             </div>
             <div id="EntryScore">
               <h2 class="my-label-title">本學期分項成績</h2>
@@ -134,11 +61,11 @@
                   <tr>
                     <th><span>學業成績</span> </th>
                     <td>
-                      <span entry-type="academic">89</span>
+                      <span entry-type="academic"></span>
                     </td>
                     <th><span>實習科目</span></th>
                     <td>
-                      <span entry-type="internship">86</span>
+                      <span entry-type="internship"></span>
                     </td>
                   </tr>
                 </tbody>
@@ -146,7 +73,6 @@
             </div>
             <div id="SubjectScore">
               <h2 class="my-label-title">本學期科目成績</h2>
-              <p>(符號「--」代表不列入計算)</p>
               <table class="my-table my-table-bordered my-well-table-striped">
                 <thead>
                   <tr>
@@ -160,48 +86,7 @@
                     <th><span>取得學分</span></th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>學業</td>
-                    <td>國文</td>
-                    <td rel="tooltip" data-original-title="在課程規劃表'97電一忠'中值為3">5</a></td>
-                    <td>2</td>
-                    <td>部定</td>
-                    <td>必修</td>
-                    <td>77</td>
-                    <td><i class="icon-ok"></i></td>
-                  </tr>
-                  <tr>
-                    <td rel="tooltip" data-original-title="在課程規劃表'97電一忠'中值為學業">實習科目</a></td>
-                    <td>電子學實習</td>
-                    <td>1</td>
-                    <td>3</td>
-                    <td>校訂</td>
-                    <td>選修</td>
-                    <td>35</td>
-                    <td><i class="icon-remove"></i></td>
-                  </tr>
-                  <tr>
-                    <td>學業</td>
-                    <td>數學</td>
-                    <td>5</td>
-                    <td>2</td>
-                    <td>部定</td>
-                    <td>必修</td>
-                    <td>76(補)</td>
-                    <td><i class="icon-ok"></i></td>
-                  </tr>
-                  <tr>
-                    <td>學業</td>
-                    <td>應用英文</td>
-                    <td>1</td>
-                    <td rel="tooltip" data-original-title="在課程規劃表'97電一忠'中值為2">3</td>
-                    <td>校訂</td>
-                    <td>選修</td>
-                    <td>81</td>
-                    <td><i class="icon-ok"></i></td>
-                  </tr>
-                </tbody>
+                <tbody></tbody>
               </table>
             </div>
           </div>
