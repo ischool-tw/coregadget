@@ -1,13 +1,13 @@
 <Content>
 	<Contract Name="ischool.exam.parent" Enabled="True">
 	<Definition>
-		<Authentication Extends="auth.parent" />
-	</Definition>
+      <Authentication Extends="auth.parent" />
+    </Definition>
 	<Package Name="_">
 		<Service Enabled="true" Name="GetAllCourseSemester">
 			<Definition Type="dbhelper">
-				<Action>Select</Action>
-				<SQLTemplate><![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
             SELECT @@FieldList
 	        FROM student_parent sp
 	        join student s on sp.ref_student_id=s.id and status in (1, 2)
@@ -17,27 +17,26 @@
 			group by school_year, semester
 			order by school_year desc, semester desc
         ]]></SQLTemplate>
-				<ResponseRecordElement>Course/Semester</ResponseRecordElement>
-				<FieldList Name="FieldList" Source="Field">
-					<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="course.school_year" />
-					<Field Alias="Semester" Mandatory="True" Source="Semester" Target="course.semester" />
-				</FieldList>
-				<Conditions Name="Condition" Required="False" Source="Condition">
-					<Condition Required="True" Source="Account" SourceType="Variable" Target="sp.account" />
-					<Condition Required="True" Source="StudentID" Target="sc_attend.ref_student_id" />
-				</Conditions>
-				<Orders Name="Order" Source="Order" />
-				<Pagination Allow="True" />
-				<InternalVariable>
-					<Variable Key="Account" Name="Account" Source="UserInfo" />
-				</InternalVariable>
-			</Definition>
+          <ResponseRecordElement>Course/Semester</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="course.school_year" />
+            <Field Alias="Semester" Mandatory="True" Source="Semester" Target="course.semester" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition">
+            <Condition Required="True" Source="Account" SourceType="Variable" Target="sp.account" />
+            <Condition Required="True" Source="StudentID" Target="sc_attend.ref_student_id" />
+          </Conditions>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+          <InternalVariable>
+            <Variable Key="Account" Name="Account" Source="UserInfo" />
+          </InternalVariable>
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetCourseExamScore">
 			<Definition Type="dbhelper">
-	<Action>Select</Action>
-	<SQLTemplate>
-		<![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
 			SELECT @@FieldList
 	        FROM student_parent sp
 	        join student s on sp.ref_student_id=s.id and status in (1, 2)
@@ -49,116 +48,113 @@
             left join sce_take on sce_take.ref_exam_id=exam.id and sce_take.ref_sc_attend_id=sc_attend.id
         where @@Condition
         order by  exam.display_order
-		]]>
-	</SQLTemplate>
-	<ResponseRecordElement>ExamScoreList</ResponseRecordElement>
-	<FieldList Name="FieldList" Source="Field">
-		<Field Mandatory="True" OutputType="Attribute" Source="SchoolYear" Target="course.school_year" />
-		<Field Mandatory="True" OutputType="Attribute" Source="Semester" Target="course.semester" />
-		<Field Mandatory="True" OutputType="Attribute" Source="CourseID" Target="sc_attend.ref_course_id" />
-		<Field Mandatory="True" OutputType="Attribute" Source="CourseName" Target="course.course_name" />
-		<Field Mandatory="True" OutputType="Attribute" Source="ScoreType" Target="course.score_type" />
-		<Field Mandatory="False" OutputType="Attribute" Source="Credit" Target="course.credit" />
-		<Field Mandatory="False" OutputType="Attribute" Source="Period" Target="course.period" />
-		<Field Mandatory="False" OutputType="Attribute" Source="Subject" Target="course.subject" />
-		<Field Mandatory="True" OutputType="Attribute" Source="ExamID" Target="exam.id" />
-		<Field Mandatory="True" OutputType="Attribute" Source="ExamName" Target="exam.exam_name" />
-		<Field Mandatory="True" OutputConverter="AbsenceOutput" OutputType="Attribute" Source="Score" Target="sce_take.score" />
-		<Field Mandatory="False" OutputType="Xml" Source="Extension" Target="sce_take.extension" />
-	</FieldList>
-	<Conditions Name="Condition" Required="False" Source="Condition">
-		<Condition Required="True" Source="Account" SourceType="Variable" Target="sp.account" />
-		<Condition Required="True" Source="StudentID" Target="sc_attend.ref_student_id" />
-		<Condition Comparer="=" Quote="true" Required="false" Source="SchoolYear" Target="course.school_year" />
-		<Condition Comparer="=" Quote="true" Required="false" Source="Semester" Target="course.semester" />
-		<Condition Comparer="=" Quote="true" Required="false" Source="ExamID" Target="sce_take.ref_exam_id" />
-		<Condition Comparer="=" Quote="true" Required="false" Source="CourseID" Target="course.id" />
-	</Conditions>
-	<ExportStyle>
-		<Group Fields="SchoolYear,Semester,ExamName,ExamID" Name="ExamScore">
-			<Record Name="ScoreDetail">
-				<Element Field="CourseID" Identity="True" />
-				<Element Field="CourseName" />
-				<Element Field="Credit" />
-				<Element Field="Period" />
-				<Element Field="Subject" />
-				<Element Field="Score" />
-				<Element Field="Extension" />
-			</Record>
-		</Group>
-	</ExportStyle>
-	<Orders Name="Order" Source="Order" />
-	<Pagination Allow="True" />
-	<InternalVariable>
-		<Variable Key="Account" Name="Account" Source="UserInfo" />
-	</InternalVariable>
-</Definition>
+		]]></SQLTemplate>
+          <ResponseRecordElement>ExamScoreList</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Mandatory="True" OutputType="Attribute" Source="SchoolYear" Target="course.school_year" />
+            <Field Mandatory="True" OutputType="Attribute" Source="Semester" Target="course.semester" />
+            <Field Mandatory="True" OutputType="Attribute" Source="CourseID" Target="sc_attend.ref_course_id" />
+            <Field Mandatory="True" OutputType="Attribute" Source="CourseName" Target="course.course_name" />
+            <Field Mandatory="True" OutputType="Attribute" Source="ScoreType" Target="course.score_type" />
+            <Field Mandatory="False" OutputType="Attribute" Source="Credit" Target="course.credit" />
+            <Field Mandatory="False" OutputType="Attribute" Source="Period" Target="course.period" />
+            <Field Mandatory="False" OutputType="Attribute" Source="Subject" Target="course.subject" />
+            <Field Mandatory="True" OutputType="Attribute" Source="ExamID" Target="exam.id" />
+            <Field Mandatory="True" OutputType="Attribute" Source="ExamName" Target="exam.exam_name" />
+            <Field Mandatory="True" OutputConverter="AbsenceOutput" OutputType="Attribute" Source="Score" Target="sce_take.score" />
+            <Field Mandatory="False" OutputType="Xml" Source="Extension" Target="sce_take.extension" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition">
+            <Condition Required="True" Source="Account" SourceType="Variable" Target="sp.account" />
+            <Condition Required="True" Source="StudentID" Target="sc_attend.ref_student_id" />
+            <Condition Comparer="=" Quote="true" Required="false" Source="SchoolYear" Target="course.school_year" />
+            <Condition Comparer="=" Quote="true" Required="false" Source="Semester" Target="course.semester" />
+            <Condition Comparer="=" Quote="true" Required="false" Source="ExamID" Target="sce_take.ref_exam_id" />
+            <Condition Comparer="=" Quote="true" Required="false" Source="CourseID" Target="course.id" />
+          </Conditions>
+          <ExportStyle>
+            <Group Fields="SchoolYear,Semester,ExamName,ExamID" Name="ExamScore">
+              <Record Name="ScoreDetail">
+                <Element Field="CourseID" Identity="True" />
+                <Element Field="CourseName" />
+                <Element Field="Credit" />
+                <Element Field="Period" />
+                <Element Field="Subject" />
+                <Element Field="Score" />
+                <Element Field="Extension" />
+              </Record>
+            </Group>
+          </ExportStyle>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+          <InternalVariable>
+            <Variable Key="Account" Name="Account" Source="UserInfo" />
+          </InternalVariable>
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetStudentInfo">
 			<Definition Type="DBHelper">
-	<Action>Select</Action>
-	<SQLTemplate>
-		<![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
         SELECT @@FieldList
         FROM student_parent sp
         join student s on sp.ref_student_id=s.id and status in (1, 2)
         WHERE @@Condition @@Order
         ]]></SQLTemplate>
-	<ResponseRecordElement>Result/Student</ResponseRecordElement>
-	<FieldList Name="FieldList" Source="">
-		<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="s.id" />
-		<Field Alias="StudentName" Mandatory="True" Source="StudentName" Target="s.name" />
-		<Field Alias="StudentNumber" Mandatory="True" Source="StudentNumber" Target="s.student_number" />
-		<Field Alias="SeatNo" Mandatory="True" Source="SeatNo" Target="s.seat_no" />
-		<Field Alias="SemsHistory" Mandatory="True" OutputType="xml" Source="SemsHistory" Target="s.sems_history" />
-	</FieldList>
-	<Conditions Name="Condition" Required="False" Source="Condition">
-		<Condition Required="True" Source="Account" SourceType="Variable" Target="sp.account" />
-	</Conditions>
-	<Orders Name="Order" Source="Order" />
-	<Pagination Allow="True" />
-	<InternalVariable>
-		<Variable Key="Account" Name="Account" Source="UserInfo" />
-	</InternalVariable>
-</Definition>
+          <ResponseRecordElement>Result/Student</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="">
+            <Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="s.id" />
+            <Field Alias="StudentName" Mandatory="True" Source="StudentName" Target="s.name" />
+            <Field Alias="StudentNumber" Mandatory="True" Source="StudentNumber" Target="s.student_number" />
+            <Field Alias="SeatNo" Mandatory="True" Source="SeatNo" Target="s.seat_no" />
+            <Field Alias="SemsHistory" Mandatory="True" OutputType="xml" Source="SemsHistory" Target="s.sems_history" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition">
+            <Condition Required="True" Source="Account" SourceType="Variable" Target="sp.account" />
+          </Conditions>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+          <InternalVariable>
+            <Variable Key="Account" Name="Account" Source="UserInfo" />
+          </InternalVariable>
+        </Definition>
 		</Service>
 	</Package>
 </Contract>
 	<Contract Name="ischool.exam.student" Enabled="True">
 	<Definition>
-		<Authentication Extends="auth.student" />
-	</Definition>
+      <Authentication Extends="auth.student" />
+    </Definition>
 	<Package Name="_">
 		<Service Enabled="true" Name="GetAllCourseSemester">
 			<Definition Type="dbhelper">
-				<Action>Select</Action>
-				<SQLTemplate><![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
             select @@FieldList
 			from sc_attend join course on sc_attend.ref_course_id=course.id
 			where @@Condition
 			group by school_year, semester
 			order by school_year desc, semester desc
         ]]></SQLTemplate>
-				<ResponseRecordElement>Course/Semester</ResponseRecordElement>
-				<FieldList Name="FieldList" Source="Field">
-					<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="course.school_year" />
-					<Field Alias="Semester" Mandatory="True" Source="Semester" Target="course.semester" />
-				</FieldList>
-				<Conditions Name="Condition" Required="False" Source="Condition">
-					<Condition Required="True" Source="StudentID" SourceType="Variable" Target="sc_attend.ref_student_id" />
-				</Conditions>
-				<Orders Name="Order" Source="Order" />
-				<Pagination Allow="True" />
-				<InternalVariable>
-					<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
-				</InternalVariable>
-			</Definition>
+          <ResponseRecordElement>Course/Semester</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="course.school_year" />
+            <Field Alias="Semester" Mandatory="True" Source="Semester" Target="course.semester" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition">
+            <Condition Required="True" Source="StudentID" SourceType="Variable" Target="sc_attend.ref_student_id" />
+          </Conditions>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+          <InternalVariable>
+            <Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+          </InternalVariable>
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetCourseExamScore">
 			<Definition Type="dbhelper">
-	<Action>Select</Action>
-	<SQLTemplate>
-		<![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
 			select @@FieldList
         	from sc_attend join course on sc_attend.ref_course_id=course.id and course.not_included_in_calc = '0'
             join exam_template on course.ref_exam_template_id = exam_template.id
@@ -168,46 +164,46 @@
         	where @@Condition and sc_attend.ref_student_id=@@StudentID
         	order by  exam.display_order
 		]]></SQLTemplate>
-	<ResponseRecordElement>ExamScoreList</ResponseRecordElement>
-	<FieldList Name="FieldList" Source="Field">
-		<Field Mandatory="True" OutputType="Attribute" Source="SchoolYear" Target="course.school_year" />
-		<Field Mandatory="True" OutputType="Attribute" Source="Semester" Target="course.semester" />
-		<Field Mandatory="True" OutputType="Attribute" Source="CourseID" Target="sc_attend.ref_course_id" />
-		<Field Mandatory="True" OutputType="Attribute" Source="CourseName" Target="course.course_name" />
-		<Field Mandatory="True" OutputType="Attribute" Source="ScoreType" Target="course.score_type" />
-		<Field Mandatory="False" OutputType="Attribute" Source="Credit" Target="course.credit" />
-		<Field Mandatory="False" OutputType="Attribute" Source="Period" Target="course.period" />
-		<Field Mandatory="False" OutputType="Attribute" Source="Subject" Target="course.subject" />
-		<Field Mandatory="True" OutputType="Attribute" Source="ExamID" Target="exam.id" />
-		<Field Mandatory="True" OutputType="Attribute" Source="ExamName" Target="exam.exam_name" />
-		<Field Mandatory="True" OutputConverter="AbsenceOutput" OutputType="Attribute" Source="Score" Target="sce_take.score" />
-		<Field Mandatory="False" OutputType="Xml" Source="Extension" Target="sce_take.extension" />
-	</FieldList>
-	<Conditions Name="Condition" Required="False" Source="Condition">
-		<Condition Comparer="=" Quote="true" Required="false" Source="SchoolYear" Target="course.school_year" />
-		<Condition Comparer="=" Quote="true" Required="false" Source="Semester" Target="course.semester" />
-		<Condition Comparer="=" Quote="true" Required="false" Source="ExamID" Target="sce_take.ref_exam_id" />
-		<Condition Comparer="=" Quote="true" Required="false" Source="CourseID" Target="course.id" />
-	</Conditions>
-	<ExportStyle>
-		<Group Fields="SchoolYear,Semester,ExamName,ExamID" Name="ExamScore">
-			<Record Name="ScoreDetail">
-				<Element Field="CourseID" Identity="True" />
-				<Element Field="CourseName" />
-				<Element Field="Credit" />
-				<Element Field="Period" />
-				<Element Field="Subject" />
-				<Element Field="Score" />
-				<Element Field="Extension" />
-			</Record>
-		</Group>
-	</ExportStyle>
-	<Orders Name="Order" Source="Order" />
-	<Pagination Allow="True" />
-	<InternalVariable>
-		<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
-	</InternalVariable>
-</Definition>
+          <ResponseRecordElement>ExamScoreList</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Mandatory="True" OutputType="Attribute" Source="SchoolYear" Target="course.school_year" />
+            <Field Mandatory="True" OutputType="Attribute" Source="Semester" Target="course.semester" />
+            <Field Mandatory="True" OutputType="Attribute" Source="CourseID" Target="sc_attend.ref_course_id" />
+            <Field Mandatory="True" OutputType="Attribute" Source="CourseName" Target="course.course_name" />
+            <Field Mandatory="True" OutputType="Attribute" Source="ScoreType" Target="course.score_type" />
+            <Field Mandatory="False" OutputType="Attribute" Source="Credit" Target="course.credit" />
+            <Field Mandatory="False" OutputType="Attribute" Source="Period" Target="course.period" />
+            <Field Mandatory="False" OutputType="Attribute" Source="Subject" Target="course.subject" />
+            <Field Mandatory="True" OutputType="Attribute" Source="ExamID" Target="exam.id" />
+            <Field Mandatory="True" OutputType="Attribute" Source="ExamName" Target="exam.exam_name" />
+            <Field Mandatory="True" OutputConverter="AbsenceOutput" OutputType="Attribute" Source="Score" Target="sce_take.score" />
+            <Field Mandatory="False" OutputType="Xml" Source="Extension" Target="sce_take.extension" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition">
+            <Condition Comparer="=" Quote="true" Required="false" Source="SchoolYear" Target="course.school_year" />
+            <Condition Comparer="=" Quote="true" Required="false" Source="Semester" Target="course.semester" />
+            <Condition Comparer="=" Quote="true" Required="false" Source="ExamID" Target="sce_take.ref_exam_id" />
+            <Condition Comparer="=" Quote="true" Required="false" Source="CourseID" Target="course.id" />
+          </Conditions>
+          <ExportStyle>
+            <Group Fields="SchoolYear,Semester,ExamName,ExamID" Name="ExamScore">
+              <Record Name="ScoreDetail">
+                <Element Field="CourseID" Identity="True" />
+                <Element Field="CourseName" />
+                <Element Field="Credit" />
+                <Element Field="Period" />
+                <Element Field="Subject" />
+                <Element Field="Score" />
+                <Element Field="Extension" />
+              </Record>
+            </Group>
+          </ExportStyle>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+          <InternalVariable>
+            <Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+          </InternalVariable>
+        </Definition>
 		</Service>
 	</Package>
 </Contract>
