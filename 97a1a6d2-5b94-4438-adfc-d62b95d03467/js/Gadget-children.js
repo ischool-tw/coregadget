@@ -5,11 +5,7 @@ var myparent = myparent || {};
 $(document).ready(function () {
     $('#ParentCode').focus();
 
-    myparent.DrawingChildrenList = function () {
-        myparent.childrenList();
-    };
-
-    myparent.DrawingChildrenList();
+    //myparent.childrenList();
 
     $('#send').bind('click', function () {
         $("div .control-group").removeClass("error");
@@ -46,7 +42,7 @@ myparent.setParentRelationship = function (parentCode, idNumber, relationship) {
                             .find(".help-inline").html(error.dsaError.message);
                         break;
                     case '003': //與家長建立關聯時發生錯誤
-                        $('#errorMessage').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><strong>設定失敗！</strong> 與家長建立關聯時發生錯誤</div>');
+                        $('#errorMessage').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><strong>設定失敗！</strong> 建立關聯時發生錯誤</div>');
                         break;
                     default:
                         $('#errorMessage').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><strong>設定失敗！</strong> ' + error.dsaError.message + '</div>');
