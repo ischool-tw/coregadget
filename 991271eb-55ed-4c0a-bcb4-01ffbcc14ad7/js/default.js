@@ -22,7 +22,8 @@
       }
     });
     $("#discipline a[my-toggle=collapse]").click(function() {
-      return $("#collapseD").slideToggle(500);
+      $("#collapseD").slideToggle(500);
+      return false;
     });
     return gadget.getContract("ischool.AD.student").send({
       service: "_.GetCurrentSemester",
