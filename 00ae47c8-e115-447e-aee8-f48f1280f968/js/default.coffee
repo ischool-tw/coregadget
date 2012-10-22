@@ -37,6 +37,7 @@ jQuery ->
 
   $("#discipline a[my-toggle=collapse]").click ->
     $("#collapseD").slideToggle 500
+    return false
 
   gadget.getContract("ischool.AD.parent").send {
     service: "_.GetCurrentSemester",

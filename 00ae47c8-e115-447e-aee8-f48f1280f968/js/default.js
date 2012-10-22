@@ -42,7 +42,8 @@
       return $(this).css("overflow", "hidden");
     });
     $("#discipline a[my-toggle=collapse]").click(function() {
-      return $("#collapseD").slideToggle(500);
+      $("#collapseD").slideToggle(500);
+      return false;
     });
     return gadget.getContract("ischool.AD.parent").send({
       service: "_.GetCurrentSemester",
