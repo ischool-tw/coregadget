@@ -17,9 +17,26 @@ jQuery ->
 
   $("#morality a[my-toggle=collapse]").click ->
     $("#morality-container").slideToggle 500
+    return false
 
   $("#discipline a[my-toggle=collapse]").click ->
     $("#collapseD").slideToggle 500
+    return false
+
+  gadget.getContract("ischool.AD.student").send {
+    service: "_.GetMorality",
+    body: "",
+    result: (response, error, xhr) ->
+      if error?
+        $("#mainMsg").html """
+          <div class='alert alert-error'>
+            <button class='close' data-dismiss='alert'>×</button>
+            <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMorality)
+          </div>
+        """
+      else
+        global.morality = response
+  }
 
   gadget.getContract("ischool.AD.student").send {
     service: "_.GetCurrentSemester",
@@ -66,6 +83,8 @@ jQuery ->
                     getDiscipline()
         }
   }
+
+
 
 
 # TODO: 學年度學期
@@ -130,14 +149,31 @@ getMorality = () ->
             </tr>
           """
 
-        if response.Result?.DailyLifeScore?.Content?.Morality?
-          $(response.Result.DailyLifeScore.Content.Morality).each () ->
+        if global.morality.Response?.Morality?
+          $(global.morality.Response.Morality).each () ->
+
             items.push """
               <tr>
                 <th><span>#{@Face || ''}</span></th>
-                <td><span>#{@['@text'] || ''}</span></td>
-              </tr>
             """
+
+            that = @
+            tmpFace = ''
+
+            if response.Result?.DailyLifeScore?.Content?.Morality?
+              $(response.Result.DailyLifeScore.Content.Morality).each () ->
+                if @.Face is that.Face
+                  tmpFace = @['@text']
+                  return false
+
+
+            items.push """
+              <td><span>#{tmpFace || ''}</span></td>
+            """
+
+          items.push """
+            </tr>
+          """
 
           $("#morality-view").removeClass "hide"
           $("#behavior #morality tbody").html items.join ""
