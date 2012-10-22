@@ -62,7 +62,7 @@
         FROM student_parent sp
         join student s on sp.ref_student_id=s.id and status in (1, 2)
         join discipline dis on dis.ref_student_id = sp.ref_student_id
-        WHERE @@Condition
+        WHERE @@Condition 
 		order by dis.occur_date desc
         ]]>
 	</SQLTemplate>
@@ -126,6 +126,30 @@
             <Variable Key="Account" Name="Account" Source="UserInfo" />
           </InternalVariable>
         </Definition>
+		</Service>
+		<Service Enabled="true" Name="GetMorality">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
+            SELECT @@FieldList FROM
+            xpath_table('list_id',
+            'content',
+            'list',
+            '/Request/Content/Morality/@Face',
+            'name=''文字評量代碼表''')
+            AS t("list_id" integer, "face" text)
+        ]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Response/Morality</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="Face" Mandatory="True" Source="Face" Target="face" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+</Definition>
 		</Service>
 		<Service Enabled="true" Name="GetSemester">
 			<Definition Type="DBHelper">
@@ -288,6 +312,30 @@ WHERE @@Condition
             <Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
           </InternalVariable>
         </Definition>
+		</Service>
+		<Service Enabled="true" Name="GetMorality">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
+            SELECT @@FieldList FROM
+            xpath_table('list_id',
+            'content',
+            'list',
+            '/Request/Content/Morality/@Face',
+            'name=''文字評量代碼表''')
+            AS t("list_id" integer, "face" text)
+        ]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Response/Morality</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="Face" Mandatory="True" Source="Face" Target="face" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+</Definition>
 		</Service>
 		<Service Enabled="true" Name="GetSemester">
 			<Definition Type="DBHelper">
