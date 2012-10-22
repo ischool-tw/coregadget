@@ -42,10 +42,23 @@
       return $(this).css("overflow", "hidden");
     });
     $("#morality a[my-toggle=collapse]").click(function() {
-      return $("#morality-container").slideToggle(500);
+      $("#morality-container").slideToggle(500);
+      return false;
     });
     $("#discipline a[my-toggle=collapse]").click(function() {
-      return $("#collapseD").slideToggle(500);
+      $("#collapseD").slideToggle(500);
+      return false;
+    });
+    gadget.getContract("ischool.AD.student").send({
+      service: "_.GetMorality",
+      body: "",
+      result: function(response, error, xhr) {
+        if (error != null) {
+          return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMorality)\n</div>");
+        } else {
+          return global.morality = response;
+        }
+      }
     });
     return gadget.getContract("ischool.AD.parent").send({
       service: "_.GetCurrentSemester",
@@ -120,7 +133,7 @@
       service: "_.GetMoralScore",
       body: "<Request>\n  <StudentID>" + global.student.StudentID + "</StudentID>\n  <SchoolYear>" + global.behavior.schoolYear + "</SchoolYear>\n  <Semester>" + global.behavior.semester + "</Semester>\n</Request>",
       result: function(response, error, xhr) {
-        var items, _ref, _ref1, _ref2, _ref3;
+        var items, _ref, _ref1;
         if (error != null) {
           return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMoralScore)\n</div>");
         } else {
@@ -128,10 +141,23 @@
           if (((_ref = response.Result) != null ? _ref.SbComment : void 0) != null) {
             items.push("<tr>\n  <th><span>導師評語</span></th>\n  <td><span>" + (this.response.Result.SbComment || '') + "</span></td>\n</tr>");
           }
-          if (((_ref1 = response.Result) != null ? (_ref2 = _ref1.DailyLifeScore) != null ? (_ref3 = _ref2.Content) != null ? _ref3.Morality : void 0 : void 0 : void 0) != null) {
-            $(response.Result.DailyLifeScore.Content.Morality).each(function() {
-              return items.push("<tr>\n  <th><span>" + (this.Face || '') + "</span></th>\n  <td><span>" + (this['@text'] || '') + "</span></td>\n</tr>");
+          if (((_ref1 = global.morality.Response) != null ? _ref1.Morality : void 0) != null) {
+            $(global.morality.Response.Morality).each(function() {
+              var that, tmpFace, _ref2, _ref3, _ref4;
+              items.push("<tr>\n  <th><span>" + (this.Face || '') + "</span></th>");
+              that = this;
+              tmpFace = '';
+              if (((_ref2 = response.Result) != null ? (_ref3 = _ref2.DailyLifeScore) != null ? (_ref4 = _ref3.Content) != null ? _ref4.Morality : void 0 : void 0 : void 0) != null) {
+                $(response.Result.DailyLifeScore.Content.Morality).each(function() {
+                  if (this.Face === that.Face) {
+                    tmpFace = this['@text'];
+                    return false;
+                  }
+                });
+              }
+              return items.push("<td><span>" + (tmpFace || '') + "</span></td>");
             });
+            items.push("</tr>");
             $("#morality-view").removeClass("hide");
             $("#behavior #morality tbody").html(items.join(""));
             return $("#behavior #morality h2").html("德行");
