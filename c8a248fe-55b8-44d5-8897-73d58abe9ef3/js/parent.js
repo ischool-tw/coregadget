@@ -75,7 +75,7 @@ myparent.saveParentRelationship = function (parentCode, idNumber, relationship) 
                             .find(".help-inline").html(error.dsaError.message);
                         break;
                     case '003': //與家長建立關聯時發生錯誤
-                        $('#errorMessage').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><strong>設定失敗！</strong> 與家長建立關聯時發生錯誤</div>');
+                        $('#errorMessage').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><strong>設定失敗！</strong> 建立關聯時發生錯誤</div>');
                         break;
                     default:
                         $('#errorMessage').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><strong>設定失敗！</strong> ' + error.dsaError.message + '</div>');
@@ -132,7 +132,7 @@ myparent.parentInto = function () {
                     myparent.parentProfile = response.Parent;
                     $(response.Parent).each(function (index, item) {
                         tempHtml += '<tr><th>姓名</th><td><span>' + item.Name + ' </span></td></tr>';
-                        tempHtml += '<tr><th>電話</th><td><span>' + item.CellPhone + ' </span></td></tr>';
+                        tempHtml += '<tr><th>行動電話</th><td><span>' + item.CellPhone + ' </span></td></tr>';
                         tempHtml += '<tr><th>電子信箱</th><td><span >' + item.EMail + ' </span></td></tr>';
                         //自訂欄位 item.Extension.Field1
                     });
@@ -186,9 +186,9 @@ myparent.setParentInfo = function () {
           '</div>' +
         '</div>' +
         '<div class="control-group">' +
-          '<label class="control-label" for="edit_CellPhone">電話</label>' +
+          '<label class="control-label" for="edit_CellPhone">行動電話</label>' +
           '<div class="controls">' +
-            '<input type="text" class="input-large" id="edit_CellPhone" placeholder="電話..." value="' + pProfile.CellPhone + '">' +
+            '<input type="text" class="input-large" id="edit_CellPhone" placeholder="行動電話..." value="' + pProfile.CellPhone + '">' +
             '<span class="help-inline"></span>' +
           '</div>' +
         '</div>' +
@@ -230,7 +230,7 @@ myparent.setRelationship = function () {
         '<div class="control-group">' +
           '<label class="control-label" for="relationship">請輸入親子關係</label>' +
           '<div class="controls">' +
-            '<input type="text" class="input-large" id="relationship" placeholder="親子關係..." value="">' +
+            '<input type="text" class="input-large" id="Relationship" placeholder="親子關係..." value="">' +
             '<span class="help-inline"></span>' +
           '</div>' +
         '</div>' +

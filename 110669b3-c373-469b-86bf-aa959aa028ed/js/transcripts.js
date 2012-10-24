@@ -1,4 +1,4 @@
-﻿var _gg = _gg || {};
+var _gg = _gg || {};
 _gg.connection = gadget.getContract("ischool.transcript.student");
 _gg.Students = [];
 _gg.ScoreRules = [];
@@ -238,14 +238,18 @@ _gg.SetScoreData = function () {
                 var tmp_use_data = tmp_semsSubjScore;
 
 
-                // TODO: 成績擇優顯示，不需評分顯示0(補)
-                var tmp_score = '0(補)';
+                // TODO: 成績擇優顯示，不需評分顯示空白
+                var tmp_score = '';
                 if (tmp_use_data.NotIncludedInCalc === "False") {
-                    tmp_score = Math.max(this.原始成績, this.學年調整成績, this.擇優採計成績, this.補考成績, this.重修成績, 0);
-                    if (parseInt(this.補考成績, 10) === tmp_score)     { tmp_score += '(補)'; }
-                    if (parseInt(this.重修成績, 10) === tmp_score)     { tmp_score += '(重)'; }
-                    if (parseInt(this.擇優採計成績, 10) === tmp_score) { tmp_score += '(手)'; }
-                    if (parseInt(this.學年調整成績, 10) === tmp_score) { tmp_score += '(調)'; }
+                    if (this.原始成績 === '' && this.學年調整成績 === '' && this.擇優採計成績 === '' && this.補考成績 === '' && this.重修成績 === '') {
+                        tmp_score = '';
+                    } else {
+                        tmp_score = Math.max(this.原始成績, this.學年調整成績, this.擇優採計成績, this.補考成績, this.重修成績, 0);
+                        if (parseInt(this.補考成績, 10) === tmp_score)     { tmp_score += '(補)'; }
+                        if (parseInt(this.重修成績, 10) === tmp_score)     { tmp_score += '(重)'; }
+                        if (parseInt(this.擇優採計成績, 10) === tmp_score) { tmp_score += '(手)'; }
+                        if (parseInt(this.學年調整成績, 10) === tmp_score) { tmp_score += '(調)'; }
+                    }
                     tmp_score = (this.是否取得學分 === "是" ? tmp_score : '<span class="my-lost-credit">' + tmp_score + '</span>');
                 }
 

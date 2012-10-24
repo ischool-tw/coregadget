@@ -32,7 +32,8 @@
         };
         resetData();
         getMorality();
-        return getAttendance();
+        getAttendance();
+        return getDiscipline();
       }
     });
     $("#behavior").hover(function() {
@@ -40,8 +41,24 @@
     }, function() {
       return $(this).css("overflow", "hidden");
     });
+    $("#morality a[my-toggle=collapse]").click(function() {
+      $("#morality-container").slideToggle(500);
+      return false;
+    });
     $("#discipline a[my-toggle=collapse]").click(function() {
-      return $("#collapseD").slideToggle(1000);
+      $("#collapseD").slideToggle(500);
+      return false;
+    });
+    gadget.getContract("ischool.AD.student").send({
+      service: "_.GetMorality",
+      body: "",
+      result: function(response, error, xhr) {
+        if (error != null) {
+          return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMorality)\n</div>");
+        } else {
+          return global.morality = response;
+        }
+      }
     });
     return gadget.getContract("ischool.AD.parent").send({
       service: "_.GetCurrentSemester",
@@ -98,7 +115,17 @@
 
   resetData = function() {
     $("#behavior #morality tbody").html("");
-    return $("#behavior #attendance .my-content").html("");
+    $("#morality-view").addClass("hide");
+    $("#behavior #attendance .my-content").html("");
+    $("#behavior #discipline tbody").html("");
+    $("#merit-a").html("<span class='badge'>0</span>");
+    $("#merit-b").html("<span class='badge'>0</span>");
+    $("#merit-c").html("<span class='badge'>0</span>");
+    $("#demerit-a").html("<span class='badge'>0</span>");
+    $("#demerit-b").html("<span class='badge'>0</span>");
+    $("#demerit-c").html("<span class='badge'>0</span>");
+    $("#demerit-d").html("");
+    return $("#discipline-view").addClass("hide");
   };
 
   getMorality = function() {
@@ -106,20 +133,34 @@
       service: "_.GetMoralScore",
       body: "<Request>\n  <StudentID>" + global.student.StudentID + "</StudentID>\n  <SchoolYear>" + global.behavior.schoolYear + "</SchoolYear>\n  <Semester>" + global.behavior.semester + "</Semester>\n</Request>",
       result: function(response, error, xhr) {
-        var items, _ref, _ref1, _ref2, _ref3;
+        var items, _ref, _ref1;
         if (error != null) {
           return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMoralScore)\n</div>");
         } else {
           items = [];
           if (((_ref = response.Result) != null ? _ref.SbComment : void 0) != null) {
-            items.push("<tr>\n  <th><span>導師評語</span></th>\n  <td><span>" + this.response.Result.SbComment + "</span></td>\n</tr>");
+            items.push("<tr>\n  <th><span>導師評語</span></th>\n  <td><span>" + (this.response.Result.SbComment || '') + "</span></td>\n</tr>");
           }
-          if (((_ref1 = response.Result) != null ? (_ref2 = _ref1.DailyLifeScore) != null ? (_ref3 = _ref2.Content) != null ? _ref3.Morality : void 0 : void 0 : void 0) != null) {
-            return $(response.Result.DailyLifeScore.Content.Morality).each(function() {
-              items.push("<tr>\n  <th><span>" + this.Face + "</span></th>\n  <td><span>" + this['@text'] + "</span></td>\n</tr>");
-              $("#behavior #morality tbody").html(items.join(""));
-              return $("#behavior #morality h2").html("德行");
+          if (((_ref1 = global.morality.Response) != null ? _ref1.Morality : void 0) != null) {
+            $(global.morality.Response.Morality).each(function() {
+              var that, tmpFace, _ref2, _ref3, _ref4;
+              items.push("<tr>\n  <th><span>" + (this.Face || '') + "</span></th>");
+              that = this;
+              tmpFace = '';
+              if (((_ref2 = response.Result) != null ? (_ref3 = _ref2.DailyLifeScore) != null ? (_ref4 = _ref3.Content) != null ? _ref4.Morality : void 0 : void 0 : void 0) != null) {
+                $(response.Result.DailyLifeScore.Content.Morality).each(function() {
+                  if (this.Face === that.Face) {
+                    tmpFace = this['@text'];
+                    return false;
+                  }
+                });
+              }
+              return items.push("<td><span>" + (tmpFace || '') + "</span></td>");
             });
+            items.push("</tr>");
+            $("#morality-view").removeClass("hide");
+            $("#behavior #morality tbody").html(items.join(""));
+            return $("#behavior #morality h2").html("德行");
           } else {
             return $("#behavior #morality tbody").html("<tr><td>目前無資料</td></tr>");
           }
@@ -150,7 +191,7 @@
           }
           items = [];
           for (name in absences) {
-            items.push("<li class='span2'>\n  <div class='thumbnail my-thumbnail-white'>\n    <div class='my-subthumbnail-top'>\n      <span class='badge badge-warning'>" + absences[name] + "</span>\n    </div>\n    <div class='caption my-subthumbnail-bottom'>\n      <h5>" + name + "</h5>\n    </div>\n  </div>\n</li>");
+            items.push("<li class='span2'>\n  <div class='thumbnail my-thumbnail-white'>\n    <div class='my-subthumbnail-top'>\n      <span class='badge badge-warning'>" + (absences[name] || '') + "</span>\n    </div>\n    <div class='caption my-subthumbnail-bottom'>\n      <h5>" + (name || '') + "</h5>\n    </div>\n  </div>\n</li>");
           }
           if (items.join("") === "") {
             return $("#behavior #attendance .my-content").html("目前無資料");
@@ -165,7 +206,7 @@
   getDiscipline = function() {
     return gadget.getContract("ischool.AD.parent").send({
       service: "_.GetDisciplineRecord",
-      body: "<Request>\n  <StudentID>" + global.student.StudentID + "</StudentID>\n</Request>",
+      body: "<Request>\n  <StudentID>" + global.student.StudentID + "</StudentID>\n  <SchoolYear>" + global.behavior.schoolYear + "</SchoolYear>\n  <Semester>" + global.behavior.semester + "</Semester>\n</Request>",
       result: function(response, error, xhr) {
         var items, sum_merit, _ref;
         if (error != null) {
@@ -202,7 +243,7 @@
                 return items.push("<tr>\n  <td class=\"my-flags\">\n    <span class=\"badge " + (merit.a !== 0 ? "badge-success" : "") + "\">" + merit.a + "</span>\n    <br />大功\n  </td>\n  <td class=\"my-flags\">\n    <span class=\"badge " + (merit.b !== 0 ? "badge-success" : "") + "\">" + merit.b + "</span>\n    <br />小功\n  </td>\n  <td class=\"my-flags\">\n    <span class=\"badge " + (merit.c !== 0 ? "badge-success" : "") + "\">" + merit.c + "</span>\n    <br />嘉獎\n  </td>\n  <td>\n    <span>" + (this.OccurDate.substr(0, 10)) + "</span>\n    <br/>\n    <span>" + this.Reason + "</span>\n  </td>\n</tr>");
               } else if (this.MeritFlag === "2") {
                 sum_merit.dd += 1;
-                return items.push("<tr>\n  <td colspan=\"3\" class=\"my-detention\">留校察看</td>\n  <td class=\"my-detention-text\">\n    <span>" + (this.OccurDate.substr(0, 10)) + "</span>\n    <br/>\n    <span>" + this.Reason + "</span>\n  </td>\n</tr>");
+                return items.push("<tr>\n  <td colspan=\"3\" class=\"my-detention\">留校察看</td>\n  <td class=\"my-detention-text\">\n    <span>" + (this.OccurDate.substr(0, 10)) + "</span>\n    <br/>\n    <span>" + (this.Reason || '') + "</span>\n  </td>\n</tr>");
               } else {
                 if (!isNaN(parseInt(this.Detail.Discipline.Demerit.A, 10))) {
                   merit.a = parseInt(this.Detail.Discipline.Demerit.A, 10);
@@ -219,7 +260,7 @@
                   sum_merit.db += merit.b;
                   sum_merit.dc += merit.c;
                 }
-                return items.push("<tr>\n  <td class=\"my-flags\">\n    <span class=\"badge " + (merit.a !== 0 && merit_clear === "是" ? "badge-warning" : (merit.a !== 0 ? "badge-important" : "")) + "\">" + merit.a + "</span>\n    <br />大過\n  </td>\n  <td class=\"my-flags\">\n    <span class=\"badge " + (merit.b !== 0 && merit_clear === '是' ? "badge-warning" : (merit.b !== 0 ? "badge-important" : "")) + "\">" + merit.b + "</span>\n    <br />小過\n  </td>\n  <td class=\"my-flags\">\n    <span class=\"badge " + (merit.c !== 0 && merit_clear === '是' ? "badge-warning" : (merit.c !== 0 ? "badge-important" : "")) + "\">" + merit.c + "</span>\n    <br />警告\n  </td>\n  <td>\n    " + (this.Detail.Discipline.Demerit.Cleared === '是' ? "<span class='my-offset'>" + (this.Detail.Discipline.Demerit.ClearDate.substr(0, 10).replace(/\//ig, "-")) + " 已銷過<br/>" + this.Detail.Discipline.Demerit.ClearReason + "</span><br/>" : "") + "\n    <span>" + (this.OccurDate.substr(0, 10)) + "</span>\n    <br/>\n    <span>" + this.Reason + "</span>\n  </td>\n</tr>");
+                return items.push("<tr>\n  <td class=\"my-flags\">\n    <span class=\"badge " + (merit.a !== 0 && merit_clear === "是" ? "badge-warning" : (merit.a !== 0 ? "badge-important" : "")) + "\">" + merit.a + "</span>\n    <br />大過\n  </td>\n  <td class=\"my-flags\">\n    <span class=\"badge " + (merit.b !== 0 && merit_clear === '是' ? "badge-warning" : (merit.b !== 0 ? "badge-important" : "")) + "\">" + merit.b + "</span>\n    <br />小過\n  </td>\n  <td class=\"my-flags\">\n    <span class=\"badge " + (merit.c !== 0 && merit_clear === '是' ? "badge-warning" : (merit.c !== 0 ? "badge-important" : "")) + "\">" + merit.c + "</span>\n    <br />警告\n  </td>\n  <td>\n    " + (this.Detail.Discipline.Demerit.Cleared === '是' ? "<span class='my-offset'>" + (this.Detail.Discipline.Demerit.ClearDate.substr(0, 10).replace(/\//ig, "-")) + " 已銷過<br/>" + (this.Detail.Discipline.Demerit.ClearReason || '') + "</span><br/>" : "") + "\n    <span>" + (this.OccurDate.substr(0, 10)) + "</span>\n    <br/>\n    <span>" + (this.Reason || '') + "</span>\n  </td>\n</tr>");
               }
             });
             $("#merit-a").html("<span class='badge " + (sum_merit.ma !== 0 ? "badge-success" : "") + "'>" + sum_merit.ma + "</span>");
@@ -231,7 +272,7 @@
             if (sum_merit.dd > 0) {
               $("#demerit-d").html("<li class=\"span12\">\n  <div class=\"thumbnail my-thumbnail-white\">\n    <div class=\"caption my-surveillance\">\n      <h5>留校察看</h5>\n    </div>\n  </div>\n</li>");
             }
-            $("#view-discipline").removeClass("hide");
+            $("#discipline-view").removeClass("hide");
             return $("#discipline tbody").html(items.join(""));
           }
         }

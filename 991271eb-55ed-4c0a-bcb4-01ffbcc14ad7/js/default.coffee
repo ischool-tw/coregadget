@@ -13,9 +13,11 @@ jQuery ->
       resetData()
       getMorality()
       getAttendance()
+      getDiscipline()
 
   $("#discipline a[my-toggle=collapse]").click ->
-    $("#collapseD").slideToggle 1000
+    $("#collapseD").slideToggle 500
+    return false
 
   gadget.getContract("ischool.AD.student").send {
     service: "_.GetCurrentSemester",
@@ -86,6 +88,14 @@ resetSchoolYearSeme = () ->
 resetData = () ->
   $("#behavior #morality tbody").html ""
   $("#behavior #attendance .my-content").html ""
+  $("#behavior #discipline tbody").html ""
+  $("#merit-a").html "<span class='badge'>0</span>"
+  $("#merit-b").html "<span class='badge'>0</span>"
+  $("#merit-c").html "<span class='badge'>0</span>"
+  $("#demerit-a").html "<span class='badge'>0</span>"
+  $("#demerit-b").html "<span class='badge'>0</span>"
+  $("#demerit-c").html "<span class='badge'>0</span>"
+  $("#discipline-view").addClass "hide"
 
 # TODO: 德性成績
 getMorality = () ->
@@ -126,8 +136,8 @@ getMorality = () ->
               $(@DailyBehavior.Item).each () ->
                 items.push """
                   <tr>
-                    <th><span>#{@Name}</span></th>
-                    <td><span>#{@Index}</span></td>
+                    <th><span>#{@Name ? ''}</span></th>
+                    <td><span>#{@Index ? ''}</span></td>
                     <td><span>#{@Degree ? ''}</span></td>
                   </tr>
                 """
@@ -155,8 +165,9 @@ getMorality = () ->
               $(@GroupActivity.Item).each () ->
                 items.push """
                   <tr>
-                    <th><span>#{@Name}</span></th>
+                    <th><span>#{@Name ? ''}</span></th>
                     <td><span>#{@Degree ? ''}</span></td>
+                    <td><span>#{@Description ? ''}</span></td>
                   </tr>
                 """
               items.push """
@@ -183,7 +194,7 @@ getMorality = () ->
               $(@PublicService.Item).each () ->
                 items.push """
                   <tr>
-                    <th><span>#{@Name}</span></th>
+                    <th><span>#{@Name ? ''}</span></th>
                     <td><span>#{@Description ? ''}</span></td>
                   </tr>
                 """
@@ -211,7 +222,7 @@ getMorality = () ->
               $(@SchoolSpecial.Item).each () ->
                 items.push """
                   <tr>
-                    <th><span>#{@Name}</span></th>
+                    <th><span>#{@Name ? ''}</span></th>
                     <td><span>#{@Description ? ''}</span></td>
                   </tr>
                 """
@@ -300,10 +311,10 @@ getAttendance = () ->
             <li class='span2'>
               <div class='thumbnail my-thumbnail-white'>
                 <div class='my-subthumbnail-top'>
-                  <span class='badge badge-warning'>#{absences[name]}</span>
+                  <span class='badge badge-warning'>#{absences[name] ? ''}</span>
                 </div>
                 <div class='caption my-subthumbnail-bottom'>
-                  <h5>#{name}</h5>
+                  <h5>#{name ? ''}</h5>
                 </div>
               </div>
             </li>
@@ -327,6 +338,8 @@ getDiscipline = () ->
     body: """
       <Request>
         <StudentID>#{global.student.StudentID}</StudentID>
+        <SchoolYear>#{global.behavior.schoolYear}</SchoolYear>
+        <Semester>#{global.behavior.semester}</Semester>
       </Request>
     """
     result: (response, error, xhr) ->
@@ -365,7 +378,7 @@ getDiscipline = () ->
                   <td>
                     <span>#{@OccurDate.substr(0, 10)}</span>
                     <br/>
-                    <span>#{@Reason}</span>
+                    <span>#{@Reason ? ''}</span>
                   </td>
                 </tr>
               """
@@ -395,10 +408,10 @@ getDiscipline = () ->
                     <br />警告
                   </td>
                   <td>
-                    #{if @Detail.Discipline.Demerit.Cleared is '是' then "<span>#{@Detail.Discipline.Demerit.ClearDate.substr(0, 10).replace(/\//ig, "-")} 已銷過<br/>#{@Detail.Discipline.Demerit.ClearReason}</span><br/>" else ""}
+                    #{if @Detail.Discipline.Demerit.Cleared is '是' then "<span class='my-offset'>#{@Detail.Discipline.Demerit.ClearDate.substr(0, 10).replace(/\//ig, "-")} 已銷過<br/>#{@Detail.Discipline.Demerit.ClearReason ? ''}</span><br/>" else ""}
                     <span>#{@OccurDate.substr(0, 10)}</span>
                     <br/>
-                    <span>#{@Reason}</span>
+                    <span>#{@Reason ? ''}</span>
                   </td>
                 </tr>
               """
@@ -410,6 +423,6 @@ getDiscipline = () ->
           $("#demerit-b").html """<span class='badge #{if sum_merit.db isnt 0 then "badge-important" else ""}'>#{sum_merit.db}</span>"""
           $("#demerit-c").html """<span class='badge #{if sum_merit.dc isnt 0 then "badge-important" else ""}'>#{sum_merit.dc}</span>"""
 
-          $("#view-discipline").removeClass "hide"
+          $("#discipline-view").removeClass "hide"
           $("#behavior #discipline tbody").html items.join("")
   }

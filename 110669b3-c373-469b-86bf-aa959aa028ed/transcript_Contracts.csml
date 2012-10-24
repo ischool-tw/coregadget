@@ -1,290 +1,283 @@
 <Content>
 	<Contract Name="ischool.transcript.parent" Enabled="True">
 	<Definition>
-		<Authentication Extends="auth.parent" />
-	</Definition>
+      <Authentication Extends="auth.parent" />
+    </Definition>
 	<Package Name="_">
 		<Service Enabled="true" Name="GetGraduationPlan">
 			<Definition Type="dbhelper">
-				<Action>Select</Action>
-				<SQLTemplate><![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
             SELECT @@FieldList
             FROM graduation_plan
             WHERE @@Condition @@Order
         ]]></SQLTemplate>
-				<ResponseRecordElement>GraduationPlan</ResponseRecordElement>
-				<FieldList Name="FieldList" Source="Field">
-					<Field Alias="Id" Mandatory="True" Source="Id" Target="id" />
-					<Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
-					<Field Alias="Content" Mandatory="True" OutputType="xml" Source="Content" Target="content" />
-				</FieldList>
-				<Conditions Name="Condition" Required="False" Source="Condition">
-					<Condition Required="true" Source="Id" Target="id" />
-				</Conditions>
-				<Orders Name="Order" Source="Order" />
-				<Pagination Allow="True" />
-			</Definition>
+          <ResponseRecordElement>GraduationPlan</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="Id" Mandatory="True" Source="Id" Target="id" />
+            <Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
+            <Field Alias="Content" Mandatory="True" OutputType="xml" Source="Content" Target="content" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition">
+            <Condition Required="true" Source="Id" Target="id" />
+          </Conditions>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetScoreRule">
 			<Definition Type="dbhelper">
-				<Action>Select</Action>
-				<SQLTemplate><![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
             SELECT @@FieldList
             FROM  score_calc_rule
             WHERE @@Condition @@Order
         ]]></SQLTemplate>
-				<ResponseRecordElement>ScoreCalcRule</ResponseRecordElement>
-				<FieldList Name="FieldList" Source="Field">
-					<Field Alias="Id" Mandatory="True" Source="Id" Target="id" />
-					<Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
-					<Field Alias="Content" Mandatory="True" OutputType="xml" Source="Content" Target="content" />
-				</FieldList>
-				<Conditions Name="Condition" Required="False" Source="Condition">
-					<Condition Required="true" Source="Id" Target="id" />
-				</Conditions>
-				<Orders Name="Order" Source="Order" />
-				<Pagination Allow="True" />
-			</Definition>
+          <ResponseRecordElement>ScoreCalcRule</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="Id" Mandatory="True" Source="Id" Target="id" />
+            <Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
+            <Field Alias="Content" Mandatory="True" OutputType="xml" Source="Content" Target="content" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition">
+            <Condition Required="true" Source="Id" Target="id" />
+          </Conditions>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetSemsEntryScore">
 			<Definition Type="dbhelper">
-	<Action>Select</Action>
-	<SQLTemplate>
-		<![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
 		SELECT @@FieldList 
 		FROM student_parent sp
 		join student s on sp.ref_student_id=s.id and status in (1, 2)
 		join sems_entry_score ses on sp.ref_student_id = ses. ref_student_id
 		WHERE @@Condition @@Order
-		]]>
-	</SQLTemplate>
-	<ResponseRecordElement>Students/SemsEntryScore</ResponseRecordElement>
-	<FieldList Name="FieldList" Source="Field">
-		<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="ses.ref_student_id" />
-		<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="ses.school_year" />
-		<Field Alias="Semester" Mandatory="True" Source="Semester" Target="ses.semester" />
-		<Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="ses.grade_year" />
-		<Field Alias="EntryGroup" Mandatory="True" Source="EntryGroup" Target="ses.entry_group" />
-		<Field Alias="ScoreInfo" Mandatory="True" OutputType="xml" Source="ScoreInfo" Target="ses.score_info" />
-	</FieldList>
-	<Conditions Name="Condition" Required="False" Source="Condition">
-		<Condition Required="True" Source="Account" SourceType="Variable" Target="sp.account" />
-		<Condition Required="False" Source="StudentID" Target="ses.ref_student_id" />
-		<Condition Required="False" Source="SchoolYear" Target="ses.school_year" />
-		<Condition Required="False" Source="Semester" Target="ses.semester" />
-	</Conditions>
-	<Orders Name="Order" Source="Order" />
-	<InternalVariable>
-		<Variable Key="Account" Name="Account" Source="UserInfo" />
-	</InternalVariable>
-</Definition>
+		]]></SQLTemplate>
+          <ResponseRecordElement>Students/SemsEntryScore</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="ses.ref_student_id" />
+            <Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="ses.school_year" />
+            <Field Alias="Semester" Mandatory="True" Source="Semester" Target="ses.semester" />
+            <Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="ses.grade_year" />
+            <Field Alias="EntryGroup" Mandatory="True" Source="EntryGroup" Target="ses.entry_group" />
+            <Field Alias="ScoreInfo" Mandatory="True" OutputType="xml" Source="ScoreInfo" Target="ses.score_info" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition">
+            <Condition Required="True" Source="Account" SourceType="Variable" Target="sp.account" />
+            <Condition Required="False" Source="StudentID" Target="ses.ref_student_id" />
+            <Condition Required="False" Source="SchoolYear" Target="ses.school_year" />
+            <Condition Required="False" Source="Semester" Target="ses.semester" />
+          </Conditions>
+          <Orders Name="Order" Source="Order" />
+          <InternalVariable>
+            <Variable Key="Account" Name="Account" Source="UserInfo" />
+          </InternalVariable>
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetSemsSubjScore">
 			<Definition Type="dbhelper">
-	<Action>Select</Action>
-	<SQLTemplate>
-		<![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
 		SELECT @@FieldList 
 		FROM student_parent sp
 		join student s on sp.ref_student_id=s.id and status in (1, 2)
 		join sems_subj_score sss on sp.ref_student_id = sss. ref_student_id
 		WHERE @@Condition @@Order
-		]]>
-	</SQLTemplate>
-	<ResponseRecordElement>Students/SemsSubjScore</ResponseRecordElement>
-	<FieldList Name="FieldList" Source="Field">
-		<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="sss.ref_student_id" />
-		<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="sss.school_year" />
-		<Field Alias="Semester" Mandatory="True" Source="Semester" Target="sss.semester" />
-		<Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="sss.grade_year" />
-		<Field Alias="ScoreInfo" Mandatory="True" OutputType="xml" Source="ScoreInfo" Target="sss.score_info" />
-		<Field Alias="ClassRating" Mandatory="True" OutputType="xml" Source="ClassRating" Target="sss.class_rating" />
-		<Field Alias="DeptRating" Mandatory="True" OutputType="xml" Source="DeptRating" Target="sss.dept_rating" />
-		<Field Alias="YearRating" Mandatory="True" OutputType="xml" Source="YearRating" Target="sss.year_rating" />
-	</FieldList>
-	<Conditions Name="Condition" Required="False" Source="Condition">
-		<Condition Required="True" Source="Account" SourceType="Variable" Target="sp.account" />
-		<Condition Required="False" Source="StudentID" Target="sss.ref_student_id" />
-		<Condition Required="False" Source="SchoolYear" Target="sss.school_year" />
-		<Condition Required="False" Source="Semester" Target="sss.semester" />
-	</Conditions>
-	<Orders Name="Order" Source="Order" />
-	<Pagination Allow="True" />
-	<InternalVariable>
-		<Variable Key="Account" Name="Account" Source="UserInfo" />
-	</InternalVariable>
-</Definition>
+		]]></SQLTemplate>
+          <ResponseRecordElement>Students/SemsSubjScore</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="sss.ref_student_id" />
+            <Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="sss.school_year" />
+            <Field Alias="Semester" Mandatory="True" Source="Semester" Target="sss.semester" />
+            <Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="sss.grade_year" />
+            <Field Alias="ScoreInfo" Mandatory="True" OutputType="xml" Source="ScoreInfo" Target="sss.score_info" />
+            <Field Alias="ClassRating" Mandatory="True" OutputType="xml" Source="ClassRating" Target="sss.class_rating" />
+            <Field Alias="DeptRating" Mandatory="True" OutputType="xml" Source="DeptRating" Target="sss.dept_rating" />
+            <Field Alias="YearRating" Mandatory="True" OutputType="xml" Source="YearRating" Target="sss.year_rating" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition">
+            <Condition Required="True" Source="Account" SourceType="Variable" Target="sp.account" />
+            <Condition Required="False" Source="StudentID" Target="sss.ref_student_id" />
+            <Condition Required="False" Source="SchoolYear" Target="sss.school_year" />
+            <Condition Required="False" Source="Semester" Target="sss.semester" />
+          </Conditions>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+          <InternalVariable>
+            <Variable Key="Account" Name="Account" Source="UserInfo" />
+          </InternalVariable>
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetStudentInfo">
 			<Definition Type="dbhelper">
-	<Action>Select</Action>
-	<SQLTemplate>
-		<![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
             SELECT @@FieldList
 			from student_parent sp join student s on sp.ref_student_id=s.id and status in (1, 2)
 			left join class c on s.ref_class_id=c.id
             WHERE @@Condition @@Order
-        ]]>
-	</SQLTemplate>
-	<ResponseRecordElement>Students/StudentInfo</ResponseRecordElement>
-	<FieldList Name="FieldList" Source="Field">
-		<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="s.id" />
-		<Field Alias="StudentName" Mandatory="True" Source="StudentName" Target="s.name" />
-		<Field Alias="StudentNumber" Mandatory="True" Source="StudentNumber" Target="s.student_number" />
-		<Field Alias="SeatNo" Mandatory="True" Source="SeatNo" Target="s.seat_no" />
-		<Field Alias="SemsHistory" Mandatory="True" OutputType="xml" Source="SemsHistory" Target="s.sems_history" />
-		<Field Alias="StudentGraduationPlanID" Mandatory="True" Source="StudentGraduationPlanID" Target="s.ref_graduation_plan_id" />
-		<Field Alias="StudentScoreCalcRuleID" Mandatory="True" Source="StudentScoreCalcRuleID" Target="s.ref_score_calc_rule_id" />
-		<Field Alias="ClassID" Mandatory="True" Sourece="ClassID" Target="c.id" />
-		<Field Alias="ClassName" Mandatory="True" Sourece="ClassName" Target="c.class_name" />
-		<Field Alias="GradeYear" Mandatory="True" Sourece="GradeYear" Target="c.grade_year" />
-		<Field Alias="ClassGraduationPlanID" Mandatory="True" Sourece="GraduationPlanID" Target="c.ref_graduation_plan_id" />
-		<Field Alias="ClassScoreCalcRuleID" Mandatory="True" Source="ClassScoreCalcRuleID" Target="c.ref_score_calc_rule_id" />
-	</FieldList>
-	<Conditions Name="Condition" Source="Condition">
-		<Condition Comparer="=" Quote="true" Required="true" Source="Account" SourceType="Variable" Target="sp.account" />
-	</Conditions>
-	<InternalVariable>
-		<Variable Key="Account" Name="Account" Source="UserInfo" />
-	</InternalVariable>
-	<Orders Name="Order" Source="Order" />
-	<Pagination Allow="True" />
-</Definition>
+        ]]></SQLTemplate>
+          <ResponseRecordElement>Students/StudentInfo</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="s.id" />
+            <Field Alias="StudentName" Mandatory="True" Source="StudentName" Target="s.name" />
+            <Field Alias="StudentNumber" Mandatory="True" Source="StudentNumber" Target="s.student_number" />
+            <Field Alias="SeatNo" Mandatory="True" Source="SeatNo" Target="s.seat_no" />
+            <Field Alias="SemsHistory" Mandatory="True" OutputType="xml" Source="SemsHistory" Target="s.sems_history" />
+            <Field Alias="StudentGraduationPlanID" Mandatory="True" Source="StudentGraduationPlanID" Target="s.ref_graduation_plan_id" />
+            <Field Alias="StudentScoreCalcRuleID" Mandatory="True" Source="StudentScoreCalcRuleID" Target="s.ref_score_calc_rule_id" />
+            <Field Alias="ClassID" Mandatory="True" Sourece="ClassID" Target="c.id" />
+            <Field Alias="ClassName" Mandatory="True" Sourece="ClassName" Target="c.class_name" />
+            <Field Alias="GradeYear" Mandatory="True" Sourece="GradeYear" Target="c.grade_year" />
+            <Field Alias="ClassGraduationPlanID" Mandatory="True" Sourece="GraduationPlanID" Target="c.ref_graduation_plan_id" />
+            <Field Alias="ClassScoreCalcRuleID" Mandatory="True" Source="ClassScoreCalcRuleID" Target="c.ref_score_calc_rule_id" />
+          </FieldList>
+          <Conditions Name="Condition" Source="Condition">
+            <Condition Comparer="=" Quote="true" Required="true" Source="Account" SourceType="Variable" Target="sp.account" />
+          </Conditions>
+          <InternalVariable>
+            <Variable Key="Account" Name="Account" Source="UserInfo" />
+          </InternalVariable>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+        </Definition>
 		</Service>
 	</Package>
 </Contract>
 	<Contract Name="ischool.transcript.student" Enabled="True">
 	<Definition>
-		<Authentication Extends="auth.student" />
-	</Definition>
+      <Authentication Extends="auth.student" />
+    </Definition>
 	<Package Name="_">
 		<Service Enabled="true" Name="GetGraduationPlan">
 			<Definition Type="dbhelper">
-				<Action>Select</Action>
-				<SQLTemplate><![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
 			SELECT @@FieldList
 			FROM graduation_plan
 			WHERE @@Condition @@Order
 		]]></SQLTemplate>
-				<ResponseRecordElement>GraduationPlan</ResponseRecordElement>
-				<FieldList Name="FieldList" Source="Field">
-					<Field Alias="Id" Mandatory="True" Source="Id" Target="id" />
-					<Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
-					<Field Alias="Content" Mandatory="True" OutputType="xml" Source="Content" Target="content" />
-				</FieldList>
-				<Conditions Name="Condition" Required="False" Source="Condition">
-					<Condition Required="true" Source="Id" Target="id" />
-				</Conditions>
-				<Orders Name="Order" Source="Order" />
-				<Pagination Allow="True" />
-			</Definition>
+          <ResponseRecordElement>GraduationPlan</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="Id" Mandatory="True" Source="Id" Target="id" />
+            <Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
+            <Field Alias="Content" Mandatory="True" OutputType="xml" Source="Content" Target="content" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition">
+            <Condition Required="true" Source="Id" Target="id" />
+          </Conditions>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetScoreRule">
 			<Definition Type="dbhelper">
-				<Action>Select</Action>
-				<SQLTemplate><![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
 			SELECT @@FieldList
 			FROM  score_calc_rule
 			WHERE @@Condition @@Order
 		]]></SQLTemplate>
-				<ResponseRecordElement>ScoreCalcRule</ResponseRecordElement>
-				<FieldList Name="FieldList" Source="Field">
-					<Field Alias="Id" Mandatory="True" Source="Id" Target="id" />
-					<Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
-					<Field Alias="Content" Mandatory="True" OutputType="xml" Source="Content" Target="content" />
-				</FieldList>
-				<Conditions Name="Condition" Required="False" Source="Condition">
-					<Condition Required="true" Source="Id" Target="id" />
-				</Conditions>
-				<Orders Name="Order" Source="Order" />
-				<Pagination Allow="True" />
-			</Definition>
+          <ResponseRecordElement>ScoreCalcRule</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="Id" Mandatory="True" Source="Id" Target="id" />
+            <Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
+            <Field Alias="Content" Mandatory="True" OutputType="xml" Source="Content" Target="content" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition">
+            <Condition Required="true" Source="Id" Target="id" />
+          </Conditions>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetSemsEntryScore">
 			<Definition Type="dbhelper">
-				<Action>Select</Action>
-				<SQLTemplate><![CDATA[SELECT @@FieldList FROM sems_entry_score WHERE @@Condition @@Order]]></SQLTemplate>
-				<ResponseRecordElement>Students/SemsEntryScore</ResponseRecordElement>
-				<FieldList Name="FieldList" Source="Field">
-					<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="ref_student_id" />
-					<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="school_year" />
-					<Field Alias="Semester" Mandatory="True" Source="Semester" Target="semester" />
-					<Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="grade_year" />
-					<Field Alias="EntryGroup" Mandatory="True" Source="EntryGroup" Target="entry_group" />
-					<Field Alias="ScoreInfo" Mandatory="True" OutputType="xml" Source="ScoreInfo" Target="score_info" />
-				</FieldList>
-				<Conditions Name="Condition" Required="False" Source="Condition">
-					<Condition Required="True" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
-					<Condition Required="False" Source="SchoolYear" Target="school_year" />
-					<Condition Required="False" Source="Semester" Target="semester" />
-				</Conditions>
-				<Orders Name="Order" Source="Order" />
-				<InternalVariable>
-					<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
-				</InternalVariable>
-			</Definition>
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[SELECT @@FieldList FROM sems_entry_score WHERE @@Condition @@Order]]></SQLTemplate>
+          <ResponseRecordElement>Students/SemsEntryScore</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="ref_student_id" />
+            <Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="school_year" />
+            <Field Alias="Semester" Mandatory="True" Source="Semester" Target="semester" />
+            <Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="grade_year" />
+            <Field Alias="EntryGroup" Mandatory="True" Source="EntryGroup" Target="entry_group" />
+            <Field Alias="ScoreInfo" Mandatory="True" OutputType="xml" Source="ScoreInfo" Target="score_info" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition">
+            <Condition Required="True" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
+            <Condition Required="False" Source="SchoolYear" Target="school_year" />
+            <Condition Required="False" Source="Semester" Target="semester" />
+          </Conditions>
+          <Orders Name="Order" Source="Order" />
+          <InternalVariable>
+            <Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+          </InternalVariable>
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetSemsSubjScore">
 			<Definition Type="dbhelper">
-				<Action>Select</Action>
-				<SQLTemplate><![CDATA[SELECT @@FieldList FROM sems_subj_score WHERE @@Condition @@Order]]></SQLTemplate>
-				<ResponseRecordElement>Students/SemsSubjScore</ResponseRecordElement>
-				<FieldList Name="FieldList" Source="Field">
-					<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="ref_student_id" />
-					<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="school_year" />
-					<Field Alias="Semester" Mandatory="True" Source="Semester" Target="semester" />
-					<Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="grade_year" />
-					<Field Alias="ScoreInfo" Mandatory="True" OutputType="xml" Source="ScoreInfo" Target="score_info" />
-					<Field Alias="ClassRating" Mandatory="True" OutputType="xml" Source="ClassRating" Target="class_rating" />
-					<Field Alias="DeptRating" Mandatory="True" OutputType="xml" Source="DeptRating" Target="dept_rating" />
-					<Field Alias="YearRating" Mandatory="True" OutputType="xml" Source="YearRating" Target="year_rating" />
-				</FieldList>
-				<Conditions Name="Condition" Required="False" Source="Condition">
-					<Condition Required="True" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
-					<Condition Required="False" Source="SchoolYear" Target="school_year" />
-					<Condition Required="False" Source="Semester" Target="semester" />
-				</Conditions>
-				<Orders Name="Order" Source="Order" />
-				<Pagination Allow="True" />
-				<InternalVariable>
-					<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
-				</InternalVariable>
-			</Definition>
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[SELECT @@FieldList FROM sems_subj_score WHERE @@Condition @@Order]]></SQLTemplate>
+          <ResponseRecordElement>Students/SemsSubjScore</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="ref_student_id" />
+            <Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="school_year" />
+            <Field Alias="Semester" Mandatory="True" Source="Semester" Target="semester" />
+            <Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="grade_year" />
+            <Field Alias="ScoreInfo" Mandatory="True" OutputType="xml" Source="ScoreInfo" Target="score_info" />
+            <Field Alias="ClassRating" Mandatory="True" OutputType="xml" Source="ClassRating" Target="class_rating" />
+            <Field Alias="DeptRating" Mandatory="True" OutputType="xml" Source="DeptRating" Target="dept_rating" />
+            <Field Alias="YearRating" Mandatory="True" OutputType="xml" Source="YearRating" Target="year_rating" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition">
+            <Condition Required="True" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
+            <Condition Required="False" Source="SchoolYear" Target="school_year" />
+            <Condition Required="False" Source="Semester" Target="semester" />
+          </Conditions>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+          <InternalVariable>
+            <Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+          </InternalVariable>
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetStudentInfo">
 			<Definition Type="dbhelper">
-	<Action>Select</Action>
-	<SQLTemplate>
-		<![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
 			SELECT @@FieldList
 			FROM student s
 			Left join class c on c.id = s.ref_class_id
 			WHERE @@Condition @@Order
 		]]></SQLTemplate>
-	<ResponseRecordElement>Student</ResponseRecordElement>
-	<FieldList Name="FieldList" Source="Field">
-		<Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="s.id" />
-		<Field Alias="StudentName" Mandatory="True" Source="StudentName" Target="s.name" />
-		<Field Alias="StudentNumber" Mandatory="True" Source="StudentNumber" Target="s.student_number" />
-		<Field Alias="SeatNo" Mandatory="True" Source="SeatNo" Target="s.seat_no" />
-		<Field Alias="SemsHistory" Mandatory="True" OutputType="xml" Source="SemsHistory" Target="s.sems_history" />
-		<Field Alias="StudentGraduationPlanID" Mandatory="True" Source="StudentGraduationPlanID" Target="s.ref_graduation_plan_id" />
-		<Field Alias="StudentScoreCalcRuleID" Mandatory="True" Source="StudentScoreCalcRuleID" Target="s.ref_score_calc_rule_id" />
-		<Field Alias="ClassID" Mandatory="True" Sourece="ClassID" Target="c.id" />
-		<Field Alias="ClassName" Mandatory="True" Sourece="ClassName" Target="c.class_name" />
-		<Field Alias="GradeYear" Mandatory="True" Sourece="GradeYear" Target="c.grade_year" />
-		<Field Alias="ClassGraduationPlanID" Mandatory="True" Sourece="GraduationPlanID" Target="c.ref_graduation_plan_id" />
-		<Field Alias="ClassScoreCalcRuleID" Mandatory="True" Source="ClassScoreCalcRuleID" Target="c.ref_score_calc_rule_id" />
-	</FieldList>
-	<Conditions Name="Condition" Required="False" Source="Condition">
-		<Condition Required="True" Source="StudentID" SourceType="Variable" Target="s.id" />
-	</Conditions>
-	<Orders Name="Order" Source="Order" />
-	<Pagination Allow="True" />
-	<InternalVariable>
-		<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
-	</InternalVariable>
-</Definition>
+          <ResponseRecordElement>Student</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="StudentID" Mandatory="True" Source="StudentID" Target="s.id" />
+            <Field Alias="StudentName" Mandatory="True" Source="StudentName" Target="s.name" />
+            <Field Alias="StudentNumber" Mandatory="True" Source="StudentNumber" Target="s.student_number" />
+            <Field Alias="SeatNo" Mandatory="True" Source="SeatNo" Target="s.seat_no" />
+            <Field Alias="SemsHistory" Mandatory="True" OutputType="xml" Source="SemsHistory" Target="s.sems_history" />
+            <Field Alias="StudentGraduationPlanID" Mandatory="True" Source="StudentGraduationPlanID" Target="s.ref_graduation_plan_id" />
+            <Field Alias="StudentScoreCalcRuleID" Mandatory="True" Source="StudentScoreCalcRuleID" Target="s.ref_score_calc_rule_id" />
+            <Field Alias="ClassID" Mandatory="True" Sourece="ClassID" Target="c.id" />
+            <Field Alias="ClassName" Mandatory="True" Sourece="ClassName" Target="c.class_name" />
+            <Field Alias="GradeYear" Mandatory="True" Sourece="GradeYear" Target="c.grade_year" />
+            <Field Alias="ClassGraduationPlanID" Mandatory="True" Sourece="GraduationPlanID" Target="c.ref_graduation_plan_id" />
+            <Field Alias="ClassScoreCalcRuleID" Mandatory="True" Source="ClassScoreCalcRuleID" Target="c.ref_score_calc_rule_id" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition">
+            <Condition Required="True" Source="StudentID" SourceType="Variable" Target="s.id" />
+          </Conditions>
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+          <InternalVariable>
+            <Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+          </InternalVariable>
+        </Definition>
 		</Service>
 	</Package>
 </Contract>

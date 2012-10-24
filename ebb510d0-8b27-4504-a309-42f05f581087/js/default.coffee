@@ -27,6 +27,7 @@ jQuery ->
       resetData()
       getMorality()
       getAttendance()
+      getDiscipline()
 
   $("#behavior").hover(
     () -> $(@).css("overflow", "auto")
@@ -34,8 +35,28 @@ jQuery ->
     () -> $(@).css("overflow", "hidden")
   )
 
+  $("#morality a[my-toggle=collapse]").click ->
+    $("#morality-container").slideToggle 500
+    return false
+
   $("#discipline a[my-toggle=collapse]").click ->
-    $("#collapseD").slideToggle 1000
+    $("#collapseD").slideToggle 500
+    return false
+
+  gadget.getContract("ischool.AD.student").send {
+    service: "_.GetMorality",
+    body: "",
+    result: (response, error, xhr) ->
+      if error?
+        $("#mainMsg").html """
+          <div class='alert alert-error'>
+            <button class='close' data-dismiss='alert'>×</button>
+            <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMorality)
+          </div>
+        """
+      else
+        global.morality = response
+  }
 
   gadget.getContract("ischool.AD.parent").send {
     service: "_.GetCurrentSemester",
@@ -101,7 +122,17 @@ resetSchoolYearSeme = () ->
 # TODO: 清除資料
 resetData = () ->
   $("#behavior #morality tbody").html ""
+  $("#morality-view").addClass "hide"
   $("#behavior #attendance .my-content").html ""
+  $("#behavior #discipline tbody").html ""
+  $("#merit-a").html "<span class='badge'>0</span>"
+  $("#merit-b").html "<span class='badge'>0</span>"
+  $("#merit-c").html "<span class='badge'>0</span>"
+  $("#demerit-a").html "<span class='badge'>0</span>"
+  $("#demerit-b").html "<span class='badge'>0</span>"
+  $("#demerit-c").html "<span class='badge'>0</span>"
+  $("#demerit-d").html ""
+  $("#discipline-view").addClass "hide"
 
 # TODO: 德性成績
 getMorality = () ->
@@ -128,21 +159,39 @@ getMorality = () ->
           items.push """
             <tr>
               <th><span>導師評語</span></th>
-              <td><span>#{@response.Result.SbComment}</span></td>
+              <td><span>#{@response.Result.SbComment || ''}</span></td>
             </tr>
           """
 
-        if response.Result?.DailyLifeScore?.Content?.Morality?
-          $(response.Result.DailyLifeScore.Content.Morality).each () ->
+        if global.morality.Response?.Morality?
+          $(global.morality.Response.Morality).each () ->
+
             items.push """
               <tr>
-                <th><span>#{@Face}</span></th>
-                <td><span>#{@['@text']}</span></td>
-              </tr>
+                <th><span>#{@Face || ''}</span></th>
             """
 
-            $("#behavior #morality tbody").html items.join ""
-            $("#behavior #morality h2").html "德行"
+            that = @
+            tmpFace = ''
+
+            if response.Result?.DailyLifeScore?.Content?.Morality?
+              $(response.Result.DailyLifeScore.Content.Morality).each () ->
+                if @.Face is that.Face
+                  tmpFace = @['@text']
+                  return false
+
+
+            items.push """
+              <td><span>#{tmpFace || ''}</span></td>
+            """
+
+          items.push """
+            </tr>
+          """
+
+          $("#morality-view").removeClass "hide"
+          $("#behavior #morality tbody").html items.join ""
+          $("#behavior #morality h2").html "德行"
         else
           $("#behavior #morality tbody").html "<tr><td>目前無資料</td></tr>"
 
@@ -182,10 +231,10 @@ getAttendance = () ->
             <li class='span2'>
               <div class='thumbnail my-thumbnail-white'>
                 <div class='my-subthumbnail-top'>
-                  <span class='badge badge-warning'>#{absences[name]}</span>
+                  <span class='badge badge-warning'>#{absences[name] || ''}</span>
                 </div>
                 <div class='caption my-subthumbnail-bottom'>
-                  <h5>#{name}</h5>
+                  <h5>#{name || ''}</h5>
                 </div>
               </div>
             </li>
@@ -209,6 +258,8 @@ getDiscipline = () ->
     body: """
       <Request>
         <StudentID>#{global.student.StudentID}</StudentID>
+        <SchoolYear>#{global.behavior.schoolYear}</SchoolYear>
+        <Semester>#{global.behavior.semester}</Semester>
       </Request>
     """
     result: (response, error, xhr) ->
@@ -260,7 +311,7 @@ getDiscipline = () ->
                   <td class="my-detention-text">
                     <span>#{@OccurDate.substr(0, 10)}</span>
                     <br/>
-                    <span>#{@Reason}</span>
+                    <span>#{@Reason || ''}</span>
                   </td>
                 </tr>
               """
@@ -290,10 +341,10 @@ getDiscipline = () ->
                     <br />警告
                   </td>
                   <td>
-                    #{if @Detail.Discipline.Demerit.Cleared is '是' then "<span class='my-offset'>#{@Detail.Discipline.Demerit.ClearDate.substr(0, 10).replace(/\//ig, "-")} 已銷過<br/>#{@Detail.Discipline.Demerit.ClearReason}</span><br/>" else ""}
+                    #{if @Detail.Discipline.Demerit.Cleared is '是' then "<span class='my-offset'>#{@Detail.Discipline.Demerit.ClearDate.substr(0, 10).replace(/\//ig, "-")} 已銷過<br/>#{@Detail.Discipline.Demerit.ClearReason || ''}</span><br/>" else ""}
                     <span>#{@OccurDate.substr(0, 10)}</span>
                     <br/>
-                    <span>#{@Reason}</span>
+                    <span>#{@Reason || ''}</span>
                   </td>
                 </tr>
               """
@@ -316,6 +367,6 @@ getDiscipline = () ->
               </li>
             """
 
-          $("#view-discipline").removeClass "hide"
+          $("#discipline-view").removeClass "hide"
           $("#discipline tbody").html items.join("")
   }
