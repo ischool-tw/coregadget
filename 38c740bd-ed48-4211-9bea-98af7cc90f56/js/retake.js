@@ -168,6 +168,9 @@ _gg.loadData = function () {
                     $(response.Response.Weight).each(function (index, item) {
                         _gg.weight = item;
                     });
+                    $('a[edit-target=SubScore1]').append( '(' + (_gg.weight.SS1Weight || '')  + '%)' );
+                    $('a[edit-target=SubScore2]').append( '(' + (_gg.weight.SS2Weight || '')  + '%)' );
+                    $('a[edit-target=SubScore3]').append( '(' + (_gg.weight.SS3Weight || '')  + '%)' );
                 }
             }
         }
