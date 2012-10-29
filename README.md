@@ -26,7 +26,7 @@ Core Gadget
 * fd56eafc-3601-40a0-82d9-808f72a8272b 參加社團(學生)
 * 6080a7c0-60e7-443c-bad7-ecccb3a86bcf 社團(老師)
 * 8e83b577-17bf-4f1a-aa01-251acc06a5db 重補修(學生)
-* 38c740bd-ed48-4211-9bea-98af7cc90f56 重補修登錄成績(老師)
+* 38c740bd-ed48-4211-9bea-98af7cc90f56 重補修成績(老師)
 
 
 Campus Lite
