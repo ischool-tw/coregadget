@@ -265,6 +265,9 @@ _gg.loadData = function () {
                     });
                     $('#changeCourse').html(items.join(''));
                     _gg.GetScore(tmp_courseID);
+                } else {
+                    $('#changeCourse').remove();
+                    $('#score_list').html('您無重補修授課資料！');
                 }
             }
         }
