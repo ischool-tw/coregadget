@@ -49,7 +49,7 @@
       $("#collapseD").slideToggle(500);
       return false;
     });
-    gadget.getContract("ischool.AD.student").send({
+    gadget.getContract("ischool.AD.parent").send({
       service: "_.GetMorality",
       body: "",
       result: function(response, error, xhr) {
