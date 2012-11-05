@@ -45,6 +45,17 @@
       $("#collapseD").slideToggle(500);
       return false;
     });
+    gadget.getContract("ischool.AD.parent").send({
+      service: "_.GetList",
+      body: "<Request><Name>DLBehaviorConfig</Name></Request>",
+      result: function(response, error, xhr) {
+        if (error != null) {
+          return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetList_DLBehaviorConfig)\n</div>");
+        } else {
+          return global.morality = response;
+        }
+      }
+    });
     return gadget.getContract("ischool.AD.parent").send({
       service: "_.GetCurrentSemester",
       body: "",
@@ -112,23 +123,24 @@
   };
 
   getMorality = function() {
-    return gadget.getContract("ischool.AD.parent").send({
-      service: "_.GetMoralScore",
-      body: "<Request>\n  <StudentID>" + global.student.StudentID + "</StudentID>\n  <SchoolYear>" + global.behavior.schoolYear + "</SchoolYear>\n  <Semester>" + global.behavior.semester + "</Semester>\n</Request>",
-      result: function(response, error, xhr) {
-        var items, _ref;
-        if (error != null) {
-          return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMoralScore)\n</div>");
-        } else {
-          items = [];
-          if (((_ref = response.Result.DailyLifeScore) != null ? _ref.TextScore : void 0) != null) {
-            $(response.Result.DailyLifeScore.TextScore).each(function() {
-              var _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+    var _ref;
+    if (((_ref = global.morality) != null ? _ref.Response : void 0) != null) {
+      return gadget.getContract("ischool.AD.parent").send({
+        service: "_.GetMoralScore",
+        body: "<Request>\n  <StudentID>" + global.student.StudentID + "</StudentID>\n  <SchoolYear>" + global.behavior.schoolYear + "</SchoolYear>\n  <Semester>" + global.behavior.semester + "</Semester>\n</Request>",
+        result: function(response, error, xhr) {
+          var items, _ref1;
+          if (error != null) {
+            return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMoralScore)\n</div>");
+          } else {
+            items = [];
+            $(global.morality.Response).each(function() {
+              var _ref1, _ref2, _ref3, _ref4, _ref5;
               if (this.DailyBehavior != null) {
                 items.push("<div class=\"accordion-group\">\n  <div class=\"accordion-heading\">\n    <a class=\"accordion-toggle\" data-toggle=\"collapse\" data-parent=\"#accordion2\" href=\"#DailyBehavior\">\n      " + ((_ref1 = this.DailyBehavior.Name) != null ? _ref1 : '日常行為表現') + "\n    </a>\n  </div>\n  <div id=\"DailyBehavior\" class=\"accordion-body collapse\">\n    <div class=\"accordion-inner\">\n      <table class=\"table table-striped\">\n        <tbody>");
                 $(this.DailyBehavior.Item).each(function() {
                   var _ref2, _ref3, _ref4;
-                  return items.push("<tr>\n  <th><span>" + ((_ref2 = this.Name) != null ? _ref2 : '') + "</span></th>\n  <td><span>" + ((_ref3 = this.Index) != null ? _ref3 : '') + "</span></td>\n  <td><span>" + ((_ref4 = this.Degree) != null ? _ref4 : '') + "</span></td>\n</tr>");
+                  return items.push("<tr>\n  <th><span>" + ((_ref2 = this.Name) != null ? _ref2 : '') + "</span></th>\n  <td><span>" + ((_ref3 = this.Index) != null ? _ref3 : '') + "</span></td>\n  <td><span data-type=\"DB_Degree_" + ((_ref4 = this.Name) != null ? _ref4 : '') + "\"></span></td>\n</tr>");
                 });
                 items.push("          </tbody>\n        </table>\n      </div>\n    </div>\n</div>");
               }
@@ -136,7 +148,7 @@
                 items.push("<div class=\"accordion-group\">\n  <div class=\"accordion-heading\">\n    <a class=\"accordion-toggle\" data-toggle=\"collapse\" data-parent=\"#accordion2\" href=\"#GroupActivity\">\n      " + ((_ref2 = this.GroupActivity.Name) != null ? _ref2 : '團體活動表現') + "\n    </a>\n  </div>\n  <div id=\"GroupActivity\" class=\"accordion-body collapse\">\n    <div class=\"accordion-inner\">\n      <table class=\"table table-striped\">\n        <tbody>");
                 $(this.GroupActivity.Item).each(function() {
                   var _ref3, _ref4, _ref5;
-                  return items.push("<tr>\n  <th><span>" + ((_ref3 = this.Name) != null ? _ref3 : '') + "</span></th>\n  <td><span>" + ((_ref4 = this.Degree) != null ? _ref4 : '') + "</span></td>\n  <td><span>" + ((_ref5 = this.Description) != null ? _ref5 : '') + "</span></td>\n</tr>");
+                  return items.push("<tr>\n  <th><span>" + ((_ref3 = this.Name) != null ? _ref3 : '') + "</span></th>\n  <td><span data-type=\"GA_Degree_" + ((_ref4 = this.Name) != null ? _ref4 : '') + "\"></span></td>\n  <td><span data-type=\"GA_Description_" + ((_ref5 = this.Name) != null ? _ref5 : '') + "\"></span></td>\n</tr>");
                 });
                 items.push("          </tbody>\n        </table>\n      </div>\n    </div>\n</div>");
               }
@@ -144,7 +156,7 @@
                 items.push("<div class=\"accordion-group\">\n  <div class=\"accordion-heading\">\n    <a class=\"accordion-toggle\" data-toggle=\"collapse\" data-parent=\"#accordion2\" href=\"#PublicService\">\n      " + ((_ref3 = this.PublicService.Name) != null ? _ref3 : '公共服務表現') + "\n    </a>\n  </div>\n  <div id=\"PublicService\" class=\"accordion-body collapse\">\n    <div class=\"accordion-inner\">\n      <table class=\"table table-striped\">\n        <tbody>");
                 $(this.PublicService.Item).each(function() {
                   var _ref4, _ref5;
-                  return items.push("<tr>\n  <th><span>" + ((_ref4 = this.Name) != null ? _ref4 : '') + "</span></th>\n  <td><span>" + ((_ref5 = this.Description) != null ? _ref5 : '') + "</span></td>\n</tr>");
+                  return items.push("<tr>\n  <th><span>" + ((_ref4 = this.Name) != null ? _ref4 : '') + "</span></th>\n  <td><span data-type=\"PS_Description_" + ((_ref5 = this.Name) != null ? _ref5 : '') + "\"></span></td>\n</tr>");
                 });
                 items.push("          </tbody>\n        </table>\n      </div>\n    </div>\n</div>");
               }
@@ -152,30 +164,59 @@
                 items.push("<div class=\"accordion-group\">\n  <div class=\"accordion-heading\">\n    <a class=\"accordion-toggle\" data-toggle=\"collapse\" data-parent=\"#accordion2\" href=\"#SchoolSpecial\">\n      " + ((_ref4 = this.SchoolSpecial.Name) != null ? _ref4 : '校內外特殊表現') + "\n    </a>\n  </div>\n  <div id=\"SchoolSpecial\" class=\"accordion-body collapse\">\n    <div class=\"accordion-inner\">\n      <table class=\"table table-striped\">\n        <tbody>");
                 $(this.SchoolSpecial.Item).each(function() {
                   var _ref5, _ref6;
-                  return items.push("<tr>\n  <th><span>" + ((_ref5 = this.Name) != null ? _ref5 : '') + "</span></th>\n  <td><span>" + ((_ref6 = this.Description) != null ? _ref6 : '') + "</span></td>\n</tr>");
+                  return items.push("<tr>\n  <th><span>" + ((_ref5 = this.Name) != null ? _ref5 : '') + "</span></th>\n  <td><span data-type=\"SS_Description_" + ((_ref6 = this.Name) != null ? _ref6 : '') + "\"></span></td>\n</tr>");
                 });
                 items.push("          </tbody>\n        </table>\n      </div>\n    </div>\n</div>");
               }
               if (this.DailyLifeRecommend != null) {
-                items.push("<div class=\"accordion-group\">\n  <div class=\"accordion-heading\">\n    <a class=\"accordion-toggle\" data-toggle=\"collapse\" data-parent=\"#accordion2\" href=\"#DailyLifeRecommend\">\n      " + ((_ref5 = this.DailyLifeRecommend.Name) != null ? _ref5 : '日常生活表現具體建議') + "\n    </a>\n  </div>\n  <div id=\"DailyLifeRecommend\" class=\"accordion-body collapse\">\n    <div class=\"accordion-inner\">\n      " + ((_ref6 = this.DailyLifeRecommend.Description) != null ? _ref6 : this.DailyLifeRecommend['#text']) + "\n    </div>\n  </div>\n</div>");
-              }
-              if (this.OtherRecommend != null) {
-                return items.push("<div class=\"accordion-group\">\n  <div class=\"accordion-heading\">\n    <a class=\"accordion-toggle\" data-toggle=\"collapse\" data-parent=\"#accordion2\" href=\"#OtherRecommend\">\n      " + ((_ref7 = this.OtherRecommend.Name) != null ? _ref7 : '其他具體建議') + "\n    </a>\n  </div>\n  <div id=\"OtherRecommend\" class=\"accordion-body collapse\">\n    <div class=\"accordion-inner\">\n      " + ((_ref8 = this.OtherRecommend['#text']) != null ? _ref8 : '') + "\n    </div>\n  </div>\n</div>");
+                return items.push("<div class=\"accordion-group\">\n  <div class=\"accordion-heading\">\n    <a class=\"accordion-toggle\" data-toggle=\"collapse\" data-parent=\"#accordion2\" href=\"#DailyLifeRecommend\">\n      " + ((_ref5 = this.DailyLifeRecommend.Name) != null ? _ref5 : '日常生活表現具體建議') + "\n    </a>\n  </div>\n  <div id=\"DailyLifeRecommend\" class=\"accordion-body collapse\">\n    <div class=\"accordion-inner\">\n    </div>\n  </div>\n</div>");
               }
             });
-            if (items.join("") === "") {
-              return $("#behavior #morality #accordion-m").html("目前無資料");
-            } else {
-              $("#behavior #morality #accordion-m").html(items.join(""));
-              $("#behavior #morality h2").html("日常生活表現");
-              return $('#behavior #morality table').find('tr:first td, tr:first th').css("border-top-color", "transparent");
+            $("#behavior #morality #accordion-m").html(items.join(""));
+            $("#behavior #morality h2").html("日常生活表現");
+            $('#behavior #morality table').find('tr:first td, tr:first th').css("border-top-color", "transparent");
+            if (((_ref1 = response.Result.DailyLifeScore) != null ? _ref1.TextScore : void 0) != null) {
+              return $(response.Result.DailyLifeScore.TextScore).each(function() {
+                var _ref2, _ref3, _ref4;
+                if (this.DailyBehavior != null) {
+                  $(this.DailyBehavior.Item).each(function() {
+                    var _ref2;
+                    return $("#DailyBehavior td span[data-type=DB_Degree_" + ((_ref2 = this.Name) != null ? _ref2 : '') + "]").html(this.Degree || '');
+                  });
+                }
+                if (this.GroupActivity != null) {
+                  $(this.GroupActivity.Item).each(function() {
+                    var _ref2, _ref3;
+                    $("#GroupActivity td span[data-type=GA_Degree_" + ((_ref2 = this.Name) != null ? _ref2 : '') + "]").html(this.Degree || '');
+                    return $("#GroupActivity td span[data-type=GA_Description_" + ((_ref3 = this.Name) != null ? _ref3 : '') + "]").html(this.Description || '');
+                  });
+                }
+                if (this.PublicService != null) {
+                  $(this.PublicService.Item).each(function() {
+                    var _ref2;
+                    return $("#PublicService td span[data-type=PS_Description_" + ((_ref2 = this.Name) != null ? _ref2 : '') + "]").html(this.Description || '');
+                  });
+                }
+                if (this.SchoolSpecial != null) {
+                  $(this.SchoolSpecial.Item).each(function() {
+                    var _ref2;
+                    return $("#SchoolSpecial td span[data-type=SS_Description_" + ((_ref2 = this.Name) != null ? _ref2 : '') + "]").html(this.Description || '');
+                  });
+                }
+                if (this.DailyLifeRecommend != null) {
+                  $("#DailyLifeRecommend .accordion-inner").html("" + ((_ref2 = this.DailyLifeRecommend.Description) != null ? _ref2 : this.DailyLifeRecommend['#text']));
+                }
+                if (this.OtherRecommend != null) {
+                  return $("#accordion-m").append("<div class=\"accordion-group\">\n  <div class=\"accordion-heading\">\n    <a class=\"accordion-toggle\" data-toggle=\"collapse\" data-parent=\"#accordion2\" href=\"#OtherRecommend\">\n      " + ((_ref3 = this.OtherRecommend.Name) != null ? _ref3 : '其他具體建議') + "\n    </a>\n  </div>\n  <div id=\"OtherRecommend\" class=\"accordion-body collapse\">\n    <div class=\"accordion-inner\">\n      " + ((_ref4 = this.OtherRecommend['#text']) != null ? _ref4 : '') + "\n    </div>\n  </div>\n</div>");
+                }
+              });
             }
-          } else {
-            return $("#behavior #morality #accordion-m").html("目前無資料");
           }
         }
-      }
-    });
+      });
+    } else {
+      return $("#behavior #morality #accordion-m").html("目前無資料");
+    }
   };
 
   getAttendance = function() {
