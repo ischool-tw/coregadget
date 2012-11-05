@@ -98,12 +98,12 @@ jQuery(function () {
         }
     });
 
-    // TODO: 載入資料上下鍵切換輸入框
-    $('#editModal').on('keydown', 'input:text', function(e) {
+    // TODO: 登錄資料上下鍵、Enter鍵切換輸入框
+    $('#editModal').on('keyup', 'input:text', function(e) {
         if (e.which === 38) {
             $(this).parent().parent().prev().find('input:text').focus();
         }
-        if (e.which === 40) {
+        if (e.which === 40 || e.which === 13) {
             $(this).parent().parent().next().find('input:text').focus();
         }
     });
@@ -265,6 +265,9 @@ _gg.loadData = function () {
                     });
                     $('#changeCourse').html(items.join(''));
                     _gg.GetScore(tmp_courseID);
+                } else {
+                    $('#changeCourse').remove();
+                    $('#score_list').html('您無重補修授課資料！');
                 }
             }
         }
