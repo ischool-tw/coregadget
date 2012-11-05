@@ -326,19 +326,19 @@ jQuery(function () {
     });
 
     // TODO: 編輯畫面按下儲存鈕
-    $('.modal button[edit-target]').bind('click', function(e) {
+    $('.modal').on('click', 'button[edit-target]', function(e) {
         var data_scope = $(this).closest(".modal").attr("id");
 
         if ($("#" + data_scope + " form").valid()) {
-            $(this).removeClass('btn-danger').addClass('btn-success').button('loading'); // TODO: 按鈕為處理中
+            $(this).button('loading'); // TODO: 按鈕為處理中
             _gg.SetSaveData(data_scope);
         } else {
-            $(this).removeClass('btn-success').addClass('btn-danger');
+            $("#" + data_scope + "_errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  資料驗證失敗，請重新檢查！\n</div>");
         }
     });
 
     // TODO: 切換年級
-    $('.my-schoolyear-semester-widget .btn').live("click", function () {
+    $('.my-schoolyear-semester-widget').on("click", '.btn', function () {
         _gg.grade = $(this).attr("grade");
         _gg.chineseGrade = $(this).attr("chinese-grade");
         _gg.SetData('B1');
