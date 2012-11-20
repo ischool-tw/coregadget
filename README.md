@@ -38,6 +38,13 @@ Campus Lite
 * d9d3531e-f65a-47d5-9c00-74880f45c26b 老師
 * 7ef361c3-a2ea-4b08-8fc3-5272313b1161 學生
 * 287475d2-7cbe-48d6-a2a5-3b73ad91fd3e 班級
+* d46c728c-2f0c-44a5-b925-09492024b971 通訊錄(老師)
+* 74907f2d-b253-41d5-81fd-736ef1b45ebe 通訊錄(學生)
+* 249bcf38-2003-45dc-9428-7b2534fe7a8b 通訊錄(家長)
+* d02aba1c-abf0-4a05-a1cc-d80cdc025bba 我是老師
+* 703f5ca1-56b8-490f-a265-cde637441fe4 我是學生(Student Code)
+* 70e199e9-5d97-4a0e-b192-3a4e519aed2c 我是學生(Class Code)
+* 208fb601-1392-4635-a8ac-0b9b4faac9f7 我是家長
 
 
 線上測試
