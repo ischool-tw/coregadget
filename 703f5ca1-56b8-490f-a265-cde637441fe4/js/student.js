@@ -161,7 +161,22 @@ _gg.saveMyInfo = function() {
                     $("#save-myself").button("reset");
                     _gg.set_error_message('#mainMsg', 'SetMyInfo', error);
                 } else {
-                    window.parent.appsLoader.reflashApplicationList();
+                    window.parent.setTimeout(window.parent.menuRander.show,500);
+                    window.parent.displayManager.refreshGadget((function () {
+                        var vars = [], hash;
+                        var p = window.location.href.slice(window.location.href.indexOf('?') + 1);
+                        if (p.indexOf("#") >= 0)
+                            p = p.substring(0, p.indexOf("#"));
+                        var hashes = p.split('&');
+                        for (var i = 0; i < hashes.length; i++) {
+                            hash = decodeURI(hashes[i]);
+                            var key = hash.substring(0, hash.indexOf("="));
+                            vars.push(key);
+                            vars[key] = hash.substring(hash.indexOf("=") + 1);
+                        }
+                        return vars;
+                    }()).id);
+
                 }
             }
         });
@@ -201,7 +216,21 @@ _gg.setAccount = function() {
                                         _gg.myself = item;
                                     });
                                     if (_gg.myself.ProfileID) {
-                                        window.parent.appsLoader.reflashApplicationList();
+                                        window.parent.setTimeout(window.parent.menuRander.show,500);
+                                        window.parent.displayManager.refreshGadget((function () {
+                                            var vars = [], hash;
+                                            var p = window.location.href.slice(window.location.href.indexOf('?') + 1);
+                                            if (p.indexOf("#") >= 0)
+                                                p = p.substring(0, p.indexOf("#"));
+                                            var hashes = p.split('&');
+                                            for (var i = 0; i < hashes.length; i++) {
+                                                hash = decodeURI(hashes[i]);
+                                                var key = hash.substring(0, hash.indexOf("="));
+                                                vars.push(key);
+                                                vars[key] = hash.substring(hash.indexOf("=") + 1);
+                                            }
+                                            return vars;
+                                        }()).id);
                                     } else {
                                         $('#save-myself').removeClass('hide');
                                     }
