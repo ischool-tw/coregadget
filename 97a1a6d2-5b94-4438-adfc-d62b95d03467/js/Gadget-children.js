@@ -51,7 +51,23 @@ myparent.setParentRelationship = function (parentCode, idNumber, relationship) {
                 $('#editModal').modal("show");
                 $('#editModal h3').html("設定成功")
                 $('#editModal .modal-body').html('設定完成');
-                $('#editModal #iknow').bind('click', window.parent.appsLoader.reflashApplicationList());
+                $('#editModal #iknow').bind('click', function() {
+                    window.parent.setTimeout(window.parent.menuRander.show,500);
+                    window.parent.displayManager.refreshGadget((function () {
+                        var vars = [], hash;
+                        var p = window.location.href.slice(window.location.href.indexOf('?') + 1);
+                        if (p.indexOf("#") >= 0)
+                            p = p.substring(0, p.indexOf("#"));
+                        var hashes = p.split('&');
+                        for (var i = 0; i < hashes.length; i++) {
+                            hash = decodeURI(hashes[i]);
+                            var key = hash.substring(0, hash.indexOf("="));
+                            vars.push(key);
+                            vars[key] = hash.substring(hash.indexOf("=") + 1);
+                        }
+                        return vars;
+                    }()).id);
+                });
             }
         }
     });
