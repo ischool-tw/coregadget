@@ -57,12 +57,25 @@ jQuery(function () {
     // TODO: 代碼確認
     $('#save-data').bind('click', function() {
         $('#errorMessage').html('');
-        if ($('#inputCode').val()) {
+        $('#myModal input:text').removeClass('error');
+
+        if ($('#inputCode').val() && $('#inputName').val() && $('#inputSeatNo').val()) {
             $(this).button("loading");
             _gg.setAccount();
         } else {
-            $('#inputCode').focus().addClass('error');
-            $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請輸入代碼！\n</div>");
+            if (!($('#inputCode').val())) {
+                $('#inputCode').addClass('error');
+            }
+            if (!($('#inputName').val())) {
+                $('#inputName').addClass('error');
+            }
+            if (!($('#inputSeatNo').val())) {
+                $('#inputSeatNo').addClass('error');
+            }
+
+            $('#myModal input:text.error:first').focus();
+
+            $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請輸入代碼、姓名、座號！\n</div>");
         }
     });
 
@@ -148,8 +161,8 @@ _gg.updatePhoto = function() {
 
 // TODO: 儲存個人基本資料
 _gg.saveMyInfo = function() {
-    var teachername = $('#edit-TeacherName').val() || '';
-    if (teachername) {
+    var studentname = $('#edit-StudentName').val() || '';
+    if (studentname) {
         var photo = $('#edit-Photo div.my-proimg').attr('photo-base64') || '';
         var gender = $('#edit-Gender').val() || '';
         var aboutme = $('#edit-AboutMe').val() || '';
@@ -170,7 +183,7 @@ _gg.saveMyInfo = function() {
         request.push('<Gender>' + gender + '</Gender>');
         request.push('<Photo>' + photo + '</Photo>');
         request.push('<Tagline>' + tagline + '</Tagline>');
-        request.push('<StudentName>' + teachername + '</StudentName>');
+        request.push('<StudentName>' + studentname + '</StudentName>');
 
         _gg.connection.send({
             service: "_.SetMyInfo",
@@ -207,12 +220,14 @@ _gg.saveMyInfo = function() {
 
 // TODO: 建立帳號關連
 _gg.setAccount = function() {
-    var code = $('#inputCode').val();
-    if (code) {
+    var code   = $('#inputCode').val();
+    var sname = $('#inputName').val();
+    var seatno = $('#inputSeatNo').val();
+    if (code && sname && seatno) {
         var public_connection = public_connection || gadget.getContract("auth.guest");
         public_connection.send({
             service: "Join.IntoClass",
-            body: '<Request><ClassCode>' + code + '</ClassCode></Request>',
+            body: '<Request><ClassCode>' + code + '</ClassCode><Name>' + sname + '</Name><SeatNo>' + seatno + '</SeatNo></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
                     _gg.set_error_message('#errorMessage', 'Join.IntoClass', error);
@@ -250,6 +265,7 @@ _gg.setAccount = function() {
                                             return vars;
                                         }()).id);
                                     } else {
+                                        $('#edit-StudentName').val(sname);
                                         $('#save-myself').removeClass('hide');
                                     }
                                 }
