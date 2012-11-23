@@ -41,10 +41,12 @@ Campus Lite
 * d46c728c-2f0c-44a5-b925-09492024b971 通訊錄(老師)
 * 74907f2d-b253-41d5-81fd-736ef1b45ebe 通訊錄(學生)
 * 249bcf38-2003-45dc-9428-7b2534fe7a8b 通訊錄(家長)
-* d02aba1c-abf0-4a05-a1cc-d80cdc025bba 我是老師
-* 703f5ca1-56b8-490f-a265-cde637441fe4 我是學生(Student Code)
-* 70e199e9-5d97-4a0e-b192-3a4e519aed2c 我是學生(Class Code)
-* 208fb601-1392-4635-a8ac-0b9b4faac9f7 我是家長
+* d02aba1c-abf0-4a05-a1cc-d80cdc025bba 我是老師(訪客)
+* 703f5ca1-56b8-490f-a265-cde637441fe4 我是學生(Student Code)(訪客)
+* 70e199e9-5d97-4a0e-b192-3a4e519aed2c 我是學生(Class Code)(訪客)
+* 208fb601-1392-4635-a8ac-0b9b4faac9f7 我是家長(訪客)
+* c4a66017-da64-4ae1-8096-07bc8a569db7 訊息(老師、學生、家長)
+* 188b2762-f04d-49d9-830a-2fb78f164370 班級管理(老師)
 
 
 線上測試
