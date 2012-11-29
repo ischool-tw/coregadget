@@ -224,7 +224,7 @@ _gg.setAccount = function() {
                                     $(response.ParentInfo).each(function(index, item) {
                                         _gg.myself = item;
                                     });
-                                    if (_gg.myself.ProfileID) {
+                                    if (_gg.myself.ParentName) {
                                         window.parent.appsLoader.reflashApplicationList(); // 重新整理選單
                                     } else {
                                         $('#save-myself').removeClass('hide');
