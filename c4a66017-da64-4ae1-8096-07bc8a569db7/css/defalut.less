@@ -1,0 +1,312 @@
+﻿ul{
+    list-style-type:none;
+    margin:0;
+}
+a {
+    color:inherit;
+}
+
+a:hover {
+    color:inherit;
+    text-decoration:none;
+}
+
+.my-left {
+    width:39%;
+    border:1px solid #e7e7e7;
+    border-radius:3px 0 0 3px;
+}
+
+.my-left-close {
+    width:99%;
+    border:1px solid #e7e7e7;
+    border-radius:3px;
+}
+
+.my-left-close .my-msglist .my-unread {
+    background:#FEFFEF url(images/icon_new.png) no-repeat 99% 75% !important;
+}
+
+.my-right{
+    width:0%;
+    overflow:hidden;
+    display:none;
+}
+
+.my-right-open {
+    width:60%;
+    border:1px solid #E5E7EC;
+    border-left:none;
+    box-shadow: -1px 0 1px rgba(0, 0, 0, 0.1);
+    border-radius:0 3px 3px 0;
+}
+
+#boxlist {
+    height:670px;
+}
+
+.my-msglist li{
+    /*border:1px solid #E5E7EC;
+    border-top-color:#fefefe;*/
+    display:inline-block;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+    width: 100%;
+}
+
+.my-msglist li, .my-msgboxtitle {
+    background: #ffffff; /* Old browsers */
+    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjQlIiBzdG9wLWNvbG9yPSIjZjdmN2Y3IiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iOTclIiBzdG9wLWNvbG9yPSIjZjdmN2Y3IiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2Q4ZDhkOCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=);
+    background: -moz-linear-gradient(top, #ffffff 0%, #f9f9f9 4%, #f9f9f9 97%, #d8d8d8 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(4%,#f9f9f9), color-stop(97%,#f9f9f9), color-stop(100%,#d8d8d8)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #ffffff 0%,#f9f9f9 4%,#f9f9f9 97%,#d8d8d8 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #ffffff 0%,#f9f9f9 4%,#f9f9f9 97%,#d8d8d8 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #ffffff 0%,#f9f9f9 4%,#f9f9f9 97%,#d8d8d8 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #ffffff 0%,#f9f9f9 4%,#f9f9f9 97%,#d8d8d8 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#d8d8d8',GradientType=0 ); /* IE6-8 */
+}
+
+.my-msglist li:hover {
+    background:#f4f6f9;
+}
+
+.my-msglist li:first-child {
+    border-top-color:#E5E7EC;
+}
+
+.my-msglist .active {
+    color:#fff;
+    background:#69C;
+    text-shadow:none;
+    /*box-shadow: 1px 1px 1px rgba(100, 100, 100, 0.1), 0 0 25px rgba(0, 0, 0, 0.1) inset;*/
+}
+
+.my-msglist .active dd, .my-msglist .active dt div:last-child {
+    color:#F9FFFF;
+}
+
+.my-msglist .active dt .icon-comment {
+    background-image:url(images/glyphicons-halflings-white.png);
+}
+
+.my-msglist .active:hover {
+    background:#69C;
+}
+
+.my-msglist .my-unread {
+    background:#FEFFEF url(images/icon_new.png) no-repeat 97% 75% !important;
+    border-bottom:1px solid #ddd;
+}
+
+.my-msglist dl {
+    margin:10px;
+}
+
+.my-msglist dt .my-msgtitle {
+    font-size:16px;
+    display:inline-block;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+}
+
+.my-msglist dt div:last-child {
+    color:#69C;
+}
+
+.my-msglist dt .close {
+    float:none;
+    vertical-align:inherit;
+}
+
+.my-msglist dt .icon-edit {
+    cursor:pointer;
+}
+
+.my-msglist dd {
+    margin:0;
+    color:#999;
+    letter-spacing: 1px;
+    width:75%;
+    height:23px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    font-size:12px;
+    white-space: nowrap;
+}
+
+.popover {
+    width:auto;
+}
+
+.my-msgboxtitle {
+    position:relative;
+    padding:7px 5px;
+    display:block;
+    /*background:#F5F5F5;
+    box-shadow: inset 0 1px white, 0 1px 3px rgba(34, 25, 25, 0.3);
+    -moz-box-shadow: inset 0 1px #fff, 0 1px 3px rgba(34,25,25,0.3);
+    -webkit-box-shadow: inset 0 1px white, 0 1px 3px rgba(34, 25, 25, 0.3);*/
+    z-index:2;
+}
+
+.my-msgboxtitle img {
+    border-radius:5px;
+    max-height: 50px;
+    max-width: 50px;
+}
+
+.my-msgboxtitle ul {
+    position:absolute;
+    left:60px;
+    top:5px;
+    margin-left:5px;
+}
+
+.my-msgboxtitle ul li {
+    line-height:25px;
+}
+
+.my-msgboxtitle ul li:last-child {
+    color:#999;
+    text-shadow: 1px 1px 0 white;
+}
+
+#boxcontent {
+    border-bottom:1px solid #E5E7EC;
+}
+
+.my-msgboxcontent {
+    position:relative;
+    padding:5px;
+    height:480px;
+    z-index:1;
+}
+
+.my-msgboxcontent > div:last-child {
+    margin-bottom:10px;
+}
+
+.my-msgboxcontent .popover {
+    position:relative;
+    margin:5px 0;
+    display:inline-block;
+    box-shadow:none;
+    border-radius:5px;
+}
+
+.my-recrive, .my-transmit {
+    padding:0 10px;
+    max-width:83%;
+    clear:both;
+}
+
+.my-recrive {
+    float:left;
+}
+
+.my-transmit {
+    float:right;
+    clear:right;
+}
+
+.my-recrive .popover-title {
+    background:#fff;
+}
+
+.my-transmit .popover-content, .my-transmit .popover-title {
+    background:#FBFFFB;
+}
+
+.my-transmit .popover.left .arrow {
+    border-left-color: #FBFFFB;
+}
+
+.my-msgboxcontent .popover-title .close {
+    font-size:10px;
+}
+
+.my-msgboxcontent .my-unread .popover-title, .my-msgboxcontent .my-unread .popover-content{
+    background:#FEFFEF;
+}
+
+.my-msgboxcontent .my-unread .popover.right .arrow {
+    border-right-color:#FEFFEF;
+}
+
+.my-time {
+    padding:1px 15px;
+    color:#999;
+    font-size:10px;
+}
+
+.my-date {
+    color:#666;
+    font-size:10px;
+    position:relative;
+    text-align:center;
+    clear:both;
+}
+
+.my-date::before, .my-date::after {
+    content: '';
+    width: 43%;
+    height: 1px;
+    background: #E5E5E5;
+    position: absolute;
+    left: 0;
+    top: 45%;
+}
+
+.my-date::after {
+    left: auto;
+    right: 0;
+}
+
+.my-msgboxre {
+    position:relative;
+    border-top:1px solid #fefefe;
+    background:#F5F5F5;
+    padding:15px 5px 0 5px;
+    z-index:2;
+}
+
+.my-msgboxre p {
+    font-size:12px;
+}
+
+.my-msgboxre:before {
+    position:absolute;
+    content:"回覆訊息：";
+    top:-10px;
+    text-shadow: 1px 1px 0 white;
+    color:#798B99;
+}
+
+/*自訂*/
+.my-successMessage {
+    div {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 2;
+    }
+}
+
+.my-transmit {
+    margin-right: 9px;
+}
+
+#mySendMsg_errorMessage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+}
