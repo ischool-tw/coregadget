@@ -62,7 +62,14 @@ h2 + p {
   color: #88A200;
 }
 .my-table thead td {
-  background: #CFCFCF;
+  background-color: #CFCFCF;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #bbb;
+}
+.my-well-table-striped tbody tr th.my-scorename {
+  background-color: #E0E0E0;
+  width: 40%;
+}
+.my-totalscore {
+  width: 10%;
 }
