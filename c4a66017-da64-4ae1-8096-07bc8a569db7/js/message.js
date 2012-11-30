@@ -98,10 +98,10 @@ jQuery(function () {
     // TODO: 載入主要資料
     var loadMainData = function() {
         var box = $('#boxlist');
-        var total_height = $(box).find('div.alt-scroll-holder').height();
-        var scroll = $(box).find('div.alt-scroll-vertical-bar');
-        var t = parseInt($(scroll).css('top'), 10);
-        var h = $(scroll).height();
+        var total_height = box.find('div.alt-scroll-holder').height();
+        var scroll = box.find('div.alt-scroll-vertical-bar');
+        var t = parseInt(scroll.css('top'), 10);
+        var h = scroll.height();
 
         if ( (total_height - (t + h)) <= 5 ) {
             var msgdata = _gg.getdata;
@@ -138,10 +138,10 @@ jQuery(function () {
     // TODO: 載入雙方溝通資料
     var loadMutualData = function() {
         var box = $('#boxcontent');
-        var total_height = $(box).find('div.alt-scroll-holder').height();
-        var scroll = $(box).find('div.alt-scroll-vertical-bar');
-        var t = parseInt($(scroll).css('top'), 10);
-        var h = $(scroll).height();
+        var total_height = box.find('div.alt-scroll-holder').height();
+        var scroll = box.find('div.alt-scroll-vertical-bar');
+        var t = parseInt(scroll.css('top'), 10);
+        var h = scroll.height();
 
         if ( (total_height - (t + h)) <= 5 ) {
             var msgdata = _gg.getdata.preview;
