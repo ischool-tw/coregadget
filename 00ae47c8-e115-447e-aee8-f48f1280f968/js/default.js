@@ -45,6 +45,20 @@
       $("#collapseD").slideToggle(500);
       return false;
     });
+    $("#attendance").on("click", ".my-content a", function() {
+      var id;
+      id = $(this).attr("data-action") || "";
+      if (id) {
+        $("#attendance .accordion-body").addClass('hide');
+        if ($(this).find('i').size()) {
+          return $(this).find('i').remove();
+        } else {
+          $("#attendance").find('i').remove();
+          $(this).find("h5").append('<i class="icon-eye-open"></i>');
+          return $("#" + id).removeClass("hide");
+        }
+      }
+    });
     gadget.getContract("ischool.AD.parent").send({
       service: "_.GetList",
       body: "<Request><Name>DLBehaviorConfig</Name></Request>",
@@ -224,29 +238,60 @@
       service: "_.GetAttendanceRecord",
       body: "<Request>\n  <StudentID>" + global.student.StudentID + "</StudentID>\n  <SchoolYear>" + global.behavior.schoolYear + "</SchoolYear>\n  <Semester>" + global.behavior.semester + "</Semester>\n</Request>",
       result: function(response, error, xhr) {
-        var absences, items, name, _ref, _ref1;
+        var absences, ii, info, items, name, tmp, _ref;
         if (error != null) {
           return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetAttendanceRecord)\n</div>");
         } else {
           absences = {};
           if (((_ref = response.Result) != null ? _ref.Attendance : void 0) != null) {
             $(response.Result.Attendance).each(function() {
-              return $(this.Detail.Attendance.Period).each(function() {
+              var occurDate, ret, that;
+              that = this;
+              occurDate = that.OccurDate;
+              ret = {};
+              $(this.Detail.Attendance.Period).each(function() {
                 if (!(absences[this['AbsenceType']] != null)) {
                   absences[this['AbsenceType']] = 0;
+                  absences[this['AbsenceType'] + '_info'] = [];
                 }
-                return absences[this['AbsenceType']] += 1;
+                absences[this['AbsenceType']] += 1;
+                if (!(ret[this['AbsenceType']] != null)) {
+                  return ret[this['AbsenceType']] = this['@text'];
+                } else {
+                  return ret[this['AbsenceType']] += ', ' + this['@text'];
+                }
+              });
+              return $.each(ret, function(key, value) {
+                var detail;
+                detail = {
+                  OccurDate: occurDate,
+                  Periods: value
+                };
+                return absences[key + '_info'].push(detail);
               });
             });
           }
           items = [];
+          info = [];
+          ii = 0;
           for (name in absences) {
-            items.push("<li class='span2'>\n  <div class='thumbnail my-thumbnail-white'>\n    <div class='my-subthumbnail-top'>\n      <span class='badge badge-warning'>" + ((_ref1 = absences[name]) != null ? _ref1 : '') + "</span>\n    </div>\n    <div class='caption my-subthumbnail-bottom'>\n      <h5>" + (name != null ? name : '') + "</h5>\n    </div>\n  </div>\n</li>");
+            if (name.indexOf("_info") < 0) {
+              ii += 1;
+              items.push("<li class='span2'>\n  <a href=\"javascript:void(0);\" data-action=\"attendance" + ii + "\">\n    <div class='thumbnail my-thumbnail-white'>\n      <div class='my-subthumbnail-top'>\n        <span class='badge badge-warning'>" + (absences[name] || '') + "</span>\n      </div>\n      <div class='caption my-subthumbnail-bottom'>\n        <h5>" + (name || '') + "</h5>\n      </div>\n    </div>\n  </a>\n</li>");
+              tmp = [];
+              $(absences[name + '_info']).each(function() {
+                return tmp.push("<tr>\n  <td>" + (this.OccurDate || '') + "</td>\n  <td>" + (this.Periods || '') + "</td>\n  <td><span>" + (name || '') + "</span></td>\n</tr>");
+              });
+              tmp.reverse();
+              info.push("<div id=\"attendance" + ii + "\" class=\"accordion-body hide\">\n    <table class=\"table table-striped\">\n      <tbody>\n        " + (tmp.join('')) + "\n      </tbody>\n    </table>\n</div>");
+            }
           }
           if (items.join("") === "") {
             return $("#behavior #attendance .my-content").html("目前無資料");
           } else {
-            return $("#behavior #attendance .my-content").html("<ul class='thumbnails'>\n  " + (items.join("")) + "\n</ul>");
+            $("#behavior #attendance .my-content").html("<ul class='thumbnails'>\n  " + (items.join("")) + "\n</ul>\n<div>\n  " + (info.join("")) + "\n</div>");
+            $("#attendance a:first").trigger('click');
+            return $('#attendance .accordion-body').alternateScroll();
           }
         }
       }

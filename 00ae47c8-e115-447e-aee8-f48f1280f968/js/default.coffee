@@ -39,6 +39,17 @@ jQuery ->
     $("#collapseD").slideToggle 500
     return false
 
+  $("#attendance").on "click", ".my-content a", ->
+    id = ($(this).attr("data-action") or "")
+    if id
+      $("#attendance .accordion-body").addClass('hide')
+      if $(this).find('i').size()
+        $(this).find('i').remove()
+      else
+        $("#attendance").find('i').remove()
+        $(this).find("h5").append('<i class="icon-eye-open"></i>')
+        $("#" + id).removeClass("hide")
+
   gadget.getContract("ischool.AD.parent").send {
     service: "_.GetList",
     body: "<Request><Name>DLBehaviorConfig</Name></Request>",
@@ -352,25 +363,70 @@ getAttendance = () ->
         absences = {}
         if response.Result?.Attendance?
           $(response.Result.Attendance).each () ->
+            that = this
+            occurDate = that.OccurDate
+            ret = {}
             $(@Detail.Attendance.Period).each () ->
               if not absences[@['AbsenceType']]?
                 absences[@['AbsenceType']] = 0
+                absences[@['AbsenceType'] + '_info'] = []
+
+
               absences[@['AbsenceType']] += 1
+              if not ret[@['AbsenceType']]?
+                ret[@['AbsenceType']] = @['@text']
+              else
+                ret[@['AbsenceType']] += ', ' + @['@text']
+
+            $.each ret, (key, value) ->
+              detail =
+                OccurDate: occurDate
+                Periods: value
+
+              absences[key + '_info'].push detail
 
         items = []
+        info = []
+        ii = 0
         for name of absences
-          items.push """
-            <li class='span2'>
-              <div class='thumbnail my-thumbnail-white'>
-                <div class='my-subthumbnail-top'>
-                  <span class='badge badge-warning'>#{absences[name] ? ''}</span>
-                </div>
-                <div class='caption my-subthumbnail-bottom'>
-                  <h5>#{name ? ''}</h5>
-                </div>
+          if name.indexOf("_info") < 0
+            ii += 1
+            items.push """
+              <li class='span2'>
+                <a href="javascript:void(0);" data-action="attendance#{ii}">
+                  <div class='thumbnail my-thumbnail-white'>
+                    <div class='my-subthumbnail-top'>
+                      <span class='badge badge-warning'>#{absences[name] || ''}</span>
+                    </div>
+                    <div class='caption my-subthumbnail-bottom'>
+                      <h5>#{name || ''}</h5>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            """
+
+            tmp = []
+            $(absences[name + '_info']).each () ->
+              tmp.push """
+                      <tr>
+                        <td>#{@.OccurDate || ''}</td>
+                        <td>#{@.Periods || ''}</td>
+                        <td><span>#{name || ''}</span></td>
+                      </tr>
+              """
+            tmp.reverse()
+
+            info.push """
+              <div id="attendance#{ii}" class="accordion-body hide">
+                  <table class="table table-striped">
+                    <tbody>
+                      #{tmp.join('')}
+                    </tbody>
+                  </table>
               </div>
-            </li>
-          """
+            """
+
 
         if items.join("") is ""
           $("#behavior #attendance .my-content").html "目前無資料"
@@ -379,8 +435,12 @@ getAttendance = () ->
             <ul class='thumbnails'>
               #{items.join ""}
             </ul>
+            <div>
+              #{info.join ""}
+            </div>
           """
-
+          $("#attendance a:first").trigger 'click'
+          $('#attendance .accordion-body').alternateScroll();
   }
 
 # TODO: 獎懲
