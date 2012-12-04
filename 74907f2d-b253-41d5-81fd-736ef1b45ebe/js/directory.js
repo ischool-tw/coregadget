@@ -131,6 +131,9 @@ jQuery(function () {
             $('[rel=popover]').popover('hide');
         });
 
+    // TODO: 提示照片格式
+    $('#edit-Photo').tooltip({trigger:'hover'});
+
     // TODO: 驗證設定
     $.validator.setDefaults({
         debug: false, // 為 true 時不會 submit
@@ -658,8 +661,10 @@ _gg.updatePhoto = function() {
 
         var file = evt.target.files[0];
 
-        if (!(file.type == "image/png" || file.type == "image/jpeg"))
+        if (!(file.type == "image/png" || file.type == "image/jpeg")) {
+            $('#profile .my-tablephoto td').prepend("<div class='alert alert-error' style='z-index: 2; position: absolute;'>\n  <button class='close' data-dismiss='alert'>×</button>\n  格式不正確！\n</div>");
             return;
+        }
 
         var reader = new FileReader();
         reader.onload = (function(theFile) {
