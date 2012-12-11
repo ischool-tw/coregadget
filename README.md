@@ -31,6 +31,7 @@ Core Gadget
 * 6080a7c0-60e7-443c-bad7-ecccb3a86bcf 社團(老師)
 * 8e83b577-17bf-4f1a-aa01-251acc06a5db 重補修(學生)
 * 38c740bd-ed48-4211-9bea-98af7cc90f56 重補修成績(老師)
+* 34a95f6c-8343-449e-99e2-434de055c553 團膳滿意度調查(學生)
 
 
 Campus Lite
