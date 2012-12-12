@@ -28,21 +28,7 @@ jQuery(function () {
 
     // TODO: 點選取消鈕退出小工具
     $('#exit-gadget').bind('click', function() {
-        window.parent.setTimeout(window.parent.menuRander.show,500); //顯示主選單
-        window.parent.displayManager.refreshGadget((function () {
-            var vars = [], hash;
-            var p = window.location.href.slice(window.location.href.indexOf('?') + 1);
-            if (p.indexOf("#") >= 0)
-                p = p.substring(0, p.indexOf("#"));
-            var hashes = p.split('&');
-            for (var i = 0; i < hashes.length; i++) {
-                hash = decodeURI(hashes[i]);
-                var key = hash.substring(0, hash.indexOf("="));
-                vars.push(key);
-                vars[key] = hash.substring(hash.indexOf("=") + 1);
-            }
-            return vars;
-        }()).id); //把特定gadget清掉
+        gadget.backToMenu(true); //顯示主選單
     });
 
     // TODO: 出現 code 的強制視窗
@@ -65,7 +51,7 @@ jQuery(function () {
             if (!($('#inputCode').val())) {
                 $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請輸入代碼！\n</div>");
             } else {
-                $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請輸入親子關係！\n</div>");
+                $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請輸入稱謂！\n</div>");
             }
         }
     });
