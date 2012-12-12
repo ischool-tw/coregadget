@@ -28,7 +28,7 @@ jQuery(function () {
 
     // TODO: 點選取消鈕退出小工具
     $('#exit-gadget').bind('click', function() {
-        window.parent.setTimeout(window.parent.menuRander.show,500);
+        window.parent.setTimeout(window.parent.menuRander.show,500); //顯示主選單
         window.parent.displayManager.refreshGadget((function () {
             var vars = [], hash;
             var p = window.location.href.slice(window.location.href.indexOf('?') + 1);
@@ -42,13 +42,13 @@ jQuery(function () {
                 vars[key] = hash.substring(hash.indexOf("=") + 1);
             }
             return vars;
-        }()).id);
+        }()).id); //把特定gadget清掉
     });
 
     // TODO: 出現 code 的強制視窗
     $('#myModal').modal({
-      keyboard : false,
-      show     : true
+        keyboard : false,
+        show     : true
     })
 
     // TODO: 預設輸入代碼為focus
@@ -57,12 +57,25 @@ jQuery(function () {
     // TODO: 代碼確認
     $('#save-data').bind('click', function() {
         $('#errorMessage').html('');
-        if ($('#inputCode').val()) {
+        $('#myModal input:text').removeClass('error');
+
+        if ($('#inputCode').val() && $('#inputName').val() && $('#inputSeatNo').val()) {
             $(this).button("loading");
             _gg.setAccount();
         } else {
-            $('#inputCode').focus().addClass('error');
-            $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請輸入代碼！\n</div>");
+            if (!($('#inputCode').val())) {
+                $('#inputCode').addClass('error');
+            }
+            if (!($('#inputName').val())) {
+                $('#inputName').addClass('error');
+            }
+            if (!($('#inputSeatNo').val())) {
+                $('#inputSeatNo').addClass('error');
+            }
+
+            $('#myModal input:text.error:first').focus();
+
+            $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請輸入代碼、姓名、座號！\n</div>");
         }
     });
 
@@ -148,8 +161,8 @@ _gg.updatePhoto = function() {
 
 // TODO: 儲存個人基本資料
 _gg.saveMyInfo = function() {
-    var teachername = $('#edit-TeacherName').val() || '';
-    if (teachername) {
+    var studentname = $('#edit-StudentName').val() || '';
+    if (studentname) {
         var photo = $('#edit-Photo div.my-proimg').attr('photo-base64') || '';
         var gender = $('#edit-Gender').val() || '';
         var aboutme = $('#edit-AboutMe').val() || '';
@@ -170,7 +183,7 @@ _gg.saveMyInfo = function() {
         request.push('<Gender>' + gender + '</Gender>');
         request.push('<Photo>' + photo + '</Photo>');
         request.push('<Tagline>' + tagline + '</Tagline>');
-        request.push('<StudentName>' + teachername + '</StudentName>');
+        request.push('<StudentName>' + studentname + '</StudentName>');
 
         _gg.connection.send({
             service: "_.SetMyInfo",
@@ -180,21 +193,7 @@ _gg.saveMyInfo = function() {
                     $("#save-myself").button("reset");
                     _gg.set_error_message('#mainMsg', 'SetMyInfo', error);
                 } else {
-                    window.parent.setTimeout(window.parent.menuRander.show,500);
-                    window.parent.displayManager.refreshGadget((function () {
-                        var vars = [], hash;
-                        var p = window.location.href.slice(window.location.href.indexOf('?') + 1);
-                        if (p.indexOf("#") >= 0)
-                            p = p.substring(0, p.indexOf("#"));
-                        var hashes = p.split('&');
-                        for (var i = 0; i < hashes.length; i++) {
-                            hash = decodeURI(hashes[i]);
-                            var key = hash.substring(0, hash.indexOf("="));
-                            vars.push(key);
-                            vars[key] = hash.substring(hash.indexOf("=") + 1);
-                        }
-                        return vars;
-                    }()).id);
+                    window.parent.appsLoader.reflashApplicationList(); //重新整理選單
                 }
             }
         });
@@ -207,12 +206,14 @@ _gg.saveMyInfo = function() {
 
 // TODO: 建立帳號關連
 _gg.setAccount = function() {
-    var code = $('#inputCode').val();
-    if (code) {
+    var code   = $('#inputCode').val();
+    var sname = $('#inputName').val();
+    var seatno = $('#inputSeatNo').val();
+    if (code && sname && seatno) {
         var public_connection = public_connection || gadget.getContract("auth.guest");
         public_connection.send({
             service: "Join.IntoClass",
-            body: '<Request><ClassCode>' + code + '</ClassCode></Request>',
+            body: '<Request><ClassCode>' + code + '</ClassCode><Name>' + sname + '</Name><SeatNo>' + seatno + '</SeatNo></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
                     _gg.set_error_message('#errorMessage', 'Join.IntoClass', error);
@@ -234,22 +235,9 @@ _gg.setAccount = function() {
                                         _gg.myself = item;
                                     });
                                     if (_gg.myself.ProfileID) {
-                                        window.parent.setTimeout(window.parent.menuRander.show,500);
-                                        window.parent.displayManager.refreshGadget((function () {
-                                            var vars = [], hash;
-                                            var p = window.location.href.slice(window.location.href.indexOf('?') + 1);
-                                            if (p.indexOf("#") >= 0)
-                                                p = p.substring(0, p.indexOf("#"));
-                                            var hashes = p.split('&');
-                                            for (var i = 0; i < hashes.length; i++) {
-                                                hash = decodeURI(hashes[i]);
-                                                var key = hash.substring(0, hash.indexOf("="));
-                                                vars.push(key);
-                                                vars[key] = hash.substring(hash.indexOf("=") + 1);
-                                            }
-                                            return vars;
-                                        }()).id);
+                                        window.parent.appsLoader.reflashApplicationList(); //重新整理選單
                                     } else {
+                                        $('#edit-StudentName').val(sname);
                                         $('#save-myself').removeClass('hide');
                                     }
                                 }
