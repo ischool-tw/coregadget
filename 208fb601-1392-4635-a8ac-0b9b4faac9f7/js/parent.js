@@ -28,27 +28,13 @@ jQuery(function () {
 
     // TODO: 點選取消鈕退出小工具
     $('#exit-gadget').bind('click', function() {
-        window.parent.setTimeout(window.parent.menuRander.show,500);
-        window.parent.displayManager.refreshGadget((function () {
-            var vars = [], hash;
-            var p = window.location.href.slice(window.location.href.indexOf('?') + 1);
-            if (p.indexOf("#") >= 0)
-                p = p.substring(0, p.indexOf("#"));
-            var hashes = p.split('&');
-            for (var i = 0; i < hashes.length; i++) {
-                hash = decodeURI(hashes[i]);
-                var key = hash.substring(0, hash.indexOf("="));
-                vars.push(key);
-                vars[key] = hash.substring(hash.indexOf("=") + 1);
-            }
-            return vars;
-        }()).id);
+        gadget.backToMenu(true); //顯示主選單
     });
 
     // TODO: 出現 code 的強制視窗
     $('#myModal').modal({
-      keyboard : false,
-      show     : true
+        keyboard : false,
+        show     : true
     })
 
     // TODO: 預設輸入代碼為focus
@@ -65,7 +51,7 @@ jQuery(function () {
             if (!($('#inputCode').val())) {
                 $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請輸入代碼！\n</div>");
             } else {
-                $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請輸入親子關係！\n</div>");
+                $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請輸入稱謂！\n</div>");
             }
         }
     });
@@ -184,21 +170,7 @@ _gg.saveMyInfo = function() {
                     $("#save-myself").button("reset");
                     _gg.set_error_message('#mainMsg', 'SetMyInfo', error);
                 } else {
-                    window.parent.setTimeout(window.parent.menuRander.show,500);
-                    window.parent.displayManager.refreshGadget((function () {
-                        var vars = [], hash;
-                        var p = window.location.href.slice(window.location.href.indexOf('?') + 1);
-                        if (p.indexOf("#") >= 0)
-                            p = p.substring(0, p.indexOf("#"));
-                        var hashes = p.split('&');
-                        for (var i = 0; i < hashes.length; i++) {
-                            hash = decodeURI(hashes[i]);
-                            var key = hash.substring(0, hash.indexOf("="));
-                            vars.push(key);
-                            vars[key] = hash.substring(hash.indexOf("=") + 1);
-                        }
-                        return vars;
-                    }()).id);
+                    window.parent.appsLoader.reflashApplicationList(); // 重新整理選單
                 }
             }
         });
@@ -238,22 +210,8 @@ _gg.setAccount = function() {
                                     $(response.ParentInfo).each(function(index, item) {
                                         _gg.myself = item;
                                     });
-                                    if (_gg.myself.ProfileID) {
-                                        window.parent.setTimeout(window.parent.menuRander.show,500);
-                                        window.parent.displayManager.refreshGadget((function () {
-                                            var vars = [], hash;
-                                            var p = window.location.href.slice(window.location.href.indexOf('?') + 1);
-                                            if (p.indexOf("#") >= 0)
-                                                p = p.substring(0, p.indexOf("#"));
-                                            var hashes = p.split('&');
-                                            for (var i = 0; i < hashes.length; i++) {
-                                                hash = decodeURI(hashes[i]);
-                                                var key = hash.substring(0, hash.indexOf("="));
-                                                vars.push(key);
-                                                vars[key] = hash.substring(hash.indexOf("=") + 1);
-                                            }
-                                            return vars;
-                                        }()).id);
+                                    if (_gg.myself.ParentName) {
+                                        window.parent.appsLoader.reflashApplicationList(); // 重新整理選單
                                     } else {
                                         $('#save-myself').removeClass('hide');
                                     }
