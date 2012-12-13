@@ -863,6 +863,17 @@ _gg.SaveCadres = function () {
                             'StudentName'   :student.StudentName,
                             'StudentNumber' :student.StudentNumber
                         });
+                    } else {
+                        tmp_cadresListA.push({
+                            'CadreName'     :'社長',
+                            'ClassName'     :'',
+                            'ClubID'        :'',
+                            'ClubName'      :'',
+                            'SeatNo'        :'',
+                            'StudentID'     :'',
+                            'StudentName'   :'',
+                            'StudentNumber' :''
+                        });
                     }
                     if (vicePresident) {
                         student = GetStudentInfo(vicePresident);
@@ -876,6 +887,17 @@ _gg.SaveCadres = function () {
                             'StudentName'   :student.StudentName,
                             'StudentNumber' :student.StudentNumber
                         });
+                    } else {
+                        tmp_cadresListA.push({
+                            'CadreName'     :'副社長',
+                            'ClassName'     :'',
+                            'ClubID'        :'',
+                            'ClubName'      :'',
+                            'SeatNo'        :'',
+                            'StudentID'     :'',
+                            'StudentName'   :'',
+                            'StudentNumber' :''
+                        });
                     }
                     run_ClubCadres = true;
                     ResetData();
@@ -887,7 +909,7 @@ _gg.SaveCadres = function () {
         var request2 = [];
         $('#editModal .controls input:text').each(function() {
             var cadreName = ($(this).val() || '');
-            var studentID = ($(this).next('select').val() || '');
+            var studentID = ($(this).nextUntil('input:text', 'select').val() || '');
             if (cadreName && studentID) {
                 request2.push('<CadresRecord>');
                 request2.push('<ClubID>' + (clubid || '0')  + '</ClubID>');
