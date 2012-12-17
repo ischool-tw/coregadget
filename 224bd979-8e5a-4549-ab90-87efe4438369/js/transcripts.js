@@ -225,7 +225,7 @@ _gg.SetScoreData = function () {
             });
 
             if (noDomain_items.join('') !== '') {
-                items.push('<thead><tr><td colspan="6">&nbsp;</td></tr></thead>')
+                items.push('<thead><tr><td colspan="6">以下為彈性課程</td></tr></thead>')
                 items = items.concat(noDomain_items);
             }
 
