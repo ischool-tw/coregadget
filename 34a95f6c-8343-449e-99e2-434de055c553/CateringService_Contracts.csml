@@ -1,0 +1,211 @@
+<Content>
+	<Contract Name="ischool.catering_service.student" Enabled="True">
+	<Definition>
+	<Authentication Extends="auth.student" />
+</Definition>
+	<Package Name="_">
+		<Service Enabled="true" Name="GetIsChief">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
+		SELECT @@FieldList 
+		FROM $ischool.shinmin.survey_management.catering_service_chief chief
+		join student on student.id = '@@MyStudentID' and student.ref_class_id = chief.ref_class_id
+		join class on class.id = student.ref_class_id
+		WHERE @@Condition
+		group by student.ref_class_id
+		@@Order
+		]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Response/CateringServiceChief</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="Chief" Mandatory="True" Source="Chief" Target="Case When count(*) &gt; 0 Then 'True' Else 'False' End " />
+		<Field Alias="ClassID" Mandatory="True" Source="ClassID" Target="student.ref_class_id" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+	</Conditions>
+	<InternalVariable>
+		<Variable Key="StudentID" Name="MyStudentID" Source="UserInfo" />
+	</InternalVariable>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetQuestion">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
+		SELECT @@FieldList 
+		FROM $ischool.shinmin.survey_management.question question
+		left join $ischool.shinmin.survey_management.question_option option on option.ref_question_id = question.uid
+		WHERE @@Condition 
+		order by question.display_order, option.display_order
+		]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Response/Question</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="QuestionID" Mandatory="True" Source="QuestionID" Target="question.uid" />
+		<Field Alias="Required" Mandatory="True" Source="Required" Target="question.required" />
+		<Field Alias="Title" Mandatory="True" Source="Title" Target="question.title" />
+		<Field Alias="Type" Mandatory="True" Source="Type" Target="question.type" />
+		<Field Alias="DisplayOrder" Mandatory="True" Source="DisplayOrder" Target="option.display_order" />
+		<Field Alias="OptionItem" Mandatory="True" Source="OptionItem" Target="option.title" />		
+		<Field Alias="StatisticsGroup" Mandatory="True" Source="StatisticsGroup" Target="option.statistics_group" />		
+		<Field Alias="OptionOrder" Mandatory="True" Source="OptionOrder" Target="option.display_order" />		
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+		<Condition Required="True" Source="SurveyID" Target="ref_survey_id" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetReply">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[SELECT @@FieldList FROM $ischool.shinmin.survey_management.reply WHERE @@Condition @@Order]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Response/Reply</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="SuppliersID" Mandatory="True" Source="SuppliersID" Target="ref_suppliers_id" />
+		<Field Alias="Answer" Mandatory="True" OutputType="Xml" Source="Answer" Target="answer" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+		<Condition Source="ClassID" SourceType="variable" Target="ref_class_id" />
+		<Condition Required="True" Source="SurveyID" Target="ref_survey_id" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="StudentID" Name="MyStudentID" Source="UserInfo" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+				SELECT count(*) > 0
+				FROM $ischool.shinmin.survey_management.catering_service_chief chief
+				join student on student.id = '@@MyStudentID' and student.ref_class_id = chief.ref_class_id
+				join class on class.id = student.ref_class_id
+			]]>
+		</Preprocess>
+		<Preprocess Name="GetMyClassInfo" Type="variable">
+			<![CDATA[
+				SELECT ref_class_id as "ClassID"
+				FROM student
+				WHERE id='@@MyStudentID'
+			]]>
+		</Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetSuppliers">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
+			SELECT @@FieldList FROM $ischool.shinmin.survey_management.suppliers 
+			WHERE @@Condition and hidden IS FALSE
+			order by uid
+		]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Response/Suppliers</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="SupplierID" Mandatory="True" Source="SupplierID" Target="uid" />
+		<Field Alias="Company" Mandatory="True" Source="Company" Target="company" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetSurvey">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
+			SELECT @@FieldList FROM $ischool.shinmin.survey_management.survey 
+			WHERE @@Condition and begin_date <= Now() and end_date >= Now() 
+			order by begin_date
+		]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Response/Survey</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="SurveyID" Mandatory="True" Source="SurveyID" Target="uid" />
+		<Field Alias="BeginDate" Mandatory="True" OutputConverter="DateTime" Source="BeginDate" Target="begin_date" />
+		<Field Alias="EndDate" Mandatory="True" OutputConverter="DateTime" Source="EndDate" Target="end_date" />
+		<Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
+		<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="school_year" />
+		<Field Alias="Semester" Mandatory="True" Source="Semester" Target="semester" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="SetReply">
+			<Definition Type="dbhelper">
+	<Action>Insert</Action>
+	<SQLTemplate>
+		<![CDATA[INSERT INTO $ischool.shinmin.survey_management.reply @@FieldList]]>
+	</SQLTemplate>
+	<RequestRecordElement>Reply</RequestRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field AutoNumber="True" InputType="Element" Quote="False" Required="False" Source="Uid" SourceType="Request" Target="uid" />
+		<Field Source="LastUpdate" SourceType="Variable" Target="last_update" />
+		<Field InputType="Xml" Source="Answer" Target="answer" />
+		<Field InputType="Xml" Source="Log" Target="log" />
+		<Field Required="True" Source="ClassID" Target="ref_class_id" />
+		<Field Required="True" Source="SuppliersID" Target="ref_suppliers_id" />
+		<Field Required="True" Source="SurveyID" Target="ref_survey_id" />
+	</FieldList>
+	<InternalVariable>
+		<Variable Key="StudentID" Name="MyStudentID" Source="UserInfo" />
+		<Variable Name="LastUpdate" Source="Literal">now()</Variable>
+		<Variable Key="IPAddress" Name="MyIPAddress" Source="ClientInfo" />
+		<Variable Key="Reply/SurveyID" Name="SurveyID" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+				SELECT count(*) > 0
+				FROM $ischool.shinmin.survey_management.catering_service_chief chief
+				join student on student.id = '@@MyStudentID' and student.ref_class_id = chief.ref_class_id
+				join class on class.id = student.ref_class_id
+			]]>
+		</Preprocess>
+		<Preprocess InvalidMessage="502" Name="VaildVisible" Type="Validate">
+			<![CDATA[
+				SELECT count(*) > 0
+				FROM $ischool.shinmin.survey_management.survey 
+				WHERE uid = '@@SurveyID' and begin_date <= Now() and end_date >= Now() 
+			]]>
+		</Preprocess>
+		<Preprocess Name="GetMyClassInfo" Type="variable">
+			<![CDATA[
+				SELECT ref_class_id as "ClassID"
+				FROM student
+				WHERE id='@@MyStudentID'
+			]]>
+		</Preprocess>
+		<Preprocess Name="RemoveReply" Type="update">
+			<![CDATA[
+				delete from $ischool.shinmin.survey_management.reply 
+				where ref_survey_id = '@@SurveyID' and ref_class_id = '@@ClassID'
+			]]>
+		</Preprocess>
+		<Preprocess Name="GetNow" Type="variable">
+			<![CDATA[
+				SELECT Now() as "GetNow"
+			]]>
+		</Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
+	</Package>
+</Contract>
+</Content>

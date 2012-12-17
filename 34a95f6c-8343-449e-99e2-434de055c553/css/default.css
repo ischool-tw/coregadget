@@ -1,0 +1,31 @@
+table table thead th {
+  background: none;
+  border-bottom: none;
+}
+.table th {
+  text-align: center;
+}
+.table tr:first-child > th:first-child {
+  border-right: 1px solid #acacac;
+  vertical-align: middle;
+}
+.table td:first-child {
+  text-align: left;
+  width: 40%;
+}
+.radio input[type="radio"],
+.checkbox input[type="checkbox"] {
+  margin: 3px 5px;
+}
+label {
+  display: inline-block;
+}
+.radio,
+.checkbox {
+  padding: 0 10px;
+}
+/*自訂*/
+form.my-cmxform label.error {
+  display: none;
+  color: #B94A48;
+}
