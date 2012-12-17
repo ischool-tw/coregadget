@@ -72,6 +72,25 @@
   }
 
   .my-thumbnails;
+
+  .my-table {
+    background:#fff;
+  }
+
+  .my-table th, .my-table td {
+    text-align:center !important;
+  }
+
+  .my-table thead th {
+    background:#e9e9e9;
+    /*border-bottom: 1px solid #d0d0d0;*/
+  }
+
+  .my-table tr td:first-child{
+    white-space:nowrap;
+    word-break: keep-all;
+    word-wrap: normal;
+  }
 }
 
 
@@ -102,19 +121,4 @@
 .thumbnails a {
 	color:#333;
 	text-decoration:none;
-}
-
-/* 自訂  */
-#attendance {
-  tr:nth-child(1) td:nth-child(1),
-  tr:nth-child(1) td:nth-child(3) {
-    white-space: nowrap;
-    width: 10%;
-  }
-
-  .accordion-body {
-    overflow: auto;
-    max-height: 460px;
-  }
-
 }

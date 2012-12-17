@@ -4,38 +4,109 @@
       <Authentication Extends="auth.parent" />
     </Definition>
 	<Package Name="_">
+		<Service Enabled="true" Name="GetAbsenceMappingTable">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
+		SELECT @@FieldList FROM
+					xpath_table('list_id',
+					'content',
+					'list',
+					'/AbsenceList/Absence/@Abbreviation|/AbsenceList/Absence/@Name',
+					'name=''假別對照表''')
+					AS t("list_id" integer, "abbreviation" text, "name" text)
+		]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Response/Absence</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="Abbreviation" Mandatory="True" Source="Abbreviation" Target="abbreviation" />
+		<Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetAssociation">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
+		SELECT @@FieldList FROM 
+			xpath_table('uid',
+			'scores',
+			'$jhschool.association.udt',
+			'/Content/Item/@AssociationName|/Content/Item/@Effort|/Content/Item/@Text',
+			'studentid=''@@MyStudentID'' and schoolyear=''@@SchoolYear'' and semester=''@@Semester''')
+			AS t("uid" integer, "association_name" text, "effort" text, "text" text)
+		]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Response/Score</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="AssociationName" Mandatory="True" Source="AssociationName" Target="association_name" />
+		<Field Alias="Effort" Mandatory="True" Source="Effort" Target="effort" />
+		<Field Alias="Text" Mandatory="True" Source="Text" Target="text" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="">
+		<Condition Required="True" Source="StudentID" Target="studentid" />
+		<Condition Required="True" Source="SchoolYear" Target="schoolyear" />
+		<Condition Required="True" Source="Semester" Target="semester" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="UserName" Name="Account" Source="UserInfo" />
+		<Variable Key="StudentID" Name="MyStudentID" Source="Request" />
+		<Variable Key="SchoolYear" Name="SchoolYear" Source="Request" />
+		<Variable Key="Semester" Name="Semester" Source="Request" />
+	</InternalVariable>
+	<Preprocesses>
+		<Preprocess InvalidMessage="501" Name="validDate" Type="validate">
+			<![CDATA[
+                SELECT count(*) > 0
+                FROM student_parent sp
+                join student s on s.id = sp.ref_student_id and s.id = '@@MyStudentID' and s.status in (1, 2)
+                where sp.account = '@@Account'
+        ]]>
+		</Preprocess>
+	</Preprocesses>
+</Definition>
+		</Service>
 		<Service Enabled="true" Name="GetAttendanceRecord">
 			<Definition Type="dbhelper">
-          <Action>Select</Action>
-          <SQLTemplate><![CDATA[
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
         SELECT @@FieldList
         FROM student_parent sp
         join student s on sp.ref_student_id=s.id and status in (1, 2)
         join attendance att on att.ref_student_id = sp.ref_student_id
         WHERE @@Condition
-        ORDER BY att.ref_student_id, att.occur_date]]></SQLTemplate>
-          <ResponseRecordElement>Result/Attendance</ResponseRecordElement>
-          <FieldList Name="FieldList" Source="">
-            <Field Alias="ID" Mandatory="True" OutputType="Element" Source="Id" Target="att.id" />
-            <Field Alias="StudentID" Mandatory="True" OutputType="Element" Source="StudentID" Target="att.ref_student_id" />
-            <Field Alias="SchoolYear" Mandatory="True" OutputType="Element" Source="SchoolYear" Target="att.school_year" />
-            <Field Alias="Semester" Mandatory="True" OutputType="Element" Source="Semester" Target="att.semester" />
-            <Field Alias="OccurDate" Mandatory="True" OutputType="Element" Source="OccurDate" Target="to_char(att.occur_date, 'YYYY/MM/DD')" />
-            <Field Alias="Detail" Mandatory="True" OutputType="Xml" Source="Detail" Target="att.detail" />
-            <Field Alias="WeekDay" Mandatory="True" OutputType="Element" Source="WeekDay" Target="date_part('dow', att.occur_date) " />
-          </FieldList>
-          <Conditions Name="Condition" Required="False" Source="">
-            <Condition Required="True" Source="Account" SourceType="Variable" Target="sp.account" />
-            <Condition Source="StudentID" Target="att.ref_student_id" />
-            <Condition Source="SchoolYear" SourceType="Request" Target="att.school_year" />
-            <Condition Source="Semester" SourceType="Request" Target="att.semester" />
-          </Conditions>
-          <Orders Name="Order" Source="Order" />
-          <Pagination Allow="True" />
-          <InternalVariable>
-            <Variable Key="Account" Name="Account" Source="UserInfo" />
-          </InternalVariable>
-        </Definition>
+        ORDER BY att.ref_student_id, att.occur_date desc]]></SQLTemplate>
+	<ResponseRecordElement>Result/Attendance</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field Alias="ID" Mandatory="True" OutputType="Element" Source="Id" Target="att.id" />
+		<Field Alias="StudentID" Mandatory="True" OutputType="Element" Source="StudentID" Target="att.ref_student_id" />
+		<Field Alias="SchoolYear" Mandatory="True" OutputType="Element" Source="SchoolYear" Target="att.school_year" />
+		<Field Alias="Semester" Mandatory="True" OutputType="Element" Source="Semester" Target="att.semester" />
+		<Field Alias="OccurDate" Mandatory="True" OutputType="Element" Source="OccurDate" Target="to_char(att.occur_date, 'YYYY/MM/DD')" />
+		<Field Alias="Detail" Mandatory="True" OutputType="Xml" Source="Detail" Target="att.detail" />
+		<Field Alias="WeekDay" Mandatory="True" OutputType="Element" Source="WeekDay" Target="date_part('dow', att.occur_date) " />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="">
+		<Condition Required="True" Source="Account" SourceType="Variable" Target="sp.account" />
+		<Condition Source="StudentID" Target="att.ref_student_id" />
+		<Condition Source="SchoolYear" SourceType="Request" Target="att.school_year" />
+		<Condition Source="Semester" SourceType="Request" Target="att.semester" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="Account" Name="Account" Source="UserInfo" />
+	</InternalVariable>
+</Definition>
 		</Service>
 		<Service Enabled="true" Name="GetCurrentSemester">
 			<Definition Type="dbhelper">
@@ -64,15 +135,14 @@
         join discipline dis on dis.ref_student_id = sp.ref_student_id
         WHERE @@Condition 
 		order by dis.occur_date desc
-        ]]>
-	</SQLTemplate>
+        ]]></SQLTemplate>
 	<ResponseRecordElement>Result/Discipline</ResponseRecordElement>
 	<FieldList Name="FieldList" Source="">
 		<Field Alias="Id" Mandatory="True" Source="Id" Target="dis.id" />
 		<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="dis.school_year" />
 		<Field Alias="Semester" Mandatory="True" Source="Semester" Target="dis.semester" />
 		<Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="dis.grade_year" />
-		<Field Alias="OccurDate" Mandatory="True" Source="OccurDate" Target="dis.occur_date" />
+		<Field Alias="OccurDate" Mandatory="True" Source="OccurDate" Target="to_char(dis.occur_date, 'YYYY/MM/DD')" />
 		<Field Alias="OccurPlace" Mandatory="True" Source="OccurPlace" Target="dis.occur_place" />
 		<Field Alias="Reason" Mandatory="True" Source="Reason" Target="dis.reason" />
 		<Field Alias="Detail" Mandatory="True" OutputType="Xml" Source="Detail" Target="dis.detail" />
@@ -94,6 +164,12 @@
 		<Variable Key="Account" Name="Account" Source="UserInfo" />
 	</InternalVariable>
 </Definition>
+		</Service>
+		<Service Enabled="true" Name="GetList">
+			<Definition Type="Component">
+          <ClassName>ischool.uds.helperservice.ConfigurationParser</ClassName>
+          <MethodName>execute</MethodName>
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetMoralScore">
 			<Definition Type="DBHelper">
@@ -129,9 +205,8 @@
 		</Service>
 		<Service Enabled="true" Name="GetMorality">
 			<Definition Type="dbhelper">
-	<Action>Select</Action>
-	<SQLTemplate>
-		<![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
             SELECT @@FieldList FROM
             xpath_table('list_id',
             'content',
@@ -139,11 +214,45 @@
             '/Request/Content/Morality/@Face',
             'name=''文字評量代碼表''')
             AS t("list_id" integer, "face" text)
-        ]]>
+        ]]></SQLTemplate>
+          <ResponseRecordElement>Response/Morality</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="Face" Mandatory="True" Source="Face" Target="face" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition" />
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+        </Definition>
+		</Service>
+		<Service Enabled="true" Name="GetPeriodMappingTable">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
+		SELECT @@FieldList FROM (
+			SELECT name AS Name, sort AS Sort FROM 
+						xpath_table('list_id',
+						'content',
+						'list',
+						'/Periods/Period/@Name|/Periods/Period/@Sort',
+						'name=''節次對照表''')
+						AS t("list_id" integer, "name" text, "sort" integer)
+			UNION
+			SELECT name AS Period, sort AS Sort FROM 
+						xpath_table('list_id',
+						'content',
+						'list',
+						'/AbsenceList/Period/@Name|/AbsenceList/Period/@Sort',
+						'name=''節次對照表''')
+						AS t("list_id" integer, "name" text, "sort" integer)
+		) my_table
+		Order by sort asc
+		]]>
 	</SQLTemplate>
-	<ResponseRecordElement>Response/Morality</ResponseRecordElement>
+	<ResponseRecordElement>Response/Period</ResponseRecordElement>
 	<FieldList Name="FieldList" Source="Field">
-		<Field Alias="Face" Mandatory="True" Source="Face" Target="face" />
+		<Field Alias="Name" Mandatory="True" Source="Name" Target="Name" />
+		<Field Alias="Order" Mandatory="True" Source="Order" Target="Sort" />
 	</FieldList>
 	<Conditions Name="Condition" Required="False" Source="Condition">
 	</Conditions>
@@ -200,34 +309,93 @@ WHERE name='系統設定']]></SQLTemplate>
       <Authentication Extends="auth.student" />
     </Definition>
 	<Package Name="_">
+		<Service Enabled="true" Name="GetAbsenceMappingTable">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
+		SELECT @@FieldList FROM
+					xpath_table('list_id',
+					'content',
+					'list',
+					'/AbsenceList/Absence/@Abbreviation|/AbsenceList/Absence/@Name',
+					'name=''假別對照表''')
+					AS t("list_id" integer, "abbreviation" text, "name" text)
+		]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Response/Absence</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="Abbreviation" Mandatory="True" Source="Abbreviation" Target="abbreviation" />
+		<Field Alias="Name" Mandatory="True" Source="Name" Target="name" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition">
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetAssociation">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
+		SELECT @@FieldList FROM 
+			xpath_table('uid',
+			'scores',
+			'$jhschool.association.udt',
+			'/Content/Item/@AssociationName|/Content/Item/@Effort|/Content/Item/@Text',
+			'studentid=''@@MyStudentID'' and schoolyear=''@@SchoolYear'' and semester=''@@Semester''')
+			AS t("uid" integer, "association_name" text, "effort" text, "text" text)
+		]]>
+	</SQLTemplate>
+	<ResponseRecordElement>Response/Score</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="AssociationName" Mandatory="True" Source="AssociationName" Target="association_name" />
+		<Field Alias="Effort" Mandatory="True" Source="Effort" Target="effort" />
+		<Field Alias="Text" Mandatory="True" Source="Text" Target="text" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="">
+		<Condition Required="True" Source="SchoolYear" Target="schoolyear" />
+		<Condition Required="True" Source="Semester" Target="semester" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="StudentID" Name="MyStudentID" Source="UserInfo" />
+		<Variable Key="SchoolYear" Name="SchoolYear" Source="Request" />
+		<Variable Key="Semester" Name="Semester" Source="Request" />
+	</InternalVariable>
+</Definition>
+		</Service>
 		<Service Enabled="true" Name="GetAttendanceRecord">
 			<Definition Type="dbhelper">
-          <Action>Select</Action>
-          <SQLTemplate><![CDATA[SELECT @@FieldList
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[SELECT @@FieldList
 FROM attendance
 WHERE @@Condition
-ORDER BY occur_date asc]]></SQLTemplate>
-          <ResponseRecordElement>Result/Attendance</ResponseRecordElement>
-          <FieldList Name="FieldList" Source="">
-            <Field Alias="ID" Mandatory="True" OutputType="Element" Source="Id" Target="id" />
-            <Field Alias="StudentID" Mandatory="True" OutputType="Element" Source="StudentID" Target="ref_student_id" />
-            <Field Alias="SchoolYear" Mandatory="True" OutputType="Element" Source="SchoolYear" Target="school_year" />
-            <Field Alias="Semester" Mandatory="True" OutputType="Element" Source="Semester" Target="semester" />
-            <Field Alias="OccurDate" Mandatory="True" OutputType="Element" Source="OccurDate" Target="to_char(occur_date, 'YYYY/MM/DD')" />
-            <Field Alias="Detail" Mandatory="True" OutputType="Xml" Source="Detail" Target="detail" />
-            <Field Alias="WeekDay" Mandatory="True" OutputType="Element" Source="WeekDay" Target="date_part('dow', occur_date) " />
-          </FieldList>
-          <Conditions Name="Condition" Required="False" Source="">
-            <Condition Required="True" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
-            <Condition Source="SchoolYear" SourceType="Request" Target="school_year" />
-            <Condition Source="Semester" SourceType="Request" Target="semester" />
-          </Conditions>
-          <Orders Name="Order" Source="Order" />
-          <Pagination Allow="True" />
-          <InternalVariable>
-            <Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
-          </InternalVariable>
-        </Definition>
+ORDER BY occur_date desc]]></SQLTemplate>
+	<ResponseRecordElement>Result/Attendance</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="">
+		<Field Alias="ID" Mandatory="True" OutputType="Element" Source="Id" Target="id" />
+		<Field Alias="StudentID" Mandatory="True" OutputType="Element" Source="StudentID" Target="ref_student_id" />
+		<Field Alias="SchoolYear" Mandatory="True" OutputType="Element" Source="SchoolYear" Target="school_year" />
+		<Field Alias="Semester" Mandatory="True" OutputType="Element" Source="Semester" Target="semester" />
+		<Field Alias="OccurDate" Mandatory="True" OutputType="Element" Source="OccurDate" Target="to_char(occur_date, 'YYYY/MM/DD')" />
+		<Field Alias="Detail" Mandatory="True" OutputType="Xml" Source="Detail" Target="detail" />
+		<Field Alias="WeekDay" Mandatory="True" OutputType="Element" Source="WeekDay" Target="date_part('dow', occur_date) " />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="">
+		<Condition Required="True" Source="StudentID" SourceType="Variable" Target="ref_student_id" />
+		<Condition Source="SchoolYear" SourceType="Request" Target="school_year" />
+		<Condition Source="Semester" SourceType="Request" Target="semester" />
+	</Conditions>
+	<Orders Name="Order" Source="Order" />
+	<Pagination Allow="True" />
+	<InternalVariable>
+		<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+	</InternalVariable>
+</Definition>
 		</Service>
 		<Service Enabled="true" Name="GetCurrentSemester">
 			<Definition Type="dbhelper">
@@ -254,15 +422,14 @@ ORDER BY occur_date asc]]></SQLTemplate>
         FROM discipline
         WHERE @@Condition
 		order by occur_date desc
-        ]]>
-	</SQLTemplate>
+        ]]></SQLTemplate>
 	<ResponseRecordElement>Result/Discipline</ResponseRecordElement>
 	<FieldList Name="FieldList" Source="">
 		<Field Alias="Id" Mandatory="True" Source="Id" Target="id" />
 		<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="school_year" />
 		<Field Alias="Semester" Mandatory="True" Source="Semester" Target="semester" />
 		<Field Alias="GradeYear" Mandatory="True" Source="GradeYear" Target="grade_year" />
-		<Field Alias="OccurDate" Mandatory="True" Source="OccurDate" Target="occur_date" />
+		<Field Alias="OccurDate" Mandatory="True" Source="OccurDate" Target="to_char(occur_date, 'YYYY/MM/DD')" />
 		<Field Alias="OccurPlace" Mandatory="True" Source="OccurPlace" Target="occur_place" />
 		<Field Alias="Reason" Mandatory="True" Source="Reason" Target="reason" />
 		<Field Alias="Detail" Mandatory="True" OutputType="Xml" Source="Detail" Target="detail" />
@@ -283,6 +450,12 @@ ORDER BY occur_date asc]]></SQLTemplate>
 		<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
 	</InternalVariable>
 </Definition>
+		</Service>
+		<Service Enabled="true" Name="GetList">
+			<Definition Type="Component">
+          <ClassName>ischool.uds.helperservice.ConfigurationParser</ClassName>
+          <MethodName>execute</MethodName>
+        </Definition>
 		</Service>
 		<Service Enabled="true" Name="GetMoralScore">
 			<Definition Type="DBHelper">
@@ -315,9 +488,8 @@ WHERE @@Condition
 		</Service>
 		<Service Enabled="true" Name="GetMorality">
 			<Definition Type="dbhelper">
-	<Action>Select</Action>
-	<SQLTemplate>
-		<![CDATA[
+          <Action>Select</Action>
+          <SQLTemplate><![CDATA[
             SELECT @@FieldList FROM
             xpath_table('list_id',
             'content',
@@ -325,11 +497,45 @@ WHERE @@Condition
             '/Request/Content/Morality/@Face',
             'name=''文字評量代碼表''')
             AS t("list_id" integer, "face" text)
-        ]]>
+        ]]></SQLTemplate>
+          <ResponseRecordElement>Response/Morality</ResponseRecordElement>
+          <FieldList Name="FieldList" Source="Field">
+            <Field Alias="Face" Mandatory="True" Source="Face" Target="face" />
+          </FieldList>
+          <Conditions Name="Condition" Required="False" Source="Condition" />
+          <Orders Name="Order" Source="Order" />
+          <Pagination Allow="True" />
+        </Definition>
+		</Service>
+		<Service Enabled="true" Name="GetPeriodMappingTable">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
+		SELECT @@FieldList FROM (
+			SELECT name AS Name, sort AS Sort FROM 
+						xpath_table('list_id',
+						'content',
+						'list',
+						'/Periods/Period/@Name|/Periods/Period/@Sort',
+						'name=''節次對照表''')
+						AS t("list_id" integer, "name" text, "sort" integer)
+			UNION
+			SELECT name AS Period, sort AS Sort FROM 
+						xpath_table('list_id',
+						'content',
+						'list',
+						'/AbsenceList/Period/@Name|/AbsenceList/Period/@Sort',
+						'name=''節次對照表''')
+						AS t("list_id" integer, "name" text, "sort" integer)
+		) my_table
+		Order by sort asc
+		]]>
 	</SQLTemplate>
-	<ResponseRecordElement>Response/Morality</ResponseRecordElement>
+	<ResponseRecordElement>Response/Period</ResponseRecordElement>
 	<FieldList Name="FieldList" Source="Field">
-		<Field Alias="Face" Mandatory="True" Source="Face" Target="face" />
+		<Field Alias="Name" Mandatory="True" Source="Name" Target="Name" />
+		<Field Alias="Order" Mandatory="True" Source="Order" Target="Sort" />
 	</FieldList>
 	<Conditions Name="Condition" Required="False" Source="Condition">
 	</Conditions>

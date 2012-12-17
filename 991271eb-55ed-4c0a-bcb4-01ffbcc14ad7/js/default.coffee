@@ -2,8 +2,7 @@ global = {}
 
 jQuery ->
   gadget.autofit document.getElementById "widget"
-  gadget.onSizeChanged (size) ->
-    $("#behavior").height size.height - 110
+
 
   $("#behavior .btn-group").on "click", ".btn", (e) ->
     if global.student?
@@ -15,35 +14,20 @@ jQuery ->
       getAttendance()
       getDiscipline()
 
-  $("#discipline a[my-toggle=collapse]").click ->
-    $("#collapseD").slideToggle 500
+  $("#morality a[my-toggle=collapse]").click ->
+    # $("#morality-container").slideToggle 500
+    $("#morality-container").toggleClass "hide"
     return false
 
-  $("#attendance").on "click", ".my-content a", ->
-    id = ($(this).attr("data-action") or "")
-    if id
-      $("#attendance .accordion-body").addClass('hide')
-      if $(this).find('i').size()
-        $(this).find('i').remove()
-      else
-        $("#attendance").find('i').remove()
-        $(this).find("h5").append('<i class="icon-eye-open"></i>')
-        $("#" + id).removeClass("hide")
+  $("#attendance a[my-toggle=collapse]").click ->
+    # $("#attendance-container").slideToggle 500
+    $("#attendance-container").toggleClass "hide"
+    return false
 
-  gadget.getContract("ischool.AD.student").send {
-    service: "_.GetList",
-    body: "<Request><Name>DLBehaviorConfig</Name></Request>",
-    result: (response, error, xhr) ->
-      if error?
-        $("#mainMsg").html """
-          <div class='alert alert-error'>
-            <button class='close' data-dismiss='alert'>×</button>
-            <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetList_DLBehaviorConfig)
-          </div>
-        """
-      else
-        global.morality = response
-  }
+  $("#discipline a[my-toggle=collapse]").click ->
+    # $("#discipline-container").slideToggle 500
+    $("#discipline-container").toggleClass "hide"
+    return false
 
   gadget.getContract("ischool.AD.student").send {
     service: "_.GetCurrentSemester",
@@ -85,9 +69,63 @@ jQuery ->
                         semester: global.semester
                     resetSchoolYearSeme()
                     resetData()
-                    getMorality()
-                    getAttendance()
                     getDiscipline()
+
+                    ### 下載上課時間表 ###
+                    gadget.getContract("ischool.AD.student").send {
+                      service: "_.GetPeriodMappingTable",
+                      body: ""
+                      result: (response, error, xhr) ->
+                        if error?
+                          $("#mainMsg").html """
+                            <div class='alert alert-error'>
+                              <button class='close' data-dismiss='alert'>×</button>
+                              <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetPeriodMappingTable)
+                            </div>
+                          """
+                        else
+                          global.periods = []
+                          global.absence = {}
+                          if response.Response?.Period?
+                            $(response.Response.Period).each (index, item) ->
+                              global.periods.push item
+
+                            ### 下載缺曠類別表 ###
+                            gadget.getContract("ischool.AD.student").send {
+                                service: "_.GetAbsenceMappingTable",
+                                body: ""
+                                result: (response, error, xhr) ->
+                                  if error?
+                                    $("#mainMsg").html """
+                                      <div class='alert alert-error'>
+                                        <button class='close' data-dismiss='alert'>×</button>
+                                        <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetAbsenceMappingTable)
+                                      </div>
+                                    """
+                                  else
+                                    if response.Response?.Absence?
+                                      $(response.Response.Absence).each (index, item) ->
+                                        global.absence[item.Name] = item.Abbreviation
+                                      getAttendance()
+                            }
+                    }
+
+                    gadget.getContract("ischool.AD.student").send {
+                      service: "_.GetList",
+                      body: "<Request><Name>DLBehaviorConfig</Name></Request>",
+                      result: (response, error, xhr) ->
+                        if error?
+                          $("#mainMsg").html """
+                            <div class='alert alert-error'>
+                              <button class='close' data-dismiss='alert'>×</button>
+                              <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetList_DLBehaviorConfig)
+                            </div>
+                          """
+                        else
+                          global.morality = response
+                          getMorality()
+                    }
+
         }
   }
 
@@ -96,39 +134,42 @@ jQuery ->
 resetSchoolYearSeme = () ->
   student = global.student
   items = []
-  if student.SemsHistory?
-    $(student.SemsHistory).each (index, item) ->
-      if item.History?
-        $(item.History).each (e) ->
-          unless @.SchoolYear is global.schoolYear and @.Semester is global.semester
-            items.push """
-              <button class='btn btn-large' school-year='#{@.SchoolYear}' semester='#{@.Semester}'>#{@.SchoolYear + '' + @.Semester}</button>
-            """
-
+  if student.SemsHistory?.History?
     items.push """
       <button class='btn btn-large active' school-year='#{global.schoolYear}' semester='#{global.semester}'>#{global.schoolYear + '' + global.semester}</button>
     """
-    $("#behavior .btn-group").html(items.reverse().join(""))
+    $(student.SemsHistory.History.sort $.by("desc", "SchoolYear", $.by("desc", "Semester"))).each (index, item) ->
+      unless @.SchoolYear is global.schoolYear and @.Semester is global.semester
+        items.push """
+          <button class='btn btn-large' school-year='#{@.SchoolYear}' semester='#{@.Semester}'>#{@.SchoolYear + '' + @.Semester}</button>
+        """
+    $("#behavior .btn-group").html(items.join(""))
 
 # TODO: 清除資料
 resetData = () ->
-  $("#behavior #morality tbody").html ""
-  $("#behavior #attendance .my-content").html ""
-  $("#behavior #discipline tbody").html ""
+  $("#morality-container").removeClass("hide").html ""
+  $("#morality-view").addClass "hide"
+  $("#attendance .my-thumbnails").html ""
+  $("#attendance-container").addClass("hide").html("")
+  $("#attendance-view").addClass "hide"
+  $("#discipline .my-thumbnails").addClass "hide"
+  $("#discipline-container").addClass("hide").html("")
+  $("#discipline-view").addClass "hide"
   $("#merit-a").html "<span class='badge'>0</span>"
   $("#merit-b").html "<span class='badge'>0</span>"
   $("#merit-c").html "<span class='badge'>0</span>"
   $("#demerit-a").html "<span class='badge'>0</span>"
   $("#demerit-b").html "<span class='badge'>0</span>"
   $("#demerit-c").html "<span class='badge'>0</span>"
-  $("#discipline-view").addClass "hide"
+  $("#demerit-d").html ""
+
 
 # TODO: 德性成績
 getMorality = () ->
   if global.morality?.Response?
 
     gadget.getContract("ischool.AD.student").send {
-      service: "_.GetMoralScore",
+      service: "_.GetAssociation",
       body: """
         <Request>
           <StudentID>#{global.student.StudentID}</StudentID>
@@ -141,188 +182,200 @@ getMorality = () ->
           $("#mainMsg").html """
             <div class='alert alert-error'>
               <button class='close' data-dismiss='alert'>×</button>
-              <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMoralScore)
+              <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetAssociation)
             </div>
           """
         else
-          items = []
-          $(global.morality.Response).each () ->
-            if @DailyBehavior?
-              items.push """
-                  <div class="accordion-group">
-                    <div class="accordion-heading">
-                      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#DailyBehavior">
-                        #{@DailyBehavior.Name ? '日常行為表現'}
-                      </a>
-                    </div>
-                    <div id="DailyBehavior" class="accordion-body collapse">
-                      <div class="accordion-inner">
-                        <table class="table table-striped">
-                          <tbody>
-              """
-              $(@DailyBehavior.Item).each () ->
-                items.push """
-                  <tr>
-                    <th><span>#{@Name ? ''}</span></th>
-                    <td><span>#{@Index ? ''}</span></td>
-                    <td><span data-type="DB_Degree_#{@Name ? ''}"></span></td>
-                  </tr>
-                """
-              items.push """
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                </div>
-              """
+          _association = {}
+          if response.Response?.Score
+            $(response.Response.Score).each (index, item) ->
+              _association = item
 
-            if @GroupActivity?
-              items.push """
-                  <div class="accordion-group">
-                    <div class="accordion-heading">
-                      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#GroupActivity">
-                        #{@GroupActivity.Name ? '團體活動表現'}
-                      </a>
-                    </div>
-                    <div id="GroupActivity" class="accordion-body collapse">
-                      <div class="accordion-inner">
-                        <table class="table table-striped">
-                          <tbody>
-              """
-              $(@GroupActivity.Item).each () ->
-                items.push """
-                  <tr>
-                    <th><span>#{@Name ? ''}</span></th>
-                    <td><span data-type="GA_Degree_#{@Name ? ''}"></span></td>
-                    <td><span data-type="GA_Description_#{@Name ? ''}"></span></td>
-                  </tr>
-                """
-              items.push """
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                </div>
-              """
-
-            if @PublicService?
-              items.push """
-                  <div class="accordion-group">
-                    <div class="accordion-heading">
-                      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#PublicService">
-                        #{@PublicService.Name ? '公共服務表現'}
-                      </a>
-                    </div>
-                    <div id="PublicService" class="accordion-body collapse">
-                      <div class="accordion-inner">
-                        <table class="table table-striped">
-                          <tbody>
-              """
-              $(@PublicService.Item).each () ->
-                items.push """
-                  <tr>
-                    <th><span>#{@Name ? ''}</span></th>
-                    <td><span data-type="PS_Description_#{@Name ? ''}"></span></td>
-                  </tr>
-                """
-              items.push """
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                </div>
-              """
-
-            if @SchoolSpecial?
-              items.push """
-                  <div class="accordion-group">
-                    <div class="accordion-heading">
-                      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#SchoolSpecial">
-                        #{@SchoolSpecial.Name ? '校內外特殊表現'}
-                      </a>
-                    </div>
-                    <div id="SchoolSpecial" class="accordion-body collapse">
-                      <div class="accordion-inner">
-                        <table class="table table-striped">
-                          <tbody>
-              """
-              $(@SchoolSpecial.Item).each () ->
-                items.push """
-                  <tr>
-                    <th><span>#{@Name ? ''}</span></th>
-                    <td><span data-type="SS_Description_#{@Name ? ''}"></span></td>
-                  </tr>
-                """
-              items.push """
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                </div>
-              """
-
-            if @DailyLifeRecommend?
-              items.push """
-                <div class="accordion-group">
-                  <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#DailyLifeRecommend">
-                      #{@DailyLifeRecommend.Name ? '日常生活表現具體建議'}
-                    </a>
-                  </div>
-                  <div id="DailyLifeRecommend" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                    </div>
-                  </div>
-                </div>
-              """
-
-          $("#behavior #morality #accordion-m").html items.join ""
-          $("#behavior #morality h2").html "日常生活表現"
-          $('#behavior #morality table').find('tr:first td, tr:first th').css("border-top-color", "transparent")
-
-          if response.Result.DailyLifeScore?.TextScore?
-            $(response.Result.DailyLifeScore.TextScore).each () ->
-              if @DailyBehavior?
-                $(@DailyBehavior.Item).each () ->
-                  $("#DailyBehavior td span[data-type=DB_Degree_#{@Name ? ''}]").html @Degree || ''
-
-              if @GroupActivity?
-                $(@GroupActivity.Item).each () ->
-                  $("#GroupActivity td span[data-type=GA_Degree_#{@Name ? ''}]").html @Degree || ''
-                  $("#GroupActivity td span[data-type=GA_Description_#{@Name ? ''}]").html @Description || ''
-
-              if @PublicService?
-                $(@PublicService.Item).each () ->
-                  $("#PublicService td span[data-type=PS_Description_#{@Name ? ''}]").html @Description || ''
-
-              if @SchoolSpecial?
-                $(@SchoolSpecial.Item).each () ->
-                  $("#SchoolSpecial td span[data-type=SS_Description_#{@Name ? ''}]").html @Description || ''
-
-              if @DailyLifeRecommend?
-                $("#DailyLifeRecommend .accordion-inner").html """
-                  #{@DailyLifeRecommend.Description ? @DailyLifeRecommend['#text']}
-                """
-
-              if @OtherRecommend?
-                $("#accordion-m").append """
-                  <div class="accordion-group">
-                    <div class="accordion-heading">
-                      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#OtherRecommend">
-                        #{@OtherRecommend.Name ? '其他具體建議'}
-                      </a>
-                    </div>
-                    <div id="OtherRecommend" class="accordion-body collapse">
-                      <div class="accordion-inner">
-                        #{@OtherRecommend['#text'] ? ''}
-                      </div>
-                    </div>
+          gadget.getContract("ischool.AD.student").send {
+            service: "_.GetMoralScore",
+            body: """
+              <Request>
+                <StudentID>#{global.student.StudentID}</StudentID>
+                <SchoolYear>#{global.behavior.schoolYear}</SchoolYear>
+                <Semester>#{global.behavior.semester}</Semester>
+              </Request>
+            """,
+            result: (response, error, xhr) ->
+              if error?
+                $("#mainMsg").html """
+                  <div class='alert alert-error'>
+                    <button class='close' data-dismiss='alert'>×</button>
+                    <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMoralScore)
                   </div>
                 """
+              else
+                items = []
+                $(global.morality.Response).each () ->
+                  if @DailyBehavior?
+                    items.push """
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#DailyBehavior">
+                              #{@DailyBehavior.Name || '日常行為表現'}
+                            </a>
+                          </div>
+                          <div id="DailyBehavior" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                              <table class="table table-striped">
+                                <tbody>
+                    """
+                    $(@DailyBehavior.Item).each () ->
+                      items.push """
+                        <tr>
+                          <th><span>#{@Name || ''}</span></th>
+                          <td><span>#{@Index || ''}</span></td>
+                          <td><span data-type="DB_Degree_#{@Name || ''}"></span></td>
+                        </tr>
+                      """
+                    items.push """
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                      </div>
+                    """
 
+                  items.push """
+                      <div class="accordion-group">
+                        <div class="accordion-heading">
+                          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#GroupActivity">
+                            #{@GroupActivity?.Name || '團體活動表現'}
+                          </a>
+                        </div>
+                        <div id="GroupActivity" class="accordion-body collapse">
+                          <div class="accordion-inner">
+                            <table class="table table-striped">
+                              <tbody>
+                  """
+                  if @GroupActivity?
+                    $(@GroupActivity.Item).each () ->
+                      items.push """
+                        <tr>
+                          <th><span>#{@Name || ''}</span></th>
+                          <td><span data-type="GA_Degree_#{@Name || ''}"></span></td>
+                          <td><span data-type="GA_Description_#{@Name || ''}"></span></td>
+                        </tr>
+                      """
+                  items.push """
+                                <tr>
+                                  <th><span>社團活動</span></th>
+                                  <td><span>#{_association.Effort || ''}</span></td>
+                                  <td><span>#{_association.Text || ''}</span></td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                    </div>
+                  """
+
+                  if @PublicService?
+                    items.push """
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#PublicService">
+                              #{@PublicService.Name || '公共服務表現'}
+                            </a>
+                          </div>
+                          <div id="PublicService" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                              <table class="table table-striped">
+                                <tbody>
+                    """
+                    $(@PublicService.Item).each () ->
+                      items.push """
+                        <tr>
+                          <th><span>#{@Name || ''}</span></th>
+                          <td><span data-type="PS_Description_#{@Name || ''}"></span></td>
+                        </tr>
+                      """
+                    items.push """
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                      </div>
+                    """
+
+                  if @SchoolSpecial?
+                    items.push """
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#SchoolSpecial">
+                              #{@SchoolSpecial.Name || '校內外特殊表現'}
+                            </a>
+                          </div>
+                          <div id="SchoolSpecial" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                              <table class="table table-striped">
+                                <tbody>
+                    """
+                    $(@SchoolSpecial.Item).each () ->
+                      items.push """
+                        <tr>
+                          <th><span>#{@Name || ''}</span></th>
+                          <td><span data-type="SS_Description_#{@Name || ''}"></span></td>
+                        </tr>
+                      """
+                    items.push """
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                      </div>
+                    """
+
+                  if @DailyLifeRecommend?
+                    items.push """
+                      <div class="accordion-group">
+                        <div class="accordion-heading">
+                          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#DailyLifeRecommend">
+                            #{@DailyLifeRecommend.Name || '日常生活表現具體建議'}
+                          </a>
+                        </div>
+                        <div id="DailyLifeRecommend" class="accordion-body collapse">
+                          <div class="accordion-inner">
+                          </div>
+                        </div>
+                      </div>
+                    """
+
+                $("#behavior #morality #morality-container").html items.join ""
+                $('#behavior #morality table').find('tr:first td, tr:first th').css("border-top-color", "transparent")
+
+                if response.Result.DailyLifeScore?.TextScore?
+                  $(response.Result.DailyLifeScore.TextScore).each () ->
+                    if @DailyBehavior?
+                      $(@DailyBehavior.Item).each () ->
+                        $("#DailyBehavior td span[data-type=DB_Degree_#{@Name || ''}]").html @Degree || ''
+
+                    if @GroupActivity?
+                      $(@GroupActivity.Item).each () ->
+                        $("#GroupActivity td span[data-type=GA_Degree_#{@Name || ''}]").html @Degree || ''
+                        $("#GroupActivity td span[data-type=GA_Description_#{@Name || ''}]").html @Description || ''
+
+                    if @PublicService?
+                      $(@PublicService.Item).each () ->
+                        $("#PublicService td span[data-type=PS_Description_#{@Name || ''}]").html @Description || ''
+
+                    if @SchoolSpecial?
+                      $(@SchoolSpecial.Item).each () ->
+                        $("#SchoolSpecial td span[data-type=SS_Description_#{@Name || ''}]").html @Description || ''
+
+                    if @DailyLifeRecommend?
+                      $("#DailyLifeRecommend .accordion-inner").html """
+                        #{@DailyLifeRecommend.Description || ''}
+                      """
+          }
     }
+    $("#morality-view").removeClass "hide"
   else
-    $("#behavior #morality #accordion-m").html "目前無資料"
+    $("#morality-container").html "目前無資料"
 
 # TODO: 缺曠
 getAttendance = () ->
@@ -344,87 +397,70 @@ getAttendance = () ->
           </div>
         """
       else
-        absences = {}
+        absences_t = {}
+        absences_d = []
         if response.Result?.Attendance?
           $(response.Result.Attendance).each () ->
-            that = this
-            occurDate = that.OccurDate
-            ret = {}
+            item = {}
+            item['OccurDate'] = @OccurDate
             $(@Detail.Attendance.Period).each () ->
-              if not absences[@['AbsenceType']]?
-                absences[@['AbsenceType']] = 0
-                absences[@['AbsenceType'] + '_info'] = []
+              if not absences_t[@['AbsenceType']]?
+                absences_t[@['AbsenceType']] = 0
+              absences_t[@['AbsenceType']] += 1
 
+              item[@["@text"]] = @.AbsenceType
 
-              absences[@['AbsenceType']] += 1
-              if not ret[@['AbsenceType']]?
-                ret[@['AbsenceType']] = @['@text']
-              else
-                ret[@['AbsenceType']] += ', ' + @['@text']
-
-            $.each ret, (key, value) ->
-              detail =
-                OccurDate: occurDate
-                Periods: value
-
-              absences[key + '_info'].push detail
+            absences_d.push item
 
         items = []
-        info = []
-        ii = 0
-        for name of absences
-          if name.indexOf("_info") < 0
-            ii += 1
+        for name of absences_t
             items.push """
               <li class='span2'>
-                <a href="javascript:void(0);" data-action="attendance#{ii}">
-                  <div class='thumbnail my-thumbnail-white'>
-                    <div class='my-subthumbnail-top'>
-                      <span class='badge badge-warning'>#{absences[name] || ''}</span>
-                    </div>
-                    <div class='caption my-subthumbnail-bottom'>
-                      <h5>#{name || ''}</h5>
-                    </div>
+                <div class='thumbnail my-thumbnail-white'>
+                  <div class='my-subthumbnail-top'>
+                    <span class='badge badge-warning'>#{absences_t[name] || ''}</span>
                   </div>
-                </a>
+                  <div class='caption my-subthumbnail-bottom'>
+                    <h5>#{name || ''}</h5>
+                  </div>
+                </div>
               </li>
             """
 
-            tmp = []
-            $(absences[name + '_info']).each () ->
-              tmp.push """
-                      <tr>
-                        <td>#{@.OccurDate || ''}</td>
-                        <td>#{@.Periods || ''}</td>
-                        <td><span>#{name || ''}</span></td>
-                      </tr>
-              """
-            tmp.reverse()
+        _periods = global.periods
+        _absence = global.absence
 
-            info.push """
-              <div id="attendance#{ii}" class="accordion-body hide">
-                  <table class="table table-striped">
-                    <tbody>
-                      #{tmp.join('')}
-                    </tbody>
-                  </table>
-              </div>
-            """
+        thead = "<th>日期</th>"
+        $(_periods).each ->
+          thead += "<th>" + @Name + "</th>"
+
+        thead = "<tr>" + thead + "</tr>"
+        tbody = ""
+        $(absences_d).each (i, item) ->
+          tr = "<td>" + item.OccurDate + "</td>"
+          $(_periods).each (j, period) ->
+            tr += "<td>" + (_absence[item[period.Name]] || '') + "</td>"
+
+          tbody += "<tr>" + tr + "</tr>"
 
 
         if items.join("") is ""
-          $("#behavior #attendance .my-content").html "目前無資料"
+          $("#attendance-container").removeClass("hide").html("目前無資料")
         else
-          $("#behavior #attendance .my-content").html """
+          $("#attendance-view").removeClass "hide"
+          $("#attendance .my-thumbnails").html """
             <ul class='thumbnails'>
               #{items.join ""}
             </ul>
+          """
+          $("#attendance-container").html """
             <div>
-              #{info.join ""}
+              <table class="table table-striped table-bordered my-table">
+                <thead>#{thead}</thead>
+                <tbody>#{tbody}</tbody>
+              </table>
             </div>
           """
-          $("#attendance a:first").trigger 'click'
-          $('#attendance .accordion-body').alternateScroll();
   }
 
 # TODO: 獎懲
@@ -474,7 +510,7 @@ getDiscipline = () ->
                   <td>
                     <span>#{@OccurDate.substr(0, 10)}</span>
                     <br/>
-                    <span>#{@Reason ? ''}</span>
+                    <span>#{@Reason || ''}</span>
                   </td>
                 </tr>
               """
@@ -504,10 +540,10 @@ getDiscipline = () ->
                     <br />警告
                   </td>
                   <td>
-                    #{if @Detail.Discipline.Demerit.Cleared is '是' then "<span class='my-offset'>#{@Detail.Discipline.Demerit.ClearDate.substr(0, 10).replace(/\//ig, "-")} 已銷過<br/>#{@Detail.Discipline.Demerit.ClearReason ? ''}</span><br/>" else ""}
+                    #{if @Detail.Discipline.Demerit.Cleared is '是' then "<span class='my-offset'>#{@Detail.Discipline.Demerit.ClearDate.substr(0, 10).replace(/\//ig, "-")} 已銷過<br/>#{@Detail.Discipline.Demerit.ClearReason || ''}</span><br/>" else ""}
                     <span>#{@OccurDate.substr(0, 10)}</span>
                     <br/>
-                    <span>#{@Reason ? ''}</span>
+                    <span>#{@Reason || ''}</span>
                   </td>
                 </tr>
               """
@@ -519,6 +555,38 @@ getDiscipline = () ->
           $("#demerit-b").html """<span class='badge #{if sum_merit.db isnt 0 then "badge-important" else ""}'>#{sum_merit.db}</span>"""
           $("#demerit-c").html """<span class='badge #{if sum_merit.dc isnt 0 then "badge-important" else ""}'>#{sum_merit.dc}</span>"""
 
+        if items.join("") is ""
+          $("#discipline-container").removeClass("hide").html("目前無資料")
+        else
           $("#discipline-view").removeClass "hide"
-          $("#behavior #discipline tbody").html items.join("")
+          $("#discipline .my-thumbnails").removeClass "hide"
+          $("#discipline-container").html """
+                      <table class="table table-striped">
+                        <tbody>
+                          #{items.join("")}
+                        </tbody>
+                      </table>
+          """
   }
+
+(($) ->
+  $.by = (model, name, minor) ->
+    (o, p) ->
+      if o and p and typeof o is "object" and typeof p is "object"
+        a = o[name]
+        b = p[name]
+        return (if typeof minor is "function" then minor(o, p) else 0)  if a is b
+        if typeof a is typeof b
+          if parseInt(a, 10) and parseInt(b, 10)
+            a = parseInt(a, 10)
+            b = parseInt(b, 10)
+          if model is "desc"
+            return (if a > b then -1 else 1)
+          else
+            return (if a < b then -1 else 1)
+        (if typeof a < typeof b then -1 else 1)
+      else
+        throw
+          name: "Error"
+          message: "Expected an object when sorting by " + name
+) jQuery
