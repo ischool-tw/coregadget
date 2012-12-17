@@ -2,13 +2,13 @@ var _gg = _gg || {};
 _gg.connection = gadget.getContract("ischool.club.teacher");
 _gg.col_class = null;
 _gg.col_clubs = null;
-_gg.schoolYear = '';
-_gg.semester = '';
 _gg.opening = {
     state: "no"
 };
 
 jQuery(function () {
+    $('#mainMsg').html('資料載入中...');
+
     // TODO: 載入資料
     _gg.loadData();
 
@@ -36,18 +36,19 @@ jQuery(function () {
         $("#editModal #errorMessage").html("");
     });
     $("#editModal").on("show", function (e) {
-        if (_gg.opening.state === "yes") {
-            $("#editModal #save-data").button("reset");
-        } else {
-            e.preventDefault();
-        }
+        $("#editModal #save-data").button("reset");
     });
     $("#editModal #save-data").click(function () {
         if ($("#editModal form").valid()) {
-            $(this).removeClass('btn-danger').addClass('btn-success').button('loading'); // TODO: 按鈕為處理中
-            _gg.SaveSorce();
+            // TODO: 驗證通過
+            $(this).button("loading");
+            if ($(this).attr('data-type') === 'cadres') {
+                _gg.SaveCadres();
+            } else {
+                _gg.SaveSorce();
+            }
         } else {
-            $(this).removeClass('btn-success').addClass('btn-danger');
+            $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  資料驗證失敗，請重新檢查！\n</div>");
         }
     });
 
@@ -60,66 +61,55 @@ jQuery(function () {
     });
 
     // TODO: 成績登錄切換社團
-    $('#changeClub').bind('change', function(event) {
+    $('#changeClub_Score').bind('change', function(event) {
         _gg.SetScore(this.value);
     });
 
-    // TODO: 輸入成績
-    $('#tabClub .my-baseinfo-item a').live('click', function(e) {
-        var edit_target, clubid, scoreType;
-        edit_target = $(this).attr("edit-target");
-        clubid = $('#changeClub').val();
+    // TODO: 社團登錄切換社團
+    $('#changeClub_Cadres').bind('change', function(event) {
+        _gg.SetCadres(this.value);
+    });
 
-        if (clubid) {
-            var edit_title;
-            switch (edit_target) {
-                case 'PaWeight':
-                    edit_title = '1：平時活動比例(' + (_gg.weight.PaWeight || '')  + '%)';
-                    scoreType = 'PaScore';
-                    break;
-                case 'ArWeight':
-                    edit_title = '2：出缺席比例(' +  (_gg.weight.ArWeight || '')  + '%)';
-                    scoreType = 'ArScore';
-                    break;
-                case 'AasWeight':
-                    edit_title = '3：活動力及服務比例(' + (_gg.weight.AasWeight || '')  + '%)';
-                    scoreType = 'AasScore';
-                    break;
-                case 'FarWeight':
-                    edit_title = '4：成品成果考驗比例(' + (_gg.weight.FarWeight || '')  + '%)';
-                    scoreType = 'FarScore';
-                    break;
+    // TODO: 點選編輯成績鈕
+    $('#tabClub').on('click', '.my-baseinfo-item a', function(e) {
+        if (_gg.opening.state === "yes") {
+            $("#editModal #save-data").button("reset");
+            var edit_target, clubid;
+            edit_target = $(this).attr("edit-target");
+            clubid = $('#changeClub_Score').val();
+            if (clubid) {
+                _gg.EditScore(clubid, edit_target);
             }
-            var students = _gg.col_clubs[clubid].Students;
-            if (students) {
-                var arys = [];
-                $(students).each(function(key, value) {
-                    arys.push('<div class="control-group">' +
-                        '    <label class="control-label">' + (value.StudentNumber || '') + ' ' + (value.StudentName || '') + '</label>' +
-                        '    <div class="controls">' +
-                        '        <input type="text" name="s' + (value.StudentNumber || '') + '" class="{digits:true, range:[0, 100]} input-large" id="' + (value.SCUID || '') + '"' +
-                        ' placeholder="成績..." value="' + (value[scoreType] || '') + '">' +
-                        '    </div>' +
-                        '</div>');
-                });
-            }
-
-            $('#editModal').find('h3').html(edit_title).end().find('fieldset').html(arys.join(''));
-            $("#save-data").attr('score-type', scoreType);
-            $('#editModal input:text:first').focus();
+        } else {
+            e.preventDefault();
+            return false;
         }
     });
 
-    // TODO: 載入資料上下鍵切換輸入框
-    $('#editModal').on('keydown', 'input:text', function(e) {
+    // TODO: 點選編輯幹部鈕
+    $('#tabCadres').on('click', 'a', function(e) {
+        var clubid = $('#changeClub_Cadres').val();
+        if (clubid) {
+            _gg.EditCadres(clubid);
+        }
+    });
+
+    // TODO: 點選刪除幹部鈕
+    $("#editModal").on('click', '.del_cadres', function(e) {
+        $(this).closest('.control-group').remove();
+    });
+
+    // TODO: 登錄資料上下鍵、Enter鍵切換輸入框
+    $('#editModal').on('keyup', 'input:text', function(e) {
         if (e.which === 38) {
             $(this).parent().parent().prev().find('input:text').focus();
         }
-        if (e.which === 40) {
+        if (e.which === 40 || e.which === 13) {
             $(this).parent().parent().next().find('input:text').focus();
         }
     });
 });
+
 
 // TODO: 錯誤訊息
 _gg.set_error_message = function(select_str, serviceName, error) {
@@ -149,6 +139,34 @@ _gg.set_error_message = function(select_str, serviceName, error) {
 
 // TODO: 載入資料
 _gg.loadData = function () {
+    // TODO: 取回全部社團紀錄資料後，呼叫社團紀錄呈現
+    var getClassStudent_data, getNoClubResultScore_data, getClubScore, getClubCadres;
+    var check_ClassData = function() {
+        if (getClassStudent_data && getNoClubResultScore_data && _gg.weight) {
+            _gg.SetClass();
+        }
+    };
+
+    var check_AllModuleData = function() {
+        if (getClassStudent_data && getNoClubResultScore_data && _gg.weight && getClubScore && getClubCadres) {
+            var navlist = [];
+            $.each(_gg.col_class, function(myClassID, myClass) {
+                var tabid = 'Tab' + myClassID;
+                navlist.push('<li><a href="#' + tabid + '" data-toggle="tab">' + myClass.ClassName + '</a></li>')
+            });
+
+            if (!($.isEmptyObject(_gg.col_clubs))) {
+                navlist.push('<li id="navClub"><a href="#tabClub" data-toggle="tab">成績登錄</a></li>');
+            }
+            if (!($.isEmptyObject(_gg.col_cadres))) {
+                navlist.push('<li id="navCadres"><a href="#tabCadres" data-toggle="tab">幹部登錄</a></li>');
+            }
+
+            $('#mainMsg').html('');
+            $('.nav').html(navlist.join('')).removeClass('hide').find('li:first a').trigger('click');
+        }
+    };
+
     // TODO: 取得比重
     _gg.connection.send({
         service: "_.GetWeight",
@@ -163,19 +181,12 @@ _gg.loadData = function () {
                         _gg.weight = item;
                     });
                     check_ClassData();
+                    check_AllModuleData();
                 }
             }
         }
     });
 
-
-    // TODO: 取回全部社團紀錄資料後，呼叫社團紀錄呈現
-    var getClassStudent_data, getNoClubResultScore_data;
-    var check_ClassData = function() {
-        if (getClassStudent_data && getNoClubResultScore_data && _gg.weight) {
-            _gg.SetClass();
-        }
-    };
 
     // TODO: 取得社團紀錄
     _gg.connection.send({
@@ -244,13 +255,14 @@ _gg.loadData = function () {
                         }
 
                     });
-
                 }
             }
             getClassStudent_data = true;
             check_ClassData();
+            check_AllModuleData();
         }
     });
+
 
     // TODO: 轉學生的社團紀錄
     _gg.connection.send({
@@ -322,6 +334,7 @@ _gg.loadData = function () {
             }
             getNoClubResultScore_data = true;
             check_ClassData();
+            check_AllModuleData();
         }
     });
 
@@ -334,13 +347,13 @@ _gg.loadData = function () {
             if (error !== null) {
                 _gg.set_error_message('#mainMsg', 'GetClubStudent', error);
             } else {
-                var _ref;
                 if (!_gg.col_clubs) { _gg.col_clubs = {}; }
 
+                var _ref;
                 if (((_ref = response.Response) != null ? _ref.Students : void 0) != null) {
 
                     var tmp_col_club = {};
-                    var btns = [];
+                    var options = [];
 
                     $(response.Response.Students).each(function (index, item) {
                         var clubid = item.ClubID;
@@ -351,93 +364,116 @@ _gg.loadData = function () {
                                 Students : []
                             };
                             tmp_col_club[clubid] = tmp_club;
-                            btns.push('<option value="' + clubid + '">' + item.ClubName + '</option>');
+                            options.push('<option value="' + clubid + '">' + item.ClubName + '</option>');
                         }
 
-                        var tmp_student = {
-                            SCUID         : item.SCUID,
-                            PaScore       : item.PaScore,
-                            ArScore       : item.ArScore,
-                            FarScore      : item.FarScore,
-                            AasScore      : item.AasScore,
-                            StudentID     : item.StudentID,
-                            StudentName   : item.StudentName,
-                            StudentNumber : item.StudentNumber,
-                            SeatNo        : item.SeatNo,
-                            ClassName     : item.ClassName,
-                            ResultScore   : item.ResultScore
-                        };
-
+                        var tmp_student = item;
                         tmp_col_club[clubid].Students.push(tmp_student);
                     });
 
                     _gg.col_clubs = tmp_col_club;
-                    $('#changeClub').html(btns.join(''));
-
+                    $('#changeClub_Score').html(options.join(''));
                 }
 
+                getClubScore = true;
+                check_AllModuleData();
 
                 if ($.isEmptyObject(_gg.col_clubs)) {
-                    $('#navClub, #tabClub').remove();
+                    $('#tabClub').remove();
                 } else {
-                    // TODO: 取得目前學年度
+                    _gg.SetScore($('#changeClub_Score').val());
+
+                    // TODO: 取得目前學年度 及 開放期間
                     _gg.connection.send({
-                        service: "_.GetCurrentSemester",
+                        service: "_.GetDTScore",
                         body: '',
                         result: function (response, error, http) {
                             if (error !== null) {
-                                _gg.set_error_message('#mainMsg', 'GetCurrentSemester', error);
+                                _gg.set_error_message('#mainMsg', 'GetDTScore', error);
                             } else {
-                                $(response.Result.SystemConfig).each(function (index, item) {
-                                    _gg.schoolYear = item.DefaultSchoolYear;
-                                    _gg.semester = item.DefaultSemester;
-
-                                    // TODO: 取得開放期間
-                                    _gg.connection.send({
-                                        service: "_.GetDTScore",
-                                        body: '',
-                                        result: function (response, error, http) {
-                                            if (error !== null) {
-                                                _gg.set_error_message('#mainMsg', 'GetCurrentSemester', error);
-                                            } else {
-                                                if (response.DTScore != null) {
-                                                    $(response.DTScore).each(function (index, item) {
-                                                        _gg.opening = item;
-                                                    });
-
-                                                     _gg.opening.state = "no";
-
-                                                     if (_gg.opening) {
-                                                        if (_gg.opening.Start && _gg.opening.End) {
-                                                            var tmp_Date  = new Date();
-                                                            var Startdate = $.parseDate(_gg.opening.Start);
-                                                            var Enddate   = $.parseDate(_gg.opening.End);
-
-                                                            if (Startdate <= tmp_Date && Enddate >= tmp_Date) {
-                                                                _gg.opening.state = "yes";
-                                                                var tmp_html = '' +
-                                                                    '<div class="alert alert-error">' +
-                                                                        _gg.schoolYear + ' 學年度第 ' + _gg.semester +
-                                                                        ' 學期　成績輸入區間： ' + _gg.opening.Start + ' ~ ' + _gg.opening.End +
-                                                                    '</div>';
-                                                                $('#opening').html(tmp_html);
-                                                                $('a[data-toggle=modal]').removeClass("disabled");
-                                                            } else {
-                                                                $('#opening').html('<div class="alert alert-error">未開放登錄</div>');
-                                                            }
-                                                        }
-                                                    }
-                                                }
-
-                                                _gg.SetScore($('#changeClub').val());
-                                            }
-                                        }
+                                if (response.DTScore != null) {
+                                    var schoolYear = '', semester = '';
+                                    $(response.DTScore).each(function (index, item) {
+                                        _gg.opening = item;
+                                        schoolYear = item.Result.SystemConfig.DefaultSchoolYear;
+                                        semester = item.Result.SystemConfig.DefaultSemester;
                                     });
 
-                                });
+                                     _gg.opening.state = "no";
+
+                                    if (_gg.opening.Start && _gg.opening.End) {
+                                        var tmp_Date  = new Date();
+                                        var Startdate = $.parseDate(_gg.opening.Start);
+                                        var Enddate   = $.parseDate(_gg.opening.End);
+
+                                        if (Startdate <= tmp_Date && Enddate >= tmp_Date) {
+                                            _gg.opening.state = "yes";
+                                            var tmp_html = '' +
+                                                '<div class="alert alert-error">' +
+                                                    schoolYear + ' 學年度第 ' + semester +
+                                                    ' 學期　成績輸入區間： ' + _gg.opening.Start + ' ~ ' + _gg.opening.End +
+                                                '</div>';
+                                            $('#opening').html(tmp_html);
+                                            $('a[data-toggle=modal]').removeClass("disabled");
+                                        } else {
+                                            $('#opening').html('<div class="alert alert-error">未開放登錄</div>');
+                                        }
+                                    }
+                                }
                             }
                         }
                     });
+
+                }
+            }
+        }
+    });
+
+
+    // TODO: 幹部登錄
+    _gg.connection.send({
+        service: "_.GetCadresRecord",
+        body: '',
+        result: function (response, error, http) {
+            if (error !== null) {
+                _gg.set_error_message('#mainMsg', 'GetCadresRecord', error);
+            } else {
+                if (!_gg.col_cadres) { _gg.col_cadres = {}; }
+
+                var _ref;
+                if (((_ref = response.Response) != null ? _ref.CadresRecord : void 0) != null) {
+
+                    var tmp_col_cadres = {};
+                    var options = [];
+
+                    $(response.Response.CadresRecord).each(function (index, item) {
+                        var clubid = item.ClubID;
+                        if (!tmp_col_cadres[clubid]) {
+                            var tmp_club = {
+                                ClubID   : item.ClubID,
+                                ClubName : item.ClubName,
+                                Cadres : []
+                            };
+                            tmp_col_cadres[clubid] = tmp_club;
+                            options.push('<option value="' + clubid + '">' + item.ClubName + '</option>');
+                        }
+
+                        var tmp_cadres = item;
+
+                        tmp_col_cadres[clubid].Cadres.push(tmp_cadres);
+                    });
+
+                    _gg.col_cadres = tmp_col_cadres;
+                    $('#changeClub_Cadres').html(options.join(''));
+                }
+
+                getClubCadres = true;
+                check_AllModuleData();
+
+                if ($.isEmptyObject(_gg.col_cadres)) {
+                    $('#tabCadres').remove();
+                } else {
+                    _gg.SetCadres($('#changeClub_Cadres').val());
                 }
             }
         }
@@ -449,8 +485,6 @@ _gg.SetClass = function () {
     $.each(_gg.col_class, function(myClassID, myClass) {
         var tabid = 'Tab' + myClassID;
         var arys = [], btns = [];
-
-        $('.nav').prepend('<li><a href="#' + tabid + '" data-toggle="tab">' + myClass.ClassName + '</a></li>');
 
         if ($.isEmptyObject(myClass.Semes)) {
             arys.push('無社團紀錄');
@@ -482,7 +516,7 @@ _gg.SetClass = function () {
                         '  <td>' + (value.StudentNumber || '') + '</td>' +
                         '  <td>' + (value.StudentName || '')   + '</td>' +
                         '  <td>' + (value.ClubName || '')      + '</td>' +
-                        '  <td>' + (value.CadreName || '')     + '</td>' +
+                        '  <td clubid="' + value.ClubID + '" studentID="' + value.StudentID + '">' + (value.CadreName || '')     + '</td>' +
                         '  <td id="PaScore' + (value.SCUID || '') + '">' + (value.PaScore || '')       + '</td>' +
                         '  <td id="ArScore' + (value.SCUID || '') + '">' + (value.ArScore || '')       + '</td>' +
                         '  <td id="AasScore' + (value.SCUID || '') + '">' + (value.AasScore || '')     + '</td>' +
@@ -506,8 +540,28 @@ _gg.SetClass = function () {
         $('.tab-content').append(html_s);
         $('#'+ tabid).find('.btn-group>.btn:first').trigger('click');
     });
+};
 
-    $('.nav li:first a').trigger('click');
+// TODO: 試算學期成績
+_gg.funWeightScore = function (paScore, arScore, aasScore, farScore) {
+    if (_gg.weight) {
+        var a = 0, b = 0, c = 0, d = 0;
+        if ($.isNumeric(paScore) && $.isNumeric(_gg.weight.PaWeight)) {
+            a = parseInt(paScore, 10) * parseInt(_gg.weight.PaWeight, 10);
+        }
+        if ($.isNumeric(arScore) && $.isNumeric(_gg.weight.ArWeight)) {
+            b = parseInt(arScore, 10) * parseInt(_gg.weight.ArWeight, 10);
+        }
+        if ($.isNumeric(aasScore) && $.isNumeric(_gg.weight.AasWeight)) {
+            c = parseInt(aasScore, 10) * parseInt(_gg.weight.AasWeight, 10);
+        }
+        if ($.isNumeric(farScore) && $.isNumeric(_gg.weight.FarWeight)) {
+            d = parseInt(farScore, 10) * parseInt(_gg.weight.FarWeight, 10);
+        }
+
+        return Math.round((a + b + c + d) / 100);
+    }
+    return 0;
 };
 
 // TODO: 成績登錄畫面
@@ -536,35 +590,53 @@ _gg.SetScore = function (clubid) {
     }
 };
 
-// TODO: 試算學期成績
-_gg.funWeightScore = function (paScore, arScore, aasScore, farScore) {
-    if (_gg.weight) {
-        var a = 0, b = 0, c = 0, d = 0;
-        if ($.isNumeric(paScore) && $.isNumeric(_gg.weight.PaWeight)) {
-            a = parseInt(paScore, 10) * parseInt(_gg.weight.PaWeight, 10);
+// TODO: 成績登錄編輯畫面
+_gg.EditScore = function (clubid, edit_target) {
+    if (clubid) {
+        var edit_title, scoreType;
+        switch (edit_target) {
+            case 'PaWeight':
+                edit_title = '1：平時活動比例(' + (_gg.weight.PaWeight || '')  + '%)';
+                scoreType = 'PaScore';
+                break;
+            case 'ArWeight':
+                edit_title = '2：出缺席比例(' +  (_gg.weight.ArWeight || '')  + '%)';
+                scoreType = 'ArScore';
+                break;
+            case 'AasWeight':
+                edit_title = '3：活動力及服務比例(' + (_gg.weight.AasWeight || '')  + '%)';
+                scoreType = 'AasScore';
+                break;
+            case 'FarWeight':
+                edit_title = '4：成品成果考驗比例(' + (_gg.weight.FarWeight || '')  + '%)';
+                scoreType = 'FarScore';
+                break;
         }
-        if ($.isNumeric(arScore) && $.isNumeric(_gg.weight.ArWeight)) {
-            b = parseInt(arScore, 10) * parseInt(_gg.weight.ArWeight, 10);
-        }
-        if ($.isNumeric(aasScore) && $.isNumeric(_gg.weight.AasWeight)) {
-            c = parseInt(aasScore, 10) * parseInt(_gg.weight.AasWeight, 10);
-        }
-        if ($.isNumeric(farScore) && $.isNumeric(_gg.weight.FarWeight)) {
-            d = parseInt(farScore, 10) * parseInt(_gg.weight.FarWeight, 10);
+        var students = _gg.col_clubs[clubid].Students;
+        if (students) {
+            var arys = [];
+            $(students).each(function(key, value) {
+                arys.push('<div class="control-group">' +
+                    '    <label class="control-label">' + (value.StudentNumber || '') + ' ' + (value.StudentName || '') + '</label>' +
+                    '    <div class="controls">' +
+                    '        <input type="text" name="s' + (value.StudentNumber || '') + '" class="{digits:true, range:[0, 100]} input-large" id="' + (value.SCUID || '') + '"' +
+                    ' placeholder="成績..." value="' + (value[scoreType] || '') + '">' +
+                    '    </div>' +
+                    '</div>');
+            });
         }
 
-        return Math.round((a + b + c + d) / 100);
+        $('#editModal').find('h3').html(edit_title).end().find('fieldset').html(arys.join(''));
+        $("#save-data").attr('data-type', scoreType);
+        $('#editModal input:text:first').focus();
     }
-    return 0;
 };
 
-
-// TODO: 儲存成績
+// TODO: 成績登錄儲存
 _gg.SaveSorce = function () {
-
     var clubid, scoreType;
-    scoreType = $("#save-data").attr('score-type');
-    clubid = $('#changeClub').val();
+    scoreType = $("#save-data").attr('data-type');
+    clubid = $('#changeClub_Score').val();
 
     if (clubid) {
         if (scoreType === 'PaScore' || scoreType === 'ArScore' || scoreType === 'AasScore' || scoreType === 'FarScore') {
@@ -590,6 +662,7 @@ _gg.SaveSorce = function () {
                         if (error !== null) {
                             _gg.set_error_message('#errorMessage', 'UpdateScore', error);
                         } else {
+                            // TODO: 處理同是班導師又是社團老師，且社團學生與所帶班級相同之學生社團成績
                             $(students).each(function(key, value) {
                                 var tmp_score = $('#'+(value.SCUID)).val();
                                 if (tmp_score !== '') {
@@ -610,5 +683,281 @@ _gg.SaveSorce = function () {
             }
         }
     }
+};
 
+
+// TODO: 幹部登錄畫面
+_gg.SetCadres = function (clubid) {
+    if (clubid) {
+        var cdres = _gg.col_cadres[clubid].Cadres;
+        if (cdres) {
+            var arys = [];
+            $(cdres).each(function(key, value) {
+                arys.push('<tr>' +
+                    '  <td>' + (value.CadreName || '') + '</td>' +
+                    '  <td>' + (value.StudentNumber || '') + '</td>' +
+                    '  <td>' + (value.ClassName || '') + '</td>' +
+                    '  <td>' + (value.SeatNo || '')   + '</td>' +
+                    '  <td>' + (value.StudentName || '') + '</td>' +
+                    '</tr>');
+            });
+            $('#tabCadres tbody').html(arys.join(''));
+        }
+    }
+};
+
+// TODO: 幹部登錄編輯畫面
+_gg.EditCadres = function (clubid) {
+    if (clubid) {
+        var items = [], maxCadresNum = 2;
+
+        items.push(
+            '<div class="my-emptyline"></div>' +
+            '<a href="#" class="btn pull-right" id="cadres-add">' +
+                '<i class="icon-plus-sign"></i>新增幹部</a>' +
+            '<hr />'
+        );
+
+        var cadres = _gg.col_cadres[clubid].Cadres;
+        var options = ['<option value="">請選擇...</option>'];
+        var students = _gg.col_clubs[clubid].Students;
+        if (students) {
+            $(students).each(function(key, value) {
+                options.push('<option ');
+                options.push('value="' + (value.StudentID || '') + '"');
+                options.push('>' + (value.StudentName || '') + '</option>');
+            });
+        }
+
+        if (cadres) {
+            $(cadres).each(function(key, value) {
+                var index = $.inArray('value="' + (value.StudentID || '') + '"', options);
+                var option1 = options.slice();
+                option1[index] += ' selected';
+
+                if (value.CadreName === '社長' || value.CadreName === '副社長') {
+                    items.push('<div class="control-group">' +
+                        '    <label class="control-label">' + (value.CadreName || '') + '</label>' +
+                        '    <div class="controls">' +
+                        '        <select name="s' + key + '">' + option1.join('') + '</select>' +
+                        '    </div>' +
+                        '</div>'
+                    );
+                } else {
+                    items.push(
+                        '<div class="control-group">' +
+                        '    <label class="control-label">其他幹部<br/>' +
+                        '<a href="#" class="btn btn-danger del_cadres" title="刪除"><i class="icon-trash icon-white"></i></a>' +
+                        '</label>' +
+                        '    <div class="controls">' +
+                        '        <input type="text" class="{required:true} input-large my-cadres-input" name="c' + key + '" placeholder="幹部名稱..." value="' + (value.CadreName || '') + '">' +
+                        '        <select name="s' + key + '" class="{required:true}">' + option1.join('') + '</select>' +
+                        '    </div>' +
+                        '</div>'
+                    );
+                }
+                maxCadresNum = key;
+            });
+        }
+
+        $('#editModal').find('h3').html('新增幹部').end().find('fieldset').html(items.join(''));
+        $("#save-data").attr('data-type', 'cadres');
+        $("#cadres-add").attr("new-id", maxCadresNum);
+        $('#editModal input:text:first').focus();
+
+        // TODO: 點選新增幹部鈕
+        $("#cadres-add").on('click', '', function(e) {
+            var cadresNum = parseInt($("#cadres-add").attr("new-id"), 10) + 1;
+            $("#cadres-add").attr("new-id", cadresNum);
+
+            $('#editModal fieldset').append(
+                '<div class="control-group">' +
+                '    <label class="control-label">其他幹部<br/>' +
+                '<a href="#" class="btn btn-danger del_cadres" title="刪除"><i class="icon-trash icon-white"></i></a>' +
+                '</label>' +
+                '    <div class="controls">' +
+                '        <input type="text" class="{required:true} input-large my-cadres-input" name="c' + cadresNum + '"' +
+                ' placeholder="幹部名稱..." value="">' +
+                '        <select name="s' + cadresNum + '" class="{required:true}">' + options.join('') + '</select>' +
+                '    </div>' +
+                '</div>'
+            );
+        });
+    }
+};
+
+// TODO: 幹部登錄儲存
+_gg.SaveCadres = function () {
+    var clubid;
+    clubid = $('#changeClub_Cadres').val();
+
+    if (clubid) {
+        var run_ClubCadres = false, run_CadresRecord = false;
+        var tmp_cadresListA = [], tmp_cadresListB = [];
+
+        // TODO: 重設資料
+        var ResetData = function() {
+            if (run_ClubCadres && run_CadresRecord) {
+                var cadres = tmp_cadresListA.concat(tmp_cadresListB);
+                _gg.col_cadres[clubid].Cadres = cadres;
+                _gg.SetCadres(clubid);
+
+                // TODO: 處理同是班導師又是社團老師，且社團學生與所帶班級相同之學生幹部名稱
+                $('td[clubid=' + clubid + ']').html('');
+                $(cadres).each(function(){
+                    var tmp_student = $('td[clubid=' + clubid + '][studentid=' + this.StudentID + ']');
+                    if (tmp_student) {
+                        var tmp_cadres_name = (tmp_student.html() || '');
+                        if (tmp_cadres_name) {
+                            tmp_cadres_name += ', ' + this.CadreName;
+                        } else {
+                            tmp_cadres_name = this.CadreName;
+                        }
+                        tmp_student.html(tmp_cadres_name);
+                    }
+                });
+
+                $('#editModal').modal("hide");
+            }
+        };
+
+        // TODO: 取得新幹部學生資料
+        var GetStudentInfo = function(studentID)  {
+            var students = _gg.col_clubs[clubid].Students;
+            var student = {};
+            $(students).each(function(key, value){
+                if (value.StudentID === studentID) {
+                    student = value;
+                    return false;
+                }
+            });
+            return student;
+        };
+
+        // TODO: 儲存社長、副社長
+        var request1 = [];
+        var president = ($('#editModal select[name=s0]').val() || '');
+        var vicePresident = ($('#editModal select[name=s1]').val() || '');
+        request1.push('<ClubRecord><Condition><ClubID>' + (clubid || '0')  + '</ClubID></Condition>');
+        request1.push('<President>' + president + '</President>');
+        request1.push('<VicePresident>' + vicePresident + '</VicePresident>');
+        request1.push('</ClubRecord>');
+
+        _gg.connection.send({
+            service: "_.UpdateClubCadres",
+            body: '<Request>' + request1.join('') + '</Request>',
+            result: function (response, error, http) {
+                if (error !== null) {
+                    _gg.set_error_message('#errorMessage', 'UpdateClubCadres', error);
+                } else {
+                    var student;
+                    if (president) {
+                        student = GetStudentInfo(president);
+                        tmp_cadresListA.push({
+                            'CadreName'     :'社長',
+                            'ClassName'     :student.ClassName,
+                            'ClubID'        :student.ClubID,
+                            'ClubName'      :student.ClubName,
+                            'SeatNo'        :student.SeatNo,
+                            'StudentID'     :student.StudentID,
+                            'StudentName'   :student.StudentName,
+                            'StudentNumber' :student.StudentNumber
+                        });
+                    } else {
+                        tmp_cadresListA.push({
+                            'CadreName'     :'社長',
+                            'ClassName'     :'',
+                            'ClubID'        :'',
+                            'ClubName'      :'',
+                            'SeatNo'        :'',
+                            'StudentID'     :'',
+                            'StudentName'   :'',
+                            'StudentNumber' :''
+                        });
+                    }
+                    if (vicePresident) {
+                        student = GetStudentInfo(vicePresident);
+                        tmp_cadresListA.push({
+                            'CadreName'     :'副社長',
+                            'ClassName'     :student.ClassName,
+                            'ClubID'        :student.ClubID,
+                            'ClubName'      :student.ClubName,
+                            'SeatNo'        :student.SeatNo,
+                            'StudentID'     :student.StudentID,
+                            'StudentName'   :student.StudentName,
+                            'StudentNumber' :student.StudentNumber
+                        });
+                    } else {
+                        tmp_cadresListA.push({
+                            'CadreName'     :'副社長',
+                            'ClassName'     :'',
+                            'ClubID'        :'',
+                            'ClubName'      :'',
+                            'SeatNo'        :'',
+                            'StudentID'     :'',
+                            'StudentName'   :'',
+                            'StudentNumber' :''
+                        });
+                    }
+                    run_ClubCadres = true;
+                    ResetData();
+                }
+            }
+        });
+
+        // TODO: 儲存其他幹部
+        var request2 = [];
+        $('#editModal .controls input:text').each(function() {
+            var cadreName = ($(this).val() || '');
+            var studentID = ($(this).nextUntil('input:text', 'select').val() || '');
+            if (cadreName && studentID) {
+                request2.push('<CadresRecord>');
+                request2.push('<ClubID>' + (clubid || '0')  + '</ClubID>');
+                request2.push('<CadreName>' + cadreName + '</CadreName>');
+                request2.push('<StudentID>' + studentID + '</StudentID>');
+                request2.push('</CadresRecord>');
+
+                var student = GetStudentInfo(studentID);
+                tmp_cadresListB.push({
+                    'CadreName'     :cadreName,
+                    'ClassName'     :student.ClassName,
+                    'ClubID'        :student.ClubID,
+                    'ClubName'      :student.ClubName,
+                    'SeatNo'        :student.SeatNo,
+                    'StudentID'     :student.StudentID,
+                    'StudentName'   :student.StudentName,
+                    'StudentNumber' :student.StudentNumber
+                });
+            }
+        });
+
+        if (request2.join('')) {
+            _gg.connection.send({
+                service: "_.UpdateCadresRecord",
+                body: '<Request>' + request2.join('') + '</Request>',
+                result: function (response, error, http) {
+                    if (error !== null) {
+                        _gg.set_error_message('#errorMessage', 'UpdateCadresRecord', error);
+                    } else {
+                        run_CadresRecord = true;
+                        ResetData();
+                    }
+                }
+            });
+        } else {
+            _gg.connection.send({
+                service: "_.DelCadresRecord",
+                body: '<Request><CadresRecord><Condition><ClubID>' + clubid + '</ClubID></Condition></CadresRecord></Request>',
+                result: function (response, error, http) {
+                    if (error !== null) {
+                        _gg.set_error_message('#errorMessage', 'DelCadresRecord', error);
+                    } else {
+                        run_CadresRecord = true;
+                        ResetData();
+                    }
+                }
+            });
+
+        }
+    }
 };

@@ -27,11 +27,12 @@
                         <li class="active"><a href="#baseinfo" data-toggle="tab">資訊科忠班社團紀錄</a></li>
                         <li><a href="#baseinfo" data-toggle="tab">國貿科忠班社團紀錄</a></li>
                         <li><a href="#tab2" data-toggle="tab">成績登錄</a></li>
-                    </ul>
+                        <li><a href="#tab3" data-toggle="tab">幹部登錄</a></li>
+                    </ul>                    
                     <div class="tab-content">
-                        <!--社團紀錄-->
+                        <!--社團紀錄--->
                         <div class="tab-pane active" id="baseinfo">
-                          <div class="btn-group" data-toggle="buttons-radio">
+                        	<div class="btn-group" data-toggle="buttons-radio">
                                 <button class="btn btn-large active" school-year="100" semester="2">99學年度第2學期</button>
                                 <button class="btn btn-large" school-year="100" semester="1">99學年度第1學期</button>
                                 <button class="btn btn-large" school-year="99" semester="2">98學年度第2學期</button>
@@ -333,12 +334,118 @@
                                 </div>
                             </div>
                         </div>
+                        <!--幹部登錄-->
+                        <div class="tab-pane" id="tab3">
+                            <div class="alert alert-error">
+                              99 學年度第 1 學期　幹部輸入區間： 2012-09-01 ~ 2012-09-30
+                            </div>
+                            <form class="form-horizontal">
+                              <select>
+                                <option>籃球社</option>
+                                <option>羽球社</option>
+                              </select>
+                              <a data-toggle="modal" href="#addleader" class="btn btn-success"><i class="icon-edit icon-white">
+                                            </i> 新增幹部</a>
+                            </form>
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <div class="my-baseinfo-item">
+                                        <table class="table table-bordered table-striped">
+                                        <thead>
+                                          <tr>
+                                            <th>幹部</th>
+                                            <th>學號</th>
+                                            <th>班級</th>
+                                            <th>座號</th>
+                                            <th>姓名</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr>
+                                            <td>社長</td>
+                                            <td>902225</td>
+                                            <td>資二忠</td>
+                                            <td>1</td>
+                                            <td>江曉信</td>
+                                          </tr>
+                                          <tr>
+                                            <td>副社長</td>
+                                            <td>902225</td>
+                                            <td>資二忠</td>
+                                            <td>2</td>
+                                            <td>江曉信</td>
+                                          </tr>
+                                          <tr>
+                                            <td>公關</td>
+                                            <td>902225</td>
+                                            <td>資二忠</td>
+                                            <td>3</td>
+                                            <td>江曉信</td>
+                                          </tr>
+                                          <tr>
+                                            <td>&nbsp;</td>
+                                            <td>902225</td>
+                                            <td>資二忠</td>
+                                            <td>4</td>
+                                            <td>江曉信</td>
+                                          </tr>
+                                          <tr>
+                                            <td>&nbsp;</td>
+                                            <td>902225</td>
+                                            <td>資二忠</td>
+                                            <td>5</td>
+                                            <td>江曉信</td>
+                                          </tr>
+                                          <tr>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                          </tr>
+                                          <tr>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                          </tr>
+                                          <tr>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                          </tr>
+                                          <tr>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                          </tr>
+                                          <tr>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                          </tr>
+                                        </tbody>
+                                        <thead>
+                                        <tbody>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<!------------------------------------->
+<!--------------------------------------->
 <!--成績1-->
 <div class="modal hide" id="scorel">
   <div class="modal-header">
@@ -570,7 +677,7 @@
           data-dismiss="modal">離開</a>
   </div>
 </div>
-<!-- 成績4-->
+<!--成績4-->
 <div class="modal hide" id="score4">
   <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal">
@@ -647,6 +754,96 @@
           data-dismiss="modal">離開</a>
   </div>
 </div>
-<!--總成績-->
+<!--新增幹部-->
+<div class="modal hide" id="addleader">
+  <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">
+          ×</button>
+      <h3>
+          新增幹部</h3>
+      <div id="errorMessage">
+      </div>
+  </div>
+  <div class="modal-body">
+  	<form class="form-horizontal">
+      <fieldset>
+                <a href="#" class="btn" id="add-data"><i class="icon-plus-sign"></i> 添加欄位</a>
+              <hr/>
+          <div class="accordion" id="accordion">
+          	<div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseA"><i class="icon-chevron-down pull-right"></i>
+                  社長
+                </a>
+              </div>
+              <div id="collapseA" class="accordion-body collapse" style="height: 0px; ">
+                <div class="accordion-inner">
+                  <div class="control-group">
+                      <label class="control-label">
+                          學生資料</label>
+                      <div class="controls">
+                          <select>
+                              <option>請選擇</option>
+                              <option>資二忠【15】江曉信</option>
+                              <option>資二忠【18】江曉信</option>
+                            </select>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseB"><i class="icon-chevron-down pull-right"></i>
+                  副社長
+                </a>
+              </div>
+              <div id="collapseB" class="accordion-body collapse" style="height: 0px; ">
+                <div class="accordion-inner">
+                  <div class="control-group">
+                      <label class="control-label">
+                          學生資料</label>
+                      <div class="controls">
+                          <select>
+                              <option>請選擇</option>
+                              <option>資二忠【15】江曉信</option>
+                              <option>資二忠【18】江曉信</option>
+                            </select>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseC"><i class="icon-chevron-down pull-right"></i>
+                  <input type="text" class="input-large" id="permanent-phone" placeholder="請輸入幹部名稱">
+                </a>
+              </div>
+              <div id="collapseC" class="accordion-body collapse" style="height: 0px; ">
+                <div class="accordion-inner">
+                  <div class="control-group">
+                      <label class="control-label">
+                          學生資料</label>
+                      <div class="controls">
+                          <select>
+                              <option>請選擇</option>
+                              <option>資二忠【15】江曉信</option>
+                              <option>資二忠【18】江曉信</option>
+                            </select>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </fieldset>
+      </form>
+  </div>
+  <div class="modal-footer">
+      <a href="#" class="btn btn-success" id="save-data">儲存變更</a> <a href="#" class="btn"
+          data-dismiss="modal">離開</a>
+  </div>
+</div>
 </body>
 </html>
