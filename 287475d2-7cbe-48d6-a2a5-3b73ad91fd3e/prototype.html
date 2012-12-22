@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>班級</title>
+<link href="css/bootstrap.css" rel="stylesheet"/>
+<link href="css/bootstrap-responsive.css" rel="stylesheet"/>
+<link href="css/mybootstrap.css" rel="stylesheet"/>
+<link href="css/base.css" rel="stylesheet" />
+<link href="css/default.css" rel="stylesheet" />
+<script src="js/jquery.min.js"></script>
+<script src="js/less.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+<script src="js/jquery.ui.touch-punch.min.js"></script>
+<script src="js/facescroll.js"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+		//$('.tabbable li:eq(2) a').tab('show'); // Select third tab (0-indexed
+		$("#baseinfo .my-label-title a").click(function () {
+			$('#editModal').removeClass('hide');
+		})
+
+		$('[data-dismiss], #save-data').click(function () {
+			$('#editModal').addClass('hide');
+		})
+	});
+</script>
+<script type="text/javascript">
+	jQuery(function(){ // on page DOM load
+		$('#namelist').alternateScroll();
+	})
+</script>
+</head>
+
+<body>
+<div id="gadget">
+  <div class="container-fluid">
+      <div class="row-fluid">
+            <div class="span12">
+                <div id="mainMsg">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+                <div class="my-widget" data-type="info">
+                      <div class="my-widget-header">
+                          <i class="icon-info-sign"></i>
+                          <h3>
+                              一年級</h3>
+                      </div>
+                      <div class="my-widget-content">
+                          <div class="my-classlist">
+                              <ul>
+                                  <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> <span data-type="classname">101</span> - 某某某某</a></li>
+                                  <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> <span data-type="classname">102</span> - 某某某某</a></li>
+                                  <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> <span data-type="classname">1013</span> - 某某某</a></li>
+                                  <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> <span data-type="classname">10114</span> - 某某某</a></li>
+                                  <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> <span data-type="classname">105</span> - 某某某</a></li>
+                                  <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> <span data-type="classname">1016</span> - 某某某</a></li>
+                                  <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> <span data-type="classname">107</span> - 某某某</a></li>
+                                  <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> <span data-type="classname">1018</span> - 某某某</a></li>
+                              </ul>
+                          </div>
+                      </div>
+        </div>
+            </div>
+        <div class="container">
+            <div class="my-widget" data-type="info">
+                  <div class="my-widget-header">
+                      <i class="icon-info-sign"></i>
+                      <h3>
+                          二年級</h3>
+                  </div>
+                  <div class="my-widget-content">
+                      <div class="my-classlist">
+                          <ul>
+                              <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> 101 某某某某</a></li>
+                              <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> 102 某某某某</a></li>
+                              <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> 103 某某某</a></li>
+                              <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> 104 某某某</a></li>
+                              <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> 105 某某某</a></li>
+                              <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> 106 某某某</a></li>
+                              <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> 107 某某某</a></li>
+                              <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> 108 某某某</a></li>
+                          </ul>
+                      </div>
+                  </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="my-widget" data-type="info">
+                  <div class="my-widget-header">
+                      <i class="icon-info-sign"></i>
+                      <h3>
+                          三年級</h3>
+                  </div>
+                  <div class="my-widget-content">
+                      <div class="my-classlist">
+                          <ul>
+                              <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> 101 某某某某</a></li>
+                              <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> 102 某某某某</a></li>
+                              <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> 103 某某某</a></li>
+                              <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> 104 某某某</a></li>
+                              <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> 105 某某某</a></li>
+                              <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> 106 某某某</a></li>
+                              <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> 107 某某某</a></li>
+                              <li><a data-toggle="modal" href="#st"><i class="icon-edit"></i> 108 某某某</a></li>
+                          </ul>
+                      </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--------------------------------------->
+<!---編輯--->
+<div class="modal hide" id="st">
+  <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">
+          ×</button>
+      <h3>
+    資料修改</h3>
+      <div id="errorMessage">
+      </div>
+  </div>
+  <div class="modal-body">
+      <form class="form-horizontal">
+      <fieldset>
+          <div class="control-group">
+              <label class="control-label">
+            年級</label>
+              <div class="controls">
+                  <select class="span1">
+                      <option>一</option>
+                      <option>二</option>
+                      <option>三</option>
+                  </select>
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+            班級</label>
+              <div class="controls">
+                  <input type="text" class="input-large" id="permanent-phone" placeholder="">
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+            班導師姓名</label>
+              <div class="controls">
+                  <input type="text" class="input-large" id="permanent-phone" placeholder="">
+              </div>
+          </div>
+      </fieldset>
+      </form>
+  </div>
+  <div class="modal-footer">
+      <a href="#" class="btn btn-success" id="save-data">儲存變更</a>
+      <a href="#" class="btn" data-dismiss="modal">離開</a>
+  </div>
+</div>
+</body>
+</html>

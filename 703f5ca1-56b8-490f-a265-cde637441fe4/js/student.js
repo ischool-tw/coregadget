@@ -28,21 +28,7 @@ jQuery(function () {
 
     // TODO: 點選取消鈕退出小工具
     $('#exit-gadget').bind('click', function() {
-        window.parent.setTimeout(window.parent.menuRander.show,500); //顯示主選單
-        window.parent.displayManager.refreshGadget((function () {
-            var vars = [], hash;
-            var p = window.location.href.slice(window.location.href.indexOf('?') + 1);
-            if (p.indexOf("#") >= 0)
-                p = p.substring(0, p.indexOf("#"));
-            var hashes = p.split('&');
-            for (var i = 0; i < hashes.length; i++) {
-                hash = decodeURI(hashes[i]);
-                var key = hash.substring(0, hash.indexOf("="));
-                vars.push(key);
-                vars[key] = hash.substring(hash.indexOf("=") + 1);
-            }
-            return vars;
-        }()).id); //把特定gadget清掉
+        gadget.backToMenu(true); //顯示主選單
     });
 
     // TODO: 出現 code 的強制視窗
@@ -109,12 +95,16 @@ jQuery(function () {
             error.insertAfter(element);
         }
     });
+
+    // TODO: 個性簽名的 tooltip
+    $('#edit-Photo').tooltip();
 });
 
 // TODO: 個人基本資料-上傳照片
 _gg.updatePhoto = function() {
     // TODO: 處理上傳圖片
-    $('#edit-Photo').click(function(evt){
+    $('#edit-Photo').click(function(evt) {
+        $('#mainMsg').html('');
         $('#files').val('').trigger('click');
     });
     $('#files').change(function(evt) {
@@ -127,8 +117,33 @@ _gg.updatePhoto = function() {
 
         var file = evt.target.files[0];
 
-        if (!(file.type == "image/png" || file.type == "image/jpeg"))
+        // TODO: 限制檔案大小
+        var fileSize = 0; //檔案大小
+        var SizeLimit = 1024 * 50;  //上傳上限，單位:byte, 50KB
+        if ($.browser.msie) {
+            //FOR IE
+            var img = new Image();
+            img.onload = checkSize;
+            img.src = file.value;
+            fileSize = this.fileSize;
+        }
+        else {
+            //FOR Firefox,Chrome
+            fileSize = file.size;
+        }
+
+        if (fileSize > SizeLimit) {
+            var _filesize = (fileSize / 1024).toPrecision(4);
+            var _limit = (SizeLimit / 1024).toPrecision();
+            var msg = "您所選擇的檔案大小為 " + _filesize + " KB\n已超過上傳上限 " + _limit + " KB\n不允許上傳！"
+            $('#mainMsg').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + msg + "\n</div>");
             return;
+        }
+
+        if (!(file.type == "image/png" || file.type == "image/jpeg")) {
+            $('#mainMsg').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請使用 .jpg 或 .png 格式！\n</div>");
+            return;
+        }
 
         var reader = new FileReader();
         reader.onload = (function(theFile) {
@@ -143,6 +158,7 @@ _gg.updatePhoto = function() {
             };
         })(file);
         reader.readAsDataURL(file);
+
     });
 };
 

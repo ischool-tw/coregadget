@@ -104,7 +104,7 @@ a:hover {
   background: #69C;
 }
 .my-msglist .my-unread {
-  background: #feffef url(images/icon_new.png) no-repeat 97% 75% !important;
+  background: #feffef url(images/icon_new.png) no-repeat 97% 50% !important;
   border-bottom: 1px solid #ddd;
 }
 .my-msglist dl {
@@ -282,4 +282,7 @@ a:hover {
   left: 0;
   right: 0;
   z-index: 2;
+}
+.pull-right {
+  padding-right: 20px;
 }

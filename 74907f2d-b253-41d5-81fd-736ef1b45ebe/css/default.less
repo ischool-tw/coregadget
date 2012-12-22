@@ -232,7 +232,7 @@ a:hover {
 }
 
 /*自訂*/
-.my-successMessage {
+div.modal div.my-Msg {
   div {
     position: absolute;
     top: 0;
@@ -253,4 +253,35 @@ a:hover {
 .dropdown-menu .active > a.my-highLightItem
 , .dropdown-menu .active > a.my-highLightItem:hover {
   color: white;
+}
+
+ol.flex-control-nav li {
+  position: relative;
+}
+
+.my-pulse {
+    width:15px;
+    height:15px;
+    border-radius:30px;
+    border: 1px solid #3193C4;
+    box-shadow: 0 0 10px #3193C4;
+    position:absolute;
+    top:-2px;
+    left:-2px;
+    -webkit-animation:my-pulse 0.7s infinite ease-out;
+    -moz-animation:my-pulse 0.7s infinite ease-out;
+}
+
+@-moz-keyframes my-pulse {
+    0%   {-moz-transform: scale(0);opacity: 0;}
+    10%  {-moz-transform: scale(1);opacity: 0.5;}
+    50%  {-moz-transform: scale(1.5);opacity: 0;}
+    100% {-moz-transform: scale(0);opacity: 0;}
+}
+
+@-webkit-keyframes my-pulse {
+    0%   {-webkit-transform: scale(0);opacity: 0;}
+    10%  {-webkit-transform: scale(1);opacity: 0.5;}
+    50%  {-webkit-transform: scale(1.5);opacity: 0;}
+    100% {-webkit-transform: scale(0);opacity: 0;}
 }
