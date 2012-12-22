@@ -443,6 +443,7 @@ _gg.SetModal = function() {
             $('#editModal h3').html('新增');
         }
 
+        $('input:file').val('');
         $('#edit-StudentName').val(student.StudentName || '');
         $('#edit-SeatNo').val(student.SeatNo || '');
         $('#edit-StudentNumber').val(student.StudentNumber || '');
@@ -579,6 +580,9 @@ _gg.saveBaseInfo = function() {
         request.push('<PermanentAddress>' + requestPermanentAddress + '</PermanentAddress>');
         request.push('<MailingAddress>' + requestMailingAddress + '</MailingAddress>');
         request.push('<Status>1</Status>');
+        request.push('<FreshmanPhoto>' + freshmanPhoto + '</FreshmanPhoto>');
+        request.push('<GraduatePhoto>' + graduatePhoto + '</GraduatePhoto>');
+
 
 
         var _service, _body, _txt;
@@ -605,38 +609,39 @@ _gg.saveBaseInfo = function() {
                         $("#filter-student").trigger('click');
                         _gg.GetAllClassList();
                     } else {
+                        _gg.GetStudentInfo();
                         // TODO: 重設資料
-                        student.StudentName = studentName;
-                        student.SeatNo = seatNo;
-                        student.StudentNumber = studentNumber;
-                        student.SaLoginName = saLoginName;
-                        student.IDNumber = iDNumber;
-                        student.Gender = gender;
-                        student.Birthdate = birthdate;
-                        student.PermanentPhone = permanentPhone;
-                        student.SmsPhone = smsPhone;
-                        student.ContactPhone = contactPhone;
-                        student.MailingAddress = mailingAddress;
-                        student.ParentCode = parentCode;
-                        student.StudentCode = studentCode;
-                        student.ClassID = classID;
-                        student.PermanentAddress = permanentAddress;
-                        student.MailingAddress = mailingAddress;
-                        student.ClassID = $('#edit-ClassName').attr('ClassName') || '';
-                        _gg.ResetStudentInfo();
+                        // student.StudentName = studentName;
+                        // student.SeatNo = seatNo;
+                        // student.StudentNumber = studentNumber;
+                        // student.SaLoginName = saLoginName;
+                        // student.IDNumber = iDNumber;
+                        // student.Gender = gender;
+                        // student.Birthdate = birthdate;
+                        // student.PermanentPhone = permanentPhone;
+                        // student.SmsPhone = smsPhone;
+                        // student.ContactPhone = contactPhone;
+                        // student.MailingAddress = mailingAddress;
+                        // student.ParentCode = parentCode;
+                        // student.StudentCode = studentCode;
+                        // student.ClassID = classID;
+                        // student.PermanentAddress = permanentAddress;
+                        // student.MailingAddress = mailingAddress;
+                        // student.ClassID = $('#edit-ClassName').attr('ClassName') || '';
+                        // _gg.ResetStudentInfo();
 
-                        var tmp_gender = '';
-                        if (gender === '1') {
-                            tmp_gender = '男';
-                        } else if (gender === '0') {
-                            tmp_gender = '女';
-                        }
+                        // var tmp_gender = '';
+                        // if (gender === '1') {
+                        //     tmp_gender = '男';
+                        // } else if (gender === '0') {
+                        //     tmp_gender = '女';
+                        // }
 
-                        var studentindex = $('a[action-type=edit]').attr('studentIndex');
-                        $('#namelist tr[studentIndex=' + studentindex + ']')
-                            .find('td:eq(0)').html(seatNo)
-                            .end().find('td:eq(1)').html(studentName)
-                            .end().find('td:eq(2)').html(tmp_gender);
+                        // var studentindex = $('a[action-type=edit]').attr('studentIndex');
+                        // $('#namelist tr[studentIndex=' + studentindex + ']')
+                        //     .find('td:eq(0)').html(seatNo)
+                        //     .end().find('td:eq(1)').html(studentName)
+                        //     .end().find('td:eq(2)').html(tmp_gender);
                     }
 
                     $('#editModal').modal('hide');
