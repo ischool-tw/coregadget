@@ -11,6 +11,11 @@ jQuery(function () {
             $('#tabName').html($(this).html());
         });
 
+    $('span.my-trash').click(function() {
+        $("#edit-Photo div.my-proimg").attr('photo-base64', '');
+        $("#edit-Photo div.my-proimg").css('background-image', 'url(css/images/nophoto.png)');
+    });
+
     $('body')
         // TODO: popover 點選x時關閉
         .on('click', 'div.popover button.close', function() {
@@ -416,7 +421,7 @@ _gg.getStudentList = function() {
             body: request,
             result: function (response, error, http) {
                 if (error !== null) {
-                    _gg.set_error_message('#mainMsg', serviceT, error);
+                    _gg.set_error_message('#mainMsg', service, error);
                 } else {
                     var _ref;
                     if (((_ref = response.Response) != null ? _ref.Users : void 0) != null) {

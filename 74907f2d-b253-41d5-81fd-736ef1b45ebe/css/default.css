@@ -303,3 +303,7 @@ ol.flex-control-nav li {
     opacity: 0;
   }
 }
+.my-trash {
+  margin: 0 1px;
+  cursor: pointer;
+}

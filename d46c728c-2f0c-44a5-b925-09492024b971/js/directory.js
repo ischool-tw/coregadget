@@ -11,6 +11,11 @@ jQuery(function () {
             $('#tabName').html($(this).html());
         });
 
+    $('span.my-trash').click(function() {
+        $("#edit-Photo div.my-proimg").attr('photo-base64', '');
+        $("#edit-Photo div.my-proimg").css('background-image', 'url(css/images/nophoto.png)');
+    });
+
     $('body')
         // TODO: popover 點選x時關閉
         .on('click', 'div.popover button.close', function() {

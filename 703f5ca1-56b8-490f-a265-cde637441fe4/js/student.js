@@ -1,30 +1,14 @@
 var _gg = _gg || {};
 
-// TODO: 錯誤訊息
-_gg.set_error_message = function(select_str, serviceName, error) {
-    var tmp_msg = '';
-    if (error !== null) {
-        if (error.dsaError) {
-            if (error.dsaError.status === "504") {
-                if (error.dsaError.message) {
-                    tmp_msg = '<strong>' + error.dsaError.message + '</strong><br />(' + serviceName + ')';
-                } else {
-                    tmp_msg = '<strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
-                }
-            } else {
-                tmp_msg = '<strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
-            }
-        } else {
-            tmp_msg = '<strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
-        }
-        $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
-    }
-};
-
 jQuery(function () {
     _gg.updatePhoto();
     $('#edit-Birthdate').datepicker();
     $('#save-myself').addClass('hide');
+    $('span.my-trash').click(function() {
+        $("#edit-Photo div.my-proimg").attr('photo-base64', '');
+        $("#edit-Photo div.my-proimg").css('background-image', 'url(css/images/nophoto.png)');
+    });
+
 
     // TODO: 點選取消鈕退出小工具
     $('#exit-gadget').bind('click', function() {
@@ -248,5 +232,21 @@ _gg.setAccount = function() {
                 }
             }
         });
+    }
+};
+
+// TODO: 錯誤訊息
+_gg.set_error_message = function(select_str, serviceName, error) {
+    var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
+    if (error !== null) {
+        if (error.dsaError) {
+            if (error.dsaError.status === "504") {
+                if (error.dsaError.message) {
+                    tmp_msg = '<strong>' + error.dsaError.message + '</strong><br />(' + serviceName + ')';
+                }
+            }
+        }
+        $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
+        $('.my-err-info').click(function(){alert('請拍下此圖，並與客服人員連絡，謝謝您。\n' + JSON.stringify(error, null, 2))});
     }
 };
