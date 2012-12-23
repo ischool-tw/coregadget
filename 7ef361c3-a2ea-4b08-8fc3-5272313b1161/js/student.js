@@ -610,38 +610,6 @@ _gg.saveBaseInfo = function() {
                         _gg.GetAllClassList();
                     } else {
                         _gg.GetStudentInfo();
-                        // TODO: 重設資料
-                        // student.StudentName = studentName;
-                        // student.SeatNo = seatNo;
-                        // student.StudentNumber = studentNumber;
-                        // student.SaLoginName = saLoginName;
-                        // student.IDNumber = iDNumber;
-                        // student.Gender = gender;
-                        // student.Birthdate = birthdate;
-                        // student.PermanentPhone = permanentPhone;
-                        // student.SmsPhone = smsPhone;
-                        // student.ContactPhone = contactPhone;
-                        // student.MailingAddress = mailingAddress;
-                        // student.ParentCode = parentCode;
-                        // student.StudentCode = studentCode;
-                        // student.ClassID = classID;
-                        // student.PermanentAddress = permanentAddress;
-                        // student.MailingAddress = mailingAddress;
-                        // student.ClassID = $('#edit-ClassName').attr('ClassName') || '';
-                        // _gg.ResetStudentInfo();
-
-                        // var tmp_gender = '';
-                        // if (gender === '1') {
-                        //     tmp_gender = '男';
-                        // } else if (gender === '0') {
-                        //     tmp_gender = '女';
-                        // }
-
-                        // var studentindex = $('a[action-type=edit]').attr('studentIndex');
-                        // $('#namelist tr[studentIndex=' + studentindex + ']')
-                        //     .find('td:eq(0)').html(seatNo)
-                        //     .end().find('td:eq(1)').html(studentName)
-                        //     .end().find('td:eq(2)').html(tmp_gender);
                     }
 
                     $('#editModal').modal('hide');
