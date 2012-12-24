@@ -48,3 +48,7 @@ input[type="text"].error-remark {
 .form-horizontal .my-cadres-input {
   margin-bottom: 6px;
 }
+/*自訂*/
+.failscore {
+  color: red;
+}

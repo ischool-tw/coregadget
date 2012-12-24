@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="社團">
+  <ModulePrefs title="社團" description="新民社團成績(老師)">
     <Icon>icon.png</Icon>
     <Mobile/>
   </ModulePrefs>
