@@ -489,6 +489,7 @@ _gg.SetClass = function () {
                     var _arScore = (value.ArScore || '');
                     var _aasScore = (value.AasScore || '');
                     var _farScore = (value.FarScore || '');
+                    var _resultScore = (value.ResultScore || '');
 
                     if ($.isNumeric(_paScore)) {
                         _paScore = parseInt(_paScore, 10);
@@ -514,6 +515,12 @@ _gg.SetClass = function () {
                             _farScore = '<span class="failscore">' + _farScore + '</span>';
                         }
                     }
+                    if ($.isNumeric(_resultScore)) {
+                    _resultScore = parseInt(_resultScore, 10);
+                    if (_resultScore < 60) {
+                        _resultScore = '<span class="failscore">' + _resultScore + '</span>';
+                    }
+                }
 
                     arys.push('<tr>' +
                         '  <td>' + (value.SeatNo || '')        + '</td>' +
@@ -525,7 +532,7 @@ _gg.SetClass = function () {
                         '  <td id="ArScore' + (value.SCUID || '') + '">'  + _arScore   + '</td>' +
                         '  <td id="AasScore' + (value.SCUID || '') + '">' + _aasScore  + '</td>' +
                         '  <td id="FarScore' + (value.SCUID || '') + '">' + _farScore  + '</td>' +
-                        '  <td>' + (value.ResultScore || '')   + '</td>' +
+                        '  <td>' + _resultScore   + '</td>' +
                         '</tr>');
                 });
                 arys.push('</tbody></table></div></div></div>');
@@ -563,7 +570,11 @@ _gg.funWeightScore = function (paScore, arScore, aasScore, farScore) {
             d = parseInt(farScore, 10) * parseInt(_gg.weight.FarWeight, 10);
         }
 
-        return Math.round((a + b + c + d) / 100);
+        _score = Math.round((a + b + c + d) / 100);
+        if (_score < 60) {
+            _score = '<span class="failscore">' + _score + '</span>';
+        }
+        return _score;
     }
     return 0;
 };
@@ -579,6 +590,7 @@ _gg.SetScore = function (clubid) {
                 var _arScore = (value.ArScore || '');
                 var _aasScore = (value.AasScore || '');
                 var _farScore = (value.FarScore || '');
+                var _resultScore = (value.ResultScore || '');
 
                 if ($.isNumeric(_paScore)) {
                     _paScore = parseInt(_paScore, 10);
@@ -604,6 +616,12 @@ _gg.SetScore = function (clubid) {
                         _farScore = '<span class="failscore">' + _farScore + '</span>';
                     }
                 }
+                if ($.isNumeric(_resultScore)) {
+                    _resultScore = parseInt(_resultScore, 10);
+                    if (_resultScore < 60) {
+                        _resultScore = '<span class="failscore">' + _resultScore + '</span>';
+                    }
+                }
 
                 arys.push('<tr>' +
                     '  <td>' + (value.StudentNumber || '') + '</td>' +
@@ -615,7 +633,7 @@ _gg.SetScore = function (clubid) {
                     '  <td>' + _aasScore + '</td>' +
                     '  <td>' + _farScore + '</td>' +
                     '  <td>' + _gg.funWeightScore(value.PaScore, value.ArScore, value.AasScore, value.FarScore) + '</td>' +
-                    '  <td>' + (value.ResultScore || '') + '</td>' +
+                    '  <td>' + _resultScore + '</td>' +
                     '</tr>');
             });
 
