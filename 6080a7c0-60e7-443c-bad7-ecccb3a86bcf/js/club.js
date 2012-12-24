@@ -8,6 +8,7 @@ _gg.opening = {
 
 jQuery(function () {
     $('#mainMsg').html('資料載入中...');
+    $('#tabClub a[rel=tooltip]').tooltip();
 
     // TODO: 載入資料
     _gg.loadData();
@@ -109,33 +110,6 @@ jQuery(function () {
         }
     });
 });
-
-
-// TODO: 錯誤訊息
-_gg.set_error_message = function(select_str, serviceName, error) {
-    var tmp_msg = '';
-    if (error !== null) {
-        if (error.dsaError) {
-            if (error.dsaError.status === "504") {
-                switch (error.dsaError.message) {
-                    case '501':
-                        tmp_msg = '<strong>很抱歉，您無存取資料權限！</strong>';
-                        break;
-                    case '502':
-                        tmp_msg = '<strong>儲存失敗，目前未開放填寫!</strong>';
-                        break;
-                    default:
-                        tmp_msg = '<strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
-                }
-            } else {
-                tmp_msg = '<strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
-            }
-        } else {
-            tmp_msg = '<strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
-        }
-        $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
-    }
-};
 
 // TODO: 載入資料
 _gg.loadData = function () {
@@ -511,16 +485,46 @@ _gg.SetClass = function () {
                     '        </thead>' +
                     '        <tbody>');
                 $(myStudents.Students).each(function(key, value) {
+                    var _paScore = (value.PaScore || '');
+                    var _arScore = (value.ArScore || '');
+                    var _aasScore = (value.AasScore || '');
+                    var _farScore = (value.FarScore || '');
+
+                    if ($.isNumeric(_paScore)) {
+                        _paScore = parseInt(_paScore, 10);
+                        if (_paScore < 60) {
+                            _paScore = '<span class="failscore">' + _paScore + '</span>';
+                        }
+                    }
+                    if ($.isNumeric(_arScore)) {
+                        _arScore = parseInt(_arScore, 10);
+                        if (_arScore < 60) {
+                            _arScore = '<span class="failscore">' + _arScore + '</span>';
+                        }
+                    }
+                    if ($.isNumeric(_aasScore)) {
+                        _aasScore = parseInt(_aasScore, 10);
+                        if (_aasScore < 60) {
+                            _aasScore = '<span class="failscore">' + _aasScore + '</span>';
+                        }
+                    }
+                    if ($.isNumeric(_farScore)) {
+                        _farScore = parseInt(_farScore, 10);
+                        if (_farScore < 60) {
+                            _farScore = '<span class="failscore">' + _farScore + '</span>';
+                        }
+                    }
+
                     arys.push('<tr>' +
                         '  <td>' + (value.SeatNo || '')        + '</td>' +
                         '  <td>' + (value.StudentNumber || '') + '</td>' +
                         '  <td>' + (value.StudentName || '')   + '</td>' +
                         '  <td>' + (value.ClubName || '')      + '</td>' +
                         '  <td clubid="' + value.ClubID + '" studentID="' + value.StudentID + '">' + (value.CadreName || '')     + '</td>' +
-                        '  <td id="PaScore' + (value.SCUID || '') + '">' + (value.PaScore || '')       + '</td>' +
-                        '  <td id="ArScore' + (value.SCUID || '') + '">' + (value.ArScore || '')       + '</td>' +
-                        '  <td id="AasScore' + (value.SCUID || '') + '">' + (value.AasScore || '')     + '</td>' +
-                        '  <td id="FarScore' + (value.SCUID || '') + '">' + (value.FarScore || '')     + '</td>' +
+                        '  <td id="PaScore' + (value.SCUID || '') + '">'  + _paScore   + '</td>' +
+                        '  <td id="ArScore' + (value.SCUID || '') + '">'  + _arScore   + '</td>' +
+                        '  <td id="AasScore' + (value.SCUID || '') + '">' + _aasScore  + '</td>' +
+                        '  <td id="FarScore' + (value.SCUID || '') + '">' + _farScore  + '</td>' +
                         '  <td>' + (value.ResultScore || '')   + '</td>' +
                         '</tr>');
                 });
@@ -571,15 +575,45 @@ _gg.SetScore = function (clubid) {
         if (students) {
             var arys = [];
             $(students).each(function(key, value) {
+                var _paScore = (value.PaScore || '');
+                var _arScore = (value.ArScore || '');
+                var _aasScore = (value.AasScore || '');
+                var _farScore = (value.FarScore || '');
+
+                if ($.isNumeric(_paScore)) {
+                    _paScore = parseInt(_paScore, 10);
+                    if (_paScore < 60) {
+                        _paScore = '<span class="failscore">' + _paScore + '</span>';
+                    }
+                }
+                if ($.isNumeric(_arScore)) {
+                    _arScore = parseInt(_arScore, 10);
+                    if (_arScore < 60) {
+                        _arScore = '<span class="failscore">' + _arScore + '</span>';
+                    }
+                }
+                if ($.isNumeric(_aasScore)) {
+                    _aasScore = parseInt(_aasScore, 10);
+                    if (_aasScore < 60) {
+                        _aasScore = '<span class="failscore">' + _aasScore + '</span>';
+                    }
+                }
+                if ($.isNumeric(_farScore)) {
+                    _farScore = parseInt(_farScore, 10);
+                    if (_farScore < 60) {
+                        _farScore = '<span class="failscore">' + _farScore + '</span>';
+                    }
+                }
+
                 arys.push('<tr>' +
                     '  <td>' + (value.StudentNumber || '') + '</td>' +
                     '  <td>' + (value.ClassName || '') + '</td>' +
                     '  <td>' + (value.SeatNo || '')   + '</td>' +
                     '  <td>' + (value.StudentName || '') + '</td>' +
-                    '  <td>' + (value.PaScore || '') + '</td>' +
-                    '  <td>' + (value.ArScore || '') + '</td>' +
-                    '  <td>' + (value.AasScore || '') + '</td>' +
-                    '  <td>' + (value.FarScore || '') + '</td>' +
+                    '  <td>' + _paScore + '</td>' +
+                    '  <td>' + _arScore + '</td>' +
+                    '  <td>' + _aasScore + '</td>' +
+                    '  <td>' + _farScore + '</td>' +
                     '  <td>' + _gg.funWeightScore(value.PaScore, value.ArScore, value.AasScore, value.FarScore) + '</td>' +
                     '  <td>' + (value.ResultScore || '') + '</td>' +
                     '</tr>');
@@ -959,5 +993,27 @@ _gg.SaveCadres = function () {
             });
 
         }
+    }
+};
+
+
+// TODO: 錯誤訊息
+_gg.set_error_message = function(select_str, serviceName, error) {
+    var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
+    if (error !== null) {
+        if (error.dsaError) {
+            if (error.dsaError.status === "504") {
+                switch (error.dsaError.message) {
+                     case '501':
+                        tmp_msg = '<strong>很抱歉，您無存取資料權限！</strong>';
+                        break;
+                    case '502':
+                        tmp_msg = '<strong>儲存失敗，目前未開放填寫!</strong>';
+                        break;
+                }
+            }
+        }
+        $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
+        $('.my-err-info').click(function(){alert('請拍下此圖，並與客服人員連絡，謝謝您。\n' + JSON.stringify(error, null, 2))});
     }
 };
