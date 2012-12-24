@@ -1,7 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="班級管理">
+  <ModulePrefs title="班級管理" description="老師-班級管理">
+    <Title lang="zh-TW">班級管理</Title>
     <Icon>icon.png</Icon>
-    <Mobile/>
+    <Mobile />
+    <Title lang="zh-CN">
+    </Title>
+    <Title lang="en-US">
+    </Title>
   </ModulePrefs>
 </Module>
