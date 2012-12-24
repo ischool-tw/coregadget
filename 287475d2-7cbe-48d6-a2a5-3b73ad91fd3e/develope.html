@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+  <script>
+    init({
+      application: "dev.sh_d",
+      paramValues: {}
+    });
+  </script>
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <link href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" rel="stylesheet"/>
+  <!--<link href="css/base.less" rel="stylesheet/less" />
+  <link href="css/default.less" rel="stylesheet/less" />-->
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <!--<script src="js/less.min.js"></script>-->
+  <script src="http://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
+  <script src="js/jquery.ui.touch-punch.min.js"></script>
+  <script src="js/facescroll.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/jquery.validate.min.js"></script>
+  <script src="js/jquery.metadata.js"></script>
+  <script src="js/messages_tw.js"></script>
+  <script src="js/class.js"></script>
+</head>
+<body>
+  <div id="gadget" class="my-page">
+      <div id="mainMsg"></div>
+      <div class="row-fluid">
+        <div class="span12">
+          <div class="tabbable">
+            <h1>班級
+              <a href="#editModal" id="addclass" class="btn btn-mini pull-right" data-toggle="modal"><i class="icon-plus"></i> 新增</a>
+            </h1>
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade active in" id="class1">
+                  <div id="container-main" class="tab-content">
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal hide" id="editModal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">×</button>
+          <h3>資料修改</h3>
+          <div id="errorMessage"></div>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal">
+              <fieldset>
+                  <div class="control-group">
+                      <label class="control-label">年級</label>
+                      <div class="controls">
+                          <input class="input-large {digits:true, min: 0}" name="edit-GradeYear" id="edit-GradeYear" placeholder="例如：1" type="text">
+                      </div>
+                  </div>
+                  <div class="control-group">
+                      <label class="control-label">*班級</label>
+                      <div class="controls">
+                          <input class="input-large {required:true}" name="edit-ClassName" id="edit-ClassName" placeholder="例如：資一甲" type="text">
+                      </div>
+                  </div>
+                  <div class="control-group">
+                      <label class="control-label">班導師姓名</label>
+                      <div class="controls">
+                          <input class="input-large {TeacherName:true}" name="edit-TeacherName" id="edit-TeacherName" placeholder="班導師..." type="text">
+                      </div>
+                  </div>
+              </fieldset>
+          </form>
+        </div>
+        <div class="modal-footer"><a href="#" class="btn btn-success" id="save-data" data-loading-text="儲存中...">儲存變更</a>
+          <a href="#" class="btn" data-dismiss="modal">離開</a> </div>
+      </div>
+      <div class="modal hide" id="delModal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">×</button>
+          <h3>刪除</h3>
+          <div id="errorMessage"></div>
+        </div>
+        <div class="modal-body">
+          <p>此動作會使該班學生列入「未分班學生」中，您確定嗎？</p>
+        </div>
+        <div class="modal-footer"><a href="#" class="btn btn-success" id="del-data" data-loading-text="刪除中...">刪除</a>
+          <a href="#" class="btn" data-dismiss="modal">離開</a> </div>
+      </div>
+  </div>
+</body>
+</html>

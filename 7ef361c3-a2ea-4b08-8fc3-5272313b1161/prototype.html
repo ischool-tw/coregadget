@@ -1,0 +1,580 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>學生</title>
+<link href="css/bootstrap.css" rel="stylesheet"/>
+<link href="css/bootstrap-responsive.css" rel="stylesheet"/>
+<link href="css/mybootstrap.css" rel="stylesheet"/>
+<link href="css/base.css" rel="stylesheet" />
+<link href="css/default.css" rel="stylesheet" />
+<script src="js/jquery.min.js"></script>
+<script src="js/less.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+<script src="js/jquery.ui.touch-punch.min.js"></script>
+<script src="js/facescroll.js"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+		//$('.tabbable li:eq(2) a').tab('show'); // Select third tab (0-indexed
+		$("#baseinfo .my-label-title a").click(function () {
+			$('#editModal').removeClass('hide');
+		})
+
+		$('[data-dismiss], #save-data').click(function () {
+			$('#editModal').addClass('hide');
+		})
+	});
+</script>
+<script type="text/javascript">
+	jQuery(function(){ // on page DOM load
+		$('#namelist').alternateScroll();
+		$('#infolist').alternateScroll();
+	})
+</script>
+</head>
+
+<body>
+<div id="gadget">
+	<div class="container-fluid">
+    	<div class="row-fluid">
+            <div class="span12">
+                <div id="mainMsg">
+                </div>
+            </div>
+        </div>
+    	<div class="row-fluid">
+        	<div class="span3">
+				<div class="accordion my-student-list-widget" id="student-list">
+                      <div class="accordion-group">
+                          <div class="accordion-heading my-nav-header">
+                              <a class="accordion-toggle" data-toggle="collapse" data-parent="#student-list" href="#collapse1">
+                                  <i class="icon-folder-open"></i> 一年級 (12)
+                              </a>
+                          </div>
+                          <div id="collapse1" class="accordion-body collapse in">
+                              <div class="accordion-inner">
+                                  <ul class="nav nav-tabs nav-stacked">
+                                      <li class="active">
+                                          <a href="#">
+                                              101
+                                              <i class="icon-chevron-right pull-right"></i>
+                                          </a>
+                                      </li>
+                                      <li>
+                                          <a href="#">
+                                              102
+                                              <i class="icon-chevron-right pull-right icon-white"></i>
+                                          </a>
+                                      </li>
+                                      <li>
+                                          <a href="#">
+                                              103
+                                              <i class="icon-chevron-right pull-right icon-white"></i>
+                                          </a>
+                                      </li>
+                                  </ul>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="accordion-group">
+                          <div class="accordion-heading my-nav-header">
+                              <a class="accordion-toggle" data-toggle="collapse" data-parent="#student-list" href="#collapse2">
+                                  <i class="icon-folder-open"></i> 二年級 (12)
+                              </a>
+                          </div>
+                          <div id="collapse2" class="accordion-body collapse">
+                              <div class="accordion-inner">
+                                  <ul class="nav nav-tabs nav-stacked">
+                                      <li>
+                                          <a href="#">
+                                              201
+                                              <i class="icon-chevron-right pull-right icon-white"></i>
+                                          </a>
+                                      </li>
+                                      <li>
+                                          <a href="#">
+                                              202
+                                              <i class="icon-chevron-right pull-right icon-white"></i>
+                                          </a>
+                                      </li>
+                                  </ul>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="accordion-group">
+                          <div class="accordion-heading my-nav-header">
+                              <a class="accordion-toggle" data-toggle="collapse" data-parent="#student-list" href="#collapse3">
+                                  <i class="icon-folder-open"></i> 三年級 (12)
+                              </a>
+                          </div>
+                          <div id="collapse3" class="accordion-body collapse">
+                              <div class="accordion-inner">
+                                  <ul class="nav nav-tabs nav-stacked">
+                                      <li>
+                                          <a href="#">
+                                              301
+                                              <i class="icon-chevron-right pull-right icon-white"></i>
+                                          </a>
+                                      </li>
+                                      <li>
+                                          <a href="#">
+                                              302
+                                              <i class="icon-chevron-right pull-right icon-white"></i>
+                                          </a>
+                                      </li>
+                                  </ul>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+			</div>
+          <div class="span3">
+           	<form class="form-search">
+                  <input type="text" class="input-medium search-query">
+                  <button type="submit" class="btn">搜尋</button>
+              </form>
+              <div id="namelist" class="my-scrollbar">
+              	<table class="table table-condensed table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>座號</th>
+                    <th>姓名</th>
+                    <th>性別</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr onclick="document.location = '#';">
+                    <td>1</td>
+                    <td>江小信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr onclick="document.location = '#';">
+                    <td>2</td>
+                    <td>江大信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr onclick="document.location = '#';">
+                    <td>3</td>
+                    <td>江中信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr onclick="document.location = '#';">
+                    <td>4</td>
+                    <td>江小信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr onclick="document.location = '#';">
+                    <td>5</td>
+                    <td>江大信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr onclick="document.location = '#';">
+                    <td>6</td>
+                    <td>江中信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr onclick="document.location = '#';">
+                    <td>7</td>
+                    <td>江小信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr onclick="document.location = '#';">
+                    <td>8</td>
+                    <td>江大信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr onclick="document.location = '#';">
+                    <td>9</td>
+                    <td>江中信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>10</td>
+                    <td>江小信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>11</td>
+                    <td>江大信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>12</td>
+                    <td>江中信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>13</td>
+                    <td>江小信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>14</td>
+                    <td>江大信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>15</td>
+                    <td>江中信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>16</td>
+                    <td>江小信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>17</td>
+                    <td>江大信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>18</td>
+                    <td>江中信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>9</td>
+                    <td>江中信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>10</td>
+                    <td>江小信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>11</td>
+                    <td>江大信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>12</td>
+                    <td>江中信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>13</td>
+                    <td>江小信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>14</td>
+                    <td>江大信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>15</td>
+                    <td>江中信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>16</td>
+                    <td>江小信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>17</td>
+                    <td>江大信</td>
+                    <td>男</td>
+                  </tr>
+                  <tr>
+                    <td>18</td>
+                    <td>江中信</td>
+                    <td>男</td>
+                  </tr>
+                </tbody>
+              </table>
+              </div>
+            </div>
+            <div class="span6">
+            <div id="infolist" class="my-scrollbar2">
+                <div class="my-widget" data-type="info">
+                  <div class="my-widget-header">
+                      <i class="icon-edit"></i>
+                          <a data-toggle="modal" href="#st" class="btn"> 江小信</a>
+                  </div>
+                  <div class="my-widget-content">
+					<div class="row-fluid">
+                        <div class="span6">
+                          <img src="img/photo_male.png" alt="入學照" title="入學照" class="my-photo pull-left">
+                          <img src="img/photo_male.png" alt="畢業照" title="畢業照" class="my-photo pull-left">
+                        </div>
+                        <div class="span6">
+                          <table class="table table-condensed table-striped">
+                              <tbody>
+                                  <tr>
+                                    <th width="40%">年級</th>
+                                      <td width="60%">一</td>
+                                  </tr>
+                                  <tr>
+                                      <th>班級</th>
+                                      <td>2</td>
+                                  </tr>
+                                  <tr>
+                                      <th>座號</th>
+                                      <td>12</td>
+                                  </tr>
+                                  <tr>
+                                      <th>學號</th>
+                                      <td>20122</td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                        </div>
+                        <div class="row-fluid">
+                          <div class="span12">
+                              <table class="table table-condensed table-striped">
+                                  <tbody>
+                                      <tr>
+                                        <th width="20%">帳號</th>
+                                        <td width="30%">abcd123456</td>
+                                        <th width="20%">身分證</th>
+                                        <td width="30%">K12256574</td>
+                                      </tr>
+                                      <tr>
+                                        <th>性別</th>
+                                        <td>男</td>
+                                          <th>生日</th>
+                                          <td>1994-06-09</td>
+                                      </tr>
+                                      <tr>
+                                        <th>戶籍電話</th>
+                                        <td> 03-5213918 </td>
+                                        <th>行動電話</th>
+                                          <td> 0912345678 </td>
+                                      </tr>
+                                      <tr>
+                                        <th>戶籍地址</th>
+                                        <td colspan="3"> 351苗栗縣頭份鎮民族路35號 </td>
+                                      </tr>
+                                      <tr>
+                                        <th>通訊電話</th>
+                                        <td>037-593336 </td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                      </tr>
+                                      <tr>
+                                        <th>通訊地址</th>
+                                        <td colspan="3"> 308新竹縣寶山鄉雙溪村雙園路2段370號 </td>
+                                      </tr>
+                                      <tr>
+                                        <th>學生代碼</th>
+                                        <td>1234567</td>
+                                        <th>家長代碼</th>
+                                        <td>7654321</td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                        </div>
+
+                        </div>
+                  </div>
+              </div>
+              	<div class="my-widget" data-type="info">
+                                            <div class="my-widget-header">
+                                                <i class="icon-info-sign"></i>
+                                                <h3>
+                                                    家長資訊</h3>
+                                            </div>
+                                            <div class="my-widget-content">
+                                                <table class="table table-condensed">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th width="19%">
+                                                                姓名</th>
+                                                            <th width="26%">電話</th>
+                                                            <th width="55%">
+                                                                電子信箱</th>
+                                                      </tr>
+                                                        <tr>
+                                                            <td>
+                                                                江江江</td>
+                                                            <td>037-593336 </td>
+                                                            <td>1234@gamil.com</td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td> 江江江</td>
+                                                          <td>037-593336 </td>
+                                                          <td>1234@gamil.com</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+              </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--------------------------------------->
+<!---編輯--->
+<div class="modal hide" id="st">
+  <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">
+          ×</button>
+      <h3>
+    資料修改</h3>
+      <div id="errorMessage">
+      </div>
+  </div>
+  <div class="modal-body">
+      <form class="form-horizontal">
+      <fieldset>
+      		<div class="control-group">
+              <label class="control-label">
+            入學照</label>
+              <div class="controls">
+                  <input name="" type="file" />
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+            畢業照</label>
+              <div class="controls">
+                  <input name="" type="file" />
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+            姓名</label>
+              <div class="controls">
+                  <input type="text" class="input-large" id="permanent-phone" placeholder="">
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+            年級</label>
+              <div class="controls">
+                  <select class="span1">
+                      <option>一</option>
+                      <option>二</option>
+                      <option>三</option>
+                  </select>
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+            班級</label>
+              <div class="controls">
+                  <select class="span1">
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                  </select>
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+            座號</label>
+              <div class="controls">
+                  <input type="text" class="input-large" id="permanent-phone" placeholder="">
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+                  學號</label>
+              <div class="controls">
+                  <input type="text" class="input-large" id="permanent-phone" placeholder="">
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+                  座號</label>
+              <div class="controls">
+                  <input type="text" class="input-large" id="permanent-phone" placeholder="">
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+                  帳號</label>
+              <div class="controls">
+                  <input type="text" class="input-large" id="permanent-phone" placeholder="">
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+                  身分證</label>
+              <div class="controls">
+                  <input type="text" class="input-large" id="permanent-phone" placeholder="">
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+                  性別</label>
+              <div class="controls">
+                  <select class="span1">
+                      <option>男</option>
+                      <option>女</option>
+                  </select>
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+                  生日</label>
+              <div class="controls">
+                  <input type="text" class="input-large" id="permanent-phone" placeholder="">
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+                  行動電話</label>
+              <div class="controls">
+                  <input type="text" class="input-large" id="permanent-phone" placeholder="">
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+                  戶籍電話</label>
+              <div class="controls">
+                  <input type="text" class="input-large" id="permanent-phone" placeholder="">
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+                  戶籍地址</label>
+              <div class="controls">
+                  <input type="text" class="input-large" id="permanent-phone" placeholder="">
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+                  通訊電話</label>
+              <div class="controls">
+                  <input type="text" class="input-large" id="permanent-phone" placeholder="">
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+                  通訊地址</label>
+              <div class="controls">
+                  <input type="text" class="input-large" id="permanent-phone" placeholder="">
+              </div>
+          </div>
+          <div class="control-group">
+              <label class="control-label">
+                  學生代碼</label>
+              <div class="controls">
+                  <input type="text" class="input-large" id="permanent-phone" placeholder="">
+              </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">
+                  家長代碼</label>
+            <div class="controls">
+                  <input type="text" class="input-large" id="permanent-phone" placeholder="">
+        </div>
+          </div>
+      </fieldset>
+      </form>
+  </div>
+  <div class="modal-footer">
+      <a href="#" class="btn btn-success" id="save-data">儲存變更</a>
+      <a href="#" class="btn" data-dismiss="modal">離開</a>
+  </div>
+</div>
+</body>
+</html>

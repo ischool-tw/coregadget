@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
   <script>
     init({
@@ -24,11 +25,7 @@
 </head>
 <body>
   <div id="gadget" class="my-page">
-      <div class="row-fluid">
-        <div class="span12">
-          <div id="mainMsg"></div>
-        </div>
-      </div>
+      <div id="mainMsg"></div>
       <div class="row-fluid">
         <div class="span12">
             <h1>建立個人資料</h1>
@@ -38,9 +35,11 @@
                   <div class="span4">
                       <table class="table my-table2 my-tablephoto">
                         <tr>
-                          <th>個人相片</th>
+                          <th>個人相片<span class="my-trash" title="清除相片"></span></th>
                           <td>
-                            <div id="edit-Photo"><div class="my-proimg" style="background-image:url(css/images/nophoto.png);"></div></div>
+                            <div id="edit-Photo" style="position:relative;" rel="tooltip" data-placement="bottom" data-original-title="請使用.jpg, .png格式，上限 50 KB">
+                              <div class="my-proimg" style="background-image:url(css/images/nophoto.png);"></div>
+                            </div>
                             <input type="file" id="files" class="hide">
                           </td>
                         </tr>

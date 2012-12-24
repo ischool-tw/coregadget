@@ -11,6 +11,11 @@ jQuery(function () {
             $('#tabName').html($(this).html());
         });
 
+    $('span.my-trash').click(function() {
+        $("#edit-Photo div.my-proimg").attr('photo-base64', '');
+        $("#edit-Photo div.my-proimg").css('background-image', 'url(css/images/nophoto.png)');
+    });
+
     $('body')
         // TODO: popover 點選x時關閉
         .on('click', 'div.popover button.close', function() {
@@ -36,15 +41,15 @@ jQuery(function () {
 
             if (parseInt($(".my-message-word").html(), 10) < 0) {
                 $(".my-message-word").css("color", "#f00");
-                $(".my-message-button").addClass("disabled").attr("disabled", "disabled");
+                $(".my-message-button").prop('disabled', true);
             }
             else if (parseInt($(".my-message-word").html(), 10) == 140) {
                 $(".my-message-word").css("color", "#999");
-                $(".my-message-button").addClass("disabled").attr("disabled", "disabled");
+                $(".my-message-button").prop('disabled', true);
             }
             else {
                 $(".my-message-word").css("color", "#999");
-                $(".my-message-button").removeClass("disabled").removeAttr("disabled");
+                $(".my-message-button").prop('disabled', false);
             }
         })
         // TODO: 點選傳訊鈕。初始化訊息送出鈕為 disabled，處理收訊者選項
@@ -52,7 +57,7 @@ jQuery(function () {
             $('div[data-type=errMsg]').html('');
             $(".my-message-word").html(140);
             $('.my-message-input').val('');
-            $(".my-message-button").addClass("disabled").attr("disabled", "disabled");
+            $(".my-message-button").prop('disabled', true);
 
             // TODO: 群組傳訊
             if (this.id === 'sendGroup') {
@@ -235,26 +240,6 @@ jQuery(function () {
         }
     });
 });
-
-// TODO: 錯誤訊息
-_gg.set_error_message = function(select_str, serviceName, error) {
-    var tmp_msg = '';
-    if (error !== null) {
-        if (error.dsaError) {
-            if (error.dsaError.status === "504") {
-                switch (error.dsaError.message) {
-                    default:
-                        tmp_msg = '<strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
-                }
-            } else {
-                tmp_msg = '<strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
-            }
-        } else {
-            tmp_msg = '<strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
-        }
-        $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
-    }
-};
 
 // TODO: 顯示個人基本資料
 _gg.getMyInfo = function () {
@@ -448,10 +433,10 @@ _gg.getTeacherInfo = function() {
                 directionNav: false
             });
 
-        if (teacher.Account) {
-            $('#teacherInfo button[rel=popover]').removeAttr('disabled');
+        if (teacher.TeacherName) {
+            $('#teacherInfo button[rel=popover]').prop('disabled', false);
         } else {
-            $('#teacherInfo button[rel=popover]').attr('disabled', 'disabled');
+            $('#teacherInfo button[rel=popover]').prop('disabled', true);
         }
     }
 };
@@ -481,7 +466,7 @@ _gg.getStudentList = function() {
             body: request,
             result: function (response, error, http) {
                 if (error !== null) {
-                    _gg.set_error_message('#mainMsg', serviceT, error);
+                    _gg.set_error_message('#mainMsg', service, error);
                 } else {
                     var _ref;
                     if (((_ref = response.Response) != null ? _ref.Users : void 0) != null) {
@@ -560,7 +545,12 @@ _gg.getStudentInfo = function() {
                         slideshow: false,
                         controlsContainer: "#studentInfo .modal-footer",
                         directionNav: false
-                    });
+                    })
+                .end().find('.flex-control-nav')
+                    .one('click', function() {
+                        $(this).closest('ol').find('div.my-pulse').remove();
+                    })
+                    .find('li a').append('<div class="my-pulse"></div>');
         }
     };
 
@@ -579,7 +569,7 @@ _gg.getStudentInfo = function() {
         }
 
         var btn_attr = '';
-        if (!student.Account) {
+        if (!student.UserName) {
             btn_attr = ' disabled="disabled"';
         }
 
@@ -695,7 +685,8 @@ _gg.getStudentInfo = function() {
 // TODO: 個人基本資料-上傳照片
 _gg.updatePhoto = function() {
     // TODO: 處理上傳圖片
-    $('#edit-Photo').click(function(evt){
+    $('#edit-Photo').click(function(evt) {
+        $('#mainMsg').html('');
         $('#files').val('').trigger('click');
     });
     $('#files').change(function(evt) {
@@ -708,8 +699,31 @@ _gg.updatePhoto = function() {
 
         var file = evt.target.files[0];
 
+        // TODO: 限制檔案大小
+        var fileSize = 0; //檔案大小
+        var SizeLimit = 1024 * 50;  //上傳上限，單位:byte, 50KB
+        if ($.browser.msie) {
+            //FOR IE
+            var img = new Image();
+            img.onload = checkSize;
+            img.src = file.value;
+            fileSize = this.fileSize;
+        }
+        else {
+            //FOR Firefox,Chrome
+            fileSize = file.size;
+        }
+
+        if (fileSize > SizeLimit) {
+            var _filesize = (fileSize / 1024).toPrecision(4);
+            var _limit = (SizeLimit / 1024).toPrecision();
+            var msg = "您所選擇的檔案大小為 " + _filesize + " KB\n已超過上傳上限 " + _limit + " KB\n不允許上傳！"
+            $('#mainMsg').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + msg + "\n</div>");
+            return;
+        }
+
         if (!(file.type == "image/png" || file.type == "image/jpeg")) {
-            $('#profile .my-tablephoto td').prepend("<div class='alert alert-error' style='z-index: 2; position: absolute;'>\n  <button class='close' data-dismiss='alert'>×</button>\n  格式不正確！\n</div>");
+            $('#mainMsg').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請使用 .jpg 或 .png 格式！\n</div>");
             return;
         }
 
@@ -726,6 +740,7 @@ _gg.updatePhoto = function() {
             };
         })(file);
         reader.readAsDataURL(file);
+
     });
 };
 
@@ -827,11 +842,8 @@ _gg.getProfile = function(obj) {
 // TODO: 傳送訊息
 _gg.sendMessage = function(e) {
     var getList1 = false, getList2 = false, tmp_recipients = [];
-    var content = '', receiverName = '', receiverID = '';
-    var that_msg_id = '#' + $('.modal.in div[data-type=errMsg]').attr('id');
+    var content = '', receiverName = '', receiverID = '', that_msg_id, that_msg_obj, that_msg_type;
     var that_send_obj = $(e); // 送出鈕物件
-    var that_msg_obj = $(that_msg_id); // 錯誤訊息物件
-    that_msg_obj.html('');
 
     // TODO: 開始傳送
     var saveMsg = function() {
@@ -848,6 +860,9 @@ _gg.sendMessage = function(e) {
             );
 
             if ($.isEmptyObject(all_recipients)) {
+                if (that_msg_type === 'group-btn') {
+                    $('.modal.in').modal('hide');
+                }
                 that_send_obj.button("reset");
                 that_msg_obj.html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  收訊者尚未建立資料，目前無法傳送！\n</div>")
             } else {
@@ -856,6 +871,9 @@ _gg.sendMessage = function(e) {
                     body: '<Request><Record>' + request.join('') + '</Record></Request>',
                     result: function (response, error, http) {
                         if (error !== null) {
+                            if (that_msg_type === 'group-btn') {
+                                $('.modal.in').modal('hide');
+                            }
                             that_send_obj.button("reset");
                             _gg.set_error_message(that_msg_id, 'AddMessage', error);
                         } else {
@@ -876,14 +894,20 @@ _gg.sendMessage = function(e) {
                                     body: '<Request>' + receiverReq.join('') + '</Request>',
                                     result: function (response, error, http) {
                                         if (error !== null) {
+                                            if (that_msg_type === 'group-btn') {
+                                                $('.modal.in').modal('hide');
+                                            }
                                             that_send_obj.button("reset");
                                             _gg.set_error_message(that_msg_id, 'AddReceiver', error);
                                         } else {
+                                            if (that_msg_type === 'group-btn') {
+                                                $('.modal.in').modal('hide');
+                                            } else {
+                                                $('.modal.in').find('[action-type=msgForm]').popover('hide');
+                                            }
                                             that_send_obj.button("reset");
-                                            $('.modal.in')
-                                                .find('[action-type=msgForm]').popover('hide')
-                                                .end().find('.my-successMessage').html('<div class="alert alert-success">\n  傳送成功！\n</div>');
-                                            setTimeout("$('.modal.in div.my-successMessage').html('')", 1500);
+                                            that_msg_obj.html('<div class="alert alert-success">\n  傳送成功！\n</div>');
+                                            setTimeout("$('" + that_msg_id + "').html('')", 1500);
                                         }
                                     }
                                 });
@@ -902,11 +926,19 @@ _gg.sendMessage = function(e) {
     var n = 0;
     if (target === 'to_teachers' || target === 'to_students') {
         content = $('#mySendMsg textarea').val();
+        that_msg_id = '#mainMsg';
+        that_msg_obj = $(that_msg_id); // 訊息物件
+        that_msg_type = 'group-btn';
     } else {
         var obj = that_send_obj.closest('div.popover');
         content = obj.find('textarea').val();
         n = obj.find('input:checked').length;
+        that_msg_id = '#' + $('.modal.in div.my-Msg').attr('id');
+        that_msg_obj = $(that_msg_id); // 訊息物件
+        that_msg_type = 'member-btn';
     }
+
+    that_msg_obj.html('');
 
     if (content) {
         switch (target) {
@@ -934,8 +966,8 @@ _gg.sendMessage = function(e) {
                 break;
 
             case 'to_family':
-                var parents = _gg.parents;
                 if (n > 0) {
+                    var parents = _gg.parents;
                     // TODO: 某學生所有親屬
                     $(parents).each(function(index, item) {
                         tmp_recipients.push(item.ProfileID);
@@ -944,11 +976,7 @@ _gg.sendMessage = function(e) {
                     receiverName = (student.UserName || '') + '所有親屬';
                 } else {
                     tmp_recipients.push(that_send_obj.attr('pid'));
-                    $(parents).each(function(index, item) {
-                        if (item.ProfileID === that_send_obj.attr('pid')) {
-                            receiverName = (item.ParentName || '');
-                        }
-                    })
+                    receiverID = that_send_obj.attr('pid');
                 }
                 break;
 
@@ -999,7 +1027,7 @@ _gg.sendMessage = function(e) {
                         result: function (response, error, http) {
                             if (error !== null) {
                                 that_send_obj.button("reset");
-                                _gg.set_error_message('#mySendMsg_errorMessage', service, error);
+                                _gg.set_error_message('#mySendMsg_Msg', service, error);
                             } else {
                                 var _ref;
                                 if (((_ref = response.Response) != null ? _ref.Parents : void 0) != null) {
@@ -1027,6 +1055,14 @@ _gg.sendMessage = function(e) {
         saveMsg();
     } else {
         that_send_obj.button("reset");
-        that_msg_obj.html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請填入訊息內容！\n</div>")
+    }
+};
+
+// TODO: 錯誤訊息
+_gg.set_error_message = function(select_str, serviceName, error) {
+    var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
+    if (error !== null) {
+        $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
+        $('.my-err-info').click(function(){alert('請拍下此圖，並與客服人員連絡，謝謝您。\n' + JSON.stringify(error, null, 2))});
     }
 };

@@ -42,3 +42,8 @@ table th {
   margin-top: 5px !important;
   margin-left: 18px;
 }
+/*自訂*/
+.my-trash {
+  margin: 0 1px;
+  cursor: pointer;
+}
