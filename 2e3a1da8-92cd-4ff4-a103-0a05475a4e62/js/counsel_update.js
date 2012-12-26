@@ -326,13 +326,14 @@ _gg.SetModifyData = function () {
                 tmp_resource = [];
                 tmp_resource.push(tmp_obj);
             }
-
             if (value.Name === '兄弟姊妹_排行') {
-                if (value.SelectValue && value.SelectValue.Data) {
-                    $('#' + data_scope + ' [name=AnySiblings][value=more]').trigger('click');
-                    $('#' + data_scope + ' [data-type=家庭狀況_兄弟姊妹_排行]').val(value.SelectValue.Data);
-                } else {
-                    $('#' + data_scope + ' [name=AnySiblings][value=1]').trigger('click');
+                if (run_model === 'edit') {
+                    if (value.SelectValue && value.SelectValue.Data) {
+                        $('#' + data_scope + ' [name=AnySiblings][value=more]').trigger('click');
+                        $('#' + data_scope + ' [data-type=家庭狀況_兄弟姊妹_排行]').val(value.SelectValue.Data);
+                    } else {
+                        $('#' + data_scope + ' [name=AnySiblings][value=1]').trigger('click');
+                    }
                 }
             } else if (value.Name === '兄弟姊妹_姓名') {
                 if (value.CanTeacherEdit === "是") {
@@ -340,7 +341,6 @@ _gg.SetModifyData = function () {
                     tmp_name_obj = value;
                 }
             }
-
         });
 
         $(tmp_resource).each(function (key, siblings) {

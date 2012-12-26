@@ -328,11 +328,13 @@ _gg.SetModifyData = function () {
             }
 
             if (value.Name === '兄弟姊妹_排行') {
-                if (value.SelectValue && value.SelectValue.Data) {
-                    $('#' + data_scope + ' [name=AnySiblings][value=more]').trigger('click');
-                    $('#' + data_scope + ' [data-type=家庭狀況_兄弟姊妹_排行]').val(value.SelectValue.Data);
-                } else {
-                    $('#' + data_scope + ' [name=AnySiblings][value=1]').trigger('click');
+                if (run_model === 'edit') {
+                    if (value.SelectValue && value.SelectValue.Data) {
+                        $('#' + data_scope + ' [name=AnySiblings][value=more]').trigger('click');
+                        $('#' + data_scope + ' [data-type=家庭狀況_兄弟姊妹_排行]').val(value.SelectValue.Data);
+                    } else {
+                        $('#' + data_scope + ' [name=AnySiblings][value=1]').trigger('click');
+                    }
                 }
             } else if (value.Name === '兄弟姊妹_姓名') {
                 if (value.CanStudentEdit === "是") {

@@ -57,12 +57,31 @@ jQuery(function () {
                         accordionHTML += "      </ul>\n    </div>\n  </div>\n</div>";
                         items.splice(0);
                     }
-                    accordionHTML += "<div class='accordion-group'>\n  <div class='accordion-heading'>\n    <a class='accordion-toggle' data-toggle='collapse' data-parent='#student-list' href='#collapse" + index + "'><i class='icon-user'></i>" + this.ClassName + "</a>\n  </div>\n  <div id='collapse" + index + "' class='accordion-body collapse " + (firstClassName === '' ? 'in' : '') + "'>\n    <div class='accordion-inner'>\n      <ul class='nav nav-pills nav-stacked'>";
+                    accordionHTML += '<div class="accordion-group">' +
+                        '  <div class="accordion-heading">' +
+                        '    <a class="accordion-toggle" data-toggle="collapse" data-parent="#student-list" href="#collapse' + index + '"><i class="icon-user"></i>' + (this.ClassName || '') + '</a>' +
+                        '  </div>' +
+                        '  <div id="collapse' + index + '" class="accordion-body collapse ' + (firstClassName === '' ? 'in' : '') + '">' +
+                        '    <div class="accordion-inner">' +
+                        '      <ul class="nav nav-pills nav-stacked">';
                     if (firstClassName === '') {
                         firstClassName = this.ClassName;
                     }
                 }
-                items.push("<li>\n  <a href='#' student-index='" + index + "'>\n    <span class='my-seat-no label label-inverse my-label'>" + this.SeatNo + "</span>\n    <span class='my-student-name'>" + this.StudentName + "</span>\n    <span class='my-student-number'>" + this.StudentNumber + "</span>\n    <i class='icon-chevron-right pull-right'></i>\n  </a>\n</li>");
+                items.push('<li>' +
+                    '  <a href="#" student-index="' + index + '">');
+
+                if (this.Kind === '認輔學生') {
+                    items.push('<span class="my-student-class"><i class="icon-bookmark"></i>' + (this.ClassName || '') + '</span>');
+                } else {
+                    items.push('<span class="my-seat-no label label-inverse my-label">' + (this.SeatNo || '&nbsp;') + '</span>');
+                }
+                items.push(
+                    '    <span class="my-student-name">' + (this.StudentName || '') + '</span>' +
+                    '    <span class="my-student-number">' + (this.StudentNumber || '') + '</span>' +
+                    '    <i class="icon-chevron-right pull-right"></i>' +
+                    '  </a>' +
+                    '</li>');
             }
         });
         accordionHTML += items.join("");
@@ -75,27 +94,42 @@ jQuery(function () {
         service: "_.GetClassStudent",
         body: "",
         result: function(response, error, xhr) {
-            var accordionHTML, className, items, _ref, classStudentCount = 0;
+            var _ref, classStudentCount = 0;
             if (error != null) {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>\n</div>");
+                _gg.set_error_message('#mainMsg', 'GetClassStudent', error);
             } else {
                 if (((_ref = response.Response) != null ? _ref.Student : void 0) != null) {
                     _gg.students = $(response.Response.Student);
-                    className = "";
-                    items = [];
-                    accordionHTML = "";
+                    var className = '', items = [], accordionHTML = '';
                     _gg.students.each(function(index, student) {
                         classStudentCount += 1;
                         if (this.ClassName !== className) {
                             className = this.ClassName;
-                            if (accordionHTML != null) {
+                            if (accordionHTML !== '') {
                                 accordionHTML += items.join("");
                                 accordionHTML += "      </ul>\n    </div>\n  </div>\n</div>";
                                 items.splice(0);
                             }
-                            accordionHTML += "<div class='accordion-group'>\n  <div class='accordion-heading'>\n    <a class='accordion-toggle' data-toggle='collapse' data-parent='#student-list' href='#collapse" + index + "'><i class='icon-user'></i>" + this.ClassName + "</a>\n  </div>\n  <div id='collapse" + index + "' class='accordion-body collapse " + (index === 0 ? 'in' : '') + "'>\n    <div class='accordion-inner'>\n      <ul class='nav nav-pills nav-stacked'>";
+                            accordionHTML += '<div class="accordion-group">' +
+                                '<div class="accordion-heading">' +
+                                '    <a class="accordion-toggle" data-toggle="collapse" data-parent="#student-list" href="#collapse' + index + '">' +
+                                '    <i class="icon-user"></i>' + (this.ClassName || '') + '</a>' +
+                                '</div>' +
+                                '<div id="collapse' + index + '" class="accordion-body collapse ' + (index === 0 ? 'in' : '') + '">' +
+                                '  <div class="accordion-inner">' +
+                                '    <ul class="nav nav-pills nav-stacked">';
+
                         }
-                        items.push("<li " + (index === 0 ? " class='active'" : '') + ">\n  <a href='#' student-index='" + index + "'>\n    <span class='my-seat-no label label-inverse my-label'>" + this.SeatNo + "</span>\n    <span class='my-student-name'>" + this.StudentName + "</span>\n    <span class='my-student-number'>" + this.StudentNumber + "</span>\n    <i class='icon-chevron-right pull-right'></i>\n  </a>\n</li>");
+                        items.push(
+                            '<li ' + (index === 0 ? ' class="active"' : '') + '>' +
+                            '  <a href="#" student-index="' + index + '">' +
+                            '    <span class="my-seat-no label label-inverse my-label">' + (this.SeatNo || '&nbsp;') + '</span>' +
+                            '    <span class="my-student-name">' + (this.StudentName || '') + '</span>' +
+                            '    <span class="my-student-number">' + (this.StudentNumber || '') + '</span>' +
+                            '    <i class="icon-chevron-right pull-right"></i>' +
+                            '  </a>' +
+                            '</li>'
+                        );
                         if (index === 0) {
                             _gg.student = student;
                             _gg.loadCounselData();
@@ -112,29 +146,46 @@ jQuery(function () {
                 service: "_.GetCounselStudent",
                 body: "",
                 result: function(response, error, xhr) {
-                    var accordionHTML, className, items, _ref, total_index;
+                    var _ref;
                     if (error != null) {
-                        $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>\n</div>");
+                        _gg.set_error_message('#mainMsg', 'GetCounselStudent', error);
                     } else {
                         if (((_ref = response.Response) != null ? _ref.Student : void 0) != null) {
-                            className = "認輔學生";
-                            items = [];
-                            accordionHTML = "";
+                            var items = [], accordionHTML = '', total_index = 0;
                             $(response.Response.Student).each(function(index, student) {
+                                student.Kind = '認輔學生';
                                 _gg.students.push(student);
-                                student.ClassName = className;
                                 total_index = index + classStudentCount;
                                 if (index === 0) {
-                                    accordionHTML += "<div class='accordion-group'>\n  <div class='accordion-heading'>\n    <a class='accordion-toggle' data-toggle='collapse' data-parent='#student-list' href='#collapse" + total_index + "'><i class='icon-user'></i>" + className + "</a>\n  </div>\n  <div id='collapse" + total_index + "' class='accordion-body collapse " + (total_index === 0 ? 'in' : '') + "'>\n    <div class='accordion-inner'>\n      <ul class='nav nav-pills nav-stacked'>";
+                                    items.push(
+                                        '<div class="accordion-group">' +
+                                        '  <div class="accordion-heading">' +
+                                        '    <a class="accordion-toggle" data-toggle="collapse" data-parent="#student-list" href="#collapse' + total_index + '">' +
+                                        '    <i class="icon-user"></i>認輔學生</a>' +
+                                        '  </div>' +
+                                        '  <div id="collapse' + total_index + '" class="accordion-body collapse ' + (total_index === 0 ? 'in' : '') + '">' +
+                                        '    <div class="accordion-inner">' +
+                                        '      <ul class="nav nav-pills nav-stacked">'
+                                    );
                                 }
-                                items.push("<li " + (total_index === 0 ? " class='active'" : '') + ">\n  <a href='#' student-index='" + total_index + "'>\n    <span class='my-seat-no label label-inverse my-label'>" + this.SeatNo + "</span>\n    <span class='my-student-name'>" + this.StudentName + "</span>\n    <span class='my-student-number'>" + this.StudentNumber + "</span>\n    <i class='icon-chevron-right pull-right'></i>\n  </a>\n</li>");
+
+                                items.push(
+                                    '<li ' + (total_index === 0 ? ' class="active"' : '') + '>' +
+                                    '  <a href="#" student-index="' + total_index + '">' +
+                                    '    <span class="my-student-class"><i class="icon-bookmark"></i>' + (this.ClassName || '') + '</span>' +
+                                    '    <span class="my-student-name">' + (this.StudentName || '') + '</span>' +
+                                    '    <span class="my-student-number">' + (this.StudentNumber || '') + '</span>' +
+                                    '    <i class="icon-chevron-right pull-right"></i>' +
+                                    '  </a>' +
+                                    '</li>'
+                                );
                                 if (total_index === 0 ) {
                                     _gg.student = student;
                                     _gg.loadCounselData();
                                 }
                             });
-                            accordionHTML += items.join("");
-                            accordionHTML += "      </ul>\n    </div>\n  </div>\n</div>";
+                            items.push('</ul></div></div></div>');
+                            accordionHTML = items.join("");
                             $("#student-list").append(accordionHTML);
                         }
                     }
@@ -208,7 +259,8 @@ jQuery(function () {
 
      // TODO: 兄弟姊妹新增鈕
     $('#siblings-add-data').bind('click', function () {
-         _gg.SetModifyData.addSibling();
+        $('#siblings [name=AnySiblings][value=more]').trigger('click');
+        _gg.SetModifyData.addSibling();
     });
 
     // TODO: 晤談紀錄新增鈕
@@ -333,7 +385,8 @@ jQuery(function () {
             $(this).button('loading'); // TODO: 按鈕為處理中
             _gg.SetSaveData(data_scope);
         } else {
-            $("#" + data_scope + "_errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  資料驗證失敗，請重新檢查！\n</div>");
+            $("#" + data_scope + "_errorMessage").html("<div class='alert alert-error'>\n" +
+                "<button class='close' data-dismiss='alert'>×</button>\n  資料驗證失敗，請重新檢查！\n</div>");
         }
     });
 
@@ -803,7 +856,9 @@ jQuery(function () {
         // 如果未指定範圍，就重新顯示全部資料
         if (_gg.init) {
             if (data_scope === 'All') {
-                $('a[data-toggle=modal]').removeClass("disabled");
+                if (_gg.student.Kind !== '認輔學生') {
+                    $('a[data-toggle=modal]').removeClass("disabled").prop('disabled', false);
+                }
 
                 $.each(_gg.col_Question, function(key, value) {
                     eval('input_' + key + '_value()');
@@ -814,3 +869,28 @@ jQuery(function () {
         }
     };
 });
+
+
+// TODO: 錯誤訊息
+_gg.set_error_message = function(select_str, serviceName, error) {
+    var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
+    if (error !== null) {
+        if (error.dsaError) {
+            if (error.dsaError.status === "504") {
+                switch (error.dsaError.message) {
+                    case '501':
+                        tmp_msg = '<strong>很抱歉，您無讀取資料權限！</strong>';
+                        break;
+                }
+            } else if (error.dsaError.message) {
+                tmp_msg = error.dsaError.message;
+            }
+        } else if (error.loginError.message) {
+            tmp_msg = error.loginError.message;
+        } else if (error.message) {
+            tmp_msg = error.message;
+        }
+        $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
+        $('.my-err-info').click(function(){alert('請拍下此圖，並與客服人員連絡，謝謝您。\n' + JSON.stringify(error, null, 2))});
+    }
+};

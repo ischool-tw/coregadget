@@ -127,7 +127,7 @@ _gg.col_Question = {
 _gg.loadCounselData = function () {
     _gg.init = false;
     // TODO: 預設編輯鈕為 disabled
-    $('a[data-toggle=modal]').addClass("disabled");
+    $('a[data-toggle=modal]').addClass("disabled").prop('disabled', true);
 
     var student = _gg.student;
     _gg.singleRecord = null;
@@ -142,6 +142,9 @@ _gg.loadCounselData = function () {
 
     // TODO: 家庭、學習、生活的年級按鈕
     var funGradeYear = function () {
+        if (!student.SemsHistory) {
+            student.SemsHistory = {};
+        }
         student.SemsHistory['GS'+student.GradeYear] = _gg.schoolYear; // TODO: 學期對照表不包含現在學期，所以先加入現在學年度、年級
 
         // TODO: 覆寫年級對應學年度，處理學生重讀
@@ -185,19 +188,6 @@ _gg.loadCounselData = function () {
             $('#B5').show();
         }
     }
-
-    // TODO: 錯誤訊息
-    var set_error_message = function(serviceName, error) {
-        if (error.dsaError.status === "504") {
-            if (error.dsaError.message === "501") {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>很抱歉，您無讀取資料權限！</strong>\n</div>");
-            } else {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(" + serviceName + ")\n</div>");
-            }
-        } else {
-            $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(" + serviceName + ")\n</div>");
-        }
-    };
 
     var funQuestion = function () {
         var set_Question_value = function () {
@@ -249,7 +239,7 @@ _gg.loadCounselData = function () {
                     body: '',
                     result: function (response, error, http) {
                         if (error !== null) {
-                            set_error_message("GetCurrentSemester", error);
+                            _gg.set_error_message('#mainMsg', 'GetCurrentSemester', error);
                         } else {
                             $(response.Result.SystemConfig).each(function (index, item) {
                                 _gg.schoolYear = item.DefaultSchoolYear;
@@ -265,7 +255,7 @@ _gg.loadCounselData = function () {
                     body: '',
                     result: function (response, error, http) {
                         if (error !== null) {
-                            set_error_message("GetQuestionsData", error);
+                            _gg.set_error_message('#mainMsg', 'GetQuestionsData', error);
                         } else {
                             $(response.Response.QuestionsData).each(function (index, item) {
                                 // TODO: 生活感想題目由學校自行設定問題內容
@@ -306,7 +296,7 @@ _gg.loadCounselData = function () {
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetSingleRecord", error);
+                _gg.set_error_message('#mainMsg', 'GetSingleRecord', error);
             } else {
                 if (!_gg.singleRecord) { _gg.singleRecord = {}; }
                 $(response.Response.SingleRecord).each(function (index, item) {
@@ -326,7 +316,7 @@ _gg.loadCounselData = function () {
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetSemesterData", error);
+                _gg.set_error_message('#mainMsg', 'GetSemesterData', error);
             } else {
                 if (!_gg.semesterData) { _gg.semesterData = {}; }
                 $(response.Response.SemesterData).each(function (index, item) {
@@ -346,7 +336,7 @@ _gg.loadCounselData = function () {
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetMultipleRecord", error);
+                _gg.set_error_message('#mainMsg', 'GetMultipleRecord', error);
             } else {
                 if (!_gg.multipleRecord) { _gg.multipleRecord = {}; }
                 $(response.Response.MultipleRecord).each(function (index, item) {
@@ -366,7 +356,7 @@ _gg.loadCounselData = function () {
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetYearlyData", error);
+                _gg.set_error_message('#mainMsg', 'GetYearlyData', error);
             } else {
                 if (!_gg.yearlyData) { _gg.yearlyData = {}; }
                 $(response.Response.YearlyData).each(function (index, item) {
@@ -386,7 +376,7 @@ _gg.loadCounselData = function () {
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetRelative", error);
+                _gg.set_error_message('#mainMsg', 'GetRelative', error);
             } else {
                 if (!_gg.relative) { _gg.relative = []; }
                 $(response.Response.Relative).each(function (index, item) {
@@ -403,7 +393,7 @@ _gg.loadCounselData = function () {
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetSibling", error);
+                _gg.set_error_message('#mainMsg', 'GetSibling', error);
             } else {
                 if (!_gg.sibling) { _gg.sibling = []; }
                 $(response.Response.Sibling).each(function (index, item) {
@@ -420,7 +410,7 @@ _gg.loadCounselData = function () {
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetPriorityData", error);
+                _gg.set_error_message('#mainMsg', 'GetPriorityData', error);
             } else {
                 if (!_gg.priorityData) { _gg.priorityData = {}; }
                 $(response.Response.PriorityData).each(function (index, item) {
@@ -440,7 +430,7 @@ _gg.loadCounselData = function () {
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetInterviewRecord", error);
+                _gg.set_error_message('#mainMsg', 'GetInterviewRecord', error);
             } else {
                 if (!_gg.interviewRecord) { _gg.interviewRecord = []; }
                 $(response.Result.Record).each(function (index, item) {
@@ -457,7 +447,7 @@ _gg.loadCounselData = function () {
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetStudentQuizData", error);
+                _gg.set_error_message('#mainMsg', 'GetStudentQuizData', error);
             } else {
                 if (!_gg.quizData) { _gg.quizData = []; }
                 $(response.Response.StudentQuizData).each(function (index, item) {

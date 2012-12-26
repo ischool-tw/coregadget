@@ -65,6 +65,7 @@ jQuery(function () {
 
      // TODO: 兄弟姊妹新增鈕
     $('#siblings-add-data').bind('click', function () {
+        $('#siblings [name=AnySiblings][value=more]').trigger('click');
          _gg.SetModifyData.addSibling();
     });
 
