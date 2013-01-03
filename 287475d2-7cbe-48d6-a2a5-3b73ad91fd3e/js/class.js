@@ -240,7 +240,10 @@ _gg.saveClassInfo = function() {
 
     if (className && classid) {
         var gradeYear = $('#edit-GradeYear').val() || '';
-        var teacherID = $('#edit-TeacherName').attr('TeacherID') || '';
+        var teacherID = '';
+        if ($('#edit-TeacherName').val()) {
+            teacherID = $('#edit-TeacherName').attr('TeacherID') || '';
+        }
 
         gradeYear = (gradeYear == '') ? '' : parseInt(gradeYear, 10) + '';
 

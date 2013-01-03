@@ -527,7 +527,10 @@ _gg.saveBaseInfo = function() {
         var contactPhone = $('#edit-ContactPhone').val() || '';
         var parentCode = $('#edit-ParentCode').val() || '';
         var studentCode = $('#edit-StudentCode').val() || '';
-        var classID = $('#edit-ClassName').attr('ClassID') || '';
+        var classID = '';
+        if ($('#edit-ClassName').val()) {
+            classID = $('#edit-ClassName').attr('ClassID') || '';
+        }
 
         var permanentAddress = {};
         permanentAddress.AddressList = {};
@@ -647,7 +650,7 @@ _gg.delStudent = function() {
                     _gg.GetAllClassList();
                     var studentindex = $('.my-widget-header a[action-type=del]').attr('studentIndex');
                     $('#namelist tr[studentIndex=' + studentindex + ']').remove();
-                    _gg.students.splice(studentindex, 1);
+                    // _gg.students.splice(studentindex, 1);
                     _gg.ClearStudentInfo();
                     $('#del-data').button('reset');
                     $('#delModal').modal('hide');
