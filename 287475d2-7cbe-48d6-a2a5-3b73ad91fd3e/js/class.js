@@ -219,6 +219,7 @@ _gg.SetModal = function() {
 
     $('#edit-GradeYear').val(myclass.GradeYear || '');
     $('#edit-ClassName').val(myclass.ClassName || '');
+
     // TODO: 處理姓名
     var tname = '';
     tname = (myclass.TeacherName || '');
@@ -226,6 +227,10 @@ _gg.SetModal = function() {
         tname += '(' + myclass.Nickname + ')';
     }
     $('#edit-TeacherName').val(tname);
+    $('#edit-TeacherName')
+        .attr('TeacherID', myclass.TeacherID || '')
+        .attr('TeacherName', myclass.TeacherName || '')
+        .attr('Nickname', myclass.Nickname ||'');
 };
 
 _gg.saveClassInfo = function() {

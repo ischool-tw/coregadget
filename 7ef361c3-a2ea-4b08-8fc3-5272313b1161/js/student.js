@@ -457,6 +457,8 @@ _gg.SetModal = function() {
         $('#edit-ParentCode').val(student.ParentCode || '');
         $('#edit-StudentCode').val(student.StudentCode || '');
         $('#edit-ClassName').val(student.ClassName || '');
+        $('#edit-ClassName').attr('ClassID', student.ClassID || '');
+        $('#edit-ClassName').attr('ClassName', student.ClassName || '');
 
         var _ref, _ref1;
         // TODO: 戶籍地址
@@ -466,12 +468,12 @@ _gg.SetModal = function() {
             $('#edit-PA-ZipCode').val(tmp_address.ZipCode || '');
             $('#edit-PA-County').val(tmp_address.County || '');
             $('#edit-PA-Town').val(tmp_address.Town || '');
-            $('#edit-PA-DetailAddres').val(tmp_address.DetailAddres || '');
+            $('#edit-PA-DetailAddress').val(tmp_address.DetailAddress || '');
         } else {
             $('#edit-PA-ZipCode').val('');
             $('#edit-PA-County').val('');
             $('#edit-PA-Town').val('');
-            $('#edit-PA-DetailAddres').val('');
+            $('#edit-PA-DetailAddress').val('');
         }
 
         // TODO: 通訊地址
@@ -481,12 +483,12 @@ _gg.SetModal = function() {
             $('#edit-MA-ZipCode').val(tmp_address.ZipCode || '');
             $('#edit-MA-County').val(tmp_address.County || '');
             $('#edit-MA-Town').val(tmp_address.Town || '');
-            $('#edit-MA-DetailAddres').val(tmp_address.DetailAddres || '');
+            $('#edit-MA-DetailAddress').val(tmp_address.DetailAddress || '');
         } else {
             $('#edit-MA-ZipCode').val('');
             $('#edit-MA-County').val('');
             $('#edit-MA-Town').val('');
-            $('#edit-MA-DetailAddres').val('');
+            $('#edit-MA-DetailAddress').val('');
         }
 
         if (student.FreshmanPhoto) {
