@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs title="服務學習時數" description="老師-服務學習時數">
+    <Title lang="zh-TW">服務學習時數</Title>
+    <Icon>icon.png</Icon>
+    <Mobile />
+    <Title lang="zh-CN">
+    </Title>
+    <Title lang="en-US">
+    </Title>
+  </ModulePrefs>
+</Module>

@@ -34,6 +34,10 @@ Core Gadget
 * 8e83b577-17bf-4f1a-aa01-251acc06a5db 重補修(學生)
 * 38c740bd-ed48-4211-9bea-98af7cc90f56 重補修成績(老師)
 * 34a95f6c-8343-449e-99e2-434de055c553 團膳滿意度調查(學生)
+* 6bccb45b-ca75-43ee-beaa-c035a77c8263 服務學習時數(老師)
+* dfde4dc2-fece-4c29-be99-c8bd11650383 服務學習時數(學生)
+* 2d25c52c-4c13-4d9b-a347-9772ec217516 服務學習時數(家長)
+
 
 
 Campus Lite
