@@ -328,6 +328,8 @@ _gg.SetModal = function() {
     if (teacher.TeacherID) {
         if (teacher.TeacherID === '0') {
             $('#editModal h3').html('新增');
+        } else {
+            $('#editModal h3').html('資料修改');
         }
 
         $('#edit-TeacherName').val(teacher.TeacherName || '');

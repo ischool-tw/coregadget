@@ -215,6 +215,8 @@ _gg.SetModal = function() {
 
     if (myclass.ClassID === '-1') {
         $('#editModal h3').html('新增');
+    } else {
+        $('#editModal h3').html('資料修改');
     }
 
     $('#edit-GradeYear').val(myclass.GradeYear || '');

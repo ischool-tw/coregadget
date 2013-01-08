@@ -523,6 +523,8 @@ _gg.SetModal = function() {
     if (student.StudentID) {
         if (student.StudentID === '0') {
             $('#editModal h3').html('新增');
+        } else {
+            $('#editModal h3').html('資料修改');
         }
 
         $('input:file').val('');
