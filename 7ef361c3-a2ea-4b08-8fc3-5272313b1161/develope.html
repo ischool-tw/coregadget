@@ -42,7 +42,7 @@
                       <div class="row-fluid">
                           <div class="span3">
                             <div class="my-scrollbar2">
-                              <div class="accordion  my-student-list-widget" id="class-list"></div>
+                              <div class="accordion my-student-list-widget" id="class-list"></div>
                             </div>
                           </div>
                           <div class="span3">
@@ -74,8 +74,10 @@
                                   <div class="my-widget-content">
                                       <div class="row-fluid">
                                         <div class="span6">
-                                          <img id="s-FreshmanPhoto" src="" alt="入學照" title="入學照" class="my-photo pull-left">
-                                          <img id="s-GraduatePhoto" src="" alt="畢業照" title="畢業照" class="my-photo pull-left">
+                                          <div id="s-FreshmanPhoto" title="入學照" class="pull-left"></diV>
+                                          <div id="s-GraduatePhoto" title="畢業照" class="pull-left"></diV>
+                                          <!-- <img id="s-FreshmanPhoto" src="" alt="入學照" title="入學照" class="my-photo pull-left">
+                                          <img id="s-GraduatePhoto" src="" alt="畢業照" title="畢業照" class="my-photo pull-left"> -->
                                         </div>
                                         <div class="span6">
                                           <table class="table table-condensed table-striped">
@@ -186,28 +188,24 @@
             <form class="form-horizontal">
               <fieldset>
                   <div class="control-group">
-                      <label class="control-label">入學照<br/>
-                          <a href="#" class="btn btn-danger my-del_photo" data-type="FreshmanPhoto" title="移除照片"><i class="icon-trash icon-white"></i></a>
+                      <label class="control-label">
+                          入學照<div class="my-trash my-del_photo" data-type="FreshmanPhoto" title="清除相片"></div>
                       </label>
-                      <div class="controls">
+                      <div class="controls" rel="tooltip" data-placement="bottom" data-original-title="請使用.jpg, .png, .gif格式">
                           <div id="preview-FreshmanPhoto"><img name="edit-FreshmanPhoto" id="edit-FreshmanPhoto" class="my-photo" src="" photo-base64=""></div>
                           <div>
                               <input type='file' name='files' data-type="FreshmanPhoto" />
-                              <br/>
-                              <span class='update-item-label'>僅支援 PNG (*.png) 與 JPEG (*.jpg) 格式</span>
                           </div>
                       </div>
                   </div>
                   <div class="control-group">
-                      <label class="control-label">畢業照<br/>
-                          <a href="#" class="btn btn-danger my-del_photo" data-type="GraduatePhoto" title="移除照片"><i class="icon-trash icon-white"></i></a>
+                      <label class="control-label">
+                          畢業照<div class="my-trash my-del_photo" data-type="GraduatePhoto" title="清除相片"></div>
                       </label>
-                      <div class="controls">
+                      <div class="controls" rel="tooltip" data-placement="bottom" data-original-title="請使用.jpg, .png, .gif格式">
                           <div id="preview-GraduatePhoto"><img name="edit-GraduatePhoto" id="edit-GraduatePhoto" class="my-photo" src="" photo-base64=""></div>
                           <div>
                               <input type='file' name='files' data-type="GraduatePhoto"/>
-                              <br/>
-                              <span class='update-item-label'>僅支援 PNG (*.png) 與 JPEG (*.jpg) 格式</span>
                           </div>
                       </div>
                   </div>
@@ -303,12 +301,14 @@
                       <label class="control-label">學生代碼</label>
                       <div class="controls">
                           <input type="text" class="input-large" name="edit-StudentCode" id="edit-StudentCode" placeholder="學生代碼...">
+                          <a href="#" action-type="refresh" data-target="#edit-StudentCode" title="產生代碼"><i class="icon-refresh"></i></a>
                       </div>
                   </div>
                   <div class="control-group">
                       <label class="control-label">家長代碼</label>
                       <div class="controls">
-                            <input type="text" class="input-large" name="edit-ParentCode" id="edit-ParentCode" placeholder="家長代碼...">
+                          <input type="text" class="input-large" name="edit-ParentCode" id="edit-ParentCode" placeholder="家長代碼...">
+                          <a href="#" action-type="refresh" data-target="#edit-ParentCode" title="產生代碼"><i class="icon-refresh"></i></a>
                       </div>
                   </div>
               </fieldset>
@@ -324,7 +324,7 @@
           <h3>刪除</h3>
           <div id="errorMessage"></div>
         </div>
-        <div class="modal-body">
+        <div class="modal-body alert-danger">
           <p>永久刪除無法回復，您確定要刪除嗎？</p>
         </div>
         <div class="modal-footer"><a href="#" class="btn btn-success" id="del-data" data-loading-text="刪除中...">刪除</a>

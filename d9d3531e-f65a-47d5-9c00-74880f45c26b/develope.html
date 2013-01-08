@@ -33,7 +33,7 @@
       <div class="row-fluid">
         <div class="span12">
           <div class="tabbable">
-            <h1>老師
+            <h1>教師
               <a href="#editModal" id="addteacher" class="btn btn-mini pull-right" data-toggle="modal"><i class="icon-plus"></i> 新增</a>
             </h1>
             <div id="myTabContent" class="tab-content">
@@ -41,6 +41,10 @@
                   <div class="container-fluid">
                       <div class="row-fluid" id="container-main">
                           <div class="span8">
+                              <div id="model" class="btn-group" data-toggle="buttons-radio">
+                                <button class="btn active" data-type="list" title="切換為列表式"><i class="icon-align-justify"></i></button>
+                                <button class="btn" data-type="img" title="切換為照片式"><i class="icon-th-large"></i></button>
+                              </div>
                               <div id="namelist">
                                   <div class="my-scrollbar2">
                                   </div>
@@ -50,7 +54,7 @@
                               <div class="my-roster-search-widget">
                                   <div class="my-entry-search-div">
                                       <div class="my-entry-search-hint" id="filter-teacher"><i class="icon-search"></i></div>
-                                      <input id="filter-keyword" type="text" class="my-entry-search" value="" autocomplete="off" placeholder="老師姓名...">
+                                      <input id="filter-keyword" type="text" class="my-entry-search" value="" autocomplete="off" placeholder="教師姓名...">
                                   </div>
                               </div>
                               <div class="my-widget" data-type="info">
@@ -107,7 +111,7 @@
                                                               <td id="t-Email"></td>
                                                           </tr>
                                                           <tr>
-                                                              <th>老師代碼</th>
+                                                              <th>教師代碼</th>
                                                           </tr>
                                                           <tr>
                                                               <td id="t-TeacherCode"></td>
@@ -137,15 +141,13 @@
           <form class="form-horizontal">
             <fieldset>
                 <div class="control-group">
-                    <label class="control-label">上傳照片<br/>
-                      <a href="#" class="btn btn-danger" id="del_photo" title="移除照片"><i class="icon-trash icon-white"></i></a>
+                    <label class="control-label">
+                      上傳照片<div class="my-trash" id="del_photo" title="清除相片"></div>
                     </label>
-                    <div class="controls">
+                    <div class="controls" rel="tooltip" data-placement="bottom" data-original-title="請使用.jpg, .png, .gif格式">
                         <div id="preview-Photo"><img id="edit-Photo" class="my-photo" src="" photo-base64=""></div>
                         <div>
-                            <input type='file' id='files' name='files[]'/>
-                            <br/>
-                            <span class='update-item-label'>僅支援 PNG (*.png) 與 JPEG (*.jpg) 格式</span>
+                            <input type='file' id='files' name='files'/>
                         </div>
                     </div>
                 </div>
@@ -189,9 +191,10 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">老師代碼</label>
+                    <label class="control-label">教師代碼</label>
                     <div class="controls">
-                        <input type="text" class="input-large" name="edit-TeacherCode" id="edit-TeacherCode" placeholder="老師代碼...">
+                        <input type="text" class="input-large" name="edit-TeacherCode" id="edit-TeacherCode" placeholder="教師代碼...">
+                        <a href="#" action-type="refresh" title="產生代碼"><i class="icon-refresh"></i></a>
                     </div>
                 </div>
             </fieldset>
@@ -206,7 +209,7 @@
           <h3>刪除</h3>
           <div id="errorMessage"></div>
         </div>
-        <div class="modal-body">
+        <div class="modal-body alert-danger">
           <p>永久刪除無法回復，您確定要刪除嗎？</p>
         </div>
         <div class="modal-footer"><a href="#" class="btn btn-success" id="del-data" data-loading-text="刪除中...">刪除</a>

@@ -492,6 +492,9 @@ _gg.set_error_message = function(select_str, serviceName, error) {
                     case '501':
                         tmp_msg = '<strong>很抱歉，您無此權限!</strong>(' + serviceName + ')';
                         break;
+                    case '503':
+                        tmp_msg = '<strong>請返回主畫面，於「通訊錄」登錄您的資料!</strong>';
+                        break;
                 }
             }
         }

@@ -81,8 +81,8 @@ h2 {
   -webkit-box-shadow: 0px 0px 6px #999;
   box-shadow: 0px 0px 6px #999;
 }
-#namelist tr:hover,
-#namelist dl:hover {
+#namelist tbody tr,
+#namelist dl {
   cursor: pointer;
 }
 #namelist dl:hover {
@@ -97,9 +97,6 @@ h2 {
   height: 170px;
   margin: 5px 8px 5px 0;
   border: 1px solid #eee;
-}
-.my-scrollbar2 {
-  height: 548px;
 }
 .my-scrollbar2 dd {
   text-align: center;
@@ -127,12 +124,21 @@ h1 {
   line-height: 40px;
   margin: 10px 0;
 }
-.my-scrollbar2 {
-  height: 667px;
-}
 .my-scrollbar2 dl {
   width: 116px;
 }
 .my-widget-header {
   padding-left: 7px;
+}
+.my-trash {
+  cursor: pointer;
+  float: right;
+}
+#namelist {
+  position: relative;
+  height: 629px;
+}
+#namelist table tbody tr.action td {
+  color: white;
+  background: #69C;
 }

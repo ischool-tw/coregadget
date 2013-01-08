@@ -81,8 +81,8 @@ h2 {
   -webkit-box-shadow: 0px 0px 6px #999;
   box-shadow: 0px 0px 6px #999;
 }
-#namelist tr:hover,
-#namelist dl:hover {
+#namelist tbody tr,
+#namelist dl {
   cursor: pointer;
 }
 #namelist dl:hover {
@@ -147,4 +147,12 @@ h1 {
 }
 .my-widget-header {
   padding-left: 7px;
+}
+.my-trash {
+  cursor: pointer;
+  float: right;
+}
+#namelist table tbody tr.action td {
+  color: white;
+  background: #69C;
 }
