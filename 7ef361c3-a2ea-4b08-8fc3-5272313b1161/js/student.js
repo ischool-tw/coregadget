@@ -9,6 +9,8 @@ jQuery(function () {
 
     // TODO: 點選新增
     $('#addstudent').click(function() {
+        _gg.ClearStudentInfo();
+        $('#namelist tbody tr.action').removeClass('action');
         _gg.student = { StudentID: '0'};
     });
 
@@ -20,6 +22,7 @@ jQuery(function () {
 
     // TODO: 點選班級
     $('#class-list').on('click', 'li', function() {
+        _gg.ClearStudentInfo();
         $(this).closest('#class-list').find('.active').removeClass('active').find('i').addClass('icon-white');
         $(this).addClass('active').find('i').removeClass('icon-white');
         var classIndex = $(this).attr('classIndex');
@@ -30,11 +33,16 @@ jQuery(function () {
 
     // TODO: 點選學生
     $('#namelist').on('click', 'tbody tr', function() {
+        _gg.ClearStudentInfo();
         var studentIndex = $(this).attr('studentIndex');
         _gg.student = _gg.students[studentIndex];
-        $('.my-widget-header .btn').removeClass('hide').attr('studentIndex', studentIndex);
-        _gg.GetStudentInfo();
-        _gg.GetParentInfo();
+        if (_gg.student) {
+            $('.my-widget-header .btn').removeClass('hide').attr('studentIndex', studentIndex);
+            $(this).closest('tbody').find('.action').removeClass('action');
+            $(this).addClass('action');
+            _gg.GetStudentInfo();
+            _gg.GetParentInfo();
+        }
     });
 
     // TODO: 搜尋
@@ -48,37 +56,46 @@ jQuery(function () {
     });
 
     // TODO: 編輯視窗
-    $("#editModal").modal({
-        show: false
-    });
-    $("#editModal").on("hidden", function () {
-        $("#editModal #errorMessage").html("");
-    });
-    $("#editModal").on("show", function () {
-        // TODO: 清除樣式
-        var validator = $("#editModal form").validate();
-        validator.resetForm();
-        $(this).find('.error').removeClass("error");
+    $("#editModal")
+        .modal({
+            show: false
+        })
+        .on("hidden", function () {
+            $("#editModal #errorMessage").html("");
+        })
+        .on("show", function () {
+            // TODO: 清除樣式
+            var validator = $("#editModal form").validate();
+            validator.resetForm();
+            $(this).find('.error').removeClass("error");
 
-        $("#editModal #save-data").button("reset");
-        _gg.SetModal();
-    });
-    $("#editModal #save-data").click(function () {
-        var err_msg = $('#errorMessage');
-        err_msg.html('');
-        if ($("#editModal form").valid()) {
-            // TODO: 驗證通過
-            $(this).button("loading");
-            _gg.saveBaseInfo();
-        } else {
-            err_msg.html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  資料驗證失敗，請重新檢查！\n</div>");
-        }
-    });
+            $("#editModal #save-data").button("reset");
+            _gg.SetModal();
+        })
+        .on('click', '#save-data', function() {
+            var err_msg = $('#errorMessage');
+            err_msg.html('');
+            if ($("#editModal form").valid()) {
+                // TODO: 驗證通過
+                $(this).button("loading");
+                _gg.saveBaseInfo();
+            } else {
+                err_msg.html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  資料驗證失敗，請重新檢查！\n</div>");
+            }
+        });
+
+    $('div[rel=tooltip]').tooltip({'trigger':'hover'});
 
     // TODO: 刪除照片
     $('.my-del_photo').click(function(){
         var photo_type = $(this).attr('data-type');
         $("#preview-" + photo_type).html('<img id="edit-' + photo_type + '" class="my-photo" src="" photo-base64="">');
+        $(this).hide();
+    });
+
+    // TODO: 產生代碼
+    $('a[action-type=refresh]').click(function() {
+        _gg.GetNewCode($(this).attr('data-target'));
     });
 
     // TODO: 處理上傳圖片
@@ -96,19 +113,43 @@ jQuery(function () {
         var photo_type = $(this).attr('data-type');
         var file = evt.target.files[0];
 
-        if (!(file.type == "image/png" || file.type == "image/jpeg"))
+        if (!(file.type == "image/png" || file.type == "image/jpeg" || file.type == "image/gif"))
             return;
 
         var reader = new FileReader();
         reader.onload = (function(theFile) {
             return function(e) {
-                $("#edit-" + photo_type).attr('src', e.target.result);
+                var image = new Image();
+                image.src = e.target.result;
+                image.onload = function () {
+                    var maxWidth = 225, maxHeight = 300, imageHeight = image.height, imageWidth = image.width;
 
-                var photo_base64 = e.target.result
-                .replace("data:image/png;base64,", "")
-                .replace("data:image/jpeg;base64,", "");
+                    if (imageHeight > maxHeight) {
+                        imageWidth *= maxHeight / imageHeight;
+                        imageHeight = maxHeight;
+                    }
+                    if (imageWidth > maxWidth) {
+                        imageHeight *= maxWidth / imageWidth;
+                        imageWidth = maxWidth;
+                    }
 
-                $("#edit-" + photo_type).attr("photo-base64", photo_base64);
+                    var canvas = document.createElement('canvas');
+                    canvas.width = imageWidth;
+                    canvas.height = imageHeight;
+
+                    var ctx = canvas.getContext("2d");
+                    ctx.drawImage(this, 0, 0, imageWidth, imageHeight);
+
+                    var finalFile = canvas.toDataURL("image/png");
+
+                    $("#edit-" + photo_type).attr('src', finalFile);
+
+                    var photo_base64 = finalFile.replace("data:image/png;base64,", "");
+
+                    $("#edit-" + photo_type).attr("photo-base64", photo_base64);
+
+                    $('div[data-type=' + photo_type + ']').show();
+                };
             };
         })(file);
         reader.readAsDataURL(file);
@@ -144,6 +185,7 @@ jQuery(function () {
 
 // TODO: 取得全部班級資訊
 _gg.GetAllClassList = function() {
+    $('#namelist tbody').html('');
     _gg.connection.send({
         service: "student.GetStudentClassList",
         body: '',
@@ -151,7 +193,7 @@ _gg.GetAllClassList = function() {
             if (error !== null) {
                 _gg.set_error_message('#mainMsg', 'GetStudentClassList', error);
             } else {
-                var _ref, ret = [], ary_class = [];
+                var _ref, ret = [], ary_class = [], tmp_open_index = '';
                 _gg.classes = [];
                 if (((_ref = response.Response) != null ? _ref.Class : void 0) != null) {
                     var gradeyear = '', classdata = [], student_count = 0;
@@ -159,12 +201,18 @@ _gg.GetAllClassList = function() {
                         _gg.classes[index] = item;
                         _gg.classes[index].index = index;
 
+                        if (_gg.student) {
+                            if (_gg.student.ClassID === item.ClassID) {
+                                tmp_open_index = index;
+                            }
+                        }
+
                         // TODO: 處理外框
                         if (gradeyear !== item.GradeYear && index !== 0) {
                             ret.push(
                                 '<div class="accordion-group">' +
                                 '    <div class="accordion-heading my-nav-header">' +
-                                '        <a class="accordion-toggle" data-toggle="collapse" data-parent="#student-list" href="#collapse' + item.ClassID + '">' +
+                                '        <a class="accordion-toggle" data-toggle="collapse" data-parent="#class-list" href="#collapse' + item.ClassID + '">' +
                                 '            <i class="icon-folder-open"></i> ' + (gradeyear || '未分') + '年級 (' + student_count + ')' +
                                 '        </a>' +
                                 '    </div>' +
@@ -200,7 +248,7 @@ _gg.GetAllClassList = function() {
                     ret.push(
                         '<div class="accordion-group">' +
                         '    <div class="accordion-heading my-nav-header">' +
-                        '        <a class="accordion-toggle" data-toggle="collapse" data-parent="#student-list" href="#collapseClass">' +
+                        '        <a class="accordion-toggle" data-toggle="collapse" data-parent="#class-list" href="#collapseClass">' +
                         '            <i class="icon-folder-open"></i> ' + (gradeyear ? gradeyear : '未分') + '年級 (' + student_count + ')' +
                         '        </a>' +
                         '    </div>' +
@@ -221,6 +269,9 @@ _gg.GetAllClassList = function() {
                     $('#edit-ClassName').autocomplete({
                         source: ary_class
                     });
+                    if (tmp_open_index) {
+                        $('li[classindex=' + tmp_open_index + ']').trigger('click').parents('.accordion-group').find('a.accordion-toggle').trigger('click')
+                    }
                 } else {
                     $('#class-list').html('目前無資料');
                 }
@@ -236,7 +287,7 @@ _gg.GetStudentList = function(search_type) {
         myclass = _gg.class;
         request = '<Request><Condition><ClassID>' + myclass.ClassID + '</ClassID></Condition></Request>';
     } else {
-        request = '<Request><Condition><StudentName>%' + ($('#filter-keyword').val() || '') + '%</StudentName></Condition></Request>';
+        request = '<Request><Field><ClassName/></Field><Condition><StudentName>%' + ($('#filter-keyword').val() || '') + '%</StudentName></Condition></Request>';
     }
 
     $('#namelist tbody').html('');
@@ -247,65 +298,95 @@ _gg.GetStudentList = function(search_type) {
             if (error !== null) {
                 _gg.set_error_message('#mainMsg', 'GetStudentList', error);
             } else {
-                var _ref, ret = [];
+                var _ref;
                 _gg.students = [];
                 if (((_ref = response.Response) != null ? _ref.Student : void 0) != null) {
 
                     $(response.Response.Student).each(function(index, item) {
                         item.index = index;
                         _gg.students[index] = item;
-
-                        // TODO: 處理姓名
-                        var tname = '';
-                        tname = (item.StudentName || '');
-                        if (item.Nickname) {
-                            tname += '(' + item.Nickname + ')';
-                        }
-
-                        var tmp_gender = '';
-                        if (item.Gender === '1') {
-                            tmp_gender = '男';
-                        } else if (item.Gender === '0') {
-                            tmp_gender = '女';
-                        }
-
-                        ret.push(
-                            '<tr studentIndex="' + index + '">' +
-                            '    <td>' + (item.SeatNo || '') + '</td>' +
-                            '    <td>' + (tname || '') + '</td>' +
-                            '    <td>' + (tmp_gender || '') + '</td>' +
-                            '</tr>'
-                        );
                     });
                 }
-                var items = ret.join('');
-                if (items) {
-                    $('#namelist tbody').html(items).find('tr:first').trigger('click');
-                } else {
-                    $('#namelist tbody').html('<tr><td colspan="3">無學生</td></tr>');
-                }
+
+                _gg.ResetStudentList(search_type);
             }
         }
     });
 };
 
-// TODO: 取得學生資訊
-_gg.GetStudentInfo = function() {
-    _gg.connection.send({
-        service: "student.GetStudentInfo",
-        body: '<Request><Condition><StudentID>' + _gg.student.StudentID + '</StudentID></Condition></Request>',
-        result: function (response, error, http) {
-            if (error !== null) {
-                _gg.set_error_message('#mainMsg', 'GetStudentInfo', error);
-            } else {
-                var _ref;
-                if (((_ref = response.Response) != null ? _ref.Student : void 0) != null) {
-                    _gg.student = response.Response.Student;
-                    _gg.ResetStudentInfo();
-                }
+_gg.ResetStudentList = function(search_type) {
+    $('#namelist tbody').html('');
+    var ret = [], _classname = '';
+
+    $(_gg.students).each(function(index, item) {
+        // TODO: 處理姓名
+        var tname = '';
+        tname = (item.StudentName || '');
+        if (item.Nickname) {
+            tname += '(' + item.Nickname + ')';
+        }
+
+        var tmp_gender = '';
+        if (item.Gender === '1') {
+            tmp_gender = '男';
+        } else if (item.Gender === '0') {
+            tmp_gender = '女';
+        }
+
+        if (search_type === 'keyword') {
+            if (item.ClassName !== _classname) {
+                ret.push(
+                    '<tr>' +
+                    '    <th colspan="3">' + (item.ClassName || '未分班') + '</th>' +
+                    '</tr>'
+                );
+                _classname = item.ClassName;
             }
         }
+
+        ret.push(
+            '<tr studentIndex="' + index + '" studentID="' + item.StudentID + '">' +
+            '    <td>' + (item.SeatNo || '') + '</td>' +
+            '    <td>' + (tname || '') + '</td>' +
+            '    <td>' + (tmp_gender || '') + '</td>' +
+            '</tr>'
+        );
     });
+
+    var items = ret.join('');
+    if (items) {
+        $('#namelist tbody').html(items);
+        if (_gg.student) {
+            $('#namelist tbody tr[studentID=' + _gg.student.StudentID + ']').trigger('click');
+        }
+    } else {
+        if ($('#filter-keyword').val()) {
+            $('#namelist tbody').html('<tr><td colspan="3">無符合條件的學生</td></tr>');
+        } else {
+            $('#namelist tbody').html('<tr><td colspan="3">無學生</td></tr>');
+        }
+    }
+};
+
+// TODO: 取得學生資訊
+_gg.GetStudentInfo = function() {
+    if (_gg.student) {
+        _gg.connection.send({
+            service: "student.GetStudentInfo",
+            body: '<Request><Condition><StudentID>' + _gg.student.StudentID + '</StudentID></Condition></Request>',
+            result: function (response, error, http) {
+                if (error !== null) {
+                    _gg.set_error_message('#mainMsg', 'GetStudentInfo', error);
+                } else {
+                    var _ref;
+                    if (((_ref = response.Response) != null ? _ref.Student : void 0) != null) {
+                        _gg.student = response.Response.Student;
+                        _gg.ResetStudentInfo();
+                    }
+                }
+            }
+        });
+    }
 };
 
 // TODO: 設定學生資訊
@@ -315,20 +396,20 @@ _gg.ResetStudentInfo = function() {
         $('.my-widget-header .btn').removeClass('hide');
         // TODO: 處理照片
         var freshmanPhoto, graduatePhoto;
-        freshmanPhoto = (student.FreshmanPhoto != null) && student.FreshmanPhoto !== "" ? "data:image/png;base64," + student.FreshmanPhoto : "";
-        graduatePhoto = (student.GraduatePhoto != null) && student.GraduatePhoto !== "" ? "data:image/png;base64," + student.GraduatePhoto : "";
+        freshmanPhoto = (student.FreshmanPhoto) ? '<img src="data:image/png;base64,' + student.FreshmanPhoto + '" class="my-photo"/>' : '';
+        graduatePhoto = (student.GraduatePhoto) ? '<img src="data:image/png;base64,' + student.GraduatePhoto + '" class="my-photo"/>' : '';
         if (freshmanPhoto === "") {
           if (student.Gender === "1") {
-            freshmanPhoto = "img/photo_male.png";
+            freshmanPhoto = '<img src="img/photo_male.png" class="my-photo"/>';
           } else {
-            freshmanPhoto = "img/photo_female.png";
+            freshmanPhoto = '<img src="img/photo_female.png" class="my-photo"/>';
           }
         }
         if (graduatePhoto === "") {
           if (student.Gender === "1") {
-            graduatePhoto = "img/photo_male.png";
+            graduatePhoto = '<img src="img/photo_male.png" class="my-photo"/>';
           } else {
-            graduatePhoto = "img/photo_female.png";
+            graduatePhoto = '<img src="img/photo_female.png" class="my-photo"/>';
           }
         }
 
@@ -360,8 +441,8 @@ _gg.ResetStudentInfo = function() {
                                     (tmp_address.DetailAddress || '');
         };
 
-        $('#s-FreshmanPhoto').attr('src', freshmanPhoto);
-        $('#s-GraduatePhoto').attr('src', graduatePhoto);
+        $('#s-FreshmanPhoto').html(freshmanPhoto);
+        $('#s-GraduatePhoto').html(graduatePhoto);
         $('#s-StudentName').html(student.StudentName || '');
         $('#s-SeatNo').html(student.SeatNo || '');
         $('#s-StudentNumber').html(student.StudentNumber || '');
@@ -382,8 +463,8 @@ _gg.ResetStudentInfo = function() {
 
 _gg.ClearStudentInfo = function() {
     $('.my-widget-header .btn').addClass('hide');
-    $('#s-FreshmanPhoto').attr('src', '');
-    $('#s-GraduatePhoto').attr('src', '');
+    $('#s-FreshmanPhoto').html('');
+    $('#s-GraduatePhoto').html('');
     $('#s-StudentName').html('');
     $('#s-SeatNo').html('');
     $('#s-StudentNumber').html('');
@@ -399,41 +480,42 @@ _gg.ClearStudentInfo = function() {
     $('#s-ParentCode').html('');
     $('#s-StudentCode').html('');
     $('#s-ClassName').html('');
+    $('#parentInfo tbody').html('');
 };
 
 // TODO: 取得家長資訊
 _gg.GetParentInfo = function() {
     var student = _gg.student;
-
-    _gg.connection.send({
-        service: "student.GetParentInfo",
-        body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
-        result: function (response, error, http) {
-            if (error !== null) {
-                _gg.set_error_message('#mainMsg', 'GetParentInfo', error);
-            } else {
-                var _ref, ret = [];
-                if (((_ref = response.Response) != null ? _ref.StudentParent : void 0) != null) {
-                    $(response.Response.StudentParent).each(function(index, item) {
-                        ret.push(
-                            '<tr>' +
-                            '    <td>' + (item.ParentName || '') + '</td>' +
-                            '    <td>' + (item.CellPhone || '') + '</td>' +
-                            '    <td>' + (item.Email || '') + '</td>' +
-                            '</tr>'
-                        );
-                    });
-                }
-                var items = ret.join('');
-                if (items) {
-                    $('#parentInfo tbody').html(items);
+    if (student) {
+        _gg.connection.send({
+            service: "student.GetParentInfo",
+            body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
+            result: function (response, error, http) {
+                if (error !== null) {
+                    _gg.set_error_message('#mainMsg', 'GetParentInfo', error);
                 } else {
-                    $('#parentInfo tbody').html('<tr><td colspan="3">目前無資料</td></tr>');
+                    var _ref, ret = [];
+                    if (((_ref = response.Response) != null ? _ref.StudentParent : void 0) != null) {
+                        $(response.Response.StudentParent).each(function(index, item) {
+                            ret.push(
+                                '<tr>' +
+                                '    <td>' + (item.ParentName || '') + '</td>' +
+                                '    <td>' + (item.CellPhone || '') + '</td>' +
+                                '    <td>' + (item.Email || '') + '</td>' +
+                                '</tr>'
+                            );
+                        });
+                    }
+                    var items = ret.join('');
+                    if (items) {
+                        $('#parentInfo tbody').html(items);
+                    } else {
+                        $('#parentInfo tbody').html('<tr><td colspan="3">目前無資料</td></tr>');
+                    }
                 }
             }
-        }
-    });
-
+        });
+    }
 };
 
 _gg.SetModal = function() {
@@ -441,6 +523,8 @@ _gg.SetModal = function() {
     if (student.StudentID) {
         if (student.StudentID === '0') {
             $('#editModal h3').html('新增');
+        } else {
+            $('#editModal h3').html('資料修改');
         }
 
         $('input:file').val('');
@@ -457,6 +541,8 @@ _gg.SetModal = function() {
         $('#edit-ParentCode').val(student.ParentCode || '');
         $('#edit-StudentCode').val(student.StudentCode || '');
         $('#edit-ClassName').val(student.ClassName || '');
+        $('#edit-ClassName').attr('ClassID', student.ClassID || '');
+        $('#edit-ClassName').attr('ClassName', student.ClassName || '');
 
         var _ref, _ref1;
         // TODO: 戶籍地址
@@ -466,12 +552,12 @@ _gg.SetModal = function() {
             $('#edit-PA-ZipCode').val(tmp_address.ZipCode || '');
             $('#edit-PA-County').val(tmp_address.County || '');
             $('#edit-PA-Town').val(tmp_address.Town || '');
-            $('#edit-PA-DetailAddres').val(tmp_address.DetailAddres || '');
+            $('#edit-PA-DetailAddress').val(tmp_address.DetailAddress || '');
         } else {
             $('#edit-PA-ZipCode').val('');
             $('#edit-PA-County').val('');
             $('#edit-PA-Town').val('');
-            $('#edit-PA-DetailAddres').val('');
+            $('#edit-PA-DetailAddress').val('');
         }
 
         // TODO: 通訊地址
@@ -481,24 +567,28 @@ _gg.SetModal = function() {
             $('#edit-MA-ZipCode').val(tmp_address.ZipCode || '');
             $('#edit-MA-County').val(tmp_address.County || '');
             $('#edit-MA-Town').val(tmp_address.Town || '');
-            $('#edit-MA-DetailAddres').val(tmp_address.DetailAddres || '');
+            $('#edit-MA-DetailAddress').val(tmp_address.DetailAddress || '');
         } else {
             $('#edit-MA-ZipCode').val('');
             $('#edit-MA-County').val('');
             $('#edit-MA-Town').val('');
-            $('#edit-MA-DetailAddres').val('');
+            $('#edit-MA-DetailAddress').val('');
         }
 
         if (student.FreshmanPhoto) {
             $('#edit-FreshmanPhoto').attr('src', 'data:image/png;base64,'+student.FreshmanPhoto).attr('photo-base64', student.FreshmanPhoto);
+            $('div[data-type=FreshmanPhoto]').show();
         } else  {
             $('#edit-FreshmanPhoto').attr('src', '').attr('photo-base64', '');
+            $('div[data-type=FreshmanPhoto]').hide();
         }
 
         if (student.GraduatePhoto) {
             $('#edit-GraduatePhoto').attr('src', 'data:image/png;base64,'+student.GraduatePhoto).attr('photo-base64', student.GraduatePhoto);
+            $('div[data-type=GraduatePhoto]').show();
         } else  {
             $('#edit-GraduatePhoto').attr('src', '').attr('photo-base64', '');
+            $('div[data-type=GraduatePhoto]').hide();
         }
     } else {
         $('#editModal').modal('hide');
@@ -525,7 +615,10 @@ _gg.saveBaseInfo = function() {
         var contactPhone = $('#edit-ContactPhone').val() || '';
         var parentCode = $('#edit-ParentCode').val() || '';
         var studentCode = $('#edit-StudentCode').val() || '';
-        var classID = $('#edit-ClassName').attr('ClassID') || '';
+        var classID = '';
+        if ($('#edit-ClassName').val()) {
+            classID = $('#edit-ClassName').attr('ClassID') || '';
+        }
 
         var permanentAddress = {};
         permanentAddress.AddressList = {};
@@ -585,12 +678,14 @@ _gg.saveBaseInfo = function() {
 
 
 
-        var _service, _body, _txt;
+        var _service, _body, _txt, _type;
         if (studentid === '0') {
+            _type = 'add';
             _service = 'student.AddStudent';
             _body ='<Request><Student><Field>' + request.join('') + '</Field></Student></Request>';
             _txt = '新增成功';
         } else {
+            _type = 'update';
             _service = 'student.SetStudentInfo';
             _body ='<Request><Student><Field>' + request.join('') + '</Field><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Student></Request>',
             _txt = '儲存成功';
@@ -604,12 +699,17 @@ _gg.saveBaseInfo = function() {
                     $("#save-data").button("reset");
                     _gg.set_error_message('#errorMessage', _service, error);
                 } else {
-                    if (studentid === '0') {
-                        $('#filter-keyword').val(studentName);
-                        $("#filter-student").trigger('click');
+                    student.ClassID = classID;
+
+                    if (_type === 'add') {
+                        if (((_ref = response.Result) != null ? _ref.NewID : void 0) != null) {
+                            student.StudentID = response.Result.NewID;
+                        }
                         _gg.GetAllClassList();
+                        _gg.ClearStudentInfo();
                     } else {
-                        _gg.GetStudentInfo();
+                        _gg.GetAllClassList();
+                        _gg.ClearStudentInfo();
                     }
 
                     $('#editModal').modal('hide');
@@ -642,11 +742,10 @@ _gg.delStudent = function() {
                     $('#del-data').button('reset');
                     _gg.set_error_message('#errorMessage', 'DelStudent', error);
                 } else {
+                    _gg.student.StudentID = null;
                     _gg.GetAllClassList();
-                    var studentindex = $('.my-widget-header a[action-type=del]').attr('studentIndex');
-                    $('#namelist tr[studentIndex=' + studentindex + ']').remove();
-                    _gg.students.splice(studentindex, 1);
                     _gg.ClearStudentInfo();
+
                     $('#del-data').button('reset');
                     $('#delModal').modal('hide');
                     $('#mainMsg').html("<div class='alert alert-success'>\n  刪除成功！\n</div>");
@@ -657,6 +756,24 @@ _gg.delStudent = function() {
     } else {
         $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n 學生編號不正確，無法刪除！ \n</div>");
     }
+};
+
+// TODO: 產生代碼
+_gg.GetNewCode = function(selector) {
+    _gg.connection.send({
+        service: "student.GetNewCode",
+        body: '',
+        result: function (response, error, http) {
+            if (error !== null) {
+                _gg.set_error_message('#errorMessage', 'GetNewCode', error);
+            } else {
+                var _ref;
+                if (((_ref = response.Response) != null ? _ref.Code : void 0) != null) {
+                    $(selector).val(response.Response.Code || '');
+                }
+            }
+        }
+    });
 };
 
 // TODO: 錯誤訊息

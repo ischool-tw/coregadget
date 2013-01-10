@@ -215,10 +215,13 @@ _gg.SetModal = function() {
 
     if (myclass.ClassID === '-1') {
         $('#editModal h3').html('新增');
+    } else {
+        $('#editModal h3').html('資料修改');
     }
 
     $('#edit-GradeYear').val(myclass.GradeYear || '');
     $('#edit-ClassName').val(myclass.ClassName || '');
+
     // TODO: 處理姓名
     var tname = '';
     tname = (myclass.TeacherName || '');
@@ -226,6 +229,10 @@ _gg.SetModal = function() {
         tname += '(' + myclass.Nickname + ')';
     }
     $('#edit-TeacherName').val(tname);
+    $('#edit-TeacherName')
+        .attr('TeacherID', myclass.TeacherID || '')
+        .attr('TeacherName', myclass.TeacherName || '')
+        .attr('Nickname', myclass.Nickname ||'');
 };
 
 _gg.saveClassInfo = function() {
@@ -235,7 +242,10 @@ _gg.saveClassInfo = function() {
 
     if (className && classid) {
         var gradeYear = $('#edit-GradeYear').val() || '';
-        var teacherID = $('#edit-TeacherName').attr('TeacherID') || '';
+        var teacherID = '';
+        if ($('#edit-TeacherName').val()) {
+            teacherID = $('#edit-TeacherName').attr('TeacherID') || '';
+        }
 
         gradeYear = (gradeYear == '') ? '' : parseInt(gradeYear, 10) + '';
 
