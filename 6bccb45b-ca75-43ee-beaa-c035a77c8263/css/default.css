@@ -1,0 +1,32 @@
+table {
+  white-space: nowrap;
+}
+table td:nth-child(3n+2) {
+  white-space: normal;
+}
+td ul {
+  margin: 0;
+}
+td li {
+  list-style-type: none;
+  line-height: 22px;
+}
+/*自訂*/
+.my-slide {
+  position: relative;
+}
+.my-detail {
+  display: none;
+}
+.my-all-list tbody tr {
+  cursor: pointer;
+}
+.my-TabContent {
+  overflow-x: hidden;
+}
+.my-form-style {
+  margin-bottom: 10px;
+}
+.my-btn-style {
+  margin-bottom: 10px;
+}

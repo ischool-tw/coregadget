@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+  <META HTTP-EQUIV="EXPIRES" CONTENT="0">
+  <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+  <script>
+    init({
+      application: "dev.sh_d",
+      paramValues: {}
+    });
+  </script>
+
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.min.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <!--<link href="css/base.less" rel="stylesheet/less" />
+  <link href="css/default.less" rel="stylesheet/less" />-->
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <!--<script src="js/less.min.js"></script>-->
+  <script src="js/bootstrap.js"></script>
+  <script src="js/servicelearning.js"></script>
+</head>
+<body>
+  <div id="gadget" class="my-page">
+      <div id="mainMsg"></div>
+      <div class="row-fluid">
+        <div class="span12">
+            <h1>
+              <span id="tabName">服務學習時數總覽</span>
+            </h1>
+            <div id="myTabContent" class="tab-content my-TabContent">
+                <div class="tab-pane fade active in" id="sall">
+                        <form class="form-horizontal my-form-style">
+                            <select name="class"></select>
+                            <select name="semester"></select>
+                        </form>
+                        <table class="table table-bordered table-striped table-hover my-slide my-all-list" data-type="all">
+                            <thead>
+                              <tr>
+                                <th>座號</th>
+                                <th>學號</th>
+                                <th>姓名</th>
+                                <th>總時數</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <div class="my-slide my-detail">
+                          <button class="btn btn-mini pull-right my-btn-style" type="button" data-type="return">返回</button>
+                          <table class="table table-bordered table-striped" data-type="total">
+                              <thead>
+                                <tr>
+                                  <th>座號</th>
+                                  <th>學號</th>
+                                  <th>姓名</th>
+                                  <th>總時數</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                              </tbody>
+                          </table>
+                          <table class="table table-bordered table-striped" data-type="detail">
+                            <thead>
+                              <tr>
+                                <th>日期</th>
+                                <th>服務內容</th>
+                                <th>時數</th>
+                                <th>主辦單位</th>
+                                <th>備註</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                          </table>
+                        </div>
+                </div>
+            </div>
+        </div>
+      </div>
+  </div>
+  <hr />
+  <hr/>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script>
+    jQuery(function () {
+      $('a').click(function(){
+        $(this).popover('show');
+      });
+
+      $('#myTab').click(function(){
+        $(this).find('li.active').removeClass('active');
+      })
+      .find('a').click(function(){
+        $('#tabName').html($(this).html());
+      });
+    });
+  </script>
+</head>
+<body>
+  <div id="gadget" class="my-page">
+      <div class="row-fluid">
+        <div class="span12">
+            <h1>
+            	<a href="#" class="dropdown-toggle" data-toggle="dropdown" id="nav_appcurrent"><span id="tabName">服務學習時數總覽</span> <b class="caret"></b></a>
+            	<ul id="myTab" class="dropdown-menu">
+                    <li><a href="#sall" data-toggle="tab">服務學習時數總覽</a></li>
+                    <li><a href="#sone" data-toggle="tab">個人服務學習時數</a></li>
+                    <li><a href="#sadd" data-toggle="tab">填寫服務學習時數</a></li>
+                </ul>
+            </h1>
+            <div id="myTabContent" class="tab-content">
+              <div class="tab-pane fade active in" id="sall">
+                        <form class="form-horizontal">
+                              <select>
+                                <option>99 學年度第 2 學期</option>
+                                <option>99 學年度第 1 學期</option>
+                              </select>
+                              <select>
+                                <option>資一忠</option>
+                                <option>資二忠</option>
+                              </select>
+                  </form>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                              <tr>
+                                <th>座號</th>
+                                <th>學號</th>
+                                <th>姓名</th>
+                                <th>總時數</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>1</td>
+                                <td>95005</td>
+                                <td>江小信</td>
+                                <td>3</td>
+                              </tr>
+                              <tr>
+                                <td>2</td>
+                                <td>95006</td>
+                                <td>江中信</td>
+                                <td>3</td>
+                              </tr>
+                              <tr>
+                                <td>3</td>
+                                <td>95007</td>
+                                <td>江大信</td>
+                                <td>3</td>
+                              </tr>
+                              <tr>
+                                <td>4</td>
+                                <td>95007</td>
+                                <td>王小華</td>
+                                <td>3</td>
+                              </tr>
+                            </tbody>
+                            <thead>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                  </table>
+              </div>
+                <div class="tab-pane fade" id="sone">
+                    <form class="form-horizontal">
+                          <select>
+                            <option>99 學年度第 2 學期</option>
+                            <option>99 學年度第 1 學期</option>
+                          </select>
+                          <select>
+                            <option>資一忠</option>
+                            <option>資二忠</option>
+                          </select>
+                          <div class="input-append">
+                      <input class="span8" id="appendedInputButton" type="text" placeholder="學生姓名">
+                      <button class="btn" type="button">搜尋</button>
+                    </div>
+                    </form>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                              <tr>
+                                <th>座號</th>
+                                <th>學號</th>
+                                <th>姓名</th>
+                                <th>總時數</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>1</td>
+                                <td>95005</td>
+                                <td>江小信</td>
+                                <td>12</td>
+                              </tr>
+                            </tbody>
+                            <thead>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                  </table>
+                    <table class="table table-bordered table-striped">
+                      <thead>
+                        <tr>
+                          <th>日期</th>
+                          <th>服務內容</th>
+                          <th>時數</th>
+                          <th>認證單位</th>
+                          <th> 備註</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>2012-11-15</td>
+                          <td><ul>
+                            <li>地點：<br />
+                              華特家商</li>
+                            <li>內容：<br />
+                              校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務</li>
+                            </ul></td>
+                          <td>3</td>
+                          <td>華特家商學校</td>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td>2012-11-15</td>
+                          <td><ul>
+                            <li>地點：<br />
+                              華特家商</li>
+                            <li>內容：<br />
+                              校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務</li>
+                            </ul></td>
+                          <td>3</td>
+                          <td>華特家商學校</td>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td>2012-11-15</td>
+                          <td><ul>
+                            <li>地點：<br />
+                              華特家商</li>
+                            <li>內容：<br />
+                              校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務</li>
+                            </ul></td>
+                          <td>3</td>
+                          <td>華特家商學校</td>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td>2012-11-15</td>
+                          <td><ul>
+                            <li>地點：<br />
+                              華特家商</li>
+                            <li>內容：<br />
+                              校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務</li>
+                            </ul></td>
+                          <td>3</td>
+                          <td>華特家商學校</td>
+                          <td>&nbsp;</td>
+                        </tr>
+                      </tbody>
+                      <thead>
+                      </thead>
+                      <tbody>
+                      </tbody>
+                    </table>
+              </div>
+                <div class="tab-pane fade" id="sadd">
+                	<table class="table my-table2">
+                        <tbody><tr>
+                          <th>學期</th>
+                          <td>
+                          <select>
+                            <option>99 學年度第 2 學期</option>
+                            <option>99 學年度第 1 學期</option>
+                          </select>
+                          </td>
+                          <th nowrap="nowrap">班級</th>
+                            <td>
+                            <select>
+                            <option>資一忠</option>
+                            <option>資二忠</option>
+                          	</select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th nowrap="nowrap">日期</th>
+                          	<td><input class="input-medium" type="date" placeholder="MM/DD/YYYY"></td>
+                            <th>姓名</th>
+                            <td><input class="input-medium" type="text" placeholder="" /></td>
+                          </tr>
+                          <tr>
+                          <th nowrap="nowrap">時數</th>
+                          <td><input class="input-mini" type="text" placeholder="">
+                            小時（請填寫整數）</td>
+                          <th>認證單位</th>
+                          <td><input class="input-xlarge" type="text" placeholder="" /></td>
+                          </tr>
+                        <tr>
+                          <th nowrap="nowrap">服務地點</th>
+                          <td colspan="3"><input class="input-xxlarge" type="text" placeholder=""></td>
+                          </tr>
+                        <tr>
+                          <th nowrap="nowrap">服務內容</th>
+                          <td colspan="3"><textarea name="textarea" rows="5" class="span11" placeholder=""></textarea></td>
+                          </tr>
+                        <tr>
+                          <th nowrap="nowrap">備註</th>
+                          <td colspan="3"><textarea rows="3" class="span11" placeholder=""></textarea></td>
+                          </tr>
+                      </tbody></table>
+                      <div class="my-sure">
+                        <a href="#to" class="btn btn-success" data-original-title="">儲存變更</a> <a href="#to" class="btn" data-original-title="">取消</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+  </div>
+  <hr />
+</body>
+</html>

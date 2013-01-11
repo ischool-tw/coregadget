@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script>
+    jQuery(function () {
+      $('a').click(function(){
+        $(this).popover('show');
+      });
+
+      $('#myTab').click(function(){
+        $(this).find('li.active').removeClass('active');
+      })
+      .find('a').click(function(){
+        $('#tabName').html($(this).html());
+      });
+    });
+  </script>
+</head>
+<body>
+  <div id="gadget" class="my-page">
+      <div class="row-fluid">
+        <div class="span12">
+            <h1>服務學習時數</h1>
+          <form class="form-horizontal">
+              <select>
+                <option>99 學年度第 2 學期</option>
+                <option>99 學年度第 1 學期</option>
+              </select>
+          </form>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th>服務內容</th>
+                <th>時數</th>
+                <th>認證單位</th>
+                <th> 備註</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2012-11-15</td>
+                <td>
+                  <ul>
+                      <li>地點：<br />華特家商</li>
+                        <li>內容：<br />校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務</li>
+                    </ul>
+                </td>
+                <td>3</td>
+                <td>華特家商學校</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>2012-11-15</td>
+                <td><ul>
+                  <li>地點：<br />
+                    華特家商</li>
+                  <li>內容：<br />
+                    校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務</li>
+                </ul></td>
+                <td>3</td>
+                <td>華特家商學校</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>2012-11-15</td>
+                <td><ul>
+                  <li>地點：<br />
+                    華特家商</li>
+                  <li>內容：<br />
+                    校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務</li>
+                </ul></td>
+                <td>3</td>
+                <td>華特家商學校</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>2012-11-15</td>
+                <td><ul>
+                  <li>地點：<br />
+                    華特家商</li>
+                  <li>內容：<br />
+                    校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務校園服務</li>
+                </ul></td>
+                <td>3</td>
+                <td>華特家商學校</td>
+                <td>&nbsp;</td>
+              </tr>
+            </tbody>
+            <thead>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  </div>
+  <hr />
+</body>
+</html>
