@@ -1,0 +1,110 @@
+table th {
+  white-space: nowrap;
+}
+table td:nth-child(3n+2) {
+  white-space: normal;
+}
+td ul {
+  margin: 0;
+}
+td li:first-child {
+  border-bottom: 1px solid #e9e9e9;
+}
+td li {
+  list-style-type: none;
+  padding: 5px 0;
+  line-height: 22px;
+}
+.my-navtabs {
+  margin-bottom: 0;
+  border-bottom: none;
+}
+/*.my-navtabs li:first-child {
+    padding:8px 20px 0 0;
+}*/
+.my-navtabs > .active > a,
+.my-navtabs > .active > a:hover {
+  color: #08c;
+}
+.my-navtabs > li > a {
+  color: #686868;
+}
+#sa01 .my-sure,
+#sa06 .my-sure {
+  margin-bottom: 10px;
+}
+/*自訂*/
+.my-conflict {
+  margin-right: 10px;
+}
+.my-cbx-style {
+  width: 15px;
+}
+#sa01 tbody tr.my-error td {
+  background: #F2DEDE;
+}
+.my-print-page {
+  font: 16px/1.5 "新細明體", "Times New Roman", Arial, sans-serif;
+}
+.my-print-page .my-title {
+  text-align: center;
+}
+.my-print-page .my-studnet-info table {
+  font-size: 18px;
+  font-weight: bold;
+  border-collapse: collapse;
+  width: 100%;
+}
+.my-print-page .my-studnet-info table td {
+  padding: 0;
+}
+.my-print-page .my-studnet-info .my-student-number {
+  width: 23%;
+}
+.my-print-page .my-studnet-info .my-class-name {
+  width: 15%;
+}
+.my-print-page .my-studnet-info .my-dept-name {
+  width: 30%;
+}
+.my-print-page .my-course-info,
+.my-print-page .my-addcourse-info {
+  text-align: center;
+}
+.my-print-page .my-course-info table,
+.my-print-page .my-addcourse-info table {
+  font-size: 12px;
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  margin: 2px;
+}
+.my-print-page .my-course-info table tr,
+.my-print-page .my-addcourse-info table tr {
+  height: 35px;
+}
+.my-print-page .my-course-info table th,
+.my-print-page .my-addcourse-info table th {
+  text-align: center;
+}
+.my-print-page .my-course-info table th,
+.my-print-page .my-addcourse-info table th,
+.my-print-page .my-course-info table td,
+.my-print-page .my-addcourse-info table td {
+  border: 1px solid #000;
+}
+.my-print-page .student-sign,
+.my-print-page .my-note-title,
+.my-print-page .my-note-info {
+  font-size: 16px;
+}
+.my-print-page .student-sign,
+.my-print-page .my-note-title {
+  line-height: 3;
+}
+.my-print-page .my-note-info p {
+  margin: 0;
+}
+.modal-body > div {
+  text-align: left;
+}

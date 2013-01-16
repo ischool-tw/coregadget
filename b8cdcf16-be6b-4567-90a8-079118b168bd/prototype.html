@@ -1,0 +1,715 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/default.js"></script>
+  <script>
+    jQuery(function () {
+      $('a').click(function(){
+        $(this).popover('show');
+      });
+
+      $('#myTab').click(function(){
+        $(this).find('li.active').removeClass('active');
+      })
+      .find('a').click(function(){
+        $('#tabName').html($(this).html());
+      });
+    });
+  </script>
+</head>
+<body>
+  <div id="gadget" class="my-page">
+      <div class="row-fluid">
+        <div class="span12">
+            <h1>
+            	<!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" id="nav_appcurrent"><span id="tabName">101 學年度第 1 學期選課程清單</span> <b class="caret"></b></a>-->
+            	101 學年度第 1 學期
+                <ul id="myTab" class="nav nav-tabs my-navtabs">
+                    <li class="active"><a href="#sa01" data-toggle="tab">可選課程</a></li>
+                    <li><a href="#sa06" data-toggle="tab">選課最終確認</a></li>
+                    <li><a href="#sa02" data-toggle="tab">課程總表</a></li>
+                    <li><a href="#sa03" data-toggle="tab">衝堂課程</a></li>
+                    <li><a href="#sa04" data-toggle="tab">選課注意事項</a></li>
+                    <li><a href="#sa05" data-toggle="tab">選課問答集</a></li>
+                </ul>
+            </h1>
+            <div id="myTabContent" class="tab-content">
+           	  <div class="tab-pane fade active in" id="sa01">
+              		<div class="alert alert-info">
+                        第一階段電腦選課：101/12/24(一)上午 10 時至 101/12/26(三)下午 5 時止。<br />
+						第二階段電腦選課：101/12/29(六)上午 10 時至 102/01/01(二)下午 5 時止。
+                </div>
+                	<div class="my-sure">
+                          <a href="#to" class="btn btn-success" data-original-title="">送出</a> <a href="#to" class="btn" data-original-title="">取消</a>
+                      </div>
+                	<table class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th colspan="9">已選課程清單</th>
+                          </tr>
+                          <tr>
+                            <th>退</th>
+                            <th>課程編號</th>
+                            <th>班次</th>
+                            <th>（必/選修）課程名稱</th>
+                            <th>授課教師</th>
+                            <th>學分</th>
+                            <th>人數上限</th>
+                            <th>教室</th>
+                            <th>上課時間</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td rowspan="2"><button type="button" class="close">×</button></td>
+                            <td>EMBA7015</td>
+                            <td>01</td>
+                            <td>
+                            <span class="label label-important">核必</span>
+                            <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">服務與營運管理</a></td>
+                            <td>郭瑞祥、郭佳瑋</td>
+                            <td>2</td>
+                            <td>&nbsp;</td>
+                            <td>冠德講堂</td>
+                            <td>星期六 09:00~12:40</td>
+                          </tr>
+                          <tr>
+                            <td colspan="8">限A班同學選課，共上8次。1/26、2/3(日)_09:00~12:40、3/9、3/23、4/20、5/4、5/18、6/1。</td>
+                          </tr>
+                          <tr>
+                            <td rowspan="2"><button type="button" class="close">×</button></td>
+                            <td>EMBAB7001</td>
+                            <td>02</td>
+                            <td>
+                            <span class="label label-warning">組必</span>
+                            <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">科技管理</a></td>
+                            <td>陳鴻基、陳忠仁</td>
+                            <td>2</td>
+                            <td>&nbsp;</td>
+                            <td>冠德講堂</td>
+                            <td>星期六 13:40~17:20</td>
+                          </tr>
+                          <tr>
+                            <td colspan="8">共上8次。2/2、3/2、3/16、3/30、4/13、4/27、5/11、5/25。</td>
+                          </tr>
+                          <tr>
+                            <td rowspan="2"><button type="button" class="close">×</button></td>
+                            <td>EMBAF7001</td>
+                            <td>03</td>
+                            <td>
+                            <span class="label label-warning">組必</span>
+                            <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">投資管理</a></td>
+                            <td>李存修、李賢源</td>
+                            <td>2</td>
+                            <td>&nbsp;</td>
+                            <td>玉山廳</td>
+                            <td>星期六 13:40~17:20</td>
+                          </tr>
+                          <tr>
+                            <td colspan="8">共上8次。2/2、3/2、3/16、3/30、4/13、4/27、5/11、5/25。</td>
+                          </tr>
+                          <tr>
+                            <td rowspan="2"><button type="button" class="close">×</button></td>
+                            <td>EMBAG7003</td>
+                            <td>03</td>
+                            <td>
+                            <span class="label label-warning">組必</span>
+                            <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">國際企業經營策略</a></td>
+                            <td>李吉仁、陳俊忠</td>
+                            <td>2</td>
+                            <td>&nbsp;</td>
+                            <td>重光講堂</td>
+                            <td>星期六 13:40~17:20</td>
+                          </tr>
+                          <tr>
+                            <td colspan="8">共上8次。3/9、3/16、3/23、3/30、4/13(B101)、4/20(R402)、4/27、5/4。 2/2(六) PM13:40-14:40舉行課程說明會。</td>
+                          </tr>
+                          <tr>
+                            <td rowspan="2"><button type="button" class="close">×</button></td>
+                            <td>EMBA7019</td>
+                            <td>01</td>
+                            <td>
+                            <span class="label label-success">共選</span>
+                            <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">大陸市場企業成長與經營模式(I)</a></td>
+                            <td>李吉仁、謝明慧、郭瑞祥、盧秋玲</td>
+                            <td>2</td>
+                            <td>30</td>
+                            <td>玉山廳/重光講堂</td>
+                            <td>星期一 19:00~21:30</td>
+                          </tr>
+                          <tr>
+                            <td colspan="8">共上4天，4/18-4/21。與人民大學EMBA師資共同合開，兩校EMBA學員合班上課。本課程之課程參與有特殊要求，選課前請詳見課程大綱。另行報名選課，選課結果將從後台匯入。課程說明會：2/2(六) 12:40-13:40 重光講堂</td>
+                          </tr>
+                        </tbody>
+                  	</table>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th colspan="9">可選課程清單</th>
+                          </tr>
+                          <tr>
+                            <th>加</th>
+                            <th>課程編號</th>
+                            <th>班次</th>
+                            <th>（必/選修）課程名稱</th>
+                            <th>授課教師</th>
+                            <th>學分</th>
+                            <th>人數上限</th>
+                            <th>教室</th>
+                            <th>上課時間</th>
+                          </tr>
+                      </thead>
+                        <tbody>
+                          <tr>
+                            <td rowspan="2"><input type="checkbox"></td>
+                            <td>EMBA7015</td>
+                            <td>01</td>
+                            <td>
+                            <span class="label label-important">核必</span>
+                            <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">服務與營運管理</a></td>
+                            <td>郭瑞祥、郭佳瑋</td>
+                            <td>2</td>
+                            <td>&nbsp;</td>
+                            <td>冠德講堂</td>
+                            <td>星期六 09:00~12:40</td>
+                          </tr>
+                          <tr>
+                            <td colspan="8">限A班同學選課，共上8次。1/26、2/3(日)_09:00~12:40、3/9、3/23、4/20、5/4、5/18、6/1。</td>
+                          </tr>
+                          <tr>
+                            <td rowspan="2"><input type="checkbox" /></td>
+                            <td>EMBAB7001</td>
+                            <td>02</td>
+                            <td>
+                            <span class="label label-warning">組必</span>
+                            <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">科技管理</a></td>
+                            <td>陳鴻基、陳忠仁</td>
+                            <td>2</td>
+                            <td>&nbsp;</td>
+                            <td>冠德講堂</td>
+                            <td>星期六 13:40~17:20</td>
+                          </tr>
+                          <tr>
+                            <td colspan="8">共上8次。2/2、3/2、3/16、3/30、4/13、4/27、5/11、5/25。</td>
+                          </tr>
+                          <tr>
+                            <td rowspan="2"><input type="checkbox" /></td>
+                            <td>EMBAF7001</td>
+                            <td>03</td>
+                            <td>
+                            <span class="label label-warning">組必</span>
+                            <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">投資管理</a></td>
+                            <td>李存修、李賢源</td>
+                            <td>2</td>
+                            <td>&nbsp;</td>
+                            <td>玉山廳</td>
+                            <td>星期六 13:40~17:20</td>
+                          </tr>
+                          <tr>
+                            <td colspan="8">共上8次。2/2、3/2、3/16、3/30、4/13、4/27、5/11、5/25。</td>
+                          </tr>
+                          <tr>
+                            <td rowspan="2"><input type="checkbox" /></td>
+                            <td>EMBAG7003</td>
+                            <td>03</td>
+                            <td>
+                            <span class="label label-warning">組必</span>
+                            <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">國際企業經營策略</a></td>
+                            <td>李吉仁、陳俊忠</td>
+                            <td>2</td>
+                            <td>&nbsp;</td>
+                            <td>重光講堂</td>
+                            <td>星期六 13:40~17:20</td>
+                          </tr>
+                          <tr>
+                            <td colspan="8">共上8次。3/9、3/16、3/23、3/30、4/13(B101)、4/20(R402)、4/27、5/4。 2/2(六) PM13:40-14:40舉行課程說明會。</td>
+                          </tr>
+                          <tr>
+                            <td rowspan="2"><input type="checkbox" /></td>
+                            <td>EMBA7019</td>
+                            <td>01</td>
+                            <td>
+                            <span class="label label-success">共選</span>
+                            <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">大陸市場企業成長與經營模式(I)</a></td>
+                            <td>李吉仁、謝明慧、郭瑞祥、盧秋玲</td>
+                            <td>2</td>
+                            <td>30</td>
+                            <td>玉山廳/重光講堂</td>
+                            <td>星期一 19:00~21:30</td>
+                          </tr>
+                          <tr>
+                            <td colspan="8">共上4天，4/18-4/21。與人民大學EMBA師資共同合開，兩校EMBA學員合班上課。本課程之課程參與有特殊要求，選課前請詳見課程大綱。另行報名選課，選課結果將從後台匯入。課程說明會：2/2(六) 12:40-13:40 重光講堂</td>
+                          </tr>
+                        </tbody>
+                        <thead>
+                        </thead>
+                        <tbody>
+                        </tbody>
+              </table>
+                    <div class="my-sure">
+                        <a href="#to" class="btn btn-success" data-original-title="">送出</a> <a href="#to" class="btn" data-original-title="">取消</a>
+                    </div>
+              	</div>
+           	  	<div class="tab-pane fade" id="sa02">
+                    <table class="table table-bordered table-striped">
+                          <thead>
+                            <tr>
+                              <th>課程編號</th>
+                              <th>班次</th>
+                              <th>（必/選修）課程名稱</th>
+                              <th>授課教師</th>
+                              <th>學分</th>
+                              <th>人數上限</th>
+                              <th>教室</th>
+                              <th>上課時間</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>EMBA7015</td>
+                              <td>01</td>
+                              <td>
+                              <span class="label label-important">核必</span>
+                              <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">服務與營運管理</a></td>
+                              <td>郭瑞祥、郭佳瑋</td>
+                              <td>2</td>
+                              <td>&nbsp;</td>
+                              <td>冠德講堂</td>
+                              <td>星期六 09:00~12:40</td>
+                            </tr>
+                            <tr>
+                              <td colspan="8">限A班同學選課，共上8次。1/26、2/3(日)_09:00~12:40、3/9、3/23、4/20、5/4、5/18、6/1。</td>
+                            </tr>
+                            <tr>
+                              <td>EMBAB7001</td>
+                              <td>02</td>
+                              <td>
+                              <span class="label label-warning">組必</span>
+                              <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">科技管理</a></td>
+                              <td>陳鴻基、陳忠仁</td>
+                              <td>2</td>
+                              <td>&nbsp;</td>
+                              <td>冠德講堂</td>
+                              <td>星期六 13:40~17:20</td>
+                            </tr>
+                            <tr>
+                              <td colspan="8">共上8次。2/2、3/2、3/16、3/30、4/13、4/27、5/11、5/25。</td>
+                            </tr>
+                            <tr>
+                              <td>EMBAF7001</td>
+                              <td>03</td>
+                              <td>
+                              <span class="label label-warning">組必</span>
+                              <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">投資管理</a></td>
+                              <td>李存修、李賢源</td>
+                              <td>2</td>
+                              <td>&nbsp;</td>
+                              <td>玉山廳</td>
+                              <td>星期六 13:40~17:20</td>
+                            </tr>
+                            <tr>
+                              <td colspan="8">共上8次。2/2、3/2、3/16、3/30、4/13、4/27、5/11、5/25。</td>
+                            </tr>
+                            <tr>
+                              <td>EMBAG7003</td>
+                              <td>03</td>
+                              <td>
+                              <span class="label label-warning">組必</span>
+                              <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">國際企業經營策略</a></td>
+                              <td>李吉仁、陳俊忠</td>
+                              <td>2</td>
+                              <td>&nbsp;</td>
+                              <td>重光講堂</td>
+                              <td>星期六 13:40~17:20</td>
+                            </tr>
+                            <tr>
+                              <td colspan="8">共上8次。3/9、3/16、3/23、3/30、4/13(B101)、4/20(R402)、4/27、5/4。 2/2(六) PM13:40-14:40舉行課程說明會。</td>
+                            </tr>
+                            <tr>
+                              <td>EMBA7019</td>
+                              <td>01</td>
+                              <td>
+                              <span class="label label-success">共選</span>
+                              <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">大陸市場企業成長與經營模式(I)</a></td>
+                              <td>李吉仁、謝明慧、郭瑞祥、盧秋玲</td>
+                              <td>2</td>
+                              <td>30</td>
+                              <td>玉山廳/重光講堂</td>
+                              <td>星期一 19:00~21:30</td>
+                            </tr>
+                            <tr>
+                              <td colspan="8">共上4天，4/18-4/21。與人民大學EMBA師資共同合開，兩校EMBA學員合班上課。本課程之課程參與有特殊要求，選課前請詳見課程大綱。另行報名選課，選課結果將從後台匯入。課程說明會：2/2(六) 12:40-13:40 重光講堂</td>
+                            </tr>
+                          </tbody>
+                          <thead>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                </table>
+              	</div>
+                <div class="tab-pane fade" id="sa03">
+                    <table class="table table-bordered table-striped">
+                          <thead>
+                            <tr>
+                              <th>衝堂（必/選修）課程名稱</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>
+                              <span class="label label-important">核必</span>
+                              服務與營運管理</td>
+                            </tr>
+                            <tr>
+                              <td>
+                              <span class="label label-warning">組必</span>
+                              科技管理</td>
+                            </tr>
+                          </tbody>
+                          <thead>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                </table>
+                    <table class="table table-bordered table-striped">
+                      <thead>
+                        <tr>
+                          <th>衝堂（必/選修）課程名稱</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><span class="label label-warning">組必</span> 國際企業經營策略</td>
+                        </tr>
+                        <tr>
+                          <td><span class="label label-success">共選</span> 大陸市場企業成長與經營模式(I)</td>
+                        </tr>
+                      </tbody>
+                      <thead>
+                      </thead>
+                      <tbody>
+                      </tbody>
+                  </table>
+              	</div>
+              <div class="tab-pane fade" id="sa04">
+                	<div class="accordion" id="accordion2">
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                              【體適能與個人健康管理】上課須知
+                            </a>
+                          </div>
+                          <div id="collapseOne" class="accordion-body collapse" style="height: 0px;">
+                            <div class="accordion-inner">上課注意事項：<br />
+                              1.課程請全程穿著運動服裝，攜帶毛巾、水（水瓶需附蓋）。（運動服裝需為寬鬆、舒適、具透氣、吸汗及延展性之材質）<br />
+                              2.實作課程除使用綜合體育館4樓慢跑道外，其餘實作課程均須穿著乾淨鞋底之室內運動鞋進入上課場地。（室內運動鞋著重於能量吸收與反彈，減少運動時足部傷害，其鞋面具有網層布面與天然及合成皮革、鞋前端側邊有大底橡膠往鞋面延伸的耐磨特性。鞋底則強調大底的抓地力及橡膠材質。）<br />
+                              3.請勿攜帶任何食物或飲料進入綜合體育館各上課教室內，以維護教室清潔。<br />
+                              4.出席與學習效果息息相關，為確保教學效果，每門課每學期請假、曠課超過四分之ㄧ以上者，該科必須重修。為執行此項規定，每次上課須親自簽到。<br />
+                              5.為避免干擾教學過程，上課中原則上禁止使用行動電話，緊急需要請改成振動模式。<br />
+                              6.為便於教學溝通，講座課程上課時請將個人桌牌置於桌上。桌牌統一由EMBA辦公室製作提供。<br />
+                              7.非選修本課程之EMBA學生不得旁聽或隨班附讀。<br />
+                              8.上課過程中，請量力而為，身體如有不適，請馬上告知老師或隨課助教。<br />
+                              9.有選上體適能課程同學需注意，第一堂課請務必到課，若有事無法到課請事前和老師請假。<br />
+                              <br />
+                              課程其他費用<br />
+                              1.每位上課的學生需進行兩次由體育室實施之全方位體適能檢測，一次為基礎體能前測，一次為課程完成後考核。參加檢測者需繳交材料費1600元（每次800元）。<br />
+                              2.本課程亦特別委託台大醫院健康管理中心規劃一份健康體適能套餐，提供上課的學生視個人健康及財務規劃參加。此套餐只屬建議性質，並無強制性。本套餐具備下列特色：<br />
+                              a. 快速通關，一步到位，無須多次來院 (one-stop shop)<br />
+                              b. 當週取得檢驗報告和專業建議。<br />
+                            c. 價格優惠：單次8000元，若採前測、後側方式評估生理變化，兩次檢查費用為15000元。</div>
+                          </div>
+                        </div>
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                              學分費收費標準
+                            </a>
+                          </div>
+                          <div id="collapseTwo" class="accordion-body collapse">
+                            <div class="accordion-inner">本專班入學學生畢業前至少應繳足六學期之全額學雜費，第七學期起，若有修課(碩士論文除外)，收費標準為學雜費基數(目前為$12,720)加學分費(每學分$11,130)計算；若超出當學期全額學雜費，則以當學期全額學費收取；若僅修論文，只需繳交學雜費基數。</div>
+                          </div>
+                        </div>
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+                              【高階管理研討】說明會時間及上課日期異動
+                            </a>
+                          </div>
+                          <div id="collapseThree" class="accordion-body collapse">
+                            <div class="accordion-inner">【高階管理研討】原說明會時間為2/3 13:30-15:00，改為13:00-15:00。<br />
+                              <br />
+                              上課日期共六次，分別為3/17、3/24、4/14、4/21、5/5、5/12, <br />
+                              將異動為3/17、3/24、4/14、4/28、5/5、5/12；<br />
+                              <br />
+                            請知悉，謝謝大家。</div>
+                          </div>
+                        </div>
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
+                              有關人數限制的課程的選課
+                            </a>
+                          </div>
+                          <div id="collapseFour" class="accordion-body collapse">
+                            <div class="accordion-inner">課程名稱加註*者表示登記此課程，非已經選上，第一二階段選課結束後，將依照&quot;開課對象&quot;及&quot; 人數限制&quot;等條件，進行亂數篩選(非依照上網登記時間序)，篩選後有選上者，星號(*)即消失，若沒有選上，則不會顯示課程名稱。如第一階段沒有選上，第二階段仍可以繼續登記參加篩選。最終選課結果請於102/1/3(四)上午10時起開放查詢。</div>
+                          </div>
+                        </div>
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFive">
+                              有關【碩士論文】選課
+                            </a>
+                          </div>
+                          <div id="collapseFive" class="accordion-body collapse">
+                            <div class="accordion-inner">自97學年度起，EMBA學生【碩士論文】的選課將由學校教務處統一加選，當學期未口試者，成績單將會註記為#號，不列入平均成績。</div>
+                          </div>
+                        </div>
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseSix">
+                              電腦選課步驟
+                            </a>
+                          </div>
+                          <div id="collapseSix" class="accordion-body collapse">
+                            <div class="accordion-inner">step by step說明請下載上方之『電腦選課步驟』<br />
+                              <br />
+                              1. 登入。<br />
+                              帳號為含英文字母的學號，共9碼(英文字母大小寫皆可)；密碼為出生月日，共4碼。如3月1日生日，密碼即為0301。<br />
+                              <br />
+                              2. 建議您先閱讀「選課注意事項」。<br />
+                              <br />
+                              3. 點選「<a href="http://www.emba.ntu.edu.tw/coursetest/Web/choice.php">電腦初選</a>」進入選課功能，請詳閱備註，按照您的組別及班別選課。<br />
+                              <br />
+                              4. 點選「送出」即完成電腦初選，系統將記錄您的初選結果於「<a href="http://www.emba.ntu.edu.tw/coursetest/Web/choice.php">電腦初選</a>」畫面。<br />
+                              <br />
+                              5. 如需修改，可進入「<a href="http://www.emba.ntu.edu.tw/coursetest/Web/change.php">電腦初選異動</a>」。<br />
+                              <br />
+                            6. 登出</div>
+                          </div>
+                        </div>
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseSeven">
+                              EMBA核心課程與分組課程說明
+                            </a>
+                          </div>
+                          <div id="collapseSeven" class="accordion-body collapse">
+                            <div class="accordion-inner">EMBA學程包含核心課程、分組課程與選修課程，畢業總學分數為36學分(不含論文)。<br />
+                              <br />
+                              核心課程之開課順序請參考：<a href="http://www.emba.ntu.edu.tw/coursetest/Web/plan.php?plan=p4-5">EMBA學程計畫</a><br />
+                              96、97級學長姐之分組課程請參考：<a href="http://www.emba.ntu.edu.tw/coursetest/Web/plan.php?plan=p96">96、97級分組課程</a><br />
+                            98、99、100、101級學長姐之分組課程請參考：<a href="http://www.emba.ntu.edu.tw/coursetest/Web/plan.php?plan=p97">98、99、100、101級分組課程</a></div>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+                <div class="tab-pane fade" id="sa05">
+                	<div class="accordion" id="accordion3">
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion3" href="#collapseQ1">【2012-12-21】工作太忙碌，錯過電腦選課時間，該怎麼辦呢?</a>
+                          </div>
+                          <div id="collapseQ1" class="accordion-body collapse" style="height: 0px;">
+                            <div class="accordion-inner">如無法於系統開放時段內選課的同學，請記得於加退選階段選課。<br />
+                              若您欲選修之課程有人數限制，建議您請他人代為選課。<br />
+                              <br />
+                            加退選時間至102/2/24（日），開學後即可領取「加退選課紀錄表」，101級學生請向班輔領取，100級(含)以前請至2F_206ＥＭＢＡ服務中心領取。無論是否加退選，請務必簽名確認，並於101/2/24（日）前將清單交回EMBA辦公室。</div>
+                          </div>
+                        </div>
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseQ2">【2012-05-14】99、100、101級學生應該修多少學分才能畢業呢?</a>
+                          </div>
+                          <div id="collapseQ2" class="accordion-body collapse">
+                            <div class="accordion-inner">畢業總學分皆為36學分(不含碩士論文)</div>
+                          </div>
+                        </div>
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseQ3">【2012-05-14】如何知道EMBA學程中，總共要選擇多少必修課程?</a>
+                          </div>
+                          <div id="collapseQ3" class="accordion-body collapse">
+                            <div class="accordion-inner">核心必修課程為哪些，請參考「<a href="http://www.emba.ntu.edu.tw/coursetest/Web/plan.php">課程計畫</a>」之「<a href="http://www.emba.ntu.edu.tw/coursetest/Web/plan.php?plan=p4-5">EMBA學程計畫</a>」；<br />
+                              96、97級之分組必修課程請參考「<a href="http://www.emba.ntu.edu.tw/coursetest/Web/plan.php">課程計畫</a>」之「<a href="http://www.emba.ntu.edu.tw/coursetest/Web/plan.php?plan=p96">96、97級分組課程</a>」<br />
+                            98、99、100、101級之分組必修課程請參考「<a href="http://www.emba.ntu.edu.tw/coursetest/Web/plan.php">課程計畫</a>」之「<a href="http://www.emba.ntu.edu.tw/coursetest/Web/plan.php?plan=p97">98、99、100、101級分組課程</a>」</div>
+                          </div>
+                        </div>
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseQ4">【2012-05-14】我是99級以上學生，可以選修100級或101級的核心課程嗎?</a>
+                          </div>
+                          <div id="collapseQ4" class="accordion-body collapse">
+                            <div class="accordion-inner">可以，99級以上學生如未修核心課程，只要上課時間不衝堂皆可選擇。</div>
+                          </div>
+                        </div>
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseQ5">【2012-05-14】何謂「核心課程」?</a>
+                          </div>
+                          <div id="collapseQ5" class="accordion-body collapse">
+                            <div class="accordion-inner">「核心課程」分為核心必修課程與核心選修課程，每門課2學分。<br />
+                              <br />
+                              100、101級核心必修課程:共9門課程，分別為管理會計、企業決策、行銷管理與顧客分析、金融市場與投資、經濟與競爭分析、財務管理、服務與營運管理、策略管理、組織行為。<br />
+                              <br />
+                            100、101級核心選修課程:共3門課程，您可選擇其中2門課程修習。3門課程分別為資訊管理、全球企業管理、公司治理與企業發展。</div>
+                          </div>
+                        </div>
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseQ6">【2012-05-14】101級之核心必修課程可跨班修習嗎？</a>
+                          </div>
+                          <div id="collapseQ6" class="accordion-body collapse">
+                            <div class="accordion-inner">請依照您的教學分班修習核心必修課程。<br />
+                              <br />
+                            若您的教學分班為A班，請在所選的核心課程中選擇01班次之課程，B班請選擇02班次，C班請選擇03班次。</div>
+                          </div>
+                        </div>
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseQ7">【2011-12-24】101級學生核心課程可以選擇性的修課嗎?</a>
+                          </div>
+                          <div id="collapseQ7" class="accordion-body collapse">
+                            <div class="accordion-inner">101級學生前三個學期(包含101暑、101_1、101_2)，每學期開出的3門核心課程皆為101級核心&ldquo;必修&rdquo;課，請101級同學務必自行選課，謝謝。</div>
+                          </div>
+                        </div>
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseQ8">【2011-12-24】EMBA學習規範</a>
+                          </div>
+                          <div id="collapseQ8" class="accordion-body collapse">
+                            <div class="accordion-inner">1.EMBA為專業管理學程，榮譽、負責與專業倫理為社群規範之依據。<br />
+                              <br />
+                              2.核心必修課程依A、B、C班分班上課，學生不得任意變更上課班次。<br />
+                              <br />
+                              3.出席與學習效果息息相關，為確保教學效果，每門課每學期請假、曠課超過四分之ㄧ以上者，該科必須重修。<br />
+                              <br />
+                              4.為避免干擾教學過程，上課中原則上禁止使用行動電話，緊急需要請改成震動模式。<br />
+                              <br />
+                              5.個案課程若使用壹館二樓冠德講堂、重光講堂與三樓玉山廳，不可攜帶任何食物或飲料，以維護教室清潔。<br />
+                              <br />
+                              6.為便於教學溝通，上課時請將個人桌牌置於桌上。<br />
+                              <br />
+                              7.EMBA為專班課程，非EMBA學生不得旁聽或隨班附讀。<br />
+                              <br />
+                            8.核心課程、核心三選二及組必修課程，缺曠登記由第一堂課起即開始計算。</div>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+                <div class="tab-pane fade" id="sa06">
+           		  <div class="alert alert-info">
+						加退選：102/01/24(四)開學起至 102/02/24(日)中午 12 時止。
+                      </div>
+               	  <div class="my-sure">
+                          <a href="#to" class="btn btn-success" data-original-title="">確認最終選課結果</a> <a href="#to" class="btn" data-original-title="">列印加退選單</a>
+                      </div>
+                	<table class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th>課程編號</th>
+                            <th>班次</th>
+                            <th>（必/選修）課程名稱</th>
+                            <th>授課教師</th>
+                            <th>學分</th>
+                            <th>人數上限</th>
+                            <th>教室</th>
+                            <th>上課時間</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>EMBA7015</td>
+                            <td>01</td>
+                            <td>
+                            <span class="label label-important">核必</span>
+                            <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">服務與營運管理</a></td>
+                            <td>郭瑞祥、郭佳瑋</td>
+                            <td>2</td>
+                            <td>&nbsp;</td>
+                            <td>冠德講堂</td>
+                            <td>星期六 09:00~12:40</td>
+                          </tr>
+                          <tr>
+                            <td colspan="8">限A班同學選課，共上8次。1/26、2/3(日)_09:00~12:40、3/9、3/23、4/20、5/4、5/18、6/1。</td>
+                          </tr>
+                          <tr>
+                            <td>EMBAB7001</td>
+                            <td>02</td>
+                            <td>
+                            <span class="label label-warning">組必</span>
+                            <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">科技管理</a></td>
+                            <td>陳鴻基、陳忠仁</td>
+                            <td>2</td>
+                            <td>&nbsp;</td>
+                            <td>冠德講堂</td>
+                            <td>星期六 13:40~17:20</td>
+                          </tr>
+                          <tr>
+                            <td colspan="8">共上8次。2/2、3/2、3/16、3/30、4/13、4/27、5/11、5/25。</td>
+                          </tr>
+                          <tr>
+                            <td>EMBAF7001</td>
+                            <td>03</td>
+                            <td>
+                            <span class="label label-warning">組必</span>
+                            <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">投資管理</a></td>
+                            <td>李存修、李賢源</td>
+                            <td>2</td>
+                            <td>&nbsp;</td>
+                            <td>玉山廳</td>
+                            <td>星期六 13:40~17:20</td>
+                          </tr>
+                          <tr>
+                            <td colspan="8">共上8次。2/2、3/2、3/16、3/30、4/13、4/27、5/11、5/25。</td>
+                          </tr>
+                          <tr>
+                            <td>EMBAG7003</td>
+                            <td>03</td>
+                            <td>
+                            <span class="label label-warning">組必</span>
+                            <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">國際企業經營策略</a></td>
+                            <td>李吉仁、陳俊忠</td>
+                            <td>2</td>
+                            <td>&nbsp;</td>
+                            <td>重光講堂</td>
+                            <td>星期六 13:40~17:20</td>
+                          </tr>
+                          <tr>
+                            <td colspan="8">共上8次。3/9、3/16、3/23、3/30、4/13(B101)、4/20(R402)、4/27、5/4。 2/2(六) PM13:40-14:40舉行課程說明會。</td>
+                          </tr>
+                          <tr>
+                            <td>EMBA7019</td>
+                            <td>01</td>
+                            <td>
+                            <span class="label label-success">共選</span>
+                            <a href="http://www.emba.ntu.edu.tw/coursetest/Web/Data/Course/101201-101203.pdf" target="_blank">大陸市場企業成長與經營模式(I)</a></td>
+                            <td>李吉仁、謝明慧、郭瑞祥、盧秋玲</td>
+                            <td>2</td>
+                            <td>30</td>
+                            <td>玉山廳/重光講堂</td>
+                            <td>星期一 19:00~21:30</td>
+                          </tr>
+                          <tr>
+                            <td colspan="8">共上4天，4/18-4/21。與人民大學EMBA師資共同合開，兩校EMBA學員合班上課。本課程之課程參與有特殊要求，選課前請詳見課程大綱。另行報名選課，選課結果將從後台匯入。課程說明會：2/2(六) 12:40-13:40 重光講堂</td>
+                          </tr>
+                        </tbody>
+                  	</table>
+                    <div class="my-sure">
+                        <a href="#to" class="btn btn-success" data-original-title="">確認最終選課結果</a> <a href="#to" class="btn" data-original-title="">列印加退選單</a>
+                    </div>
+              	</div>
+            </div>
+        </div>
+      </div>
+  </div>
+  <hr />
+</body>
+</html>

@@ -1,0 +1,338 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta content="text/html;charset=utf-8">
+  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+  <script>
+    init({
+      application: "http://test.iteacher.tw/cs4/tp.ntu.emba.dev",
+      paramValues: {}
+    });
+  </script>
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.min.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/2.2.0/knockout-min.js"></script>
+  <!--<script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-2.2.0.debug.js"></script>-->
+  <script src="js/choose-course.js"></script>
+</head>
+<body>
+  <div id="gadget" class="my-page">
+      <div id="mainMsg"></div>
+      <div class="row-fluid">
+        <div class="span12">
+            <h1>
+              <span data-bind="text: currentData.SchoolYear"></span> 學年度 <span data-bind="text: currentData.FullSemester"></span>
+                <ul id="myTab" class="nav nav-tabs my-navtabs">
+                    <li data-bind="if: currentData.Item() !== '0'"><a href="#sa01" data-toggle="tab">可選課程</a></li>
+                    <li data-bind="if: currentData.Item() === '0'"><a href="#sa06" data-toggle="tab">選課最終確認</a></li>
+                    <li><a href="#sa02" data-toggle="tab">課程總表</a></li>
+                    <li><a href="#sa03" data-toggle="tab">衝堂課程</a></li>
+                    <li><a href="#sa04" data-toggle="tab">選課注意事項</a></li>
+                    <li><a href="#sa05" data-toggle="tab">選課問答集</a></li>
+                </ul>
+            </h1>
+            <div id="myTabContent" class="tab-content">
+              <div class="tab-pane fade" id="sa01">
+                  <div class="alert alert-info" data-bind="html: course_opening_info.Item1"></div>
+                  <div class="my-sure" data-bind="if: currentData.Item() == '1' || currentData.Item() == '2'">
+                      <button type="button" class="btn btn-success" action-type="save" data-toggle="modal" data-target="#myModal">送出</button>
+                      <button type="button" class="btn" data-bind="click: reset_add_quit">取消</button>
+                  </div>
+                  <table class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th colspan="9">已選課程清單</th>
+                          </tr>
+                          <tr>
+                            <th>退</th>
+                            <th>課程編號</th>
+                            <th>班次</th>
+                            <th>（必/選修）課程名稱</th>
+                            <th>授課教師</th>
+                            <th>學分</th>
+                            <th>人數上限</th>
+                            <th>教室</th>
+                            <th>上課時間</th>
+                          </tr>
+                        </thead>
+                        <tbody data-bind="foreach: curr_attend">
+                          <tr data-bind="if: !WillQuit(), css: { 'my-error': HaveConflict().length > 0}">
+                            <td rowspan="2" class="my-cbx-style" data-bind="if: $root.currentData.Item() == '1' || $root.currentData.Item() == '2'">
+                              <button type="button" class="close" data-bind="click: $root.set_quit_cousre">×</button>
+                            </td>
+                            <td data-bind="text: NewSubjectCode"></td>
+                            <td data-bind="text: ClassName"></td>
+                            <td data-bind="type_format: CourseType">
+                              <a data-bind="visible: Syllabus, text: CourseName, attr: { href: Syllabus }" target="_blank"></a>
+                              <span data-bind="visible: !Syllabus, text: CourseName"></span>
+                            </td>
+                            <td data-bind="text: TeacherName"></td>
+                            <td data-bind="text: Credit"></td>
+                            <td data-bind="text: Capacity"></td>
+                            <td data-bind="text: Classroom"></td>
+                            <td data-bind="text: CourseTimeInfo"></td>
+                          </tr>
+                          <tr data-bind="if: !WillQuit(), css: { 'my-error': HaveConflict().length > 0}">
+                            <td colspan="8" data-bind="text: Memo"></td>
+                          </tr>
+                        </tbody>
+                        <tbody data-bind="visible: curr_attend().length === 0"><tr><td colspan="9">目前無資料</td></tbody>
+                  </table>
+                  <table class="table table-bordered table-striped">
+                      <thead>
+                        <tr>
+                          <th colspan="9">可選課程清單</th>
+                        </tr>
+                        <tr>
+                          <th>加</th>
+                          <th>課程編號</th>
+                          <th>班次</th>
+                          <th>（必/選修）課程名稱</th>
+                          <th>授課教師</th>
+                          <th>學分</th>
+                          <th>人數上限</th>
+                          <th>教室</th>
+                          <th>上課時間</th>
+                        </tr>
+                      </thead>
+                      <tbody data-bind="foreach: can_choose_course">
+                        <tr data-bind="css: { 'my-error': HaveConflict().length > 0}">
+                          <td rowspan="2" class="my-cbx-style" data-bind="if: $root.currentData.Item() == '1' || $root.currentData.Item() == '2'">
+                            <input type="checkbox" data-bind="checked: WillAdd, value: CourseID">
+                          </td>
+                          <td data-bind="text: NewSubjectCode"></td>
+                          <td data-bind="text: ClassName"></td>
+                          <td data-bind="type_format: CourseType">
+                            <a data-bind="visible: Syllabus, text: CourseName, attr: { href: Syllabus }" target="_blank"></a>
+                            <span data-bind="visible: !Syllabus, text: CourseName"></span>
+                          </td>
+                          <td data-bind="text: TeacherName"></td>
+                          <td data-bind="text: Credit"></td>
+                          <td data-bind="text: Capacity"></td>
+                          <td data-bind="text: Classroom"></td>
+                          <td data-bind="text: CourseTimeInfo"></td>
+                        </tr>
+                        <tr data-bind="css: { 'my-error': HaveConflict().length > 0}">
+                          <td colspan="8" data-bind="text: Memo"></td>
+                        </tr>
+                      </tbody>
+                      <tbody data-bind="visible: can_choose_course().length === 0"><tr><td colspan="9">目前無資料</td></tbody>
+                  </table>
+                  <div class="my-sure" data-bind="if: currentData.Item() == '1' || currentData.Item() == '2'">
+                      <button type="button" class="btn btn-success" action-type="save-data">送出</button>
+                      <button type="button" class="btn" data-bind="click: reset_add_quit">取消</button>
+                  </div>
+              </div>
+              <div class="tab-pane fade" id="sa02">
+                  <table class="table table-bordered table-striped">
+                      <thead>
+                        <tr>
+                          <th>課程編號</th>
+                          <th>班次</th>
+                          <th>（必/選修）課程名稱</th>
+                          <th>授課教師</th>
+                          <th>學分</th>
+                          <th>人數上限</th>
+                          <th>教室</th>
+                          <th>上課時間</th>
+                        </tr>
+                      </thead>
+                      <tbody data-bind="foreach: all_course">
+                        <tr>
+                          <td data-bind="text: NewSubjectCode"></td>
+                          <td data-bind="text: ClassName"></td>
+                          <td data-bind="type_format: CourseType">
+                            <a data-bind="visible: Syllabus, text: CourseName, attr: { href: Syllabus }" target="_blank"></a>
+                            <span data-bind="visible: !Syllabus, text: CourseName"></span>
+                          </td>
+                          <td data-bind="text: TeacherName"></td>
+                          <td data-bind="text: Credit"></td>
+                          <td data-bind="text: Capacity"></td>
+                          <td data-bind="text: Classroom"></td>
+                          <td data-bind="text: CourseTimeInfo"></td>
+                        </tr>
+                        <tr>
+                          <td colspan="8" data-bind="text: Memo"></td>
+                        </tr>
+                      </tbody>
+                      <tbody data-bind="visible: all_course().length === 0"><tr><td colspan="8">目前無資料</td></tbody>
+                  </table>
+              </div>
+              <div class="tab-pane fade" id="sa03">
+              </div>
+              <div class="tab-pane fade" id="sa04">
+                  <div class="accordion" id="accordion2" data-bind="foreach: faq.A">
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" data-bind="html: Title, attr: {href: Href}"></a>
+                          </div>
+                          <div class="accordion-body collapse" data-bind="attr: {id: Id}">
+                            <div class="accordion-inner" data-bind="html: Content"></div>
+                          </div>
+                        </div>
+                  </div>
+                  <div data-bind="visible: faq.A().length === 0">目前無資料</div>
+              </div>
+              <div class="tab-pane fade" id="sa05">
+                  <div class="accordion" id="accordion3" data-bind="foreach: faq.B">
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion3" data-bind="html: Title, attr: {href: Href}"></a>
+                          </div>
+                          <div class="accordion-body collapse" data-bind="attr: {id: Id}">
+                            <div class="accordion-inner" data-bind="html: Content"></div>
+                          </div>
+                        </div>
+                  </div>
+                  <div data-bind="visible: faq.B().length === 0">目前無資料</div>
+              </div>
+              <div class="tab-pane fade" id="sa06">
+                <div class="alert alert-info" data-bind="html: course_opening_info.Item0"></div>
+                    <div class="my-sure" data-bind="visible: !sc_confirm()">
+                        <a href="#" class="btn btn-success">確認最終選課結果</a>
+                        <a href="#" class="btn" data-bind="click: printCourse">列印加退選單</a>
+                    </div>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th>課程編號</th>
+                            <th>班次</th>
+                            <th>（必/選修）課程名稱</th>
+                            <th>授課教師</th>
+                            <th>學分</th>
+                            <th>人數上限</th>
+                            <th>教室</th>
+                            <th>上課時間</th>
+                          </tr>
+                        </thead>
+                        <tbody data-bind="foreach: sc_attend">
+                          <tr>
+                            <td data-bind="text: NewSubjectCode"></td>
+                            <td data-bind="text: ClassName"></td>
+                            <td data-bind="type_format: CourseType">
+                              <a data-bind="visible: Syllabus, text: CourseName, attr: { href: Syllabus }" target="_blank"></a>
+                              <span data-bind="visible: !Syllabus, text: CourseName"></span>
+                            </td>
+                            <td data-bind="text: TeacherName"></td>
+                            <td data-bind="text: Credit"></td>
+                            <td data-bind="text: Capacity"></td>
+                            <td data-bind="text: Classroom"></td>
+                            <td data-bind="text: CourseTimeInfo"></td>
+                          </tr>
+                          <tr>
+                            <td colspan="8" data-bind="text: Memo"></td>
+                          </tr>
+                        </tbody>
+                        <tbody data-bind="visible: sc_attend().length === 0"><tr><td colspan="8">目前無資料</td></tbody>
+                    </table>
+                    <div class="my-sure" data-bind="visible: !sc_confirm()">
+                        <a href="#" class="btn btn-success">確認最終選課結果</a>
+                        <a href="#" class="btn" data-bind="click: printCourse">列印加退選單</a>
+                    </div>
+              </div>
+            </div>
+        </div>
+      </div>
+
+      <div class="modal hide" id="myModal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">×</button>
+          <h3></h3>
+          <div id="errorMessage"></div>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" id="save-data" autocomplete="off" data-loading-text="儲存中...">送出</button>
+          <button type="button" class="btn" data-dismiss="modal">取消</button>
+        </div>
+      </div>
+
+      <div class="my-print-page hide">
+        <div class="my-title">國立臺灣大學 EMBA
+          <span data-bind="text: currentData.SchoolYear"></span>學年度
+          <span data-bind="text: currentData.FullSemester"></span> 加退選課紀錄表</div>
+        <div class="my-studnet-info">
+          <table>
+            <tr>
+              <td class="my-student-number">學號:<span data-bind="text: student.StudentNumber"></span></td>
+              <td class="my-class-name">班級:<span data-bind="text: student.ClassName"></span></td>
+              <td class="my-dept-name">系所名稱:<span data-bind="text: student.DeptName"></span></td>
+              <td class="my-student-name">姓名:<span data-bind="text: student.StudentName"></span></td>
+            </tr>
+          </table>
+        </div>
+        <div class="my-course-title">你所選擇課程如下:</div>
+        <div class="my-course-info">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 6.9%;">退選<br />畫X</th>
+                <th style="width: 10.3%;">流水號</th>
+                <th style="width: 10.3%">課程編號</th>
+                <th style="width: 8.6%;">班次</th>
+                <th style="width: 38.1%">課程名稱</th>
+                <th style="width: 5.1%;">學分</th>
+                <th style="width: 8.6%;">教室</th>
+                <th style="width: 10.3%;">上課時間</th>
+              </tr>
+            </thead>
+            <tbody data-bind="foreach: sc_attend">
+              <tr>
+                <td></td>
+                <td data-bind="text: SerialNo"></td>
+                <td data-bind="text: NewSubjectCode"></td>
+                <td data-bind="text: ClassName"></td>
+                <td data-bind="text: CourseName"></td>
+                <td data-bind="text: Credit"></td>
+                <td data-bind="text: Classroom"></td>
+                <td data-bind="text: CourseTimeInfo"></td>
+              </tr>
+            </tbody>
+            <tbody data-bind="visible: sc_attend().length === 0"><tr><td colspan="8">無選擇課程</td></tbody>
+          </table>
+        </div>
+        <div class="my-addcourse-title">課程加選欄:</div>
+        <div class="my-addcourse-info">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 10.4%;">流水號</th>
+                <th style="width: 18.1%;">課程編號</th>
+                <th style="width: 8.6%;">班次</th>
+                <th style="width: 36.7%;">課程名稱</th>
+                <th style="width: 5.1%;">學分</th>
+                <th style="width: 18.9%;">教師簽章</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="student-sign">
+          <div>共修:_________學分</div>
+          <div>學生簽章:______________________________</div>
+          <div>聯絡電話:______________________________</div>
+        </div>
+        <div class="my-note-title">注意事項:</div>
+        <div class="my-note-info">
+          <p>◎學生不論是否加退科目，均應簽名確認繳回!!</p>
+          <p>◎加選課程需請授課教師簽名。</p>
+          <p>◎請於102年2月24日(日)中午12點之前將本表繳回EMBA服務中心，亦可傳真到(02)23636073或掃描後將電子檔寄至embacourse@ntu.edu.tw。</p>
+          <p>◎請務必於時限內完成加退選，逾期將無法加選課程，欲退選之課程只能申請停修(限一科)。</p>
+        </div>
+      </div>
+  </div>
+  <hr />
+</body>
+</html>
