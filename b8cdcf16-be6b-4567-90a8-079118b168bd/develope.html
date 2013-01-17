@@ -124,7 +124,7 @@
                       <tbody data-bind="visible: can_choose_course().length === 0"><tr><td colspan="9">目前無資料</td></tbody>
                   </table>
                   <div class="my-sure" data-bind="if: currentData.Item() == '1' || currentData.Item() == '2'">
-                      <button type="button" class="btn btn-success" action-type="save-data">送出</button>
+                      <button type="button" class="btn btn-success" action-type="save" data-toggle="modal" data-target="#myModal">送出</button>
                       <button type="button" class="btn" data-bind="click: reset_add_quit">取消</button>
                   </div>
               </div>
