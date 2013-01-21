@@ -674,11 +674,11 @@ jQuery(function () {
 
                 for (i=1; i<=page_count; i+=1) {
                     content += $('.my-print-page > div[data-area=title]').html();
-                    content += '<div class="my-pages">頁次：' + i + '/' + page_count + '</div>';
+                    if (page_count > 1) { content += '<div class="my-pages">頁次：' + i + '/' + page_count + '</div>' };
 
                     var start = 28 * (i - 1);
                     var end   = (28 * i ) - 1;
-                    page = $('.my-print-page > div[data-area=course]').clone();
+                    var page = $('.my-print-page > div[data-area=course]').clone();
                     $(page).find('tbody tr').each(function(index, item) {
                         if (!(index >= start && index <= end)) {
                             $(item).remove();
@@ -696,7 +696,7 @@ jQuery(function () {
                 }
                 if (self.sc_attend().length % 28 > 14) {
                     content += $('.my-print-page > div[data-area=title]').html();
-                    content += '<div class="my-pages">頁次：' + page_count + '/' + page_count + '</div>';
+                    if (page_count > 1) { content += '<div class="my-pages">頁次：' + page_count + '/' + page_count + '</div>' };
                     content += $('.my-print-page > div[data-area=sign]').html();
                 } else {
                     content += $('.my-print-page > div[data-area=sign]').html();
