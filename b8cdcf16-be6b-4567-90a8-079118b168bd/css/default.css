@@ -40,6 +40,13 @@ td li {
 .my-cbx-style {
   width: 15px;
 }
+div.modal div.my-Msg div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
 #sa01 tbody tr.my-error td {
   background: #F2DEDE;
 }
@@ -66,6 +73,9 @@ td li {
 }
 .my-print-page .my-studnet-info .my-dept-name {
   width: 30%;
+}
+.my-print-page .my-pages {
+  text-align: right;
 }
 .my-print-page .my-course-info,
 .my-print-page .my-addcourse-info {
