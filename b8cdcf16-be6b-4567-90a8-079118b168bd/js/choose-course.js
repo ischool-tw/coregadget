@@ -1027,7 +1027,6 @@ ko.bindingHandlers.conflict_list = {
                 placement :'right',
                 title     : '與「' + title.join(', ') + '」衝堂'
             });
-            console.log(title.join(','))
         }
     }
 };
