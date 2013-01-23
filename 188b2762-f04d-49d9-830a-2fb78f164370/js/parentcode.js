@@ -62,7 +62,7 @@ jQuery(function () {
 
 });
 
-// TODO: 顯示班級學生的 ParentCode
+// TODO: 顯示班級學生的 ParentCode、StudentCode
 _gg.getStudentList = function() {
     $('#student1').html('');
     _gg.students = [];
@@ -85,8 +85,9 @@ _gg.getStudentList = function() {
 
                             ret.push(
                                 '<tr>' +
-                                '<td>' + (item.StudentName || '&nbsp;') + '</td>' +
                                 '<td>' + (item.SeatNo || '&nbsp;') + '</td>' +
+                                '<td>' + (item.StudentName || '&nbsp;') + '</td>' +
+                                '<td>' + (item.StudentCode || '&nbsp;') + '</td>' +
                                 '<td><span data-type="parentCode" studentID="' + (item.StudentID || '') + '">' + (item.ParentCode || '') + '</spna></td>' +
                                 '<td><a href="#" action-type="refreshP" studentID="' + (item.StudentID || '') + '" title="重設代碼"><i class="icon-refresh"></i></a></td>' +
                                 '<td><a href="#" action-type="removeP" studentID="' + (item.StudentID || '') + '" title="清除代碼"><i class="icon-trash"></i></a></td>' +
@@ -100,11 +101,25 @@ _gg.getStudentList = function() {
                             var tmp_head ='<table class="table my-table2">' +
                                 '<thead>' +
                                 '<tr>' +
-                                '<th>姓名</th><th>座號</th><th>家長代碼</th><th>重設代碼</th><th>清除代碼</th><th>家長姓名</th>' +
+                                '<th>座號</th><th>姓名</th><th>學生代碼</th><th>家長代碼</th><th>重設代碼</th><th>清除代碼</th><th>家長姓名</th>' +
                                 '</tr>'
                                 '</thead>';
 
                             $('#student1').html(tmp_head + '<tbody>' + tmp_html + '</tbody></table>');
+                            $('#student1 table').dataTable({
+                                "bPaginate" : false,
+                                "bFilter"   : false,
+                                "bInfo"     : false,
+                                "aoColumns": [
+                                  null,
+                                  null,
+                                  { "bSortable": false },
+                                  { "bSortable": false },
+                                  { "bSortable": false },
+                                  { "bSortable": false },
+                                  { "bSortable": false }
+                                ]
+                            });
                         } else {
                             $('#student1').html('目前無資料');
                         }
