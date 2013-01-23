@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="家長代碼管理" description="老師-家長代碼管理">
-    <Title lang="zh-TW">家長代碼管理</Title>
+  <ModulePrefs title="代碼管理" description="老師-代碼管理">
+    <Title lang="zh-TW">代碼管理</Title>
     <Icon>icon.png</Icon>
     <Mobile />
     <Title lang="zh-CN">

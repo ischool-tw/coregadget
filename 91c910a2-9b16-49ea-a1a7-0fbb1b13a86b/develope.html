@@ -12,9 +12,11 @@
   <link href="css/bootstrap.min.css" rel="stylesheet" />
   <link href="css/bootstrap-responsive.min.css" rel="stylesheet" />
   <link href="css/mybootstrap.css" rel="stylesheet" />
+  <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css" rel="stylesheet"/>
   <link href="css/base.css" rel="stylesheet" />
   <link href="css/default.css" rel="stylesheet" />
   <script src="js/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
   <script src="js/bootstrap.js"></script>
   <script src="js/jquery.validate.min.js"></script>
   <script src="js/jquery.metadata.js"></script>
@@ -27,17 +29,17 @@
       <div class="row-fluid">
         <div class="span12">
             <h1>學校基本資料</h1>
-            <form>
+            <form id="myform">
               <table class="table my-table2">
                 <tbody>
                   <tr>
-                    <th>學校代碼</th>
-                    <td><input type="text" id="edit-Code" placeholder="學校代碼..."></td>
+                    <!-- <th>學校代碼</th>
+                    <td><input type="text" id="edit-Code" name="edit-Code" placeholder="學校代碼..."></td> -->
                     <th>學年度</th>
-                    <td><input type="text" class="{digits:true}" id="edit-DefaultSchoolYear" placeholder="101"></td>
+                    <td><input type="text" class="{digits:true}" id="edit-DefaultSchoolYear" name="edit-DefaultSchoolYear" placeholder="101"></td>
                     <th>學期</th>
                     <td>
-                      <select class="input-mini" id="edit-DefaultSemester">
+                      <select class="input" id="edit-DefaultSemester" name="edit-DefaultSemester">
                         <option>1</option>
                         <option>2</option>
                       </select>
@@ -49,39 +51,39 @@
                 <tbody>
                   <tr>
                     <th>學校中文名稱</th>
-                    <td colspan="3"><input class="input-xxlarge" type="text" id="edit-ChineseName" placeholder="學校中文名稱..."></td>
+                    <td colspan="3"><input class="input-xxlarge" type="text" id="edit-ChineseName" name="edit-ChineseName" placeholder="學校中文名稱..."></td>
                   </tr>
                   <tr>
                     <th>學校英文名稱</th>
-                    <td colspan="3"><input class="input-xxlarge" type="text" id="edit-EnglishName" placeholder="學校英文名稱..."></td>
+                    <td colspan="3"><input class="input-xxlarge" type="text" id="edit-EnglishName" name="edit-EnglishName" placeholder="學校英文名稱..."></td>
                   </tr>
                   <tr>
                     <th>學校中文地址</th>
-                    <td colspan="3"><input class="input-xxlarge" type="text" id="edit-Address" placeholder="學校中文地址..."></td>
+                    <td colspan="3"><input class="input-xxlarge" type="text" id="edit-Address" name="edit-Address" placeholder="學校中文地址..."></td>
                   </tr>
                   <tr>
                     <th>學校英文地址</th>
-                    <td colspan="3"><input class="input-xxlarge" type="text" id="edit-EnglishAddress" placeholder="學校英文地址..."></td>
+                    <td colspan="3"><input class="input-xxlarge" type="text" id="edit-EnglishAddress" name="edit-EnglishAddress" placeholder="學校英文地址..."></td>
                   </tr>
                   <tr>
                     <th>學校電話</th>
-                    <td><input type="text" id="edit-Fax" placeholder="學校電話..."></td>
+                    <td><input type="text" id="edit-Fax" name="edit-Fax" placeholder="學校電話..."></td>
                     <th>學校傳真</th>
-                    <td><input type="text" id="edit-Telephone" placeholder="學校傳真..."></td>
+                    <td><input type="text" id="edit-Telephone" name="edit-Telephone" placeholder="學校傳真..."></td>
                   </tr>
                   <tr>
                     <th>校長中文姓名</th>
-                    <td colspan="3"><input class="input-xxlarge" type="text" id="edit-ChancellorChineseName" placeholder="校長中文姓名..."></td>
+                    <td colspan="3"><input class="input-xxlarge {TeacherName:true}" type="text" id="edit-ChancellorChineseName" name="edit-ChancellorChineseName" placeholder="校長中文姓名..."></td>
                     </tr>
                   <tr>
                     <th>校長英文姓名</th>
-                    <td colspan="3"><input class="input-xxlarge" type="text" id="edit-ChancellorEnglishName" placeholder="校長英文姓名..."></td>
+                    <td colspan="3"><input class="input-xxlarge" type="text" id="edit-ChancellorEnglishName" name="edit-ChancellorEnglishName" placeholder="校長英文姓名..."></td>
                     </tr>
                   <tr>
                     <th>教務主任姓名</th>
-                    <td><input type="text" id="edit-EduDirectorName" placeholder="教務主任姓名..."></td>
+                    <td><input type="text" id="edit-EduDirectorName" name="edit-EduDirectorName" placeholder="教務主任姓名..."></td>
                     <th>學務主任姓名</th>
-                    <td><input type="text" id="edit-StuDirectorName" placeholder="學務主任姓名..."></td>
+                    <td><input type="text" id="edit-StuDirectorName" name="edit-StuDirectorName" placeholder="學務主任姓名..."></td>
                     </tr>
                 </tbody>
               </table>
