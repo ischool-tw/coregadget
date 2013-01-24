@@ -123,7 +123,7 @@ _gg.GetStudentDetail = function() {
                             );
 
                             if ($.isNumeric(item.Hours)) {
-                                count_hour += (parseFloat(item.Hours, 10) * 10);
+                                count_hour += (parseFloat(item.Hours, 10) * 100);
                             }
                         });
                     }
@@ -134,7 +134,7 @@ _gg.GetStudentDetail = function() {
                         $('table[data-type=detail] tbody').html('<tr><td colspan="5">目前無資料</td></tr>');
                     }
 
-                    count_hour = (count_hour / 10);
+                    count_hour = (count_hour / 100);
                     $('table[data-type=total] td').html(count_hour);
                 }
             }
