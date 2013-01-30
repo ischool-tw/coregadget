@@ -1,251 +1,256 @@
-﻿/// <reference path="../include/jquery-1.7.2.min.js"/>
-var myparent = myparent || {};
-myparent.public_connection;
+var _gg = _gg || {};
 
-$(document).ready(function () {
-    $('a[data-toggle=modal]').bind('click', function () {
-        $("div .control-group").removeClass("error");
-        $(".help-inline").html("");
-        if ($(this).attr("action-type") === "profile") {
-            myparent.setParentInfo();
+jQuery(function () {
+    _gg.updatePhoto();
+    $('#edit-Birthdate').datepicker();
+    $('#save-myself').addClass('hide');
+    $('span.my-trash').click(function() {
+        $("#edit-Photo div.my-proimg").attr('photo-base64', '');
+        $("#edit-Photo div.my-proimg").css('background-image', 'url(css/images/nophoto.png)');
+    });
+
+    // TODO: 點選取消鈕退出小工具
+    $('#exit-gadget').bind('click', function() {
+        gadget.backToMenu(true); //顯示主選單
+    });
+
+    // TODO: 出現 code 的強制視窗
+    $('#myModal').modal({
+        keyboard : false,
+        show     : true
+    })
+
+    // TODO: 預設輸入代碼為focus
+    $('#inputCode').focus();
+
+    // TODO: 代碼確認
+    $('#save-data').bind('click', function() {
+        $('#errorMessage').html('');
+        if ($('#inputCode').val() && $('#relationship').val()) {
+            $(this).button("loading");
+            _gg.setAccount();
         } else {
-            myparent.setRelationship();
+            $('#inputCode').focus().addClass('error');
+            if (!($('#inputCode').val())) {
+                $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請輸入代碼！\n</div>");
+            } else {
+                $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請輸入稱謂！\n</div>");
+            }
         }
     });
 
-    $("#editModal").modal({ show: false });
-
-    $("#editModal").on("hidden", function () {
-        return $("#editModal #errorMessage").html("");
-    });
-
-    $("#editModal").on("show", function () {
-        return $("#editModal #save-data").button('reset');
-    });
-
-    $("#editModal #save-data").click(function () {
-        $("div .control-group").removeClass("error");
-        $(".help-inline").html("");
-        $("#editModal #save-data").button('loading');
-        var edit_target = $(this).attr("edit-target");
-        switch (edit_target) {
-            case "profile":
-                var tmp_request = {
-                    Name: $('#edit_Name').val(),
-                    CellPhone: $('#edit_CellPhone').val(),
-                    EMail: $('#edit_EMail').val()
-                };
-
-                myparent.parentInto.set_ParentInfo(tmp_request);
-                break;
-            case 'relationship':
-                myparent.saveParentRelationship($('#ParentCode').val(), $('#IDNumber').val(), $('#Relationship').val());
-                break;
+    // TODO: 基本資料儲存鈕
+    $('#save-myself').click(function() {
+        $('#mainMsg').html('');
+        if ($("#profile form").valid()) {
+            // TODO: 驗證通過
+            $(this).button("loading");
+            _gg.saveMyInfo();
+        } else {
+            $('#mainMsg').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  資料驗證失敗，請重新檢查！\n</div>");
         }
     });
+
+    // TODO: 基本資料取消鈕
+    $('#cancel-myself').click(function() {
+        $('#profile').find('input:text, textarea').val('')
+            .end().find('#edit-Photo').html('<div class="my-proimg" style="background-image:url(css/images/nophoto.png);"></div>');
+    });
+
+    $.datepicker.setDefaults({
+        dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"]
+        ,monthNames: ["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]
+        ,dateFormat: "yy/mm/dd"
+    });
+
+
+    // TODO: 驗證設定
+    $.validator.setDefaults({
+        debug: false, // 為 true 時不會 submit
+        errorElement: "span", //錯誤時使用元素
+        errorClass: "help-inline", //錯誤時使用樣式
+        highlight: function(element) {
+            // 將未通過驗證的表單元素設置高亮度
+            $(element).parentsUntil('.control-group').parent().addClass("error");
+        },
+        unhighlight: function(element) {
+            // 與 highlight 相反
+            $(element).parentsUntil('.control-group').parent().removeClass("error");
+        },
+        errorPlacement: function (error, element) {
+            // 錯誤標籤的顯示位置
+            error.insertAfter(element);
+        }
+    });
+
+    // TODO: 個性簽名的 tooltip
+    $('#edit-Photo').tooltip();
 });
 
-myparent.parent_connection = gadget.getContract("auth.parent");
-
-/* 設定關係 */
-myparent.saveParentRelationship = function (parentCode, idNumber, relationship) {
-    myparent.public_connection = gadget.getContract("parentguest");
-    myparent.public_connection.send({
-        service: 'Parent.SetParentRelationship',
-        body: {
-            Request: {
-                ParentCode: parentCode,
-                IDNumber: idNumber,
-                Relationship: relationship
-            }
-        },
-        result: function (response, error, http) {
-            if (error != null) {
-                switch (error.dsaError.header.DSFault.Fault.Code) {
-                    case '001': //家長代碼或身分證號不正確
-                        $('#ParentCode, #IDNumber')
-                            .parent().parent().addClass("error")
-                            .find(".help-inline").html(error.dsaError.message);
-                        $('#ParentCode').focus();
-                        break;
-                    case '002': //此代碼已經設定過了
-                        $('#ParentCode')
-                            .focus()
-                            .parent().parent().addClass("error")
-                            .find(".help-inline").html(error.dsaError.message);
-                        break;
-                    case '003': //與家長建立關聯時發生錯誤
-                        $('#errorMessage').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><strong>設定失敗！</strong> 建立關聯時發生錯誤</div>');
-                        break;
-                    default:
-                        $('#errorMessage').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><strong>設定失敗！</strong> ' + error.dsaError.message + '</div>');
-                }
-            } else {
-                myparent.childrenList();
-                $("#editModal").modal("hide");
-            }
-            $("#editModal #save-data").button('reset');
+// TODO: 個人基本資料-上傳照片
+_gg.updatePhoto = function() {
+    // TODO: 處理上傳圖片
+    $('#edit-Photo').click(function(evt) {
+        $('#mainMsg').html('');
+        $('#files').val('').trigger('click');
+    });
+    $('#files').change(function(evt) {
+        if (evt.target == undefined ||
+        evt.target.files == undefined ||
+        evt.target.files.length == 0) {
+            alert("您的瀏覽器並未支援讀取檔案功能，請更新您的瀏覽器，謝謝!\n\n建議瀏覽器：Chrome 10+, IE 10+, Firefox 10+");
+            return;
         }
+
+        var file = evt.target.files[0];
+
+        // TODO: 限制檔案大小
+        var fileSize = 0; //檔案大小
+        var SizeLimit = 1024 * 50;  //上傳上限，單位:byte, 50KB
+        if ($.browser.msie) {
+            //FOR IE
+            var img = new Image();
+            img.onload = checkSize;
+            img.src = file.value;
+            fileSize = this.fileSize;
+        }
+        else {
+            //FOR Firefox,Chrome
+            fileSize = file.size;
+        }
+
+        if (fileSize > SizeLimit) {
+            var _filesize = (fileSize / 1024).toPrecision(4);
+            var _limit = (SizeLimit / 1024).toPrecision();
+            var msg = "您所選擇的檔案大小為 " + _filesize + " KB\n已超過上傳上限 " + _limit + " KB\n不允許上傳！"
+            $('#mainMsg').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + msg + "\n</div>");
+            return;
+        }
+
+        if (!(file.type == "image/png" || file.type == "image/jpeg")) {
+            $('#mainMsg').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請使用 .jpg 或 .png 格式！\n</div>");
+            return;
+        }
+
+        var reader = new FileReader();
+        reader.onload = (function(theFile) {
+            return function(e) {
+                $("#edit-Photo div.my-proimg").css('background-image', 'url(' + e.target.result + ')');
+
+                var photo_base64 = e.target.result
+                .replace("data:image/png;base64,", "")
+                .replace("data:image/jpeg;base64,", "");
+
+                $("#edit-Photo div.my-proimg").attr("photo-base64", photo_base64);
+            };
+        })(file);
+        reader.readAsDataURL(file);
+
     });
 };
 
-/* 關係表 */
-myparent.childrenList = function () {
-    //	parent_connection.ready(function () {
-    myparent.parent_connection.send({
-        service: 'My.Children',
-        body: '',
-        result: function (response, error, http) {
-            if (error != null) {
-                return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>\n</div>");
+// TODO: 儲存個人基本資料
+_gg.saveMyInfo = function() {
+    var teachername = $('#edit-TeacherName').val() || '';
+    if (teachername) {
+        var photo = $('#edit-Photo div.my-proimg').attr('photo-base64') || '';
+        var gender = $('#edit-Gender').val() || '';
+        var aboutme = $('#edit-AboutMe').val() || '';
+        var birthdate = $('#edit-Birthdate').val() || '';
+        var cellphone = $('#edit-CellPhone').val() || '';
+        var contactaddress = $('#edit-ContactAddress').val() || '';
+        var contactphone = $('#edit-ContactPhone').val() || '';
+        var email = $('#edit-Email').val() || '';
+        var tagline = $('#edit-Tagline').val() || '';
 
-            } else {
-                var tempHtml = '';
-                $(response.Children.Child).each(function (index, item) {
-                    tempHtml += '<tr>';
-                    tempHtml += '<td>' + item.Name + '</td>';
-                    tempHtml += '<td>' + item.ClassName + '</td>';
-                    tempHtml += '<td>' + item.SeatNo + '</td>';
-                    tempHtml += '<td>' + item.Relationship + '</td>';
-                    tempHtml += '</tr>';
-                });
+        var request = [];
+        request.push('<AboutMe>' + aboutme + '</AboutMe>');
+        request.push('<Birthdate>' + birthdate + '</Birthdate>');
+        request.push('<CellPhone>' + cellphone + '</CellPhone>');
+        request.push('<ContactAddress>' + contactaddress + '</ContactAddress>');
+        request.push('<ContactPhone>' + contactphone + '</ContactPhone>');
+        request.push('<Email>' + email + '</Email>');
+        request.push('<Gender>' + gender + '</Gender>');
+        request.push('<Photo>' + photo + '</Photo>');
+        request.push('<Tagline>' + tagline + '</Tagline>');
+        request.push('<ParentName>' + teachername + '</ParentName>');
 
-                $('#childrenList tbody').html(tempHtml);
-            }
-        }
-    });
-    //	});
-
-};
-
-/* 個人資料 */
-myparent.parentInto = function () {
-    var funGetParentInfo = function () {
-        myparent.parent_connection.send({
-            service: 'My.GetPersonalInfo',
-            body: '',
+        _gg.connection.send({
+            service: "_.SetMyInfo",
+            body: '<Request><Profile><Field>' + request.join('') + '</Field></Profile></Request>',
             result: function (response, error, http) {
-                if (error != null) {
-                    return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>\n</div>");
+                if (error !== null) {
+                    $("#save-myself").button("reset");
+                    _gg.set_error_message('#mainMsg', 'SetMyInfo', error);
                 } else {
-                    var tempHtml = '';
-                    myparent.parentProfile = response.Parent;
-                    $(response.Parent).each(function (index, item) {
-                        tempHtml += '<tr><th>姓名</th><td><span>' + item.Name + ' </span></td></tr>';
-                        tempHtml += '<tr><th>行動電話</th><td><span>' + item.CellPhone + ' </span></td></tr>';
-                        tempHtml += '<tr><th>電子信箱</th><td><span >' + item.EMail + ' </span></td></tr>';
-                        //自訂欄位 item.Extension.Field1
+                    window.parent.appsLoader.reflashApplicationList(); // 重新整理選單
+                }
+            }
+        });
+    } else {
+        $("#save-myself").button("reset");
+        $('#mainMsg').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  姓名為必填值！\n</div>");
+    }
+};
+
+
+// TODO: 建立帳號關連
+_gg.setAccount = function() {
+    var code = $('#inputCode').val();
+    var relationship = $('#relationship').val();
+    if (code && relationship) {
+        var public_connection = public_connection || gadget.getContract("auth.guest");
+        public_connection.send({
+            service: "Join.AsParent",
+            body: '<Request><ParentCode>' + code + '</ParentCode><Relationship>' + relationship + '</Relationship></Request>',
+            result: function (response, error, http) {
+                if (error !== null) {
+                    _gg.set_error_message('#errorMessage', 'Join.AsParent', error);
+                    $('#save-data').button("reset");
+                } else {
+                    _gg.connection = gadget.getContract("campuslite.directory.parent");
+
+                    // TODO: 取得我的基本資料
+                    _gg.connection.send({
+                        service: "_.GetMyInfo",
+                        body: '',
+                        result: function (response, error, http) {
+                            if (error !== null) {
+                                _gg.set_error_message('#mainMsg', 'GetMyInfo', error);
+                            } else {
+                                _gg.myself = [];
+                                if (response.ParentInfo != null) {
+                                    $(response.ParentInfo).each(function(index, item) {
+                                        _gg.myself = item;
+                                    });
+                                    if (_gg.myself.ParentName) {
+                                        window.parent.appsLoader.reflashApplicationList(); // 重新整理選單
+                                    } else {
+                                        $('#save-myself').removeClass('hide');
+                                    }
+                                }
+                            }
+                        }
                     });
-
-                    $('#parentProfile tbody').html(tempHtml);
+                    $('#myModal').modal('hide');
                 }
             }
         });
-    };
+    }
+};
 
-    var funSetParentInfo = function (updateValue) {
-        myparent.parent_connection.send({
-            service: 'My.UpdatePersonalInfo',
-            body: {
-                Request: {
-                    Parent: updateValue
-                }
-            },
-            result: function (response, error, http) {
-                if (error != null) {
-                    return $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>\n</div>");
-                } else {
-                    $("#editModal").modal("hide");
-                    funGetParentInfo();
+// TODO: 錯誤訊息
+_gg.set_error_message = function(select_str, serviceName, error) {
+    var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
+    if (error !== null) {
+        if (error.dsaError) {
+            if (error.dsaError.status === "504") {
+                if (error.dsaError.message) {
+                    tmp_msg = '<strong>' + error.dsaError.message + '</strong><br />(' + serviceName + ')';
                 }
             }
-        });
-    };
-
-    return {
-        set_ParentInfo: function (updateValue) {
-            funSetParentInfo(updateValue);
-        },
-        get_ParentInfo: function () {
-            funGetParentInfo();
         }
-    };
-} ();
-
-
-myparent.setParentInfo = function () {
-    var pProfile = myparent.parentProfile;
-    var tmp_editProfile = '';
-    tmp_editProfile = '<form class="form-horizontal">' +
-      '<fieldset>' +
-        '<div class="control-group">' +
-          '<label class="control-label" for="edit_Name">姓名</label>' +
-          '<div class="controls">' +
-            '<input type="text" class="input-large" id="edit_Name" placeholder="姓名..." value="' + pProfile.Name + '">' +
-            '<span class="help-inline"></span>' +
-          '</div>' +
-        '</div>' +
-        '<div class="control-group">' +
-          '<label class="control-label" for="edit_CellPhone">行動電話</label>' +
-          '<div class="controls">' +
-            '<input type="text" class="input-large" id="edit_CellPhone" placeholder="行動電話..." value="' + pProfile.CellPhone + '">' +
-            '<span class="help-inline"></span>' +
-          '</div>' +
-        '</div>' +
-        '<div class="control-group">' +
-          '<label class="control-label" for="edit_EMail">電子信箱</label>' +
-          '<div class="controls">' +
-            '<input type="text" class="input-large" id="edit_EMail" placeholder="電子信箱..." value="' + pProfile.EMail + '">' +
-            '<span class="help-inline"></span>' +
-          '</div>' +
-        '</div>' +
-      '</fieldset>' +
-    '</form>'
-
-    $("#editModal h3").html("家長基本資料");
-    $("#editModal .modal-body").html(tmp_editProfile);
-    $("#editModal #save-data").attr("edit-target", "profile")
-    $("#editModal").modal("show");
+        $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
+        $('.my-err-info').click(function(){alert('請拍下此圖，並與客服人員連絡，謝謝您。\n' + JSON.stringify(error, null, 2))});
+    }
 };
-
-myparent.setRelationship = function () {
-    var pProfile = myparent.parentProfile;
-    var tmp_editProfile = '';
-    tmp_editProfile = '<form class="form-horizontal">' +
-      '<fieldset>' +
-        '<div class="control-group">' +
-          '<label class="control-label" for="ParentCode">請輸入家長代碼</label>' +
-          '<div class="controls">' +
-            '<input type="text" class="input-large" id="ParentCode" placeholder="家長代碼..." value="">' +
-            '<span class="help-inline"></span>' +
-          '</div>' +
-        '</div>' +
-        '<div class="control-group">' +
-          '<label class="control-label" for="IDNumber">孩子身分證字號</label>' +
-          '<div class="controls">' +
-            '<input type="text" class="input-large" id="IDNumber" maxlength="10" placeholder="孩子身分證字號..." value="">' +
-            '<span class="help-inline"></span>' +
-          '</div>' +
-        '</div>' +
-        '<div class="control-group">' +
-          '<label class="control-label" for="relationship">請輸入親子關係</label>' +
-          '<div class="controls">' +
-            '<input type="text" class="input-large" id="Relationship" placeholder="親子關係..." value="">' +
-            '<span class="help-inline"></span>' +
-          '</div>' +
-        '</div>' +
-      '</fieldset>'
-    '</form>'
-
-    $("#editModal h3").html("設定帳號親屬關係");
-    $("#editModal .modal-body").html(tmp_editProfile);
-    $("#editModal #save-data").attr("edit-target", "relationship")
-    $("#editModal").modal("show");
-};
-
-
-/* 取回基本資料、關係表 */
-myparent.parent_connection.ready(function () {
-    myparent.childrenList();
-    myparent.parentInto.get_ParentInfo();
-});

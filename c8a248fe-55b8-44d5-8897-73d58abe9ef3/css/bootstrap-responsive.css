@@ -815,21 +815,3 @@
 }
 
 
-/*------------------------*/
-@media (min-width: 768px) and (max-width: 979px) {
-  .input-large,
-  .input-xlarge,
-  .input-xxlarge,
-  input[class*="span"],
-  select[class*="span"],
-  textarea[class*="span"],
-  .uneditable-input {
-    display: block;
-    width: 100%;
-    min-height: 28px;
-    -webkit-box-sizing: border-box;
-       -moz-box-sizing: border-box;
-        -ms-box-sizing: border-box;
-            box-sizing: border-box;
-  }
-}
