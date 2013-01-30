@@ -48,12 +48,7 @@ jQuery ->
     body: "",
     result: (response, error, xhr) ->
       if error?
-        $("#mainMsg").html """
-          <div class='alert alert-error'>
-            <button class='close' data-dismiss='alert'>×</button>
-            <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetCurrentSemester)
-          </div>
-        """
+        set_error_message('#mainMsg', 'GetCurrentSemester', error)
       else
         global.schoolYear = response.Current.SchoolYear
         global.semester = response.Current.Semester
@@ -63,12 +58,7 @@ jQuery ->
           body: "",
           result: (response, error, xhr) ->
             if error?
-              $("#mainMsg").html """
-                <div class='alert alert-error'>
-                  <button class='close' data-dismiss='alert'>×</button>
-                  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetStudentInfo)
-                </div>
-              """
+              set_error_message('#mainMsg', 'GetStudentInfo', error)
             else
               if response.Result?.Student?
                 resetData()
@@ -89,18 +79,15 @@ jQuery ->
                   body: ""
                   result: (response, error, xhr) ->
                     if error?
-                      $("#mainMsg").html """
-                        <div class='alert alert-error'>
-                          <button class='close' data-dismiss='alert'>×</button>
-                          <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetPeriodMappingTable)
-                        </div>
-                      """
+                      set_error_message('#mainMsg', 'GetPeriodMappingTable', error)
                     else
                       global.periods = []
+                      global.period_type = {}
                       global.absence = {}
                       if response.Response?.Period?
                         $(response.Response.Period).each (index, item) ->
                           global.periods.push item
+                          global.period_type[item.Type] = 0  unless global.period_type[item.Type]
 
                         ### 下載缺曠類別表 ###
                         gadget.getContract("ischool.AD.parent").send {
@@ -108,12 +95,7 @@ jQuery ->
                             body: ""
                             result: (response, error, xhr) ->
                               if error?
-                                $("#mainMsg").html """
-                                  <div class='alert alert-error'>
-                                    <button class='close' data-dismiss='alert'>×</button>
-                                    <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetAbsenceMappingTable)
-                                  </div>
-                                """
+                                set_error_message('#mainMsg', 'GetAbsenceMappingTable', error)
                               else
                                 if response.Response?.Absence?
                                   $(response.Response.Absence).each (index, item) ->
@@ -129,12 +111,7 @@ jQuery ->
                   body: "",
                   result: (response, error, xhr) ->
                     if error?
-                      $("#mainMsg").html """
-                        <div class='alert alert-error'>
-                          <button class='close' data-dismiss='alert'>×</button>
-                          <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMorality)
-                        </div>
-                      """
+                      set_error_message('#mainMsg', 'GetMorality', error)
                     else
                       global.morality = response
                       runFirstStudent()
@@ -165,6 +142,7 @@ resetSchoolYearSeme = () ->
 resetData = () ->
   $("#morality-container").removeClass("hide").html ""
   $("#morality-view").addClass "hide"
+  $("#attendance h2 span").html ""
   $("#attendance .my-thumbnails").html ""
   $("#attendance-container").addClass("hide").html("")
   $("#attendance-view").addClass "hide"
@@ -192,12 +170,7 @@ getMorality = () ->
     """,
     result: (response, error, xhr) ->
       if error?
-        $("#mainMsg").html """
-          <div class='alert alert-error'>
-            <button class='close' data-dismiss='alert'>×</button>
-            <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetMoralScore)
-          </div>
-        """
+        set_error_message('#mainMsg', 'GetMoralScore', error)
       else
         items = []
         if response.Result?.SbComment?
@@ -260,12 +233,7 @@ getAttendance = () ->
     """
     result: (response, error, xhr) ->
       if error?
-        $("#mainMsg").html """
-          <div class='alert alert-error'>
-            <button class='close' data-dismiss='alert'>×</button>
-            <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetAttendanceRecord)
-          </div>
-        """
+        set_error_message('#mainMsg', 'GetAttendanceRecord', error)
       else
         absences_t = {}
         absences_d = []
@@ -299,6 +267,9 @@ getAttendance = () ->
 
         _periods = global.periods
         _absence = global.absence
+        _period_type = global.period_type
+        $.each _period_type, (name, item) ->
+          _period_type[name] = 0
 
         thead = "<th>日期</th>"
         $(_periods).each ->
@@ -309,7 +280,11 @@ getAttendance = () ->
         $(absences_d).each (i, item) ->
           tr = "<td>" + item.OccurDate + "</td>"
           $(_periods).each (j, period) ->
-            tr += "<td>" + (_absence[item[period.Name]] || '') + "</td>"
+            if _absence[item[period.Name]]
+              tr += "<td>" + (_absence[item[period.Name]] || '') + "</td>"
+              _period_type[period.Type] += 1
+            else
+              tr += "<td>" + (_absence[item[period.Name]] || '') + "</td>"
 
           tbody += "<tr>" + tr + "</tr>"
 
@@ -331,6 +306,17 @@ getAttendance = () ->
               </table>
             </div>
           """
+
+          total_txt = ''
+          $.each _period_type, (name, item) ->
+            if item > 0
+              total_txt += """
+                <span class="label label-success my-label-font">#{name}：</span> <span class="my-subtitle">#{item}</span>&nbsp;
+              """
+
+          $("#attendance h2 span").html """
+            #{total_txt}
+          """
   }
 
 # TODO: 獎懲
@@ -346,12 +332,7 @@ getDiscipline = () ->
     """
     result: (response, error, xhr) ->
       if error?
-        $("#mainMsg").html """
-          <div class='alert alert-error'>
-            <button class='close' data-dismiss='alert'>×</button>
-            <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetDisciplineRecord)
-          </div>
-        """
+        set_error_message('#mainMsg', 'GetDisciplineRecord', error)
       else
         items = []
         if response.Result?.Discipline?
@@ -462,6 +443,23 @@ getDiscipline = () ->
                       </table>
           """
   }
+
+# TODO: 錯誤訊息
+set_error_message = (select_str, serviceName, error) ->
+  tmp_msg = "<i class=\"icon-white icon-info-sign my-err-info\"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(" + serviceName + ")"
+  if error isnt null
+    if error.dsaError
+      if error.dsaError.status is "504"
+        switch error.dsaError.message
+          when "501"
+            tmp_msg = "<strong>很抱歉，您無讀取資料權限！</strong>"
+      else tmp_msg = error.dsaError.message  if error.dsaError.message
+    else if error.loginError.message
+      tmp_msg = error.loginError.message
+    else tmp_msg = error.message  if error.message
+    $(select_str).html "<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>"
+    $(".my-err-info").click ->
+      alert "請拍下此圖，並與客服人員連絡，謝謝您。\n" + JSON.stringify(error, null, 2)
 
 (($) ->
   $.by = (model, name, minor) ->

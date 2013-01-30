@@ -102,3 +102,15 @@
   color: #333;
   text-decoration: none;
 }
+/*自訂*/
+.my-err-info {
+  cursor: pointer;
+}
+.my-label-font {
+  font-size: 13px;
+}
+.my-subtitle {
+  font-size: 13px;
+  color: #360;
+  margin-right: 5px;
+}
