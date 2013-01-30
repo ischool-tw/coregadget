@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+  <script>
+    init({
+      application: "dev.sh_d",
+      paramValues: {}
+    });
+  </script>
+  <link href="css/bootstrap.min.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.min.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css" rel="stylesheet"/>
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/jquery.validate.min.js"></script>
+  <script src="js/jquery.metadata.js"></script>
+  <script src="js/messages_tw.js"></script>
+  <script src="js/principal.js"></script>
+</head>
+<body>
+  <div id="gadget" class="my-page">
+      <div id="mainMsg"></div>
+      <div class="row-fluid">
+        <div class="span12">
+            <h1>校長</h1>
+            <form id="myform">
+              <table class="table my-table2">
+                <tbody>
+                  <tr>
+                    <th>校長姓名</th>
+                    <td colspan="3"><input class="input-xxlarge {TeacherName:true}" type="text" id="edit-Principal" name="edit-Principal" placeholder="校長姓名..."></td>
+                    </tr>
+                </tbody>
+              </table>
+              <div class="my-sure">
+                <button type="button" class="btn btn-success" id="save-data" autocomplete="off" data-loading-text="儲存中...">儲存</button>
+                <button type="button" class="btn" id="cancel" data-dismiss="modal">取消</button>
+              </div>
+            </form>
+          </div>
+      </div>
+  </div>
+  <hr />
+</body>
+</html>
