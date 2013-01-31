@@ -1,7 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="學期成績">
+  <ModulePrefs title="學期成績" description="家長-學期成績(國中高雄版)">
+    <Title lang="zh-TW">學期成績</Title>
     <Icon>icon.png</Icon>
-    <Mobile/>
+    <Mobile />
+    <Title lang="zh-CN">
+    </Title>
+    <Title lang="en-US">
+    </Title>
   </ModulePrefs>
 </Module>
