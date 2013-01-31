@@ -284,69 +284,71 @@ _gg.getMutualData = function() {
                     '<Pagination><StartPage>' + page_no + '</StartPage>' +
                     '<PageSize>' + msgdata.page_size + '</PageSize></Pagination></Request>',
             result: function (response, error, http) {
-                if (error !== null) {
-                    _gg.set_error_message('#mainMsg', 'GetMutualMessage', error);
-                } else {
-                    msgdata.pageno += 1;
+                if (memberid === $('.my-msglist ul li.active').attr('memberid')) {
+                    if (error !== null) {
+                        _gg.set_error_message('#mainMsg', 'GetMutualMessage', error);
+                    } else {
+                        msgdata.pageno += 1;
 
-                    var _ref, ret = [];
-                    if (((_ref = response.Response) != null ? _ref.Messages : void 0) != null) {
-                        var prev_date = '';
-                        $(response.Response.Messages).each(function(index, item) {
-                            if (prev_date && item.LastUpdate) {
-                                var prev_y = parseInt($.formatDate($.parseDate(prev_date), 'yyyy'), 10);
-                                var prev_m = parseInt($.formatDate($.parseDate(prev_date), 'M'), 10);
-                                var item_y = parseInt($.formatDate($.parseDate(item.LastUpdate), 'yyyy'), 10);
-                                var item_m = parseInt($.formatDate($.parseDate(item.LastUpdate), 'M'), 10);
+                        var _ref, ret = [];
+                        if (((_ref = response.Response) != null ? _ref.Messages : void 0) != null) {
+                            var prev_date = '';
+                            $(response.Response.Messages).each(function(index, item) {
+                                if (prev_date && item.LastUpdate) {
+                                    var prev_y = parseInt($.formatDate($.parseDate(prev_date), 'yyyy'), 10);
+                                    var prev_m = parseInt($.formatDate($.parseDate(prev_date), 'M'), 10);
+                                    var item_y = parseInt($.formatDate($.parseDate(item.LastUpdate), 'yyyy'), 10);
+                                    var item_m = parseInt($.formatDate($.parseDate(item.LastUpdate), 'M'), 10);
 
-                                var item_date = ($.formatDate($.parseDate(item.LastUpdate), 'yyyyMMdd')).replace(/\//ig, '-');
+                                    var item_date = ($.formatDate($.parseDate(item.LastUpdate), 'yyyyMMdd')).replace(/\//ig, '-');
 
-                                if ((prev_y !== item_y) || (prev_m !== item_m)) {
-                                    ret.push('<div class="my-date">▼ ' + item_date + '</div>');
+                                    if ((prev_y !== item_y) || (prev_m !== item_m)) {
+                                        ret.push('<div class="my-date">▼ ' + item_date + '</div>');
+                                    }
                                 }
+
+
+                                var css_name1, css_name2;
+
+                                if (item.Kind === 'send') {
+                                    css_name1 = 'my-transmit';
+                                    css_name2 = ' left';
+                                } else {
+                                    css_name1 = 'my-recrive';
+                                    css_name2 = ' right';
+                                }
+
+                                ret.push(
+                                    '<div class="' + css_name1 + '">' +
+                                    '    <div class="popover' + css_name2 + '">' +
+                                    '        <div class="arrow"></div>' +
+                                    '        <div class="popover-title my-time">' +
+                                    (item.LastUpdate || '') +
+                                    '        </div>' +
+                                    '        <div class="popover-content">' +
+                                    '            <p>' + $.htmlEncode((item.Message) || '') + '</p>' +
+                                    '        </div>' +
+                                    '    </div>' +
+                                    '</div>'
+                                );
+
+                                prev_date = item.LastUpdate;
+                            });
+
+                            if (ret.length < msgdata.page_size) {
+                                // TODO: 到達最後一筆
+                                msgdata.to_last = true;
                             }
-
-
-                            var css_name1, css_name2;
-
-                            if (item.Kind === 'send') {
-                                css_name1 = 'my-transmit';
-                                css_name2 = ' left';
-                            } else {
-                                css_name1 = 'my-recrive';
-                                css_name2 = ' right';
-                            }
-
-                            ret.push(
-                                '<div class="' + css_name1 + '">' +
-                                '    <div class="popover' + css_name2 + '">' +
-                                '        <div class="arrow"></div>' +
-                                '        <div class="popover-title my-time">' +
-                                (item.LastUpdate || '') +
-                                '        </div>' +
-                                '        <div class="popover-content">' +
-                                '            <p>' + $.htmlEncode((item.Message) || '') + '</p>' +
-                                '        </div>' +
-                                '    </div>' +
-                                '</div>'
-                            );
-
-                            prev_date = item.LastUpdate;
-                        });
-
-                        if (ret.length < msgdata.page_size) {
+                        } else {
                             // TODO: 到達最後一筆
                             msgdata.to_last = true;
                         }
-                    } else {
-                        // TODO: 到達最後一筆
-                        msgdata.to_last = true;
+                        if (page_no === 1) {
+                            $('#boxcontent div.my-mutualmsg').html('');
+                        }
+                        $('#boxcontent div.my-mutualmsg').append(ret.join(''));
+                        msgdata.loading = false;
                     }
-                    if (page_no === 1) {
-                        $('#boxcontent div.my-mutualmsg').html('');
-                    }
-                    $('#boxcontent div.my-mutualmsg').append(ret.join(''));
-                    msgdata.loading = false;
                 }
             }
         });

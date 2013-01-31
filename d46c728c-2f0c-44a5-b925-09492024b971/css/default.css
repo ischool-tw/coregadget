@@ -231,6 +231,12 @@ a:hover {
 #studentInfo .modal-body {
   min-height: 386px;
 }
+.my-table2 label {
+  white-space: nowrap;
+}
+.modal-footer label {
+  white-space: nowrap;
+}
 /*自訂*/
 div.modal div.my-Msg div {
   position: absolute;
