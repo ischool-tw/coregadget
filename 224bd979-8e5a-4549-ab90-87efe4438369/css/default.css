@@ -1,0 +1,75 @@
+/* 方框式成績表示 */
+.my-slate-text-color {
+  color: #999;
+}
+.my-slate {
+  padding: 4px;
+  line-height: 1;
+  border: 1px solid #DDD;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
+  -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
+  text-align: center;
+  background-color: white;
+  display: table-cell;
+}
+.my-slate span {
+  display: block;
+}
+.my-slate .my-slate-number {
+  font-size: 20px;
+  font-weight: normal;
+  font-family: "Oxygen", sans-serif;
+  margin: 7px 0 10px 0;
+}
+.my-slate .my-slate-total {
+  font-size: 20px;
+  padding: 5px;
+  color: #CCC;
+}
+.my-slate .my-slate-text {
+  padding: 5px;
+  border-top: 1px solid #CCC;
+  background: #DDD;
+}
+/* 標題次行註解文字 */
+h2 + p {
+  margin-left: 16px;
+  text-align: right;
+}
+/* 本學期分項成績 */
+#EntryScore th {
+  width: 120px;
+}
+/* 科目屬性差異處的底色 */
+#SubjectScore td[rel=tooltip]:not([data-type=ranking]) {
+  font-weight: bold;
+  background-color: #d07f49;
+  color: white;
+}
+/* 科目未取得學分 */
+.my-lost-credit {
+  color: red;
+}
+/* 本學期學分資訊 成績靠右*/
+#Credit table td {
+  text-align: right;
+}
+.my-ignore {
+  color: #88A200;
+}
+.my-table thead td {
+  background: #CFCFCF;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #bbb;
+}
+.my-well-table-striped tbody tr th.my-scorename {
+  background-color: #E0E0E0;
+  width: 40%;
+}
+.my-totalscore {
+  width: 10%;
+}

@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+  <script>
+    init({
+      application: "dev.sh_d", //"http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_kh",
+      paramValues: {schooltype: 123}
+    });
+  </script>
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <!--<link href="css/base.less" rel="stylesheet/less" />
+  <link href="css/default.less" rel="stylesheet/less" />-->
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <!--<script src="js/less.min.js"></script>-->
+  <script src="js/bootstrap.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/transcripts.js"></script>
+</head>
+<body>
+  <div id="gadget">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+          <div id="mainMsg"></div>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span12" id="container-main">
+          <div class="my-schoolyear-semester-widget" title="請選擇學年度學期">
+            <div class="btn-group" data-toggle="buttons-radio">
+            </div>
+          </div>
+          <div class="well">
+            <div id="SubjectScore">
+              <h2 class="my-label-title">本學期領域及科目成績</h2>
+              <table class="my-table my-table-bordered my-well-table-striped">
+              </table>
+            </div>
+            <div id="SubjectTotalScore">
+            <div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

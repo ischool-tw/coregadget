@@ -1,0 +1,289 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <!--<link href="css/base.less" rel="stylesheet/less" />
+  <link href="css/default.less" rel="stylesheet/less" />-->
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <!--<script src="js/less.min.js"></script>-->
+  <script src="js/bootstrap.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('td[rel=tooltip]').tooltip("show").tooltip("toggle");
+    });
+
+  </script>
+</head>
+<body>
+  <div id="gadget">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+          <div id="mainMsg"></div>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span12" id="container-main">
+        	<ul class="nav nav-pills">
+              <li class="active"><a href="#">江小信</a></li>
+              <li><a href="#">江中信</a></li>
+              <li><a href="#">江大信</a></li>
+            </ul>
+          <div class="my-schoolyear-semester-widget" title="請選擇學年度學期">
+            <div class="btn-group" data-toggle="buttons-radio">
+              <button class="btn btn-large active" school-year="100" semester="2">1002</button>
+              <button class="btn btn-large" school-year="100" semester="1">1001</button>
+              <button class="btn btn-large" school-year="99" semester="2">992</button>
+              <button class="btn btn-large" school-year="99" semester="1">991</button>
+            </div>
+          </div>
+          <div class="well">
+            <div id="SubjectScore">
+              <h2 class="my-label-title">本學期領域及科目成績</h2>
+              <p>(符號「--」代表不列入計算)</p>
+              <table class="my-table my-table-bordered my-well-table-striped">
+                <thead>
+                  <tr>
+                    <th><span>領域</span></th>
+                    <th><span>科目</span></th>
+                    <th><span>級別</span></th>
+                    <th><span>節權數</span></th>
+                    <th><span>成績</span></th>
+                    <th><span>努力程度</span></th>
+                    <th><span>等地</span></th>
+                    <th><span>及格</span></th>
+                  </tr>
+                </thead>
+                <thead>
+                  <tr>
+                    <td><i class="icon-book"></i> 語文</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>甲</td>
+                    <td><i class="icon-ok"></i></td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>國語</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>甲</td>
+                    <td><i class="icon-ok"></i></td>
+                  </tr>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>英語</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>甲</td>
+                    <td><i class="icon-ok"></i></td>
+                  </tr>
+                </tbody>
+                <thead>
+                  <tr>
+                    <td><i class="icon-book"></i> 數學</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td class="lost-credit">59</td>
+                    <td>1</td>
+                    <td>乙</td>
+                    <td><i class="icon-remove"></i></td>
+                  </tr>
+                </thead>
+                <thead>
+                  <tr>
+                    <td><i class="icon-book"></i> 自然與生活科技</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>優</td>
+                    <td><i class="icon-ok"></i></td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </tbody>
+                <thead>
+                  <tr>
+                    <td><i class="icon-book"></i> 社會</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>甲</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>地理</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>歷史</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>公民</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </tbody>
+                <thead>
+                  <tr>
+                    <td><i class="icon-book"></i> 藝術與人文</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </tbody>
+                <thead>
+                  <tr>
+                    <td><i class="icon-book"></i> 健康與體育</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </tbody>
+                <thead>
+                  <tr>
+                    <td><i class="icon-book"></i> 綜合活動</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </tbody>
+                <thead>
+                  <tr>
+                    <td><i class="icon-book"></i> 彈性課程</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </tbody>
+              </table>
+              <table class="my-table my-table-bordered my-well-table-striped">
+                <tbody>
+                  <tr>
+                    <th class="my-scorename">學期領域成績(七大學習領域)</th>
+                    <td class="my-totalscore">81.3</td>
+                    <th class="my-scorename">課程學習成績(含彈性課程)</th>
+                    <td class="my-totalscore">82.4</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
