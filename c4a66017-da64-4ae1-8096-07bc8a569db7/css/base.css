@@ -256,6 +256,7 @@ body {
 }
 
 .my-page h1:first-child {
+  font-size: 22px;
 	font-size: 1.2rem;
 	position: relative;
 	left: -10px;
@@ -273,6 +274,7 @@ body {
 }
 
 .my-page h1 li {
+  font-size:16px;
 	font-size:1rem;
 }
 
@@ -284,6 +286,7 @@ body {
 
 .my-table2 th {
 	background:#f1f1f1;
+	width:80px;
 }
 
 .my-table2 th, .my-table2 td {
