@@ -52,19 +52,21 @@ jQuery(function () {
             if (item) {
                 if (item.ClubName.indexOf($("#filter-keyword").val()) !== -1) {
                     var limit_str = '不限';
-                    var tmp_attendCount = 0;
+                    var tmp_attendCount = (item.TotalCount || '0');
                     if (item.Limit) {
                         limit_str = item.Limit;
-                        if (parseInt(this.TotalCount, 10) > parseInt(item.Limit, 10)) {
-                            tmp_attendCount = item.Limit;
-                        } else {
-                            tmp_attendCount = this.TotalCount;
+
+                        tmp_attendCount = (parseInt(item.Limit, 10) - parseInt(item.TotalCount, 10) > 0) ? item.TotalCount : "額滿";
+                        if (tmp_attendCount !== '額滿') {
+                            if (item['Grade' + _gg.Student.GradeYear + 'Limit']) {
+                                tmp_attendCount = (parseInt(item['Grade' + _gg.Student.GradeYear + 'Limit'], 10) - parseInt(item['GradeYear' + _gg.Student.GradeYear + 'Count'], 10) > 0) ? item.TotalCount : "額滿";
+                            }
                         }
                     }
 
                     items.push("<li club-id='" + item.ClubID + "'>" +
                         "<a href='#' club-index='" + index + "' data-toggle='tab'>" +
-                        "<span>" + this.ClubName + "</span>" +
+                        "<span>" + item.ClubName + "</span>" +
                         " <span class='pull-right'>(<span data-type='club-man-count'>" + tmp_attendCount + "</span>/<span>" + limit_str + "</span>)" +
                         "</span></a></li>");
                 }
@@ -80,6 +82,8 @@ jQuery(function () {
             _gg.ResetData();
             _gg.setClubInfo();
         });
+
+        $('#club-list a:first').click();
     };
 
     // TODO: 取得目前學年度學期
@@ -235,11 +239,8 @@ jQuery(function () {
                                                 if (error !== null) {
                                                     _gg.set_error_message("GetAllClubs", error);
                                                 } else {
-                                                    var tmp_HTML, items, tmp_class, tmp_show;
+                                                    var tmp_show;
                                                     _gg.ResetData();
-
-                                                    items = [];
-                                                    tmp_HTML = "<ul class='nav nav-tabs nav-stacked'>";
 
                                                     if ($(response.Response.ClubRecord).size() === 0) {
                                                         $("#filter-keyword").addClass("disabled").attr("disabled", "disabled");
@@ -258,48 +259,13 @@ jQuery(function () {
                                                             }
 
                                                             if (tmp_show === "true") {
-                                                                tmp_class = '';
-                                                                if (!_gg.Club) {
-                                                                    _gg.Club = item;
-                                                                    tmp_class = ' class="active"';
-                                                                }
-
                                                                 if (!_gg.Clubs[index]) {
                                                                     _gg.Clubs[index] = item;
                                                                     item.getInfo = "false";
                                                                 }
-
-                                                                var limit_str = '不限';
-                                                                var tmp_attendCount = 0;
-                                                                if (item.Limit) {
-                                                                    limit_str = item.Limit;
-                                                                    if (parseInt(item.TotalCount, 10) > parseInt(item.Limit, 10)) {
-                                                                        tmp_attendCount = item.Limit;
-                                                                    } else {
-                                                                        tmp_attendCount = item.TotalCount;
-                                                                    }
-                                                                }
-
-                                                                items.push("<li club-id='" + item.ClubID + "'" + tmp_class + ">" +
-                                                                    "<a href='#' club-index='" + index + "' data-toggle='tab'>" +
-                                                                    "<span>" + item.ClubName + "</span>" +
-                                                                    " <span class='pull-right'>(<span data-type='club-man-count'>" + tmp_attendCount + "</span>/<span>" + limit_str + "</span>)" +
-                                                                    "</span></a></li>");
-
                                                             }
                                                         });
-
-                                                        tmp_HTML += items.join("");
-                                                        tmp_HTML += "</ul>";
-                                                        $("#club-list .tabbable").html(tmp_HTML);
-                                                        $("#club-list a").click(function (e) {
-                                                            e.preventDefault();
-
-                                                            _gg.Club = _gg.Clubs[$(this).attr("club-index")];
-                                                            _gg.ResetData();
-                                                            _gg.setClubInfo();
-                                                        });
-                                                        _gg.setClubInfo();
+                                                        _gg.resetClubList();
                                                         _gg.SetClubRecord();
                                                     }
                                                 }
@@ -344,15 +310,15 @@ _gg.setClubInfo = function () {
             items_info.push('<tr><th nowrap="nowrap">場地 </th><td>' + club.Location + '</td></tr>');
 
             // TODO: 社團條件
-            var tmp_attendCount = 0;
-            if (club.Grade1Limit) {
-                tmp_attendCount = (parseInt(club.GradeYear1Count, 10) > parseInt(club.Grade1Limit)) ? club.Grade1Limit : club.GradeYear1Count;
-                tmp_grade1Limit = club.Grade1Limit + ' 人，現已 <span grade_year="1">' + tmp_attendCount + '</span> 人';
-            }
-            if (club.Grade2Limit) {
-                tmp_attendCount = (parseInt(club.GradeYear2Count, 10) > parseInt(club.Grade2Limit)) ? club.Grade2Limit : club.GradeYear2Count;
-                tmp_grade2Limit = club.Grade2Limit + ' 人，現已 <span grade_year="2">' + tmp_attendCount + '</span> 人';
-            }
+            // var tmp_attendCount = 0;
+            // if (club.Grade1Limit) {
+            //     tmp_attendCount = (parseInt(club.GradeYear1Count, 10) > parseInt(club.Grade1Limit)) ? club.Grade1Limit : club.GradeYear1Count;
+            //     tmp_grade1Limit = club.Grade1Limit + ' 人，現已 <span grade_year="1">' + tmp_attendCount + '</span> 人';
+            // }
+            // if (club.Grade2Limit) {
+            //     tmp_attendCount = (parseInt(club.GradeYear2Count, 10) > parseInt(club.Grade2Limit)) ? club.Grade2Limit : club.GradeYear2Count;
+            //     tmp_grade2Limit = club.Grade2Limit + ' 人，現已 <span grade_year="2">' + tmp_attendCount + '</span> 人';
+            // }
             if (club.Limit) {
                 tmp_limit = club.Limit + '人';
             }
@@ -448,21 +414,14 @@ _gg.Check_State = function () {
         if (_gg.Student.ClubID === club.ClubID) {
             state = (_gg.Student.Lock === "是") ? "5" : "4";
         } else {
-            switch (_gg.Student.GradeYear) {
-                case "1":
-                    if (club.Grade1Limit) {
-                        state = (parseInt(club.Grade1Limit, 10) - parseInt(club.GradeYear1Count, 10) > 0) ? "2" : "3";
-                    }
-                    break;
-                case "2":
-                    if (club.Grade2Limit) {
-                        state = (parseInt(club.Grade2Limit, 10) - parseInt(club.GradeYear2Count, 10) > 0) ? "2" : "3";
-                    }
-                    break;
-            }
-
             if (club.Limit) {
                 state = (parseInt(club.Limit, 10) - parseInt(club.TotalCount, 10) > 0) ? "2" : "3";
+
+                 if (state === '2') {
+                    if (club['Grade' + _gg.Student.GradeYear + 'Limit']) {
+                        state = (parseInt(club['Grade' + _gg.Student.GradeYear + 'Limit'], 10) - parseInt(club['GradeYear' + _gg.Student.GradeYear + 'Count'], 10) > 0) ? "2" : "3";
+                    }
+                }
             } else {
                 state = "2";
             }
@@ -527,13 +486,18 @@ _gg.AddToClub = function () {
             result: function (response, error, http) {
                 if (error !== null) {
                     if (error.dsaError.status === "504") {
-                        $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>加入失敗，已過開放選社時間!</strong>\n</div>");
+                        if (error.dsaError.message) {
+                            $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>加入失敗，" + error.dsaError.message + "!</strong>\n</div>");
+                        } else {
+                            $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>加入失敗，請稍候重試!</strong>(SetMyClub)\n</div>");
+                        }
                     } else {
                         $("#editModal #errorMessage").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>加入失敗，請稍候重試!</strong>(SetMyClub)\n</div>");
                     }
                 } else {
                     $("#editModal .modal-body").html("加入" + club.ClubName + "成功");
                     $("#editModal a[data-dismiss=modal]").html("關閉");
+                    _gg.Student.PreClubID = _gg.Student.ClubID;
                     _gg.Student.ClubID = club.ClubID;
                     _gg.RefreshCount();
                 }
@@ -588,19 +552,66 @@ _gg.RefreshCount = function () {
                         club.GradeYear1Count = item.GradeYear1Count;
                         club.GradeYear2Count = item.GradeYear2Count;
                         club.GradeYear3Count = item.GradeYear3Count;
-                        $("#club-list li[club-id=" + club.ClubID + "] span[data-type=club-man-count]").html(item.TotalCount);
-                        $("span[grade_year=1]").html(item.GradeYear1Count);
-                        $("span[grade_year=2]").html(item.GradeYear2Count);
-                        $("span[grade_year=3]").html(item.GradeYear3Count);
+                        var tmp_attendCount = (item.TotalCount || '');
+                        if (club.Limit) {
+                            tmp_attendCount = (parseInt(club.Limit, 10) - parseInt(club.TotalCount, 10) > 0) ? club.TotalCount : "額滿";
+                            if (tmp_attendCount !== '額滿') {
+                                if (club['Grade' + _gg.Student.GradeYear + 'Limit']) {
+                                    tmp_attendCount = (parseInt(club['Grade' + _gg.Student.GradeYear + 'Limit'], 10) - parseInt(club['GradeYear' + _gg.Student.GradeYear + 'Count'], 10) > 0) ? club.TotalCount : "額滿";
+                                }
+                            }
+                        }
+                        $("#club-list li[club-id=" + club.ClubID + "] span[data-type=club-man-count]").html(tmp_attendCount);
+                        // $("span[grade_year=1]").html(item.GradeYear1Count);
+                        // $("span[grade_year=2]").html(item.GradeYear2Count);
+                        // $("span[grade_year=3]").html(item.GradeYear3Count);
                     });
                     _gg.Check_State();
                 }
             }
         });
     }
+    if (_gg.Student.PreClubID) {
+        var index = $('#club-list li[club-id=' + _gg.Student.PreClubID + '] a').attr('club-index');
+        if (index) {
+            var preclub = _gg.Clubs[index];
+            if (preclub) {
+                _gg.connection.send({
+                    service: "_.GetClubAttendNumber",
+                    body: '<Request><ClubID>' + _gg.Student.PreClubID + '</ClubID></Request>',
+                    result: function (response, error, http) {
+                        if (error !== null) {
+                            _gg.set_error_message("GetClubAttendNumber", error);
+                        } else {
+                            $(response.Response.ClubRecord).each(function (index, item) {
+                                preclub.TotalCount = item.TotalCount;
+                                preclub.GradeYear1Count = item.GradeYear1Count;
+                                preclub.GradeYear2Count = item.GradeYear2Count;
+                                preclub.GradeYear3Count = item.GradeYear3Count;
+                                var tmp_attendCount = (item.TotalCount || '');
+                                if (preclub.Limit) {
+                                    tmp_attendCount = (parseInt(preclub.Limit, 10) - parseInt(preclub.TotalCount, 10) > 0) ? preclub.TotalCount : "額滿";
+                                    if (tmp_attendCount !== '額滿') {
+                                        if (preclub['Grade' + _gg.Student.GradeYear + 'Limit']) {
+                                            tmp_attendCount = (parseInt(preclub['Grade' + _gg.Student.GradeYear + 'Limit'], 10) - parseInt(preclub['GradeYear' + _gg.Student.GradeYear + 'Count'], 10) > 0) ? preclub.TotalCount : "額滿";
+                                        }
+                                    }
+                                }
+                                $("#club-list li[club-id=" + preclub.ClubID + "] span[data-type=club-man-count]").html(tmp_attendCount);
+                                // $("span[grade_year=1]").html(item.GradeYear1Count);
+                                // $("span[grade_year=2]").html(item.GradeYear2Count);
+                                // $("span[grade_year=3]").html(item.GradeYear3Count);
+                            });
+                            _gg.Check_State();
+                        }
+                    }
+                });
+            }
+        }
+    }
 };
 
-// TODO: 社團紀錄
+// TODO: 社團成績
 _gg.SetClubRecord = function () {
     _gg.connection.send({
         service: "_.GetWeight",
@@ -663,19 +674,19 @@ _gg.SetClubRecord = function () {
                         '                       <tbody>' +
                         '                           <tr>' +
                         '                               <th nowrap="nowrap">平時活動(' + _gg.Weight.PaWeight + '%)</th>' +
-                        '                               <td>' + (item.PaScore || '') + '</td>' +
+                        '                               <td>' + (item.xPaScore || '') + '</td>' +
                         '                           </tr>' +
                         '                           <tr>' +
                         '                               <th nowrap="nowrap">出缺率(' + _gg.Weight.ArWeight + '%)</th>' +
-                        '                               <td>' + (item.ArScore || '') + '</td>' +
+                        '                               <td>' + (item.xArScore || '') + '</td>' +
                         '                           </tr>' +
                         '                           <tr>' +
                         '                               <th nowrap="nowrap">活動力及服務(' + _gg.Weight.AasWeight + '%)</th>' +
-                        '                               <td>' + (item.AasScore || '') + '</td>' +
+                        '                               <td>' + (item.xAasScore || '') + '</td>' +
                         '                           </tr>' +
                         '                           <tr>' +
                         '                               <th nowrap="nowrap">成品成果考驗(' + _gg.Weight.FarWeight + '%)</th>' +
-                        '                               <td>' + (item.FarScore || '') + '</td>' +
+                        '                               <td>' + (item.xFarScore || '') + '</td>' +
                         '                           </tr>' +
                         '                       </tbody>' +
                         '                   </table>' +
@@ -698,7 +709,11 @@ _gg.SetClubRecord = function () {
                     items.push('</div>');
                 }
 
-                $('#ClubRecord').html('<div class="row-fluid">' + items.join('') + '</div>');
+                if (items.length > 0) {
+                    $('#ClubRecord').html('<div class="row-fluid">' + items.join('') + '</div>');
+                } else {
+                    $('#ClubRecord').html('<div>無社團成績</div>');
+                }
             }
         }
     });
