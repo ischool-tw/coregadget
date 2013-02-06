@@ -489,7 +489,11 @@ _gg.getStudentInfo = function() {
                     .one('click', function() {
                         $(this).closest('ol').find('div.my-pulse').remove();
                     })
-                    .find('li a').append('<div class="my-pulse"></div>');
+                    .find('li a')
+                        .append('<div class="my-pulse"></div>')
+                        .click(function() {
+                            $('[rel=popover]').popover('hide');
+                        });
         }
     };
 

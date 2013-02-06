@@ -256,6 +256,7 @@ body {
 }
 
 .my-page h1:first-child {
+  font-size: 22px;
 	font-size: 1.2rem;
 	position: relative;
 	left: -10px;
@@ -273,6 +274,7 @@ body {
 }
 
 .my-page h1 li {
+  font-size:16px;
 	font-size:1rem;
 }
 
@@ -302,9 +304,4 @@ body {
 	display:block;
 	overflow:hidden;
 	line-height:999px;
-}
-
-table thead th {
-	background: #DDDDE1 url(images/thbg.png) 0 0 repeat-x;
-	border-bottom: 1px solid #ACACAC;
 }
