@@ -4,8 +4,7 @@ _gg.connection = gadget.getContract("ischool.scheduler.teacher");
 $(document).ready( function () {
     $('#timeTable').find('thead').html('').end().find('tbody').html('<tr><td>載入中...</td></tr>');
 
-    // var vm = new MyViewModel();
-    window.vm = new MyViewModel();
+    var vm = new MyViewModel();
     ko.applyBindings(vm);
 
     $('#keyword').focus(function() {
