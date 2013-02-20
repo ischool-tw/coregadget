@@ -7,6 +7,7 @@ _gg.semester = '';
 
 
 $(document).ready(function () {
+    // TODO: 切換學年度學期
     $('.my-schoolyear-semester-widget').on("click", ".btn", function () {
         _gg.schoolYear = $(this).attr("school-year");
         _gg.semester = $(this).attr("semester");
@@ -22,14 +23,16 @@ $(document).ready(function () {
                 _gg.set_error_message('#mainMsg', 'GetStudentInfo', error);
             } else {
                 $(response.Student).each(function (index, item) {
+                    if (!$.isArray(item.SemsHistory.History)) {
+                        item.SemsHistory.History = [item.SemsHistory.History];
+                    }
+
                     if (index === 0) { _gg.Student = item; }
 
                     if (!_gg.Students[item.StudentID]) {
                         _gg.Students[item.StudentID] = item;
                     }
                 });
-
-                var student = _gg.Student;
                 _gg.GetSemsSubjScore();                          // TODO: 取得學期成績
             }
         }
@@ -40,12 +43,18 @@ $(document).ready(function () {
 _gg.SetStudentCreditData = function () {
     var student = _gg.Student;
     if (student.MySemsSubjScore) {
-        // TODO: 學期對照表
-        var items = [];
-        $(student.SemsHistory.History.sort($.by('desc', 'SchoolYear', $.by('desc', 'Semester')))).each(function (key, item) {
-            items.push("<button class='btn btn-large' grade-year='" + item.GradeYear + "' school-year='" + item.SchoolYear + "' semester='" + item.Semester + "'>" + item.SchoolYear + item.Semester + "</button>");
-        });
+        var _ref, items = [], _schoolYear, _semester;
 
+        if (((_ref = student.SemsHistory) != null ? _ref.History : void 0) != null) {
+            // TODO: 學期對照表
+            $(student.SemsHistory.History.sort($.by('desc', 'SchoolYear', $.by('desc', 'Semester')))).each(function (key, item) {
+                items.push("<button class='btn btn-large' grade-year='" + item.GradeYear + "' school-year='" + item.SchoolYear + "' semester='" + item.Semester + "'>" + item.SchoolYear + item.Semester + "</button>");
+            });
+        } else if (student.MySemsSubjScore.length > 0) {
+            _schoolYear = student.MySemsSubjScore[0].SchoolYear;
+            _semester = student.MySemsSubjScore[0].Semester;
+            items.push("<button class='btn btn-large active' school-year='" + _schoolYear + "' semester='" + _semester + "'>" + (_schoolYear + '' + _semester) + "</button>");
+        }
         $(".my-schoolyear-semester-widget div").html(items.join(""));
         $(".my-schoolyear-semester-widget button:first").addClass("active").trigger('click');
 
@@ -69,14 +78,14 @@ _gg.SetScoreData = function () {
         if (_gg.schoolYear === item.SchoolYear && _gg.semester === item.Semester) {
 
             var col_score = {};
-            $.each(item.ScoreInfo.Domains.Domain, function(domainIndex, domainItem) {
+            $(item.ScoreInfo.Domains.Domain).each(function(domainIndex, domainItem) {
                 if (!col_score[domainItem.領域]) {
                     domainItem.subject = [];
                     col_score[domainItem.領域] = domainItem;
                 }
             });
 
-            $.each(item.ScoreInfo.SemesterSubjectScoreInfo.Subject, function(subjectIndex, subjectItem) {
+            $(item.ScoreInfo.SemesterSubjectScoreInfo.Subject).each(function(subjectIndex, subjectItem) {
                 var  domainName = subjectItem.領域;
                 if (!domainName) {
                     domainName = '無領域';
@@ -169,7 +178,7 @@ _gg.SetScoreData = function () {
 
                     var period_Weight = tmp_semsSubjScore.Period;
 
-                    if (tmp_semsSubjScore.Period !== tmp_semsSubjScore.Weight) {
+                    if (tmp_semsSubjScore.Period.trim() !== tmp_semsSubjScore.Weight.trim()) {
                         period_Weight += '/' + tmp_semsSubjScore.Weight;
                     }
 
@@ -257,13 +266,18 @@ _gg.GetSemsSubjScore = function (schoolYear, semester) {
             if (error !== null) {
                 _gg.set_error_message('#mainMsg', 'GetSemsSubjScore', error);
             } else {
-                student.MySemsSubjScore = response.Students.SemsSubjScore;
+                student.MySemsSubjScore = [];
+                var _ref;
+                if (((_ref = response.Students) != null ? _ref.SemsSubjScore : void 0) != null) {
+                    $(response.Students.SemsSubjScore).each(function(index, item) {
+                        student.MySemsSubjScore.push(item);
+                    });
+                }
                 _gg.SetStudentCreditData();
             }
         }
     });
 };
-
 
 // TODO: 清除資訊
 _gg.ResetData = function () {

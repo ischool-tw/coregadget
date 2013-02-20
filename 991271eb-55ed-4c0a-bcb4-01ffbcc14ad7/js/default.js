@@ -57,6 +57,9 @@
                   resetData();
                   global.students = $(response.Result.Student);
                   return global.students.each(function(index, student) {
+                    if (!$.isArray(student.SemsHistory.History)) {
+                      student.SemsHistory.History = [student.SemsHistory.History];
+                    }
                     if (index === 0) {
                       global.student = student;
                       global.behavior = {

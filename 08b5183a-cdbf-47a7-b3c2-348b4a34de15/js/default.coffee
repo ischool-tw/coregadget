@@ -56,6 +56,9 @@ jQuery ->
                 global.students = $(response.Result.Student)
 
                 global.students.each (index, student) ->
+                  if not $.isArray(student.SemsHistory.History)
+                    student.SemsHistory.History = [student.SemsHistory.History]
+
                   if index is 0
                     global.student = student
                     global.behavior =
