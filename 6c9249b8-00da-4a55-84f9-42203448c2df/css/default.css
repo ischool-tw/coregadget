@@ -92,3 +92,6 @@ label {
   max-height: 310px;
   overflow: auto;
 }
+.my-clear-both {
+  clear: both;
+}

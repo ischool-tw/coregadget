@@ -308,8 +308,8 @@ var MyViewModel = function() {
 
     self.runMydata = function() {
         $('#timeTable td[rel=tooltip]').tooltip('hide');
-        vm.correspond_list.removeAll();
-        vm.correspond_list.push({
+        self.correspond_list.removeAll();
+        self.correspond_list.push({
             Kind : 'teacher',
             ID   : self.myid,
             Name : self.myname
@@ -436,14 +436,14 @@ var MyViewModel = function() {
                                         var period = parseInt((item.Period || 0), 10);
 
                                         for (var ii=period; ii<len+period; ii++) {
-                                            if (!self.curr_scheduler[period]) {
-                                                self.curr_scheduler[period] = [];
+                                            if (!self.curr_scheduler[ii]) {
+                                                self.curr_scheduler[ii] = [];
                                             }
 
-                                            if (!self.curr_scheduler[period][item.Weekday]) {
-                                                self.curr_scheduler[period][item.Weekday] = [];
+                                            if (!self.curr_scheduler[ii][item.Weekday]) {
+                                                self.curr_scheduler[ii][item.Weekday] = [];
                                             }
-                                            self.curr_scheduler[period][item.Weekday].push(item);
+                                            self.curr_scheduler[ii][item.Weekday].push(item);
                                         }
                                     }
                                 });
