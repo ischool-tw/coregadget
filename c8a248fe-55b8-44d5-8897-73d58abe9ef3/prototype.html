@@ -9,12 +9,14 @@
   <link href="css/default.css" rel="stylesheet" />
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap.js"></script>
-  <script src="js/default.js"></script>
-  <script src="js/jquery.flexslider.js"></script>
+  <script src="js/jquery.flexslider-min.js"></script>
   <!-- Hook up the FlexSlider -->
     <script>
     jQuery(function () {
-      $('.flexslider').flexslider();
+      $('.flexslider').flexslider({
+            slideshow: false,
+            directionNav: false
+      });
       $('a').popover({
         'trigger'  :'manual',
         'placement':'right'
@@ -45,91 +47,152 @@
 </head>
 <body>
   <div id="gadget" class="my-page">
+      <div id="mainMsg"></div>
       <div class="row-fluid">
         <div class="span12">
-            <h1>建立個人資料</h1>
-            <div class="row-fluid">
-                <div class="span4">
-                	<table class="table my-table2 my-tablephoto">
+          <div class="tabbable">
+            <h1>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="nav_appcurrent">
+                <span id="tabName">綜三仁</span>
+                <b class="caret"></b>
+              </a>
+              <ul id="myTab" class="dropdown-menu">
+                <li class="active">
+                  <a href="#student1" data-toggle="tab" joinlimit="0" kind="class" cid="1433">綜三仁</a>
+                </li>
+                <li>
+                  <a href="#student1" data-toggle="tab" joinlimit="0" kind="class" cid="1524">資一a</a>
+                </li>
+                <li>
+                  <a href="#student1" data-toggle="tab" joinlimit="0" kind="class" cid="1505">綜觀一乙</a>
+                </li>
+                <li>
+                  <a href="#student1" data-toggle="tab" joinlimit="10" kind="class" cid="1478">汽二乙</a>
+                </li>
+              </ul>
+              <div class="pull-right my-code">
+                <i class="icon-hand-up"></i> 班級代碼剩餘使用次數：
+                <span id="joinlimit">0</span>
+              </div>
+            </h1>
+            <div id="myTabContent" class="tab-content">
+              <div id="student1">
+                  <table class="table my-table2 dataTable" id="DataTables_Table_0">
+                    <thead>
                       <tr>
-                        <th>個人相片</th>
+                        <th>座號</th>
+                        <th>姓名</th>
+                        <th>學生代碼</th>
+                        <th>家長代碼</th>
+                        <th>重設代碼</th>
+                        <th>清除代碼</th>
+                        <th>家長姓名</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>蘇小威</td>
+                        <td>3f27fa</td>
                         <td>
-                            <div class="my-proimg" style="background-image:url(css/images/nophoto.png);"></div>
+                          <span data-type="parentCode" studentid="54307">7c0815</span>
                         </td>
-                      </tr>
-                    </table>
-                    <table class="table my-table2">
-                      <tr>
-                        <th nowrap="nowrap">姓名</th>
-                        <td><input class="input-medium" type="text" placeholder="" /></td>
-                      </tr>
-                      <tr>
-                        <th nowrap="nowrap">性別</th>
-                        <td><select class="input-mini">
-                          <option>男</option>
-                          <option>女</option>
-                        </select></td>
+                        <td>
+                          <a href="#" action-type="refreshP" studentid="54307" title="重設代碼">
+                            <i class="icon-refresh"></i>
+                          </a>
+                        </td>
+                        <td>
+                          <a href="#" action-type="removeP" studentid="54307" title="清除代碼">
+                            <i class="icon-trash"></i>
+                          </a>
+                        </td>
+                        <td>&nbsp;</td>
                       </tr>
                       <tr>
-                        <th nowrap="nowrap">個性簽名</th>
-                        <td><input class="input-medium" type="text" placeholder="請輸入您想說的話" /> 25字</td>
+                        <td>2</td>
+                        <td>羅小羅</td>
+                        <td>&nbsp;</td>
+                        <td>
+                          <span data-type="parentCode" studentid="54253">829396</span>
+                        </td>
+                        <td>
+                          <a href="#" action-type="refreshP" studentid="54253" title="重設代碼">
+                            <i class="icon-refresh"></i>
+                          </a>
+                        </td>
+                        <td>
+                          <a href="#" action-type="removeP" studentid="54253" title="清除代碼">
+                            <i class="icon-trash"></i>
+                          </a>
+                        </td>
+                        <td>&nbsp;</td>
                       </tr>
-                    </table>
-                </div>
-                <div class="span8">
-                    <table class="table my-table2">
-                    <tr>
-                      <th nowrap="nowrap">生日</th>
-                      <td><input class="input-medium" type="date" placeholder="MM/DD/YYYY"></td>
-                    </tr>
-                    <tr>
-                      <th nowrap="nowrap">電子郵件</th>
-                      <td><input class="input-xxlarge" type="text" placeholder="" /></td>
-                    </tr>
-                    <tr>
-                      <th nowrap="nowrap">地址</th>
-                      <td><input class="input-xxlarge" type="text" placeholder=""></td>
-                    </tr>
-                    <tr>
-                      <th nowrap="nowrap">行動電話</th>
-                      <td><input class="input-xxlarge" type="text" placeholder=""></td>
-                    </tr>
-                    <tr>
-                      <th nowrap="nowrap">其它電話</th>
-                      <td><input class="input-xxlarge" type="text" placeholder=""></td>
-                    </tr>
-                    <tr>
-                      <th nowrap="nowrap">關於我</th>
-                      <td><textarea rows="5" class="input-xxlarge" placeholder=""></textarea></td>
-                    </tr>
+                      <tr>
+                        <td>3</td>
+                        <td>羅小芷</td>
+                        <td>&nbsp;</td>
+                        <td>
+                          <span data-type="parentCode" studentid="54254">daa27f</span>
+                        </td>
+                        <td>
+                          <a href="#" action-type="refreshP" studentid="54254" title="重設代碼">
+                            <i class="icon-refresh"></i>
+                          </a>
+                        </td>
+                        <td>
+                          <a href="#" action-type="removeP" studentid="54254" title="清除代碼">
+                            <i class="icon-trash"></i>
+                          </a>
+                        </td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>4</td>
+                        <td>鍾小宜</td>
+                        <td>&nbsp;</td>
+                        <td>
+                          <span data-type="parentCode" studentid="54258">c59045</span>
+                        </td>
+                        <td>
+                          <a href="#" action-type="refreshP" studentid="54258" title="重設代碼">
+                            <i class="icon-refresh"></i>
+                          </a>
+                        </td>
+                        <td>
+                          <a href="#" action-type="removeP" studentid="54258" title="清除代碼">
+                            <i class="icon-trash"></i>
+                          </a>
+                        </td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>5</td>
+                        <td>謝小珖</td>
+                        <td>&nbsp;</td>
+                        <td>
+                          <span data-type="parentCode" studentid="54206">0579e2</span>
+                        </td>
+                        <td>
+                          <a href="#" action-type="refreshP" studentid="54206" title="重設代碼">
+                            <i class="icon-refresh"></i>
+                          </a>
+                        </td>
+                        <td>
+                          <a href="#" action-type="removeP" studentid="54206" title="清除代碼">
+                            <i class="icon-trash"></i>
+                          </a>
+                        </td>
+                        <td>&nbsp;</td>
+                      </tr>
+                    </tbody>
                   </table>
-                </div>
+              </div>
             </div>
-            <div class="my-sure">
-                <a href="#to" class="btn btn-success">儲存變更</a> <a href="#to" class="btn">取消</a>
-            </div>
+          </div>
         </div>
       </div>
   </div>
-  <hr />
-<!--輸入代碼-->
-<div id="myModal" class="modal hide fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: block;">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">身份驗證</h3>
-    </div>
-    <div class="modal-body">
-            <label>家長代碼</label>
-            <input type="text" class="input-xlarge" id="inputCode" placeholder="請輸入代碼">
-            <label>稱謂</label>
-            <input type="text" class="input-xlarge" id="inputCode" placeholder="請輸入稱謂">
-            <p><i class="icon-info-sign"></i> 如何取得家長代碼？</p><p>請詢問孩子或聯絡導師。</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-success">送出</button>
-      <button class="btn" data-dismiss="modal">取消</button>
-    </div>
-</div>
-<div class="modal-backdrop fade in"></div>
+<hr>
 </body>
 </html>
