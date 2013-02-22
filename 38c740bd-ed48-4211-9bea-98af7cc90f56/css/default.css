@@ -45,3 +45,14 @@ input[type="text"].error-remark {
   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
+/* 自訂 */
+.table tbody tr.my-noexam td {
+  background: #D07F49;
+  color: white;
+}
+.table tbody tr.my-noexam:hover td {
+  background: #D07F49;
+}
+.table tbody tr.my-noexam span {
+  padding-top: 5px;
+}

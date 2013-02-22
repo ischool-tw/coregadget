@@ -80,13 +80,25 @@ jQuery(function () {
                 if (students) {
                     var ret = [];
                     $(students).each(function(key, value) {
-                        ret.push('<div class="control-group">' +
+                        ret.push(
+                            '<div class="control-group">' +
                             '    <label class="control-label">' + (value.SCSelectSeatNo || '') + ' ' + (value.StudentName || '') + '</label>' +
-                            '    <div class="controls">' +
-                            '        <input type="text" name="s' + (value.StudentNumber || '') + '" class="{digits:true, range:[0, 100]} input-large" id="' + (value.SCSelectID || '') + '"' +
-                            ' placeholder="成績..." value="' + (value[scoreType] || '') + '">' +
-                            '    </div>' +
-                            '</div>');
+                            '    <div class="controls">'
+                        );
+
+                        if (value.NotExam === 't') {
+                            ret.push('<span>' + (value[scoreType] || '') + ' (扣考)</span>');
+                        } else {
+                            ret.push(
+                                '        <input type="text" name="s' + (value.StudentNumber || '') + '" class="{digits:true, range:[0, 100]} input-large" id="' + (value.SCSelectID || '') + '"' +
+                                ' placeholder="成績..." value="' + (value[scoreType] || '') + '">'
+                            );
+                        }
+
+                        ret.push(
+                                '    </div>' +
+                                '</div>'
+                            );
                     });
                 }
                 $('#editModal').find('h3').html(edit_title).end().find('fieldset').html(ret.join(''));
@@ -101,10 +113,10 @@ jQuery(function () {
     // TODO: 登錄資料上下鍵、Enter鍵切換輸入框
     $('#editModal').on('keyup', 'input:text', function(e) {
         if (e.which === 38) {
-            $(this).parent().parent().prev().find('input:text').focus();
+            $(this).parent().parent().prevAll().find('input:text').first().focus();
         }
         if (e.which === 40 || e.which === 13) {
-            $(this).parent().parent().next().find('input:text').focus();
+            $(this).parent().parent().nextAll().find('input:text').first().focus();
         }
     });
 });
@@ -143,7 +155,7 @@ _gg.loadData = function () {
         body: '<Request><Condition></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message('#mainMsg', 'GetTimeList', error);
+                _gg.set_error_message('#mainMsg', 'GetTimeList', error);
             } else {
                 var _ref;
                 if (((_ref = response.TimeList) != null ? _ref.Name : void 0) != null) {
@@ -314,13 +326,19 @@ _gg.GetScore = function (courseID) {
     }
 };
 
-// TODO: 成績登錄畫面
+// TODO: 成績列表
 _gg.SetScore = function (courseID) {
     if (courseID) {
         var students = _gg.col_courses[courseID].Students;
         var items = [];
         $(students).each(function(key, value) {
-            items.push('<tr>' +
+            var notexam_css = '', notexam_tooltip = '';
+            if (value.NotExam === 't') {
+                notexam_css = 'my-noexam';
+                notexam_tooltip = ' rel="tooltip" title="扣考"';
+            }
+
+            items.push('<tr class="' + notexam_css + '" ' + notexam_tooltip + '>' +
                 '  <td>' + (value.SCSelectSeatNo || '') + '</td>' +
                 '  <td>' + (value.StudentNumber || '') + '</td>' +
                 '  <td>' + (value.ClassName || '') + '</td>' +
@@ -337,6 +355,8 @@ _gg.SetScore = function (courseID) {
         var ret = items.join('');
         if (ret) {
             $('#score_list tbody').html(ret);
+            // TODO: 扣考 tooltip
+            $('#score_list tr.my-noexam').tooltip();
         } else {
             $('#score_list tbody').html('<tr><td colspan="10">無學生資料</td></tr>');
         }
@@ -376,15 +396,18 @@ _gg.SaveSorce = function () {
             if (students) {
                 var arys = [];
                 $(students).each(function(key, value) {
-                    arys.push('<Students><Condition><UID>' + (value.SCSelectID || '0')  + '</UID></Condition>');
-                    var tmp_score = $('#'+(value.SCSelectID)).val();
-                    if (tmp_score !== '') {
-                        tmp_score = parseInt(tmp_score, 10) + '';
-                    } else {
-                        tmp_score = '';
+                    if (!(value.NotExam === 't')) {
+                        arys.push('<Students><Condition><UID>' + (value.SCSelectID || '0')  + '</UID></Condition>');
+                        var tmp_score = $('#'+(value.SCSelectID)).val();
+                        if (tmp_score !== '') {
+                            tmp_score = parseInt(tmp_score, 10) + '';
+                            tmp_score = isNaN(tmp_score) ? '' : tmp_score;
+                        } else {
+                            tmp_score = '';
+                        }
+                        arys.push('<' + scoreType + '>' + tmp_score + '</' + scoreType + '>');
+                        arys.push('</Students>');
                     }
-                    arys.push('<' + scoreType + '>' + tmp_score + '</' + scoreType + '>');
-                    arys.push('</Students>');
                 });
 
                 var serviceName = '';
@@ -403,14 +426,17 @@ _gg.SaveSorce = function () {
                             _gg.set_error_message('#errorMessage', serviceName, error);
                         } else {
                             $(students).each(function(key, value) {
-                                var tmp_score = $('#'+(value.SCSelectID)).val();
-                                if (tmp_score !== '') {
-                                    tmp_score = parseInt(tmp_score, 10) + '';
-                                } else {
-                                    tmp_score = '';
+                                if (!(value.NotExam === 't')) {
+                                    var tmp_score = $('#'+(value.SCSelectID)).val();
+                                    if (tmp_score !== '') {
+                                        tmp_score = parseInt(tmp_score, 10) + '';
+                                        tmp_score = isNaN(tmp_score) ? '' : tmp_score;
+                                    } else {
+                                        tmp_score = '';
+                                    }
+                                    value[scoreType] = tmp_score;
+                                    $('#' + scoreType + value.SCSelectID).html(tmp_score);
                                 }
-                                value[scoreType] = tmp_score;
-                                $('#' + scoreType + value.SCSelectID).html(tmp_score);
                             });
 
                             _gg.SetScore(courseid);
