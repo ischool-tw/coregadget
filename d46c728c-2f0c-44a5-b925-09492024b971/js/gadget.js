@@ -1,17 +1,4 @@
-﻿<script type="text/javascript" src="http://140.126.57.213/web/js/jquery-1.4.4.min.js"></script>
-<script type="text/javascript" src="http://140.126.57.213/web/js/jquery.history.js"></script>
-<script type="text/javascript" src="http://140.126.57.213/web/js/windowSize.js"></script>
-<script type="text/javascript" src="http://140.126.57.213/web/js/xmlWriter.js"></script>
-<script type="text/javascript" src="http://140.126.57.213/web/js/xml2json.js"></script>
-<script type="text/javascript" src="http://140.126.57.213/web/js/parseXml.js"></script>
-<script type="text/javascript" src="http://140.126.57.213/web/js/dsnsLookup.js"></script>
-<script type="text/javascript" src="http://140.126.57.213/web/js/dsutil.js"></script>
-<script type="text/javascript" src="http://140.126.57.213/web/js/log.js"></script>
-<script type="text/javascript" src="http://140.126.57.213/web/js/authentication.js"></script>
-<script type="text/javascript" src="http://140.126.57.213/web/js/gadgetPreference.js"></script>
-<script type="text/javascript" src="http://140.126.57.213/web/js/analytics.js"></script>
-<script type="text/javascript">
-    //http://closure-compiler.appspot.com/home
+﻿    //http://closure-compiler.appspot.com/home
     // ==ClosureCompiler==
     // @output_file_name gadget.js
     // @compilation_level WHITESPACE_ONLY
@@ -458,4 +445,3 @@
         };
         return controller;
     }
-</script>
