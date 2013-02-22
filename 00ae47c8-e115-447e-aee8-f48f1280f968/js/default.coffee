@@ -69,6 +69,8 @@ jQuery ->
                 global.students = $(response.Result.Student)
                 items = []
                 global.students.each (index, student) ->
+                  if not $.isArray(student.SemsHistory.History)
+                    student.SemsHistory.History = [student.SemsHistory.History]
                   items.push """
                     <li #{if index is 0 then " class='active'" else ''}>
                       <a href='#' children-index='#{index}'>#{@StudentName}</a>

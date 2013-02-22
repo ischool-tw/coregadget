@@ -73,6 +73,9 @@
                   global.students = $(response.Result.Student);
                   items = [];
                   global.students.each(function(index, student) {
+                    if (!$.isArray(student.SemsHistory.History)) {
+                      student.SemsHistory.History = [student.SemsHistory.History];
+                    }
                     return items.push("<li " + (index === 0 ? " class='active'" : '') + ">\n  <a href='#' children-index='" + index + "'>" + this.StudentName + "</a>\n</li>");
                   });
                   $("#children-list").html(items.join(""));
