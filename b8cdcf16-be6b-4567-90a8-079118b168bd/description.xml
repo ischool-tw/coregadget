@@ -1,7 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="個人資料">
+  <ModulePrefs title="選課" description="EMBA學生-選課">
+    <Title lang="zh-TW">選課</Title>
     <Icon>icon.png</Icon>
-    <Mobile/>
+    <Mobile />
+    <Title lang="zh-CN">
+    </Title>
+    <Title lang="en-US">
+    </Title>
   </ModulePrefs>
 </Module>
