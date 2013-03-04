@@ -41,6 +41,7 @@ Core Gadget
 
 台大EMBA
 * b8cdcf16-be6b-4567-90a8-079118b168bd 選課(學生)
+* ae4ff68f-b2dc-47b7-9167-f448e7247b4a 教學評鑑(學生)
 
 
 Campus Lite
