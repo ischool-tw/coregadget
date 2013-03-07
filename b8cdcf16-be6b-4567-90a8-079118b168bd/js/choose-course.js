@@ -763,7 +763,7 @@ jQuery(function () {
             save_quit_add : function() {
                 var self = MyViewModel;
                 var add_list = [], add_log = [], add_complete = false, log_add_content = [];
-                var quit_list = [], quit_log = [], quit_complete = false, log_quit_content = [];
+                var quit_list = [], quit_log = [], quit_complete = false, log_quit_content = []
                 var course_add_html = '', course_quit_html = '';
 
                 var get_course_html = function(courses) {
@@ -870,10 +870,7 @@ jQuery(function () {
                         add_list.push('<Course><CourseID>' + item.CourseID + '</CourseID></Course>');
                         add_log.push('<Course><CourseID>' + item.CourseID + '</CourseID>' +
                             '<Action>insert</Action><ActionBy>student</ActionBy></Course>');
-                        log_add_content.push(
-                            '學生「' + self.student.StudentName() + '」加選課程：\n' +
-                            item.CourseName
-                        );
+                        log_add_content.push(item.CourseName);
                     });
 
                     _gg.connection.send({
@@ -932,10 +929,7 @@ jQuery(function () {
                         quit_list.push('<Course><CourseID>' + item.CourseID + '</CourseID></Course>');
                         quit_log.push('<Course><CourseID>' + item.CourseID + '</CourseID>' +
                             '<Action>delete</Action><ActionBy>student</ActionBy></Course>');
-                        log_quit_content.push(
-                            '學生「' + self.student.StudentName() + '」退選課程：\n' +
-                            item.CourseName
-                        );
+                        log_quit_content.push(item.CourseName);
                     });
 
                     _gg.connection.send({

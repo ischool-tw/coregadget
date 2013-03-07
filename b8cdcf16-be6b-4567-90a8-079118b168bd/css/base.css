@@ -2,7 +2,7 @@
 body {
   max-width: 1024px;
   margin: 0 auto;
-  background: url(images/page-bg.gif);
+  background:url(images/page-bg.gif);
 }
 /* 基礎框架 */
 .container-fluid {
@@ -246,56 +246,62 @@ body {
 .my-well-table-striped tbody tr:nth-child(odd) th {
   background-color: #f9f9f9;
 }
+
 .my-page {
-  max-width: 1000px;
-  margin: 20px auto;
-  background: #fff;
-  padding: 10px;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2), 0 0 2px rgba(0, 0, 0, 0.2), 0 1px 1px rgba(0, 0, 0, 0.2), 3px 3px 0 #ffffff, 4px 4px 0 rgba(0, 0, 0, 0.2), 6px 6px 0 #ffffff, 7px 7px 0 rgba(0, 0, 0, 0.2);
+	max-width:1000px;
+	margin:20px auto;
+	background:#fff;
+	padding:10px;
+	box-shadow:0 0 2px rgba(0, 0, 0, 0.2), 0 0 2px rgba(0, 0, 0, 0.2), 0 1px 1px rgba(0, 0, 0, .2), 3px 3px 0 white,4px 4px 0 rgba(0, 0, 0, .2),6px 6px 0 white,7px 7px 0 rgba(0, 0, 0, .2);
 }
+
 .my-page h1:first-child {
   font-size: 22px;
-  font-size: 1.2rem;
-  position: relative;
-  left: -10px;
-  border-left: 10px solid #B0CCC6;
-  border-bottom: 1px solid whiteSmoke;
-  padding-left: 20px;
+	font-size: 1.2rem;
+	position: relative;
+	left: -10px;
+	border-left: 10px solid #B0CCC6;
+	border-bottom: 1px solid whiteSmoke;
+	padding-left: 20px;
 }
+
 .my-page h1 a {
-  color: #333;
+	color:#333;
 }
+
 .my-page h1 .caret {
-  vertical-align: middle;
+	vertical-align:middle;
 }
+
 .my-page h1 li {
-  font-size: 1rem;
+  font-size:16px;
+	font-size:1rem;
 }
+
 .my-table2 {
-  background: #fff;
-  border: 1px solid #CCC;
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+	background:#fff;
+	border: 1px solid #CCC;
+	box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
 }
+
 .my-table2 th {
-  background: #f1f1f1;
-  width: 80px;
+	background:#f1f1f1;
+	width:80px;
 }
-.my-table2 th,
-.my-table2 td {
-  vertical-align: middle;
+
+.my-table2 th, .my-table2 td {
+	vertical-align:middle;
 }
+
 .my-sure {
-  text-align: center;
+	text-align: center;
 }
+
 .my-trash {
-  background: url(../img/trash.png) no-repeat;
-  width: 11px;
-  height: 13px;
-  display: block;
-  overflow: hidden;
-  line-height: 999px;
-}
-table thead th {
-  background: #dddde1 url(images/thbg.png) 0 0 repeat-x;
-  border-bottom: 1px solid #ACACAC;
+	background:url(../img/trash.png) no-repeat;
+	width:11px;
+	height:13px;
+	display:block;
+	overflow:hidden;
+	line-height:999px;
 }
