@@ -206,7 +206,7 @@ var _gg = function() {
             if (teachers && classes && classrooms) {
                 alloptions = teachers.concat(classes, classrooms);
             }
-        }
+        };
 
         var getTeachers = function() {
             connection.send({
@@ -290,7 +290,7 @@ var _gg = function() {
                                     ID   : item.Uid,
                                     Name : item.Name
                                 });
-                                classroom_list.push('<li><a href="#" kind="class" kid="' + (item.Uid || '') + '">' + (item.Name || '') + '</a></li>');
+                                classroom_list.push('<li><a href="#" kind="classroom" kid="' + (item.Uid || '') + '">' + (item.Name || '') + '</a></li>');
                             });
                         }
                         classrooms = items;
