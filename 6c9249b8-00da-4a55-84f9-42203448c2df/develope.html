@@ -16,8 +16,6 @@
   <link href="css/default.css" rel="stylesheet" />
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/2.2.0/knockout-min.js"></script>
-  <!--<script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-2.2.0.debug.js"></script>-->
   <script src="js/api.js"></script>
   <script src="js/timetable.js"></script>
 </head>
@@ -28,34 +26,56 @@
         <div class="span12">
             <h1 style="height: 41px;">
                 <ul class="nav nav-pills pull-left">
-                  <li class="dropdown" data-bind="visible: semester_list().length > 0">
+                  <li class="dropdown">
                     <a href="#" class="dropdown-toggle pull-left" data-toggle="dropdown"><span id="tabName"></span> <b class="caret"></b></a>
-                    <ul id="menu1" class="dropdown-menu my-dropdown-menu" data-bind="foreach: semester_list">
-                        <li><a href="#" data-bind="text: FullName, attr: {schoolyear: SchoolYear, semester: Semester}"></a></li>
+                    <ul id="menu1" class="dropdown-menu my-dropdown-menu">
                     </ul>
                   </li>
-                  <li class="dropdown" data-bind="visible: correspond_list().length > 0">
+                  <li class="dropdown">
                     <a href="#" class="dropdown-toggle pull-left" data-toggle="dropdown"><span id="tabSearch"></span> <b class="caret"></b></a>
-                    <span class="pull-right" style="margin: 7px 3px;">課表</span>
-                    <ul id="menu2" class="dropdown-menu my-dropdown-menu" data-bind="foreach: correspond_list">
-                        <li><a href="#" data-bind="text: Name, attr: {kid: ID, kind: Kind}"></a></li>
+                    <span class="pull-right" style="margin: 9px 3px;">課表</span>
+                    <ul id="menu2" class="dropdown-menu my-dropdown-menu">
                     </ul>
                   </li>
                 </ul>
                 <div class="input-prepend input-append pull-right">
                     <span class="add-on"><i class="icon-search"></i></span>
-                      <input class="input-large" id="keyword" type="text" placeholder="請輸入班級、教師或場地名稱">
-                      <button class="btn" type="button" id="search">搜尋</button>
-                      <button class="btn" type="button" id="print"><i class="icon-print"></i> 列印</button>
+                    <input class="input-large" id="keyword" type="text" placeholder="請輸入班級、教師或場地名稱">
+                    <button class="btn" type="button" id="search">搜尋</button>
+                    <button class="btn" type="button" id="print"><i class="icon-print"></i> 列印</button>
                 </div>
             </h1>
-            <div id="timeTable" class="my-clear-both">
-              <table class="table table-bordered" style="margin-left: 0; text-align:left">
-                <thead>
-                </thead>
-                <tbody>
-                </tbody>
-              </table>
+            <div class="row-fluid">
+              <div class="span3 my-clear-both" style="margin-left: 0; text-align:left">
+                  <div id="myTab" class="btn-group my-tab" data-toggle="buttons-radio">
+                      <a href="#class" class="btn active" data-toggle="tab">班級</a>
+                        <a href="#teacher" class="btn" data-toggle="tab">教師</a>
+                        <a href="#place" class="btn" data-toggle="tab">場地</a>
+                      </div>
+                    <div id="myTabContent" class="tab-content well my-well2">
+                      <div class="tab-pane fade active in" id="class">
+                        <ul class="nav nav-list">
+                        </ul>
+                      </div>
+                      <div class="tab-pane fade" id="teacher">
+                        <ul class="nav nav-list">
+                        </ul>
+                      </div>
+                      <div class="tab-pane fade" id="place">
+                        <ul class="nav nav-list">
+                        </ul>
+                      </div>
+                    </div>
+                </div>
+                <div class="span9" id="timeTable">
+                  <table class="table table-bordered">
+                        <caption class="hidden"></caption>
+                        <thead>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                      </table>
+                </div>
             </div>
         </div>
       </div>

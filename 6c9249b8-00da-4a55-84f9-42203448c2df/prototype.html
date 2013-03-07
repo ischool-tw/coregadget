@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link href="css/bootstrap.css" rel="stylesheet" />
@@ -30,118 +30,1220 @@
   <div id="gadget" class="my-page">
       <div class="row-fluid">
         <div class="span12">
-            <h1><a href="#" class="dropdown-toggle pull-left" data-toggle="dropdown" id="nav_appcurrent"><span id="tabName">101學年度第一學期</span> <b class="caret"></b></a>
-            <a href="#" class="dropdown-toggle pull-left" data-toggle="dropdown" id="nav_appcurrent2"><span id="tabSearch">王大華</span> <b class="caret"></b></a>
-            課表
+            <h1><a href="#" class="dropdown-toggle" data-toggle="dropdown" id="nav_appcurrent"><span id="tabName">101學年度第一學期</span> <b class="caret"></b></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="nav_appcurrent2"><span id="tabSearch">王大華</span> <b class="caret"></b></a>課表
                   <ul id="myTab" class="dropdown-menu">
                       <li><a href="#" data-toggle="tab">101學年度第一學期</a></li>
                       <li><a href="#" data-toggle="tab">100學年度第二學期</a></li>
                       <li><a href="#" data-toggle="tab">100學年度第一學期</a></li>
                   </ul>
+
                 <div class="input-prepend input-append pull-right">
                     <span class="add-on"><i class="icon-search"></i></span>
                       <input class="input-large" id="appendedInputButton" type="text" placeholder="請輸入班級、教師或場地名稱">
                       <button class="btn" type="button">搜尋</button>
-                      <button class="btn" type="button"><i class="icon-remove"></i> 取消搜尋</button>
+                      <button class="btn" type="button"><i class="icon-remove"></i> 取消<!--[if !IE ]>-->搜尋<!--<![endif]--></button>
                       <button class="btn" type="button"><i class="icon-print"></i> 列印</button>
                 </div>
             </h1>
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th>&nbsp;</th>
-                <th>一</th>
-                <th>二</th>
-                <th>三</th>
-                <th>四</th>
-                <th>五</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th>1</th>
-                <td rel="tooltip" data-placement="top" data-original-title="8:00 - 9:00" my-group="國文">
-                <ul>
-                    <li>國文</li>
-                    <li>王大華</li>
-                    <li>101教室</li>
-                </ul>
-                </td>
-                <td rel="tooltip" data-placement="top" data-original-title="【群組名稱】8:00 - 9:00<ol><li>國文 - 王大華 - 101教室</li><li>數學 - 陳大華 - 201教室</li><li>自然科學概論 - 江小信 - 203實驗室實驗室實驗室實驗室</li><ol>">群組名稱</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <th>2</th>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <th>3</th>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <th>4</th>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <th>5</th>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td rel="tooltip" data-placement="top" data-original-title="8:00 - 9:00" my-group="國文">
-                <ul>
-                    <li>國文</li>
-                    <li>王大華</li>
-                    <li>101教室</li>
-                </ul>
-                </td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <th>6</th>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td rel="tooltip" data-placement="top" data-original-title="8:00 - 9:00" my-group="國文">
-                <ul>
-                    <li>國文</li>
-                    <li>王大華</li>
-                    <li>101教室</li>
-                </ul>
-                </td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <th>7</th>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <th>8</th>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-            </tbody>
-              </table>
+            <div class="row-fluid">
+            	<div class="span3">
+                	<div id="myTab" class="btn-group my-tab" data-toggle="buttons-radio">
+                    	<a href="#class" class="btn active" data-toggle="tab">班級</a>
+                        <a href="#teacher" class="btn" data-toggle="tab">教師</a>
+                        <a href="#place" class="btn" data-toggle="tab">場地</a>
+                      </div>
+                    <div id="myTabContent" class="tab-content well my-well2">
+                      <div class="tab-pane fade active in" id="class">
+                      	<ul class="nav nav-list">
+                            <li class="nav-header"><a href="#"><i class="icon-chevron-down"></i> 一年級</a></li>
+                            <li class="active"><a href="#">資一忠</a></li>
+                            <li><a href="#">資一孝</a></li>
+                            <li><a href="#">資一仁</a></li>
+                            <li class="nav-header"><a href="#"><i class="icon-chevron-down"></i> 二年級</a></li>
+                            <li><a href="#">資二忠</a></li>
+                            <li><a href="#">資二忠</a></li>
+                            <li class="nav-header"><a href="#"><i class="icon-chevron-down"></i> 三年級</a></li>
+                            <li><a href="#">資三忠</a></li>
+                            <li><a href="#">資三忠</a></li>
+                        </ul>
+                      </div>
+                      <div class="tab-pane fade" id="teacher">
+                        <ul class="nav nav-list">
+                            <li class="active"><a href="#">吳三桂</a></li>
+                            <li><a href="#">陳圓圓</a></li>
+                            <li><a href="#">羅密歐</a></li>
+                            <li><a href="#">茱麗葉</a></li>
+                            <li><a href="#">梁山伯</a></li>
+                            <li><a href="#">祝英台</a></li>
+                        </ul>
+                      </div>
+                      <div class="tab-pane fade" id="place">
+                        <ul class="nav nav-list">
+                            <li class="active"><a href="#">圖書館</a></li>
+                            <li><a href="#">電101</a></li>
+                            <li><a href="#">電102</a></li>
+                            <li><a href="#">操場</a></li>
+                            <li><a href="#">科101</a></li>
+                            <li><a href="#">科102</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                </div>
+                <div class="span9">
+                	<table class="table table-bordered my-row12">
+                        <caption class="hidden">101學年度第一學期 王大華 課表</caption>
+                        <thead>
+                          <tr>
+                            <th>&nbsp;</th>
+                            <th>一</th>
+                            <th>二</th>
+                            <th>三</th>
+                            <th>四</th>
+                            <th>五</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th>1<div class="my-time">08:00<br />|<br />09:00</div></th>
+                            <td class="my-list1">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list2">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list3">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list4">
+                                <div style="position:relative;"><div style="position:relative;">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <div class="my-more">3+</div>
+                                </div>
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <th>2<div class="my-time">08:00<br />|<br />09:00</div></th>
+                            <td class="my-list1">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list2">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list3">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list4"><div style="position:relative;">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <div class="my-more">3+</div>
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <th>3<div class="my-time">08:00<br />|<br />09:00</div></th>
+                            <td class="my-list1">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list2">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list3">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list4"><div style="position:relative;">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <div class="my-more">3+</div>
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <th>4<div class="my-time">08:00<br />|<br />09:00</div></th>
+                            <td class="my-list1">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list2">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list3">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list4"><div style="position:relative;">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <div class="my-more">3+</div>
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <th>5<div class="my-time">08:00<br />|<br />09:00</div></th>
+                            <td class="my-list1">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list2">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list3">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list4"><div style="position:relative;">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <div class="my-more">3+</div>
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <th>6<div class="my-time">08:00<br />|<br />09:00</div></th>
+                            <td class="my-list1">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list2">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list3">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list4"><div style="position:relative;">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <div class="my-more">3+</div>
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <th>7
+                              <div class="my-time">08:00<br />|<br />09:00</div></th>
+                            <td class="my-list1">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list2">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list3">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list4"><div style="position:relative;">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <div class="my-more">3+</div>
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <th>8
+                              <div class="my-time">08:00<br />|<br />09:00</div></th>
+                            <td class="my-list1">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list2">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list3">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list4"><div style="position:relative;">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <div class="my-more">3+</div>
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <th>9
+                              <div class="my-time">08:00<br />|<br />09:00</div></th>
+                            <td class="my-list1">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list2">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list3">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list4"><div style="position:relative;">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <div class="my-more">3+</div>
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <th>10
+                              <div class="my-time">08:00<br />|<br />09:00</div></th>
+                            <td class="my-list1">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list2">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list3">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list4"><div style="position:relative;">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <div class="my-more">3+</div>
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <th>11
+                              <div class="my-time">08:00<br />|<br />09:00</div></th>
+                            <td class="my-list1">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list2">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list3">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list4"><div style="position:relative;">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <div class="my-more">3+</div>
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <th>12
+                              <div class="my-time">08:00<br />|<br />09:00</div></th>
+                            <td class="my-list1">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list2">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list3">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                            </td>
+                            <td class="my-list4"><div style="position:relative;">
+                                    <ul>
+                                        <li class="my-week">(單)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">101教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <ul>
+                                        <li class="my-week">(雙)</li>
+                                        <li class="my-class">資一忠</li>
+                                        <li class="my-subject">國文</li>
+                                        <li class="my-teacher">王大華</li>
+                                        <li class="my-class">102教室</li>
+                                        <li class="my-time">(08:20-09:10)</li>
+                                    </ul>
+                                    <div class="my-more">3+</div>
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                </div>
+            </div>
         </div>
       </div>
   </div>

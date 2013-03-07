@@ -1,34 +1,64 @@
-table table thead th {
+.table {
+  width: 689px !important;
+  margin: 0 auto;
+}
+.table thead th {
   background: none;
   border-bottom: none;
 }
-.table th {
+.table th,
+.table td {
+  /*position:relative;*/
+
   text-align: center;
+  vertical-align: middle;
+}
+.table th {
   width: 19%;
+}
+.table td {
+  padding: 0 5px;
 }
 .table th:first-child {
   width: 5%;
 }
-.table td {
-  height: 70px;
-  vertical-align: middle;
-  text-align: center;
+.table caption {
+  margin: 5px 0;
 }
-.radio input[type="radio"],
-.checkbox input[type="checkbox"] {
-  margin: 3px 5px;
-}
-label {
-  display: inline-block;
-}
-.radio,
-.checkbox {
-  padding: 0 10px;
+.table ol li {
+  margin: 0px;
 }
 .table ul {
   list-style-type: none;
+  border: 0;
+  border-top: 1px solid #ccc;
   margin: 0;
+  padding: 0;
+  clear: both;
 }
+.table ul li {
+  float: left;
+}
+.table ul li:after {
+  content: "";
+  padding-right: 4px;
+}
+/*
+.table ul li:nth-child(n+5):after,
+.table ul li:first-child:after,
+.my-place ul li:nth-child(4):after,
+.my-list1 ul li:after,
+.my-row6 .my-list2 ul li:after,
+.my-row6 .my-list3 ul li:after,
+.my-row7 .my-list2 ul li:after,
+.my-row7 .my-list3 ul li:after,
+.my-row8 .my-list2 ul li:after,
+.my-row9 .my-list2 ul li:after,
+.my-row10 .my-list2 ul li:after,
+.my-row11 .my-list2 ul li:after {
+  content:"";
+  padding:0;
+}*/
 .tooltip-inner {
   max-width: 500px !important;
   text-align: left;
@@ -45,53 +75,268 @@ label {
 .my-search .add-on {
   cursor: pointer;
 }
+.my-more {
+  background: #CCC;
+  font-size: 10px;
+  padding: 0 5px;
+  border-radius: 5px;
+  border: 3px solid #fff;
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+}
+.table td ul:first-child {
+  border-top: none;
+}
+.btn-group {
+  margin: 0 8px 5px 0;
+}
+.my-tab {
+  margin-bottom: 0;
+}
+.my-tab .btn:first-child {
+  border-bottom-left-radius: 0;
+}
+.my-tab .btn:last-child {
+  border-bottom-right-radius: 0;
+}
+.my-well2 {
+  border-top-left-radius: 0;
+  max-height: 860px;
+}
+.my-well2 .nav-header a {
+  color: #333;
+}
+.my-well2 li a {
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 18px;
+}
+.my-table th {
+  text-align: center;
+}
+.my-time {
+  font-weight: normal;
+  font-size: 10px;
+  text-align: center;
+  line-height: 12px;
+}
+.my-row6 tbody th {
+  height: 128px;
+}
+.my-row7 tbody th {
+  height: 111px;
+}
+.my-row8 tbody th {
+  height: 95px;
+}
+.my-row9 tbody th {
+  height: 82px;
+}
+.my-row10 tbody th {
+  height: 72px;
+}
+.my-row11 tbody th {
+  height: 64px;
+}
+.my-row12 tbody th {
+  height: 57px;
+}
+.my-row11 td,
+.my-row12 td {
+  font-size: 13px;
+}
+table ul {
+  overflow: hidden;
+  padding: 2px 0;
+}
+li {
+  line-height: 15px;
+}
+.my-row6 .my-list1 ul {
+  height: 144px;
+}
+.my-row6 .my-list2 ul {
+  height: 73px;
+}
+.my-row6 .my-list3 ul {
+  height: 46px;
+}
+.my-row6 .my-list4 ul {
+  height: 36px;
+}
+.my-row7 .my-list1 ul {
+  height: 122px;
+}
+.my-row7 .my-list2 ul {
+  height: 62px;
+}
+.my-row7 .my-list3 ul {
+  height: 39px;
+}
+.my-row7 .my-list4 ul {
+  height: 30px;
+}
+.my-row8 .my-list1 ul {
+  height: 107px;
+}
+.my-row8 .my-list2 ul {
+  height: 54px;
+}
+.my-row8 .my-list3 ul {
+  height: 36px;
+}
+.my-row8 .my-list4 ul {
+  height: 27px;
+}
+.my-row9 .my-list1 ul {
+  height: 94px;
+}
+.my-row9 .my-list2 ul {
+  height: 46px;
+}
+.my-row9 .my-list3 ul {
+  height: 31px;
+}
+.my-row9 .my-list4 ul {
+  height: 20px;
+}
+.my-row10 .my-list1 ul {
+  height: 84px;
+}
+.my-row10 .my-list2 ul {
+  height: 42px;
+}
+.my-row10 .my-list3 ul {
+  height: 28px;
+}
+.my-row10 .my-list4 ul {
+  height: 17px;
+}
+.my-row11 .my-list1 ul {
+  height: 76px;
+}
+.my-row11 .my-list2 ul {
+  height: 38px;
+}
+.my-row11 .my-list3 ul {
+  height: 25px;
+}
+.my-row11 .my-list4 ul {
+  height: 15px;
+}
+.my-row12 .my-list1 ul {
+  height: 72px;
+}
+.my-row12 .my-list2 ul {
+  height: 35px;
+}
+.my-row12 .my-list3 ul {
+  height: 20px;
+}
+.my-row12 .my-list4 ul {
+  height: 15px;
+}
+.my-list1 li,
+.my-row6 .my-list2 li,
+.my-row6 .my-list3 li,
+.my-row7 .my-list2 li,
+.my-row7 .my-list3 li,
+.my-row8 .my-list2 li,
+.my-row9 .my-list2 li,
+.my-row10 .my-list2 li,
+.my-row11 .my-list2 li {
+  float: none !important;
+}
+.my-row6 .my-list1 .my-week,
+.my-row6 .my-list2 .my-week,
+.my-row6 .my-list3 .my-week,
+.my-row7 .my-list1 .my-week,
+.my-row7 .my-list2 .my-week,
+.my-row7 .my-list3 .my-week,
+.my-row8 .my-list1 .my-week,
+.my-row8 .my-list2 .my-week,
+.my-row9 .my-list1 .my-week,
+.my-row9 .my-list2 .my-week,
+.my-row10 .my-list1 .my-week,
+.my-row10 .my-list2 .my-week,
+.my-row11 .my-list1 .my-week,
+.my-row11 .my-list2 .my-week,
+.my-row12 .my-list1 .my-week {
+  position: absolute;
+}
+.my-list3 li,
+.my-list4 li,
+.my-row7 .my-list2 li,
+.my-row8 .my-list2 li,
+.my-row9 .my-list2 li,
+.my-row10 .my-list2 li,
+.my-row11 .my-list2 li,
+.my-row12 .my-list2 li {
+  font-size: 13px;
+  line-height: 13px;
+}
+.my-row6 .my-list4 li,
+.my-row9 .my-list4 li,
+.my-row10 .my-list4 li,
+.my-row11 .my-list4 li,
+.my-row12 .my-list3 li {
+  line-height: 19px;
+}
+.my-row6 .my-list4 li,
+.my-row8 .my-list3 li,
+.my-row12 .my-list2 li {
+  line-height: 17px;
+}
+.my-row6 .my-list3 li {
+  line-height: 16px;
+}
+.my-row6 .my-list3 li,
+.my-row7 .my-list2 li,
+.my-row7 .my-list4 li,
+.my-row9 .my-list2 li,
+.my-row9 .my-list3 li,
+.my-row12 .my-list4 li {
+  line-height: 15px;
+}
+.my-row8 .my-list2 li,
+.my-row10 .my-list2 li,
+.my-row10 .my-list3 li {
+  line-height: 14px;
+}
 /*自訂*/
 .my-err-info {
   cursor: pointer;
-}
-.dropdown-menu .active > a,
-.dropdown-menu .active > a:hover {
-  color: white;
-}
-.my-print {
-  width: 880px;
-  padding: 40px 20px;
-}
-.my-print .title {
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-}
-.my-print .table {
-  border: 1px solid #DDD;
-  border-collapse: collapse;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  width: 100%;
-}
-.my-print .table thead td {
-  height: 37px;
-}
-.my-print .table td {
-  border: 1px solid #DDD;
-  font-family: "微軟正黑體", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  vertical-align: middle;
-  text-align: center;
-  padding: 8px;
-  line-height: 20px;
-  min-height: 70px;
-}
-.my-print .table td ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
 }
 .my-dropdown-menu {
   max-height: 310px;
   overflow: auto;
 }
+.my-dropdown-menu .active > a,
+.my-dropdown-menu .active > a:hover {
+  color: white;
+}
 .my-clear-both {
   clear: both;
+}
+.my-print {
+  width: 880px;
+  padding: 40px 20px;
+}
+.my-print .hidden {
+  display: table-caption;
+  visibility: visible;
+}
+.my-print .table-bordered {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.my-print .table-bordered caption + thead tr:first-child th:first-child,
+.my-print .table-bordered caption + tbody tr:first-child td:first-child,
+.my-print .table-bordered colgroup + thead tr:first-child th:first-child,
+.my-print .table-bordered colgroup + tbody tr:first-child td:first-child {
+  -webkit-border-top-left-radius: 0;
+  border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
 }
