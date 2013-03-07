@@ -43,3 +43,6 @@ table.table-striped tbody tr.my-iscase th {
 table.table-striped tbody tr.my-iscase td.my-casename {
   padding-left: 27px;
 }
+form tr.error span.help-inline {
+  color: #B94A48;
+}

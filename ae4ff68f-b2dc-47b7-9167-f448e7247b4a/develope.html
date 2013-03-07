@@ -26,6 +26,7 @@
 </head>
 <body>
   <div id="gadget" class="my-page">
+      <div id="mainMsg"></div>
       <div class="row-fluid">
         <div class="span12">
           <h1><span id="tabName"></span> 課程問卷調查</h1>
@@ -44,7 +45,7 @@
             </table>
           </div>
           <div id="tab_form">
-            <table class="table table-bordered">
+            <table id="course_info" class="table table-bordered">
                 <thead>
                   <tr>
                     <th>課號</th>
@@ -78,62 +79,13 @@
                 </tbody>
               </table>
             </form>
-            <div class="my-sure">
-                <button class="btn btn-info" data-original-title="處理中..." data-action="temp">暫存不送出</button>
+            <div class="my-sure" data-type="form">
+                <button class="btn btn-info" data-loading-text="儲存中..." data-action="temp">暫存不送出</button>
                 <button class="btn btn-success" data-action="preview">預覽並送出</button>
                 <button class="btn" data-action="form_cancel">取消</button>
             </div>
-          </div>
-          <div id="tab_preview">
-            <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th>課號</th>
-                    <th>課程名稱</th>
-                    <th>任課教師</th>
-                    <th>修課人數</th>
-                  </tr>
-                </thead>
-                <tbody>
-                </tbody>
-                <thead>
-                  <tr>
-                    <th colspan="4">評鑑說明</th>
-                  </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-            <table class="table table-bordered table-striped">
-              <thead>
-                <tr>
-                  <th>題項<span class="text-error">（*為必填欄位）</span></th>
-                  <th>選項</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><span class="text-error">*</span>1.本門課我的出缺席狀況是</td>
-                  <td>從不缺課</td>
-                </tr>
-                <tr>
-                  <td><span class="text-error">*</span>2.我認為本課程我可以獲得的成績範圍為</td>
-                  <td>80～89 分</td>
-                </tr>
-                <tr>
-                  <td>3.本課程的內容和學習目標十分明確</td>
-                  <td>同意</td>
-                </tr>
-                <tr>
-                  <td>4.本課程給您最大的收獲是什麼？</td>
-                  <td colspan="4">
-                  無
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="my-sure">
-                <button class="btn btn-success" data-original-title="處理中...">送出</button>
+            <div class="my-sure" data-type="preview">
+                <button class="btn btn-success" data-loading-text="儲存中..." id="save-data">送出</button>
                 <button class="btn" data-action="preview_cancel">取消</button>
             </div>
           </div>
