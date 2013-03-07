@@ -116,6 +116,8 @@ jQuery(function () {
                     self.currentData.Item(item.Item || '');
                     self.currentData.SchoolYear(item.SchoolYear || '');
                     self.currentData.Semester(item.Semester || '');
+                    self.currentData.BeginTime(item.BeginTime || '');
+                    self.currentData.EndTime(item.EndTime || '');
                 };
                 var set_course_opening_info = function(item) {
                     var tmp_txt = '';
@@ -175,7 +177,9 @@ jQuery(function () {
                 Item         : ko.observable(''),
                 SchoolYear   : ko.observable(''),
                 Semester     : ko.observable(''),
-                FullSemester : ko.observable('')
+                FullSemester : ko.observable(''),
+                BeginTime    : ko.observable(''),
+                EndTime      : ko.observable('')
             },
             course_opening_info : {
                 Item1 : ko.observable(''),
@@ -708,8 +712,18 @@ jQuery(function () {
                     }
                 }
 
-                content = "<!DOCTYPE html>\n<html>\n <head>\n        <link type=\"text/css\" rel=\"stylesheet\" href=\"css/default.css\"/>\n    </head>\n" +
-                        "<body>\n        <div style='width:880px;padding:40px 20px' class='my-print-page'>" +
+                var tmp = $(content);
+                $(tmp).find('#printEndTime').append(self.currentData.EndTime() || '');
+                content = $('<div>').append(tmp).html();
+
+                content = "<!DOCTYPE html>\n" +
+                        "<html>\n" +
+                        "<head>\n" +
+                        "<title>加退選單</title>\n" +
+                        "<link type=\"text/css\" rel=\"stylesheet\" href=\"css/default.css\"/>\n" +
+                        "</head>\n" +
+                        "<body style='width:880px;padding:40px 20px' onload=\"window.print();\">\n" +
+                        "<div class='my-print-page'>" +
                         content +
                         "</div>\n  </body>\n</html>";
                 var doc = window.open('about:blank', '_blank', '');
@@ -763,7 +777,7 @@ jQuery(function () {
             save_quit_add : function() {
                 var self = MyViewModel;
                 var add_list = [], add_log = [], add_complete = false, log_add_content = [];
-                var quit_list = [], quit_log = [], quit_complete = false, log_quit_content = []
+                var quit_list = [], quit_log = [], quit_complete = false, log_quit_content = [];
                 var course_add_html = '', course_quit_html = '';
 
                 var get_course_html = function(courses) {
@@ -870,7 +884,10 @@ jQuery(function () {
                         add_list.push('<Course><CourseID>' + item.CourseID + '</CourseID></Course>');
                         add_log.push('<Course><CourseID>' + item.CourseID + '</CourseID>' +
                             '<Action>insert</Action><ActionBy>student</ActionBy></Course>');
-                        log_add_content.push(item.CourseName);
+                        log_add_content.push(
+                            '學生「' + self.student.StudentName() + '」加選課程：\n' +
+                            item.CourseName
+                        );
                     });
 
                     _gg.connection.send({
@@ -929,7 +946,10 @@ jQuery(function () {
                         quit_list.push('<Course><CourseID>' + item.CourseID + '</CourseID></Course>');
                         quit_log.push('<Course><CourseID>' + item.CourseID + '</CourseID>' +
                             '<Action>delete</Action><ActionBy>student</ActionBy></Course>');
-                        log_quit_content.push(item.CourseName);
+                        log_quit_content.push(
+                            '學生「' + self.student.StudentName() + '」退選課程：\n' +
+                            item.CourseName
+                        );
                     });
 
                     _gg.connection.send({
