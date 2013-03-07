@@ -450,7 +450,7 @@ var _gg = function() {
                                                                 flag_x = '';
                                                         }
 
-                                                        var subject = (item.Subject || '') + $.arabic2roman(item.level || '');
+                                                        var subject = (item.Subject || '') + (item.level ? $.arabic2roman(item.level) : '');
                                                         var teachername = (item.TeacherName || '');
                                                         var classroomname = (item.ClassroomName || '');
                                                         var classname = (item.ClassName || '');
