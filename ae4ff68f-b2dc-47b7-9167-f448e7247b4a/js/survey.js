@@ -34,28 +34,37 @@ jQuery(function () {
 
     //#region 將結果轉成物件
     var getReply2Obj = function() {
+        var all_qid = [];
         var reply = {
-            'Answers':[]
+            'Answers': {
+                'Question': []
+            }
         };
         $('#tab_form td[data-qid]').each(function(index, val) {
-            var tmp = {
-                'Question':{
+            var tmp;
+            var that_qid = $(this).attr('data-qid') || '';
+            var has_qid = $.inArray(that_qid, all_qid);
+            if (has_qid === -1) {
+                reply.Answers.Question.push({
                     '@'          : ['QuestionID'],
-                    'QuestionID' : $(this).attr('data-qid') || '',
+                    'QuestionID' : that_qid,
                     'Answer'     : []
-                }
+                });
+                all_qid.push(that_qid);
+                tmp = reply.Answers.Question[reply.Answers.Question.length - 1];
+            } else {
+                tmp = reply.Answers.Question[has_qid];
             }
             $(this).each(function(index, val) {
                 $(val).find('input[data-caseid]:checked, textarea').each(function(index, item) {
-                    tmp.Question.Answer.push({
+                    tmp.Answer.push({
                         '@text'  : $(item).attr('data-title') || '',
                         '@'      : ['CaseID','Score'],
                         'CaseID' : $(item).attr('data-caseid') || '',
-                        'Score'  : $(item).val() || '',
+                        'Score'  : $(item).val() || ''
                     });
                 });
             });
-            reply.Answers.push(tmp);
         });
         return reply;
     };
@@ -383,18 +392,18 @@ var _gg = function() {
                         tbody.html(top_question.join('') + down_question.join(''));
 
                         //#region 設定預設值
-                        if (_reply_answer.Answers) {
-                            $(_reply_answer.Answers).each(function(index, question) {
-                                $(question.Question).each(function(key, answer) {
-                                    var caseid, option,
-                                        qid = answer.QuestionID || '';
-                                    $(answer.Answer).each(function(a, b) {
-                                        caseid = b.CaseID || '';
-                                        option = b['@text'] || '';
-                                        score = b.Score || '';
-                                        $('input[name=q' + qid + caseid + ']', tbody).filter('[value="' + score + '"]').prop('checked', true);
-                                        $('textarea[name=q' + qid + caseid + ']', tbody).val(option);
-                                    });
+
+                        var _q_ref;
+                        if (((_q_ref = _reply_answer.Answers) != null ? _q_ref.Question : void 0) != null) {
+                            $(_reply_answer.Answers.Question).each(function(key, answer) {
+                                var caseid, option,
+                                    qid = answer.QuestionID || '';
+                                $(answer.Answer).each(function(a, b) {
+                                    caseid = b.CaseID || '';
+                                    option = b['@text'] || '';
+                                    score = b.Score || '';
+                                    $('input[name=q' + qid + caseid + ']', tbody).filter('[value="' + score + '"]').prop('checked', true);
+                                    $('textarea[name=q' + qid + caseid + ']', tbody).val(option);
                                 });
                             });
                         }
