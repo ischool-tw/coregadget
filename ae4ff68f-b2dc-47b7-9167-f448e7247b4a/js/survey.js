@@ -48,9 +48,10 @@ jQuery(function () {
             $(this).each(function(index, val) {
                 $(val).find('input[data-caseid]:checked, textarea').each(function(index, item) {
                     tmp.Question.Answer.push({
-                        '@text'  : $(item).val() || '',
-                        '@'      : ['CaseID'],
-                        'CaseID' : $(item).attr('data-caseid') || ''
+                        '@text'  : $(item).attr('data-title') || '',
+                        '@'      : ['CaseID','Score'],
+                        'CaseID' : $(item).attr('data-caseid') || '',
+                        'Score'  : $(item).val() || '',
                     });
                 });
             });
@@ -318,7 +319,8 @@ var _gg = function() {
                                         '<label class="radio">' +
                                         '<input type="radio" name="' + unique + '" class="' + validate_css + '"' +
                                         ' data-caseid="' + _caseid + '"' +
-                                        ' value="' + (value.OptionTitle || '') + '">' + (value.OptionTitle || '') +
+                                        ' data-title="' + (value.OptionTitle || '') + '"' +
+                                        ' value="' + (value.OptionOrder || '') + '">' + (value.OptionTitle || '') +
                                         '</label>'
                                     );
                                 });
@@ -389,7 +391,8 @@ var _gg = function() {
                                     $(answer.Answer).each(function(a, b) {
                                         caseid = b.CaseID || '';
                                         option = b['@text'] || '';
-                                        $('input[name=q' + qid + caseid + ']', tbody).filter('[value="' + option + '"]').prop('checked', true);
+                                        score = b.Score || '';
+                                        $('input[name=q' + qid + caseid + ']', tbody).filter('[value="' + score + '"]').prop('checked', true);
                                         $('textarea[name=q' + qid + caseid + ']', tbody).val(option);
                                     });
                                 });

@@ -1,5 +1,6 @@
 var _gg = _gg || {};
 _gg.connection = gadget.getContract("ischool.exam.parent");
+_gg.curr_schoolyear, _gg.curr_semester;
 
 jQuery(function () {
     // TODO: 切換學年度學期
@@ -17,7 +18,22 @@ jQuery(function () {
         $(this).parent().addClass('active');
         _gg.student = _gg.students[$(this).attr("children-index")];
         _gg.resetData();
-        _gg.resetSchoolYearSeme();
+        _gg.curr_schoolyear = null, _gg.curr_semester = null;
+        _gg.connection.send({
+            service: "_.GetCurrentSemester",
+            body: '',
+            result: function (response, error, http) {
+                if (error !== null) {
+                    _gg.set_error_message('#mainMsg', 'GetCurrentSemester', error);
+                } else {
+                    if (response.Current) {
+                        _gg.curr_schoolyear = response.Current.SchoolYear || '';
+                        _gg.curr_semester = response.Current.Semester || '';
+                    }
+                    _gg.resetSchoolYearSeme();
+                }
+            }
+        });
     });
 
     // TODO: 取得學生資料
@@ -86,6 +102,9 @@ _gg.resetData = function() {
 _gg.loadScore = function() {
     var schoolYear = _gg.exam.schoolYear;
     var semester = _gg.exam.semester;
+    var curr_schoolyear = _gg.curr_schoolyear;
+    var curr_semester = _gg.curr_semester;
+
     _gg.connection.send({
         service: "_.GetCourseExamScore",
         body: {
@@ -110,57 +129,79 @@ _gg.loadScore = function() {
                     if (((_ref = response.ExamScoreList) != null ? _ref.ExamScore : void 0) != null) {
 
                         var thead = "<th rowspan='2'>課程名稱</th>", thead2 = "", tbody = "", tfooter = "<th>總分</th>";
-                        var items = [], exams = [];
+                        var items = [], exams = [], show_data = true, tmp_exams_id = [];
 
                         $(response.ExamScoreList.ExamScore).each(function(i, exam) {
+                            //#region 判斷目前學年度學期，如在繳交期限前不顯示
+                            if (schoolYear === curr_schoolyear && semester === curr_semester) {
+                                if (exam.EndTime) {
+                                    var tmp_Date  = new Date();
+                                    var Enddate   = new Date(exam.EndTime);
 
-                            thead += '<th colspan="2">' + exam.ExamName + '</th>';
-                            thead2 += '<th colspan="2">成績</th>';
+                                    if (Enddate < tmp_Date) {
+                                        show_data = true;
+                                    } else {
+                                        show_data = false;
+                                    }
+                                } else {
+                                    show_data = true;
+                                }
+                            } else {
+                                show_data = true;
+                            }
+                            //#endregion
 
-                            exams.push(exam);
+                            if (show_data === true) {
+                                var tmp_course = '';
 
-                            var tmp_course = '';
+                                $(exam.ScoreDetail).each(function(j, course) {
 
-                            $(exam.ScoreDetail).each(function(j, course) {
+                                    var include = false;
 
-                                var include = false;
+                                    $(items).each(function(j, item) {
+                                        if (course.CourseID == item.CourseID) {
+                                            include = true;
 
-                                $(items).each(function(j, item) {
-                                    if (course.CourseID == item.CourseID) {
-                                        include = true;
+                                            if (course.Extension && course.Extension.Extension) {
+                                                item["Exam_" + exam.ExamID + "_Score"] =
+                                                    course.Extension.Extension.Score == "" ? "" : course.Extension.Extension.Score;
+                                                item["Exam_" + exam.ExamID + "_AssignmentScore"] =
+                                                    course.Extension.Extension.AssignmentScore == "" ? "" : course.Extension.Extension.AssignmentScore;
+                                                item["Exam_" + exam.ExamID + "_Text"] =
+                                                    course.Extension.Extension.Text == "" ? "" : course.Extension.Extension.Text;
+                                            }
+                                            return false;
+                                        }
+                                    });
+
+                                    if (!include) {
+                                        var item = {};
+                                        item.CourseID   = course.CourseID;
+                                        item.Subject    = course.Subject;
+                                        item.CourseName = course.CourseName;
 
                                         if (course.Extension && course.Extension.Extension) {
-                                            item["Exam_" + exam.ExamID + "_Score"] =
-                                                course.Extension.Extension.Score == "" ? "&nbsp;" : course.Extension.Extension.Score;
-                                            item["Exam_" + exam.ExamID + "_AssignmentScore"] =
-                                                course.Extension.Extension.AssignmentScore == "" ? "&nbsp;" : course.Extension.Extension.AssignmentScore;
-                                            item["Exam_" + exam.ExamID + "_Text"] =
-                                                course.Extension.Extension.Text == "" ? "&nbsp;" : course.Extension.Extension.Text;
+                                            item["Exam_" + exam.ExamID + "_Score"] = course.Extension.Extension.Score;
                                         }
-                                        return false;
+
+                                        items.push(item);
                                     }
+
+                                    tmp_course += course.Subject;
                                 });
 
-                                if (!include) {
-                                    var item = {};
-                                    item.CourseID   = course.CourseID;
-                                    item.Subject    = course.Subject;
-                                    item.CourseName = course.CourseName;
 
-                                    if (course.Extension && course.Extension.Extension) {
-                                        item["Exam_" + exam.ExamID + "_Score"] = course.Extension.Extension.Score;
+                                if ($.inArray(exam.ExamID, tmp_exams_id) === -1) {
+                                    thead += '<th colspan="2">' + exam.ExamName + '</th>';
+                                    thead2 += '<th colspan="2">成績</th>';
+                                    if (tmp_course === '體育') {
+                                        tfooter += '<td class="sum-score" my-data="' + exam.ExamID + '" my-type="no"></td><td>&nbsp;</td>';
+                                    } else {
+                                        tfooter += '<td class="sum-score" my-data="' + exam.ExamID + '"></td><td>&nbsp;</td>';
                                     }
-
-                                    items.push(item);
+                                    tmp_exams_id.push(exam.ExamID);
+                                    exams.push(exam);
                                 }
-
-                                tmp_course += course.Subject;
-                            });
-
-                            if (tmp_course === '體育') {
-                                tfooter += '<td class="sum-score" my-data="' + exam.ExamID + '" my-type="no"></td><td>&nbsp;</td>';
-                            } else {
-                                tfooter += '<td class="sum-score" my-data="' + exam.ExamID + '"></td><td>&nbsp;</td>';
                             }
                         });
 
@@ -174,7 +215,7 @@ _gg.loadScore = function() {
 
                             $(exams).each(function(j, exam) {
                                 var currse_score = item["Exam_" + exam.ExamID + "_Score"];
-                                if (currse_score == undefined || currse_score === "") {
+                                if (!currse_score) {
                                     tr += '<td class="my-nofill">&nbsp;</td>';
                                     tr += '<td class="my-nofill">&nbsp;</td>';
                                 } else {
