@@ -510,7 +510,7 @@ var _gg = function() {
                                                         }
 
                                                         if (index > 3) {
-                                                            info.push('<div class="my-more">3+</div>');
+                                                            info.push('<div class="my-more">' + (that.length - 4)+ '+</div>');
                                                         }
                                                     });
 
