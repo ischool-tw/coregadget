@@ -300,9 +300,12 @@ var _gg = function() {
                 }
             });
         };
-        getTeachers();
-        getClasses();
-        getClassrooms();
+
+        connection.ready(function() {
+            getTeachers();
+            getClasses();
+            getClassrooms();
+        });
     };
     //#endregion
 
@@ -416,20 +419,24 @@ var _gg = function() {
                                             // TODO: timetable不排課
                                             _tbody.push(
                                                 '<td class="' + getTDCSS(1) + '">' +
+                                                '  <table class="my-subtable"><tr><td>' +
                                                 '    <ul>' +
                                                 '        <li class="my-subject">' + tt.DisableMessage + '</li>' +
                                                 course_time +
                                                 '    </ul>' +
+                                                '  </td></tr></table>' +
                                                 '</td>'
                                             );
                                         } else {
                                             if (curr_classbusy['' + ii + jj]) {
                                                 _tbody.push(
                                                     '<td class="' + getTDCSS(1) + '">' +
+                                                    '  <table class="my-subtable"><tr><td>' +
                                                     '    <ul>' +
                                                     '        <li class="my-subject">' + curr_classbusy['' + ii + jj] + '</li>' +
                                                     course_time +
                                                     '    </ul>' +
+                                                    '  </td></tr></table>' +
                                                     '</td>'
                                                 );
                                             } else {
@@ -474,32 +481,38 @@ var _gg = function() {
                                                             switch (kind) {
                                                                 case 'teacher':
                                                                     info.push(
+                                                                        '<tr><td>' +
                                                                         '<ul>' +
                                                                         flag_h +
-                                                                        '<li>' + classlink + '</li>' +
-                                                                        '<li>' + subject + '</li>' +
-                                                                        '<li>' + classroomlink + '</li>' +
-                                                                        '</ul>'
+                                                                        '<li class="my-class">' + classlink + '</li>' +
+                                                                        '<li class="my-subject">' + subject + '</li>' +
+                                                                        '<li class="my-classroom">' + classroomlink + '</li>' +
+                                                                        '</ul>' +
+                                                                        '</td></tr>'
                                                                     );
                                                                     break;
                                                                 case 'classroom':
                                                                     info.push(
+                                                                        '<tr><td>' +
                                                                         '<ul>' +
                                                                         flag_h +
-                                                                        '<li>' + classlink + '</li>' +
-                                                                        '<li>' + subject + '</li>' +
-                                                                        '<li>' + teacherlink + '</li>' +
-                                                                        '</ul>'
+                                                                        '<li class="my-class">' + classlink + '</li>' +
+                                                                        '<li class="my-subject">' + subject + '</li>' +
+                                                                        '<li class="my-teacher">' + teacherlink + '</li>' +
+                                                                        '</ul>' +
+                                                                        '</td></tr>'
                                                                     );
                                                                     break;
                                                                 case 'class':
                                                                     info.push(
+                                                                        '<tr><td>' +
                                                                         '<ul>' +
                                                                         flag_h +
-                                                                        '<li>' + subject + '</li>' +
-                                                                        '<li>' + teacherlink + '</li>' +
-                                                                        '<li>' + classroomlink + '</li>' +
-                                                                        '</ul>'
+                                                                        '<li class="my-subject">' + subject + '</li>' +
+                                                                        '<li class="my-teacher">' + teacherlink + '</li>' +
+                                                                        '<li class="my-classroom">' + classroomlink + '</li>' +
+                                                                        '</ul>' +
+                                                                        '</td></tr>'
                                                                     );
                                                                     break;
                                                             };
@@ -523,10 +536,12 @@ var _gg = function() {
 
                                                     _tbody.push(
                                                         '<td class="' + getTDCSS(that.length) + '" ' + tooltip_html + '>' +
-                                                        (that.length > 4 ? '<div style="position:relative;">' : '') +
+                                                        '<div class="my-container-more" style="position:relative;">' +
+                                                        '<table class="my-subtable">' +
                                                         info.join('') +
+                                                        '</table>' +
                                                         course_time +
-                                                        (that.length > 4 ? '</div>' : '') +
+                                                        '</div>' +
                                                         '</td>'
                                                     );
                                                 } else {
