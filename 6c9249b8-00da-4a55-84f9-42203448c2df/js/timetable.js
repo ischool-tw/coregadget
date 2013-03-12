@@ -783,7 +783,7 @@ var _gg = function() {
                 },
                 result: function (response, error, http) {
                     if (error !== null) {
-                        _gg.set_error_message('#mainMsg', 'GetClassBusy', error);
+                        set_error_message('#mainMsg', 'GetClassBusy', error);
                     } else {
                         var _ref;
                         if (((_ref = response.Response) != null ? _ref.ClassBusy : void 0) != null) {
