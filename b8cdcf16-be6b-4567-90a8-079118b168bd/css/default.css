@@ -119,3 +119,6 @@ div.modal div.my-Msg div {
 .modal-body > div {
   text-align: left;
 }
+#printEndTime {
+  color: red;
+}
