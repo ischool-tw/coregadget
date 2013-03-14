@@ -1,0 +1,50 @@
+.tab-content .my-baseinfo-item .my-label-title,
+.tab-content .btn-group {
+  margin-bottom: 10px;
+}
+.my-lineheight {
+  line-height: 22px;
+}
+.my-lineheight strong {
+  margin: 0 5px;
+}
+.my-right {
+  text-align: right;
+}
+.my-emptyline {
+  line-height: 18px;
+  display: inline-block;
+}
+span[generated].help-inline {
+  color: #B94A48;
+}
+input[type="text"].error-remark {
+  border-color: #B94A48;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+.form-horizontal .my-cadres-input {
+  margin-bottom: 6px;
+}
+/*自訂*/
+.failscore {
+  color: red;
+}
+table.table thead th {
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+table.table .my-nowrap {
+  white-space: nowrap;
+}
+table.table .my-min-width1 {
+  min-width: 70px;
+}
+table.table .my-min-width2 {
+  min-width: 90px;
+}
+table.table-bordered {
+  border-collapse: collapse;
+}
