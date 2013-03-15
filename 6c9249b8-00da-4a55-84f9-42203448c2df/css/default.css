@@ -290,11 +290,11 @@
 .my-row12 td {
   font-size: 13px;
 }
-ul {
+.table ul {
   overflow: hidden;
   padding: 2px 0;
 }
-li {
+.table li {
   line-height: 15px;
 }
 .my-list1 li,
