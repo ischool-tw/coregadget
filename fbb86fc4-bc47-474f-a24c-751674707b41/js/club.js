@@ -30,6 +30,9 @@ jQuery(function () {
     $("#editModal").on("show", function (e) {
         $("#editModal #save-data").button("reset");
     });
+    $("#editModal").on("shown", function (e) {
+        $("#editModal div.modal-body").scrollTop(0);
+    });
     $("#editModal #save-data").click(function () {
         if ($("#editModal form").valid()) {
             // TODO: 驗證通過
@@ -662,9 +665,18 @@ var _gg = function() {
 
     // TODO: 成績登錄編輯畫面
     var EditScore = function (clubid, edit_target, _index) {
+        var getWeightProportion = function (_target) {
+            var ret = '';
+            $(weight).each(function(_index, _weight) {
+                if (_weight.Name === _target) {
+                    ret = _weight.Proportion;
+                }
+            });
+            return ret;
+        }
         if (clubid) {
             var edit_title, scoreType;
-            edit_title = _index + '：' + edit_target + '(' + (weight[edit_target] || '')  + '%)';
+            edit_title = _index + '：' + edit_target + '(' + (getWeightProportion(edit_target) || '')  + '%)';
             scoreType = edit_target;
 
             var students = col_clubs[clubid].Students;
