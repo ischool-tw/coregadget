@@ -36,6 +36,9 @@ table.table thead th {
   vertical-align: middle;
   white-space: nowrap;
 }
+table.table {
+  overflow: auto;
+}
 table.table .my-nowrap {
   white-space: nowrap;
 }

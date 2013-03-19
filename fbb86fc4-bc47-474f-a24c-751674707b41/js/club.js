@@ -254,7 +254,8 @@ var _gg = function() {
                                     ClubName       : item.ClubName,
                                     CadreName      : tmp_cadreName,
                                     ResultScore    : item.ResultScore,
-                                    SCUID          : item.SCUID
+                                    SCUID          : item.SCUID,
+                                    Location       : item.Location
                                 };
 
                                 if (item.Score.Xml && item.Score.Xml.Item) {
@@ -526,7 +527,8 @@ var _gg = function() {
                     '            <th rowspan="2">學號</th>' +
                     '            <th rowspan="2">姓名</th>' +
                     '            <th rowspan="2">社團</th>' +
-                    '            <th rowspan="2">幹部</th>'
+                    '            <th rowspan="2">幹部</th>' +
+                    '            <th rowspan="2">場地</th>'
                 );
 
                 $(weight).each(function(_index, _weight) {
@@ -578,6 +580,7 @@ var _gg = function() {
                             '  <td class="my-nowrap">' + (value.StudentName || '')   + '</td>' +
                             '  <td class="my-min-width1">' + (value.ClubName || '')      + '</td>' +
                             '  <td class="my-min-width2" clubid="' + value.ClubID + '" studentID="' + value.StudentID + '">' + (value.CadreName || '')     + '</td>' +
+                            '  <td class="my-min-width1">' + (value.Location || '')      + '</td>' +
                             score_html.join('') +
                             '  <td>' + _resultScore   + '</td>' +
                             '</tr>');
