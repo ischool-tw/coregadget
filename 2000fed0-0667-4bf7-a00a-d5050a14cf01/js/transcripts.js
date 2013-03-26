@@ -111,7 +111,7 @@ _gg.SetStudentCreditData = function () {
                 // TODO: 實際學期科目成績內容
                 var tmp_semsSubjScore = {};
 
-                $.each(item.ScoreInfo.SemesterSubjectScoreInfo.Subject, function () {
+                $(item.ScoreInfo.SemesterSubjectScoreInfo.Subject).each(function () {
                             // TODO: 實際學期科目成績內容
                             tmp_semsSubjScore = {
                                 Entry: this.開課分項類別,
@@ -203,11 +203,11 @@ _gg.SetScoreData = function () {
     };
 
     // TODO: 本學期科目成績
-    $.each(SemsSubjScore, function (index, item) {
+    $(SemsSubjScore).each(function (index, item) {
         // TODO: 目前要顯示的學年度學期
         var items = [];
         if (_gg.schoolYear === item.SchoolYear && _gg.semester === item.Semester) {
-            $.each(item.ScoreInfo.SemesterSubjectScoreInfo.Subject, function () {
+            $(item.ScoreInfo.SemesterSubjectScoreInfo.Subject).each(function () {
                 // TODO: 取得學分
                 var tmp_credit = '不列入';
                 if (this.不計學分 === "否") {
@@ -225,7 +225,7 @@ _gg.SetScoreData = function () {
 
                 // TODO: 課程規劃表
                 var that = this;
-                $.each(GraduationPlan, function () {
+                $(GraduationPlan).each(function () {
                     if (that.科目 === this.SubjectName && that.科目級別 === this.Level) {
                         tmp_graduationPlan = {
                             Entry: this.Entry,
