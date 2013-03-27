@@ -177,17 +177,18 @@ _gg.SetScoreData = function () {
     $(SemsEntryScore.SemsEntryScore).each(function (index, item) {
         // TODO: 目前要顯示的學年度學期
         if (_gg.schoolYear === item.SchoolYear && _gg.semester === item.Semester) {
-            if (this.ScoreInfo.SemesterEntryScore.Entry.分項 === "學業") {
-                tmp_academic = this.ScoreInfo.SemesterEntryScore.Entry.成績;
-            };
-            if (this.ScoreInfo.SemesterEntryScore.Entry.分項 === "實習科目") {
-                tmp_internship = this.ScoreInfo.SemesterEntryScore.Entry.成績;
-            };
+            $(this.ScoreInfo.SemesterEntryScore.Entry).each(function(key, value) {
+                if (value.分項 === "學業") {
+                    tmp_academic = value.成績;
+                };
+                if (value.分項 === "實習科目") {
+                    tmp_internship = value.成績;
+                };
+            });
         };
-
-        $("#EntryScore span[entry-type=academic]").html(tmp_academic);
-        $("#EntryScore span[entry-type=internship]").html(tmp_internship);
     });
+    $("#EntryScore span[entry-type=academic]").html(tmp_academic);
+    $("#EntryScore span[entry-type=internship]").html(tmp_internship);
 
     // TODO: 處理分項成績中與課程規劃表的差異 Tooltip
     var fun_SubjectScore_tooltip = function (mainData, compareData) {
@@ -378,7 +379,11 @@ _gg.GetSemsSubjScore = function (schoolYear, semester) {
             if (error !== null) {
                 return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetSemsSubjScore)\n</div>");
             } else {
-                student.MySemsSubjScore = response.Students.SemsSubjScore;
+                if (response.Students.SemsSubjScore) {
+                    student.MySemsSubjScore = response.Students.SemsSubjScore;
+                } else {
+                    student.MySemsSubjScore = [];
+                }
                 _gg.SetStudentCreditData();
             }
         }
@@ -395,7 +400,11 @@ _gg.GetSemsEntryScore = function (schoolYear, semester) {
             if (error !== null) {
                 return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetSemsEntryScore)\n</div>");
             } else {
-                student.MySemsEntryScore = response.Students;
+                if (response.Students) {
+                    student.MySemsEntryScore = response.Students;
+                } else {
+                    student.MySemsEntryScore = [];
+                }
                 _gg.SetStudentCreditData();
             }
         }
