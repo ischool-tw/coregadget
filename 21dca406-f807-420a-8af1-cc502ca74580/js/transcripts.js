@@ -142,7 +142,7 @@ _gg.SetScoreData = function() {
                 var domainWeight = (domainItem.權數 || '');
                 var domainPeriod_Weight = domainPeriod;
 
-                if (domainPeriod.trim() !== domainWeight.trim()) {
+                if ($.trim(domainPeriod) !== $.trim(domainWeight)) {
                     domainPeriod_Weight += '/' + domainWeight;
                 }
 
@@ -196,7 +196,7 @@ _gg.SetScoreData = function() {
 
                     var period_Weight = tmp_semsSubjScore.Period;
 
-                    if (tmp_semsSubjScore.Period.trim() !== tmp_semsSubjScore.Weight.trim()) {
+                    if ($.trim(tmp_semsSubjScore.Period) !== $.trim(tmp_semsSubjScore.Weight)) {
                         period_Weight += '/' + tmp_semsSubjScore.Weight;
                     }
 
@@ -213,9 +213,9 @@ _gg.SetScoreData = function() {
                     tmp_item.push('</tbody>');
 
                     if (domainName === '無領域') {
-                        itemNoDoamin.push(tmp_item);
+                        itemNoDoamin.push(tmp_item.join(''));
                     } else {
-                        items.push(tmp_item);
+                        items.push(tmp_item.join(''));
                     }
                 });
             });
