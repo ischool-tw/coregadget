@@ -3,7 +3,8 @@ $(function() {
     LessonPlanManager.ControlMaterial = function(target) {
         var target = $(target)
             , _col_material
-            , _all_material;
+            , _all_material
+            , _filter;
 
         target.find('[data-action=add]').click(function() {
             LessonPlanManager.ControlAddmaterial.loadMaterial(null);
@@ -61,7 +62,12 @@ $(function() {
                                 }).join('') );
                             }
                             if (callback && $.isFunction(callback)) {
-                                callback(_all_material);
+                                if (_filter) {
+                                    target.find('select').val(_filter);
+                                    callback(_col_material[_filter] || '');
+                                } else {
+                                    callback(_all_material);
+                                }
                             }
                         }
                     }
@@ -97,6 +103,7 @@ $(function() {
 
         return {
             reload: function() {
+                _filter = target.find('select').val();
                 target.find('select[name=MyChooseSubject]').find('option').remove().end().html('<option value="">全部</option>');
                 getMaterial(showMaterial);
             }

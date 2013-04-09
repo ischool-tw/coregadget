@@ -1,9 +1,15 @@
 // 所有教案列表
 $(function() {
+    $('a[data-toggle="tab"]').on('show', function (e) {
+        if (e.target.hash === '#viewmaterial') {
+            LessonPlanManager.ControlViewMaterial.reload();
+        }
+    });
     LessonPlanManager.ControlViewMaterial = function(target) {
         var target = $(target)
             , _col_material
-            , _all_material;
+            , _all_material
+            , _filter;
 
         target.find('select').change(function() {
             var filter = $(this).val();
@@ -72,7 +78,12 @@ $(function() {
 
                         }
                         if (callback && $.isFunction(callback)) {
-                            callback(_all_material);
+                            if (_filter) {
+                                target.find('select').val(_filter);
+                                callback(_col_material[_filter] || '');
+                            } else {
+                                callback(_all_material);
+                            }
                         }
                     }
                 }
@@ -103,10 +114,9 @@ $(function() {
             }
         };
 
-        getMaterial(showMaterial);
-
         return {
             reload: function() {
+                _filter = target.find('select').val();
                 target.find('select[name=subjectList]').find('option').remove().end().html('<option value="">全部</option>');
                 getMaterial(showMaterial);
             }

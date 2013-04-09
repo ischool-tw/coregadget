@@ -44,35 +44,35 @@ $(function() {
         //#region 點選上傳檔案
         target.on('click', 'input:submit', function() {
             var elem = $(this).closest('td[data-type=fileContainer]');
-            var form = $('<form />');
-            var number, i_name, iframe, url, file, clone;
+            var number, i_name, iframe, url, file, clone, myform, f_name;
 
             if (elem.find('input:file').val()) {
-
-                file = elem.find('input:file');
-                clone = file.clone();
-                file.after(clone).appendTo(form);
-
                 _number += 1;
                 number = _number;
-                i_name = 'post_' + number;
+                i_name = 'material_post_' + number;
                 iframe = $('<iframe name="' + i_name + '" id="' + i_name + '" style="display: none" />');
 
                 $('body').append(iframe);
 
                 LessonPlanManager.StartUp.getConfig(function(config) {
-                    form.prop('action', (config['upload']) ? config['upload'] : '');
-                    form.prop('method', 'post');
-                    form.prop('enctype', 'multipart/form-data');
-                    form.prop('encoding', 'multipart/form-data');
-                    form.prop('target', i_name);
+                    f_name = 'material_fileform_' + number;
+                    myform = $('<form id="' + f_name + '" style="display: none" />');
+                    file = elem.find('input:file');
+                    clone = file.clone();
+                    file.after(clone).appendTo(myform);
+                    myform.prop('action', (config['upload']) ? config['upload'] : '');
+                    myform.prop('method', 'post');
+                    myform.prop('enctype', 'multipart/form-data');
+                    myform.prop('encoding', 'multipart/form-data');
+                    myform.prop('target', i_name);
                     url = _location + (_location.indexOf('?') < 0 ? '?' : '&') + 'fn=addmaterial&num=' + number + '&elem=' + elem[0].id;
-                    form.append('<input type="hidden" name="redrictURL" value="' + url + '" />')
-                    form.submit();
+                    myform.append('<input type="hidden" name="redrictURL" value="' + url + '" />')
+                    $('body').append(myform);
+                    $('#' + f_name).submit();
                 });
 
                 $('#' + i_name).load(function () {
-                    iframe.remove();
+                    myform.remove();
                 });
 
                 elem.find('div[data-type=fileInfo]').append('<p data-tmpid="' + number + '">檔案上傳中...</p>');
@@ -408,26 +408,6 @@ $(function() {
         };
 
         return {
-            //#region 上傳後，取得檔案回傳結果
-            fileInfo : function(vars) {
-                var resp = vars['resp'];
-                var num = vars['num'];
-                var elem = vars['elem'];
-                LessonPlanManager.StartUp.getConfig(function(config) {
-                    if (resp && elem) {
-                        var obj = jQuery.parseJSON(decodeURIComponent(resp));
-                        var download = config['download'] || '';
-                        var info = '<a href="' + download + (obj.key || '') + '"' +
-                            ' target="_blank" data-type="AddFile"' +
-                            ' data-key="' + (obj.key || '') + '" data-filename="' + obj.file + '">' +
-                            (obj.file || '') + '</a>';
-                        info += '<span class="my-trash pull-right" title="刪除檔案"></span>';
-                        $('#' + elem, target).find('p[data-tmpid=' + (num || '') +']').html(info);
-                    }
-                });
-            },
-            //#endregion
-
             loadMaterial : function(uid) {
                 // 清空所有欄位值
                 target.find('input:text, input:file, textarea').val('');
@@ -458,3 +438,23 @@ $(function() {
         }
     }('#addmaterial');
 });
+
+//#region 上傳後，取得檔案回傳結果
+AddmaterialFileInfo = function(vars) {
+    var resp = vars['resp'];
+    var num = vars['num'];
+    var elem = vars['elem'];
+    LessonPlanManager.StartUp.getConfig(function(config) {
+        if (resp && elem) {
+            var download = config['download'] || '';
+            var info = '<a href="' + download + (resp.key || '') + '"' +
+                ' target="_blank" data-type="AddFile"' +
+                ' data-key="' + (resp.key || '') + '" data-filename="' + resp.file + '">' +
+                (resp.file || '') + '</a>';
+            info += '<span class="my-trash pull-right" title="刪除檔案"></span>';
+            $('#' + elem, '#addmaterial').find('p[data-tmpid=' + (num || '') +']').html(info);
+            $('#material_post_' + num).remove();
+        }
+    });
+};
+//#endregion

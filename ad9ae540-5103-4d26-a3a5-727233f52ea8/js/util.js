@@ -114,8 +114,8 @@ LessonPlanManager.Util = function() {
                 '<link href="css/base.css" rel="stylesheet" /> \n' +
                 '<link href="css/default.css" rel="stylesheet" /> \n' +
                 '</head> \n' +
-                '<body onload="window.print();"> \n' +
-                '<div style="width:880px;height:auto;padding:40px 20px" class="my-print-page"> \n' +
+                '<body style="width:880px;height:auto;padding:40px 20px" onload="window.print();"> \n' +
+                '<div style="width:880px;" class="my-print-page"> \n' +
                 content +
                 '</div>\n  </body>\n</html>';
         var doc = window.open('about:blank', '_blank', '');

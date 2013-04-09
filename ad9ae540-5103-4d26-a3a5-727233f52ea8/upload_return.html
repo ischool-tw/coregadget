@@ -23,14 +23,21 @@
     // 搭配父層 iframe_upload 的父層的 fileInfo()
     var resp = getUrlVars();
     if (resp) {
-        var fnType = resp["fn"], funName;
-        if (fnType === 'pfe') {
-            funName = 'LessonPlanManager.ControlPFE.fileInfo';
-        } else if (fnType === 'addmaterial') {
-            funName = 'LessonPlanManager.ControlAddmaterial.fileInfo';
+        var fnType = resp['fn'];
+        var obj = decodeURIComponent(resp['resp'] || '');
+        if (obj.indexOf('\\') !== -1) {
+            var ary = obj.split(',');
+            if (ary.length > 1) {
+                ary[0] = ary[0].split('\\').pop();
+                obj = '{"file":"' + ary.join(',');
+            }
         }
-        if (funName) {
-            eval('parent.parent.' + funName)(resp);
+        obj = jQuery.parseJSON(obj);
+        resp['resp'] = obj;
+        if (fnType === 'pfe') {
+            parent.PFEFileInfo(resp);
+        } else if (fnType === 'addmaterial') {
+            parent.AddmaterialFileInfo(resp);
         }
     }
 </script>

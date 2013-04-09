@@ -50,3 +50,6 @@ table input[type="text"] {
 .my-print-page .table td {
   border-left: 1px solid #DDD;
 }
+.my-print-page .my-proimg img {
+  width: 180px;
+}
