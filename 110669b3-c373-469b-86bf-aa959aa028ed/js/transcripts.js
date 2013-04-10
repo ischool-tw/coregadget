@@ -91,7 +91,7 @@ _gg.SetStudentCreditData = function () {
                 // TODO: 實際學期科目成績內容
                 var tmp_semsSubjScore = {};
 
-                $.each(item.ScoreInfo.SemesterSubjectScoreInfo.Subject, function () {
+                $(item.ScoreInfo.SemesterSubjectScoreInfo.Subject).each(function () {
                             // TODO: 實際學期科目成績內容
                             tmp_semsSubjScore = {
                                 Entry: this.開課分項類別,
@@ -157,17 +157,18 @@ _gg.SetScoreData = function () {
     $(SemsEntryScore.SemsEntryScore).each(function (index, item) {
         // TODO: 目前要顯示的學年度學期
         if (_gg.schoolYear === item.SchoolYear && _gg.semester === item.Semester) {
-            if (this.ScoreInfo.SemesterEntryScore.Entry.分項 === "學業") {
-                tmp_academic = this.ScoreInfo.SemesterEntryScore.Entry.成績;
-            };
-            if (this.ScoreInfo.SemesterEntryScore.Entry.分項 === "實習科目") {
-                tmp_internship = this.ScoreInfo.SemesterEntryScore.Entry.成績;
-            };
+            $(this.ScoreInfo.SemesterEntryScore.Entry).each(function(key, value) {
+                if (value.分項 === "學業") {
+                    tmp_academic = value.成績;
+                };
+                if (value.分項 === "實習科目") {
+                    tmp_internship = value.成績;
+                };
+            });
         };
-
-        $("#EntryScore span[entry-type=academic]").html(tmp_academic);
-        $("#EntryScore span[entry-type=internship]").html(tmp_internship);
     });
+    $("#EntryScore span[entry-type=academic]").html(tmp_academic);
+    $("#EntryScore span[entry-type=internship]").html(tmp_internship);
 
     // TODO: 處理分項成績中與課程規劃表的差異 Tooltip
     var fun_SubjectScore_tooltip = function (mainData, compareData) {
@@ -183,11 +184,11 @@ _gg.SetScoreData = function () {
     };
 
     // TODO: 本學期科目成績
-    $.each(SemsSubjScore, function (index, item) {
+    $(SemsSubjScore).each(function (index, item) {
         // TODO: 目前要顯示的學年度學期
         var items = [];
         if (_gg.schoolYear === item.SchoolYear && _gg.semester === item.Semester) {
-            $.each(item.ScoreInfo.SemesterSubjectScoreInfo.Subject, function () {
+            $(item.ScoreInfo.SemesterSubjectScoreInfo.Subject).each(function () {
                 // TODO: 取得學分
                 var tmp_credit = '不列入';
                 if (this.不計學分 === "否") {
@@ -205,7 +206,7 @@ _gg.SetScoreData = function () {
 
                 // TODO: 課程規劃表
                 var that = this;
-                $.each(GraduationPlan, function () {
+                $(GraduationPlan).each(function () {
                     if (that.科目 === this.SubjectName && that.科目級別 === this.Level) {
                         tmp_graduationPlan = {
                             Entry: this.Entry,
@@ -358,7 +359,11 @@ _gg.GetSemsSubjScore = function (schoolYear, semester) {
             if (error !== null) {
                 return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetSemsSubjScore)\n</div>");
             } else {
-                student.MySemsSubjScore = response.Students.SemsSubjScore;
+                if (response.Students.SemsSubjScore) {
+                    student.MySemsSubjScore = response.Students.SemsSubjScore;
+                } else {
+                    student.MySemsSubjScore = [];
+                }
                 _gg.SetStudentCreditData();
             }
         }
@@ -375,7 +380,11 @@ _gg.GetSemsEntryScore = function (schoolYear, semester) {
             if (error !== null) {
                 return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetSemsEntryScore)\n</div>");
             } else {
-                student.MySemsEntryScore = response.Students;
+                if (response.Students) {
+                    student.MySemsEntryScore = response.Students;
+                } else {
+                    student.MySemsEntryScore = [];
+                }
                 _gg.SetStudentCreditData();
             }
         }
