@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html;charset=utf-8">
+    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+    <script>
+        init({
+            application: "http://dev.ischool.com.tw:8080/cs4/tp.ntu.emba.dev",
+            paramValues: {}
+        });
+    </script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"/>
+    <link href="css/base.css" rel="stylesheet"/>
+    <link href="css/default.css" rel="stylesheet"/>
+    <script src="js/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/default.js"></script>
+</head>
+<body>
+<div id="widget">
+    <div class="page-container">
+        <div class="header">
+            <img class="logo" src="src/logo.jpg"/>
+            <span class="link">
+                <a href="http://web.ischool.com.tw/main.htm#menu" target="_blank">回myEMBA首頁</a>
+                <a href="http://web.emba.ntu.edu.tw" target="_blank">台大EMBA官網</a>
+            </span>
+        </div>
+        <div class="header-space"></div>
+        <div class="content container">
+            <div class="tabbable">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="payment">
+                        <div class="row">
+                            <div class="span12">
+                                <span class="label label-important" id="payment-message">您的身份為畢業生、退學生或其它，已不提供繳費次數之紀錄</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span12" id="payment-detail">
+                                <table class="table table-bordered my-table">
+                                    <thead>
+                                        <tr>
+                                            <th>學年度</th>
+                                            <th>學期</th>
+                                            <th>繳費狀況</th>
+                                            <th>日期</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span12">
+                                <div class="well well-small">
+                                    學雜費繳費次數及相關資訊如下：<br/>
+                                    <i class="icon-tag"></i> 若繳費後辦理休學，該學期視同未註冊，不列入繳費次數中。<br/>
+                                    <i class="icon-tag"></i> 欲索取繳費證明者請<a href="http://www.ga.ntu.edu.tw/cashier/sample_01.jsp?ci_id=CI1309916616445&npage=1" target="_blank">按此連結</a>至臺大出納組網站。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-space"></div>
+        <div class="footer">
+            <img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/red_logo.jpg">
+            <img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/bot_logo.png">
+            <p style="text-align: left;">
+                <font color="#999999">台北市羅斯福路四段一號 臺灣大學管理學院壹號館六樓 EMBA辦公室<br>
+                TEL:886-2-33661010 FAX:886-2-23636073<br>
+                Copyright © 2005 National Taiwan University All Rights Reserved
+                </font>
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html;charset=utf-8">
+    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+    <script>
+        init({
+            application: "http://dev.ischool.com.tw:8080/cs4/tp.ntu.emba.dev",
+            paramValues: {}
+        });
+    </script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"/>
+    <link href="css/base.css" rel="stylesheet"/>
+    <link href="css/default.css" rel="stylesheet"/>
+    <script src="js/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/default.js"></script>
+</head>
+<body>
+<div id="widget">
+    <div class="page-container">
+        <div class="header">
+            <img class="logo" src="src/logo.jpg"/>
+            <span class="link">
+                <a href="http://web.ischool.com.tw/main.htm#menu" target="_blank">回myEMBA首頁</a>
+                <a href="http://web.emba.ntu.edu.tw" target="_blank">台大EMBA官網</a>
+            </span>
+        </div>
+        <div class="header-space"></div>
+        <div class="content container">
+            <div class="tabbable">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="absence" style="height: 300px">
+                        <div class="row">
+                            <div class="span12">
+                            	<span class="input-append">
+			                		<span class="btn btn-inverse disabled">學年度</span>
+			                		<input type="text" class="input-small" placeholder="學年度" target="schoolYear"/>
+                            	</span>
+			                	<span class="input-append">
+			                		<span class="btn-group">
+	                                    <a class="btn btn-inverse dropdown-toggle" data-toggle="dropdown" href="#">
+	                                        <span target="semester">學期</span>
+	                                        <span class="caret"></span>
+	                                    </a>
+	                                    <ul class="dropdown-menu" target="semester-options">
+	                                        <li><a href="#" value="0">暑期</a></li>
+	                                        <li><a href="#" value="1">第 1 學期</a></li>
+	                                        <li><a href="#" value="2">第 2 學期</a></li>
+	                                    </ul>
+	                                </span>
+	                                <a href="#" class="btn btn-primary" target="query" style="margin-bottom: 9px"><i class="icon-search icon-white"></i> 查詢</a>
+								</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span12" id="absence-detail">
+                                <table class="table table-bordered my-table">
+                                    <thead>
+                                        <tr>
+                                            <th>學年度</th>
+                                            <th>學期</th>
+                                            <th>課程名稱</th>
+                                            <th>課程識別碼</th>
+                                            <th>上課日期</th>
+                                            <th>上課時間</th>
+                                            <th>補課訊息</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-space"></div>
+        <div class="footer">
+            <img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/red_logo.jpg">
+            <img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/bot_logo.png">
+            <p style="text-align: left;">
+                <font color="#999999">台北市羅斯福路四段一號 臺灣大學管理學院壹號館六樓 EMBA辦公室<br>
+                TEL:886-2-33661010 FAX:886-2-23636073<br>
+                Copyright © 2005 National Taiwan University All Rights Reserved
+                </font>
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
