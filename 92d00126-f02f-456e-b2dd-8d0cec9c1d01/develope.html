@@ -141,7 +141,7 @@
                 <div class="control-group">
                     <label class="control-label">分享</label>
                     <div class="controls">
-                        <input type="checkbox" target="sharing">
+                        <input type="checkbox" target="sharing" name="experience_sharing" class="{ShareIncumbent: true}">
                     </div>
                 </div>
                 <div class="control-group">
@@ -222,6 +222,12 @@
                     </div>
                 </div>
                 <div class="control-group">
+                    <label class="control-label">公關姓名</label>
+                    <div class="controls">
+                        <input type="text" placeholder="公關姓名" target="publicist">
+                    </div>
+                </div>
+                <div class="control-group">
                     <label class="control-label">公關室電話</label>
                     <div class="controls">
                         <input type="text" placeholder="公關室電話" target="public_relations_office_telephone">
@@ -234,15 +240,9 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">對外公關姓名</label>
+                    <label class="control-label">公關室email</label>
                     <div class="controls">
-                        <input type="text" placeholder="對外公關姓名" target="publicist">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">對外公關EMAIL</label>
-                    <div class="controls">
-                        <input type="text" placeholder="對外公關EMAIL" target="publicist_email" name="publicist_email" class="{email: true}">
+                        <input type="text" placeholder="公關室email" target="publicist_email" name="publicist_email" class="{email: true}">
                     </div>
                 </div>
                 <div class="control-group">
@@ -299,7 +299,7 @@
     						        <table class="table table-bordered my-table">
     						            <thead>
     						                <tr>
-                                                <th colspan="7">個人資料<a herf="#" target="save-baseinfo" class="btn btn-primary btn-mini pull-right"><i class="icon-edit icon-white"></i> <span>儲存</span></a></th>
+                                                <th colspan="7">個人資料</th>
                                             </tr>
                                             <tr>
                                                 <th>&nbsp;</th>
@@ -321,32 +321,36 @@
                                                 </td>
                                                 <th>姓名</th>
                                                 <td>
-                                                    <span class="span2 uneditable-input" target="name"></span>
+                                                    <span class="span2" target="name"></span>
                                                 </td>
                                                 <td target="data-sharing">
-                                                    <span class="label label-info hide" target="share-birthdate">
-                                                        <i class="icon-ok icon-white"></i>
-                                                    </span>
+                                                    <div class="square">
+                                                        <span class="label label-info hide" target="share-birthdate">
+                                                            <i class="icon-ok icon-white"></i>
+                                                        </span>
+                                                    </div>
                                                 </td>
                                                 <th>出生日期</th>
                                                 <td>
-                                                    <span class="span2 uneditable-input" target="birthdate"></span>
+                                                    <span class="span2" target="birthdate"></span>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td target="data-sharing">
+                                                <td>
                                                     <span class="label label-info hide" target="share-gender">
                                                         <i class="icon-ok icon-white"></i>
                                                     </span>
                                                 </td>
                                                 <th>性別</th>
                                                 <td>
-                                                    <span class="span2 uneditable-input" target="gender"></span>
+                                                    <span class="span2" target="gender"></span>
                                                 </td>
                                                 <td target="data-sharing">
-                                                    <span class="label label-info hide" target="share-contact-phone">
-                                                        <i class="icon-ok icon-white"></i>
-                                                    </span>
+                                                    <div class="square">
+                                                        <span class="label label-info hide" target="share-contact-phone">
+                                                            <i class="icon-ok icon-white"></i>
+                                                        </span>
+                                                    </div>
                                                 </td>
                                                 <th>聯絡電話</th>
                                                 <td>
@@ -354,18 +358,18 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td target="data-sharing">
-                                                    <span class="label label-info hide" target="share-custodian-name">
-                                                        <i class="icon-ok icon-white"></i>
+                                                <td>
+                                                    <span class="label label-important" target="share-custodian-name">
+                                                        <i class="icon-remove icon-white"></i>
                                                     </span>
                                                 </td>
                                                 <th>緊急聯絡人</th>
                                                 <td>
                                                     <input type="text" class="span2" target="custodian-name"/>
                                                 </td>
-                                                <td target="data-sharing">
-                                                    <span class="label label-info hide" target="share-custodian-phone">
-                                                        <i class="icon-ok icon-white"></i>
+                                                <td>
+                                                    <span class="label label-important" target="share-custodian-phone">
+                                                        <i class="icon-remove icon-white"></i>
                                                     </span>
                                                 </td>
                                                 <th>聯絡人電話</th>
@@ -389,9 +393,11 @@
                                         <tbody>
                                             <tr>
                                                 <td target="data-sharing">
-                                                    <span class="label label-info hide" target="share-email1">
-                                                        <i class="icon-ok icon-white"></i>
-                                                    </span>
+                                                    <div class="square">
+                                                        <span class="label label-info hide" target="share-email1">
+                                                            <i class="icon-ok icon-white"></i>
+                                                        </span>
+                                                    </div>
                                                 </td>
                                                 <th>E-MAIL 1</th>
                                                 <td>
@@ -399,21 +405,23 @@
                                                         <input type="text" class="{email:true} span4" target="email1" name="email1"/>
                                                     </div>
                                                 </td>
-                                                <td style="cursor: not-allowed;">
-                                                    <span class="label label-info hide" target="share-permanent-phone">
-                                                        <i class="icon-ok icon-white"></i>
+                                                <td>
+                                                    <span class="label label-important" target="share-permanent-phone">
+                                                        <i class="icon-remove icon-white"></i>
                                                     </span>
                                                 </td>
                                                 <th>住家電話</th>
                                                 <td>
-                                                    <span class="span2 uneditable-input" target="permanent-phone"></span>
+                                                    <span class="span2" target="permanent-phone"></span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td target="data-sharing">
-                                                    <span class="label label-info hide" target="share-email2">
-                                                        <i class="icon-ok icon-white"></i>
-                                                    </span>
+                                                    <div class="square">
+                                                        <span class="label label-info hide" target="share-email2">
+                                                            <i class="icon-ok icon-white"></i>
+                                                        </span>
+                                                    </div>
                                                 </td>
                                                 </td><th>E-MAIL 2</th>
                                                 <td>
@@ -422,9 +430,11 @@
                                                     </div>
                                                 </td>
                                                 <td target="data-sharing">
-                                                    <span class="label label-info hide" target="share-office-phone">
-                                                        <i class="icon-ok icon-white"></i>
-                                                    </span>
+                                                    <div class="square">
+                                                        <span class="label label-info hide" target="share-office-phone">
+                                                            <i class="icon-ok icon-white"></i>
+                                                        </span>
+                                                    </div>
                                                 </td>
                                                 <th>公司電話</th>
                                                 <td>
@@ -433,9 +443,11 @@
                                             </tr>
                                             <tr>
                                                 <td target="data-sharing">
-                                                    <span class="label label-info hide" target="share-email3">
-                                                        <i class="icon-ok icon-white"></i>
-                                                    </span>
+                                                    <div class="square">
+                                                        <span class="label label-info hide" target="share-email3">
+                                                            <i class="icon-ok icon-white"></i>
+                                                        </span>
+                                                    </div>
                                                 </td>
                                                 <th>E-MAIL 3</th>
                                                 <td>
@@ -444,9 +456,11 @@
                                                     </div>
                                                 </td>
                                                 <td target="data-sharing">
-                                                    <span class="label label-info hide" target="share-other-phone">
-                                                        <i class="icon-ok icon-white"></i>
-                                                    </span>
+                                                    <div class="square">
+                                                        <span class="label label-info hide" target="share-other-phone">
+                                                            <i class="icon-ok icon-white"></i>
+                                                        </span>
+                                                    </div>
                                                 </td>
                                                 <th>秘書電話</th>
                                                 <td>
@@ -455,9 +469,11 @@
                                             </tr>
                                             <tr>
                                                 <td target="data-sharing">
-                                                    <span class="label label-info hide" target="share-email4">
-                                                        <i class="icon-ok icon-white"></i>
-                                                    </span>
+                                                    <div class="square">
+                                                        <span class="label label-info hide" target="share-email4">
+                                                            <i class="icon-ok icon-white"></i>
+                                                        </span>
+                                                    </div>
                                                 </td>
                                                 <th>E-MAIL 4</th>
                                                 <td>
@@ -466,9 +482,11 @@
                                                     </div>
                                                 </td>
                                                 <td target="data-sharing">
-                                                    <span class="label label-info hide" target="share-sms-phone1">
-                                                        <i class="icon-ok icon-white"></i>
-                                                    </span>
+                                                    <div class="square">
+                                                        <span class="label label-info hide" target="share-sms-phone1">
+                                                            <i class="icon-ok icon-white"></i>
+                                                        </span>
+                                                    </div>
                                                 </td>
                                                 <th>行動電話 1</th>
                                                 <td>
@@ -477,9 +495,11 @@
                                             </tr>
                                             <tr>
                                                 <td target="data-sharing">
-                                                    <span class="label label-info hide" target="share-email5">
-                                                        <i class="icon-ok icon-white"></i>
-                                                    </span>
+                                                    <div class="square">
+                                                        <span class="label label-info hide" target="share-email5">
+                                                            <i class="icon-ok icon-white"></i>
+                                                        </span>
+                                                    </div>
                                                 </td>
                                                 <th>E-MAIL 5</th>
                                                 <td>
@@ -488,9 +508,11 @@
                                                     </div>
                                                 </td>
                                                 <td target="data-sharing">
-                                                    <span class="label label-info hide" target="share-sms-phone2">
-                                                        <i class="icon-ok icon-white"></i>
-                                                    </span>
+                                                    <div class="square">
+                                                        <span class="label label-info hide" target="share-sms-phone2">
+                                                            <i class="icon-ok icon-white"></i>
+                                                        </span>
+                                                    </div>
                                                 </td>
                                                 <th>行動電話 2</th>
                                                 <td>
@@ -509,9 +531,9 @@
                                         </thead>
                                         <tbody>
     						                <tr>
-    						                    <td target="data-sharing">
-    						                        <span class="label label-info hide" target="share-contact-address">
-    						                            <i class="icon-ok icon-white"></i>
+    						                    <td>
+                                                    <span class="label label-important" target="share-contact-address">
+                                                        <i class="icon-remove icon-white"></i>
     						                        </span>
     						                    </td>
                                                 <th width="80px">聯絡地址</th>
@@ -520,20 +542,20 @@
         						                </td>
     						                </tr>
     						                <tr>
-    						                    <td style="cursor: not-allowed;">
-    						                        <span class="label label-info hide" target="share-permanent-address">
-    						                            <i class="icon-ok icon-white"></i>
-    						                        </span>
+    						                    <td>
+                                                    <span class="label label-important" target="share-permanent-address">
+                                                        <i class="icon-remove icon-white"></i>
+                                                    </span>
     						                    </td>
                                                 <th>住家地址</th>
     						                    <td>
-    						                    	<span class="span6 uneditable-input" target="permanent-address"></span>
+    						                    	<span class="span6" target="permanent-address"></span>
     						                    </td>
     						                </tr>
     						                <tr>
-    						                    <td target="data-sharing">
-    						                        <span class="label label-info hide" target="share-office-address">
-    						                            <i class="icon-ok icon-white"></i>
+    						                    <td>
+                                                    <span class="label label-important" target="share-office-address">
+                                                        <i class="icon-remove icon-white"></i>
     						                        </span>
     						                    </td>
                                                 <th>公司地址</th>
@@ -543,6 +565,9 @@
     						                </tr>
     						            </tbody>
     						        </table>
+                                    <div style="text-align:center; padding-bottom:40px;">
+                                        <a herf="#" target="save-baseinfo" class="btn btn-primary"><i class="icon-edit icon-white"></i> <span>儲存個人資料</span></a>
+                                    </div>
                                 </form>
 						    </div>
 						</div>

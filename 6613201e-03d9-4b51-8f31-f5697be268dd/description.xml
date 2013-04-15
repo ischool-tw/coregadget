@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="修課記錄" description="EMBA學生-修課記錄">
-    <Title lang="zh-TW">修課記錄</Title>
+  <ModulePrefs title="學業成績" description="EMBA學生-學業成績">
+    <Title lang="zh-TW">學業成績</Title>
     <Icon>icon.png</Icon>
     <Mobile />
     <Title lang="zh-CN">

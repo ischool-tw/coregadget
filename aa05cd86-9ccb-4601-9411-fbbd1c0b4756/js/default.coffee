@@ -39,7 +39,7 @@ query_absence = () ->
 					items.push """
 						<tr>
 							<td>#{item.SchoolYear}</td>
-							<td>#{item.Semester}</td>
+							<td>#{if item.Semester is "0" then "暑假" else "第 #{item.Semester} 學期"}</td>
 							<td>#{item.CourseName}</td>
 							<td>#{item.SubjectCode}</td>
 							<td>#{item.StartTime.substr(0, 10)}</td>
@@ -47,6 +47,6 @@ query_absence = () ->
 							<td>#{item.MakeUpDescription}</td>
 						</tr>"""
 
-			$("#absence #absence-detail tbody").html items.join ""
+			$("#absence #absence-detail tbody").html (if items.length is 0 then '<tr><td colspan="7">無資料</td></tr>' else items.join "")
 	}
 

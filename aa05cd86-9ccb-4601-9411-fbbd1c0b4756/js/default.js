@@ -48,10 +48,10 @@
         items = [];
         if (response.Result != null) {
           $(response.Result.Absence).each(function(index, item) {
-            return items.push("<tr>\n	<td>" + item.SchoolYear + "</td>\n	<td>" + item.Semester + "</td>\n	<td>" + item.CourseName + "</td>\n	<td>" + item.SubjectCode + "</td>\n	<td>" + (item.StartTime.substr(0, 10)) + "</td>\n	<td>" + (item.StartTime.substr(11, 5)) + "</td>\n	<td>" + item.MakeUpDescription + "</td>\n</tr>");
+            return items.push("<tr>\n	<td>" + item.SchoolYear + "</td>\n	<td>" + (item.Semester === "0" ? "暑假" : "第 " + item.Semester + " 學期") + "</td>\n	<td>" + item.CourseName + "</td>\n	<td>" + item.SubjectCode + "</td>\n	<td>" + (item.StartTime.substr(0, 10)) + "</td>\n	<td>" + (item.StartTime.substr(11, 5)) + "</td>\n	<td>" + item.MakeUpDescription + "</td>\n</tr>");
           });
         }
-        return $("#absence #absence-detail tbody").html(items.join(""));
+        return $("#absence #absence-detail tbody").html((items.length === 0 ? '<tr><td colspan="7">無資料</td></tr>' : items.join("")));
       }
     });
   };

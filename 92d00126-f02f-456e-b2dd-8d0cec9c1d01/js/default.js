@@ -5,10 +5,11 @@
   $(function() {
     $("td[target='data-sharing']").click(function(e) {
       e.preventDefault();
-      return $(this).find("span").toggleClass("hide");
+      return $(this).find("span").toggleClass("hide").closest('div').toggleClass('square');
     });
     $('.modal').on('shown', function() {
-      return $('.modal-body', $(this)).scrollTop(0);
+      $('.modal-body', $(this)).scrollTop(0);
+      return $('.error').removeClass('error');
     });
     $(".modal[target='address'] a[target='accept']").click(function(e) {
       e.preventDefault();
@@ -413,11 +414,17 @@
     $("#baseinfo span[target='name']").html(myInfo.Name);
     $("#baseinfo span[target='name']").attr("original", myInfo.Name);
     if (myInfo.DataSharing.Gender === "true") {
+      $("#baseinfo span[target='share-gender']").closest('div').removeClass("square");
+    }
+    if (myInfo.DataSharing.Gender === "false") {
       $("#baseinfo span[target='share-gender']").removeClass("hide");
     }
     $("#baseinfo span[target='share-gender']").attr("original", myInfo.DataSharing.Gender);
     $("#baseinfo span[target='gender']").html(myInfo.Gender);
     $("#baseinfo span[target='gender']").attr("original", myInfo.Gender);
+    if (myInfo.DataSharing.Birthdate === "true") {
+      $("#baseinfo span[target='share-birthdate']").closest('div').removeClass("square");
+    }
     if (myInfo.DataSharing.Birthdate === "true") {
       $("#baseinfo span[target='share-birthdate']").removeClass("hide");
     }
@@ -429,11 +436,17 @@
       $("#baseinfo span[target='birthdate']").attr("original", myInfo.Birthdate.substr(0, 10));
     }
     if (myInfo.DataSharing.Custodian === "true") {
+      $("#baseinfo span[target='share-custodian-name']").closest('div').removeClass("square");
+    }
+    if (myInfo.DataSharing.Custodian === "true") {
       $("#baseinfo span[target='share-custodian-name']").removeClass("hide");
     }
     $("#baseinfo span[target='share-custodian-name']").attr("original", myInfo.DataSharing.Custodian);
     $("#baseinfo input[target='custodian-name']").val(myInfo.CustodianName);
     $("#baseinfo input[target='custodian-name']").attr("original", myInfo.CustodianName);
+    if (myInfo.DataSharing.CustodianPhone === "true") {
+      $("#baseinfo span[target='share-custodian-phone']").closest('div').removeClass("square");
+    }
     if (myInfo.DataSharing.CustodianPhone === "true") {
       $("#baseinfo span[target='share-custodian-phone']").removeClass("hide");
     }
@@ -441,11 +454,17 @@
     $("#baseinfo input[target='custodian-phone']").val(myInfo.CustodianOtherInfo.CustodianOtherInfo.Phone);
     $("#baseinfo input[target='custodian-phone']").attr("original", myInfo.CustodianOtherInfo.CustodianOtherInfo.Phone);
     if (myInfo.DataSharing.ContactPhone === "true") {
+      $("#baseinfo span[target='share-contact-phone']").closest('div').removeClass("square");
+    }
+    if (myInfo.DataSharing.ContactPhone === "true") {
       $("#baseinfo span[target='share-contact-phone']").removeClass("hide");
     }
     $("#baseinfo span[target='share-contact-phone']").attr("original", myInfo.DataSharing.ContactPhone);
     $("#baseinfo input[target='contact-phone']").val(myInfo.ContactPhone);
     $("#baseinfo input[target='contact-phone']").attr("original", myInfo.ContactPhone);
+    if (myInfo.DataSharing.PermanentPhone === "true") {
+      $("#baseinfo span[target='share-permanent-phone']").closest('div').removeClass("square");
+    }
     if (myInfo.DataSharing.PermanentPhone === "true") {
       $("#baseinfo span[target='share-permanent-phone']").removeClass("hide");
     }
@@ -453,11 +472,17 @@
     $("#baseinfo span[target='permanent-phone']").html(myInfo.PermanentPhone);
     $("#baseinfo span[target='permanent-phone']").attr("original", myInfo.PermanentPhone);
     if (myInfo.DataSharing.OtherPhoneList.PhoneNumber[0]["@text"] === "true") {
+      $("#baseinfo span[target='share-office-phone']").closest('div').removeClass("square");
+    }
+    if (myInfo.DataSharing.OtherPhoneList.PhoneNumber[0]["@text"] === "true") {
       $("#baseinfo span[target='share-office-phone']").removeClass("hide");
     }
     $("#baseinfo span[target='share-office-phone']").attr("original", myInfo.DataSharing.OtherPhoneList.PhoneNumber[0]["@text"]);
     $("#baseinfo input[target='office-phone']").val(myInfo.OtherPhones.PhoneList.PhoneNumber[0]);
     $("#baseinfo input[target='office-phone']").attr("original", myInfo.OtherPhones.PhoneList.PhoneNumber[0]);
+    if (myInfo.DataSharing.OtherPhoneList.PhoneNumber[2]["@text"] === "true") {
+      $("#baseinfo span[target='share-other-phone']").closest('div').removeClass("square");
+    }
     if (myInfo.DataSharing.OtherPhoneList.PhoneNumber[2]["@text"] === "true") {
       $("#baseinfo span[target='share-other-phone']").removeClass("hide");
     }
@@ -465,11 +490,17 @@
     $("#baseinfo input[target='other-phone']").val(myInfo.OtherPhones.PhoneList.PhoneNumber[2]);
     $("#baseinfo input[target='other-phone']").attr("original", myInfo.OtherPhones.PhoneList.PhoneNumber[2]);
     if (myInfo.DataSharing.SMSPhone === "true") {
+      $("#baseinfo span[target='share-sms-phone1']").closest('div').removeClass("square");
+    }
+    if (myInfo.DataSharing.SMSPhone === "true") {
       $("#baseinfo span[target='share-sms-phone1']").removeClass("hide");
     }
     $("#baseinfo span[target='share-sms-phone1']").attr("original", myInfo.DataSharing.SMSPhone);
     $("#baseinfo input[target='sms-phone1']").val(myInfo.SMSPhone);
     $("#baseinfo input[target='sms-phone1']").attr("original", myInfo.SMSPhone);
+    if (myInfo.DataSharing.OtherPhoneList.PhoneNumber[1]["@text"] === "true") {
+      $("#baseinfo span[target='share-sms-phone2']").closest('div').removeClass("square");
+    }
     if (myInfo.DataSharing.OtherPhoneList.PhoneNumber[1]["@text"] === "true") {
       $("#baseinfo span[target='share-sms-phone2']").removeClass("hide");
     }
@@ -477,11 +508,17 @@
     $("#baseinfo input[target='sms-phone2']").val(myInfo.OtherPhones.PhoneList.PhoneNumber[1]);
     $("#baseinfo input[target='sms-phone2']").attr("original", myInfo.OtherPhones.PhoneList.PhoneNumber[1]);
     if (myInfo.DataSharing.EmailList["Email1"] === "true") {
+      $("#baseinfo span[target='share-email1']").closest('div').removeClass("square");
+    }
+    if (myInfo.DataSharing.EmailList["Email1"] === "true") {
       $("#baseinfo span[target='share-email1']").removeClass("hide");
     }
     $("#baseinfo span[target='share-email1']").attr("original", myInfo.DataSharing.EmailList["Email1"]);
     $("#baseinfo input[target='email1']").val(myInfo.EmailList["email1"]);
     $("#baseinfo input[target='email1']").attr("original", myInfo.EmailList["email1"]);
+    if (myInfo.DataSharing.EmailList["Email2"] === "true") {
+      $("#baseinfo span[target='share-email2']").closest('div').removeClass("square");
+    }
     if (myInfo.DataSharing.EmailList["Email2"] === "true") {
       $("#baseinfo span[target='share-email2']").removeClass("hide");
     }
@@ -489,11 +526,17 @@
     $("#baseinfo input[target='email2']").val(myInfo.EmailList["email2"]);
     $("#baseinfo input[target='email2']").attr("original", myInfo.EmailList["email2"]);
     if (myInfo.DataSharing.EmailList["Email3"] === "true") {
+      $("#baseinfo span[target='share-email3']").closest('div').removeClass("square");
+    }
+    if (myInfo.DataSharing.EmailList["Email3"] === "true") {
       $("#baseinfo span[target='share-email3']").removeClass("hide");
     }
     $("#baseinfo span[target='share-email3']").attr("original", myInfo.DataSharing.EmailList["Email3"]);
     $("#baseinfo input[target='email3']").val(myInfo.EmailList["email3"]);
     $("#baseinfo input[target='email3']").attr("original", myInfo.EmailList["email3"]);
+    if (myInfo.DataSharing.EmailList["Email4"] === "true") {
+      $("#baseinfo span[target='share-email4']").closest('div').removeClass("square");
+    }
     if (myInfo.DataSharing.EmailList["Email4"] === "true") {
       $("#baseinfo span[target='share-email4']").removeClass("hide");
     }
@@ -501,11 +544,17 @@
     $("#baseinfo input[target='email4']").val(myInfo.EmailList["email4"]);
     $("#baseinfo input[target='email4']").attr("original", myInfo.EmailList["email4"]);
     if (myInfo.DataSharing.EmailList["Email5"] === "true") {
+      $("#baseinfo span[target='share-email5']").closest('div').removeClass("square");
+    }
+    if (myInfo.DataSharing.EmailList["Email5"] === "true") {
       $("#baseinfo span[target='share-email5']").removeClass("hide");
     }
     $("#baseinfo span[target='share-email5']").attr("original", myInfo.DataSharing.EmailList["Email5"]);
     $("#baseinfo input[target='email5']").val(myInfo.EmailList["email5"]);
     $("#baseinfo input[target='email5']").attr("original", myInfo.EmailList["email5"]);
+    if (myInfo.DataSharing.ContactAddress === "true") {
+      $("#baseinfo span[target='share-contact-address']").closest('div').removeClass("square");
+    }
     if (myInfo.DataSharing.ContactAddress === "true") {
       $("#baseinfo span[target='share-contact-address']").removeClass("hide");
     }
@@ -513,11 +562,17 @@
     $("#baseinfo span[target='contact-address']").html(myInfo.DataSharing.ContactAddress);
     $("#baseinfo span[target='contact-address']").attr("original", myInfo.DataSharing.ContactAddress);
     if (myInfo.DataSharing.PermanentAddress === "true") {
+      $("#baseinfo span[target='share-permanent-address']").closest('div').removeClass("square");
+    }
+    if (myInfo.DataSharing.PermanentAddress === "true") {
       $("#baseinfo span[target='share-permanent-address']").removeClass("hide");
     }
     $("#baseinfo span[target='share-permanent-address']").attr("original", myInfo.DataSharing.PermanentAddress);
     $("#baseinfo span[target='permanent-address']").html(myInfo.DataSharing.PermanentAddress);
     $("#baseinfo span[target='permanent-address']").attr("original", myInfo.DataSharing.PermanentAddress);
+    if (myInfo.DataSharing.OtherAddressList.Address[0] === "true") {
+      $("#baseinfo span[target='share-office-address']").closest('div').removeClass("square");
+    }
     if (myInfo.DataSharing.OtherAddressList.Address[0] === "true") {
       $("#baseinfo span[target='share-office-address']").removeClass("hide");
     }
@@ -618,13 +673,15 @@
         if (response.Result != null) {
           experiences = $(response.Result.Experience);
           experiences.each(function(index, item) {
-            return items.push("<tr>\n                            <th class=\"myth\" style=\"width:30px\">分享</th>\n                            <th class=\"myth\">公司</th>\n                            <th class=\"myth\">職稱</th>\n                            <th class=\"myth\">層級別</th>\n                            <th class=\"myth\">產業別</th>\n                            <th class=\"myth\">部門</th>\n                            <th class=\"myth\">工作地點</th>\n                            <th class=\"myth\">工作狀態</th>\n                            <th class=\"myth\"></th>\n                        </tr>\n<tr>\n	<td rowspan=\"3\">" + (item.IsSharing === "t" ? "<span class='label label-info'><i class='icon-ok icon-white'></i></span>" : "") + "</td>\n	<td>" + item.CompanyName + "</td>\n	<td>" + item.Position + "</td>\n	<td>" + item.PostLevel + "</td>\n	<td>" + item.Industry + "</td>\n	<td>" + item.DepartmentCategory + "</td>\n	<td>" + item.WorkPlace + "</td>\n	<td>" + item.WorkStatus + "</td>\n	<td rowspan=\"3\" style='width:40px'><a href='#' class='btn btn-mini btn-inverse' index='" + index + "' target='edit'>編輯</a></td>\n</tr>\n	                    <tr>\n	                        <th class=\"myth\">公關室電話</th>\n	                        <th class=\"myth\">公關室傳真</th>\n	                        <th class=\"myth\">對外公關姓名</th>\n	                        <th class=\"myth\">對外公關EMAIL</th>\n	                        <th class=\"myth\">公司網址</th>\n	                        <th class=\"myth\">工作起日</th>\n	                        <th class=\"myth\">工作迄日</th>\n	                    </tr>\n	                    <tr>\n	<td>" + item.PublicRelationsOfficeTelephone + "</td>\n	<td>" + item.PblicRelationsOfficeFax + "</td>\n	<td>" + item.Publicist + "</td>\n	<td>" + item.PublicistEmail + "</td>\n	<td>" + item.CompanyWebsite + "</td>\n	<td>" + item.WorkBeginDate + "</td>\n	<td>" + item.WorkEndDate + "</td>\n</tr>");
+            return items.push("<tr>\n                            <th class=\"myth\" style=\"width:30px\">分享</th>\n                            <th class=\"myth\">公司</th>\n                            <th class=\"myth\">職稱</th>\n                            <th class=\"myth\">層級別</th>\n                            <th class=\"myth\">產業別</th>\n                            <th class=\"myth\">部門</th>\n                            <th class=\"myth\">工作地點</th>\n                            <th class=\"myth\">工作狀態</th>\n                            <th class=\"myth\"></th>\n                        </tr>\n<tr>\n	<td rowspan=\"3\">" + (item.IsSharing === "t" ? "<span class='label label-info'><i class='icon-ok icon-white'></i></span>" : "") + "</td>\n	<td>" + item.CompanyName + "</td>\n	<td>" + item.Position + "</td>\n	<td>" + item.PostLevel + "</td>\n	<td>" + item.Industry + "</td>\n	<td>" + item.DepartmentCategory + "</td>\n	<td>" + item.WorkPlace + "</td>\n	<td>" + item.WorkStatus + "</td>\n	<td rowspan=\"3\" style='width:40px'><a href='#' class='btn btn-mini btn-inverse' index='" + index + "' target='edit'>編輯</a></td>\n</tr>\n	                    <tr>\n	                        <th class=\"myth\">公關姓名</th>\n	                        <th class=\"myth\">公關室電話</th>\n	                        <th class=\"myth\">公關室傳真</th>\n	                        <th class=\"myth\">公關室email</th>\n	                        <th class=\"myth\">公司網址</th>\n	                        <th class=\"myth\">工作起日</th>\n	                        <th class=\"myth\">工作迄日</th>\n	                    </tr>\n	                    <tr>\n	<td>" + item.Publicist + "</td>\n	<td>" + item.PublicRelationsOfficeTelephone + "</td>\n	<td>" + item.PblicRelationsOfficeFax + "</td>\n	<td>" + item.PublicistEmail + "</td>\n	<td>" + item.CompanyWebsite + "</td>\n	<td>" + item.WorkBeginDate + "</td>\n	<td>" + item.WorkEndDate + "</td>\n</tr>");
           });
         }
         $("#baseinfo #experience tbody").html(items.join(""));
         return $("#baseinfo #experience a[target='edit']").click(function(e) {
           var index;
           e.preventDefault();
+          $(".modal[target='experience'] form").validate().resetForm();
+          $(".modal[target='experience'] .error").removeClass("error");
           index = parseInt($(this).attr("index"), 10);
           if (experiences[index].IsSharing === "t") {
             $(".modal[target='experience'] input[target='sharing']").attr("checked", "checked");
@@ -713,5 +770,13 @@
       return $(element).closest('.control-group').removeClass("error");
     }
   });
+
+  jQuery.validator.addMethod("ShareIncumbent", (function(value, element) {
+    if ($(element).prop('checked')) {
+      return $(".modal[target='experience'] span[target='status']").html() === '現職';
+    } else {
+      return true;
+    }
+  }), "現職才能勾選分享");
 
 }).call(this);

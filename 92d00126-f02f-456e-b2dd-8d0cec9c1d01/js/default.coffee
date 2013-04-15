@@ -1,10 +1,11 @@
 $ ->
 	$("td[target='data-sharing']").click (e) ->
 		e.preventDefault()
-		$(@).find("span").toggleClass "hide"
+		$(@).find("span").toggleClass("hide").closest('div').toggleClass('square')
 
 	$('.modal').on 'shown', () ->
 		$('.modal-body', $(@)).scrollTop(0)
+		$('.error').removeClass 'error'
 
 	$(".modal[target='address'] a[target='accept']").click (e) ->
 		e.preventDefault()
@@ -699,91 +700,109 @@ bind_baseinfo = () ->
 	$("#baseinfo span[target='name']").html myInfo.Name
 	$("#baseinfo span[target='name']").attr "original", myInfo.Name
 
-	$("#baseinfo span[target='share-gender']").removeClass "hide" if myInfo.DataSharing.Gender is "true"
+	$("#baseinfo span[target='share-gender']").closest('div').removeClass "square" if myInfo.DataSharing.Gender is "true"
+	$("#baseinfo span[target='share-gender']").removeClass "hide" if myInfo.DataSharing.Gender is "false"
 	$("#baseinfo span[target='share-gender']").attr "original", myInfo.DataSharing.Gender
 	$("#baseinfo span[target='gender']").html myInfo.Gender
 	$("#baseinfo span[target='gender']").attr "original", myInfo.Gender
 
+	$("#baseinfo span[target='share-birthdate']").closest('div').removeClass "square" if myInfo.DataSharing.Birthdate is "true"
 	$("#baseinfo span[target='share-birthdate']").removeClass "hide" if myInfo.DataSharing.Birthdate is "true"
 	$("#baseinfo span[target='share-birthdate']").attr "original", myInfo.DataSharing.Birthdate
 	$("#baseinfo span[target='birthdate']").html myInfo.Birthdate.substr(0, 10) if myInfo.Birthdate isnt ""
 	$("#baseinfo span[target='birthdate']").attr "original", myInfo.Birthdate.substr(0, 10) if myInfo.Birthdate isnt ""
 
+	$("#baseinfo span[target='share-custodian-name']").closest('div').removeClass "square" if myInfo.DataSharing.Custodian is "true"
 	$("#baseinfo span[target='share-custodian-name']").removeClass "hide" if myInfo.DataSharing.Custodian is "true"
 	$("#baseinfo span[target='share-custodian-name']").attr "original", myInfo.DataSharing.Custodian
 	$("#baseinfo input[target='custodian-name']").val myInfo.CustodianName
 	$("#baseinfo input[target='custodian-name']").attr "original", myInfo.CustodianName
 
+	$("#baseinfo span[target='share-custodian-phone']").closest('div').removeClass "square" if myInfo.DataSharing.CustodianPhone is "true"
 	$("#baseinfo span[target='share-custodian-phone']").removeClass "hide" if myInfo.DataSharing.CustodianPhone is "true"
 	$("#baseinfo span[target='share-custodian-phone']").attr "original", myInfo.DataSharing.CustodianPhone
 	$("#baseinfo input[target='custodian-phone']").val myInfo.CustodianOtherInfo.CustodianOtherInfo.Phone
 	$("#baseinfo input[target='custodian-phone']").attr "original", myInfo.CustodianOtherInfo.CustodianOtherInfo.Phone
 
+	$("#baseinfo span[target='share-contact-phone']").closest('div').removeClass "square" if myInfo.DataSharing.ContactPhone is "true"
 	$("#baseinfo span[target='share-contact-phone']").removeClass "hide" if myInfo.DataSharing.ContactPhone is "true"
 	$("#baseinfo span[target='share-contact-phone']").attr "original", myInfo.DataSharing.ContactPhone
 	$("#baseinfo input[target='contact-phone']").val myInfo.ContactPhone
 	$("#baseinfo input[target='contact-phone']").attr "original", myInfo.ContactPhone
 
+	$("#baseinfo span[target='share-permanent-phone']").closest('div').removeClass "square" if myInfo.DataSharing.PermanentPhone is "true"
 	$("#baseinfo span[target='share-permanent-phone']").removeClass "hide" if myInfo.DataSharing.PermanentPhone is "true"
 	$("#baseinfo span[target='share-permanent-phone']").attr "original", myInfo.DataSharing.PermanentPhone
 	$("#baseinfo span[target='permanent-phone']").html myInfo.PermanentPhone
 	$("#baseinfo span[target='permanent-phone']").attr "original", myInfo.PermanentPhone
 
+	$("#baseinfo span[target='share-office-phone']").closest('div').removeClass "square" if myInfo.DataSharing.OtherPhoneList.PhoneNumber[0]["@text"] is "true"
 	$("#baseinfo span[target='share-office-phone']").removeClass "hide" if myInfo.DataSharing.OtherPhoneList.PhoneNumber[0]["@text"] is "true"
 	$("#baseinfo span[target='share-office-phone']").attr "original", myInfo.DataSharing.OtherPhoneList.PhoneNumber[0]["@text"]
 	$("#baseinfo input[target='office-phone']").val myInfo.OtherPhones.PhoneList.PhoneNumber[0]
 	$("#baseinfo input[target='office-phone']").attr "original", myInfo.OtherPhones.PhoneList.PhoneNumber[0]
 
+	$("#baseinfo span[target='share-other-phone']").closest('div').removeClass "square" if myInfo.DataSharing.OtherPhoneList.PhoneNumber[2]["@text"] is "true"
 	$("#baseinfo span[target='share-other-phone']").removeClass "hide" if myInfo.DataSharing.OtherPhoneList.PhoneNumber[2]["@text"] is "true"
 	$("#baseinfo span[target='share-other-phone']").attr "original", myInfo.DataSharing.OtherPhoneList.PhoneNumber[2]["@text"]
 	$("#baseinfo input[target='other-phone']").val myInfo.OtherPhones.PhoneList.PhoneNumber[2]
 	$("#baseinfo input[target='other-phone']").attr "original", myInfo.OtherPhones.PhoneList.PhoneNumber[2]
 
+	$("#baseinfo span[target='share-sms-phone1']").closest('div').removeClass "square" if myInfo.DataSharing.SMSPhone is "true"
 	$("#baseinfo span[target='share-sms-phone1']").removeClass "hide" if myInfo.DataSharing.SMSPhone is "true"
 	$("#baseinfo span[target='share-sms-phone1']").attr "original", myInfo.DataSharing.SMSPhone
 	$("#baseinfo input[target='sms-phone1']").val myInfo.SMSPhone
 	$("#baseinfo input[target='sms-phone1']").attr "original", myInfo.SMSPhone
 
+	$("#baseinfo span[target='share-sms-phone2']").closest('div').removeClass "square" if myInfo.DataSharing.OtherPhoneList.PhoneNumber[1]["@text"] is "true"
 	$("#baseinfo span[target='share-sms-phone2']").removeClass "hide" if myInfo.DataSharing.OtherPhoneList.PhoneNumber[1]["@text"] is "true"
 	$("#baseinfo span[target='share-sms-phone2']").attr "original", myInfo.DataSharing.OtherPhoneList.PhoneNumber[1]["@text"]
 	$("#baseinfo input[target='sms-phone2']").val myInfo.OtherPhones.PhoneList.PhoneNumber[1]
 	$("#baseinfo input[target='sms-phone2']").attr "original", myInfo.OtherPhones.PhoneList.PhoneNumber[1]
 
+	$("#baseinfo span[target='share-email1']").closest('div').removeClass "square" if myInfo.DataSharing.EmailList["Email1"] is "true"
 	$("#baseinfo span[target='share-email1']").removeClass "hide" if myInfo.DataSharing.EmailList["Email1"] is "true"
 	$("#baseinfo span[target='share-email1']").attr "original", myInfo.DataSharing.EmailList["Email1"]
 	$("#baseinfo input[target='email1']").val myInfo.EmailList["email1"]
 	$("#baseinfo input[target='email1']").attr "original", myInfo.EmailList["email1"]
 
+	$("#baseinfo span[target='share-email2']").closest('div').removeClass "square" if myInfo.DataSharing.EmailList["Email2"] is "true"
 	$("#baseinfo span[target='share-email2']").removeClass "hide" if myInfo.DataSharing.EmailList["Email2"] is "true"
 	$("#baseinfo span[target='share-email2']").attr "original", myInfo.DataSharing.EmailList["Email2"]
 	$("#baseinfo input[target='email2']").val myInfo.EmailList["email2"]
 	$("#baseinfo input[target='email2']").attr "original", myInfo.EmailList["email2"]
 
+	$("#baseinfo span[target='share-email3']").closest('div').removeClass "square" if myInfo.DataSharing.EmailList["Email3"] is "true"
 	$("#baseinfo span[target='share-email3']").removeClass "hide" if myInfo.DataSharing.EmailList["Email3"] is "true"
 	$("#baseinfo span[target='share-email3']").attr "original", myInfo.DataSharing.EmailList["Email3"]
 	$("#baseinfo input[target='email3']").val myInfo.EmailList["email3"]
 	$("#baseinfo input[target='email3']").attr "original", myInfo.EmailList["email3"]
 
+	$("#baseinfo span[target='share-email4']").closest('div').removeClass "square" if myInfo.DataSharing.EmailList["Email4"] is "true"
 	$("#baseinfo span[target='share-email4']").removeClass "hide" if myInfo.DataSharing.EmailList["Email4"] is "true"
 	$("#baseinfo span[target='share-email4']").attr "original", myInfo.DataSharing.EmailList["Email4"]
 	$("#baseinfo input[target='email4']").val myInfo.EmailList["email4"]
 	$("#baseinfo input[target='email4']").attr "original", myInfo.EmailList["email4"]
 
+	$("#baseinfo span[target='share-email5']").closest('div').removeClass "square" if myInfo.DataSharing.EmailList["Email5"] is "true"
 	$("#baseinfo span[target='share-email5']").removeClass "hide" if myInfo.DataSharing.EmailList["Email5"] is "true"
 	$("#baseinfo span[target='share-email5']").attr "original", myInfo.DataSharing.EmailList["Email5"]
 	$("#baseinfo input[target='email5']").val myInfo.EmailList["email5"]
 	$("#baseinfo input[target='email5']").attr "original", myInfo.EmailList["email5"]
 
+	$("#baseinfo span[target='share-contact-address']").closest('div').removeClass "square" if myInfo.DataSharing.ContactAddress is "true"
 	$("#baseinfo span[target='share-contact-address']").removeClass "hide" if myInfo.DataSharing.ContactAddress is "true"
 	$("#baseinfo span[target='share-contact-address']").attr "original", myInfo.DataSharing.ContactAddress
 	$("#baseinfo span[target='contact-address']").html myInfo.DataSharing.ContactAddress
 	$("#baseinfo span[target='contact-address']").attr "original", myInfo.DataSharing.ContactAddress
 
+	$("#baseinfo span[target='share-permanent-address']").closest('div').removeClass "square" if myInfo.DataSharing.PermanentAddress is "true"
 	$("#baseinfo span[target='share-permanent-address']").removeClass "hide" if myInfo.DataSharing.PermanentAddress is "true"
 	$("#baseinfo span[target='share-permanent-address']").attr "original", myInfo.DataSharing.PermanentAddress
 	$("#baseinfo span[target='permanent-address']").html myInfo.DataSharing.PermanentAddress
 	$("#baseinfo span[target='permanent-address']").attr "original", myInfo.DataSharing.PermanentAddress
 
+	$("#baseinfo span[target='share-office-address']").closest('div').removeClass "square" if myInfo.DataSharing.OtherAddressList.Address[0] is "true"
 	$("#baseinfo span[target='share-office-address']").removeClass "hide" if myInfo.DataSharing.OtherAddressList.Address[0] is "true"
 	$("#baseinfo span[target='share-office-address']").attr "original", myInfo.DataSharing.OtherAddressList.Address[0]
 	$("#baseinfo span[target='office-address']").html myInfo.DataSharing.OtherAddressList.Address[0]
@@ -908,18 +927,18 @@ bind_experience = () ->
 							<td rowspan="3" style='width:40px'><a href='#' class='btn btn-mini btn-inverse' index='#{index}' target='edit'>編輯</a></td>
 						</tr>
 	                    <tr>
+	                        <th class="myth">公關姓名</th>
 	                        <th class="myth">公關室電話</th>
 	                        <th class="myth">公關室傳真</th>
-	                        <th class="myth">對外公關姓名</th>
-	                        <th class="myth">對外公關EMAIL</th>
+	                        <th class="myth">公關室email</th>
 	                        <th class="myth">公司網址</th>
 	                        <th class="myth">工作起日</th>
 	                        <th class="myth">工作迄日</th>
 	                    </tr>
 	                    <tr>
+							<td>#{item.Publicist}</td>
 							<td>#{item.PublicRelationsOfficeTelephone}</td>
 							<td>#{item.PblicRelationsOfficeFax}</td>
-							<td>#{item.Publicist}</td>
 							<td>#{item.PublicistEmail}</td>
 							<td>#{item.CompanyWebsite}</td>
 							<td>#{item.WorkBeginDate}</td>
@@ -929,6 +948,10 @@ bind_experience = () ->
 			$("#baseinfo #experience tbody").html items.join ""
 			$("#baseinfo #experience a[target='edit']").click (e) ->
 				e.preventDefault()
+
+				$(".modal[target='experience'] form").validate().resetForm()
+				$(".modal[target='experience'] .error").removeClass "error"
+
 				index = parseInt $(@).attr("index"), 10
 
 				$(".modal[target='experience'] input[target='sharing']").attr "checked", "checked" if experiences[index].IsSharing is "t"
@@ -1002,15 +1025,23 @@ bind_data_source = () ->
 
 # 驗證錯誤提示
 $.validator.setDefaults
-  debug: false # 為 true 時不會 submit
-  errorElement: "span" #錯誤時使用元素
-  errorClass: "help-inline" #錯誤時使用樣式
-  highlight: (element) ->
+	debug: false # 為 true 時不會 submit
+	errorElement: "span" #錯誤時使用元素
+	errorClass: "help-inline" #錯誤時使用樣式
+	highlight: (element) ->
 
-    # 將未通過驗證的表單元素設置高亮度
-    $(element).closest('.control-group').addClass "error"
+	    # 將未通過驗證的表單元素設置高亮度
+	    $(element).closest('.control-group').addClass "error"
 
-  unhighlight: (element) ->
+	unhighlight: (element) ->
 
-    # 與 highlight 相反
-    $(element).closest('.control-group').removeClass "error"
+	    # 與 highlight 相反
+	    $(element).closest('.control-group').removeClass "error"
+
+# 驗證經歷中的分享必須為現職狀態
+jQuery.validator.addMethod "ShareIncumbent", ((value, element) ->
+	if $(element).prop('checked')
+  		$(".modal[target='experience'] span[target='status']").html() is '現職'
+  	else
+    	true
+), "現職才能勾選分享"
