@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs
+      title="學生修業須知" popupURL="https://sites.google.com/a/emba.ntu.edu.tw/student/xue-sheng-zhu-yi-shi-xiang">
+    <Icon>src/icon.png</Icon>
+  </ModulePrefs>
+</Module>
