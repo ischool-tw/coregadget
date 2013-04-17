@@ -39,6 +39,7 @@
   sharing = {};
 
   query_student = function() {
+    $("table[target='student-detail'] tbody").html("");
     if ($("input[target='student-name']").val() !== "" || $("input[target='company-name']").val() !== "" || $("input[target='enroll-year']").val() !== "" || $("span[target='department']").html() !== "系所組別") {
       return gadget.getContract("emba.student").send({
         service: "public.QueryStudents",

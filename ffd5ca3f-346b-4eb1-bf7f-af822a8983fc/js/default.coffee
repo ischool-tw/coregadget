@@ -28,6 +28,7 @@ experience = []
 # education = []
 sharing = {}
 query_student = () ->
+	$("table[target='student-detail'] tbody").html ""
 	if $("input[target='student-name']").val() isnt "" or $("input[target='company-name']").val() isnt "" or $("input[target='enroll-year']").val() isnt "" or $("span[target='department']").html() isnt "系所組別"
 		gadget.getContract("emba.student").send {
 			service: "public.QueryStudents",
