@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+    <script>
+        init({
+            application: "http://dev.ischool.com.tw:8080/cs4/tp.ntu.emba.dev",
+            paramValues: {}
+        });
+    </script>
+    <meta content='text/html;charset=utf-8' />
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"/>
+    <link href="css/base.css" rel="stylesheet"/>
+    <link href="css/default.css" rel="stylesheet"/>
+    <script src="js/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/default.js"></script>
+</head>
+<body>
+<div id="widget">
+    <div class="page-container">
+        <div class="header">
+            <ul class="breadcrumb">
+              <li><a href="http://web.ischool.com.tw/main.htm#menu" target="_blank">回myEMBA首頁</a> <span class="divider">/</span></li>
+              <li><a href="http://www.emba.ntu.edu.tw" target="_blank">台大EMBA官網</a></li>
+            </ul>
+        </div>
+        <div class="header-space"></div>
+        <div class="content container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="input-prepend pull-left" style="margin-right:5px;">
+                      <span class="add-on">入學年度</span>
+                      <input class="input-small" id="prependedInput" type="text" placeholder="入學年度" target="enroll-year">
+                    </div>
+                    <div class="input-prepend pull-left" style="margin-right:5px;">
+                      <span class="add-on">學生姓名</span>
+                      <input class="input-small" id="prependedInput" type="text" placeholder="學生姓名" target="student-name">
+                    </div>
+                    <div class="input-prepend pull-left" style="margin-right:5px;">
+                      <span class="add-on">公司名稱</span>
+                      <input class="input-small" id="prependedInput" type="text" placeholder="公司名稱" target="company-name">
+                    </div>
+                        <div class="btn-group pull-left" style="margin-right:5px;">
+                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                <span target="department">系所組別</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" target="department-options"></ul>
+                        </div>
+                        <a href="#" class="btn btn-primary" target="query"><i class="icon-search icon-white"></i> 查詢</a>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span6">
+                    <table class="table table-bordered my-table table-hover" target="student-list">
+                        <thead>
+                            <tr>
+                                <th>級別</th>
+                                <th>班別</th>
+                                <th>學生姓名</th>
+                                <th>性別</th>
+                                <th>系所組別</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="span6">
+                    <table class="table table-bordered my-table table-hover" target="student-detail">
+                        <thead>
+                            <tr class="label label-warning">
+                                <th style="width: 70px">&nbsp;</th><th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="footer-space"></div>
+        <div class="footer">
+            <img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/red_logo.jpg">
+            <img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/bot_logo.png">
+            <p style="text-align: left;">
+                <font color="#999999">台北市羅斯福路四段一號 臺灣大學管理學院壹號館六樓 EMBA辦公室<br>
+                TEL:886-2-33661010 FAX:886-2-23636073<br>
+                Copyright © 2005 National Taiwan University All Rights Reserved
+                </font>
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

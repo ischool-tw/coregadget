@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
   <ModulePrefs
-      title="地圖與交通資訊" popupURL="https://sites.google.com/a/emba.ntu.edu.tw/content/jian-jie/jiao-tong-zi-xun">
+      title="地圖與交通資訊" popupURL="http://www.management.ntu.edu.tw/EMBA/about%20EMBA/Transportation">
     <Icon>src/icon.png</Icon>
   </ModulePrefs>
 </Module>

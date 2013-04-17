@@ -274,18 +274,17 @@
 
     <div class="page-container">
         <div class="header">
-            <img class="logo" src="src/logo.jpg"/>
-            <span class="link">
-                <a href="http://web.ischool.com.tw/main.htm#menu" target="_blank">回myEMBA首頁</a>
-                <a href="http://web.emba.ntu.edu.tw" target="_blank">台大EMBA官網</a>
-            </span>
+            <ul class="breadcrumb">
+              <li><a href="http://web.ischool.com.tw/main.htm#menu" target="_blank">回myEMBA首頁</a> <span class="divider">/</span></li>
+              <li><a href="http://www.emba.ntu.edu.tw" target="_blank">台大EMBA官網</a></li>
+            </ul>
         </div>
         <div class="header-space"></div>
-        <div class="content container">
+        <div class="content container-fluid">
             <div class="tabbable">
                 <div class="tab-content">
                     <div class="tab-pane active" id="baseinfo">
-                        <div class="row">
+                        <div class="row-fluid">
                             <div class="span12">
                                 <div class="well well-small">
                                     <i class="icon-tag"></i> 如您願意分享個人資訊於myEMBA查詢，請於分享框內打勾，學歷、經歷請點選編輯進行分享，如不願意被查詢或分享，則請勿打勾，謝謝。<br/>
@@ -293,7 +292,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row-fluid">
 						    <div class="span12">
                                 <form>
     						        <table class="table table-bordered my-table">
@@ -302,7 +301,7 @@
                                                 <th colspan="7">個人資料</th>
                                             </tr>
                                             <tr>
-                                                <th>&nbsp;</th>
+                                                <th width="120px">&nbsp;</th>
                                                 <th width="30px">分享</th>
                                                 <th width="80px">&nbsp;</th>
                                                 <th>&nbsp;</th>
@@ -323,12 +322,10 @@
                                                 <td>
                                                     <span class="span2" target="name"></span>
                                                 </td>
-                                                <td target="data-sharing">
-                                                    <div class="square">
-                                                        <span class="label label-info hide" target="share-birthdate">
-                                                            <i class="icon-ok icon-white"></i>
-                                                        </span>
-                                                    </div>
+                                                <td>
+                                                    <span class="label label-important" target="share-birthdate">
+                                                        <i class="icon-remove icon-white"></i>
+                                                    </span>
                                                 </td>
                                                 <th>出生日期</th>
                                                 <td>
@@ -345,16 +342,14 @@
                                                 <td>
                                                     <span class="span2" target="gender"></span>
                                                 </td>
-                                                <td target="data-sharing">
-                                                    <div class="square">
-                                                        <span class="label label-info hide" target="share-contact-phone">
-                                                            <i class="icon-ok icon-white"></i>
-                                                        </span>
-                                                    </div>
+                                                <td>
+                                                    <span class="label label-important" target="share-contact-phone">
+                                                        <i class="icon-remove icon-white"></i>
+                                                    </span>
                                                 </td>
                                                 <th>聯絡電話</th>
                                                 <td>
-                                                    <input type="text" class="span2" target="contact-phone"/>
+                                                    <input type="text" class="span12" target="contact-phone"/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -365,7 +360,7 @@
                                                 </td>
                                                 <th>緊急聯絡人</th>
                                                 <td>
-                                                    <input type="text" class="span2" target="custodian-name"/>
+                                                    <input type="text" class="span12" target="custodian-name"/>
                                                 </td>
                                                 <td>
                                                     <span class="label label-important" target="share-custodian-phone">
@@ -374,7 +369,7 @@
                                                 </td>
                                                 <th>聯絡人電話</th>
                                                 <td>
-                                                    <input type="text" class="span2" target="custodian-phone">
+                                                    <input type="text" class="span12" target="custodian-phone">
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -384,7 +379,7 @@
                                             <tr>
                                                 <th width="30px">分享</th>
                                                 <th width="80px">&nbsp;</th>
-                                                <th>&nbsp;</th>
+                                                <th width="360px">&nbsp;</th>
                                                 <th width="30px">分享</th>
                                                 <th width="80px">&nbsp;</th>
                                                 <th>&nbsp;</th>
@@ -402,7 +397,7 @@
                                                 <th>E-MAIL 1</th>
                                                 <td>
                                                     <div class="control-group">
-                                                        <input type="text" class="{email:true} span4" target="email1" name="email1"/>
+                                                        <input type="text" class="{email:true} span12" target="email1" name="email1"/>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -426,7 +421,7 @@
                                                 </td><th>E-MAIL 2</th>
                                                 <td>
                                                     <div class="control-group">
-                                                        <input type="text" class="{email:true} span4" target="email2" name="email2"/>
+                                                        <input type="text" class="{email:true} span12" target="email2" name="email2"/>
                                                     </div>
                                                 </td>
                                                 <td target="data-sharing">
@@ -438,7 +433,7 @@
                                                 </td>
                                                 <th>公司電話</th>
                                                 <td>
-                                                    <input type="text" class="span2" target="office-phone"/>
+                                                    <input type="text" class="span12" target="office-phone"/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -452,19 +447,17 @@
                                                 <th>E-MAIL 3</th>
                                                 <td>
                                                     <div class="control-group">
-                                                        <input type="text" class="{email:true} span4" target="email3" name="email3"/>
+                                                        <input type="text" class="{email:true} span12" target="email3" name="email3"/>
                                                     </div>
                                                 </td>
-                                                <td target="data-sharing">
-                                                    <div class="square">
-                                                        <span class="label label-info hide" target="share-other-phone">
-                                                            <i class="icon-ok icon-white"></i>
-                                                        </span>
-                                                    </div>
+                                                <td>
+                                                    <span class="label label-important" target="share-other-phone">
+                                                        <i class="icon-remove icon-white"></i>
+                                                    </span>
                                                 </td>
                                                 <th>秘書電話</th>
                                                 <td>
-                                                    <input type="text" class="span2" target="other-phone"/>
+                                                    <input type="text" class="span12" target="other-phone"/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -478,7 +471,7 @@
                                                 <th>E-MAIL 4</th>
                                                 <td>
                                                     <div class="control-group">
-                                                        <input type="text" class="{email:true} span4" target="email4" name="email4"/>
+                                                        <input type="text" class="{email:true} span12" target="email4" name="email4"/>
                                                     </div>
                                                 </td>
                                                 <td target="data-sharing">
@@ -490,7 +483,7 @@
                                                 </td>
                                                 <th>行動電話 1</th>
                                                 <td>
-                                                    <input type="text" class="span2" target="sms-phone1"/>
+                                                    <input type="text" class="span12" target="sms-phone1"/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -504,7 +497,7 @@
                                                 <th>E-MAIL 5</th>
                                                 <td>
                                                     <div class="control-group">
-                                                        <input type="text" class="{email:true} span4" target="email5" name="email5"/>
+                                                        <input type="text" class="{email:true} span12" target="email5" name="email5"/>
                                                     </div>
                                                 </td>
                                                 <td target="data-sharing">
@@ -516,7 +509,7 @@
                                                 </td>
                                                 <th>行動電話 2</th>
                                                 <td>
-                                                    <input type="text" class="span2" target="sms-phone2"/>
+                                                    <input type="text" class="span12" target="sms-phone2"/>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -571,7 +564,7 @@
                                 </form>
 						    </div>
 						</div>
-                        <div class="row">
+                        <div class="row-fluid">
                             <div class="span12" id="education">
                                 <table class="table table-bordered table-condensed">
                                     <thead>
@@ -591,7 +584,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row-fluid">
                             <div class="span12" id="experience">
                                 <table class="table table-bordered table-condensed">
                                     <thead>

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="個人資料" description="EMBA學生-個人資料">
-    <Title lang="zh-TW">個人資料</Title>
+  <ModulePrefs title="個人資訊" description="EMBA學生-個人資訊">
+    <Title lang="zh-TW">個人資訊</Title>
     <Icon>icon.png</Icon>
     <Mobile />
     <Title lang="zh-CN">

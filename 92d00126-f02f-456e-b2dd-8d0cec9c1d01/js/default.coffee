@@ -638,7 +638,7 @@ bind_myinfo = () ->
 							if not response.Result.DataSharing?.DataSharing?
 								myInfo.DataSharing = {
 									Name: 'true',
-									Gender: 'false',
+									Gender: 'true',
 									Birthdate: 'false',
 									Custodian: 'false',
 									CustodianPhone: 'false',
@@ -936,7 +936,7 @@ bind_experience = () ->
 	                        <th class="myth">工作迄日</th>
 	                    </tr>
 	                    <tr>
-							<td>#{item.Publicist}</td>
+							<td>#{item.Publicist || '&nbsp;'}</td>
 							<td>#{item.PublicRelationsOfficeTelephone}</td>
 							<td>#{item.PblicRelationsOfficeFax}</td>
 							<td>#{item.PublicistEmail}</td>
