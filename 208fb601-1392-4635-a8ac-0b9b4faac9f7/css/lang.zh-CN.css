@@ -5,11 +5,11 @@
 }
 [lang=zh-CN] [multi-lang-text=個人相片]:before
 {
-	content: "个人相片";
+	content: "头像";
 }
 [lang=zh-CN] [multi-lang-text=變更相片]:hover:before
 {
-	content: "变更相片";
+	content: "更换头像";
 }
 [lang=zh-CN] [multi-lang-text=姓名]:before
 {
@@ -45,7 +45,7 @@
 }
 [lang=zh-CN] [multi-lang-text=行動電話]:before
 {
-	content: "行动电话";
+	content: "移动电话";
 }
 [lang=zh-CN] [multi-lang-text=其它電話]:before
 {
@@ -53,11 +53,11 @@
 }
 [lang=zh-CN] [multi-lang-text=關於我]:before
 {
-	content: "关于我";
+	content: "个人说明";
 }
 [lang=zh-CN] [multi-lang-text=儲存變更]:before
 {
-	content: "储存变更";
+	content: "保存";
 }
 [lang=zh-CN] [multi-lang-text=儲存變更中]:before
 {
@@ -84,11 +84,11 @@
 }
 [lang=zh-CN] [multi-lang-text=取得代碼A]:before
 {
-	content: "请询问孩子或联络导师。";
+	content: "请询问孩子或联系班主任。";
 }
 [lang=zh-CN] [multi-lang-text=送出]:before
 {
-	content: "送出";
+	content: "发送";
 }
 [lang=zh-CN] [multi-lang-text=送出中]:before
 {
