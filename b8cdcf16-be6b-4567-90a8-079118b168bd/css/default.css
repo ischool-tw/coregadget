@@ -122,3 +122,16 @@ div.modal div.my-Msg div {
 #printEndTime {
   color: red;
 }
+.my-label-info {
+  background-color: #804688;
+}
+.my-table-head1 {
+  font-size: 16px;
+  background: #bbe6e2;
+  color: #145240;
+}
+.my-table-head2 {
+  font-size: 16px;
+  background: #fffdc5;
+  color: #7e631e;
+}

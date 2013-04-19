@@ -301,6 +301,7 @@ jQuery(function () {
                 });
             },
             set_quit_cousre : function(_courseID, status) {
+                debugger
                 if (_courseID) {
                     var self = MyViewModel;
                     if (self.conflict_col_course[_courseID]) {
@@ -615,10 +616,12 @@ jQuery(function () {
                                     if (item.Category === '選課注意事項') {
                                         item.Id = 'collapseA' + index;
                                         item.Href = '#' + item.Id;
+                                        item.Content = item.Content.replace(/\n/g, '<br />');
                                         self.faq.A.push(item);
                                     } else if (item.Category === '選課問答') {
                                         item.Id = 'collapseB' + index;
                                         item.Href = '#' + item.Id;
+                                        item.Content = item.Content.replace(/\n/g, '<br />');
                                         self.faq.B.push(item);
                                     }
                                 });
@@ -1029,11 +1032,11 @@ _gg.getCourseType = function(type) {
         case '核心必修':
             return '<span class="label label-important">核必</span>';
         case '核心選修':
-            return '<span class="label label-warning">組必</span>';
+            return '<span class="label label-warning">共選</span>';
         case '分組必修':
-            return '<span class="label label-success">共選</span>';
+            return '<span class="label label-success">組必</span>';
         case '選修':
-            return '<span class="label label-info">選修</span>';
+            return '<span class="label my-label-info">選修</span>';
         default:
             return '<span class="label">' + type + '</span>';
     }
