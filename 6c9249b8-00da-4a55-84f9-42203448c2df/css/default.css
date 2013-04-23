@@ -1,54 +1,535 @@
-/* 搜尋 */
-#filter-keyword {
-  width: 300px;
+.table {
+  width: 689px !important;
+  margin: 0 auto;
 }
-/* 課表 */
-.my-table thead th,
-.my-table tbody th {
+.table th,
+.table td {
+  /*position:relative;*/
+
   text-align: center;
   vertical-align: middle;
 }
-.my-table thead th:first-child {
-  min-width: 50px;
+.table th {
+  width: 19%;
 }
-.my-table tr td {
+.table td {
+  padding: 0 5px;
+}
+.table th:first-child {
+  width: 5%;
+}
+.table caption {
+  margin: 5px 0;
+}
+.table ol li {
+  margin: 0px;
+}
+.table ul {
+  list-style-type: none;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 0;
+  padding: 0;
+  clear: both;
+}
+.table ul li {
+  float: left;
+  overflow: hidden;
+}
+.table ul li:after {
+  content: "";
+  padding-right: 4px;
+}
+/*
+.table ul li:nth-child(n+5):after,
+.table ul li:first-child:after,
+.my-place ul li:nth-child(4):after,
+.my-list1 ul li:after,
+.my-row6 .my-list2 ul li:after,
+.my-row6 .my-list3 ul li:after,
+.my-row7 .my-list2 ul li:after,
+.my-row7 .my-list3 ul li:after,
+.my-row8 .my-list2 ul li:after,
+.my-row9 .my-list2 ul li:after,
+.my-row10 .my-list2 ul li:after,
+.my-row11 .my-list2 ul li:after {
+  content:"";
+  padding:0;
+}*/
+.tooltip-inner {
+  max-width: 500px !important;
+  text-align: left;
+}
+.table tbody tr:hover td.my-td-group {
+  background-color: #eee;
+}
+.my-page .caret {
+  margin-right: 5px;
+}
+.my-search {
+  margin: 5px;
+}
+.my-search .add-on {
+  cursor: pointer;
+}
+.my-more {
+  background: #CCC;
+  font-size: 10px;
+  padding: 0 5px;
+  border-radius: 5px;
+  border: 3px solid #fff;
+  position: absolute;
+  right: -5px;
+  bottom: 0;
+}
+.table td ul:first-child {
+  border-top: none;
+}
+.btn-group {
+  margin: 0 8px 5px 0;
+}
+.my-tab {
+  margin-bottom: 0;
+}
+.my-tab .btn:first-child {
+  border-bottom-left-radius: 0;
+}
+.my-tab .btn:last-child {
+  border-bottom-right-radius: 0;
+}
+.my-well2 {
+  border-top-left-radius: 0;
+  max-height: 860px;
+}
+.my-well2 .nav-header a {
+  color: #333;
+}
+.my-well2 li a {
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 18px;
+}
+.my-table th {
   text-align: center;
+}
+.my-time {
+  font-weight: normal;
+  font-size: 10px;
+  text-align: center;
+  line-height: 12px;
+}
+.my-row6 .my-list1 .my-subtable td {
+  height: 144px;
+}
+.my-row6 .my-list1 .my-subtable td ul {
+  max-height: 144px;
+}
+.my-row6 .my-list2 .my-subtable td {
+  height: 73px;
+}
+.my-row6 .my-list2 .my-subtable td ul {
+  max-height: 73px;
+}
+.my-row6 .my-list3 .my-subtable td {
+  height: 46px;
+}
+.my-row6 .my-list3 .my-subtable td ul {
+  max-height: 46px;
+}
+.my-row6 .my-list4 .my-subtable td {
+  height: 36px;
+}
+.my-row6 .my-list4 .my-subtable td ul {
+  max-height: 36px;
+}
+.my-row7 .my-list1 .my-subtable td {
+  height: 122px;
+}
+.my-row7 .my-list1 .my-subtable td ul {
+  max-height: 122px;
+}
+.my-row7 .my-list2 .my-subtable td {
+  height: 62px;
+}
+.my-row7 .my-list2 .my-subtable td ul {
+  max-height: 62px;
+}
+.my-row7 .my-list3 .my-subtable td {
+  height: 39px;
+}
+.my-row7 .my-list3 .my-subtable td ul {
+  max-height: 39px;
+}
+.my-row7 .my-list4 .my-subtable td {
+  height: 30px;
+}
+.my-row7 .my-list4 .my-subtable td ul {
+  max-height: 30px;
+}
+.my-row8 .my-list1 .my-subtable td {
   height: 107px;
 }
-.my-table tr td .my-classroom {
-  text-align: right;
+.my-row8 .my-list1 .my-subtable td ul {
+  max-height: 107px;
 }
-.my-table tbody tr:hover td.my-td-group {
-  background-color: #eeeeee;
+.my-row8 .my-list2 .my-subtable td {
+  height: 54px;
 }
-.my-table .my-td-group {
-  background-color: #eeeeee;
-  opacity: 1;
-  color: #888888;
-  border-top-left-radius: 9px;
-  border-top-right-radius: 9px;
-  border-bottom-right-radius: 9px;
-  border-bottom-left-radius: 9px;
-  -webkit-box-shadow: #2f4f4f 0px 0px 3px inset;
-  box-shadow: #2f4f4f 0px 0px 3px inset;
+.my-row8 .my-list2 .my-subtable td ul {
+  max-height: 54px;
 }
-.my-table-bordered th {
-  background: #f0ffee;
+.my-row8 .my-list3 .my-subtable td {
+  height: 36px;
 }
-/* overwrite */
-.btn-group + .btn-group {
-  margin-left: 0px;
+.my-row8 .my-list3 .my-subtable td ul {
+  max-height: 36px;
 }
-/* 自動完成 */
-.ui-autocomplete.ui-menu.ui-widget.ui-widget-content.ui-corner-all {
-  max-height: 370px;
+.my-row8 .my-list4 .my-subtable td {
+  height: 27px;
+}
+.my-row8 .my-list4 .my-subtable td ul {
+  max-height: 27px;
+}
+.my-row9 .my-list1 .my-subtable td {
+  height: 94px;
+}
+.my-row9 .my-list1 .my-subtable td ul {
+  max-height: 94px;
+}
+.my-row9 .my-list2 .my-subtable td {
+  height: 46px;
+}
+.my-row9 .my-list2 .my-subtable td ul {
+  max-height: 46px;
+}
+.my-row9 .my-list3 .my-subtable td {
+  height: 31px;
+}
+.my-row9 .my-list3 .my-subtable td ul {
+  max-height: 31px;
+}
+.my-row9 .my-list4 .my-subtable td {
+  height: 20px;
+}
+.my-row9 .my-list4 .my-subtable td ul {
+  max-height: 20px;
+}
+.my-row10 .my-list1 .my-subtable td {
+  height: 84px;
+}
+.my-row10 .my-list1 .my-subtable td ul {
+  max-height: 84px;
+}
+.my-row10 .my-list2 .my-subtable td {
+  height: 42px;
+}
+.my-row10 .my-list2 .my-subtable td ul {
+  max-height: 42px;
+}
+.my-row10 .my-list3 .my-subtable td {
+  height: 28px;
+}
+.my-row10 .my-list3 .my-subtable td ul {
+  max-height: 28px;
+}
+.my-row10 .my-list4 .my-subtable td {
+  height: 17px;
+}
+.my-row10 .my-list4 .my-subtable td ul {
+  max-height: 17px;
+}
+.my-row11 .my-list1 .my-subtable td {
+  height: 76px;
+}
+.my-row11 .my-list1 .my-subtable td ul {
+  max-height: 76px;
+}
+.my-row11 .my-list2 .my-subtable td {
+  height: 38px;
+}
+.my-row11 .my-list2 .my-subtable td ul {
+  max-height: 38px;
+}
+.my-row11 .my-list3 .my-subtable td {
+  height: 25px;
+}
+.my-row11 .my-list3 .my-subtable td ul {
+  max-height: 25px;
+}
+.my-row11 .my-list4 .my-subtable td {
+  height: 15px;
+}
+.my-row11 .my-list4 .my-subtable td ul {
+  max-height: 15px;
+}
+.my-row12 .my-list1 .my-subtable td {
+  height: 72px;
+}
+.my-row12 .my-list1 .my-subtable td ul {
+  max-height: 72px;
+}
+.my-row12 .my-list2 .my-subtable td {
+  height: 35px;
+}
+.my-row12 .my-list2 .my-subtable td ul {
+  max-height: 35px;
+}
+.my-row12 .my-list3 .my-subtable td {
+  height: 20px;
+}
+.my-row12 .my-list3 .my-subtable td ul {
+  max-height: 20px;
+}
+.my-row12 .my-list4 .my-subtable td {
+  height: 15px;
+}
+.my-row12 .my-list4 .my-subtable td ul {
+  max-height: 15px;
+}
+.my-row11 td,
+.my-row12 td {
+  font-size: 13px;
+}
+.table ul {
+  overflow: hidden;
+  padding: 2px 0;
+}
+.table li {
+  line-height: 15px;
+}
+.my-list1 li,
+.my-row6 .my-list2 li,
+.my-row6 .my-list3 li,
+.my-row7 .my-list2 li,
+.my-row7 .my-list3 li,
+.my-row8 .my-list2 li,
+.my-row9 .my-list2 li,
+.my-row10 .my-list2 li,
+.my-row11 .my-list2 li {
+  float: none !important;
+}
+.my-week {
+  position: absolute;
+}
+.my-list3 li,
+.my-list4 li,
+.my-row7 .my-list2 li,
+.my-row8 .my-list2 li,
+.my-row9 .my-list2 li,
+.my-row10 .my-list2 li,
+.my-row11 .my-list2 li,
+.my-row12 .my-list2 li {
+  font-size: 13px;
+  line-height: 13px;
+  max-height: 13px;
+}
+.my-row6 .my-list4 li,
+.my-row9 .my-list4 li,
+.my-row10 .my-list4 li,
+.my-row11 .my-list4 li,
+.my-row12 .my-list3 li {
+  line-height: 19px;
+  max-height: 19px;
+}
+.my-row6 .my-list4 li,
+.my-row8 .my-list3 li,
+.my-row12 .my-list2 li {
+  line-height: 17px;
+  max-height: 17px;
+}
+.my-row6 .my-list3 li {
+  line-height: 16px;
+  max-height: 16px;
+}
+.my-row6 .my-list3 li,
+.my-row7 .my-list2 li,
+.my-row7 .my-list4 li,
+.my-row9 .my-list2 li,
+.my-row9 .my-list3 li,
+.my-row12 .my-list4 li {
+  line-height: 15px;
+  max-height: 15px;
+}
+.my-row8 .my-list2 li,
+.my-row10 .my-list2 li,
+.my-row10 .my-list3 li {
+  line-height: 14px;
+  max-height: 14px;
+}
+/*自訂*/
+.my-err-info {
+  cursor: pointer;
+}
+.my-dropdown-menu {
+  max-height: 310px;
   overflow: auto;
 }
-/* 自動完成分類項目 */
-.ui-autocomplete-category {
-  font-weight: bold;
-  font-size: 18px;
-  padding: 7px 4px;
-  line-height: 1.5;
-  color: #5B8607;
+.my-dropdown-menu .active > a,
+.my-dropdown-menu .active > a:hover {
+  color: white;
+}
+.my-clear-both {
+  clear: both;
+}
+.my-print {
+  width: 880px;
+  padding: 40px 20px;
+}
+.my-print .hidden {
+  display: table-caption;
+  visibility: visible;
+}
+.my-print .table-bordered {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.my-print .table-bordered caption + thead tr:first-child th:first-child,
+.my-print .table-bordered caption + tbody tr:first-child td:first-child,
+.my-print .table-bordered colgroup + thead tr:first-child th:first-child,
+.my-print .table-bordered colgroup + tbody tr:first-child td:first-child {
+  -webkit-border-top-left-radius: 0;
+  border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+}
+.my-subtable {
+  vertical-align: middle;
+  width: 100%;
+}
+.my-subtable td {
+  border-top: 1px solid #ccc;
+  border-left: none;
+  padding: 0;
+}
+.my-subtable tr:first-child td {
+  border: none;
+}
+.my-subtable li.my-week + li {
+  text-indent: 25px;
+}
+.my-row6 .my-container-more {
+  height: 144px;
+}
+.my-row7 .my-container-more {
+  height: 122px;
+}
+.my-row8 .my-container-more {
+  height: 107px;
+}
+.my-row9 .my-container-more {
+  height: 94px;
+}
+.my-row10 .my-container-more {
+  height: 84px;
+}
+.my-row11 .my-container-more {
+  height: 76px;
+}
+.my-row12 .my-container-more {
+  height: 72px;
+}
+.my-row6 .my-container-more {
+  height: 144px;
+}
+.my-row6 .my-list1 .my-subtable ul .my-class {
+  max-height: 30px;
+}
+.my-row6 .my-list1 .my-subtable ul .my-subject {
+  max-height: 30px;
+}
+.my-row6 .my-list1 .my-subtable ul .my-classroom {
+  max-height: 30px;
+}
+.my-row6 .my-list1 .my-subtable ul .my-teacher {
+  max-height: 30px;
+}
+.my-row7 .my-container-more {
+  height: 122px;
+}
+.my-row7 .my-list1 .my-subtable ul .my-class {
+  max-height: 30px;
+}
+.my-row7 .my-list1 .my-subtable ul .my-subject {
+  max-height: 30px;
+}
+.my-row7 .my-list1 .my-subtable ul .my-classroom {
+  max-height: 30px;
+}
+.my-row7 .my-list1 .my-subtable ul .my-teacher {
+  max-height: 15px;
+}
+.my-row8 .my-container-more {
+  height: 107px;
+}
+.my-row8 .my-list1 .my-subtable ul .my-class {
+  max-height: 30px;
+}
+.my-row8 .my-list1 .my-subtable ul .my-subject {
+  max-height: 30px;
+}
+.my-row8 .my-list1 .my-subtable ul .my-classroom {
+  max-height: 15px;
+}
+.my-row8 .my-list1 .my-subtable ul .my-teacher {
+  max-height: 15px;
+}
+.my-row9 .my-container-more {
+  height: 94px;
+}
+.my-row9 .my-list1 .my-subtable ul .my-class {
+  max-height: 30px;
+}
+.my-row9 .my-list1 .my-subtable ul .my-subject {
+  max-height: 30px;
+}
+.my-row9 .my-list1 .my-subtable ul .my-classroom {
+  max-height: 15px;
+}
+.my-row9 .my-list1 .my-subtable ul .my-teacher {
+  max-height: 15px;
+}
+.my-row10 .my-container-more {
+  height: 84px;
+}
+.my-row10 .my-list1 .my-subtable ul .my-class {
+  max-height: 15px;
+}
+.my-row10 .my-list1 .my-subtable ul .my-subject {
+  max-height: 30px;
+}
+.my-row10 .my-list1 .my-subtable ul .my-classroom {
+  max-height: 15px;
+}
+.my-row10 .my-list1 .my-subtable ul .my-teacher {
+  max-height: 15px;
+}
+.my-row11 .my-container-more {
+  height: 76px;
+}
+.my-row11 .my-list1 .my-subtable ul .my-class {
+  max-height: 15px;
+}
+.my-row11 .my-list1 .my-subtable ul .my-subject {
+  max-height: 30px;
+}
+.my-row11 .my-list1 .my-subtable ul .my-classroom {
+  max-height: 15px;
+}
+.my-row11 .my-list1 .my-subtable ul .my-teacher {
+  max-height: 15px;
+}
+.my-row12 .my-container-more {
+  height: 72px;
+}
+.my-row12 .my-list1 .my-subtable ul .my-class {
+  max-height: 15px;
+}
+.my-row12 .my-list1 .my-subtable ul .my-subject {
+  max-height: 30px;
+}
+.my-row12 .my-list1 .my-subtable ul .my-classroom {
+  max-height: 15px;
+}
+.my-row12 .my-list1 .my-subtable ul .my-teacher {
+  max-height: 15px;
 }
