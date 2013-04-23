@@ -3,6 +3,8 @@ _gg.connection = gadget.getContract("campuslite.directory.teacher");
 _gg.msgconnection = gadget.getContract("campuslite.message");
 
 jQuery(function () {
+    if ($.browser.msie) { _gg.set_error_message('#ieMsg', '', '若照片無法完整呈現，請改用其他瀏覽器！'); }
+
     $('#myTab')
         .click(function() {
             $(this).find('li.active').removeClass('active');
@@ -270,12 +272,12 @@ _gg.getMyInfo = function () {
             .replace("data:image/png;base64,", "")
             .replace("data:image/jpeg;base64,", "");
 
-        photo = '<div class="my-proimg" style="background-image:url(data:image/png;base64,' + myself.Photo + ');" photo-base64="' + photo_base64 + '"></div>';
+        photo = '<div class="my-proimg" style="background-image:url(data:image/png;base64,' + myself.Photo + ')"></div>';
     } else {
         photo = '<div class="my-proimg" style="background-image:url(css/images/nophoto.png);"></div>';
     }
 
-    $('#edit-Photo').html(photo);
+    $('#edit-Photo').html(photo).find('div.my-proimg').css("background-size", "100% auto");
     $('#edit-Gender').val(myself.Gender || '');
     $('#edit-AboutMe').val(myself.AboutMe || '');
     $('#edit-Birthdate').val(myself.Birthdate || '').datepicker();
@@ -308,53 +310,71 @@ _gg.getMyInfo = function () {
 
 // TODO: 顯示教師通訊錄
 _gg.getTeacherList = function() {
-    _gg.connection.send({
-        service: "_.GetTeachers",
-        body: '',
-        result: function (response, error, http) {
-            if (error !== null) {
-                _gg.set_error_message('#mainMsg', 'GetTeachers', error);
-            } else {
-                var _ref;
-                _gg.teachers = [];
-                if (((_ref = response.Response) != null ? _ref.Teachers : void 0) != null) {
-                    var ret = [];
+    var curr_page = 1,
+        page_size = 50,
+        ret = [],
+        curr_index = 0;
 
-                    $(response.Response.Teachers).each(function(index, item) {
-                        _gg.teachers[index] = item;
+    var get_teacher_data = function(_start_page, _page_size) {
+        _gg.connection.send({
+            service: "_.GetTeachers",
+            body: {
+                Request: {
+                    Pagination: {
+                        StartPage : _start_page,
+                        PageSize  : _page_size
+                    }
+                }
+            },
+            result: function (response, error, http) {
+                if (error !== null) {
+                    _gg.set_error_message('#mainMsg', 'GetTeachers', error);
+                } else {
+                    var _ref;
+                    if (_start_page === 1) { _gg.teachers = []; };
+                    if (((_ref = response.Response) != null ? _ref.Teachers : void 0) != null) {
+                        $(response.Response.Teachers).each(function(index, item) {
+                            curr_index += 1;
+                            _gg.teachers[curr_index] = item;
 
-                        var photo;
-                        if (item.Photo) {
-                            photo ='data:image/png;base64,' + item.Photo;
+                            var photo, p_resize = false;
+                            if (item.Photo) {
+                                photo = 'data:image/png;base64,' + item.Photo;
+                                p_resize = true;
+                            } else {
+                                photo = 'css/images/nophoto.png';
+                            }
+
+                            ret.push(
+                                '<div class="my-stlist">' +
+                                '<a href="#teacherInfo" data-toggle="modal" Index="' + curr_index + '">' +
+                                '<div class="my-stpic" style="background-image: url(' + photo +');" data-resize="' + p_resize + '"></div>' +
+                                '<div class="my-stext">' + (item.TeacherName || '') + '</div>' +
+                                '<div class="my-mur" rel="tooltip" data-placement="top" data-original-title="' + (item.Tagline || '') +'">' + (item.Tagline || '') + '</div>' +
+                                '</a>' +
+                                '</div>'
+                            );
+                        });
+                        if (response.Response.Teachers.length < _page_size) {
+                            var tmp_html = ret.join('');
+                            if (tmp_html) {
+                                $('#teacher1').html(tmp_html).end().find('.my-stpic[data-resize=true]').css("background-size", "100% auto");
+                                $('#teacher1 div[rel=tooltip]').tooltip("show").tooltip("toggle");
+                            } else {
+                                $('#teacher1').html('目前無資料');
+                            }
                         } else {
-                            photo = 'css/images/nophoto.png';
+                            curr_page += 1;
+                            get_teacher_data(curr_page, page_size);
                         }
-
-
-                        ret.push(
-                            '<div class="my-stlist">' +
-                            '<a href="#teacherInfo" data-toggle="modal" Index="' + index + '">' +
-                            '<div class="my-stpic" style="background-image: url(' + photo +');"></div>' +
-                            '<div class="my-stext">' + (item.TeacherName || '') + '</div>' +
-                            '<div class="my-mur" rel="tooltip" data-placement="top" data-original-title="' + (item.Tagline || '') +'">' + (item.Tagline || '') + '</div>' +
-                            '</a>' +
-                            '</div>'
-                        );
-                    });
-
-                    var tmp_html = ret.join('');
-                    if (tmp_html) {
-                        $('#teacher1').html(tmp_html);
-                        $('#teacher1 div[rel=tooltip]').tooltip("show").tooltip("toggle");
                     } else {
                         $('#teacher1').html('目前無資料');
                     }
-                } else {
-                    $('#teacher1').html('目前無資料');
                 }
             }
-        }
-    });
+        });
+    };
+    get_teacher_data(curr_page, page_size);
 };
 
 // TODO: 顯示教師詳細資料
@@ -426,9 +446,10 @@ _gg.getStudentList = function() {
                         $(response.Response.Students).each(function(index, item) {
                             _gg.students[index] = item;
 
-                            var photo;
+                            var photo, p_resize = false;
                             if (item.Photo) {
                                 photo = 'data:image/png;base64,' + item.Photo;
+                                p_resize = true;
                             } else {
                                 photo = 'css/images/nophoto.png';
                             }
@@ -443,7 +464,7 @@ _gg.getStudentList = function() {
                             ret.push(
                                 '<div class="my-stlist">' +
                                 '<a href="#studentInfo" data-toggle="modal" Index="' + index + '">' +
-                                '<div class="my-stpic" style="background-image: url(' + photo + ');"></div>' +
+                                '<div class="my-stpic" style="background-image: url(' + photo + ');" data-resize="' + p_resize + '"></div>' +
                                 '<div class="my-stext">' + (item.UserName || '') + title + '</div>' +
                                 '<div class="my-mur" rel="tooltip" data-placement="top" data-original-title="' + (item.Tagline || '') +'">' + (item.Tagline || '') + '</div>' +
                                 '</a>' +
@@ -453,7 +474,7 @@ _gg.getStudentList = function() {
 
                         var tmp_html = ret.join('');
                         if (tmp_html) {
-                            $('#student1').html(tmp_html);
+                            $('#student1').html(tmp_html).find('.my-stpic[data-resize=true]').css("background-size", "100% auto");
                             $('#student1 div[rel=tooltip]').tooltip("show").tooltip("toggle");
                         } else {
                             $('#student1').html('目前無資料');
@@ -700,7 +721,7 @@ _gg.updatePhoto = function() {
         var reader = new FileReader();
         reader.onload = (function(theFile) {
             return function(e) {
-                $("#edit-Photo div.my-proimg").css('background-image', 'url(' + e.target.result + ')');
+                $("#edit-Photo div.my-proimg").css('background-image', 'url(' + e.target.result + ')').css("background-size", "100% auto");
 
                 var photo_base64 = e.target.result
                 .replace("data:image/png;base64,", "")
@@ -1075,25 +1096,35 @@ _gg.sendMessage = function(e) {
 
 // TODO: 錯誤訊息
 _gg.set_error_message = function(select_str, serviceName, error) {
-    var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
-    if (error !== null) {
-        if (error.dsaError) {
-            if (error.dsaError.status === "504") {
-                switch (error.dsaError.message) {
-                    case '777':
-                        if (serviceName === 'ResetParentCode') {
-                            _gg.resetParentCode();
-                            return false;
-                        }
-                        if (serviceName === 'resetStudentCode') {
-                            _gg.resetStudentCode();
-                            return false;
-                        }
-                        break;
+    if (serviceName) {
+        var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
+        if (error !== null) {
+            if (error.dsaError) {
+                if (error.dsaError.status === "504") {
+                    switch (error.dsaError.message) {
+                        case '777':
+                            if (serviceName === 'ResetParentCode') {
+                                _gg.resetParentCode();
+                                return false;
+                            }
+                            if (serviceName === 'resetStudentCode') {
+                                _gg.resetStudentCode();
+                                return false;
+                            }
+                            break;
+                    }
+                } else if (error.dsaError.message) {
+                    tmp_msg = error.dsaError.message;
                 }
+            } else if (error.loginError.message) {
+                tmp_msg = error.loginError.message;
+            } else if (error.message) {
+                tmp_msg = error.message;
             }
+            $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
+            $('.my-err-info').click(function(){alert('請拍下此圖，並與客服人員連絡，謝謝您。\n' + JSON.stringify(error, null, 2))});
         }
-        $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
-        $('.my-err-info').click(function(){alert('請拍下此圖，並與客服人員連絡，謝謝您。\n' + JSON.stringify(error, null, 2))});
+    } else {
+        $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + error + "\n</div>");
     }
 };
