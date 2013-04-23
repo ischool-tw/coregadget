@@ -1,0 +1,48 @@
+table table thead th {
+  background: none;
+  border-bottom: none;
+}
+.table th {
+  text-align: center;
+}
+.table thead th {
+  border-right: 1px solid #acacac;
+  vertical-align: middle;
+}
+.table td:first-child {
+  text-align: left;
+}
+.radio input[type="radio"],
+.checkbox input[type="checkbox"] {
+  margin: 3px 5px;
+}
+label {
+  display: inline-block;
+}
+.radio,
+.checkbox {
+  padding: 0 10px;
+}
+.table-list td {
+  text-align: center;
+}
+.table a {
+  display: block;
+}
+.my-table td {
+  text-align: center !important;
+}
+/*自訂*/
+.my-err-info {
+  cursor: pointer;
+}
+table.table-striped tbody tr.my-iscase th {
+  background-color: #eee;
+  text-align: left;
+}
+table.table-striped tbody tr.my-iscase td.my-casename {
+  padding-left: 27px;
+}
+form tr.error span.help-inline {
+  color: #B94A48;
+}
