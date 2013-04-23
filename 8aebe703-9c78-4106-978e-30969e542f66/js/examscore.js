@@ -147,7 +147,7 @@ var Exam = function() {
                                         if ($.inArray(exam.ExamID, exam_list) === -1) {
                                             exam_list.push(exam.ExamID);
                                             thead1.push('<th colspan="2">' + exam.ExamName + '</th>');
-                                            thead2.push('<th colspan="2">成績</th>');
+                                            thead2.push('<th colspan="2">平均 (定期/平時)</th>');
                                         }
                                     });
                                 });
