@@ -1,4 +1,6 @@
 jQuery(function () {
+    $("#ExamScore tbody").html('<tr><td>載入中...</td></tr>');
+
     // TODO: 切換學年度學期
     $("#Semester").on('click', '.btn', function(event) {
         var schoolYear = $(this).attr("school-year");
@@ -6,28 +8,17 @@ jQuery(function () {
         Exam.score(schoolYear, semester);
         $('.tooltip').remove();
     });
-
-    //#region 切換學生
-    $("#children-list").on("click", "a", function(e) {
-        $('#children-list li[class=active]').removeClass('active');
-        $(this).parent().addClass('active');
-        Exam.onChangeStudent($(this).attr("children-index"));
-        $('.tooltip').remove();
-    });
-    //#endregion
 });
 
 
 var Exam = function() {
-    var connection = gadget.getContract("ischool.exam.parent");
+    var connection = gadget.getContract("ischool.exam.student");
     var _curr_schoolyear
         , _curr_semester
         , _exam
-        , _system_type = 'kh'
+        , _system_type = 'hs'
         , _places
-        , _math_type
-        , _students
-        , _student;
+        , _math_type;
 
     var getCurrSemester = function() {
         connection.send({
@@ -41,51 +32,16 @@ var Exam = function() {
                         _curr_schoolyear = response.Current.SchoolYear || '';
                         _curr_semester = response.Current.Semester || '';
                     }
-                    getStudentInfo();
+                    resetSchoolYearSeme();
                 }
             }
         });
     };
 
-    //#region 取得全部子女資料
-    var getStudentInfo = function() {
-        resetData();
-        connection.send({
-            service: "_.GetStudentInfo",
-            body: '',
-            result: function (response, error, http) {
-                if (error !== null) {
-                    set_error_message('#mainMsg', 'GetStudentInfo', error);
-                } else {
-                    var items = [];
-                    if (error != null) {
-                        return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetStudentInfo)\n</div>");
-                    } else {
-                        if (response.Result && response.Result.Student) {
-                            _students = $(response.Result.Student);
-                            _students.each(function(index, student) {
-                                return items.push('<li ' + (index === 0 ? ' class="active"' : "") + '>\n  <a href="#" children-index="' + index + '">' + this.StudentName + '</a>\n</li>');
-                            });
-                            $("#children-list").html(items.join("")).find('a:first').trigger('click');
-                        }
-                    }
-                }
-            }
-        });
-    };
-    //#endregion
-
-    //#region 取得某學生的成績規則、學年度學期
-    var getStudentRuleSeme = function() {
+    var resetSchoolYearSeme = function() {
         connection.send({
             service: "_.GetScoreCalcRule",
-            body: {
-                Request: {
-                    Condition: {
-                        StudentID: _student.StudentID
-                    }
-                }
-            },
+            body: '',
             result: function (response, error, http) {
                 if (error !== null) {
                     set_error_message('#mainMsg', 'GetScoreCalcRule', error);
@@ -113,20 +69,14 @@ var Exam = function() {
 
                     connection.send({
                         service: "_.GetAllCourseSemester",
-                        body: {
-                            Request: {
-                                Condition: {
-                                    StudentID: _student.StudentID
-                                }
-                            }
-                        },
+                        body: '',
                         result: function (response, error, http) {
                             if (error !== null) {
                                 set_error_message('#mainMsg', 'GetAllCourseSemester', error);
                             } else {
-                                var items = [];
-                                if (response.Course && response.Course.Semester) {
-
+                                var _ref;
+                                if (((_ref = response.Course) != null ? _ref.Semester : void 0) != null) {
+                                    var items = [];
                                     $(response.Course.Semester).each(function(index, item) {
                                         items.push("<button class='btn btn-large' school-year='" + this.SchoolYear + "' semester='" + this.Semester + "'>" + (this.SchoolYear + '' + this.Semester) + "</button>");
                                     });
@@ -142,10 +92,10 @@ var Exam = function() {
             }
         });
     };
-    //#endregion
 
     var resetData = function() {
-        $("#ExamScore").find('thead').html('').end().find('tbody').html('');
+        $("#ExamScore thead").html('');
+        $("#ExamScore tbody").html('');
     };
 
     //#region 取得評量成績
@@ -156,8 +106,7 @@ var Exam = function() {
                 Content: {
                     Condition: {
                         SchoolYear: schoolYear,
-                        Semester: semester,
-                        StudentID: _student.StudentID
+                        Semester: semester
                     },
                     Field: {
                         Subject: '',
@@ -352,7 +301,7 @@ var Exam = function() {
     //#endregion
 
     //#region 錯誤訊息
-    var set_error_message = function(select_str, serviceName, error) {
+    set_error_message = function(select_str, serviceName, error) {
         var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
         if (error !== null) {
             if (error.dsaError) {
@@ -422,11 +371,7 @@ var Exam = function() {
     return {
         'score' : function(schoolYear, semester) {
             loadScore(schoolYear, semester);
-        },
-        'onChangeStudent' : function(index) {
-            resetData();
-            _student = _students[index];
-            getStudentRuleSeme();
         }
+
     }
 }();

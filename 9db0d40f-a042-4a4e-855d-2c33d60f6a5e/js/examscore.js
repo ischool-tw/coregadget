@@ -23,7 +23,7 @@ var Exam = function() {
     var _curr_schoolyear
         , _curr_semester
         , _exam
-        , _system_type = 'kh'
+        , _system_type = 'hs'
         , _places
         , _math_type
         , _students
