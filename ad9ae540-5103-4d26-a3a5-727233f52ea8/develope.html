@@ -191,10 +191,10 @@
                         <!-- Form template-->
                         <tr id="teacher_certify_template">
                           <th nowrap="nowrap">證照號碼</th>
-                          <td><input placeholder="證照號碼..." type="text" name="TeacherCertify_Number" id="teacher_certify_#index#_Number"/></td>
+                          <td><input class="input-block-level" placeholder="證照號碼..." type="text" name="TeacherCertify_Number" id="teacher_certify_#index#_Number"/></td>
                           <th nowrap="nowrap">科別</th>
                           <td colspan="3">
-                            <input class="input-large" placeholder="科別..." type="text" name="TeacherCertify_Subject" id="teacher_certify_#index#_Subject"/>
+                            <input class="input-block-level" placeholder="科別..." type="text" name="TeacherCertify_Subject" id="teacher_certify_#index#_Subject"/>
                           </td>
                           <td><button id="teacher_certify_remove_current" type="button" class="btn" data-dismiss="alert">×</button></td>
                         </tr>
@@ -219,7 +219,7 @@
                         <!-- Form template-->
                         <tr id="education_template">
                           <td colspan="6">
-                            <input class="input-xxlarge" placeholder="學歷..." type="text" name="Education_SchoolName" id="education_#index#_SchoolName"/>
+                            <input class="input-block-level" placeholder="學歷..." type="text" name="Education_SchoolName" id="education_#index#_SchoolName"/>
                           </td>
                           <td><button id="education_remove_current" type="button" class="btn" data-dismiss="alert">×</button></td>
                         </tr>
@@ -244,11 +244,11 @@
                         <!-- Form template-->
                         <tr id="working_experience_template">
                           <td>校名</td>
-                          <td><input placeholder="校名..." type="text" name="WorkingExperience_SchoolName" id="working_experience_#index#_SchoolName"/></td>
+                          <td><input  class="input-block-level" placeholder="校名..." type="text" name="WorkingExperience_SchoolName" id="working_experience_#index#_SchoolName"/></td>
                           <td>職稱</td>
-                          <td><input class="input-small" placeholder="職稱..." type="text" name="WorkingExperience_Title" id="working_experience_#index#_Title"/></td>
+                          <td style="width:95px"><input class="input-small" placeholder="職稱..." type="text" name="WorkingExperience_Title" id="working_experience_#index#_Title"/></td>
                           <td nowrap="nowrap">年資</td>
-                          <td><input class="input-mini" placeholder="年資..." type="text" name="WorkingExperience_Seniority" id="working_experience_#index#_Seniority"></td>
+                          <td style="width:65px"><input class="input-mini" placeholder="年資..." type="text" name="WorkingExperience_Seniority" id="working_experience_#index#_Seniority"></td>
                           <td><button id="working_experience_remove_current" type="button" class="btn" data-dismiss="alert">×</button></td>
                         </tr>
                         <!-- /Form template-->
@@ -272,7 +272,7 @@
                         <!-- Form template-->
                         <tr id="skill_certify_template">
                           <td colspan="6">
-                            <input class="input-xxlarge" placeholder="專長證照..." type="text" name="SkillCertify_Subject" id="skill_certify_#index#_Subject">
+                            <input class="input-block-level" placeholder="專長證照..." type="text" name="SkillCertify_Subject" id="skill_certify_#index#_Subject">
                           </td>
                           <td><button id="skill_certify_remove_current" type="button" class="btn" data-dismiss="alert">×</button></td>
                         </tr>
@@ -297,7 +297,7 @@
                         <!-- Form template-->
                         <tr id="accomplishments_template">
                           <td colspan="6">
-                            <input class="input-xxlarge" placeholder="獲獎經歷..." type="text" name="Accomplishments_Subject" id="accomplishments_#index#_Subject">
+                            <input class="input-block-level" placeholder="獲獎經歷..." type="text" name="Accomplishments_Subject" id="accomplishments_#index#_Subject">
                           </td>
                           <td><button id="accomplishments_remove_current" type="button" class="btn" data-dismiss="alert">×</button></td>
                         </tr>
@@ -415,7 +415,7 @@
                         </tr>
                         <tr>
                           <th width="173px">日期（必填）</th>
-                          <td><input placeholder="yyyy/mm/dd" class="{required: true, date: true, dateISO: true} date" type="text" name="StudyDate" id="study_#index#_StudyDate"/></td>
+                          <td><input placeholder="yyyy/mm/dd" class="{required: true, date: true, dateISO: true} date input-block-level" type="text" name="StudyDate" id="study_#index#_StudyDate"/></td>
                         </tr>
                         <tr>
                           <th>研習名稱（必填）</th>
@@ -484,7 +484,7 @@
                     <table class="table table-bordered my-table2">
                       <tr>
                         <th>創建日期（必填）</th>
-                        <td><input placeholder="yyyy/mm/dd" class="{required: true, date: true, dateISO: true} date" type="text" name="Createdate"/></td>
+                        <td><input placeholder="yyyy/mm/dd" class="{required: true, date: true, dateISO: true} date input-block-level" type="text" name="Createdate"/></td>
                         <th>公開教材</th>
                         <td>
                           <label class="checkbox">
@@ -498,7 +498,7 @@
                     <table class="table table-bordered my-table2" id="content">
                       <tr>
                         <th>科目（必填）</th>
-                        <td><input class="{required: true}" placeholder="科目..." type="text" name="Subject"/></td>
+                        <td><input class="{required: true} input-block-level" placeholder="科目..." type="text" name="Subject"/></td>
                         <th>&nbsp;</th>
                         <td colspan="2">&nbsp;</td>
                       </tr>

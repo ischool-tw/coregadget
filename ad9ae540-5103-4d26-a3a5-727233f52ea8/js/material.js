@@ -38,7 +38,7 @@ $(function() {
                                 TeacherID: TeacherID
                             },
                             Order: {
-                                Uid: 'DESC'
+                                Createdate: 'DESC'
                             }
                         }
                     },
