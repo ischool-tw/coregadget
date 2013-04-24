@@ -316,6 +316,7 @@ _gg.getTeacherList = function() {
         curr_index = 0;
 
     var get_teacher_data = function(_start_page, _page_size) {
+        var curr_length = 0;
         _gg.connection.send({
             service: "_.GetTeachers",
             body: {
@@ -330,12 +331,12 @@ _gg.getTeacherList = function() {
                 if (error !== null) {
                     _gg.set_error_message('#mainMsg', 'GetTeachers', error);
                 } else {
-                    var _ref;
                     if (_start_page === 1) { _gg.teachers = []; };
-                    if (((_ref = response.Response) != null ? _ref.Teachers : void 0) != null) {
+                    if (response.Response && response.Response.Teachers) {
+                        curr_length = response.Response.Teachers.length;
                         $(response.Response.Teachers).each(function(index, item) {
-                            curr_index += 1;
                             _gg.teachers[curr_index] = item;
+                            curr_index += 1;
 
                             var photo, p_resize = false;
                             if (item.Photo) {
@@ -355,20 +356,18 @@ _gg.getTeacherList = function() {
                                 '</div>'
                             );
                         });
-                        if (response.Response.Teachers.length < _page_size) {
-                            var tmp_html = ret.join('');
-                            if (tmp_html) {
-                                $('#teacher1').html(tmp_html).end().find('.my-stpic[data-resize=true]').css("background-size", "100% auto");
-                                $('#teacher1 div[rel=tooltip]').tooltip("show").tooltip("toggle");
-                            } else {
-                                $('#teacher1').html('目前無資料');
-                            }
+                    }
+                    if (curr_length < _page_size) {
+                        var tmp_html = ret.join('');
+                        if (tmp_html) {
+                            $('#teacher1').html(tmp_html).end().find('.my-stpic[data-resize=true]').css("background-size", "100% auto");
+                            $('#teacher1 div[rel=tooltip]').tooltip("show").tooltip("toggle");
                         } else {
-                            curr_page += 1;
-                            get_teacher_data(curr_page, page_size);
+                            $('#teacher1').html('目前無資料');
                         }
                     } else {
-                        $('#teacher1').html('目前無資料');
+                        curr_page += 1;
+                        get_teacher_data(curr_page, page_size);
                     }
                 }
             }
