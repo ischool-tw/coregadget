@@ -43,7 +43,7 @@ query_absence = () ->
 							<td>#{item.CourseName}</td>
 							<td>#{item.SubjectCode}</td>
 							<td>#{item.StartTime.substr(0, 10)}</td>
-							<td>#{item.StartTime.substr(11, 5)}</td>
+							<td>#{item.StartTime.substr(11, 5)} - #{item.EndTime.substr(11, 5)}</td>
 							<td>#{item.MakeUpDescription}</td>
 						</tr>"""
 
