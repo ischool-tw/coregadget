@@ -1,7 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
   <ModulePrefs
-      title="EMBA社團活動資訊" popupURL="http://exp.management.ntu.edu.tw/EMBA/student_life/activities&clubs/clubs">
+      title="EMBA社團活動資訊" description="EMBA社團活動資訊" popupURL="http://exp.management.ntu.edu.tw/EMBA/student_life/activities&amp;clubs/clubs">
     <Icon>src/icon.png</Icon>
+    <Mobile />
+    <Title lang="zh-CN">
+    </Title>
+    <Title lang="en-US">
+    </Title>
+    <Title lang="zh-TW">EMBA社團活動資訊</Title>
   </ModulePrefs>
 </Module>
