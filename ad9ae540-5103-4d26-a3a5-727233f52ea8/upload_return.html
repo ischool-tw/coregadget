@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript">
+    function getUrlVars() {
+        var vars = [], hash;
+        var p = window.location.href.slice(window.location.href.indexOf('?') + 1);
+        if (p.indexOf("#") >= 0) {
+            p = p.substring(0, p.indexOf("#"));
+        }
+        var hashes = p.split('&');
+        for (var i = 0; i < hashes.length; i++) {
+            hash = decodeURI(hashes[i]);
+            var key = hash.substring(0, hash.indexOf("="));
+            vars.push(key);
+            vars[key] = hash.substring(hash.indexOf("=") + 1);
+        }
+        return vars;
+    };
+
+    // 搭配父層 iframe_upload 的父層的 fileInfo()
+    var resp = getUrlVars();
+    if (resp) {
+        var fnType = resp['fn'];
+        var obj = decodeURIComponent(resp['resp'] || '');
+        if (obj.indexOf('\\') !== -1) {
+            var ary = obj.split(',');
+            if (ary.length > 1) {
+                ary[0] = ary[0].split('\\').pop();
+                obj = '{"file":"' + ary.join(',');
+            }
+        }
+        obj = jQuery.parseJSON(obj);
+        resp['resp'] = obj;
+        if (fnType === 'pfe') {
+            parent.PFEFileInfo(resp);
+        } else if (fnType === 'addmaterial') {
+            parent.AddmaterialFileInfo(resp);
+        }
+    }
+</script>
+</head>
+</html>
