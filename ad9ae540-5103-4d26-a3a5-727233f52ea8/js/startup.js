@@ -74,6 +74,7 @@ LessonPlanManager.StartUp = function() {
                                     if (response.Response && response.Response.TeacherExt) {
                                         _profileValue = response.Response.TeacherExt;
                                     }
+                                    _profileValue = _profileValue || {};
                                     _profileValue.TeacherID = _teacherID;
                                     _isProfileReady = true;
                                     $(_pReadyCallBack).each(function(index, callback) {
