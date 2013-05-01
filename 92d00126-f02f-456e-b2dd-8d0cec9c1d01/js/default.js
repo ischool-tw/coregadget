@@ -119,7 +119,7 @@
       $(".modal[target='experience'] input[target='companyname']").val("");
       $(".modal[target='experience'] span[target='industry']").html("產業別");
       $(".modal[target='experience'] input[target='position']").val("");
-      $(".modal[target='experience'] span[target='department']").html("部門類別");
+      $(".modal[target='experience'] span[target='department']").html("部門");
       $(".modal[target='experience'] span[target='level']").html("層級別");
       $(".modal[target='experience'] span[target='place']").html("工作地點");
       $(".modal[target='experience'] span[target='status']").html("工作狀態");
@@ -143,7 +143,7 @@
         companyname = $(".modal[target='experience'] input[target='companyname']").val();
         industry = $(".modal[target='experience'] span[target='industry']").html() !== "產業別" ? $(".modal[target='experience'] span[target='industry']").html() : "";
         position = $(".modal[target='experience'] input[target='position']").val();
-        department = $(".modal[target='experience'] span[target='department']").html() !== "部門類別" ? $(".modal[target='experience'] span[target='department']").html() : "";
+        department = $(".modal[target='experience'] span[target='department']").html() !== "部門" ? $(".modal[target='experience'] span[target='department']").html() : "";
         level = $(".modal[target='experience'] span[target='level']").html() !== "層級別" ? $(".modal[target='experience'] span[target='level']").html() : "";
         place = $(".modal[target='experience'] span[target='place']").html() !== "工作地點" ? $(".modal[target='experience'] span[target='place']").html() : "";
         status = $(".modal[target='experience'] span[target='status']").html() !== "工作狀態" ? $(".modal[target='experience'] span[target='status']").html() : "";

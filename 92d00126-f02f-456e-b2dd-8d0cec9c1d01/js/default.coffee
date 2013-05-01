@@ -174,7 +174,7 @@ $ ->
 		$(".modal[target='experience'] input[target='companyname']").val ""
 		$(".modal[target='experience'] span[target='industry']").html "產業別"
 		$(".modal[target='experience'] input[target='position']").val ""
-		$(".modal[target='experience'] span[target='department']").html "部門類別"
+		$(".modal[target='experience'] span[target='department']").html "部門"
 		$(".modal[target='experience'] span[target='level']").html "層級別"
 		$(".modal[target='experience'] span[target='place']").html "工作地點"
 		$(".modal[target='experience'] span[target='status']").html "工作狀態"
@@ -199,7 +199,7 @@ $ ->
 			companyname = $(".modal[target='experience'] input[target='companyname']").val()
 			industry = if $(".modal[target='experience'] span[target='industry']").html() isnt "產業別" then $(".modal[target='experience'] span[target='industry']").html() else ""
 			position = $(".modal[target='experience'] input[target='position']").val()
-			department = if $(".modal[target='experience'] span[target='department']").html() isnt "部門類別" then $(".modal[target='experience'] span[target='department']").html() else ""
+			department = if $(".modal[target='experience'] span[target='department']").html() isnt "部門" then $(".modal[target='experience'] span[target='department']").html() else ""
 			level = if $(".modal[target='experience'] span[target='level']").html() isnt "層級別" then $(".modal[target='experience'] span[target='level']").html() else ""
 			place = if $(".modal[target='experience'] span[target='place']").html() isnt "工作地點" then $(".modal[target='experience'] span[target='place']").html() else ""
 			status = if $(".modal[target='experience'] span[target='status']").html() isnt "工作狀態" then $(".modal[target='experience'] span[target='status']").html() else ""
