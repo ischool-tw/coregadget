@@ -87,12 +87,12 @@
                 <a href="#" target="confirm-accept">確定</a>
             </div>
             <form class="form-horizontal">
-                <div class="control-group">
+<!--                 <div class="control-group">
                     <label class="control-label">分享</label>
                     <div class="controls">
                         <input type="checkbox" target="sharing">
                     </div>
-                </div>
+                </div> -->
                 <div class="control-group">
                     <label class="control-label">學校</label>
                     <div class="controls">
@@ -315,7 +315,7 @@
                                                 <td rowspan="3"><span target="photo"></span></td>
                                                 <td>
                                                     <span class="label label-info hide" target="share-name">
-                                                        <i class="icon-ok icon-white"></i>
+                                                        <i class="icon-"></li>
                                                     </span>
                                                 </td>
                                                 <th>姓名</th>
@@ -323,19 +323,19 @@
                                                     <span class="span2" target="name"></span>
                                                 </td>
                                                 <td>
-                                                    <span class="label label-important" target="share-birthdate">
-                                                        <i class="icon-remove icon-white"></i>
+                                                    <span class="label label-important" target="share-custodian-name">
+                                                        <i class="icon-"></i>
                                                     </span>
                                                 </td>
-                                                <th>出生日期</th>
+                                                <th>緊急聯絡人</th>
                                                 <td>
-                                                    <span class="span2" target="birthdate"></span>
+                                                    <input type="text" class="span12" target="custodian-name"/>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>
                                                     <span class="label label-info hide" target="share-gender">
-                                                        <i class="icon-ok icon-white"></i>
+                                                        <i class="icon-"></li>
                                                     </span>
                                                 </td>
                                                 <th>性別</th>
@@ -343,34 +343,26 @@
                                                     <span class="span2" target="gender"></span>
                                                 </td>
                                                 <td>
-                                                    <span class="label label-important" target="share-contact-phone">
-                                                        <i class="icon-remove icon-white"></i>
-                                                    </span>
-                                                </td>
-                                                <th>聯絡電話</th>
-                                                <td>
-                                                    <input type="text" class="span12" target="contact-phone"/>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <span class="label label-important" target="share-custodian-name">
-                                                        <i class="icon-remove icon-white"></i>
-                                                    </span>
-                                                </td>
-                                                <th>緊急聯絡人</th>
-                                                <td>
-                                                    <input type="text" class="span12" target="custodian-name"/>
-                                                </td>
-                                                <td>
                                                     <span class="label label-important" target="share-custodian-phone">
-                                                        <i class="icon-remove icon-white"></i>
+                                                        <i class="icon-"></i>
                                                     </span>
                                                 </td>
                                                 <th>聯絡人電話</th>
                                                 <td>
                                                     <input type="text" class="span12" target="custodian-phone">
                                                 </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span class="label label-important" target="share-birthdate">
+                                                        <i class="icon-"></i>
+                                                    </span>
+                                                </td>
+                                                <th>出生日期</th>
+                                                <td>
+                                                    <span class="span2" target="birthdate"></span>
+                                                </td>
+                                                <td colspan="3"></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -402,7 +394,7 @@
                                                 </td>
                                                 <td>
                                                     <span class="label label-important" target="share-permanent-phone">
-                                                        <i class="icon-remove icon-white"></i>
+                                                        <i class="icon-"></i>
                                                     </span>
                                                 </td>
                                                 <th>住家電話</th>
@@ -450,10 +442,12 @@
                                                         <input type="text" class="{email:true} span12" target="email3" name="email3"/>
                                                     </div>
                                                 </td>
-                                                <td>
-                                                    <span class="label label-important" target="share-other-phone">
-                                                        <i class="icon-remove icon-white"></i>
-                                                    </span>
+                                                <td target="data-sharing">
+                                                    <div class="square">
+                                                        <span class="label label-info hide" target="share-other-phone">
+                                                            <i class="icon-ok icon-white"></i>
+                                                        </span>
+                                                    </div>
                                                 </td>
                                                 <th>秘書電話</th>
                                                 <td>
@@ -526,7 +520,7 @@
     						                <tr>
     						                    <td>
                                                     <span class="label label-important" target="share-contact-address">
-                                                        <i class="icon-remove icon-white"></i>
+                                                        <i class="icon-"></i>
     						                        </span>
     						                    </td>
                                                 <th width="80px">聯絡地址</th>
@@ -537,7 +531,7 @@
     						                <tr>
     						                    <td>
                                                     <span class="label label-important" target="share-permanent-address">
-                                                        <i class="icon-remove icon-white"></i>
+                                                        <i class="icon-"></i>
                                                     </span>
     						                    </td>
                                                 <th>住家地址</th>
@@ -548,7 +542,7 @@
     						                <tr>
     						                    <td>
                                                     <span class="label label-important" target="share-office-address">
-                                                        <i class="icon-remove icon-white"></i>
+                                                        <i class="icon-"></i>
     						                        </span>
     						                    </td>
                                                 <th>公司地址</th>

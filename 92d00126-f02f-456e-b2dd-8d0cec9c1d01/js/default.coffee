@@ -29,11 +29,11 @@ $ ->
 
 	$("#baseinfo a[target='edit-education']").click (e) ->
 		e.preventDefault()
-		$(".modal[target='education'] input[target='sharing']").removeAttr "checked"
+		$(".modal[target='education'] input[target='sharing']").prop "checked", false
 		$(".modal[target='education'] input[target='schoolname']").val ""
 		$(".modal[target='education'] input[target='department']").val ""
 		$(".modal[target='education'] input[target='degree']").val ""
-		$(".modal[target='education'] input[target='top']").removeAttr "checked"
+		$(".modal[target='education'] input[target='top']").prop "checked", false
 
 		$(".modal[target='education'] div[target='confirm-message']").addClass "hide"
 		$(".modal[target='education'] a[target='delete']").addClass "hide"
@@ -47,8 +47,9 @@ $ ->
 		schoolname = $(".modal[target='education'] input[target='schoolname']").val()
 		department = $(".modal[target='education'] input[target='department']").val()
 		degree = $(".modal[target='education'] input[target='degree']").val()
-		top = if $(".modal[target='education'] input[target='top']").attr("checked") is "checked" then "true" else "false"
-		sharing = if $(".modal[target='education'] input[target='sharing']").attr("checked") is "checked" then "true" else "false"
+		top = $(".modal[target='education'] input[target='top']").prop("checked")
+		sharing = "false"
+		# sharing = $(".modal[target='education'] input[target='sharing']").prop("checked")
 
 		gadget.getContract("emba.student").send {
 			service: if edit_type is "add" then "default.AddEducationBackground" else "default.UpdateEducationBackground",
@@ -75,23 +76,23 @@ $ ->
 			original_department = $(".modal[target='education'] input[target='department']").attr "original"
 			original_degree = $(".modal[target='education'] input[target='degree']").attr "original"
 			original_top = $(".modal[target='education'] input[target='top']").attr "original"
-			original_sharing = $(".modal[target='education'] input[target='sharing']").attr "original"
+			# original_sharing = $(".modal[target='education'] input[target='sharing']").attr "original"
 
 			log_desc = """
-				分享： #{if original_sharing is "t" then "分享" else "不分享"} -> #{if sharing is "true" then "分享" else "不分享"}
 				學校： #{original_schoolname} -> #{schoolname}
 				系所： #{original_department} -> #{department}
 				學位： #{original_degree} -> #{degree}
 				最高學歷： #{if original_top is "t" then "是" else ""} -> #{if top is "true" then "是" else ""}
 			"""
+			# 分享： #{if original_sharing is "t" then "分享" else "不分享"} -> #{if sharing is "true" then "分享" else "不分享"}
 		else
 			log_desc = """
-				分享： #{if sharing is "true" then "分享" else "不分享"}
 				學校： #{schoolname}
 				系所： #{department}
 				學位： #{degree}
 				最高學歷： #{if top is "true" then "是" else ""}
 			"""
+			# 分享： #{if sharing is "true" then "分享" else "不分享"}
 
 		gadget.getContract("emba.student").send {
 			service: "public.AddLog",
@@ -133,15 +134,15 @@ $ ->
 				original_department = $(".modal[target='education'] input[target='department']").attr "original"
 				original_degree = $(".modal[target='education'] input[target='degree']").attr "original"
 				original_top = $(".modal[target='education'] input[target='top']").attr "original"
-				original_sharing = $(".modal[target='education'] input[target='sharing']").attr "original"
+				# original_sharing = $(".modal[target='education'] input[target='sharing']").attr "original"
 
 				log_desc = """
-					分享： #{if original_sharing is "t" then "分享" else "不分享"}
 					學校： #{original_schoolname}
 					系所： #{original_department}
 					學位： #{original_degree}
 					最高學歷： #{if original_top is "t" then "是" else ""}
 				"""
+				# 分享： #{if original_sharing is "t" then "分享" else "不分享"}
 				gadget.getContract("emba.student").send {
 					service: "public.AddLog",
 					body: """
@@ -170,7 +171,7 @@ $ ->
 		$(".modal[target='experience'] form").validate().resetForm()
 		$(".modal[target='experience'] .error").removeClass "error"
 
-		$(".modal[target='experience'] input[target='sharing']").removeAttr "checked"
+		$(".modal[target='experience'] input[target='sharing']").prop "checked", false
 		$(".modal[target='experience'] input[target='companyname']").val ""
 		$(".modal[target='experience'] span[target='industry']").html "產業別"
 		$(".modal[target='experience'] input[target='position']").val ""
@@ -203,7 +204,7 @@ $ ->
 			level = if $(".modal[target='experience'] span[target='level']").html() isnt "層級別" then $(".modal[target='experience'] span[target='level']").html() else ""
 			place = if $(".modal[target='experience'] span[target='place']").html() isnt "工作地點" then $(".modal[target='experience'] span[target='place']").html() else ""
 			status = if $(".modal[target='experience'] span[target='status']").html() isnt "工作狀態" then $(".modal[target='experience'] span[target='status']").html() else ""
-			sharing = if $(".modal[target='experience'] input[target='sharing']").attr("checked") is "checked" then "true" else "false"
+			sharing = $(".modal[target='experience'] input[target='sharing']").prop("checked")
 			work_begin_date = $(".modal[target='experience'] input[target='work_begin_date']").val()
 			work_end_date = $(".modal[target='experience'] input[target='work_end_date']").val()
 			publicist = $(".modal[target='experience'] input[target='publicist']").val()
@@ -439,11 +440,11 @@ $ ->
 						<DataSharing>
 							<DataSharing>
 								<Name>true</Name>
-								<Gender>#{!$("#baseinfo span[target='share-gender']").hasClass('hide')}</Gender>
+								<Gender>true</Gender>
 								<Birthdate>#{!$("#baseinfo span[target='share-birthdate']").hasClass('hide')}</Birthdate>
 								<Custodian>#{!$("#baseinfo span[target='share-custodian-name']").hasClass('hide')}</Custodian>
 								<CustodianPhone>#{!$("#baseinfo span[target='share-custodian-phone']").hasClass('hide')}</CustodianPhone>
-								<ContactPhone>#{!$("#baseinfo span[target='share-contact-phone']").hasClass('hide')}</ContactPhone>
+								<ContactPhone>false</ContactPhone>
 								<PermanentPhone>#{!$("#baseinfo span[target='share-permanent-phone']").hasClass('hide')}</PermanentPhone>
 								<OtherPhoneList>
 									<PhoneNumber title='公司電話'>#{!$("#baseinfo span[target='share-office-phone']").hasClass('hide')}</PhoneNumber>
@@ -484,7 +485,7 @@ $ ->
 								<Relationship>#{myInfo.CustodianOtherInfo.CustodianOtherInfo.Relationship}</Relationship>
 							</CustodianOtherInfo>
 						</CustodianOtherInfo>
-						<ContactPhone>#{$("#baseinfo input[target='contact-phone']").val()}</ContactPhone>
+						<ContactPhone>#{myInfo.ContactPhone}</ContactPhone>
 						<OtherPhones>
 							<PhoneList>
 								<PhoneNumber>#{$("#baseinfo input[target='office-phone']").val()}</PhoneNumber>
@@ -541,7 +542,6 @@ $ ->
 				出生日期： #{$("#baseinfo span[target='share-birthdate']").attr("original")} -> #{!$("#baseinfo span[target='share-birthdate']").hasClass('hide')}
 				緊急聯絡人： #{$("#baseinfo span[target='share-custodian-name']").attr("original")} -> #{!$("#baseinfo span[target='share-custodian-name']").hasClass('hide')}
 				聯絡人電話： #{$("#baseinfo span[target='share-custodian-phone']").attr("original")} -> #{!$("#baseinfo span[target='share-custodian-phone']").hasClass('hide')}
-				聯絡電話： #{$("#baseinfo span[target='share-contact-phone']").attr("original")} -> #{!$("#baseinfo span[target='share-contact-phone']").hasClass('hide')}
 				公司電話： #{$("#baseinfo span[target='share-office-phone']").attr("original")} -> #{!$("#baseinfo span[target='share-office-phone']").hasClass('hide')}
 				秘書電話： #{$("#baseinfo span[target='share-other-phone']").attr("original")} -> #{!$("#baseinfo span[target='share-other-phone']").hasClass('hide')}
 				行動電話 1： #{$("#baseinfo span[target='share-sms-phone1']").attr("original")} -> #{!$("#baseinfo span[target='share-sms-phone1']").hasClass('hide')}
@@ -574,7 +574,6 @@ $ ->
 			log_desc2 = """
 				緊急聯絡人： #{$("#baseinfo input[target='custodian-name']").attr("original")} -> #{$("#baseinfo input[target='custodian-name']").val()}
 				聯絡人電話： #{$("#baseinfo input[target='custodian-phone']").attr("original")} -> #{$("#baseinfo input[target='custodian-phone']").val()}
-				聯絡電話： #{$("#baseinfo input[target='contact-phone']").attr("original")} -> #{$("#baseinfo input[target='contact-phone']").val()}
 				公司電話： #{$("#baseinfo input[target='office-phone']").attr("original")} -> #{$("#baseinfo input[target='office-phone']").val()}
 				秘書電話： #{$("#baseinfo input[target='other-phone']").attr("original")} -> #{$("#baseinfo input[target='other-phone']").val()}
 				行動電話 1： #{$("#baseinfo input[target='sms-phone1']").attr("original")} -> #{$("#baseinfo input[target='sms-phone1']").val()}
@@ -700,8 +699,7 @@ bind_baseinfo = () ->
 	$("#baseinfo span[target='name']").html myInfo.Name
 	$("#baseinfo span[target='name']").attr "original", myInfo.Name
 
-	$("#baseinfo span[target='share-gender']").closest('div').removeClass "square" if myInfo.DataSharing.Gender is "true"
-	$("#baseinfo span[target='share-gender']").removeClass "hide" if myInfo.DataSharing.Gender is "false"
+	$("#baseinfo span[target='share-gender']").removeClass "hide"
 	$("#baseinfo span[target='share-gender']").attr "original", myInfo.DataSharing.Gender
 	$("#baseinfo span[target='gender']").html myInfo.Gender
 	$("#baseinfo span[target='gender']").attr "original", myInfo.Gender
@@ -724,11 +722,11 @@ bind_baseinfo = () ->
 	$("#baseinfo input[target='custodian-phone']").val myInfo.CustodianOtherInfo.CustodianOtherInfo.Phone
 	$("#baseinfo input[target='custodian-phone']").attr "original", myInfo.CustodianOtherInfo.CustodianOtherInfo.Phone
 
-	$("#baseinfo span[target='share-contact-phone']").closest('div').removeClass "square" if myInfo.DataSharing.ContactPhone is "true"
-	$("#baseinfo span[target='share-contact-phone']").removeClass "hide" if myInfo.DataSharing.ContactPhone is "true"
-	$("#baseinfo span[target='share-contact-phone']").attr "original", myInfo.DataSharing.ContactPhone
-	$("#baseinfo input[target='contact-phone']").val myInfo.ContactPhone
-	$("#baseinfo input[target='contact-phone']").attr "original", myInfo.ContactPhone
+	# $("#baseinfo span[target='share-contact-phone']").closest('div').removeClass "square" if myInfo.DataSharing.ContactPhone is "true"
+	# $("#baseinfo span[target='share-contact-phone']").removeClass "hide" if myInfo.DataSharing.ContactPhone is "true"
+	# $("#baseinfo span[target='share-contact-phone']").attr "original", myInfo.DataSharing.ContactPhone
+	# $("#baseinfo input[target='contact-phone']").val myInfo.ContactPhone
+	# $("#baseinfo input[target='contact-phone']").attr "original", myInfo.ContactPhone
 
 	$("#baseinfo span[target='share-permanent-phone']").closest('div').removeClass "square" if myInfo.DataSharing.PermanentPhone is "true"
 	$("#baseinfo span[target='share-permanent-phone']").removeClass "hide" if myInfo.DataSharing.PermanentPhone is "true"
@@ -859,11 +857,11 @@ bind_education = () ->
 				educations.each (index, item) ->
 					items.push """
 						<tr>
-							<td>#{if item.IsSharing is "t" then "<span class='label label-info'><i class='icon-ok icon-white'></i></span>" else ""}</td>
+							<td><span class="label label-important" target="share-contact-address"><i class="icon-"></i></span></td>
 							<td>#{item.SchoolName}</td>
 							<td>#{item.Department}</td>
 							<td>#{item.Degree}</td>
-							<td>#{if item.IsTop is "t" then "<span class='label label-info'><i class='icon-ok icon-white'></i></span>" else ""}</td>
+							<td>#{if item.IsTop is "t" then "是" else ""}</td>
 							<td style='width:40px'><a href='#' class='btn btn-mini btn-inverse' index='#{index}' target='edit'>編輯</a></td>
 						</tr>"""
 
@@ -872,15 +870,15 @@ bind_education = () ->
 				e.preventDefault()
 				index = parseInt $(@).attr("index"), 10
 
-				$(".modal[target='education'] input[target='sharing']").attr "checked", "checked" if educations[index].IsSharing is "t"
-				$(".modal[target='education'] input[target='sharing']").attr "original", educations[index].IsSharing
+				# $(".modal[target='education'] input[target='sharing']").prop "checked", educations[index].IsSharing is "t"
+				# $(".modal[target='education'] input[target='sharing']").attr "original", educations[index].IsSharing
 				$(".modal[target='education'] input[target='schoolname']").val educations[index].SchoolName
 				$(".modal[target='education'] input[target='schoolname']").attr "original", educations[index].SchoolName
 				$(".modal[target='education'] input[target='department']").val educations[index].Department
 				$(".modal[target='education'] input[target='department']").attr "original", educations[index].Department
 				$(".modal[target='education'] input[target='degree']").val educations[index].Degree
 				$(".modal[target='education'] input[target='degree']").attr "original", educations[index].Degree
-				$(".modal[target='education'] input[target='top']").attr "checked", "checked" if educations[index].IsTop is "t"
+				$(".modal[target='education'] input[target='top']").prop "checked", educations[index].IsTop is "t"
 				$(".modal[target='education'] input[target='top']").attr "original", educations[index].IsTop
 
 				$(".modal[target='education'] .modal-header h3").html "編輯學歷"
@@ -916,8 +914,19 @@ bind_experience = () ->
                             <th class="myth"></th>
                         </tr>
 						<tr>
-							<td rowspan="3">#{if item.IsSharing is "t" then "<span class='label label-info'><i class='icon-ok icon-white'></i></span>" else ""}</td>
-							<td>#{item.CompanyName}</td>
+							<td rowspan="3">
+							#{
+								if item.WorkStatus is "現職"
+								    if item.IsSharing is "t"
+								        "<span class='label label-info'><i class='icon-ok icon-white'></i></span>"
+								    else
+								        '<div class="square"></div>'
+								else
+								    '<span class="label label-important" target="share-permanent-address"><i class="icon-"></i></span>'
+
+							}
+							</td>
+							<td>#{item.CompanyName || '&nbsp;'}</td>
 							<td>#{item.Position}</td>
 							<td>#{item.PostLevel}</td>
 							<td>#{item.Industry}</td>
@@ -954,7 +963,7 @@ bind_experience = () ->
 
 				index = parseInt $(@).attr("index"), 10
 
-				$(".modal[target='experience'] input[target='sharing']").attr "checked", "checked" if experiences[index].IsSharing is "t"
+				$(".modal[target='experience'] input[target='sharing']").prop "checked", experiences[index].IsSharing is "t"
 				$(".modal[target='experience'] input[target='sharing']").attr "original", experiences[index].IsSharing
 				$(".modal[target='experience'] input[target='companyname']").val experiences[index].CompanyName
 				$(".modal[target='experience'] input[target='companyname']").attr "original", experiences[index].CompanyName
