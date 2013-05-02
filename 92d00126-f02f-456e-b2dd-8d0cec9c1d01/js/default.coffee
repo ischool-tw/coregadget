@@ -914,18 +914,15 @@ bind_experience = () ->
                             <th class="myth"></th>
                         </tr>
 						<tr>
-							<td rowspan="3">
 							#{
 								if item.WorkStatus is "現職"
 								    if item.IsSharing is "t"
-								        "<span class='label label-info'><i class='icon-ok icon-white'></i></span>"
+								        '<td target="data-sharing" rowspan="3"><span class="label label-info" data-action="share" index="' + index + '"><i class="icon-ok icon-white"></i></span></td>'
 								    else
-								        '<div class="square"></div>'
+								        '<td target="data-sharing" rowspan="3"><div class="square" data-action="share" index="' + index + '"></div></td>'
 								else
-								    '<span class="label label-important" target="share-permanent-address"><i class="icon-"></i></span>'
-
+								    '<td rowspan="3"><span class="label label-important" target="share-permanent-address"><i class="icon-"></i></span></td>'
 							}
-							</td>
 							<td>#{item.CompanyName || '&nbsp;'}</td>
 							<td>#{item.Position}</td>
 							<td>#{item.PostLevel}</td>
@@ -955,6 +952,9 @@ bind_experience = () ->
 						</tr>"""
 
 			$("#baseinfo #experience tbody").html items.join ""
+			$("#baseinfo #experience [data-action='share']").click (e) ->
+				$("#baseinfo #experience a[target='edit']").filter("[index='#{$(@).attr('index')}']").click()
+
 			$("#baseinfo #experience a[target='edit']").click (e) ->
 				e.preventDefault()
 
