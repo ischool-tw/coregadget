@@ -45,7 +45,7 @@
       return $(".modal[target='education']").modal("show");
     });
     $(".modal[target='education'] a[target='save']").click(function(e) {
-      var degree, department, edit_type, log_desc, original_degree, original_department, original_schoolname, original_top, schoolname, sharing, top;
+      var degree, department, edit_type, log_desc, original_degree, original_department, original_schoolname, original_top, request, schoolname, sharing, top;
       e.preventDefault();
       edit_type = $(this).attr("edit-type");
       schoolname = $(".modal[target='education'] input[target='schoolname']").val();
@@ -53,9 +53,23 @@
       degree = $(".modal[target='education'] input[target='degree']").val();
       top = $(".modal[target='education'] input[target='top']").prop("checked");
       sharing = "false";
+      request = {
+        Request: {
+          EducationBackground: {
+            SchoolName: schoolname,
+            Department: department,
+            Degree: degree,
+            IsTop: top,
+            IsSharing: sharing
+          }
+        }
+      };
+      if (edit_type === "update") {
+        request.Request.EducationBackground.UID = $(this).attr('uid');
+      }
       gadget.getContract("emba.student").send({
         service: edit_type === "add" ? "default.AddEducationBackground" : "default.UpdateEducationBackground",
-        body: "<Request>\n	<EducationBackground>\n		<SchoolName>" + schoolname + "</SchoolName>\n		<Department>" + department + "</Department>\n		<Degree>" + degree + "</Degree>\n		<IsTop>" + top + "</IsTop>\n		<IsSharing>" + sharing + "</IsSharing>\n		" + (edit_type === "update" ? "<UID>" + ($(this).attr('uid')) + "</UID>" : "") + "\n	</EducationBackground>\n</Request>",
+        body: request,
         result: function(response, error, http) {
           if ((response.Result != null) && parseInt(response.Result.EffectRows, 10) > 0) {
             bind_education();
@@ -75,7 +89,21 @@
       }
       return gadget.getContract("emba.student").send({
         service: "public.AddLog",
-        body: "<Request>\n	<Log>\n		<Actor>" + (gadget.getContract("emba.student").getUserInfo().UserName) + "</Actor>\n		<ActionType>" + (edit_type === "update" ? "更新" : "新增") + "</ActionType>\n		<Action>" + (edit_type === "update" ? "更新學歷" : "新增學歷") + "</Action>\n		<TargetCategory>ischool.emba.education_background</TargetCategory>\n		<ClientInfo><ClientInfo></ClientInfo></ClientInfo>\n		<ActionBy>ischool web 個人資訊小工具</ActionBy>\n		<Description>" + log_desc + "</Description>\n	</Log>\n</Request>"
+        body: {
+          Request: {
+            Log: {
+              Actor: gadget.getContract("emba.student").getUserInfo().UserName,
+              ActionType: edit_type === "update" ? "更新" : "新增",
+              Action: edit_type === "update" ? "更新學歷" : "新增學歷",
+              TargetCategory: "ischool.emba.education_background",
+              ClientInfo: {
+                ClientInfo: ""
+              },
+              ActionBy: "ischool web 個人資訊小工具",
+              Description: log_desc
+            }
+          }
+        }
       });
     });
     $(".modal[target='education'] a[target='delete']").click(function(e) {
@@ -90,7 +118,13 @@
       e.preventDefault();
       return gadget.getContract("emba.student").send({
         service: "default.RemoveEducationBackground",
-        body: "<Request>\n	<EducationBackground>\n		<UID>" + ($(this).attr('uid')) + "</UID>\n	</EducationBackground>\n</Request>",
+        body: {
+          Request: {
+            EducationBackground: {
+              UID: $(this).attr('uid')
+            }
+          }
+        },
         result: function(response, error, http) {
           var log_desc, original_degree, original_department, original_schoolname, original_top;
           original_schoolname = $(".modal[target='education'] input[target='schoolname']").attr("original");
@@ -100,7 +134,21 @@
           log_desc = "學校： " + original_schoolname + "\n系所： " + original_department + "\n學位： " + original_degree + "\n最高學歷： " + (original_top === "t" ? "是" : "");
           gadget.getContract("emba.student").send({
             service: "public.AddLog",
-            body: "<Request>\n	<Log>\n		<Actor>" + (gadget.getContract("emba.student").getUserInfo().UserName) + "</Actor>\n		<ActionType>刪除</ActionType>\n		<Action>刪除學歷</Action>\n		<TargetCategory>ischool.emba.education_background</TargetCategory>\n		<ClientInfo><ClientInfo></ClientInfo></ClientInfo>\n		<ActionBy>ischool web 個人資訊小工具</ActionBy>\n		<Description>" + log_desc + "</Description>\n	</Log>\n</Request>"
+            body: {
+              Request: {
+                Log: {
+                  Actor: gadget.getContract("emba.student").getUserInfo().UserName,
+                  ActionType: "刪除",
+                  Action: "刪除學歷",
+                  TargetCategory: "ischool.emba.education_background",
+                  ClientInfo: {
+                    ClientInfo: ""
+                  },
+                  ActionBy: "ischool web 個人資訊小工具",
+                  Description: log_desc
+                }
+              }
+            }
           });
           if ((response.Result != null) && parseInt(response.Result.EffectRows, 10) > 0) {
             bind_education();
@@ -134,7 +182,7 @@
       return $(".modal[target='experience']").modal("show");
     });
     $(".modal[target='experience'] a[target='save']").click(function(e) {
-      var company_website, companyname, department, edit_type, industry, level, log_desc, original_company_website, original_companyname, original_department, original_industry, original_level, original_place, original_position, original_public_relations_office_fax, original_public_relations_office_telephone, original_publicist, original_publicist_email, original_sharing, original_status, original_work_begin_date, original_work_end_date, place, position, public_relations_office_fax, public_relations_office_telephone, publicist, publicist_email, sharing, status, work_begin_date, work_end_date;
+      var company_website, companyname, department, edit_type, industry, level, log_desc, original_company_website, original_companyname, original_department, original_industry, original_level, original_place, original_position, original_public_relations_office_fax, original_public_relations_office_telephone, original_publicist, original_publicist_email, original_sharing, original_status, original_work_begin_date, original_work_end_date, place, position, public_relations_office_fax, public_relations_office_telephone, publicist, publicist_email, request, sharing, status, work_begin_date, work_end_date;
       e.preventDefault();
       if ($(".modal[target='experience'] form").valid()) {
         edit_type = $(this).attr("edit-type");
@@ -153,9 +201,33 @@
         public_relations_office_fax = $(".modal[target='experience'] input[target='public_relations_office_fax']").val();
         publicist_email = $(".modal[target='experience'] input[target='publicist_email']").val();
         company_website = $(".modal[target='experience'] input[target='company_website']").val();
+        request = {
+          Request: {
+            Experience: {
+              CompanyName: companyname,
+              Industry: industry,
+              Position: position,
+              DepartmentCategory: department,
+              PostLevel: level,
+              WorkPlace: place,
+              WorkStatus: status,
+              IsSharing: sharing,
+              WorkBeginDate: work_begin_date,
+              WorkEndDate: work_end_date,
+              Publicist: publicist,
+              PublicRelationsOfficeTelephone: public_relations_office_telephone,
+              PblicRelationsOfficeFax: public_relations_office_fax,
+              PublicistEmail: publicist_email,
+              CompanyWebsite: company_website
+            }
+          }
+        };
+        if (edit_type === "update") {
+          request.Request.Experience.UID = $(this).attr('uid');
+        }
         gadget.getContract("emba.student").send({
           service: edit_type === "add" ? "default.AddExperience" : "default.UpdateExperience",
-          body: "<Request>\n	<Experience>\n		<CompanyName>" + companyname + "</CompanyName>\n		<Industry>" + industry + "</Industry>\n		<Position>" + position + "</Position>\n		<DepartmentCategory>" + department + "</DepartmentCategory>\n		<PostLevel>" + level + "</PostLevel>\n		<WorkPlace>" + place + "</WorkPlace>\n		<WorkStatus>" + status + "</WorkStatus>\n		<IsSharing>" + sharing + "</IsSharing>\n		<WorkBeginDate>" + work_begin_date + "</WorkBeginDate>\n		<WorkEndDate>" + work_end_date + "</WorkEndDate>\n		<Publicist>" + publicist + "</Publicist>\n		<PublicRelationsOfficeTelephone>" + public_relations_office_telephone + "</PublicRelationsOfficeTelephone>\n		<PblicRelationsOfficeFax>" + public_relations_office_fax + "</PblicRelationsOfficeFax>\n		<PublicistEmail>" + publicist_email + "</PublicistEmail>\n		<CompanyWebsite>" + company_website + "</CompanyWebsite>\n		" + (edit_type === "update" ? "<UID>" + ($(this).attr('uid')) + "</UID>" : "") + "\n	</Experience>\n</Request>",
+          body: request,
           result: function(response, error, http) {
             if ((response.Result != null) && parseInt(response.Result.EffectRows, 10) > 0) {
               bind_experience();
@@ -180,13 +252,27 @@
           original_public_relations_office_fax = $(".modal[target='experience'] input[target='public_relations_office_fax']").attr("original");
           original_publicist_email = $(".modal[target='experience'] input[target='publicist_email']").attr("original");
           original_company_website = $(".modal[target='experience'] input[target='company_website']").attr("original");
-          log_desc = "分享： " + (original_sharing === "t" ? "分享" : "不分享") + " -> " + (sharing === "true" ? "分享" : "不分享") + "\n公司： " + original_companyname + " -> " + companyname + "\n職稱： " + original_position + " -> " + position + "\n層級別： " + original_level + " -> " + level + "\n產業別： " + original_industry + " -> " + industry + "\n部門： " + original_department + " -> " + department + "\n工作地點： " + original_place + " -> " + place + "\n工作狀態： " + original_sharing + " -> " + sharing + "\n公關室電話： " + original_public_relations_office_telephone + " -> " + public_relations_office_telephone + "\n公關室傳真： " + original_public_relations_office_fax + " -> " + public_relations_office_fax + "\n對外公關姓名： " + original_publicist + " -> " + publicist + "\n對外公關EMAIL： " + original_publicist_email + " -> " + publicist_email + "\n公司網址： " + original_company_website + " -> " + company_website + "\n工作起日： " + original_work_begin_date + " -> " + work_begin_date + "\n工作迄日： " + original_work_end_date + " -> " + work_end_date;
+          log_desc = "分享： " + (original_sharing === "t" ? "分享" : "不分享") + " -> " + (sharing === true ? "分享" : "不分享") + "\n公司： " + original_companyname + " -> " + companyname + "\n職稱： " + original_position + " -> " + position + "\n層級別： " + original_level + " -> " + level + "\n產業別： " + original_industry + " -> " + industry + "\n部門： " + original_department + " -> " + department + "\n工作地點： " + original_place + " -> " + place + "\n工作狀態： " + original_sharing + " -> " + sharing + "\n公關室電話： " + original_public_relations_office_telephone + " -> " + public_relations_office_telephone + "\n公關室傳真： " + original_public_relations_office_fax + " -> " + public_relations_office_fax + "\n對外公關姓名： " + original_publicist + " -> " + publicist + "\n對外公關EMAIL： " + original_publicist_email + " -> " + publicist_email + "\n公司網址： " + original_company_website + " -> " + company_website + "\n工作起日： " + original_work_begin_date + " -> " + work_begin_date + "\n工作迄日： " + original_work_end_date + " -> " + work_end_date;
         } else {
           log_desc = "分享： " + (sharing === "true" ? "分享" : "不分享") + "\n公司： " + companyname + "\n職稱： " + position + "\n層級別： " + level + "\n產業別： " + industry + "\n部門： " + department + "\n工作地點： " + place + "\n工作狀態： " + sharing + "\n公關室電話： " + public_relations_office_telephone + "\n公關室傳真： " + public_relations_office_fax + "\n對外公關姓名： " + publicist + "\n對外公關EMAIL： " + publicist_email + "\n公司網址： " + company_website + "\n工作起日： " + work_begin_date + "\n工作迄日： " + work_end_date;
         }
         return gadget.getContract("emba.student").send({
           service: "public.AddLog",
-          body: "<Request>\n	<Log>\n		<Actor>" + (gadget.getContract("emba.student").getUserInfo().UserName) + "</Actor>\n		<ActionType>" + (edit_type === "update" ? "更新" : "新增") + "</ActionType>\n		<Action>" + (edit_type === "update" ? "更新經歷" : "新增經歷") + "</Action>\n		<TargetCategory>ischool.emba.experience</TargetCategory>\n		<ClientInfo><ClientInfo></ClientInfo></ClientInfo>\n		<ActionBy>ischool web 個人資訊小工具</ActionBy>\n		<Description>" + log_desc + "</Description>\n	</Log>\n</Request>"
+          body: {
+            Request: {
+              Log: {
+                Actor: gadget.getContract("emba.student").getUserInfo().UserName,
+                ActionType: edit_type === "update" ? "更新" : "新增",
+                Action: edit_type === "update" ? "更新經歷" : "新增經歷",
+                TargetCategory: "ischool.emba.experience",
+                ClientInfo: {
+                  ClientInfo: ""
+                },
+                ActionBy: "ischool web 個人資訊小工具",
+                Description: log_desc
+              }
+            }
+          }
         });
       } else {
         return $(".modal[target='experience'] .error:first input").focus();
@@ -204,7 +290,13 @@
       e.preventDefault();
       return gadget.getContract("emba.student").send({
         service: "default.RemoveExperience",
-        body: "<Request>\n	<Experience>\n		<UID>" + ($(this).attr('uid')) + "</UID>\n	</Experience>\n</Request>",
+        body: {
+          Request: {
+            Experience: {
+              UID: $(this).attr('uid')
+            }
+          }
+        },
         result: function(response, error, http) {
           var log_desc, original_company_website, original_companyname, original_department, original_industry, original_level, original_place, original_position, original_public_relations_office_fax, original_public_relations_office_telephone, original_publicist, original_publicist_email, original_sharing, original_status, original_work_begin_date, original_work_end_date;
           original_companyname = $(".modal[target='experience'] input[target='companyname']").attr("original");
@@ -225,7 +317,21 @@
           log_desc = "分享： " + (original_sharing === "t" ? "分享" : "不分享") + "\n公司： " + original_companyname + "\n職稱： " + original_position + "\n層級別： " + original_level + "\n產業別： " + original_industry + "\n部門： " + original_department + "\n工作地點： " + original_place + "\n工作狀態： " + original_sharing + "\n公關室電話： " + original_public_relations_office_telephone + "\n公關室傳真： " + original_public_relations_office_fax + "\n對外公關姓名： " + original_publicist + "\n對外公關EMAIL： " + original_publicist_email + "\n公司網址： " + original_company_website + "\n工作起日： " + original_work_begin_date + "\n工作迄日： " + original_work_end_date;
           gadget.getContract("emba.student").send({
             service: "public.AddLog",
-            body: "<Request>\n	<Log>\n		<Actor>" + (gadget.getContract("emba.student").getUserInfo().UserName) + "</Actor>\n		<ActionType>刪除</ActionType>\n		<Action>刪除經歷</Action>\n		<TargetCategory>ischool.emba.experience</TargetCategory>\n		<ClientInfo><ClientInfo></ClientInfo></ClientInfo>\n		<ActionBy>ischool web 個人資訊小工具</ActionBy>\n		<Description>" + log_desc + "</Description>\n	</Log>\n</Request>"
+            body: {
+              Request: {
+                Log: {
+                  Actor: gadget.getContract("emba.student").getUserInfo().UserName,
+                  ActionType: "刪除",
+                  Action: "刪除經歷",
+                  TargetCategory: "ischool.emba.experience",
+                  ClientInfo: {
+                    ClientInfo: ""
+                  },
+                  ActionBy: "ischool web 個人資訊小工具",
+                  Description: log_desc
+                }
+              }
+            }
           });
           if ((response.Result != null) && parseInt(response.Result.EffectRows, 10) > 0) {
             bind_experience();
@@ -272,8 +378,104 @@
       var log_desc1, log_desc2, request1, request2;
       e.preventDefault();
       if ($("#baseinfo form").valid()) {
-        request1 = "<Request>\n	<Content>\n		<EmailList>\n			<email1>" + ($("#baseinfo input[target='email1']").val()) + "</email1>\n			<email2>" + ($("#baseinfo input[target='email2']").val()) + "</email2>\n			<email3>" + ($("#baseinfo input[target='email3']").val()) + "</email3>\n			<email4>" + ($("#baseinfo input[target='email4']").val()) + "</email4>\n			<email5>" + ($("#baseinfo input[target='email5']").val()) + "</email5>\n		</EmailList>\n		<DataSharing>\n			<DataSharing>\n				<Name>true</Name>\n				<Gender>true</Gender>\n				<Birthdate>" + (!$("#baseinfo span[target='share-birthdate']").hasClass('hide')) + "</Birthdate>\n				<Custodian>" + (!$("#baseinfo span[target='share-custodian-name']").hasClass('hide')) + "</Custodian>\n				<CustodianPhone>" + (!$("#baseinfo span[target='share-custodian-phone']").hasClass('hide')) + "</CustodianPhone>\n				<ContactPhone>false</ContactPhone>\n				<PermanentPhone>" + (!$("#baseinfo span[target='share-permanent-phone']").hasClass('hide')) + "</PermanentPhone>\n				<OtherPhoneList>\n					<PhoneNumber title='公司電話'>" + (!$("#baseinfo span[target='share-office-phone']").hasClass('hide')) + "</PhoneNumber>\n					<PhoneNumber title='行動電話2'>" + (!$("#baseinfo span[target='share-sms-phone2']").hasClass('hide')) + "</PhoneNumber>\n					<PhoneNumber title='秘書電話'>" + (!$("#baseinfo span[target='share-other-phone']").hasClass('hide')) + "</PhoneNumber>\n				</OtherPhoneList>\n				<SMSPhone>" + (!$("#baseinfo span[target='share-sms-phone1']").hasClass('hide')) + "</SMSPhone>\n				<EmailList>\n					<Email1>" + (!$("#baseinfo span[target='share-email1']").hasClass('hide')) + "</Email1>\n					<Email2>" + (!$("#baseinfo span[target='share-email2']").hasClass('hide')) + "</Email2>\n					<Email3>" + (!$("#baseinfo span[target='share-email3']").hasClass('hide')) + "</Email3>\n					<Email4>" + (!$("#baseinfo span[target='share-email4']").hasClass('hide')) + "</Email4>\n					<Email5>" + (!$("#baseinfo span[target='share-email5']").hasClass('hide')) + "</Email5>\n				</EmailList>\n				<ContactAddress>" + (!$("#baseinfo span[target='share-contact-address']").hasClass('hide')) + "</ContactAddress>\n				<PermanentAddress>" + (!$("#baseinfo span[target='share-permanent-address']").hasClass('hide')) + "</PermanentAddress>\n				<OtherAddressList>\n					<Address>" + (!$("#baseinfo span[target='share-office-address']").hasClass('hide')) + "</Address>\n					<Address>" + (!$("#baseinfo span[target='share-office-address']").hasClass('hide')) + "</Address>\n					<Address>" + (!$("#baseinfo span[target='share-office-address']").hasClass('hide')) + "</Address>\n				</OtherAddressList>\n			</DataSharing>\n		</DataSharing>\n	</Content>\n</Request>";
-        request2 = "<Request>\n	<Content>\n		<CustodianName>" + ($("#baseinfo input[target='custodian-name']").val()) + "</CustodianName>\n		<CustodianOtherInfo>\n			<CustodianOtherInfo>\n				<Phone>" + ($("#baseinfo input[target='custodian-phone']").val()) + "</Phone>\n				<Email>" + myInfo.CustodianOtherInfo.CustodianOtherInfo.Email + "</Email>\n				<Job>" + myInfo.CustodianOtherInfo.CustodianOtherInfo.Job + "</Job>\n				<EducationDegree>" + myInfo.CustodianOtherInfo.CustodianOtherInfo.EducationDegree + "</EducationDegree>\n				<Relationship>" + myInfo.CustodianOtherInfo.CustodianOtherInfo.Relationship + "</Relationship>\n			</CustodianOtherInfo>\n		</CustodianOtherInfo>\n		<ContactPhone>" + myInfo.ContactPhone + "</ContactPhone>\n		<OtherPhones>\n			<PhoneList>\n				<PhoneNumber>" + ($("#baseinfo input[target='office-phone']").val()) + "</PhoneNumber>\n				<PhoneNumber>" + ($("#baseinfo input[target='sms-phone2']").val()) + "</PhoneNumber>\n				<PhoneNumber>" + ($("#baseinfo input[target='other-phone']").val()) + "</PhoneNumber>\n			</PhoneList>\n		</OtherPhones>\n		<SMSPhone>" + ($("#baseinfo input[target='sms-phone1']").val()) + "</SMSPhone>\n		<MailingAddress>\n			<AddressList>\n				<Address>\n					<ZipCode>" + (myInfo.MailingAddress.AddressList.Address.ZipCode || "") + "</ZipCode>\n					<County>" + (myInfo.MailingAddress.AddressList.Address.County || "") + "</County>\n					<Town>" + (myInfo.MailingAddress.AddressList.Address.Town || "") + "</Town>\n					<District>" + (myInfo.MailingAddress.AddressList.Address.District || "") + "</District>\n					<Area>" + (myInfo.MailingAddress.AddressList.Address.Area || "") + "</Area>\n					<DetailAddress>" + (myInfo.MailingAddress.AddressList.Address.DetailAddress || "") + "</DetailAddress>\n				</Address>\n			</AddressList>\n		</MailingAddress>\n		<OtherAddresses>\n			<AddressList>\n				<Address>\n					<ZipCode>" + (myInfo.OtherAddresses.AddressList.Address.ZipCode || "") + "</ZipCode>\n					<County>" + (myInfo.OtherAddresses.AddressList.Address.County || "") + "</County>\n					<Town>" + (myInfo.OtherAddresses.AddressList.Address.Town || "") + "</Town>\n					<District>" + (myInfo.OtherAddresses.AddressList.Address.District || "") + "</District>\n					<Area>" + (myInfo.OtherAddresses.AddressList.Address.Area || "") + "</Area>\n					<DetailAddress>" + (myInfo.OtherAddresses.AddressList.Address.DetailAddress || "") + "</DetailAddress>\n				</Address>\n			</AddressList>\n		</OtherAddresses>\n	</Content>\n</Request>";
+        request1 = {
+          Request: {
+            Content: {
+              EmailList: {
+                email1: $("#baseinfo input[target='email1']").val(),
+                email2: $("#baseinfo input[target='email2']").val(),
+                email3: $("#baseinfo input[target='email3']").val(),
+                email4: $("#baseinfo input[target='email4']").val(),
+                email5: $("#baseinfo input[target='email5']").val()
+              },
+              DataSharing: {
+                DataSharing: {
+                  Name: "true",
+                  Gender: "true",
+                  Birthdate: !$("#baseinfo span[target='share-birthdate']").hasClass('hide'),
+                  Custodian: !$("#baseinfo span[target='share-custodian-name']").hasClass('hide'),
+                  CustodianPhone: !$("#baseinfo span[target='share-custodian-phone']").hasClass('hide'),
+                  ContactPhone: "false",
+                  PermanentPhone: !$("#baseinfo span[target='share-permanent-phone']").hasClass('hide'),
+                  OtherPhoneList: {
+                    PhoneNumber: [
+                      {
+                        "@text": !$("#baseinfo span[target='share-office-phone']").hasClass('hide') + '',
+                        "@title": "公司電話"
+                      }, {
+                        "@text": !$("#baseinfo span[target='share-sms-phone2']").hasClass('hide') + '',
+                        "@title": "行動電話2"
+                      }, {
+                        "@text": !$("#baseinfo span[target='share-other-phone']").hasClass('hide') + '',
+                        "@title": "秘書電話"
+                      }
+                    ]
+                  },
+                  SMSPhone: !$("#baseinfo span[target='share-sms-phone1']").hasClass('hide'),
+                  EmailList: {
+                    Email1: !$("#baseinfo span[target='share-email1']").hasClass('hide'),
+                    Email2: !$("#baseinfo span[target='share-email2']").hasClass('hide'),
+                    Email3: !$("#baseinfo span[target='share-email3']").hasClass('hide'),
+                    Email4: !$("#baseinfo span[target='share-email4']").hasClass('hide'),
+                    Email5: !$("#baseinfo span[target='share-email5']").hasClass('hide')
+                  },
+                  ContactAddress: !$("#baseinfo span[target='share-contact-address']").hasClass('hide'),
+                  PermanentAddress: !$("#baseinfo span[target='share-permanent-address']").hasClass('hide'),
+                  OtherAddressList: {
+                    Address: [!$("#baseinfo span[target='share-office-address']").hasClass('hide'), !$("#baseinfo span[target='share-office-address']").hasClass('hide'), !$("#baseinfo span[target='share-office-address']").hasClass('hide')]
+                  }
+                }
+              }
+            }
+          }
+        };
+        request2 = {
+          Request: {
+            Content: {
+              CustodianName: $("#baseinfo input[target='custodian-name']").val(),
+              CustodianOtherInfo: {
+                CustodianOtherInfo: {
+                  Phone: $("#baseinfo input[target='custodian-phone']").val(),
+                  Email: myInfo.CustodianOtherInfo.CustodianOtherInfo.Email,
+                  Job: myInfo.CustodianOtherInfo.CustodianOtherInfo.Job,
+                  EducationDegree: myInfo.CustodianOtherInfo.CustodianOtherInfo.EducationDegree,
+                  Relationship: myInfo.CustodianOtherInfo.CustodianOtherInfo.Relationship
+                }
+              },
+              ContactPhone: myInfo.ContactPhone,
+              OtherPhones: {
+                PhoneList: {
+                  PhoneNumber: [$("#baseinfo input[target='office-phone']").val(), $("#baseinfo input[target='sms-phone2']").val(), $("#baseinfo input[target='other-phone']").val()]
+                }
+              },
+              SMSPhone: $("#baseinfo input[target='sms-phone1']").val(),
+              MailingAddress: {
+                AddressList: {
+                  Address: {
+                    ZipCode: myInfo.MailingAddress.AddressList.Address.ZipCode || "",
+                    County: myInfo.MailingAddress.AddressList.Address.County || "",
+                    Town: myInfo.MailingAddress.AddressList.Address.Town || "",
+                    District: myInfo.MailingAddress.AddressList.Address.District || "",
+                    Area: myInfo.MailingAddress.AddressList.Address.Area || "",
+                    DetailAddress: myInfo.MailingAddress.AddressList.Address.DetailAddress || ""
+                  }
+                }
+              },
+              OtherAddresses: {
+                AddressList: {
+                  Address: {
+                    ZipCode: myInfo.OtherAddresses.AddressList.Address.ZipCode || "",
+                    County: myInfo.OtherAddresses.AddressList.Address.County || "",
+                    Town: myInfo.OtherAddresses.AddressList.Address.Town || "",
+                    District: myInfo.OtherAddresses.AddressList.Address.District || "",
+                    Area: myInfo.OtherAddresses.AddressList.Address.Area || "",
+                    DetailAddress: myInfo.OtherAddresses.AddressList.Address.DetailAddress || ""
+                  }
+                }
+              }
+            }
+          }
+        };
         gadget.getContract("emba.student").send({
           service: "default.UpdateStudentBrief",
           body: request1,
@@ -295,12 +497,40 @@
         log_desc1 = "性別： " + ($("#baseinfo span[target='share-gender']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-gender']").hasClass('hide')) + "\n出生日期： " + ($("#baseinfo span[target='share-birthdate']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-birthdate']").hasClass('hide')) + "\n緊急聯絡人： " + ($("#baseinfo span[target='share-custodian-name']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-custodian-name']").hasClass('hide')) + "\n聯絡人電話： " + ($("#baseinfo span[target='share-custodian-phone']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-custodian-phone']").hasClass('hide')) + "\n公司電話： " + ($("#baseinfo span[target='share-office-phone']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-office-phone']").hasClass('hide')) + "\n秘書電話： " + ($("#baseinfo span[target='share-other-phone']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-other-phone']").hasClass('hide')) + "\n行動電話 1： " + ($("#baseinfo span[target='share-sms-phone1']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-sms-phone1']").hasClass('hide')) + "\n行動電話 2： " + ($("#baseinfo span[target='share-sms-phone2']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-sms-phone2']").hasClass('hide')) + "\nE-MAIL 1： " + ($("#baseinfo span[target='share-email1']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-email1']").hasClass('hide')) + "\nE-MAIL 2： " + ($("#baseinfo span[target='share-email2']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-email2']").hasClass('hide')) + "\nE-MAIL 3： " + ($("#baseinfo span[target='share-email3']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-email3']").hasClass('hide')) + "\nE-MAIL 4： " + ($("#baseinfo span[target='share-email4']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-email4']").hasClass('hide')) + "\nE-MAIL 5： " + ($("#baseinfo span[target='share-email5']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-email5']").hasClass('hide')) + "\n聯絡地址： " + ($("#baseinfo span[target='share-contact-address']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-contact-address']").hasClass('hide')) + "\n公司地址： " + ($("#baseinfo span[target='share-office-address']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-office-address']").hasClass('hide'));
         gadget.getContract("emba.student").send({
           service: "public.AddLog",
-          body: "<Request>\n	<Log>\n		<Actor>" + (gadget.getContract("emba.student").getUserInfo().UserName) + "</Actor>\n		<ActionType>更新</ActionType>\n		<Action>更新分享資料</Action>\n		<TargetCategory>ischool.emba.student_brief2</TargetCategory>\n		<ClientInfo><ClientInfo></ClientInfo></ClientInfo>\n		<ActionBy>ischool web 個人資訊小工具</ActionBy>\n		<Description>" + log_desc1 + "</Description>\n	</Log>\n</Request>"
+          body: {
+            Request: {
+              Log: {
+                Actor: gadget.getContract("emba.student").getUserInfo().UserName,
+                ActionType: "更新",
+                Action: "更新分享資料",
+                TargetCategory: "ischool.emba.student_brief2",
+                ClientInfo: {
+                  ClientInfo: ""
+                },
+                ActionBy: "ischool web 個人資訊小工具",
+                Description: log_desc1
+              }
+            }
+          }
         });
         log_desc2 = "緊急聯絡人： " + ($("#baseinfo input[target='custodian-name']").attr("original")) + " -> " + ($("#baseinfo input[target='custodian-name']").val()) + "\n聯絡人電話： " + ($("#baseinfo input[target='custodian-phone']").attr("original")) + " -> " + ($("#baseinfo input[target='custodian-phone']").val()) + "\n公司電話： " + ($("#baseinfo input[target='office-phone']").attr("original")) + " -> " + ($("#baseinfo input[target='office-phone']").val()) + "\n秘書電話： " + ($("#baseinfo input[target='other-phone']").attr("original")) + " -> " + ($("#baseinfo input[target='other-phone']").val()) + "\n行動電話 1： " + ($("#baseinfo input[target='sms-phone1']").attr("original")) + " -> " + ($("#baseinfo input[target='sms-phone1']").val()) + "\n行動電話 2： " + ($("#baseinfo input[target='sms-phone2']").attr("original")) + " -> " + ($("#baseinfo input[target='sms-phone2']").val()) + "\nE-MAIL 1： " + ($("#baseinfo input[target='email1']").attr("original")) + " -> " + ($("#baseinfo input[target='email1']").val()) + "\nE-MAIL 2： " + ($("#baseinfo input[target='email2']").attr("original")) + " -> " + ($("#baseinfo input[target='email2']").val()) + "\nE-MAIL 3： " + ($("#baseinfo input[target='email3']").attr("original")) + " -> " + ($("#baseinfo input[target='email3']").val()) + "\nE-MAIL 4： " + ($("#baseinfo input[target='email4']").attr("original")) + " -> " + ($("#baseinfo input[target='email4']").val()) + "\nE-MAIL 5： " + ($("#baseinfo input[target='email5']").attr("original")) + " -> " + ($("#baseinfo input[target='email5']").val()) + "\n聯絡地址： " + ($("#baseinfo span[target='contact-address']").attr("original")) + " -> " + ($("#baseinfo span[target='contact-address']").html()) + "\n公司地址： " + ($("#baseinfo span[target='office-address']").attr("original")) + " -> " + ($("#baseinfo span[target='office-address']").val());
         return gadget.getContract("emba.student").send({
           service: "public.AddLog",
-          body: "<Request>\n	<Log>\n		<Actor>" + (gadget.getContract("emba.student").getUserInfo().UserName) + "</Actor>\n		<ActionType>更新</ActionType>\n		<Action>更新個人資料</Action>\n		<TargetCategory>student</TargetCategory>\n		<ClientInfo><ClientInfo></ClientInfo></ClientInfo>\n		<ActionBy>ischool web 個人資訊小工具</ActionBy>\n		<Description>" + log_desc2 + "</Description>\n	</Log>\n</Request>"
+          body: {
+            Request: {
+              Log: {
+                Actor: gadget.getContract("emba.student").getUserInfo().UserName,
+                ActionType: "更新",
+                Action: "更新個人資料",
+                TargetCategory: "student",
+                ClientInfo: {
+                  ClientInfo: ""
+                },
+                ActionBy: "ischool web 個人資訊小工具",
+                Description: log_desc2
+              }
+            }
+          }
         });
       } else {
         return $("#baseinfo form .error:first input").focus();
@@ -552,8 +782,6 @@
       $("#baseinfo span[target='share-permanent-address']").removeClass("hide");
     }
     $("#baseinfo span[target='share-permanent-address']").attr("original", myInfo.DataSharing.PermanentAddress);
-    $("#baseinfo span[target='permanent-address']").html(myInfo.DataSharing.PermanentAddress);
-    $("#baseinfo span[target='permanent-address']").attr("original", myInfo.DataSharing.PermanentAddress);
     if (myInfo.DataSharing.OtherAddressList.Address[0] === "true") {
       $("#baseinfo span[target='share-office-address']").closest('div').removeClass("square");
     }
@@ -561,8 +789,6 @@
       $("#baseinfo span[target='share-office-address']").removeClass("hide");
     }
     $("#baseinfo span[target='share-office-address']").attr("original", myInfo.DataSharing.OtherAddressList.Address[0]);
-    $("#baseinfo span[target='office-address']").html(myInfo.DataSharing.OtherAddressList.Address[0]);
-    $("#baseinfo span[target='office-address']").attr("original", myInfo.DataSharing.OtherAddressList.Address[0]);
     return $("#baseinfo span[target='photo']").html("<img src='data:image/png;base64," + myInfo.FreshmanPhoto + "' style='width:80px'/>");
   };
 

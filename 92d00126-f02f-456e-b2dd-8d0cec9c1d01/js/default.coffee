@@ -51,19 +51,22 @@ $ ->
 		sharing = "false"
 		# sharing = $(".modal[target='education'] input[target='sharing']").prop("checked")
 
+		request = {
+            Request: {
+                EducationBackground: {
+                    SchoolName: schoolname,
+                    Department: department,
+                    Degree: degree,
+                    IsTop: top,
+                    IsSharing: sharing
+                }
+            }
+        }
+        if edit_type is "update" then request.Request.EducationBackground.UID = $(@).attr('uid')
+
 		gadget.getContract("emba.student").send {
 			service: if edit_type is "add" then "default.AddEducationBackground" else "default.UpdateEducationBackground",
-			body: """
-				<Request>
-					<EducationBackground>
-						<SchoolName>#{schoolname}</SchoolName>
-						<Department>#{department}</Department>
-						<Degree>#{degree}</Degree>
-						<IsTop>#{top}</IsTop>
-						<IsSharing>#{sharing}</IsSharing>
-						#{if edit_type is "update" then "<UID>#{$(@).attr('uid')}</UID>" else ""}
-					</EducationBackground>
-				</Request>""",
+			body: request,
 			result: (response, error, http) ->
 				if response.Result? and parseInt(response.Result.EffectRows, 10) > 0
 					bind_education()
@@ -96,19 +99,21 @@ $ ->
 
 		gadget.getContract("emba.student").send {
 			service: "public.AddLog",
-			body: """
-				<Request>
-					<Log>
-						<Actor>#{gadget.getContract("emba.student").getUserInfo().UserName}</Actor>
-						<ActionType>#{if edit_type is "update" then "更新" else "新增"}</ActionType>
-						<Action>#{if edit_type is "update" then "更新學歷" else "新增學歷"}</Action>
-						<TargetCategory>ischool.emba.education_background</TargetCategory>
-						<ClientInfo><ClientInfo></ClientInfo></ClientInfo>
-						<ActionBy>ischool web 個人資訊小工具</ActionBy>
-						<Description>#{log_desc}</Description>
-					</Log>
-				</Request>
-			"""
+			body: {
+				Request: {
+					Log: {
+						Actor: gadget.getContract("emba.student").getUserInfo().UserName,
+						ActionType: if edit_type is "update" then "更新" else "新增",
+						Action: if edit_type is "update" then "更新學歷" else "新增學歷",
+						TargetCategory: "ischool.emba.education_background",
+						ClientInfo: {
+							ClientInfo: ""
+						},
+						ActionBy: "ischool web 個人資訊小工具",
+						Description: log_desc
+					}
+				}
+			}
 		}
 
 	$(".modal[target='education'] a[target='delete']").click (e) ->
@@ -123,12 +128,13 @@ $ ->
 		e.preventDefault()
 		gadget.getContract("emba.student").send {
 			service: "default.RemoveEducationBackground",
-			body: """
-				<Request>
-					<EducationBackground>
-						<UID>#{$(@).attr('uid')}</UID>
-					</EducationBackground>
-				</Request>""",
+			body: {
+				Request: {
+					EducationBackground: {
+						UID: $(@).attr('uid')
+					}
+				}
+			},
 			result: (response, error, http) ->
 				original_schoolname = $(".modal[target='education'] input[target='schoolname']").attr "original"
 				original_department = $(".modal[target='education'] input[target='department']").attr "original"
@@ -145,19 +151,21 @@ $ ->
 				# 分享： #{if original_sharing is "t" then "分享" else "不分享"}
 				gadget.getContract("emba.student").send {
 					service: "public.AddLog",
-					body: """
-						<Request>
-							<Log>
-								<Actor>#{gadget.getContract("emba.student").getUserInfo().UserName}</Actor>
-								<ActionType>刪除</ActionType>
-								<Action>刪除學歷</Action>
-								<TargetCategory>ischool.emba.education_background</TargetCategory>
-								<ClientInfo><ClientInfo></ClientInfo></ClientInfo>
-								<ActionBy>ischool web 個人資訊小工具</ActionBy>
-								<Description>#{log_desc}</Description>
-							</Log>
-						</Request>
-					"""
+					body: {
+						Request: {
+							Log: {
+								Actor: gadget.getContract("emba.student").getUserInfo().UserName,
+								ActionType: "刪除",
+								Action: "刪除學歷",
+								TargetCategory: "ischool.emba.education_background",
+								ClientInfo: {
+									ClientInfo: ""
+								},
+								ActionBy: "ischool web 個人資訊小工具",
+								Description: log_desc
+							}
+						}
+					}
 				}
 				if response.Result? and parseInt(response.Result.EffectRows, 10) > 0
 					bind_education()
@@ -213,31 +221,32 @@ $ ->
 			publicist_email = $(".modal[target='experience'] input[target='publicist_email']").val()
 			company_website = $(".modal[target='experience'] input[target='company_website']").val()
 
+			request = {
+				Request: {
+					Experience: {
+						CompanyName: companyname,
+						Industry: industry,
+						Position: position,
+						DepartmentCategory: department,
+						PostLevel: level,
+						WorkPlace: place,
+						WorkStatus: status,
+						IsSharing: sharing,
+						WorkBeginDate: work_begin_date,
+						WorkEndDate: work_end_date,
+						Publicist: publicist,
+						PublicRelationsOfficeTelephone: public_relations_office_telephone,
+						PblicRelationsOfficeFax: public_relations_office_fax,
+						PublicistEmail: publicist_email,
+						CompanyWebsite: company_website
+					}
+				}
+			}
+			if edit_type is "update" then request.Request.Experience.UID = $(@).attr('uid')
 
 			gadget.getContract("emba.student").send {
 				service: if edit_type is "add" then "default.AddExperience" else "default.UpdateExperience",
-				body: """
-					<Request>
-						<Experience>
-							<CompanyName>#{companyname}</CompanyName>
-							<Industry>#{industry}</Industry>
-							<Position>#{position}</Position>
-							<DepartmentCategory>#{department}</DepartmentCategory>
-							<PostLevel>#{level}</PostLevel>
-							<WorkPlace>#{place}</WorkPlace>
-							<WorkStatus>#{status}</WorkStatus>
-							<IsSharing>#{sharing}</IsSharing>
-							<WorkBeginDate>#{work_begin_date}</WorkBeginDate>
-							<WorkEndDate>#{work_end_date}</WorkEndDate>
-							<Publicist>#{publicist}</Publicist>
-							<PublicRelationsOfficeTelephone>#{public_relations_office_telephone}</PublicRelationsOfficeTelephone>
-							<PblicRelationsOfficeFax>#{public_relations_office_fax}</PblicRelationsOfficeFax>
-							<PublicistEmail>#{publicist_email}</PublicistEmail>
-							<CompanyWebsite>#{company_website}</CompanyWebsite>
-							#{if edit_type is "update" then "<UID>#{$(@).attr('uid')}</UID>" else ""}
-						</Experience>
-					</Request>""",
-
+				body: request,
 				result: (response, error, http) ->
 					if response.Result? and parseInt(response.Result.EffectRows, 10) > 0
 						bind_experience()
@@ -263,7 +272,7 @@ $ ->
 				original_company_website = $(".modal[target='experience'] input[target='company_website']").attr "original"
 
 				log_desc = """
-					分享： #{if original_sharing is "t" then "分享" else "不分享"} -> #{if sharing is "true" then "分享" else "不分享"}
+					分享： #{if original_sharing is "t" then "分享" else "不分享"} -> #{if sharing is true then "分享" else "不分享"}
 					公司： #{original_companyname} -> #{companyname}
 					職稱： #{original_position} -> #{position}
 					層級別： #{original_level} -> #{level}
@@ -300,19 +309,21 @@ $ ->
 
 			gadget.getContract("emba.student").send {
 				service: "public.AddLog",
-				body: """
-					<Request>
-						<Log>
-							<Actor>#{gadget.getContract("emba.student").getUserInfo().UserName}</Actor>
-							<ActionType>#{if edit_type is "update" then "更新" else "新增"}</ActionType>
-							<Action>#{if edit_type is "update" then "更新經歷" else "新增經歷"}</Action>
-							<TargetCategory>ischool.emba.experience</TargetCategory>
-							<ClientInfo><ClientInfo></ClientInfo></ClientInfo>
-							<ActionBy>ischool web 個人資訊小工具</ActionBy>
-							<Description>#{log_desc}</Description>
-						</Log>
-					</Request>
-				"""
+				body: {
+					Request: {
+						Log: {
+							Actor: gadget.getContract("emba.student").getUserInfo().UserName,
+							ActionType: if edit_type is "update" then "更新" else "新增",
+							Action: if edit_type is "update" then "更新經歷" else "新增經歷",
+							TargetCategory: "ischool.emba.experience",
+							ClientInfo: {
+								ClientInfo: ""
+							},
+							ActionBy: "ischool web 個人資訊小工具",
+							Description: log_desc
+						}
+					}
+				}
 			}
 		else
 			$(".modal[target='experience'] .error:first input").focus()
@@ -329,12 +340,13 @@ $ ->
 		e.preventDefault()
 		gadget.getContract("emba.student").send {
 			service: "default.RemoveExperience",
-			body: """
-				<Request>
-					<Experience>
-						<UID>#{$(@).attr('uid')}</UID>
-					</Experience>
-				</Request>""",
+			body: {
+				Request: {
+					Experience: {
+						UID: $(@).attr('uid')
+					}
+				}
+			},
 			result: (response, error, http) ->
 				original_companyname = $(".modal[target='experience'] input[target='companyname']").attr "original"
 				original_industry = $(".modal[target='experience'] span[target='industry']").attr "original"
@@ -371,19 +383,21 @@ $ ->
 				"""
 				gadget.getContract("emba.student").send {
 					service: "public.AddLog",
-					body: """
-						<Request>
-							<Log>
-								<Actor>#{gadget.getContract("emba.student").getUserInfo().UserName}</Actor>
-								<ActionType>刪除</ActionType>
-								<Action>刪除經歷</Action>
-								<TargetCategory>ischool.emba.experience</TargetCategory>
-								<ClientInfo><ClientInfo></ClientInfo></ClientInfo>
-								<ActionBy>ischool web 個人資訊小工具</ActionBy>
-								<Description>#{log_desc}</Description>
-							</Log>
-						</Request>
-					"""
+					body: {
+						Request: {
+							Log: {
+								Actor: gadget.getContract("emba.student").getUserInfo().UserName,
+								ActionType: "刪除",
+								Action: "刪除經歷",
+								TargetCategory: "ischool.emba.experience",
+								ClientInfo: {
+									ClientInfo: ""
+								},
+								ActionBy: "ischool web 個人資訊小工具",
+								Description: log_desc
+							}
+						}
+					}
 				}
 				if response.Result? and parseInt(response.Result.EffectRows, 10) > 0
 					bind_experience()
@@ -427,100 +441,111 @@ $ ->
 	$("#baseinfo a[target='save-baseinfo']").click (e) ->
 		e.preventDefault()
 		if $("#baseinfo form").valid()
-			request1 = """
-				<Request>
-					<Content>
-						<EmailList>
-							<email1>#{$("#baseinfo input[target='email1']").val()}</email1>
-							<email2>#{$("#baseinfo input[target='email2']").val()}</email2>
-							<email3>#{$("#baseinfo input[target='email3']").val()}</email3>
-							<email4>#{$("#baseinfo input[target='email4']").val()}</email4>
-							<email5>#{$("#baseinfo input[target='email5']").val()}</email5>
-						</EmailList>
-						<DataSharing>
-							<DataSharing>
-								<Name>true</Name>
-								<Gender>true</Gender>
-								<Birthdate>#{!$("#baseinfo span[target='share-birthdate']").hasClass('hide')}</Birthdate>
-								<Custodian>#{!$("#baseinfo span[target='share-custodian-name']").hasClass('hide')}</Custodian>
-								<CustodianPhone>#{!$("#baseinfo span[target='share-custodian-phone']").hasClass('hide')}</CustodianPhone>
-								<ContactPhone>false</ContactPhone>
-								<PermanentPhone>#{!$("#baseinfo span[target='share-permanent-phone']").hasClass('hide')}</PermanentPhone>
-								<OtherPhoneList>
-									<PhoneNumber title='公司電話'>#{!$("#baseinfo span[target='share-office-phone']").hasClass('hide')}</PhoneNumber>
-									<PhoneNumber title='行動電話2'>#{!$("#baseinfo span[target='share-sms-phone2']").hasClass('hide')}</PhoneNumber>
-									<PhoneNumber title='秘書電話'>#{!$("#baseinfo span[target='share-other-phone']").hasClass('hide')}</PhoneNumber>
-								</OtherPhoneList>
-								<SMSPhone>#{!$("#baseinfo span[target='share-sms-phone1']").hasClass('hide')}</SMSPhone>
-								<EmailList>
-									<Email1>#{!$("#baseinfo span[target='share-email1']").hasClass('hide')}</Email1>
-									<Email2>#{!$("#baseinfo span[target='share-email2']").hasClass('hide')}</Email2>
-									<Email3>#{!$("#baseinfo span[target='share-email3']").hasClass('hide')}</Email3>
-									<Email4>#{!$("#baseinfo span[target='share-email4']").hasClass('hide')}</Email4>
-									<Email5>#{!$("#baseinfo span[target='share-email5']").hasClass('hide')}</Email5>
-								</EmailList>
-								<ContactAddress>#{!$("#baseinfo span[target='share-contact-address']").hasClass('hide')}</ContactAddress>
-								<PermanentAddress>#{!$("#baseinfo span[target='share-permanent-address']").hasClass('hide')}</PermanentAddress>
-								<OtherAddressList>
-									<Address>#{!$("#baseinfo span[target='share-office-address']").hasClass('hide')}</Address>
-									<Address>#{!$("#baseinfo span[target='share-office-address']").hasClass('hide')}</Address>
-									<Address>#{!$("#baseinfo span[target='share-office-address']").hasClass('hide')}</Address>
-								</OtherAddressList>
-							</DataSharing>
-						</DataSharing>
-					</Content>
-				</Request>
-			"""
+			request1 = {
+				Request: {
+					Content: {
+						EmailList: {
+							email1: $("#baseinfo input[target='email1']").val()
+							email2: $("#baseinfo input[target='email2']").val()
+							email3: $("#baseinfo input[target='email3']").val()
+							email4: $("#baseinfo input[target='email4']").val()
+							email5: $("#baseinfo input[target='email5']").val()
+						},
+						DataSharing: {
+							DataSharing: {
+								Name: "true"
+								Gender: "true"
+								Birthdate: !$("#baseinfo span[target='share-birthdate']").hasClass('hide')
+								Custodian: !$("#baseinfo span[target='share-custodian-name']").hasClass('hide')
+								CustodianPhone: !$("#baseinfo span[target='share-custodian-phone']").hasClass('hide')
+								ContactPhone: "false"
+								PermanentPhone: !$("#baseinfo span[target='share-permanent-phone']").hasClass('hide')
+								OtherPhoneList: {
+									PhoneNumber: [
+										"@text": !$("#baseinfo span[target='share-office-phone']").hasClass('hide') + ''
+										"@title": "公司電話"
+									,
+										"@text": !$("#baseinfo span[target='share-sms-phone2']").hasClass('hide') + ''
+										"@title": "行動電話2"
+									,
+										"@text": !$("#baseinfo span[target='share-other-phone']").hasClass('hide') + ''
+										"@title": "秘書電話"
+									]
+								},
+								SMSPhone: !$("#baseinfo span[target='share-sms-phone1']").hasClass('hide')
+								EmailList: {
+									Email1: !$("#baseinfo span[target='share-email1']").hasClass('hide')
+									Email2: !$("#baseinfo span[target='share-email2']").hasClass('hide')
+									Email3: !$("#baseinfo span[target='share-email3']").hasClass('hide')
+									Email4: !$("#baseinfo span[target='share-email4']").hasClass('hide')
+									Email5: !$("#baseinfo span[target='share-email5']").hasClass('hide')
+								},
+								ContactAddress: !$("#baseinfo span[target='share-contact-address']").hasClass('hide')
+								PermanentAddress: !$("#baseinfo span[target='share-permanent-address']").hasClass('hide')
+								OtherAddressList: {
+									Address: [
+										!$("#baseinfo span[target='share-office-address']").hasClass('hide'),
+										!$("#baseinfo span[target='share-office-address']").hasClass('hide'),
+										!$("#baseinfo span[target='share-office-address']").hasClass('hide')
+									]
+								}
+							}
+						}
+					}
+				}
+			}
 
-			request2 = """
-				<Request>
-					<Content>
-						<CustodianName>#{$("#baseinfo input[target='custodian-name']").val()}</CustodianName>
-						<CustodianOtherInfo>
-							<CustodianOtherInfo>
-								<Phone>#{$("#baseinfo input[target='custodian-phone']").val()}</Phone>
-								<Email>#{myInfo.CustodianOtherInfo.CustodianOtherInfo.Email}</Email>
-								<Job>#{myInfo.CustodianOtherInfo.CustodianOtherInfo.Job}</Job>
-								<EducationDegree>#{myInfo.CustodianOtherInfo.CustodianOtherInfo.EducationDegree}</EducationDegree>
-								<Relationship>#{myInfo.CustodianOtherInfo.CustodianOtherInfo.Relationship}</Relationship>
-							</CustodianOtherInfo>
-						</CustodianOtherInfo>
-						<ContactPhone>#{myInfo.ContactPhone}</ContactPhone>
-						<OtherPhones>
-							<PhoneList>
-								<PhoneNumber>#{$("#baseinfo input[target='office-phone']").val()}</PhoneNumber>
-								<PhoneNumber>#{$("#baseinfo input[target='sms-phone2']").val()}</PhoneNumber>
-								<PhoneNumber>#{$("#baseinfo input[target='other-phone']").val()}</PhoneNumber>
-							</PhoneList>
-						</OtherPhones>
-						<SMSPhone>#{$("#baseinfo input[target='sms-phone1']").val()}</SMSPhone>
-						<MailingAddress>
-							<AddressList>
-								<Address>
-									<ZipCode>#{myInfo.MailingAddress.AddressList.Address.ZipCode || ""}</ZipCode>
-									<County>#{myInfo.MailingAddress.AddressList.Address.County || ""}</County>
-									<Town>#{myInfo.MailingAddress.AddressList.Address.Town || ""}</Town>
-									<District>#{myInfo.MailingAddress.AddressList.Address.District || ""}</District>
-									<Area>#{myInfo.MailingAddress.AddressList.Address.Area || ""}</Area>
-									<DetailAddress>#{myInfo.MailingAddress.AddressList.Address.DetailAddress || ""}</DetailAddress>
-								</Address>
-							</AddressList>
-						</MailingAddress>
-						<OtherAddresses>
-							<AddressList>
-								<Address>
-									<ZipCode>#{myInfo.OtherAddresses.AddressList.Address.ZipCode || ""}</ZipCode>
-									<County>#{myInfo.OtherAddresses.AddressList.Address.County || ""}</County>
-									<Town>#{myInfo.OtherAddresses.AddressList.Address.Town || ""}</Town>
-									<District>#{myInfo.OtherAddresses.AddressList.Address.District || ""}</District>
-									<Area>#{myInfo.OtherAddresses.AddressList.Address.Area || ""}</Area>
-									<DetailAddress>#{myInfo.OtherAddresses.AddressList.Address.DetailAddress || ""}</DetailAddress>
-								</Address>
-							</AddressList>
-						</OtherAddresses>
-					</Content>
-				</Request>
-			"""
+			request2 = {
+				Request: {
+					Content: {
+						CustodianName: $("#baseinfo input[target='custodian-name']").val()
+						CustodianOtherInfo: {
+							CustodianOtherInfo: {
+								Phone: $("#baseinfo input[target='custodian-phone']").val()
+								Email: myInfo.CustodianOtherInfo.CustodianOtherInfo.Email
+								Job: myInfo.CustodianOtherInfo.CustodianOtherInfo.Job
+								EducationDegree: myInfo.CustodianOtherInfo.CustodianOtherInfo.EducationDegree
+								Relationship: myInfo.CustodianOtherInfo.CustodianOtherInfo.Relationship
+							}
+						},
+						ContactPhone: myInfo.ContactPhone,
+						OtherPhones: {
+							PhoneList: {
+								PhoneNumber: [
+									$("#baseinfo input[target='office-phone']").val(),
+									$("#baseinfo input[target='sms-phone2']").val(),
+									$("#baseinfo input[target='other-phone']").val()
+								]
+							}
+						},
+						SMSPhone: $("#baseinfo input[target='sms-phone1']").val(),
+						MailingAddress: {
+							AddressList: {
+								Address: {
+									ZipCode: myInfo.MailingAddress.AddressList.Address.ZipCode || ""
+									County: myInfo.MailingAddress.AddressList.Address.County || ""
+									Town: myInfo.MailingAddress.AddressList.Address.Town || ""
+									District: myInfo.MailingAddress.AddressList.Address.District || ""
+									Area: myInfo.MailingAddress.AddressList.Address.Area || ""
+									DetailAddress: myInfo.MailingAddress.AddressList.Address.DetailAddress || ""
+								}
+							}
+						},
+						OtherAddresses: {
+							AddressList: {
+								Address: {
+									ZipCode: myInfo.OtherAddresses.AddressList.Address.ZipCode || ""
+									County: myInfo.OtherAddresses.AddressList.Address.County || ""
+									Town: myInfo.OtherAddresses.AddressList.Address.Town || ""
+									District: myInfo.OtherAddresses.AddressList.Address.District || ""
+									Area: myInfo.OtherAddresses.AddressList.Address.Area || ""
+									DetailAddress: myInfo.OtherAddresses.AddressList.Address.DetailAddress || ""
+								}
+							}
+						}
+					}
+				}
+			}
 
 			gadget.getContract("emba.student").send {
 				service: "default.UpdateStudentBrief",
@@ -556,19 +581,21 @@ $ ->
 			"""
 			gadget.getContract("emba.student").send {
 				service: "public.AddLog",
-				body: """
-					<Request>
-						<Log>
-							<Actor>#{gadget.getContract("emba.student").getUserInfo().UserName}</Actor>
-							<ActionType>更新</ActionType>
-							<Action>更新分享資料</Action>
-							<TargetCategory>ischool.emba.student_brief2</TargetCategory>
-							<ClientInfo><ClientInfo></ClientInfo></ClientInfo>
-							<ActionBy>ischool web 個人資訊小工具</ActionBy>
-							<Description>#{log_desc1}</Description>
-						</Log>
-					</Request>
-				"""
+				body: {
+					Request: {
+						Log: {
+							Actor: gadget.getContract("emba.student").getUserInfo().UserName
+							ActionType: "更新"
+							Action: "更新分享資料"
+							TargetCategory: "ischool.emba.student_brief2"
+							ClientInfo: {
+								ClientInfo: ""
+							}
+							ActionBy: "ischool web 個人資訊小工具"
+							Description: log_desc1
+						}
+					}
+				}
 			}
 
 			log_desc2 = """
@@ -588,19 +615,21 @@ $ ->
 			"""
 			gadget.getContract("emba.student").send {
 				service: "public.AddLog",
-				body: """
-					<Request>
-						<Log>
-							<Actor>#{gadget.getContract("emba.student").getUserInfo().UserName}</Actor>
-							<ActionType>更新</ActionType>
-							<Action>更新個人資料</Action>
-							<TargetCategory>student</TargetCategory>
-							<ClientInfo><ClientInfo></ClientInfo></ClientInfo>
-							<ActionBy>ischool web 個人資訊小工具</ActionBy>
-							<Description>#{log_desc2}</Description>
-						</Log>
-					</Request>
-				"""
+				body: {
+					Request: {
+						Log: {
+							Actor: gadget.getContract("emba.student").getUserInfo().UserName,
+							ActionType: "更新",
+							Action: "更新個人資料",
+							TargetCategory: "student",
+							ClientInfo: {
+								ClientInfo: ""
+							},
+							ActionBy: "ischool web 個人資訊小工具",
+							Description: log_desc2
+						}
+					}
+				}
 			}
 		else
 			$("#baseinfo form .error:first input").focus()
@@ -797,14 +826,11 @@ bind_baseinfo = () ->
 	$("#baseinfo span[target='share-permanent-address']").closest('div').removeClass "square" if myInfo.DataSharing.PermanentAddress is "true"
 	$("#baseinfo span[target='share-permanent-address']").removeClass "hide" if myInfo.DataSharing.PermanentAddress is "true"
 	$("#baseinfo span[target='share-permanent-address']").attr "original", myInfo.DataSharing.PermanentAddress
-	$("#baseinfo span[target='permanent-address']").html myInfo.DataSharing.PermanentAddress
-	$("#baseinfo span[target='permanent-address']").attr "original", myInfo.DataSharing.PermanentAddress
+
 
 	$("#baseinfo span[target='share-office-address']").closest('div').removeClass "square" if myInfo.DataSharing.OtherAddressList.Address[0] is "true"
 	$("#baseinfo span[target='share-office-address']").removeClass "hide" if myInfo.DataSharing.OtherAddressList.Address[0] is "true"
 	$("#baseinfo span[target='share-office-address']").attr "original", myInfo.DataSharing.OtherAddressList.Address[0]
-	$("#baseinfo span[target='office-address']").html myInfo.DataSharing.OtherAddressList.Address[0]
-	$("#baseinfo span[target='office-address']").attr "original", myInfo.DataSharing.OtherAddressList.Address[0]
 
 	$("#baseinfo span[target='photo']").html "<img src='data:image/png;base64,#{myInfo.FreshmanPhoto}' style='width:80px'/>"
 
