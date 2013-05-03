@@ -1,4 +1,5 @@
 $ ->
+	all_dept = []
 	gadget.getContract("emba.student").send {
 		service: "default.GetDepartmentGroup",
 		body: "",
@@ -7,6 +8,8 @@ $ ->
 				items = ["<li><a herf='#'>系所組別</a></li>"]
 				$(response.Result.Department).each () ->
 					items.push "<li><a herf='#'>#{@Name}</a></li>"
+
+				all_dept = items
 
 				$("ul[target='department-options']").html items.join ""
 
@@ -21,6 +24,38 @@ $ ->
 	$("a[target='query']").click (e) ->
 		e.preventDefault()
 		query_student()
+
+	$("input[target='enroll-year']").change () ->
+		$("span[target='department']").html "系所組別"
+		$("ul[target='department-options']").html ""
+		if $(@).val() isnt ""
+			gadget.getContract("emba.student").send {
+				service: "default.GetEnrollYearDepartmentGroup",
+				body: "<Request><Condition><EnrollYear>#{$(@).val()}</EnrollYear></Condition></Request>",
+				result: (response, error, http) ->
+					if response.Result?
+						items = ["<li><a herf='#'>系所組別</a></li>"]
+						$(response.Result.Department).each () ->
+							items.push "<li><a herf='#'>#{@Name}</a></li>"
+
+						$("ul[target='department-options']").html items.join ""
+
+						$("ul[target='department-options'] a").unbind "click"
+						$("ul[target='department-options'] a").on {
+							click: (e) ->
+								e.preventDefault()
+								$("span[target='department']").html $(@).html()
+						}
+			}
+		else
+			$("ul[target='department-options']").html all_dept.join ""
+			$("ul[target='department-options'] a").unbind "click"
+			$("ul[target='department-options'] a").on {
+				click: (e) ->
+					e.preventDefault()
+					$("span[target='department']").html $(@).html()
+			}
+
 
 students = []
 current_index = 0

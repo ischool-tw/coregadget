@@ -3,6 +3,8 @@
   var current_index, experience, preview_detail, query_student, sharing, students;
 
   $(function() {
+    var all_dept;
+    all_dept = [];
     gadget.getContract("emba.student").send({
       service: "default.GetDepartmentGroup",
       body: "",
@@ -13,6 +15,7 @@
           $(response.Result.Department).each(function() {
             return items.push("<li><a herf='#'>" + this.Name + "</a></li>");
           });
+          all_dept = items;
           $("ul[target='department-options']").html(items.join(""));
           $("ul[target='department-options'] a").unbind("click");
           return $("ul[target='department-options'] a").on({
@@ -24,9 +27,45 @@
         }
       }
     });
-    return $("a[target='query']").click(function(e) {
+    $("a[target='query']").click(function(e) {
       e.preventDefault();
       return query_student();
+    });
+    return $("input[target='enroll-year']").change(function() {
+      $("span[target='department']").html("系所組別");
+      $("ul[target='department-options']").html("");
+      if ($(this).val() !== "") {
+        return gadget.getContract("emba.student").send({
+          service: "default.GetEnrollYearDepartmentGroup",
+          body: "<Request><Condition><EnrollYear>" + ($(this).val()) + "</EnrollYear></Condition></Request>",
+          result: function(response, error, http) {
+            var items;
+            if (response.Result != null) {
+              items = ["<li><a herf='#'>系所組別</a></li>"];
+              $(response.Result.Department).each(function() {
+                return items.push("<li><a herf='#'>" + this.Name + "</a></li>");
+              });
+              $("ul[target='department-options']").html(items.join(""));
+              $("ul[target='department-options'] a").unbind("click");
+              return $("ul[target='department-options'] a").on({
+                click: function(e) {
+                  e.preventDefault();
+                  return $("span[target='department']").html($(this).html());
+                }
+              });
+            }
+          }
+        });
+      } else {
+        $("ul[target='department-options']").html(all_dept.join(""));
+        $("ul[target='department-options'] a").unbind("click");
+        return $("ul[target='department-options'] a").on({
+          click: function(e) {
+            e.preventDefault();
+            return $("span[target='department']").html($(this).html());
+          }
+        });
+      }
     });
   });
 
