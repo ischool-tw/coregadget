@@ -325,14 +325,14 @@ var _gg = function () {
                 tmp_grade1Limit = '不限', tmp_grade2Limit = '不限', tmp_limit = '不限', tmp_genderRestrict = '不限', tmp_deptRestrict = '不限';
 
                 // TODO: 社團基本資料
-                items_info.push('<tr><th nowrap="nowrap">學年 </th><td>' + club.SchoolYear + '</td></tr>');
-                items_info.push('<tr><th nowrap="nowrap">學期 </th><td>' + club.Semester + '</td></tr>');
-                items_info.push('<tr><th nowrap="nowrap">類別 </th><td>' + club.ClubCategory + '</td></tr>');
-                items_info.push('<tr><th nowrap="nowrap">代碼 </th><td>' + club.ClubNumber + '</td></tr>');
-                items_info.push('<tr><th nowrap="nowrap">老師1 </th><td>' + club.TeacherName1 + '</td></tr>');
-                items_info.push('<tr><th nowrap="nowrap">老師2 </th><td>' + club.TeacherName2 + '</td></tr>');
-                items_info.push('<tr><th nowrap="nowrap">老師3 </th><td>' + club.TeacherName3 + '</td></tr>');
-                items_info.push('<tr><th nowrap="nowrap">場地 </th><td>' + club.Location + '</td></tr>');
+                items_info.push('<tr><th nowrap="nowrap" width="29%">學年 </th><td>' + club.SchoolYear + '</td></tr>');
+                items_info.push('<tr><th nowrap="nowrap" width="29%">學期 </th><td>' + club.Semester + '</td></tr>');
+                items_info.push('<tr><th nowrap="nowrap" width="29%">類別 </th><td>' + club.ClubCategory + '</td></tr>');
+                items_info.push('<tr><th nowrap="nowrap" width="29%">代碼 </th><td>' + club.ClubNumber + '</td></tr>');
+                items_info.push('<tr><th nowrap="nowrap" width="29%">老師1 </th><td>' + club.TeacherName1 + '</td></tr>');
+                items_info.push('<tr><th nowrap="nowrap" width="29%">老師2 </th><td>' + club.TeacherName2 + '</td></tr>');
+                items_info.push('<tr><th nowrap="nowrap" width="29%">老師3 </th><td>' + club.TeacherName3 + '</td></tr>');
+                items_info.push('<tr><th nowrap="nowrap" width="29%">場地 </th><td>' + club.Location + '</td></tr>');
 
                 // TODO: 社團條件
                 // var tmp_attendCount = 0;
@@ -360,9 +360,9 @@ var _gg = function () {
                 // items_condition.push('<tr><th width="29%" nowrap="nowrap">年級 </th><td width="71%"></td></tr>');
                 // items_condition.push('<tr><th width="29%" nowrap="nowrap">年級 </th><td width="71%">一年級 ' + tmp_grade1Limit + '</td></tr>');
                 // items_condition.push('<tr><th nowrap="nowrap">&nbsp;</th><td>二年級 ' + tmp_grade2Limit + '</td></tr>');
-                items_condition.push('<tr><th nowrap="nowrap">名額 </th><td>' + tmp_limit + ' </td></tr>');
-                items_condition.push('<tr><th nowrap="nowrap">性別 </th><td>' + tmp_genderRestrict + '</td></tr>');
-                items_condition.push('<tr><th nowrap="nowrap">科別 </th><td>' + tmp_deptRestrict + '</td></tr>');
+                items_condition.push('<tr><th nowrap="nowrap" width="29%">名額 </th><td>' + tmp_limit + ' </td></tr>');
+                items_condition.push('<tr><th nowrap="nowrap" width="29%">性別 </th><td>' + tmp_genderRestrict + '</td></tr>');
+                items_condition.push('<tr><th nowrap="nowrap" width="29%">科別 </th><td>' + tmp_deptRestrict + '</td></tr>');
 
                 // TODO: 社團簡介
                 items_summary.push('<p>' + club.About + '</p>');
