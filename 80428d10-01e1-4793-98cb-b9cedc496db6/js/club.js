@@ -1,5 +1,13 @@
 ﻿jQuery(function () {
     _gg.onInit();
+
+    gadget.onLeave(function() {
+        if (!_gg.getSaved()) {
+            return '您尚未儲存選社結果，確認要離開此網頁嗎?';
+        }
+        return '';
+    });
+
     $("#sortable").sortable({
         containment: "#container-main"
     });
@@ -44,6 +52,7 @@ var _gg = function () {
     var Opening = "no";
     var _maxCount = 0;
     var _chooseClub = [];
+    var _saved = true;
 
     // TODO: 錯誤訊息
     var set_error_message = function(select_str, serviceName, error) {
@@ -628,6 +637,7 @@ var _gg = function () {
                 if (error !== null) {
                     set_error_message("#mainMsg", "SetVolunteer", error);
                 } else {
+                    _saved = true;
                     $('#mainMsg').html('<div class="alert alert-success">\n  儲存成功！\n</div>');
                     setTimeout("$('#mainMsg').html('')", 1500);
                 }
@@ -643,6 +653,7 @@ var _gg = function () {
             var cid = Club.ClubID;
             if (cid) {
                 if (_maxCount > _chooseClub.length) {
+                    _saved = false;
                     _chooseClub.push(cid);
                     $('div[data-type="add-club"]').html('<a href="javascript:void(0);" class="btn btn-danger" action-type="remove"><i class="icon-minus icon-white"></i>取消參加</a>');
                     $('#club-list li[club-id="' + cid + '"]').addClass('my-add-in-club');
@@ -665,6 +676,7 @@ var _gg = function () {
         removeClub : function() {
             var cid = Club.ClubID;
             if (cid) {
+                _saved = false;
                 _chooseClub = $.grep(_chooseClub, function(value) {
                     return value !== cid;
                 });
@@ -676,6 +688,7 @@ var _gg = function () {
             }
         },
         removeAll : function() {
+            _saved = false;
             _chooseClub = [];
             $('div[data-type="add-club"]').html('<a href="javascript:void(0);" class="btn btn-success" action-type="add"><i class="icon-plus icon-white"></i>我想參加</a>');
             $('#club-list li').removeClass('my-add-in-club');
@@ -686,6 +699,9 @@ var _gg = function () {
             if (Opening === 'yes') {
                 saveClub();
             }
+        },
+        getSaved : function() {
+            return _saved;
         }
     };
     return result;
