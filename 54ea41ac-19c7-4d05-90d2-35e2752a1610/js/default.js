@@ -232,14 +232,21 @@
             if (((_ref = response.Result) != null ? _ref.SbComment : void 0) != null) {
               items.push("<tr>\n  <th><span>導師評語</span></th>\n  <td><span>" + (this.response.Result.SbComment || '') + "</span></td>\n</tr>");
             }
+            console.log(global.morality.Response.Morality);
             if (((_ref1 = global.morality.Response) != null ? _ref1.Morality : void 0) != null) {
               $(global.morality.Response.Morality).each(function() {
-                var that, tmpFace, _ref2, _ref3, _ref4;
+                var morality, that, tmpFace, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
                 items.push("<tr>\n  <th><span>" + (this.Face || '') + "</span></th>");
                 that = this;
                 tmpFace = '';
                 if (((_ref2 = response.Result) != null ? (_ref3 = _ref2.DailyLifeScore) != null ? (_ref4 = _ref3.Content) != null ? _ref4.Morality : void 0 : void 0 : void 0) != null) {
-                  $(response.Result.DailyLifeScore.Content.Morality).each(function() {
+                  morality = response.Result.DailyLifeScore.Content.Morality;
+                }
+                if (((_ref5 = response.Result) != null ? (_ref6 = _ref5.DailyLifeScore) != null ? (_ref7 = _ref6.TextScore) != null ? _ref7.Morality : void 0 : void 0 : void 0) != null) {
+                  morality = response.Result.DailyLifeScore.TextScore.Morality;
+                }
+                if (morality) {
+                  $(morality).each(function() {
                     if (this.Face === that.Face) {
                       tmpFace = this['@text'];
                       return false;

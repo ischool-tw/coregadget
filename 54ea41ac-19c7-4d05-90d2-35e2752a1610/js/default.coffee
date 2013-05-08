@@ -212,7 +212,7 @@ getMorality = () ->
                 <td><span>#{@response.Result.SbComment || ''}</span></td>
               </tr>
             """
-
+          console.log global.morality.Response.Morality
           if global.morality.Response?.Morality?
             $(global.morality.Response.Morality).each () ->
 
@@ -224,8 +224,11 @@ getMorality = () ->
               that = @
               tmpFace = ''
 
-              if response.Result?.DailyLifeScore?.Content?.Morality?
-                $(response.Result.DailyLifeScore.Content.Morality).each () ->
+              if response.Result?.DailyLifeScore?.Content?.Morality? then morality = response.Result.DailyLifeScore.Content.Morality
+              if response.Result?.DailyLifeScore?.TextScore?.Morality? then morality = response.Result.DailyLifeScore.TextScore.Morality
+
+              if morality
+                $(morality).each () ->
                   if @.Face is that.Face
                     tmpFace = @['@text']
                     return false
