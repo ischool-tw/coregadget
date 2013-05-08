@@ -56,7 +56,7 @@
                   <table class="table table-bordered table-striped">
                         <thead>
                           <tr>
-                            <th colspan="9" class="my-table-head1">已選課程清單</th>
+                            <th colspan="9" class="my-table-head1">第一階段已選課程</th>
                           </tr>
                           <tr>
                             <th>退</th>
@@ -71,7 +71,7 @@
                           </tr>
                         </thead>
                         <tbody data-type="quit" data-bind="foreach: curr_attend">
-                          <tr data-bind="css: { 'my-error': HaveConflict().length > 0}">
+                          <tr data-bind="if: ChooseItem == '1', css: { 'my-error': HaveConflict().length > 0}">
                             <td rowspan="2" class="my-cbx-style" data-bind="if: $root.currentData.Item() == '1' || $root.currentData.Item() == '2'">
                               <input type="checkbox" data-bind="checked: WillQuit, value: CourseID, conflict_list: HaveConflict()">
                             </td>
@@ -87,11 +87,51 @@
                             <td data-bind="text: Classroom"></td>
                             <td data-bind="text: CourseTimeInfo"></td>
                           </tr>
-                          <tr data-bind="css: { 'my-error': HaveConflict().length > 0}">
+                          <tr data-bind="if: ChooseItem == '1', css: { 'my-error': HaveConflict().length > 0}">
                             <td colspan="8" data-bind="text: Memo"></td>
                           </tr>
                         </tbody>
-                        <tbody data-bind="visible: curr_attend().length === 0"><tr><td colspan="9">目前無資料</td></tbody>
+                        <tbody data-bind="visible: getLevelItems('1') === 0"><tr><td colspan="9">目前無資料</td></tbody>
+                  </table>
+                  <table class="table table-bordered table-striped" data-bind="visible: $root.currentData.Item() == '2'">
+                        <thead>
+                          <tr>
+                            <th colspan="9" class="my-table-head1">第二階段已選課程</th>
+                          </tr>
+                          <tr>
+                            <th>退</th>
+                            <th>課程編號</th>
+                            <th>班次</th>
+                            <th>（必/選修）課程名稱</th>
+                            <th>授課教師</th>
+                            <th>學分</th>
+                            <th>人數上限</th>
+                            <th>教室</th>
+                            <th>上課時間</th>
+                          </tr>
+                        </thead>
+                        <tbody data-type="quit" data-bind="foreach: curr_attend" id="choose02">
+                          <tr data-bind="if: ChooseItem == '2', css: { 'my-error': HaveConflict().length > 0}">
+                            <td rowspan="2" class="my-cbx-style" data-bind="if: $root.currentData.Item() == '1' || $root.currentData.Item() == '2'">
+                              <input type="checkbox" data-bind="checked: WillQuit, value: CourseID, conflict_list: HaveConflict()">
+                            </td>
+                            <td data-bind="text: NewSubjectCode"></td>
+                            <td data-bind="text: ClassName"></td>
+                            <td data-bind="type_format: CourseType">
+                              <a data-bind="visible: Syllabus, text: CourseName, attr: { href: Syllabus }" target="_blank"></a>
+                              <span data-bind="visible: !Syllabus, text: CourseName"></span>
+                            </td>
+                            <td data-bind="html: TeacherURLName"></td>
+                            <td data-bind="text: Credit"></td>
+                            <td data-bind="text: Capacity"></td>
+                            <td data-bind="text: Classroom"></td>
+                            <td data-bind="text: CourseTimeInfo"></td>
+                          </tr>
+                          <tr data-bind="if: ChooseItem == '2', css: { 'my-error': HaveConflict().length > 0}">
+                            <td colspan="8" data-bind="text: Memo"></td>
+                          </tr>
+                        </tbody>
+                        <tbody data-bind="visible: getLevelItems('2') === 0"><tr><td colspan="9">目前無資料</td></tbody>
                   </table>
                   <table class="table table-bordered table-striped">
                       <thead>
