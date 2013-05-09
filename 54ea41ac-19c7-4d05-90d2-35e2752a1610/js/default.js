@@ -232,7 +232,6 @@
             if (((_ref = response.Result) != null ? _ref.SbComment : void 0) != null) {
               items.push("<tr>\n  <th><span>導師評語</span></th>\n  <td><span>" + (this.response.Result.SbComment || '') + "</span></td>\n</tr>");
             }
-            console.log(global.morality.Response.Morality);
             if (((_ref1 = global.morality.Response) != null ? _ref1.Morality : void 0) != null) {
               $(global.morality.Response.Morality).each(function() {
                 var morality, that, tmpFace, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;

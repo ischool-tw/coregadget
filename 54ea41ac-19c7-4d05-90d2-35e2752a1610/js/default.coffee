@@ -212,7 +212,7 @@ getMorality = () ->
                 <td><span>#{@response.Result.SbComment || ''}</span></td>
               </tr>
             """
-          console.log global.morality.Response.Morality
+
           if global.morality.Response?.Morality?
             $(global.morality.Response.Morality).each () ->
 
