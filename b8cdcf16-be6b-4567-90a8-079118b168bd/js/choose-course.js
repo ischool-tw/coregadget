@@ -17,6 +17,7 @@ jQuery(function () {
         if (stop_exit()) {
             return '您尚未儲存選課結果，確認要離開此網頁嗎?';
         }
+        return '';
     });
 
     $('#myTab a[data-toggle="tab"]').on('show', function (e) {
@@ -109,6 +110,7 @@ jQuery(function () {
 (function() {
     this.MyViewModel = (function(){
         var conn_log = gadget.getContract("emba.student");
+        var _show_level = '0';
         return {
             get_openingdata : function() {
                 var self = MyViewModel;
@@ -123,6 +125,12 @@ jQuery(function () {
                     var tmp_txt = '';
                     switch(item.Item) {
                         case '1':
+                            var tmp_Date  = new Date();
+                            var Startdate = new Date(item.BeginTime);
+
+                            if (Startdate > tmp_Date) {
+                                _show_level = '-1';
+                            }
                             tmp_txt = '第一階段電腦選課：' +  (item.BeginTime || '未設定') + ' 至 ' + (item.EndTime || '未設定') + ' 止。';
                             self.course_opening_info.Item1(self.course_opening_info.Item1() + tmp_txt);
                             break;
@@ -161,14 +169,24 @@ jQuery(function () {
                                 if (self.currentData.SchoolYear() && self.currentData.Semester()) {
                                     self.get_all_course();
                                 }
-                                $('#myTab li > a:first').trigger('click');
                             }
                             if (self.currentData.Item()) {
                                 self.get_student_info();
                                 $('#sa01 button[ac-type=save1]').tooltip({
                                     trigger : "manual"
                                 });
+                            } else {
+                                // -1:第一階段尚未開始顯示「尚未開放」；-2:加退選階段過期顯示加退選結果
+                                if (_show_level === '-1') {
+                                    $('#sa01 table').remove();
+                                    $('#sa01').append('<p>目前尚未開放</p>');
+                                } else {
+                                    _show_level === '-2'
+                                    $('#sa06 .memb-list').remove();
+                                    MyViewModel.currentData.Item('0');
+                                }
                             }
+                            $('#myTab li > a:first').trigger('click');
                         }
                     }
                 });
@@ -191,18 +209,22 @@ jQuery(function () {
             all_col_course : {},
             get_all_course : function() {
                 var self = MyViewModel;
-                var condition = '<SchoolYear>' + (self.currentData.SchoolYear() || '') + '</SchoolYear>' +
-                    '<Semester>' + (self.currentData.Semester() || '') + '</Semester>';
 
                 _gg.connection.send({
                     service: "_.GetAllCourse",
-                    body: '<Request><Condition>' + condition + '</Condition></Request>',
+                    body: {
+                        Request: {
+                            Condition: {
+                                SchoolYear: self.currentData.SchoolYear() || '',
+                                Semester: self.currentData.Semester() || ''
+                            }
+                        }
+                    },
                     result: function (response, error, http) {
                         if (error !== null) {
                             _gg.set_error_message('#mainMsg', 'GetAllCourse', error);
                         } else {
-                            var _ref;
-                            if (((_ref = response.Response) != null ? _ref.Course : void 0) != null) {
+                            if (response.Response && response.Response.Course) {
                                 $(response.Response.Course).each(function(index, item) {
                                     var tmp = '', _teachers = [];
                                     if (item.TeacherURLName) {
@@ -245,21 +267,27 @@ jQuery(function () {
             },
             get_configuration : function() {
                 var self = MyViewModel;
-                var request = '<ConfName>cs_cancel1_content_template</ConfName>' +
-                    '<ConfName>cs_final_message</ConfName>' +
-                    '<ConfName>email_content2_template</ConfName>' +
-                    '<ConfName>email_content1_template</ConfName>' +
-                    '<ConfName>cs_cancel2_content_template</ConfName>';
 
                 _gg.connection.send({
                     service: "_.GetSConfiguration",
-                    body: '<Request><Condition>' + request + '</Condition></Request>',
+                    body: {
+                        Request: {
+                            Condition: {
+                                ConfName: [
+                                    'cs_cancel1_content_template',
+                                    'cs_final_message',
+                                    'email_content2_template',
+                                    'email_content1_template',
+                                    'cs_cancel2_content_template'
+                                ]
+                            }
+                        }
+                    },
                     result: function (response, error, http) {
                         if (error !== null) {
                             _gg.set_error_message('#mainMsg', 'GetSConfiguration', error);
                         } else {
-                            var _ref;
-                            if (((_ref = response.Response) != null ? _ref.Configuration : void 0) != null) {
+                            if (response.Response && response.Response.Configuration) {
                                 $(response.Response.Configuration).each(function(index, item) {
                                     self.configuration[item.ConfName](item.ConfContent);
                                 });
@@ -271,37 +299,42 @@ jQuery(function () {
 
             // TODO: 可選課程(已選)
             curr_attend : ko.observableArray([]),
-            get_attend : function() {
+            get_attend : function(callback) {
                 var self = MyViewModel;
-
-                var condition = '<SchoolYear>' + (self.currentData.SchoolYear() || '') + '</SchoolYear>' +
-                    '<Semester>' + (self.currentData.Semester() || '') + '</Semester>';
 
                 _gg.connection.send({
                     service: "_.GetCSAttend",
-                    body: '<Request><Condition>' + condition + '</Condition></Request>',
+                    body: {
+                        Request: {
+                            Condition: {
+                                SchoolYear: self.currentData.SchoolYear() || '',
+                                Semester: self.currentData.Semester() || ''
+                            }
+                        }
+                    },
                     result: function (response, error, http) {
                         if (error !== null) {
                             _gg.set_error_message('#mainMsg', 'GetCSAttend', error);
                         } else {
-                            var _ref;
-                            if (((_ref = response.Response) != null ? _ref.Attend : void 0) != null) {
+                            if (response.Response && response.Response.Attend) {
                                 $(response.Response.Attend).each(function(index, item) {
                                     var _course = self.all_col_course[item.CourseID];
                                     if (_course) {
                                         _course.WillQuit = ko.observable(false);
                                         _course.HaveConflict = ko.observableArray();
+                                        _course.ChooseItem = item.Item;
                                         self.curr_attend.push(_course);
                                     }
                                 });
-
+                            }
+                            if (callback) {
+                                callback();
                             }
                         }
                     }
                 });
             },
             set_quit_cousre : function(_courseID, status) {
-                debugger
                 if (_courseID) {
                     var self = MyViewModel;
                     if (self.conflict_col_course[_courseID]) {
@@ -359,18 +392,21 @@ jQuery(function () {
             get_can_choose_course : function() {
                 var self = MyViewModel;
 
-                var condition = '<SchoolYear>' + (self.currentData.SchoolYear() || '') + '</SchoolYear>' +
-                    '<Semester>' + (self.currentData.Semester() || '') + '</Semester>';
-
                 _gg.connection.send({
                     service: "_.GetCanChooseCourse",
-                    body: '<Request><Condition>' + condition + '</Condition></Request>',
+                    body: {
+                        Request: {
+                            Condition: {
+                                SchoolYear: self.currentData.SchoolYear() || '',
+                                Semester: self.currentData.Semester() || ''
+                            }
+                        }
+                    },
                     result: function (response, error, http) {
                         if (error !== null) {
                             _gg.set_error_message('#mainMsg', 'GetCanChooseCourse', error);
                         } else {
-                            var _ref;
-                            if (((_ref = response.Response) != null ? _ref.Course : void 0) != null) {
+                            if (response.Response && response.Response.Course) {
                                 $(response.Response.Course).each(function(index, item) {
                                     var _course = self.all_col_course[item.CourseID];
                                     if (_course) {
@@ -442,18 +478,22 @@ jQuery(function () {
             get_sc_attend : function() {
                 var self = MyViewModel;
 
-                var condition = '<SchoolYear>' + (self.currentData.SchoolYear() || '') + '</SchoolYear>' +
-                    '<Semester>' + (self.currentData.Semester() || '') + '</Semester>';
-
                 _gg.connection.send({
                     service: "_.GetSCAttend_ext",
-                    body: '<Request><Condition>' + condition + '</Condition></Request>',
+                    body: {
+                        Request: {
+                            Condition: {
+                                SchoolYear: self.currentData.SchoolYear() || '',
+                                Semester: self.currentData.Semester() || ''
+                            }
+                        }
+                    },
                     result: function (response, error, http) {
                         if (error !== null) {
                             _gg.set_error_message('#mainMsg', 'GetSCAttend_ext', error);
                         } else {
                             var _ref;
-                            if (((_ref = response.Response) != null ? _ref.SCattendExt : void 0) != null) {
+                            if (response.Response && response.Response.SCattendExt) {
                                 $(response.Response.SCattendExt).each(function(index, item) {
                                     var _course = self.all_col_course[item.CourseID];
                                     if (_course) {
@@ -471,17 +511,21 @@ jQuery(function () {
             get_registration_confirm : function() {
                 var self = MyViewModel;
 
-                var condition = '<SchoolYear>' + (self.currentData.SchoolYear() || '') + '</SchoolYear>' +
-                    '<Semester>' + (self.currentData.Semester() || '') + '</Semester>';
                 _gg.connection.send({
                     service: "_.GetRegistrationConfirm",
-                    body: '<Request><Condition>' + condition + '</Condition></Request>',
+                    body: {
+                        Request: {
+                            Condition: {
+                                SchoolYear: self.currentData.SchoolYear() || '',
+                                Semester: self.currentData.Semester() || ''
+                            }
+                        }
+                    },
                     result: function (response, error, http) {
                         if (error !== null) {
                             _gg.set_error_message('#mainMsg', 'GetRegistrationConfirm', error);
                         } else {
-                            var _ref;
-                            if (((_ref = response.Response) != null ? _ref.Confirm : void 0) != null) {
+                            if (response.Response && response.Response.Confirm) {
                                 if (response.Response.Confirm.Confirm === 't') {
                                     self.sc_confirm(true);
                                 }
@@ -501,7 +545,7 @@ jQuery(function () {
                             $('#save-data').button('reset');
                             _gg.set_error_message('#errorMessage', 'SetRegistrationConfirm', error);
                         } else {
-                            if (((_ref = response.Result) != null ? _ref.ExecuteCount : void 0) != null) {
+                            if (response.Result && response.Result.ExecuteCount) {
                                 if (parseInt(response.Result.ExecuteCount, 10) > 0) {
                                     self.sc_confirm(true);
                                     $('#myModal').modal('hide');
@@ -519,18 +563,23 @@ jQuery(function () {
             conflict_col_course : {},
             get_conflict_course : function() {
                 var self = MyViewModel;
-                var condition = '<SchoolYear>' + (self.currentData.SchoolYear() || '') + '</SchoolYear>' +
-                    '<Semester>' + (self.currentData.Semester() || '') + '</Semester>';
 
                 _gg.connection.send({
                     service: "_.GetConflictCourse",
-                    body: '<Request><Condition>' + condition + '</Condition></Request>',
+                    body: {
+                        Request: {
+                            Condition: {
+                                SchoolYear: self.currentData.SchoolYear() || '',
+                                Semester: self.currentData.Semester() || ''
+                            }
+                        }
+                    },
                     result: function (response, error, http) {
                         if (error !== null) {
                             _gg.set_error_message('#mainMsg', 'GetConflictCourse', error);
                         } else {
-                            var _ref, items = {};
-                            if (((_ref = response.Response) != null ? _ref.ConflictCourse : void 0) != null) {
+                            var items = {};
+                            if (response.Response && response.Response.ConflictCourse) {
                                 $(response.Response.ConflictCourse).each(function(index, item) {
                                     if (!items[item.CourseIDA]) {
                                         items[item.CourseIDA] = [];
@@ -610,8 +659,7 @@ jQuery(function () {
                         if (error !== null) {
                             _gg.set_error_message('#mainMsg', 'GetCSFaq', error);
                         } else {
-                            var _ref;
-                            if (((_ref = response.Response) != null ? _ref.Faq : void 0) != null) {
+                            if (response.Response && response.Response.Faq) {
                                 $(response.Response.Faq).each(function(index, item) {
                                     if (item.Category === '選課注意事項') {
                                         item.Id = 'collapseA' + index;
@@ -657,13 +705,13 @@ jQuery(function () {
                 };
                 _gg.connection.send({
                     service: "_.GetMyInfo",
-                    body: '<Request><Condition></Condition></Request>',
+                    body: '',
                     result: function (response, error, http) {
                         if (error !== null) {
                             _gglf.set_error_message('#mainMsg', 'GetMyInfo', error);
                         } else {
                             var _ref;
-                            if (((_ref = response.Response) != null ? _ref.StudentInfo : void 0) != null) {
+                            if (response.Response && response.Response.StudentInfo) {
                                 $(response.Response.StudentInfo).each(function(index, item) {
                                     set_student(item);
                                 });
@@ -832,47 +880,50 @@ jQuery(function () {
 
                 var complete_process = function() {
                     if (add_complete && quit_complete) {
-                        self.curr_attend.sort(function(left, right) { return left.SerialNo == right.SerialNo ? 0 : (left.SerialNo < right.SerialNo ? -1 : 1) })
-                        self.can_choose_course.sort(function(left, right) { return left.SerialNo == right.SerialNo ? 0 : (left.SerialNo < right.SerialNo ? -1 : 1) })
-                        self.reset_add_quit();
-
                         // TODO: 送出Email
-                        var receiver = [], request = [], mail_subject = '', mail_tmpl_name = '', course_html = '';
-                        for (var ii=1; ii<=5; ii+=1) {
-                            if (self.student['Email' + ii]()) {
-                                receiver.push((self.student.StudentName() || '') + '<' + self.student['Email' + ii]() + '>');
-                            }
-                        }
-
-                        var receivers = receiver.join(',');
-                        if (receivers) {
-                            request.push('<Receiver><![CDATA[' + receivers + ']]></Receiver>');
-
-                            if (self.currentData.Item() === '1') {
-                                mail_subject = '第一階段選課結果';
-                                mail_tmpl_name = 'email_content1_template';
-                            } else if (self.currentData.Item() === '2') {
-                                mail_subject = '第二階段選課結果';
-                                mail_tmpl_name = 'email_content2_template';
-                            }
-                            request.push('<Subject>' + mail_subject + '</Subject>');
-
-                            course_html = course_add_html + course_quit_html + '<p>選課結果：</p>' +  get_course_html(self.curr_attend());
-
-                            request.push('<HtmlContent><![CDATA[' + self.configuration[mail_tmpl_name]() + course_html + ']]></HtmlContent>');
-
-                            _gg.connection.send({
-                                service: "_.SendMail",
-                                body: '<Request>' + request.join('') + '</Request>',
-
-                                result: function (response, error, http) {
-                                    if (error !== null) {
-                                        $('#save-data').button('reset');
-                                        _gg.set_error_message('#mainMsg', '', '郵件發送失敗！請連絡系統管理員');
-                                    }
+                        var send_Mail = function() {
+                            var receiver = [], request = [], mail_subject = '', mail_tmpl_name = '', course_html = '';
+                            for (var ii=1; ii<=5; ii+=1) {
+                                if (self.student['Email' + ii]()) {
+                                    receiver.push((self.student.StudentName() || '') + '<' + self.student['Email' + ii]() + '>');
                                 }
-                            });
-                        }
+                            }
+
+                            var receivers = receiver.join(',');
+                            if (receivers) {
+                                request.push('<Receiver><![CDATA[' + receivers + ']]></Receiver>');
+
+                                if (self.currentData.Item() === '1') {
+                                    mail_subject = '第一階段選課結果';
+                                    mail_tmpl_name = 'email_content1_template';
+                                } else if (self.currentData.Item() === '2') {
+                                    mail_subject = '第二階段選課結果';
+                                    mail_tmpl_name = 'email_content2_template';
+                                }
+                                request.push('<Subject>' + mail_subject + '</Subject>');
+
+                                course_html = course_add_html + course_quit_html + '<p>選課結果：</p>' + get_course_html(self.curr_attend());
+
+                                request.push('<HtmlContent><![CDATA[' + self.configuration[mail_tmpl_name]() + course_html + ']]></HtmlContent>');
+
+                                _gg.connection.send({
+                                    service: "_.SendMail",
+                                    body: '<Request>' + request.join('') + '</Request>',
+
+                                    result: function (response, error, http) {
+                                        if (error !== null) {
+                                            $('#save-data').button('reset');
+                                            _gg.set_error_message('#mainMsg', '', '郵件發送失敗！請連絡系統管理員');
+                                        }
+                                    }
+                                });
+                            }
+                        };
+
+                        self.curr_attend.removeAll();
+                        self.can_choose_course.removeAll();
+                        self.get_attend(send_Mail);
+                        self.get_can_choose_course();
 
                         $('#myModal').modal('hide');
                         $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
@@ -888,8 +939,7 @@ jQuery(function () {
                         add_log.push('<Course><CourseID>' + item.CourseID + '</CourseID>' +
                             '<Action>insert</Action><ActionBy>student</ActionBy></Course>');
                         log_add_content.push(
-                            '學生「' + self.student.StudentName() + '」加選課程：\n' +
-                            item.CourseName
+                            '學生「' + self.student.StudentName() + '」加選課程：\n' + item.CourseName
                         );
                     });
 
@@ -901,18 +951,6 @@ jQuery(function () {
                                 $('#save-data').button('reset');
                                 _gg.set_error_message('#errorMessage', 'AddCSAttend', error);
                             } else {
-                                // TODO: add to curr_attend, remove to can_choose_course
-                                $(self.can_choose_course()).each(function(index, item) {
-                                    if (item.WillAdd()) {
-                                        if (item.hasOwnProperty("WillQuit")) {
-                                            item.WillQuit(false);
-                                        } else {
-                                            item.WillQuit = ko.observable(false);
-                                        }
-                                        self.curr_attend.push(item);
-                                        self.can_choose_course.remove(item);
-                                    }
-                                });
                                 conn_log.ready(function(){
                                     _gg.connection.send({
                                         service: "_.AddCSAttendLog",
@@ -950,8 +988,7 @@ jQuery(function () {
                         quit_log.push('<Course><CourseID>' + item.CourseID + '</CourseID>' +
                             '<Action>delete</Action><ActionBy>student</ActionBy></Course>');
                         log_quit_content.push(
-                            '學生「' + self.student.StudentName() + '」退選課程：\n' +
-                            item.CourseName
+                            '學生「' + self.student.StudentName() + '」退選課程：\n' + item.CourseName
                         );
                     });
 
@@ -963,18 +1000,6 @@ jQuery(function () {
                                 $('#save-data').button('reset');
                                 _gg.set_error_message('#errorMessage', 'DelCSAttend', error);
                             } else {
-                                // TODO: add to can_choose_course, remove to curr_attend
-                                $(self.curr_attend()).each(function(index, item) {
-                                    if (item.WillQuit()) {
-                                        if (item.hasOwnProperty("WillAdd")) {
-                                            item.WillAdd(false);
-                                        } else {
-                                            item.WillAdd = ko.observable(false);
-                                        }
-                                        self.can_choose_course.push(item);
-                                        self.curr_attend.remove(item);
-                                    }
-                                });
                                 conn_log.ready(function(){
                                     _gg.connection.send({
                                         service: "_.AddCSAttendLog",
@@ -1018,6 +1043,16 @@ jQuery(function () {
                             return '';
                     }
                 })
+            },
+            getLevelItems : function(level) {
+                var self = MyViewModel;
+                var count = 0;
+                $(self.curr_attend()).each(function(index, item) {
+                    if (item.ChooseItem === level) {
+                        count += 1;
+                    }
+                });
+                return count;
             }
         };
     })();
