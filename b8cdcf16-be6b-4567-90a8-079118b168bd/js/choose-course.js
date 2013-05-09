@@ -110,6 +110,7 @@ jQuery(function () {
 (function() {
     this.MyViewModel = (function(){
         var conn_log = gadget.getContract("emba.student");
+        var _show_level = '0';
         return {
             get_openingdata : function() {
                 var self = MyViewModel;
@@ -124,6 +125,12 @@ jQuery(function () {
                     var tmp_txt = '';
                     switch(item.Item) {
                         case '1':
+                            var tmp_Date  = new Date();
+                            var Startdate = new Date(item.BeginTime);
+
+                            if (Startdate > tmp_Date) {
+                                _show_level = '-1';
+                            }
                             tmp_txt = '第一階段電腦選課：' +  (item.BeginTime || '未設定') + ' 至 ' + (item.EndTime || '未設定') + ' 止。';
                             self.course_opening_info.Item1(self.course_opening_info.Item1() + tmp_txt);
                             break;
@@ -162,14 +169,24 @@ jQuery(function () {
                                 if (self.currentData.SchoolYear() && self.currentData.Semester()) {
                                     self.get_all_course();
                                 }
-                                $('#myTab li > a:first').trigger('click');
                             }
                             if (self.currentData.Item()) {
                                 self.get_student_info();
                                 $('#sa01 button[ac-type=save1]').tooltip({
                                     trigger : "manual"
                                 });
+                            } else {
+                                // -1:第一階段尚未開始顯示「尚未開放」；-2:加退選階段過期顯示加退選結果
+                                if (_show_level === '-1') {
+                                    $('#sa01 table').remove();
+                                    $('#sa01').append('<p>目前尚未開放</p>');
+                                } else {
+                                    _show_level === '-2'
+                                    $('#sa06 .memb-list').remove();
+                                    MyViewModel.currentData.Item('0');
+                                }
                             }
+                            $('#myTab li > a:first').trigger('click');
                         }
                     }
                 });
@@ -381,8 +398,7 @@ jQuery(function () {
                         Request: {
                             Condition: {
                                 SchoolYear: self.currentData.SchoolYear() || '',
-                                Semester: self.currentData.Semester() || '',
-                                Item: self.currentData.Item() || ''
+                                Semester: self.currentData.Semester() || ''
                             }
                         }
                     },
@@ -1044,7 +1060,6 @@ jQuery(function () {
     MyViewModel.get_openingdata();
     MyViewModel.get_faq();
     MyViewModel.get_configuration();
-    MyViewModel.currentData.Item('1');
 })();
 
 _gg.getCourseType = function(type) {
