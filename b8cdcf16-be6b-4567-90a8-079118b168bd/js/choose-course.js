@@ -1081,7 +1081,7 @@ jQuery(function () {
                 } else {
                     // 1. 第一階段選課前，可選課程=目前尚未開放選課,課程總表 + 衝堂課程=無資料
                     // 2. 第一第二階段選課中間~可選課程=目前尚未開放第二階段選課
-                    // 3. 第二階段後加退選前~選課最終確認
+                    // 3. 第二階段後加退選前~選課最終確認=尚未公告選課最終結果
                     // 4. 加退選期間結束後~選課最終確認,課程總表 + 衝堂課程=本學期選課已結束，目前尚未開放下一學期選課
                     if (_all_opening_data['Level0_EndTime']) {
                         Enddate = new Date(_all_opening_data['Level0_EndTime']);
@@ -1133,7 +1133,7 @@ jQuery(function () {
                             MyViewModel.currentData.Item('s2');
                             break;
                         case 3:
-                            $('#sa06 .memb-list').remove();
+                            $('#sa06').html('<p>尚未公告選課最終結果</p>');
                             MyViewModel.currentData.Item('s3');
                             break;
                         case 4:
