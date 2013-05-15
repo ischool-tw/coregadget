@@ -336,7 +336,6 @@ _gg.getTeacherList = function() {
                         curr_length = response.Response.Teachers.length;
                         $(response.Response.Teachers).each(function(index, item) {
                             _gg.teachers[curr_index] = item;
-                            curr_index += 1;
 
                             var photo, p_resize = false;
                             if (item.Photo) {
@@ -355,6 +354,7 @@ _gg.getTeacherList = function() {
                                 '</a>' +
                                 '</div>'
                             );
+                            curr_index += 1;
                         });
                     }
                     if (curr_length < _page_size) {
