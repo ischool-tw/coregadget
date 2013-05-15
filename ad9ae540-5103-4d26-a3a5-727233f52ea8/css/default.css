@@ -53,3 +53,6 @@ table input[type="text"] {
 .my-print-page .my-proimg img {
   width: 180px;
 }
+#pfe div[data-type="StudyCategory"] select {
+  margin-right: 10px;
+}

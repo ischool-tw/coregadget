@@ -308,13 +308,38 @@
                         <!-- /No forms template-->
                       </tbody>
                       <!-- /sheepIt Form -->
+                      <thead>
+                        <tr>
+                          <th colspan="7">著作
+                            <a class="btn btn-mini btn-inverse pull-right" href="#" id="book_add">
+                              <i class="icon-plus icon-white"></i>
+                            </a>
+                          </th>
+                        </tr>
+                      </thead>
+                      <!-- sheepIt Form -->
+                      <tbody id="book">
+                        <!-- Form template-->
+                        <tr id="book_template">
+                          <td colspan="6">
+                            <input class="input-block-level" placeholder="著作..." type="text" name="Book_Subject" id="book_#index#_Subject">
+                          </td>
+                          <td><button id="book_remove_current" type="button" class="btn" data-dismiss="alert">×</button></td>
+                        </tr>
+                        <!-- /Form template-->
+
+                        <!-- No forms template -->
+                        <tr id="book_noforms_template"><td colspan="7">目前無資料</td></tr>
+                        <!-- /No forms template-->
+                      </tbody>
+                      <!-- /sheepIt Form -->
                     </table>
                   </div>
                 </div>
                 <div class="my-sure">
                   <a href="javascript:void(0);" class="btn btn-success" data-action="save">儲存變更</a>
                   <a href="javascript:void(0);" class="btn btn-inverse" data-action="print">列印</a>
-                  <a href="javascript:void(0);" class="btn" id="cancel-pfe" data-action="cancel">取消</a>
+                  <a href="javascript:void(0);" class="btn" data-action="cancel">取消</a>
                 </div>
               </form>
             </div>
@@ -331,7 +356,7 @@
                     <div class="my-sure">
                       <a href="javascript:void(0);" class="btn btn-success" data-action="save">儲存變更</a>
                       <a href="javascript:void(0);" class="btn btn-inverse" data-action="print">列印</a>
-                      <a href="javascript:void(0);" class="btn" id="cancel-pfe" data-action="cancel">取消</a>
+                      <a href="javascript:void(0);" class="btn" data-action="cancel">取消</a>
                     </div>
                   </div>
                 </div>
@@ -362,7 +387,7 @@
                     <div class="my-sure">
                       <a href="javascript:void(0);" class="btn btn-success" data-action="save">儲存變更</a>
                       <a href="javascript:void(0);" class="btn btn-inverse" data-action="print">列印</a>
-                      <a href="javascript:void(0);" class="btn" id="cancel-pfe" data-action="cancel">取消</a>
+                      <a href="javascript:void(0);" class="btn" data-action="cancel">取消</a>
                     </div>
                   </div>
                 </div>
@@ -420,6 +445,12 @@
                         <tr>
                           <th>研習名稱（必填）</th>
                           <td><input class="{required: true} input-block-level" placeholder="研習名稱..." type="text" name="StudyName" id="study_#index#_StudyName"/></td>
+                        </tr>
+                        <tr>
+                          <th>研習分類（必填）</th>
+                          <td class="my-cateogry">
+                            <div data-type="StudyCategory" id="study_#index#_StudyCategory"></div>
+                          </td>
                         </tr>
                         <tr>
                           <th>心得</th>
