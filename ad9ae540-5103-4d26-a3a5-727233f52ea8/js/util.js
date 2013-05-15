@@ -43,6 +43,7 @@ LessonPlanManager.Util = function() {
         } else {
             $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + error + "\n</div>");
         }
+        $('body').scrollTop(0);
     };
     //#region 預覽
     myToPreview = function(jEle) {

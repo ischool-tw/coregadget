@@ -184,6 +184,7 @@ $(function() {
                                         $('<a href="#material" data-toggle="tab"></a>').tab('show');
                                         $('#delModal').modal("hide");
                                         $('#mainMsg').html('<div class="alert alert-success">\n  刪除成功！\n</div>');
+                                        $('body').scrollTop(0);
                                         setTimeout("$('#mainMsg').html('')", 1500);
                                     }
                                 }

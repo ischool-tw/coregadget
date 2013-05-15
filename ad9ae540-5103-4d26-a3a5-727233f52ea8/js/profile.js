@@ -19,6 +19,7 @@ $(function() {
         var sheepItForm3 = $('#working_experience').sheepIt(options);
         var sheepItForm4 = $('#skill_certify').sheepIt(options);
         var sheepItForm5 = $('#accomplishments').sheepIt(options);
+        var sheepItForm6 = $('#book').sheepIt(options);
 
         target.on('focus', 'input.date:not(.hasDatepicker)', function() {
             $( this ).datepicker({
@@ -77,7 +78,7 @@ $(function() {
                     tmp_req.TeacherCertify = { TeacherCertifys: { Certify: [] } };
                     $(LessonPlanManager.Util.handleArray(tmp_req.TeacherCertify_Number)).each(function(index, item) {
                         tmp_req.TeacherCertify.TeacherCertifys.Certify.push({
-                            Number: item,
+                            "Number": item,
                             Subject: LessonPlanManager.Util.handleArray(tmp_req.TeacherCertify_Subject)[index]
                         });
                     });
@@ -125,6 +126,16 @@ $(function() {
                     });
                 } else {
                     tmp_req.Accomplishments = '';
+                }
+                if (tmp_req.Book_Subject) {
+                    tmp_req.Book = { Books: { Book: [] } };
+                    $(LessonPlanManager.Util.handleArray(tmp_req.Book_Subject)).each(function(index, item) {
+                        tmp_req.Book.Books.Book.push({
+                            Subject: item
+                        });
+                    });
+                } else {
+                    tmp_req.Book = '';
                 }
 
                 LessonPlanManager.StartUp.profileSave({Request: { TeacherExt : tmp_req }} , setProfile);
@@ -196,6 +207,9 @@ $(function() {
             if (_myInfo.Accomplishments) {
                 sheepItForm5.reset(LessonPlanManager.Util.handleArray(_myInfo.Accomplishments.Accomplishments.Accomplishment));
             }
+            if (_myInfo.Book) {
+                sheepItForm6.reset(LessonPlanManager.Util.handleArray(_myInfo.Book.Books.Book));
+            }
             //#endregion
         };
         //#endregion
@@ -215,9 +229,11 @@ $(function() {
             _myInfo.SkillCertify = req.SkillCertify;
             _myInfo.TeacherCertify = req.TeacherCertify;
             _myInfo.WorkingExperience = req.WorkingExperience;
+            _myInfo.Book = req.Book;
 
             target.find('[data-action=save]').text('儲存變更').removeClass("disabled");
             $('#mainMsg').html('<div class="alert alert-success">\n  儲存成功！\n</div>');
+            $('body').scrollTop(0);
             setTimeout("$('#mainMsg').html('')", 1500);
         };
         LessonPlanManager.StartUp.profileReady(showProfile);

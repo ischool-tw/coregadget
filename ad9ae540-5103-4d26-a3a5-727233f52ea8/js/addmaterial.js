@@ -8,8 +8,9 @@ $(function() {
             , _number = 0
             , _uid
             , _wantDel = {
-                FileCondition: []
-            }; //點選刪除時加入，點選取消時清空;
+                FileCondition: [] //點選刪除時加入，點選取消時清空;
+            };
+
 
         //#region 設定動態新增的plugin
         var sheepItForm = $('#content').sheepIt({
@@ -39,6 +40,7 @@ $(function() {
                     target.find('form').validate().element(this);
                 }
             });
+            $( this ).focus();
         });
 
         //#region 點選上傳檔案
@@ -111,6 +113,7 @@ $(function() {
 
                         btn.text('儲存變更').removeClass('disabled');
                         $('#mainMsg').html('<div class="alert alert-success">\n  儲存成功！\n</div>');
+                        $('body').scrollTop(0);
                         setTimeout("$('#mainMsg').html('')", 1500);
                     }
                 };
@@ -290,6 +293,8 @@ $(function() {
                         }
                     });
                 }
+            } else {
+                target.find('td.my-error:first').find('input, select').first().focus();
             }
         });
 
@@ -410,6 +415,8 @@ $(function() {
         return {
             loadMaterial : function(uid) {
                 // 清空所有欄位值
+                target.find('td.my-error').removeClass('my-error');
+                target.find('span[generated="true"]').remove();
                 target.find('input:text, input:file, textarea').val('');
                 target.find('[data-type=fileInfo]').html('');
                 target.find('input:checkbox').prop('checked', false);
