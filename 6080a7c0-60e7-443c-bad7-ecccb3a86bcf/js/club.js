@@ -812,7 +812,7 @@ _gg.EditCadres = function (clubid) {
             });
         }
 
-        $('#editModal').find('h3').html('新增幹部').end().find('fieldset').html(items.join(''));
+        $('#editModal').find('h3').html('編輯幹部').end().find('fieldset').html(items.join(''));
         $("#save-data").attr('data-type', 'cadres');
         $("#cadres-add").attr("new-id", maxCadresNum);
         $('#editModal input:text:first').focus();
