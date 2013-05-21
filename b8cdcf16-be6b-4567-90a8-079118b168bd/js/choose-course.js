@@ -33,12 +33,15 @@ jQuery(function () {
     })
 
     $('#myModal').on('click', '#save-data', function() {
-        $(this).button("loading");
-        var _action = $(this).attr('action-type');
-        if (_action === 'quit-add') {
-            vm.save_quit_add();
-        } else if (_action === 'reg-confirm') {
-            vm.set_registration_confirm();
+        if ($(this).prop('disabled') === false) {
+            $(this).button("loading");
+            $('#myModal [data-dismiss="modal"]').hide();
+            var _action = $(this).attr('action-type');
+            if (_action === 'quit-add') {
+                vm.save_quit_add();
+            } else if (_action === 'reg-confirm') {
+                vm.set_registration_confirm();
+            }
         }
     });
 
@@ -55,6 +58,7 @@ jQuery(function () {
 
     $('body').on('click', 'button[data-target=#myModal]', function() {
         $('#save-data').button('reset');
+        $('#myModal [data-dismiss="modal"]').show();
         $('#errorMessage').html('');
         $('#myModal .alert-danger').removeClass('alert-danger');
 
@@ -523,6 +527,7 @@ jQuery(function () {
                     result: function (response, error, http) {
                         if (error !== null) {
                             $('#save-data').button('reset');
+                            $('#myModal [data-dismiss="modal"]').show();
                             _gg.set_error_message('#errorMessage', 'SetRegistrationConfirm', error);
                         } else {
                             if (response.Result && response.Result.ExecuteCount) {
@@ -895,6 +900,7 @@ jQuery(function () {
                                     result: function (response, error, http) {
                                         if (error !== null) {
                                             $('#save-data').button('reset');
+                                            $('#myModal [data-dismiss="modal"]').show();
                                             _gg.set_error_message('#mainMsg', '', '郵件發送失敗！請連絡系統管理員');
                                         }
                                     }
@@ -931,6 +937,7 @@ jQuery(function () {
                         result: function (response, error, http) {
                             if (error !== null) {
                                 $('#save-data').button('reset');
+                                $('#myModal [data-dismiss="modal"]').show();
                                 _gg.set_error_message('#errorMessage', 'AddCSAttend', error);
                             } else {
                                 conn_log.ready(function(){
@@ -941,6 +948,7 @@ jQuery(function () {
                                         result: function (response, error, http) {
                                             if (error !== null) {
                                                 $('#save-data').button('reset');
+                                                $('#myModal [data-dismiss="modal"]').show();
                                                 _gg.set_error_message('#errorMessage', 'AddCSAttendLog', error);
                                             } else {
                                                 gadget.getContract("emba.student").send({
@@ -994,6 +1002,7 @@ jQuery(function () {
                         result: function (response, error, http) {
                             if (error !== null) {
                                 $('#save-data').button('reset');
+                                $('#myModal [data-dismiss="modal"]').show();
                                 _gg.set_error_message('#errorMessage', 'DelCSAttend', error);
                             } else {
                                 conn_log.ready(function(){
@@ -1004,6 +1013,7 @@ jQuery(function () {
                                         result: function (response, error, http) {
                                             if (error !== null) {
                                                 $('#save-data').button('reset');
+                                                $('#myModal [data-dismiss="modal"]').show();
                                                 _gg.set_error_message('#errorMessage', 'AddCSAttendLog', error);
                                             } else {
                                                 gadget.getContract("emba.student").send({
