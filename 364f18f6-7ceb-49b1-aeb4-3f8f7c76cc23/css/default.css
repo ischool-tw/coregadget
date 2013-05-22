@@ -27,3 +27,9 @@ table thead tr:nth-child(2) > th {
 .my-err-info {
   cursor: pointer;
 }
+.my-th-align {
+  text-align: center;
+}
+.my-model-radio {
+  margin-top: 30px;
+}

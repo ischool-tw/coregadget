@@ -4,19 +4,23 @@
   <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
   <script>
     init({
-      application: "dev.sh_d", //"h.trialschool.tw", //"http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_kh",
-      paramValues: {}
+      application: "dev.sh_d",
+      paramValues: {
+        "system_type": "kh",
+        "system_exam_must_enddate": "true",
+        "system_fix_must_enddate": "true",
+        "system_show_model": "subject",
+        "system_position": "student"
+      }
+      // paramValues: {"system_type": "hs"}
     });
   </script>
   <link href="css/bootstrap.css" rel="stylesheet" />
   <link href="css/bootstrap-responsive.css" rel="stylesheet" />
   <link href="css/mybootstrap.css" rel="stylesheet" />
-  <!--<link href="css/base.less" rel="stylesheet/less" />
-  <link href="css/default.less" rel="stylesheet/less" />-->
   <link href="css/base.css" rel="stylesheet" />
   <link href="css/default.css" rel="stylesheet" />
   <script src="js/jquery.min.js"></script>
-  <!--<script src="js/less.min.js"></script>-->
   <script src="js/bootstrap.js"></script>
   <script src="js/examscore.js"></script>
 </head>
@@ -30,8 +34,15 @@
       </div>
       <div class="row-fluid">
         <div class="span12" id="container-main">
-          <div class="my-schoolyear-semester-widget" title="請選擇學年度學期" id="Semester">
-            <div class="btn-group" data-toggle="buttons-radio">
+          <ul class="nav nav-pills" id="children-list"></ul>
+          <div>
+            <div class="my-schoolyear-semester-widget pull-left" title="請選擇學年度學期" id="Semester">
+              <div class="btn-group" data-toggle="buttons-radio">
+              </div>
+            </div>
+            <div class="my-model-radio pull-right controls">
+              <label class="checkbox inline"><input type="radio" name="show_model" value="subject">科目</label>
+              <label class="checkbox inline"><input type="radio" name="show_model" value="domain">領域加權</label>
             </div>
           </div>
           <div>
