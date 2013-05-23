@@ -94,7 +94,7 @@ Exam = do ->
         if error isnt null
           set_error_message "#mainMsg", "GetScoreCalcRule", error
         else
-          if response.ScoreCalcRule?.Content?.ScoreCalcRule?['成績計算規則']?['各項成績計算位數']?['科目成績計算']
+          if response.ScoreCalcRule?.Content?.ScoreCalcRule?['成績計算規則']?['各項成績計算位數']?['科目成績計算']?
             obj = response.ScoreCalcRule.Content.ScoreCalcRule["成績計算規則"]["各項成績計算位數"]["科目成績計算"]
             _places = obj["位數"] or 0
             switch obj["進位方式"]
@@ -154,7 +154,7 @@ Exam = do ->
           if error isnt null
             set_error_message "#mainMsg", "GetJHCourseExamScore", error
           else
-            if response.ExamScoreList?.Seme?.Course
+            if response.ExamScoreList?.Seme?.Course?
               oCourse = myHandleArray(response.ExamScoreList.Seme.Course).sort(Comparer)
               oScore = _exam_score[schoolYear + semester] = []
               oElasticity = {
@@ -169,8 +169,8 @@ Exam = do ->
                 ret
 
               $(oCourse).each (index, course) ->
-                course.Domain = course.Domain ? '彈性課程'
-                course.Subject = course.Subject ? '社團'
+                course.Domain = course.Domain or '彈性課程'
+                course.Subject = course.Subject or ''
 
                 if course.Domain is '彈性課程'
                   oElasticity.Courses.push course
@@ -342,7 +342,7 @@ Exam = do ->
                         avg_score = parseInt(ext_assignmentScore, 10)
                         td_score = (if (ext_assignmentScore) then Number(avg_score).toFixed(_places) else "")
 
-                  if avg_score?
+                  if avg_score
                     total_score[exam.ExamID]['examTotal'] = FloatAdd(total_score[exam.ExamID]['examTotal'], avg_score)
                     total_score[exam.ExamID]['examCount'] += 1
                     total_score[exam.ExamID]['weightTotal'] = FloatAdd(total_score[exam.ExamID]['weightTotal'], FloatMul(avg_score, course.Credit))
@@ -354,7 +354,7 @@ Exam = do ->
                 # 領域加權時的處理，記錄index及預設的加權欄位
                 if _system_show_model is "domain" && idx is 0
                   total_domain_score[exam.ExamID]['tbody1Index'] = tbody1.length
-                  tbody1.push """<td rowspan="#{domain.Courses.length}"></td><td rowspan="#{domain.Courses.length}"></td>"""
+                  tbody1.push """<td rowspan="#{domain.Courses.length}"></td><td rowspan="#{domain.Courses.length}" class="my-effect"></td>"""
 
                 # 科目成績
                 if _system_show_model is "subject"
@@ -368,17 +368,17 @@ Exam = do ->
 
                       # 除了科目為「體育」和第一次考試，皆與上次比較進退步
                       if course.Subject is "體育" or pre_score is -999
-                        tbody1.push "<td>&nbsp;</td>"
+                        tbody1.push """<td class="my-effect">&nbsp;</td>"""
                       else
                         if avg_score > pre_score
-                          tbody1.push """<td><span class="my-progress">↑</span></td>"""
+                          tbody1.push """<td class="my-effect"><span class="my-progress">↑</span></td>"""
                         else if avg_score < pre_score
-                          tbody1.push """<td><span class="my-regress">↓</span></td>"""
+                          tbody1.push """<td class="my-effect"><span class="my-regress">↓</span></td>"""
                         else
-                          tbody1.push "<td>&nbsp;</td>"
+                          tbody1.push """<td class="my-effect">&nbsp;</td>"""
                       pre_score = avg_score
                     else
-                      tbody1.push "<td></td><td></td>"
+                      tbody1.push """<td>&nbsp;</td><td class="my-effect">&nbsp;</td>"""
                   else if show_data is false
                     tbody1.push """
                       <td colspan="2" rel="tooltip"
@@ -386,13 +386,13 @@ Exam = do ->
                         未開放</td>
                     """
                   else
-                    tbody1.push "<td></td><td></td>"
+                    tbody1.push """<td>&nbsp;</td><td class="my-effect">&nbsp;</td>"""
 
               else
                 if _system_show_model is "domain" && idx is 0
-                  tbody1.push """<td rowspan="#{domain.Courses.length}"></td><td rowspan="#{domain.Courses.length}"></td>"""
+                  tbody1.push """<td rowspan="#{domain.Courses.length}"></td><td class="my-effect" rowspan="#{domain.Courses.length}"></td>"""
                 else if _system_show_model is "subject"
-                  tbody1.push "<td></td><td></td>"
+                  tbody1.push """<td>&nbsp;</td><td class="my-effect">&nbsp;</td>"""
 
             # 高雄平時評量
             if _system_type is "kh"
@@ -408,7 +408,7 @@ Exam = do ->
                     show_fix = false  if fixenddate >= now
 
               if show_fix is true
-                if course.FixExtension?.Extension?.OrdinarilyScore
+                if course.FixExtension?.Extension?.OrdinarilyScore?
                   fix_score = course.FixExtension.Extension.OrdinarilyScore
 
 
@@ -453,7 +453,7 @@ Exam = do ->
             # 填入領域定期成績的加權平均
             $(exam_list).each (index, examid) ->
               domain_html = ""
-              avg_domain_score = if total_domain_score[examid]['weightCount']? then FloatMath(FloatDiv(total_domain_score[examid]['weightTotal'], total_domain_score[examid]['weightCount']), _math_type, _places) else null
+              avg_domain_score = if total_domain_score[examid]['weightCount'] then FloatMath(FloatDiv(total_domain_score[examid]['weightTotal'], total_domain_score[examid]['weightCount']), _math_type, _places) else null
 
               if total_domain_score[examid]['weightCount']
                 if avg_domain_score and avg_domain_score < 60
@@ -462,17 +462,17 @@ Exam = do ->
                   domain_html += """<td my-data="#{examid}" rowspan="#{domain.Courses.length}">#{Number(avg_domain_score).toFixed(_places)}</td>"""
 
                 if pre_score is -999
-                  domain_html += """<td rowspan="#{domain.Courses.length}">&nbsp;</td>"""
+                  domain_html += """<td class="my-effect" rowspan="#{domain.Courses.length}">&nbsp;</td>"""
                 else
                   if avg_domain_score > pre_score
-                    domain_html += """<td rowspan="#{domain.Courses.length}"><span class="my-progress">↑</span></td>"""
+                    domain_html += """<td class="my-effect" rowspan="#{domain.Courses.length}"><span class="my-progress">↑</span></td>"""
                   else if avg_domain_score < pre_score
-                    domain_html += """<td rowspan="#{domain.Courses.length}"><span class="my-regress">↓</span></td>"""
+                    domain_html += """<td class="my-effect" rowspan="#{domain.Courses.length}"><span class="my-regress">↓</span></td>"""
                   else
-                    domain_html += """<td rowspan="#{domain.Courses.length}">&nbsp;</td>"""
+                    domain_html += """<td class="my-effect" rowspan="#{domain.Courses.length}">&nbsp;</td>"""
               else
                 domain_html += """<td my-data="#{examid}" rowspan="#{domain.Courses.length}">&nbsp;</td>"""
-                domain_html += """<td rowspan="#{domain.Courses.length}">&nbsp;</td>"""
+                domain_html += """<td class="my-effect" rowspan="#{domain.Courses.length}">&nbsp;</td>"""
 
               if total_domain_score[examid]['tbody1Index'] isnt 0
                 tbody1[total_domain_score[examid]['tbody1Index']] = domain_html
@@ -483,7 +483,7 @@ Exam = do ->
             # 填入領域平時評量的加權平均
             if _system_type is "kh"
               domain_html = ""
-              avg_domain_score = if total_fixdomain_score['weightCount']? then FloatMath(FloatDiv(total_fixdomain_score['weightTotal'], total_fixdomain_score['weightCount']), _math_type, _places) else null
+              avg_domain_score = if total_fixdomain_score['weightCount'] then FloatMath(FloatDiv(total_fixdomain_score['weightTotal'], total_fixdomain_score['weightCount']), _math_type, _places) else null
 
               if total_fixdomain_score['weightCount']
                 if avg_domain_score and avg_domain_score < 60
@@ -511,10 +511,10 @@ Exam = do ->
           avg_count = 0
           if _system_show_model is "subject"
             avg_count = total_score[examid]['examCount'] or 0
-            avg_exam_score = if total_score[examid]['examCount'] then FloatMath(FloatDiv(total_score[examid]['examTotal'], total_score[examid]['examCount']), _math_type, _places) else 0
+            avg_exam_score = if avg_count then FloatMath(FloatDiv(total_score[examid]['examTotal'], avg_count), _math_type, _places) else 0
           else if _system_show_model is "domain"
             avg_count = total_score[examid]['weightCount'] or 0
-            avg_exam_score = if total_score[examid]['weightCount'] then FloatMath(FloatDiv(total_score[examid]['weightTotal'], total_score[examid]['weightCount']), _math_type, _places) else 0
+            avg_exam_score = if avg_count then FloatMath(FloatDiv(total_score[examid]['weightTotal'], avg_count), _math_type, _places) else 0
 
           if avg_count
             if avg_exam_score and avg_exam_score < 60
@@ -532,10 +532,10 @@ Exam = do ->
           avg_count = 0
           if _system_show_model is "subject"
             avg_count = total_score['fixdomain']['examCount'] or 0
-            avg_exam_score = if total_score['fixdomain']['examCount'] then FloatMath(FloatDiv(total_score['fixdomain']['examTotal'], total_score['fixdomain']['examCount']), _math_type, _places) else 0
+            avg_exam_score = if avg_count then FloatMath(FloatDiv(total_score['fixdomain']['examTotal'], avg_count), _math_type, _places) else 0
           else if _system_show_model is "domain"
             avg_count = total_score['fixdomain']['weightCount'] or 0
-            avg_exam_score = if total_score['fixdomain']['weightCount'] then FloatMath(FloatDiv(total_score['fixdomain']['weightTotal'], total_score['fixdomain']['weightCount']), _math_type, _places) else 0
+            avg_exam_score = if avg_count then FloatMath(FloatDiv(total_score['fixdomain']['weightTotal'], avg_count), _math_type, _places) else 0
 
           if avg_count
             if avg_exam_score and avg_exam_score < 60
@@ -665,8 +665,8 @@ Exam = do ->
   Comparer = (s1, s2) ->
     ComparerWithKeys = (s1, s2) ->
       return 0  if s1 is s2
-      return -1  if s1.length is 0
-      return 1  if s2.length is 0
+      return 1  if s1.length is 0
+      return -1  if s2.length is 0
       maxLength = (if (s1.length > s2.length) then s2.length else s1.length)
       i = 0
 

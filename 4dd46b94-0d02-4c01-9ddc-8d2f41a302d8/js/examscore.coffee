@@ -361,8 +361,8 @@ Exam = do ->
       key = null
       maxLength = null
       return 0  if s1 is s2
-      return -1  if s1.length is 0
-      return 1  if s2.length is 0
+      return 1  if s1.length is 0
+      return -1  if s2.length is 0
       maxLength = ((if s1.length > s2.length then s2.length else s1.length))
       i = 0
       while i < maxLength

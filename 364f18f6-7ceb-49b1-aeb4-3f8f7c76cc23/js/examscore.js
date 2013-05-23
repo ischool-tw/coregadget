@@ -107,7 +107,7 @@
           if (error !== null) {
             return set_error_message("#mainMsg", "GetScoreCalcRule", error);
           } else {
-            if ((_ref = response.ScoreCalcRule) != null ? (_ref1 = _ref.Content) != null ? (_ref2 = _ref1.ScoreCalcRule) != null ? (_ref3 = _ref2['成績計算規則']) != null ? (_ref4 = _ref3['各項成績計算位數']) != null ? _ref4['科目成績計算'] : void 0 : void 0 : void 0 : void 0 : void 0) {
+            if (((_ref = response.ScoreCalcRule) != null ? (_ref1 = _ref.Content) != null ? (_ref2 = _ref1.ScoreCalcRule) != null ? (_ref3 = _ref2['成績計算規則']) != null ? (_ref4 = _ref3['各項成績計算位數']) != null ? _ref4['科目成績計算'] : void 0 : void 0 : void 0 : void 0 : void 0) != null) {
               obj = response.ScoreCalcRule.Content.ScoreCalcRule["成績計算規則"]["各項成績計算位數"]["科目成績計算"];
               _places = obj["位數"] || 0;
               switch (obj["進位方式"]) {
@@ -179,7 +179,7 @@
             if (error !== null) {
               return set_error_message("#mainMsg", "GetJHCourseExamScore", error);
             } else {
-              if ((_ref = response.ExamScoreList) != null ? (_ref1 = _ref.Seme) != null ? _ref1.Course : void 0 : void 0) {
+              if (((_ref = response.ExamScoreList) != null ? (_ref1 = _ref.Seme) != null ? _ref1.Course : void 0 : void 0) != null) {
                 oCourse = myHandleArray(response.ExamScoreList.Seme.Course).sort(Comparer);
                 oScore = _exam_score[schoolYear + semester] = [];
                 oElasticity = {
@@ -198,10 +198,10 @@
                   return ret;
                 };
                 $(oCourse).each(function(index, course) {
-                  var idx, obj, _ref2, _ref3;
+                  var idx, obj;
 
-                  course.Domain = (_ref2 = course.Domain) != null ? _ref2 : '彈性課程';
-                  course.Subject = (_ref3 = course.Subject) != null ? _ref3 : '社團';
+                  course.Domain = course.Domain || '彈性課程';
+                  course.Subject = course.Subject || '';
                   if (course.Domain === '彈性課程') {
                     return oElasticity.Courses.push(course);
                   } else {
@@ -374,7 +374,7 @@
                           td_score = (ext_assignmentScore ? Number(avg_score).toFixed(_places) : "");
                         }
                     }
-                    if (avg_score != null) {
+                    if (avg_score) {
                       total_score[exam.ExamID]['examTotal'] = FloatAdd(total_score[exam.ExamID]['examTotal'], avg_score);
                       total_score[exam.ExamID]['examCount'] += 1;
                       total_score[exam.ExamID]['weightTotal'] = FloatAdd(total_score[exam.ExamID]['weightTotal'], FloatMul(avg_score, course.Credit));
@@ -385,7 +385,7 @@
                   }
                   if (_system_show_model === "domain" && idx === 0) {
                     total_domain_score[exam.ExamID]['tbody1Index'] = tbody1.length;
-                    tbody1.push("<td rowspan=\"" + domain.Courses.length + "\"></td><td rowspan=\"" + domain.Courses.length + "\"></td>");
+                    tbody1.push("<td rowspan=\"" + domain.Courses.length + "\"></td><td rowspan=\"" + domain.Courses.length + "\" class=\"my-effect\"></td>");
                   }
                   if (_system_show_model === "subject") {
                     if (show_data === true) {
@@ -396,31 +396,31 @@
                           tbody1.push("<td my-data=\"" + exam.ExamID + "\">" + td_score + "</td>");
                         }
                         if (course.Subject === "體育" || pre_score === -999) {
-                          tbody1.push("<td>&nbsp;</td>");
+                          tbody1.push("<td class=\"my-effect\">&nbsp;</td>");
                         } else {
                           if (avg_score > pre_score) {
-                            tbody1.push("<td><span class=\"my-progress\">↑</span></td>");
+                            tbody1.push("<td class=\"my-effect\"><span class=\"my-progress\">↑</span></td>");
                           } else if (avg_score < pre_score) {
-                            tbody1.push("<td><span class=\"my-regress\">↓</span></td>");
+                            tbody1.push("<td class=\"my-effect\"><span class=\"my-regress\">↓</span></td>");
                           } else {
-                            tbody1.push("<td>&nbsp;</td>");
+                            tbody1.push("<td class=\"my-effect\">&nbsp;</td>");
                           }
                         }
                         return pre_score = avg_score;
                       } else {
-                        return tbody1.push("<td></td><td></td>");
+                        return tbody1.push("<td>&nbsp;</td><td class=\"my-effect\">&nbsp;</td>");
                       }
                     } else if (show_data === false) {
                       return tbody1.push("<td colspan=\"2\" rel=\"tooltip\"\n  title=\"" + (exam.ScoreDetail.EndTime ? exam.ScoreDetail.EndTime + "後開放" : "尚未開放") + "\">\n  未開放</td>");
                     } else {
-                      return tbody1.push("<td></td><td></td>");
+                      return tbody1.push("<td>&nbsp;</td><td class=\"my-effect\">&nbsp;</td>");
                     }
                   }
                 } else {
                   if (_system_show_model === "domain" && idx === 0) {
-                    return tbody1.push("<td rowspan=\"" + domain.Courses.length + "\"></td><td rowspan=\"" + domain.Courses.length + "\"></td>");
+                    return tbody1.push("<td rowspan=\"" + domain.Courses.length + "\"></td><td class=\"my-effect\" rowspan=\"" + domain.Courses.length + "\"></td>");
                   } else if (_system_show_model === "subject") {
-                    return tbody1.push("<td></td><td></td>");
+                    return tbody1.push("<td>&nbsp;</td><td class=\"my-effect\">&nbsp;</td>");
                   }
                 }
               });
@@ -439,7 +439,7 @@
                   }
                 }
                 if (show_fix === true) {
-                  if ((_ref = course.FixExtension) != null ? (_ref1 = _ref.Extension) != null ? _ref1.OrdinarilyScore : void 0 : void 0) {
+                  if (((_ref = course.FixExtension) != null ? (_ref1 = _ref.Extension) != null ? _ref1.OrdinarilyScore : void 0 : void 0) != null) {
                     fix_score = course.FixExtension.Extension.OrdinarilyScore;
                   }
                   if (_system_show_model === "domain") {
@@ -481,7 +481,7 @@
                 var avg_domain_score, domain_html;
 
                 domain_html = "";
-                avg_domain_score = total_domain_score[examid]['weightCount'] != null ? FloatMath(FloatDiv(total_domain_score[examid]['weightTotal'], total_domain_score[examid]['weightCount']), _math_type, _places) : null;
+                avg_domain_score = total_domain_score[examid]['weightCount'] ? FloatMath(FloatDiv(total_domain_score[examid]['weightTotal'], total_domain_score[examid]['weightCount']), _math_type, _places) : null;
                 if (total_domain_score[examid]['weightCount']) {
                   if (avg_domain_score && avg_domain_score < 60) {
                     domain_html += "<td class=\"my-fail\" my-data=\"" + examid + "\" rowspan=\"" + domain.Courses.length + "\">" + (Number(avg_domain_score).toFixed(_places)) + "</td>";
@@ -489,19 +489,19 @@
                     domain_html += "<td my-data=\"" + examid + "\" rowspan=\"" + domain.Courses.length + "\">" + (Number(avg_domain_score).toFixed(_places)) + "</td>";
                   }
                   if (pre_score === -999) {
-                    domain_html += "<td rowspan=\"" + domain.Courses.length + "\">&nbsp;</td>";
+                    domain_html += "<td class=\"my-effect\" rowspan=\"" + domain.Courses.length + "\">&nbsp;</td>";
                   } else {
                     if (avg_domain_score > pre_score) {
-                      domain_html += "<td rowspan=\"" + domain.Courses.length + "\"><span class=\"my-progress\">↑</span></td>";
+                      domain_html += "<td class=\"my-effect\" rowspan=\"" + domain.Courses.length + "\"><span class=\"my-progress\">↑</span></td>";
                     } else if (avg_domain_score < pre_score) {
-                      domain_html += "<td rowspan=\"" + domain.Courses.length + "\"><span class=\"my-regress\">↓</span></td>";
+                      domain_html += "<td class=\"my-effect\" rowspan=\"" + domain.Courses.length + "\"><span class=\"my-regress\">↓</span></td>";
                     } else {
-                      domain_html += "<td rowspan=\"" + domain.Courses.length + "\">&nbsp;</td>";
+                      domain_html += "<td class=\"my-effect\" rowspan=\"" + domain.Courses.length + "\">&nbsp;</td>";
                     }
                   }
                 } else {
                   domain_html += "<td my-data=\"" + examid + "\" rowspan=\"" + domain.Courses.length + "\">&nbsp;</td>";
-                  domain_html += "<td rowspan=\"" + domain.Courses.length + "\">&nbsp;</td>";
+                  domain_html += "<td class=\"my-effect\" rowspan=\"" + domain.Courses.length + "\">&nbsp;</td>";
                 }
                 if (total_domain_score[examid]['tbody1Index'] !== 0) {
                   tbody1[total_domain_score[examid]['tbody1Index']] = domain_html;
@@ -510,7 +510,7 @@
               });
               if (_system_type === "kh") {
                 domain_html = "";
-                avg_domain_score = total_fixdomain_score['weightCount'] != null ? FloatMath(FloatDiv(total_fixdomain_score['weightTotal'], total_fixdomain_score['weightCount']), _math_type, _places) : null;
+                avg_domain_score = total_fixdomain_score['weightCount'] ? FloatMath(FloatDiv(total_fixdomain_score['weightTotal'], total_fixdomain_score['weightCount']), _math_type, _places) : null;
                 if (total_fixdomain_score['weightCount']) {
                   if (avg_domain_score && avg_domain_score < 60) {
                     domain_html += "<td class=\"my-fail\" my-data=\"Ordinarily\" rowspan=\"" + domain.Courses.length + "\">" + (Number(avg_domain_score).toFixed(_places)) + "</td>";
@@ -539,10 +539,10 @@
             avg_count = 0;
             if (_system_show_model === "subject") {
               avg_count = total_score[examid]['examCount'] || 0;
-              avg_exam_score = total_score[examid]['examCount'] ? FloatMath(FloatDiv(total_score[examid]['examTotal'], total_score[examid]['examCount']), _math_type, _places) : 0;
+              avg_exam_score = avg_count ? FloatMath(FloatDiv(total_score[examid]['examTotal'], avg_count), _math_type, _places) : 0;
             } else if (_system_show_model === "domain") {
               avg_count = total_score[examid]['weightCount'] || 0;
-              avg_exam_score = total_score[examid]['weightCount'] ? FloatMath(FloatDiv(total_score[examid]['weightTotal'], total_score[examid]['weightCount']), _math_type, _places) : 0;
+              avg_exam_score = avg_count ? FloatMath(FloatDiv(total_score[examid]['weightTotal'], avg_count), _math_type, _places) : 0;
             }
             if (avg_count) {
               if (avg_exam_score && avg_exam_score < 60) {
@@ -561,10 +561,10 @@
             avg_count = 0;
             if (_system_show_model === "subject") {
               avg_count = total_score['fixdomain']['examCount'] || 0;
-              avg_exam_score = total_score['fixdomain']['examCount'] ? FloatMath(FloatDiv(total_score['fixdomain']['examTotal'], total_score['fixdomain']['examCount']), _math_type, _places) : 0;
+              avg_exam_score = avg_count ? FloatMath(FloatDiv(total_score['fixdomain']['examTotal'], avg_count), _math_type, _places) : 0;
             } else if (_system_show_model === "domain") {
               avg_count = total_score['fixdomain']['weightCount'] || 0;
-              avg_exam_score = total_score['fixdomain']['weightCount'] ? FloatMath(FloatDiv(total_score['fixdomain']['weightTotal'], total_score['fixdomain']['weightCount']), _math_type, _places) : 0;
+              avg_exam_score = avg_count ? FloatMath(FloatDiv(total_score['fixdomain']['weightTotal'], avg_count), _math_type, _places) : 0;
             }
             if (avg_count) {
               if (avg_exam_score && avg_exam_score < 60) {
@@ -704,10 +704,10 @@
           return 0;
         }
         if (s1.length === 0) {
-          return -1;
+          return 1;
         }
         if (s2.length === 0) {
-          return 1;
+          return -1;
         }
         maxLength = (s1.length > s2.length ? s2.length : s1.length);
         i = 0;

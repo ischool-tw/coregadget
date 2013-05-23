@@ -431,10 +431,10 @@
           return 0;
         }
         if (s1.length === 0) {
-          return -1;
+          return 1;
         }
         if (s2.length === 0) {
-          return 1;
+          return -1;
         }
         maxLength = (s1.length > s2.length ? s2.length : s1.length);
         i = 0;
