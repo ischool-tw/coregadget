@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="評量成績" description="學生-評量成績(高中)">
+  <ModulePrefs title="評量成績" description="學生、家長-評量成績(高中)">
     <Title lang="zh-TW">評量成績</Title>
     <Icon>icon.png</Icon>
     <Mobile />
@@ -8,5 +8,13 @@
     </Title>
     <Title lang="en-US">
     </Title>
+    <AllowParams>
+      <Param key="system_exam_must_enddate" type="limit" description="本學期定期成績是否於輸入截止後才顯示成績">
+        <value>true</value><value>false</value>
+      </Param>
+      <Param key="system_position" type="limit" description="使用小工具者的身份">
+        <value>student</value><value>parent</value>
+      </Param>
+    </AllowParams>
   </ModulePrefs>
 </Module>
