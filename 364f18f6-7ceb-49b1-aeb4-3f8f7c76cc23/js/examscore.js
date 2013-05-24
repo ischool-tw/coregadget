@@ -286,15 +286,19 @@
               return $(course.Exam).each(function(index, exam) {
                 if (exam.ExamID) {
                   if ($.inArray(exam.ExamID, exam_list) === -1) {
-                    exam_list.push(exam.ExamID);
-                    thead1.push("<th colspan=\"2\">" + exam.ExamName + "</th>");
-                    thead2.push("<th colspan=\"2\">成績</th>");
-                    return total_score[exam.ExamID] = {
+                    total_score[exam.ExamID] = {
                       'examTotal': 0,
                       'examCount': 0,
                       'weightTotal': 0,
                       'weightCount': 0
                     };
+                    exam_list.push(exam.ExamID);
+                    thead1.push("<th colspan=\"2\">" + exam.ExamName + "</th>");
+                    if (_system_type === "hs" && _system_show_model === "subject") {
+                      return thead2.push("<th colspan=\"2\" class=\"my-subject-thead\">總成績(定期/平時)</th>");
+                    } else {
+                      return thead2.push("<th colspan=\"2\">成績</th>");
+                    }
                   }
                 }
               });
@@ -527,7 +531,7 @@
             }
           });
           if (_system_show_model === "subject") {
-            tbody1.push("<tr><th colspan=\"3\">平均</th>");
+            tbody1.push("<tr><th colspan=\"3\">總平均</th>");
           } else if (_system_show_model === "domain") {
             tbody1.push("<tr><th colspan=\"3\">加權平均</th>");
           }

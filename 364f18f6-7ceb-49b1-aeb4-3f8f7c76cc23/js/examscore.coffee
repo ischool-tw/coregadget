@@ -247,15 +247,20 @@ Exam = do ->
             $(course.Exam).each (index, exam) ->
               if exam.ExamID
                 if $.inArray(exam.ExamID, exam_list) is -1
-                  exam_list.push exam.ExamID
-                  thead1.push """<th colspan="2">#{exam.ExamName}</th>"""
-                  thead2.push """<th colspan="2">成績</th>"""
                   total_score[exam.ExamID] = {
                     'examTotal': 0
                     'examCount': 0
                     'weightTotal': 0
                     'weightCount': 0
                   }
+
+                  exam_list.push exam.ExamID
+                  thead1.push """<th colspan="2">#{exam.ExamName}</th>"""
+
+                  if _system_type is "hs" and _system_show_model is "subject"
+                    thead2.push """<th colspan="2" class="my-subject-thead">總成績(定期/平時)</th>"""
+                  else
+                    thead2.push """<th colspan="2">成績</th>"""
 
         # 領域
         $(exam_data).each (index, domain) ->
@@ -501,7 +506,7 @@ Exam = do ->
 
         # 定期評量平均、及加權總平均
         if _system_show_model is "subject"
-          tbody1.push """<tr><th colspan="3">平均</th>"""
+          tbody1.push """<tr><th colspan="3">總平均</th>"""
         else if _system_show_model is "domain"
           tbody1.push """<tr><th colspan="3">加權平均</th>"""
 

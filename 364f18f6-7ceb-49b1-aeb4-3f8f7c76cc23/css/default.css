@@ -36,3 +36,6 @@ table thead tr:nth-child(2) > th {
 .my-effect {
   width: 35px;
 }
+.my-subject-thead {
+  min-width: 120px;
+}
