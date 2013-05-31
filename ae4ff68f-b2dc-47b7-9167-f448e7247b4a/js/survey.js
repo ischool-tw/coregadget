@@ -225,7 +225,7 @@ var _gg = function() {
                 } else {
                     var _ref, items = [];
                     if (((_ref = response.Response) != null ? _ref.Survey : void 0) != null) {
-                        surveylist = response.Response.Survey;
+                        surveylist = myHandleArray(response.Response.Survey);
                         $(response.Response.Survey).each(function(index, item) {
                             // TODO: 填寫評鑑鈕
                             var status_html;
@@ -572,6 +572,23 @@ var _gg = function() {
         );
         $('#tab_form tbody[data-type=title]').html(items.join(''));
         $('#tab_form tbody[data-type=note]').html(description || '');
+    };
+    //#endregion
+
+    //#region 轉換物件為陣列
+    var myHandleArray = function(obj) {
+        var result;
+
+        result = void 0;
+        if (!$.isArray(obj)) {
+            result = [];
+            if (obj) {
+                result.push(obj);
+            }
+        } else {
+            result = obj;
+        }
+        return result;
     };
     //#endregion
 
