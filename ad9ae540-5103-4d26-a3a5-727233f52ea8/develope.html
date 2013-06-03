@@ -404,7 +404,7 @@
                   <p class="pull-right">
                     <a href="javascript:void(0);" class="btn btn-primary" data-action="add">
                       <i class="icon-pencil icon-white"></i>
-                      新增教材</a></p>
+                      新增教案</a></p>
                   <table class="table table-bordered my-table table-striped table-hover" style="clear:both;">
                     <thead>
                       <tr>
@@ -440,7 +440,11 @@
                         </tr>
                         <tr>
                           <th width="173px">日期（必填）</th>
-                          <td><input placeholder="yyyy/mm/dd" class="{required: true, date: true, dateISO: true} date input-block-level" type="text" name="StudyDate" id="study_#index#_StudyDate"/></td>
+                          <td>
+                            <input placeholder="yyyy/mm/dd" class="{required: true, date: true, dateISO: true} date" type="text" name="StudyDate" id="study_#index#_StudyDate"/>
+                             ~
+                            <input placeholder="yyyy/mm/dd" class="{required: true, date: true, dateISO: true} isAfterStartDate date" type="text" name="EndDate" id="study_#index#_EndDate"/>
+                          </td>
                         </tr>
                         <tr>
                           <th>研習名稱（必填）</th>
@@ -516,7 +520,7 @@
                       <tr>
                         <th>創建日期（必填）</th>
                         <td><input placeholder="yyyy/mm/dd" class="{required: true, date: true, dateISO: true} date input-block-level" type="text" name="Createdate"/></td>
-                        <th>公開教材</th>
+                        <th>公開教案</th>
                         <td>
                           <label class="checkbox">
                             <input type="checkbox" value="public" name="Public">
@@ -530,8 +534,12 @@
                       <tr>
                         <th>科目（必填）</th>
                         <td><input class="{required: true} input-block-level" placeholder="科目..." type="text" name="Subject"/></td>
-                        <th>&nbsp;</th>
-                        <td colspan="2">&nbsp;</td>
+                        <th>融入議題（必填）</th>
+                        <td colspan="2">
+                          <select name="Issues" class="{required: true}">
+                            <option value="">請選擇...</option>
+                          </select>
+                        </td>
                       </tr>
                       <tr>
                         <th>主題名稱（必填）</th>
@@ -554,9 +562,9 @@
                         <td colspan="2"><input class="input-block-level" placeholder="教學人數..." type="text" name="Capacity"/></td>
                       </tr>
                       <tr>
-                        <th>教材架構</th>
+                        <th>教案架構</th>
                         <td colspan="4">
-                          <textarea class="input-block-level" placeholder="教材架構..." rows="3" name="Architecture"></textarea>
+                          <textarea class="input-block-level" placeholder="教案架構..." rows="3" name="Architecture"></textarea>
                         </td>
                       </tr>
                       <tr>
@@ -637,8 +645,8 @@
                       <tr>
                         <th>學習單</th>
                         <td colspan="4" data-type="fileContainer" id="fileSheet">
-                            <input type="file" name="userfile" size="50"/>
-                            <input type="submit" name="uploadfile" value="上傳檔案" />
+                            <input type="file" name="userfileSheet" size="50"/>
+                            <input type="submit" name="uploadfileSheet" value="上傳檔案" />
                             <div data-type="fileInfo"></div>
                           </td>
                         </td>
@@ -646,8 +654,8 @@
                       <tr>
                         <th>附件上傳</th>
                         <td colspan="4" data-type="fileContainer" id="fileAttach">
-                            <input type="file" name="userfile" size="50"/>
-                            <input type="submit" name="uploadfile" value="上傳檔案" />
+                            <input type="file" name="userfileAttach" size="50"/>
+                            <input type="submit" name="uploadfileAttach" value="上傳檔案" />
                             <div data-type="fileInfo"></div>
                           </td>
                         </td>
@@ -669,7 +677,7 @@
                     <tr>
                       <th width="10%">創建日期</th>
                       <td width="60%" data-type="Createdate"></td>
-                      <th width="10%">公開教材</th>
+                      <th width="10%">公開教案</th>
                       <td width="20%" data-type="Public"></td>
                     </tr>
                   </table>
@@ -677,8 +685,8 @@
                     <tr>
                       <th>科目</th>
                       <td data-type="Subject"></td>
-                      <th>&nbsp;</th>
-                      <td>&nbsp;</td>
+                      <th>融入議題</th>
+                      <td data-type="Issues"></td>
                     </tr>
                     <tr>
                       <th style="width:145px;">主題名稱</th>
@@ -699,7 +707,7 @@
                       <td data-type="Capacity"></td>
                     </tr>
                     <tr>
-                      <th>教材架構</th>
+                      <th>教案架構</th>
                       <td colspan="3" data-type="Architecture"></td>
                     </tr>
                     <tr>
@@ -767,8 +775,8 @@
                     <tr>
                       <th>科目</th>
                       <td data-type="Subject"></td>
-                      <th>&nbsp;</th>
-                      <td>&nbsp;</td>
+                      <th>融入議題</th>
+                      <td data-type="Issues"></td>
                     </tr>
                     <tr>
                       <th style="width:145px;">主題名稱</th>
@@ -789,7 +797,7 @@
                       <td data-type="Capacity"></td>
                     </tr>
                     <tr>
-                      <th>教材架構</th>
+                      <th>教案架構</th>
                       <td colspan="3" data-type="Architecture"></td>
                     </tr>
                     <tr>
@@ -857,10 +865,10 @@
   <div class="modal hide" id="delModal">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal">×</button>
-      <h3>刪除教材</h3>
+      <h3>刪除教案</h3>
       <div id="errorMessage"></div>
     </div>
-    <div class="modal-body alert-danger">您確定要刪除此教材嗎？</div>
+    <div class="modal-body alert-danger">您確定要刪除此教案嗎？</div>
     <div class="modal-footer"><a href="#" class="btn btn-success" data-action="del">我要刪除</a>
       <a href="#" class="btn" data-dismiss="modal">取消</a>
     </div>

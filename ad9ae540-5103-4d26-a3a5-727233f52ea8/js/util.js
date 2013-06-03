@@ -108,7 +108,7 @@ LessonPlanManager.Util = function() {
         content = '<!DOCTYPE html> \n' +
                 '<html> \n' +
                 '<head> \n' +
-                '<title>print</title> \n' +
+                '<title>教案</title> \n' +
                 '<link href="css/bootstrap.css" rel="stylesheet" /> \n' +
                 '<link href="css/bootstrap-responsive.css" rel="stylesheet" /> \n' +
                 '<link href="css/mybootstrap.css" rel="stylesheet" /> \n' +

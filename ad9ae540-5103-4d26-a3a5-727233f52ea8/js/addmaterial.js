@@ -9,7 +9,8 @@ $(function() {
             , _uid
             , _wantDel = {
                 FileCondition: [] //點選刪除時加入，點選取消時清空;
-            };
+            }
+            , _issues_list = [];
 
 
         //#region 設定動態新增的plugin
@@ -27,6 +28,7 @@ $(function() {
         });
         //#enaregion
 
+        //#region Datepicker
         target.on('focus', 'input.date:not(.hasDatepicker)', function() {
             $( this ).datepicker({
                 dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"]
@@ -42,6 +44,7 @@ $(function() {
             });
             $( this ).focus();
         });
+        //#endregion
 
         //#region 點選上傳檔案
         target.on('click', 'input:submit', function() {
@@ -84,6 +87,7 @@ $(function() {
         });
         //#endregion
 
+        //#region 刪除檔案
         target.on('click', '.my-trash', function() {
             var container = $(this).closest('p');
             if (container.find('a').attr('file-id')) {
@@ -92,7 +96,9 @@ $(function() {
                 container.remove();
             }
         });
+        //#endregion
 
+        //#region 儲存
         target.find('[data-action=save]').click(function() {
             var btn = $(this);
             if (btn.hasClass('disabled')) return;
@@ -245,11 +251,19 @@ $(function() {
 
                 if (_uid) {
                     data.Request.Main.Condition = { Uid: _uid };
-                    target.find('a[data-type=AddFile]').each(function(key, oneFile) {
+                    $('#fileSheet').find('a[data-type=AddFile]').each(function(key, oneFile) {
                         addfile.push({
                             Filename: $(oneFile).attr('data-filename') || '',
                             OriginID: _uid,
                             OriginType: 'sheet',
+                            Key: $(oneFile).attr('data-key') || ''
+                        });
+                    });
+                    $('#fileAttach').find('a[data-type=AddFile]').each(function(key, oneFile) {
+                        addfile.push({
+                            Filename: $(oneFile).attr('data-filename') || '',
+                            OriginID: _uid,
+                            OriginType: 'attach',
                             Key: $(oneFile).attr('data-key') || ''
                         });
                     });
@@ -297,9 +311,10 @@ $(function() {
                 target.find('td.my-error:first').find('input, select').first().focus();
             }
         });
+        //#endregion
 
         //#region 取得教材內容
-        var getMaterial = function(uid, callback) {
+        var getMaterial = function(uid, callBack) {
             LessonPlanManager.StartUp.getMyTeacherID(function(TeacherID) {
                 connection.send({
                     service: "_.GetLessonPlanMain",
@@ -341,8 +356,8 @@ $(function() {
                                             files = response.Response.File;
                                         }
                                     }
-                                    if (callback && $.isFunction(callback)) {
-                                        callback(data, files);
+                                    if (callBack && $.isFunction(callBack)) {
+                                        callBack(data, files);
                                     }
                                 }
                             });
@@ -353,6 +368,7 @@ $(function() {
         };
         //#endregion
 
+        //#region 顯示教材內容
         var showFixMaterial = function(data, files) {
             // 1.顯示一般資料，再顯示檔案資料
             var items = [];
@@ -375,6 +391,7 @@ $(function() {
                 target.find('[name=Target]').val(data.Target || '');
                 target.find('[name=TimeSpan]').val(data.TimeSpan || '');
                 target.find('[name=Title]').val(data.Title || '');
+                target.find('[name=Issues]').val(data.Issues || '');
 
                 if (data.Content && data.Content.Contents && data.Content.Contents.Content) {
                     sheepItForm.reset(LessonPlanManager.Util.handleArray(data.Content.Contents.Content));
@@ -411,6 +428,43 @@ $(function() {
                 }
             }
         };
+        //#endregion
+
+        //#region 取得融入議題
+        var getIssues = function(callBack) {
+            if (_issues_list.length > 0) {
+                if (callBack && $.isFunction(callBack)) {
+                    callBack();
+                }
+            } else {
+                connection.send({
+                    service: "_.GetLessonPlanList",
+                    body: {
+                        Condition: {
+                            Name: '融入議題'
+                        }
+                    },
+                    result: function (response, error, http) {
+                        if (error !== null) {
+                            set_error_message('#mainMsg', 'GetLessonPlanList', error);
+                        } else {
+                            if (response.Response.List && response.Response.List.Content && response.Response.List.Content.Configs && response.Response.List.Content.Configs.Config) {
+                                $(response.Response.List.Content.Configs.Config).each(function(index, item) {
+                                    _issues_list.push('<option value="' + item.Name + '">' + item.Name + '</option>');
+                                });
+
+                                target.find('select[name="Issues"]').append(_issues_list.join(''));
+
+                                if (callBack && $.isFunction(callBack)) {
+                                    callBack();
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        };
+        //#endregion
 
         return {
             loadMaterial : function(uid) {
@@ -437,9 +491,13 @@ $(function() {
                     source: subject
                 });
 
-                if (uid) {
-                    getMaterial(uid, showFixMaterial);
-                }
+
+                getIssues(function() {
+                    if (uid) {
+                        getMaterial(uid, showFixMaterial);
+                    }
+                });
+
             }
 
         }

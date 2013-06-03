@@ -88,6 +88,7 @@ $(function() {
                 target.find('[data-type=Target]').html(data.Target || '');
                 target.find('[data-type=TimeSpan]').html(data.TimeSpan || '');
                 target.find('[data-type=Title]').html(data.Title || '');
+                target.find('[data-type=Issues]').html(data.Issues || '');
 
                 if (data.Content && data.Content.Contents && data.Content.Contents.Content) {
                     $(data.Content.Contents.Content).each(function(index, item) {
