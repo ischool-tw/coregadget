@@ -39,3 +39,10 @@ table thead tr:nth-child(2) > th {
 .my-subject-thead {
   min-width: 120px;
 }
+.my-examname-thead {
+  min-width: 150px;
+  width: 150px;
+}
+.my-fix-thead {
+  width: 80px;
+}

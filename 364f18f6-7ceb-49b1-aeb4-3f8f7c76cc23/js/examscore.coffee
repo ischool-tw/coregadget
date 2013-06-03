@@ -1,3 +1,5 @@
+new
+
 jQuery ->
   $("#ExamScore tbody").html "<tr><td>載入中...</td></tr>"
 
@@ -36,15 +38,41 @@ Exam = do ->
   _exam_score = {}
   _places = null
   _math_type = null
-  _keys = ["國文", "國語", "英文", "英語", "數學", "理化", "生物", "社會", "物理", "化學", "歷史", "地理", "公民"]
+  _keys = [
+   "國語文:國文"
+   "國語文"
+   "英語:英文"
+   "英語"
+   "語文:國文"
+   "語文:英文"
+   "語文"
+   "數學"
+   "社會:歷史"
+   "社會:地理"
+   "社會:公民"
+   "社會"
+   "自然與生活科技:理化"
+   "自然與生活科技:生物"
+   "自然與生活科技:物理"
+   "自然與生活科技:化學"
+   "自然與生活科技"
+   "健康與體育"
+   "藝術與人文"
+   "綜合活動"
+   "彈性課程"
+  ]
   _schoolYear = null
   _semester = null
   _connection = null
+  _now = null
 
   if _system_position is "parent"
     _connection = gadget.getContract("ischool.exam.parent")
   else
     _connection = gadget.getContract("ischool.exam.student")
+    _student = {
+      StudentID : 0
+    }
 
 
   # 目前學年度
@@ -60,25 +88,41 @@ Exam = do ->
             _curr_schoolyear = response.Current.SchoolYear or ""
             _curr_semester = response.Current.Semester or ""
 
+        _connection.send
+          service: "_.GetNow"
+          body: {}
+          result: (response, error, http) ->
+            if error isnt null
+              set_error_message "#mainMsg", "GetNow", error
+            else
+              _now = new Date(response.Now)
+              getStudentInfo()
+
 
   # 取得全部子女資料
   getStudentInfo = ->
-    _connection.send
-      service: "_.GetStudentInfo"
-      body: {}
-      result: (response, error, http) ->
-        if error isnt null
-          set_error_message '#mainMsg', 'GetStudentInfo', error
-        else
-          items = []
-          if response.Result and response.Result.Student
-            _students = $(response.Result.Student)
-            _students.each (index, student) ->
-              items.push """
-                <li #{ if index is 0 then 'class="active"'}>
-                  <a href="#" children-index="#{index}">#{student.StudentName}</a>
-                </li>
-              """
+    if _system_position is "student"
+      _exam_score[0] = [];
+      getStudentRuleSeme()
+    else if _system_position is "parent"
+      _connection.send
+        service: "_.GetStudentInfo"
+        body: {}
+        result: (response, error, http) ->
+          if error isnt null
+            set_error_message '#mainMsg', 'GetStudentInfo', error
+          else
+            items = []
+            if response.Result and response.Result.Student
+              _students = $(response.Result.Student)
+              _students.each (index, student) ->
+                items.push """
+                  <li #{ if index is 0 then 'class="active"'}>
+                    <a href="#" children-index="#{index}">#{student.StudentName}</a>
+                  </li>
+                """
+                _exam_score[student.StudentID] = [];
+
               $("#children-list").html(items.join("")).find('a:first').trigger('click')
 
 
@@ -121,7 +165,12 @@ Exam = do ->
                       </button>
                     """
 
-                  $("#Semester .btn-group").html(items.join("")).find(".btn:first").trigger "click"
+                  $("#Semester .btn-group").html(items.join(""))
+
+                  if $("#Semester .btn-group button[school-year="+_schoolYear+"][semester="+_semester+"]").length > 0
+                    $("#Semester .btn-group button[school-year="+_schoolYear+"][semester="+_semester+"]").trigger "click"
+                  else
+                    $("#Semester .btn-group button:first").trigger "click"
                 else
                   $("#ExamScore tbody").html """<tr><td>目前無資料</td></tr>"""
 
@@ -137,8 +186,8 @@ Exam = do ->
     _semester = semester
     isCurrSemester = (schoolYear is _curr_schoolyear and semester is _curr_semester)
 
-    if (_exam_score[schoolYear + semester])
-      showScore(_exam_score[schoolYear + semester], isCurrSemester)
+    if (_exam_score[_student.StudentID][schoolYear + semester])
+      showScore(_exam_score[_student.StudentID][schoolYear + semester], isCurrSemester)
     else
       request = Content:
         Condition:
@@ -155,440 +204,451 @@ Exam = do ->
             set_error_message "#mainMsg", "GetJHCourseExamScore", error
           else
             if response.ExamScoreList?.Seme?.Course?
-              oCourse = myHandleArray(response.ExamScoreList.Seme.Course).sort(Comparer)
-              oScore = _exam_score[schoolYear + semester] = []
-              oElasticity = {
-                'Domain': '彈性課程'
-                'Courses': []
+              # 解析樣版產出 exam_list
+              # 高雄有固定的平時成績，OrdinarilyScore為其成績，FixTime是繳交期限
+              # 新竹每次皆有對等的定期、平時成績，AssignmentScore為其成績，EndTime是繳交期限
+              # 如為目前學年度學期，如在繳交期限前不顯示
+              # Subject：沒有科目，代表社團成績；Domain：沒有領域，代表彈性課程
+              # Credit：權數, Period：節數
+              oCourse = myHandleArray(response.ExamScoreList.Seme.Course)
+              _exam_score[_student.StudentID][schoolYear + semester] = {
+                Domain: {}
+                Course: []
+                ExamList: []
+                FixExam: {
+                  AvgTFScore: null
+                  TotalTFCredit: 0
+                  TotalTFScore: 0
+                }
               }
-
-              getIndex = (obj, uid, key) ->
-                ret = -1
-                $(obj).each (index, item) ->
-                  ret = index  if item[key] is uid
-                ret
+              aDomain = _exam_score[_student.StudentID][schoolYear + semester].Domain;
+              aCourse = _exam_score[_student.StudentID][schoolYear + semester].Course;
+              aExamList = _exam_score[_student.StudentID][schoolYear + semester].ExamList;
+              aFixExam = _exam_score[_student.StudentID][schoolYear + semester].FixExam;
 
               $(oCourse).each (index, course) ->
+                credit = null
+                fix_score = null
                 course.Domain = course.Domain or '彈性課程'
-                course.Subject = course.Subject or ''
+                credit = Number(course.Credit) if course.Credit
+                fix_score = Number(course.FixExtension.Extension.OrdinarilyScore) if course.FixExtension?.Extension?.OrdinarilyScore? and course.FixExtension.Extension.OrdinarilyScore
 
-                if course.Domain is '彈性課程'
-                  oElasticity.Courses.push course
-                else
-                  idx = getIndex(oScore, course.Domain, 'Domain')
+                # 領域的科目統計資料
+                if (!aDomain["domain:" + course.Domain])
+                  aDomain["domain:" + course.Domain] = {
+                    'Domain': course.Domain
+                    'CourseCount': 0
+                    'TotalFCredit': 0
+                    'TotalFScore': 0
+                    'AvgFScore': null
+                    'Flag': null
+                    'Exams': {}
+                  }
+                aDomain["domain:" + course.Domain].CourseCount += 1
 
-                  if idx is -1
-                    obj = {
-                      'Domain': course.Domain
-                      'Courses': [course]
-                    }
-                    oScore.push obj
-                  else
-                    oScore[idx].Courses.push course
+                exams = []
+                if course.Exam?
+                  $(course.Exam).each (index, exam) ->
+                    ext_score = null
+                    ext_assignmentScore = null
+                    avg_score = null
 
-              if oElasticity.Courses.length > 0 then oScore.push oElasticity
+                    if course.Exam?
+                      $(course.Exam).each (index, exam) ->
+                        if exam.ExamID
+                          # 設定定期評量成績
+                          if exam.ScoreDetail?.Extension?.Extension?
+                            $(exam.ScoreDetail.Extension.Extension).each (index, extension) ->
+                              # 定期分數
+                              ext_score = Number(extension.Score) if extension.Score
+                              # 新竹平時分數
+                              ext_assignmentScore = Number(extension.AssignmentScore) if extension.AssignmentScore
+                              if ext_score and ext_assignmentScore
+                                avg_score = FloatMath(FloatMath(ext_score, '+', ext_assignmentScore), '/', 2)
+                              else if ext_score
+                                avg_score = ext_score
+                              else
+                                avg_score = ext_assignmentScore
+
+                          # 定期評量資料
+                          exams[exam.ExamID] = {
+                            ExamID: exam.ExamID
+                            ExamName: exam.ExamName
+                            EndTime: exam.ScoreDetail.EndTime if exam.ScoreDetail?.EndTime?
+                            Score1: ext_score
+                            Score2: ext_assignmentScore
+                            Avg: avg_score
+                            CreditScore: FloatMath(avg_score, '*', credit) if avg_score? and credit
+                            Flag: null
+                          }
+
+                          # 定期評量領域加權
+                          if !aDomain["domain:" + course.Domain].Exams[exam.ExamID]
+                            aDomain["domain:" + course.Domain].Exams[exam.ExamID] = {
+                              'TotalCredit': 0
+                              'TotalCScore': 0
+                              'AvgCScore': null
+                              'Flag': null
+                            }
+
+                          if !aExamList['exam:' + exam.ExamID]
+                            aExamList['exam:' + exam.ExamID] = {
+                              ExamID: exam.ExamID
+                              ExamName: exam.ExamName
+                              ExamDisplayOrder: exam.ExamDisplayOrder
+                              TotalECredit: 0
+                              TotalEScore: 0
+                              AvgEScore: null
+                              Flag: null
+                            }
+                            aExamList.push aExamList['exam:'+ exam.ExamID]
+
+
+                # 科目的定期及平時評量資料
+                aCourse[course.Domain + ":" + course.Subject] = {
+                  Index: course.Domain + ":" + course.Subject
+                  Domain: course.Domain
+                  Subject: course.Subject
+                  Credit: credit
+                  FixEndTime: course.FixTime.Extension.OrdinarilyEndTime if course.FixTime?.Extension?.OrdinarilyEndTime?
+                  FixScore: fix_score
+                  Exams: exams
+                }
+                aCourse.push aCourse[course.Domain + ":" + course.Subject]
+
+
+              # 領域科目排序
+              aCourse.sort(Comparer)
+
+              aExamList.sort((a, b) ->
+                return parseInt(a.ExamDisplayOrder, 10) > parseInt(b.ExamDisplayOrder, 10)
+              )
+
+
+              # 計算平均
+              avgScore(_exam_score[_student.StudentID][schoolYear + semester], isCurrSemester)
+
             else
-              _exam_score[schoolYear + semester] = null
+              _exam_score[_student.StudentID][schoolYear + semester] = null
 
             if $("#Semester button.active").attr("school-year") is schoolYear and $("#Semester button.active").attr("semester") is semester
-              showScore(_exam_score[schoolYear + semester], isCurrSemester)
+              showScore(_exam_score[_student.StudentID][schoolYear + semester], isCurrSemester)
+
+  # 領域定期、平時加權平均
+  avgScore = (exam_data, isCurrSemester) ->
+    exam_process = () ->
+      # 科目：定期評量與上次成績比較進退步
+      $(exam_data.Course).each (key, course) ->
+        pre_score = -1
+        ii = 0
+        for key, exam of course.Exams
+          ii += 1
+          if exam.Avg? and course.Subjec isnt '體育'
+            if ii isnt 1 and exam.Avg isnt '未開放'
+              if exam.Avg > pre_score
+                exam.Flag = 'up'
+              else if exam.Avg < pre_score
+                exam.Flag = 'down'
+
+            pre_score = exam.Avg
+
+
+      # 領域：計算定期評量加權總分
+      $(exam_data.Course).each (key, course) ->
+        credit = course.Credit
+        for key, exam of course.Exams
+          if exam.Avg? and exam.Avg isnt '未開放' and credit
+            exam_data.Domain["domain:" + course.Domain].Exams[exam.ExamID].TotalCredit = FloatMath(credit, '+', exam_data.Domain["domain:" + course.Domain].Exams[exam.ExamID].TotalCredit)
+            exam_data.Domain["domain:" + course.Domain].Exams[exam.ExamID].TotalCScore = FloatMath(FloatMath(exam.Avg, '*', credit), '+', exam_data.Domain["domain:" + course.Domain].Exams[exam.ExamID].TotalCScore)
+            exam_data.ExamList['exam:' + exam.ExamID].TotalECredit = FloatMath(credit, '+', exam_data.ExamList['exam:' + exam.ExamID].TotalECredit)
+            exam_data.ExamList['exam:' + exam.ExamID].TotalEScore = FloatMath(FloatMath(exam.Avg, '*', credit), '+', exam_data.ExamList['exam:' + exam.ExamID].TotalEScore)
+
+
+      # 領域：計算定期評量加權平均AvgCScore、進退步
+      for key, domain of exam_data.Domain
+        ii = 0
+        domainName = domain.DomainName
+        for key, exam of domain.Exams
+          ii += 1
+          if exam.TotalCredit > 0
+            exam.AvgCScore = FloatFormat(FloatMath(exam.TotalCScore, '/', exam.TotalCredit), _math_type, _places)
+            if ii isnt 1
+              if exam.AvgCScore > pre_score
+                exam.Flag = 'up'
+              else if exam.AvgCScore < pre_score
+                exam.Flag = 'down'
+
+            pre_score = exam.AvgCScore
+
+
+      # 定期評量的總加權平均，進退步
+      ii = 0
+      $(exam_data.ExamList).each (key, exam) ->
+        if exam.TotalECredit > 0
+          exam.AvgEScore = FloatFormat(FloatMath(exam.TotalEScore, '/', exam.TotalECredit), _math_type, _places)
+          ii += 1
+          if ii isnt 1
+            if exam.AvgEScore > pre_score
+              exam.Flag = 'up'
+            else if exam.AvgEScore < pre_score
+              exam.Flag = 'down'
+
+          pre_score = exam.AvgEScore
+
+
+
+      # 平時評量加權總分，總平均
+      $(exam_data.Course).each (key, course) ->
+        credit = course.Credit
+        fix_score = course.FixScore
+        if course.FixScore? and course.FixScore isnt '未開放' and credit
+          exam_data.Domain["domain:" + course.Domain].TotalFCredit = FloatMath(credit, '+', exam_data.Domain["domain:" + course.Domain].TotalFCredit)
+          exam_data.Domain["domain:" + course.Domain].TotalFScore = FloatMath(FloatMath(fix_score, '*', credit), '+', exam_data.Domain["domain:" + course.Domain].TotalFScore)
+          exam_data.FixExam.TotalTFCredit = FloatMath(credit, '+', exam_data.FixExam.TotalTFCredit)
+          exam_data.FixExam.TotalTFScore = FloatMath(FloatMath(fix_score, '*', credit), '+', exam_data.FixExam.TotalTFScore)
+
+
+      # 領域：平時評量的加權平均
+      ii = 0
+      for key, domain of exam_data.Domain
+        if domain.TotalFCredit > 0
+          domain.AvgFScore = FloatFormat(FloatMath(domain.TotalFScore, '/', domain.TotalFCredit), _math_type, _places)
+          ii += 1
+          if ii isnt 1
+            if domain.AvgFScore > pre_score
+              domain.Flag = 'up'
+            else if domain.AvgFScore < pre_score
+              domain.Flag = 'down'
+
+          pre_score = domain.AvgFScore
+
+
+      # 平時評量加權總平均
+      if exam_data.FixExam.TotalTFCredit
+        exam_data.FixExam.AvgTFScore = FloatFormat(FloatMath(exam_data.FixExam.TotalTFScore, '/', exam_data.FixExam.TotalTFCredit), _math_type, _places)
+
+
+
+    # 先取得目前時間，再處理資料顯示
+    if isCurrSemester and (_system_exam_must_enddate is "true" or _system_fix_must_enddate is "true")
+      # 若為當年度且輸入時間未截止，重設定期評量科目平均Avg為「未開放」
+      if _system_exam_must_enddate is "true"
+        # 領域科目
+        $(exam_data.Course).each (key, course) ->
+          domainName = course.Domain
+          for key, exam of course.Exams
+            # 目前學年度時，依設定是否於輸入截止才顯示
+            if exam.EndTime
+              if new Date(exam.EndTime) >= _now
+                exam.Avg = '未開放'
+
+      # 若為當年度且輸入時間未截止，重設平時評量科目成績為「未開放」
+      if _system_fix_must_enddate is "true"
+        $(exam_data.Course).each (key, course) ->
+          if course.FixEndTime
+            if new Date(course.FixEndTime) >= _now
+              course.FixScore = '未開放'
+
+        exam_process()
+    else
+      exam_process()
+
+
 
   # 顯示評量成績
-  showScore = (exam_data, isCurrSemester) ->
-    # 解析樣版產出 exam_list
-    # 高雄有固定的平時成績，OrdinarilyScore為其成績，FixTime是繳交期限
-    # 新竹每次皆有對等的定期、平時成績，AssignmentScore為其成績，EndTime是繳交期限
-    # 如為目前學年度學期，如在繳交期限前不顯示
-    # Subject：沒有科目，代表社團成績；Domain：沒有領域，代表彈性課程
-    # Credit：權數, Period：節數
-    # total_score：計算定時評量平時評量總平均
-    # total_domain_score：計算定時評量領域加權
-    # total_fixdomain_score：計算高雄平時評量領域加權
-    exam_list = []
+  showScore= (exam_data, isCurrSemester) ->
+    console.log exam_data
     thead1 = []
     thead2 = []
     thead_html = ""
     tbody1 = []
     tbody_html = ""
-    total_score = {
-      'fixdomain': {
-        'examTotal': 0
-        'examCount': 0
-        'weightTotal': 0
-        'weightCount': 0
-      }
-    }
-    total_domain_score = {}
-    total_fixdomain_score = {}
-    now = new Date()
+    pre_domain = null
 
-    getIndex = (cid, exams) ->
-      ret = null
-      $(exams).each (index, item) ->
-        ret = item  if item.ExamID is cid
-      ret
+    if exam_data
+      # 表頭
+      $(exam_data.ExamList).each (key, exam) ->
+        thead1.push """<th colspan="2" class="my-examname-thead">#{exam.ExamName}</th>"""
+        if _system_type is "hs" and _system_show_model is "subject"
+          thead2.push """<th colspan="2" class="my-subject-thead">總成績(定期/平時)</th>"""
+        else
+          thead2.push """<th colspan="2">成績</th>"""
 
-    getNow = (callBack) ->
-      _connection.send
-        service: "_.GetNow"
-        body: {}
-        result: (response, error, http) ->
-          if error isnt null
-            set_error_message "#mainMsg", "GetNow", error
-          else
-            if callBack and $.isFunction(callBack)
-              callBack(new Date(response.Now))
-
-    exam_process = () ->
-      if exam_data
-        # 整理定期評量，定時評量平均預設值
-        $(exam_data).each (index, domain) ->
-          $(domain.Courses).each (index, course) ->
-            $(course.Exam).each (index, exam) ->
-              if exam.ExamID
-                if $.inArray(exam.ExamID, exam_list) is -1
-                  total_score[exam.ExamID] = {
-                    'examTotal': 0
-                    'examCount': 0
-                    'weightTotal': 0
-                    'weightCount': 0
-                  }
-
-                  exam_list.push exam.ExamID
-                  thead1.push """<th colspan="2">#{exam.ExamName}</th>"""
-
-                  if _system_type is "hs" and _system_show_model is "subject"
-                    thead2.push """<th colspan="2" class="my-subject-thead">總成績(定期/平時)</th>"""
-                  else
-                    thead2.push """<th colspan="2">成績</th>"""
-
-        # 領域
-        $(exam_data).each (index, domain) ->
-
-          if _system_show_model is "domain" then pre_score = -999
-
-          # 重設領域定期評量加權預設值
-          $(exam_list).each (index, examid) ->
-            total_domain_score[examid] = {
-              'weightTotal': 0
-              'weightCount': 0
-              'tbody1Index': 0
-            }
-
-          # 重設平時評量領域加權預設值
-          total_fixdomain_score = {
-            'weightTotal': 0
-            'weightCount': 0
-            'tbody1Index': 0
-          }
-
-          # 科目
-          $(domain.Courses).each (idx, course) ->
-
-            tbody1.push """<tr>"""
-
-            if idx is 0 then tbody1.push """<th rowspan="#{domain.Courses.length}">#{domain.Domain}</th>"""
-
-            tbody1.push """
-              <th>#{course.Subject}</th>
-              <th>#{course.Credit}</th>
-            """
-
-            if _system_show_model is "subject" then pre_score = -999
-
-            $(exam_list).each (key, value) ->
-              # now 目前時間
-              # endtime 輸入截止時間
-              # show_data 是否顯示
-              endtime = null
-              show_data = true
-              exam = getIndex(value, course.Exam)
-              extension = null
-              ext_score = null
-              ext_text = null
-              ext_assignmentScore = null
-              avg_score = null
-              td_score = null
-
-              if exam
-                # 目前學年度時，依設定是否於輸入截止才顯示
-                if isCurrSemester
-                  if _system_exam_must_enddate is "true"
-                    if exam.ScoreDetail?.EndTime?
-                      endtime = new Date(exam.ScoreDetail.EndTime)
-                      show_data = false  if endtime >= now
-
-                # 有成績且可顯示時資料處理
-                if exam.ScoreDetail and exam.ScoreDetail.Extension and show_data
-                  extension = exam.ScoreDetail.Extension.Extension
-                  switch _system_type
-                    when "kh"
-                      # 高雄的分數評量
-                      ext_score = extension.Score or ""
-                      avg_score = parseInt(ext_score, 10)
-                      td_score = if (ext_score) then Number(avg_score).toFixed(_places) else ""
-
-                    when "hs"
-                      # 新竹定期分數
-                      ext_score = extension.Score or ""
-
-                      # 新竹平時分數
-                      ext_assignmentScore = extension.AssignmentScore or ""
-                      if ext_score and ext_assignmentScore
-                        avg_score = FloatMath(FloatDiv(FloatAdd(ext_score, ext_assignmentScore), 2), _math_type, _places)
-                        td_score = """
-                          <span class="my-avg-score"> #{Number(avg_score).toFixed(_places)} </span>
-                          ( #{ext_score} / #{ext_assignmentScore} )
-                        """
-                      else if ext_score
-                        avg_score = parseInt(ext_score, 10)
-                        td_score = (if (ext_score) then Number(avg_score).toFixed(_places) else "")
-                      else
-                        avg_score = parseInt(ext_assignmentScore, 10)
-                        td_score = (if (ext_assignmentScore) then Number(avg_score).toFixed(_places) else "")
-
-                  if avg_score
-                    total_score[exam.ExamID]['examTotal'] = FloatAdd(total_score[exam.ExamID]['examTotal'], avg_score)
-                    total_score[exam.ExamID]['examCount'] += 1
-                    total_score[exam.ExamID]['weightTotal'] = FloatAdd(total_score[exam.ExamID]['weightTotal'], FloatMul(avg_score, course.Credit))
-                    total_score[exam.ExamID]['weightCount'] += parseInt(course.Credit || 0, 10)
-
-                    total_domain_score[exam.ExamID]['weightTotal'] = FloatAdd(total_domain_score[exam.ExamID]['weightTotal'], FloatMul(avg_score, course.Credit))
-                    total_domain_score[exam.ExamID]['weightCount'] += parseInt(course.Credit || 0, 10)
-
-                # 領域加權時的處理，記錄index及預設的加權欄位
-                if _system_show_model is "domain" && idx is 0
-                  total_domain_score[exam.ExamID]['tbody1Index'] = tbody1.length
-                  tbody1.push """<td rowspan="#{domain.Courses.length}"></td><td rowspan="#{domain.Courses.length}" class="my-effect"></td>"""
-
-                # 科目成績
-                if _system_show_model is "subject"
-                  if show_data is true
-                    if td_score
-                      # 顯示成績，未達60分以紅色表示
-                      if avg_score and avg_score < 60
-                        tbody1.push """<td class="my-fail" my-data="#{exam.ExamID}">#{td_score}</td>"""
-                      else
-                        tbody1.push """<td my-data="#{exam.ExamID}">#{td_score}</td>"""
-
-                      # 除了科目為「體育」和第一次考試，皆與上次比較進退步
-                      if course.Subject is "體育" or pre_score is -999
-                        tbody1.push """<td class="my-effect">&nbsp;</td>"""
-                      else
-                        if avg_score > pre_score
-                          tbody1.push """<td class="my-effect"><span class="my-progress">↑</span></td>"""
-                        else if avg_score < pre_score
-                          tbody1.push """<td class="my-effect"><span class="my-regress">↓</span></td>"""
-                        else
-                          tbody1.push """<td class="my-effect">&nbsp;</td>"""
-                      pre_score = avg_score
-                    else
-                      tbody1.push """<td>&nbsp;</td><td class="my-effect">&nbsp;</td>"""
-                  else if show_data is false
-                    tbody1.push """
-                      <td colspan="2" rel="tooltip"
-                        title="#{if exam.ScoreDetail.EndTime then exam.ScoreDetail.EndTime + "後開放" else "尚未開放"}">
-                        未開放</td>
-                    """
-                  else
-                    tbody1.push """<td>&nbsp;</td><td class="my-effect">&nbsp;</td>"""
-
-              else
-                if _system_show_model is "domain" && idx is 0
-                  tbody1.push """<td rowspan="#{domain.Courses.length}"></td><td class="my-effect" rowspan="#{domain.Courses.length}"></td>"""
-                else if _system_show_model is "subject"
-                  tbody1.push """<td>&nbsp;</td><td class="my-effect">&nbsp;</td>"""
-
-            # 高雄平時評量
-            if _system_type is "kh"
-              fixenddate = null
-              show_fix = true
-              fix_score = null
-
-              # 目前學年度時，依設定是否於輸入截止才顯示
-              if isCurrSemester
-                if _system_fix_must_enddate is "true"
-                  if course.FixTime and course.FixTime.Extension and course.FixTime.Extension.OrdinarilyEndTime
-                    fixenddate = new Date(course.FixTime.Extension.OrdinarilyEndTime)
-                    show_fix = false  if fixenddate >= now
-
-              if show_fix is true
-                if course.FixExtension?.Extension?.OrdinarilyScore?
-                  fix_score = course.FixExtension.Extension.OrdinarilyScore
+      switch _system_type
+        when "kh"
+          thead_html = """
+            <tr class="my-nofill">
+              <th rowspan="2">領域名稱</th>
+              <th rowspan="2">科目名稱</th>
+              <th rowspan="2">權數</th>
+              #{thead1.join("")}
+              <th class="my-fix-thead">平時評量</th>
+            </tr>
+            <tr class="my-nofill">#{thead2.join("")}<th>成績</th></tr>
+          """
+        else
+          thead_html = """
+            <tr class="my-nofill">
+              <th rowspan="2">領域名稱</th>
+              <th rowspan="2">科目名稱</th>
+              <th rowspan="2">權數</th>
+              #{thead1.join("")}
+            </tr>
+            <tr class="my-nofill">#{thead2.join("")}</tr>
+          """
 
 
-                if _system_show_model is "domain"
-                  # 記錄平時評量加權，總加權
-                  if fix_score
-                    total_fixdomain_score['weightTotal'] = FloatAdd(total_fixdomain_score['weightTotal'], FloatMul(fix_score, course.Credit))
-                    total_fixdomain_score['weightCount'] += parseInt(course.Credit || 0, 10)
-                    total_score['fixdomain']['weightTotal'] += total_fixdomain_score['weightTotal']
-                    total_score['fixdomain']['weightCount'] += total_fixdomain_score['weightCount']
+      # 領域科目
+      $(exam_data.Course).each (key, course) ->
+        domain = exam_data.Domain['domain:' + course.Domain]
 
-                  # 記錄index及預設的加權欄位
-                  if idx is 0
-                    total_fixdomain_score['tbody1Index'] = tbody1.length
-                    tbody1.push """<td rowspan="#{domain.Courses.length}" my-data="Ordinarily"></td>"""
-                else if _system_show_model is "subject"
-                  if fix_score
-                    total_score['fixdomain']['examTotal'] = FloatAdd(total_score['fixdomain']['examTotal'], fix_score)
-                    total_score['fixdomain']['examCount'] += 1
-                    if parseInt(fix_score, 10) < 60
-                      tbody1.push """<td class="my-fail" my-data="Ordinarily">#{Number(fix_score).toFixed(_places)}</td>"""
-                    else
-                      tbody1.push """<td my-data="Ordinarily">#{Number(fix_score).toFixed(_places)}</td>"""
-                  else
-                    tbody1.push "<td></td>"
-              else if show_fix is false
-                if _system_show_model is "domain" and idx is 0
-                  tbody1.push """
-                    <td rowspan="#{domain.Courses.length}" my-data="Ordinarily" rel="tooltip"
-                      title="#{if fixenddate then fixenddate + "後開放" else "尚未開放"}">
-                      未開放</td>
+        tbody1.push """<tr>"""
+
+        if course.Domain isnt pre_domain
+          tbody1.push """<th rowspan="#{domain.CourseCount}">#{course.Domain}</th>"""
+
+        tbody1.push """
+          <th>#{course.Subject}</th>
+          <th>#{course.Credit}</th>
+        """
+
+        $(exam_data.ExamList).each (key, item) ->
+          exam = course.Exams[item.ExamID]
+          td_score = null
+
+          if exam
+
+            # 有成績且可顯示時資料處理
+            switch _system_type
+              when "kh"
+                # 高雄的分數評量
+                td_score = if exam.Avg? then exam.Avg else ''
+
+              when "hs"
+                # 新竹 平均(定期分數, 平時分數)
+                if exam.Score1? and exam.Score2?
+                  td_score = """
+                    <span class="my-avg-score"> #{Number(exam.Avg).toFixed(_places)} </span>( #{exam.Score1} / #{exam.Score2} )
                   """
-                else if _system_show_model is "subject"
-                  tbody1.push """<td my-data="Ordinarily" rel="tooltip"
-                    title="#{if fixenddate then fixenddate + "後開放" else "尚未開放"}">
+                else if exam.Score1?
+                  td_score = exam.Score1
+                else if exam.Score2?
+                  td_score = exam.Score2
+                else
+                  td_score = ''
+
+            # 定期評量
+            if _system_show_model is "domain" and course.Domain isnt pre_domain
+              # 領域
+              if domain.Exams[exam.ExamID]?.AvgCScore?
+                td_score = Number(domain.Exams[exam.ExamID].AvgCScore).toFixed(_places)
+                if domain.Exams[exam.ExamID].AvgCScore < 60
+                  tbody1.push """<td class="my-fail" rowspan="#{domain.CourseCount}">#{td_score}</td>"""
+                else
+                  tbody1.push """<td rowspan="#{domain.CourseCount}">#{td_score}</td>"""
+              else
+                tbody1.push """<td rowspan="#{domain.CourseCount}"></td>"""
+
+              if domain.Exams[exam.ExamID].Flag is "up"
+                tbody1.push """<td class="my-effect" rowspan="#{domain.CourseCount}"><span class="my-progress">↑</span></td>"""
+              else if domain.Exams[exam.ExamID].Flag is "down"
+                tbody1.push """<td class="my-effect" rowspan="#{domain.CourseCount}"><span class="my-regress">↓</span></td>"""
+              else
+                tbody1.push """<td class="my-effect" rowspan="#{domain.CourseCount}">&nbsp;</td>"""
+
+            else if _system_show_model is "subject"
+              # 科目
+              if exam.Avg isnt '未開放'
+                # 顯示成績，未達60分以紅色表示
+                if exam.Avg? and exam.Avg < 60
+                  tbody1.push """<td class="my-fail" my-data="#{exam.ExamID}">#{td_score}</td>"""
+                else
+                  tbody1.push """<td my-data="#{exam.ExamID}">#{td_score}</td>"""
+
+                if exam.Flag is "up"
+                  tbody1.push """<td class="my-effect"><span class="my-progress">↑</span></td>"""
+                else if exam.Flag is "down"
+                  tbody1.push """<td class="my-effect"><span class="my-regress">↓</span></td>"""
+                else
+                  tbody1.push """<td class="my-effect">&nbsp;</td>"""
+              else
+                tbody1.push """
+                  <td rel="tooltip"
+                    title="#{if exam.EndTime then exam.EndTime.toString() + "後開放" else "尚未開放"}">
                     未開放</td>
-                  """
-            tbody1.push "</tr>"
-
-          # 填入加權平均欄位
-          if _system_show_model is "domain"
-            # 填入領域定期成績的加權平均
-            $(exam_list).each (index, examid) ->
-              domain_html = ""
-              avg_domain_score = if total_domain_score[examid]['weightCount'] then FloatMath(FloatDiv(total_domain_score[examid]['weightTotal'], total_domain_score[examid]['weightCount']), _math_type, _places) else null
-
-              if total_domain_score[examid]['weightCount']
-                if avg_domain_score and avg_domain_score < 60
-                  domain_html += """<td class="my-fail" my-data="#{examid}" rowspan="#{domain.Courses.length}">#{Number(avg_domain_score).toFixed(_places)}</td>"""
-                else
-                  domain_html += """<td my-data="#{examid}" rowspan="#{domain.Courses.length}">#{Number(avg_domain_score).toFixed(_places)}</td>"""
-
-                if pre_score is -999
-                  domain_html += """<td class="my-effect" rowspan="#{domain.Courses.length}">&nbsp;</td>"""
-                else
-                  if avg_domain_score > pre_score
-                    domain_html += """<td class="my-effect" rowspan="#{domain.Courses.length}"><span class="my-progress">↑</span></td>"""
-                  else if avg_domain_score < pre_score
-                    domain_html += """<td class="my-effect" rowspan="#{domain.Courses.length}"><span class="my-regress">↓</span></td>"""
-                  else
-                    domain_html += """<td class="my-effect" rowspan="#{domain.Courses.length}">&nbsp;</td>"""
-              else
-                domain_html += """<td my-data="#{examid}" rowspan="#{domain.Courses.length}">&nbsp;</td>"""
-                domain_html += """<td class="my-effect" rowspan="#{domain.Courses.length}">&nbsp;</td>"""
-
-              if total_domain_score[examid]['tbody1Index'] isnt 0
-                tbody1[total_domain_score[examid]['tbody1Index']] = domain_html
-
-              pre_score = avg_domain_score
-
-
-            # 填入領域平時評量的加權平均
-            if _system_type is "kh"
-              domain_html = ""
-              avg_domain_score = if total_fixdomain_score['weightCount'] then FloatMath(FloatDiv(total_fixdomain_score['weightTotal'], total_fixdomain_score['weightCount']), _math_type, _places) else null
-
-              if total_fixdomain_score['weightCount']
-                if avg_domain_score and avg_domain_score < 60
-                  domain_html += """<td class="my-fail" my-data="Ordinarily" rowspan="#{domain.Courses.length}">#{Number(avg_domain_score).toFixed(_places)}</td>"""
-                else
-                  domain_html += """<td my-data="Ordinarily" rowspan="#{domain.Courses.length}">#{Number(avg_domain_score).toFixed(_places)}</td>"""
-              else
-                domain_html += """<td my-data="Ordinarily" rowspan="#{domain.Courses.length}"></td>"""
-
-
-              if total_fixdomain_score['tbody1Index'] isnt 0
-                tbody1[total_fixdomain_score['tbody1Index']] = domain_html
-
-
-
-        # 定期評量平均、及加權總平均
-        if _system_show_model is "subject"
-          tbody1.push """<tr><th colspan="3">總平均</th>"""
-        else if _system_show_model is "domain"
-          tbody1.push """<tr><th colspan="3">加權平均</th>"""
-
-        $(exam_list).each (index, examid) ->
-          exam_html = ""
-          avg_exam_score = ""
-          avg_count = 0
-          if _system_show_model is "subject"
-            avg_count = total_score[examid]['examCount'] or 0
-            avg_exam_score = if avg_count then FloatMath(FloatDiv(total_score[examid]['examTotal'], avg_count), _math_type, _places) else 0
-          else if _system_show_model is "domain"
-            avg_count = total_score[examid]['weightCount'] or 0
-            avg_exam_score = if avg_count then FloatMath(FloatDiv(total_score[examid]['weightTotal'], avg_count), _math_type, _places) else 0
-
-          if avg_count
-            if avg_exam_score and avg_exam_score < 60
-              exam_html += """<td class="my-fail" my-data="#{examid}" colspan="2">#{Number(avg_exam_score).toFixed(_places)}</td>"""
-            else
-              exam_html += """<td my-data="#{examid}" colspan="2">#{Number(avg_exam_score).toFixed(_places)}</td>"""
+                  <td class="my-effect">&nbsp;</td>
+                """
           else
-            exam_html += """<td my-data="#{examid}" colspan="2"></td>"""
+            if _system_show_model is "subject"
+              tbody1.push """<td>&nbsp;</td><td>&nbsp;</td>"""
+            else if _system_show_model is "domain" and course.Domain isnt pre_domain
+              tbody1.push """
+                <td rowspan="#{domain.CourseCount}"></td>
+                <td class="my-effect" rowspan="#{domain.CourseCount}">&nbsp;</td>"""
 
-          tbody1.push """#{exam_html}"""
-
+        # 高雄平時評量
         if _system_type is "kh"
-          exam_html = ""
-          avg_exam_score = ""
-          avg_count = 0
-          if _system_show_model is "subject"
-            avg_count = total_score['fixdomain']['examCount'] or 0
-            avg_exam_score = if avg_count then FloatMath(FloatDiv(total_score['fixdomain']['examTotal'], avg_count), _math_type, _places) else 0
-          else if _system_show_model is "domain"
-            avg_count = total_score['fixdomain']['weightCount'] or 0
-            avg_exam_score = if avg_count then FloatMath(FloatDiv(total_score['fixdomain']['weightTotal'], avg_count), _math_type, _places) else 0
-
-          if avg_count
-            if avg_exam_score and avg_exam_score < 60
-              exam_html += """<td class="my-fail" my-data="#{examid}" colspan="2"#{Number(avg_exam_score).toFixed(_places)}</td>"""
-            else
-              exam_html += """<td colspan="2">#{Number(avg_exam_score).toFixed(_places)}</td>"""
+          if _system_show_model is "subject" and course.FixScore is '未開放'
+              tbody1.push """<td my-data="Ordinarily" rel="tooltip"
+                title="#{if course.FixEndTime then course.FixEndTime.toString() + "後開放" else "尚未開放"}">
+                未開放</td>
+              """
           else
-            exam_html += """<td colspan="2"></td>"""
+            if _system_show_model is "domain"
+              # 領域：平時評量加權
+              if course.Domain isnt pre_domain
+                if domain.AvgFScore?
+                  if domain.AvgFScore < 60
+                    tbody1.push """<td rowspan="#{domain.CourseCount}" class="my-fail" my-data="Ordinarily">#{Number(domain.AvgFScore).toFixed(_places)}</td>"""
+                  else
+                    tbody1.push """<td rowspan="#{domain.CourseCount}" my-data="Ordinarily">#{Number(domain.AvgFScore).toFixed(_places)}</td>"""
+                else
+                  tbody1.push """<td rowspan="#{domain.CourseCount}" my-data="Ordinarily"></td>"""
+            else if _system_show_model is "subject"
+              # 科目：平時評量成績
+              if course.FixScore?
+                if course.FixScore < 60
+                  tbody1.push """<td class="my-fail" my-data="Ordinarily">#{course.FixScore}</td>"""
+                else
+                  tbody1.push """<td my-data="Ordinarily">#{course.FixScore}</td>"""
+              else
+                tbody1.push """<td my-data="Ordinarily"></td>"""
 
-          tbody1.push """#{exam_html}"""
+        tbody1.push "</tr>"
 
-        tbody1.push """</tr>"""
+        # 上次迴圈的領域名
+        pre_domain = course.Domain
 
 
-        switch _system_type
-          when "kh"
-            thead_html = """
-              <tr class="my-nofill">
-                <th rowspan="2">領域名稱</th>
-                <th rowspan="2">科目名稱</th>
-                <th rowspan="2">權數</th>
-                #{thead1.join("")}
-                <th>平時評量</th>
-              </tr>
-              <tr class="my-nofill">#{thead2.join("")}<th>成績</th></tr>
-            """
+      # 定期評量平均、及加權總平均
+      tbody1.push """<tr><th colspan="3">加權平均</th>"""
+
+      $(exam_data.ExamList).each (key, exam) ->
+        if exam.TotalECredit
+          if exam.AvgEScore? and exam.AvgEScore < 60
+            tbody1.push """<td class="my-fail" my-data="#{exam.ExamID}" colspan="2">#{Number(exam.AvgEScore).toFixed(_places)}</td>"""
           else
-            thead_html = """
-              <tr class="my-nofill">
-                <th rowspan="2">領域名稱</th>
-                <th rowspan="2">科目名稱</th>
-                <th rowspan="2">權數</th>
-                #{thead1.join("")}
-              </tr>
-              <tr class="my-nofill">#{thead2.join("")}</tr>
-            """
-        tbody_html = tbody1.join("")
-        $("#ExamScore").find("thead").html(thead_html).end().find("tbody").html(tbody_html).end().find("td[rel='tooltip']").tooltip()
-      else
-        $("#ExamScore").find("thead").html("").end().find("tbody").html "<tr><td>目前無資料</td></tr>"
+            tbody1.push """<td my-data="#{exam.ExamID}" colspan="2">#{Number(exam.AvgEScore).toFixed(_places)}</td>"""
+        else
+          tbody1.push """<td my-data="#{exam.ExamID}" colspan="2"></td>"""
 
-    # 先取得目前時間，再處理資料顯示
-    if isCurrSemester and (_system_exam_must_enddate is "true" or _system_fix_must_enddate is "true")
-      getNow (d1) ->
-        now = d1
-        exam_process()
+
+      if _system_type is "kh"
+        if exam_data.FixExam.TotalTFCredit
+          if exam_data.FixExam.AvgTFScore? and exam_data.FixExam.AvgTFScore < 60
+            tbody1.push """<td class="my-fail" my-data="#{exam.ExamID}" colspan="2">#{Number(exam_data.FixExam.AvgTFScore).toFixed(_places)}</td>"""
+          else
+            tbody1.push """<td colspan="2">#{Number(exam_data.FixExam.AvgTFScore).toFixed(_places)}</td>"""
+        else
+          tbody1.push """<td colspan="2"></td>"""
+
+
+      tbody1.push """</tr>"""
+      tbody_html = tbody1.join("")
+      $("#ExamScore").find("thead").html(thead_html).end().find("tbody").html(tbody_html).end().find("td[rel='tooltip']").tooltip()
     else
-      exam_process()
+      $("#ExamScore").find("thead").html("").end().find("tbody").html "<tr><td>目前無資料</td></tr>"
+
 
 
   # 錯誤訊息
@@ -609,52 +669,36 @@ Exam = do ->
         alert "請拍下此圖，並與客服人員連絡，謝謝您。\n" + JSON.stringify(error, null, 2)
 
 
-  # 浮點數相加
-  FloatAdd = (arg1, arg2) ->
-    r1 = null
-    r2 = null
-    m = null
+  # 浮點數運算
+  FloatMath = (x, operators, y) ->
+    arg1 = x + ''
+    arg2 = y + ''
     try
-      r1 = arg1.toString().split(".")[1].length
+      r1 = arg1.split(".")[1].length
     catch e
       r1 = 0
+
     try
-      r2 = arg2.toString().split(".")[1].length
+      r2 = arg2.split(".")[1].length
     catch e
       r2 = 0
-    m = Math.pow(10, Math.max(r1, r2))
-    (FloatMul(arg1, m) + FloatMul(arg2, m)) / m
 
+    m = Math.max(r1, r2)
 
-  # 浮點數相除
-  FloatDiv = (arg1, arg2) ->
-    t1 = 0
-    t2 = 0
-    r1 = null
-    r2 = null
-    try
-      t1 = arg1.toString().split(".")[1].length
-    try
-      t2 = arg2.toString().split(".")[1].length
-    r1 = Number(arg1.toString().replace(".", ""))
-    r2 = Number(arg2.toString().replace(".", ""))
-    (r1 / r2) * Math.pow(10, t2 - t1)
-
-
-  # 浮點數相乘
-  FloatMul = (arg1, arg2) ->
-    m = 0
-    s1 = arg1.toString()
-    s2 = arg2.toString()
-    try
-      m += s1.split(".")[1].length
-    try
-      m += s2.split(".")[1].length
-    Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)
+    switch operators
+      when "+"
+        ((Number(arg1) * Math.pow(10, m)) + (Number(arg2) * Math.pow(10, m))) / Math.pow(10, m)
+      when "-"
+        ((Number(arg1) * Math.pow(10, m)) - (Number(arg2) * Math.pow(10, m))) / Math.pow(10, m)
+      when "*"
+        m = r1 + r2
+        (Number(arg1.replace(".", "")) * Number(arg2.replace(".", ""))) / Math.pow(10, m)
+      when "/"
+        (Number(arg1) * Math.pow(10, m)) / (Number(arg2) * Math.pow(10, m))
 
 
   #四捨五入、無條件捨去、無條件進位
-  FloatMath = (arg1, type, places) ->
+  FloatFormat = (arg1, type, places) ->
     places = places or 0
     switch type
       when "ceil"
@@ -697,8 +741,9 @@ Exam = do ->
       return 0  if s1 is s2
       return -1  unless s1
       return 1  unless s2
+
       ComparerWithKeys s1, s2
-    ComparerWithKeys s1.Subject, s2.Subject
+    ComparerWithKeys s1.Index, s2.Index
 
   # 轉換物件為陣列
   myHandleArray = (obj) ->
@@ -714,15 +759,12 @@ Exam = do ->
 
   # 初始化
   getCurrSemester()
-  if _system_position is "parent"
-    getStudentInfo()
-  else
-    getStudentRuleSeme()
+
 
   # 外部函數
   {
     'score': (schoolYear, semester) ->
-      loadScore schoolYear, semester
+      loadScore(schoolYear, semester)
     'setModel': (model) ->
       _system_show_model = model
       loadScore(_schoolYear, _semester)
