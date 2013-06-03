@@ -17,7 +17,7 @@ gadget-評量成績(國中)
 **gadget.paramValues 設定**
 
     //版本
-    "system_type": ["kh"(高雄，預設) || "hs"(新竹) ]
+    "system_type": ["kh"(高雄，預設) || "hc"(新竹) ]
 
     //本學期定期成績是否於輸入截止後才顯示成績
     "system_exam_must_enddate": ["true"(預設) || "false"]

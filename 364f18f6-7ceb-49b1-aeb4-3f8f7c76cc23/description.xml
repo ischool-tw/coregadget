@@ -10,7 +10,7 @@
     </Title>
     <AllowParams>
       <Param key="system_type" type="limit" description="指定為高雄或新竹版">
-        <value>kh</value><value>hs</value>
+        <value>kh</value><value>hc</value>
       </Param>
       <Param key="system_exam_must_enddate" type="limit" description="本學期定期成績是否於輸入截止後才顯示成績">
         <value>true</value><value>false</value>

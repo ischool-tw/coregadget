@@ -462,7 +462,7 @@ Exam = do ->
       # 表頭
       $(exam_data.ExamList).each (key, exam) ->
         thead1.push """<th colspan="2" class="my-examname-thead">#{exam.ExamName}</th>"""
-        if _system_type is "hs" and _system_show_model is "subject"
+        if _system_type is "hc" and _system_show_model is "subject"
           thead2.push """<th colspan="2" class="my-subject-thead">總成績(定期/平時)</th>"""
         else
           thead2.push """<th colspan="2">成績</th>"""
@@ -522,7 +522,7 @@ Exam = do ->
                 # 高雄的分數評量
                 td_score = if exam.Avg? then exam.Avg else ''
 
-              when "hs"
+              when "hc"
                 # 新竹 平均(定期分數, 平時分數)
                 if exam.Score1? and exam.Score2?
                   td_score = """

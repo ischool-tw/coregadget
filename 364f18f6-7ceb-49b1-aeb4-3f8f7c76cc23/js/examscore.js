@@ -493,7 +493,7 @@
       if (exam_data) {
         $(exam_data.ExamList).each(function(key, exam) {
           thead1.push("<th colspan=\"2\" class=\"my-examname-thead\">" + exam.ExamName + "</th>");
-          if (_system_type === "hs" && _system_show_model === "subject") {
+          if (_system_type === "hc" && _system_show_model === "subject") {
             return thead2.push("<th colspan=\"2\" class=\"my-subject-thead\">總成績(定期/平時)</th>");
           } else {
             return thead2.push("<th colspan=\"2\">成績</th>");
@@ -529,7 +529,7 @@
                 case "kh":
                   td_score = exam.Avg != null ? exam.Avg : '';
                   break;
-                case "hs":
+                case "hc":
                   if ((exam.Score1 != null) && (exam.Score2 != null)) {
                     td_score = "<span class=\"my-avg-score\"> " + (Number(exam.Avg).toFixed(_places)) + " </span>( " + exam.Score1 + " / " + exam.Score2 + " )";
                   } else if (exam.Score1 != null) {
