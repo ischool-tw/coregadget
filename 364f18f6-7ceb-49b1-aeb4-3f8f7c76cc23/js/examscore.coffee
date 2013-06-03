@@ -357,7 +357,7 @@ Exam = do ->
       $(exam_data.Course).each (key, course) ->
         credit = course.Credit
         for key, exam of course.Exams
-          if exam.Avg? and exam.Avg isnt '未開放' and credit
+          if exam.Avg? and exam.Avg isnt '未開放' and credit and course.Doamin isnt '彈性課程'
             exam_data.Domain["domain:" + course.Domain].Exams[exam.ExamID].TotalCredit = FloatMath(credit, '+', exam_data.Domain["domain:" + course.Domain].Exams[exam.ExamID].TotalCredit)
             exam_data.Domain["domain:" + course.Domain].Exams[exam.ExamID].TotalCScore = FloatMath(FloatMath(exam.Avg, '*', credit), '+', exam_data.Domain["domain:" + course.Domain].Exams[exam.ExamID].TotalCScore)
             exam_data.ExamList['exam:' + exam.ExamID].TotalECredit = FloatMath(credit, '+', exam_data.ExamList['exam:' + exam.ExamID].TotalECredit)
@@ -401,7 +401,7 @@ Exam = do ->
       $(exam_data.Course).each (key, course) ->
         credit = course.Credit
         fix_score = course.FixScore
-        if course.FixScore? and course.FixScore isnt '未開放' and credit
+        if course.FixScore? and course.FixScore isnt '未開放' and credit and course.Doamin isnt '彈性課程'
           exam_data.Domain["domain:" + course.Domain].TotalFCredit = FloatMath(credit, '+', exam_data.Domain["domain:" + course.Domain].TotalFCredit)
           exam_data.Domain["domain:" + course.Domain].TotalFScore = FloatMath(FloatMath(fix_score, '*', credit), '+', exam_data.Domain["domain:" + course.Domain].TotalFScore)
           exam_data.FixExam.TotalTFCredit = FloatMath(credit, '+', exam_data.FixExam.TotalTFCredit)
@@ -413,12 +413,6 @@ Exam = do ->
       for key, domain of exam_data.Domain
         if domain.TotalFCredit > 0
           domain.AvgFScore = FloatFormat(FloatMath(domain.TotalFScore, '/', domain.TotalFCredit), _math_type, _places)
-          ii += 1
-          if ii isnt 1
-            if domain.AvgFScore > pre_score
-              domain.Flag = 'up'
-            else if domain.AvgFScore < pre_score
-              domain.Flag = 'down'
 
           pre_score = domain.AvgFScore
 
@@ -500,124 +494,126 @@ Exam = do ->
 
       # 領域科目
       $(exam_data.Course).each (key, course) ->
-        domain = exam_data.Domain['domain:' + course.Domain]
+        if _system_show_model is 'domain' and course.Domain is '彈性課程'
+        else
+          domain = exam_data.Domain['domain:' + course.Domain]
 
-        tbody1.push """<tr>"""
+          tbody1.push """<tr>"""
 
-        if course.Domain isnt pre_domain
-          tbody1.push """<th rowspan="#{domain.CourseCount}">#{course.Domain}</th>"""
+          if course.Domain isnt pre_domain
+            tbody1.push """<th rowspan="#{domain.CourseCount}">#{course.Domain}</th>"""
 
-        tbody1.push """
-          <th>#{course.Subject}</th>
-          <th>#{course.Credit}</th>
-        """
+          tbody1.push """
+            <th>#{course.Subject}</th>
+            <th>#{course.Credit}</th>
+          """
 
-        $(exam_data.ExamList).each (key, item) ->
-          exam = course.Exams[item.ExamID]
-          td_score = null
+          $(exam_data.ExamList).each (key, item) ->
+            exam = course.Exams[item.ExamID]
+            td_score = null
 
-          if exam
+            if exam
 
-            # 有成績且可顯示時資料處理
-            switch _system_type
-              when "kh"
-                # 高雄的分數評量
-                td_score = if exam.Avg? then exam.Avg else ''
+              # 有成績且可顯示時資料處理
+              switch _system_type
+                when "kh"
+                  # 高雄的分數評量
+                  td_score = if exam.Avg? then exam.Avg else ''
 
-              when "hs"
-                # 新竹 平均(定期分數, 平時分數)
-                if exam.Score1? and exam.Score2?
-                  td_score = """
-                    <span class="my-avg-score"> #{Number(exam.Avg).toFixed(_places)} </span>( #{exam.Score1} / #{exam.Score2} )
-                  """
-                else if exam.Score1?
-                  td_score = exam.Score1
-                else if exam.Score2?
-                  td_score = exam.Score2
-                else
-                  td_score = ''
-
-            # 定期評量
-            if _system_show_model is "domain" and course.Domain isnt pre_domain
-              # 領域
-              if domain.Exams[exam.ExamID]?.AvgCScore?
-                td_score = Number(domain.Exams[exam.ExamID].AvgCScore).toFixed(_places)
-                if domain.Exams[exam.ExamID].AvgCScore < 60
-                  tbody1.push """<td class="my-fail" rowspan="#{domain.CourseCount}">#{td_score}</td>"""
-                else
-                  tbody1.push """<td rowspan="#{domain.CourseCount}">#{td_score}</td>"""
-              else
-                tbody1.push """<td rowspan="#{domain.CourseCount}"></td>"""
-
-              if domain.Exams[exam.ExamID].Flag is "up"
-                tbody1.push """<td class="my-effect" rowspan="#{domain.CourseCount}"><span class="my-progress">↑</span></td>"""
-              else if domain.Exams[exam.ExamID].Flag is "down"
-                tbody1.push """<td class="my-effect" rowspan="#{domain.CourseCount}"><span class="my-regress">↓</span></td>"""
-              else
-                tbody1.push """<td class="my-effect" rowspan="#{domain.CourseCount}">&nbsp;</td>"""
-
-            else if _system_show_model is "subject"
-              # 科目
-              if exam.Avg isnt '未開放'
-                # 顯示成績，未達60分以紅色表示
-                if exam.Avg? and exam.Avg < 60
-                  tbody1.push """<td class="my-fail" my-data="#{exam.ExamID}">#{td_score}</td>"""
-                else
-                  tbody1.push """<td my-data="#{exam.ExamID}">#{td_score}</td>"""
-
-                if exam.Flag is "up"
-                  tbody1.push """<td class="my-effect"><span class="my-progress">↑</span></td>"""
-                else if exam.Flag is "down"
-                  tbody1.push """<td class="my-effect"><span class="my-regress">↓</span></td>"""
-                else
-                  tbody1.push """<td class="my-effect">&nbsp;</td>"""
-              else
-                tbody1.push """
-                  <td rel="tooltip"
-                    title="#{if exam.EndTime then exam.EndTime.toString() + "後開放" else "尚未開放"}">
-                    未開放</td>
-                  <td class="my-effect">&nbsp;</td>
-                """
-          else
-            if _system_show_model is "subject"
-              tbody1.push """<td>&nbsp;</td><td>&nbsp;</td>"""
-            else if _system_show_model is "domain" and course.Domain isnt pre_domain
-              tbody1.push """
-                <td rowspan="#{domain.CourseCount}"></td>
-                <td class="my-effect" rowspan="#{domain.CourseCount}">&nbsp;</td>"""
-
-        # 高雄平時評量
-        if _system_type is "kh"
-          if _system_show_model is "subject" and course.FixScore is '未開放'
-              tbody1.push """<td my-data="Ordinarily" rel="tooltip"
-                title="#{if course.FixEndTime then course.FixEndTime.toString() + "後開放" else "尚未開放"}">
-                未開放</td>
-              """
-          else
-            if _system_show_model is "domain"
-              # 領域：平時評量加權
-              if course.Domain isnt pre_domain
-                if domain.AvgFScore?
-                  if domain.AvgFScore < 60
-                    tbody1.push """<td rowspan="#{domain.CourseCount}" class="my-fail" my-data="Ordinarily">#{Number(domain.AvgFScore).toFixed(_places)}</td>"""
+                when "hs"
+                  # 新竹 平均(定期分數, 平時分數)
+                  if exam.Score1? and exam.Score2?
+                    td_score = """
+                      <span class="my-avg-score"> #{Number(exam.Avg).toFixed(_places)} </span>( #{exam.Score1} / #{exam.Score2} )
+                    """
+                  else if exam.Score1?
+                    td_score = exam.Score1
+                  else if exam.Score2?
+                    td_score = exam.Score2
                   else
-                    tbody1.push """<td rowspan="#{domain.CourseCount}" my-data="Ordinarily">#{Number(domain.AvgFScore).toFixed(_places)}</td>"""
-                else
-                  tbody1.push """<td rowspan="#{domain.CourseCount}" my-data="Ordinarily"></td>"""
-            else if _system_show_model is "subject"
-              # 科目：平時評量成績
-              if course.FixScore?
-                if course.FixScore < 60
-                  tbody1.push """<td class="my-fail" my-data="Ordinarily">#{course.FixScore}</td>"""
-                else
-                  tbody1.push """<td my-data="Ordinarily">#{course.FixScore}</td>"""
-              else
-                tbody1.push """<td my-data="Ordinarily"></td>"""
+                    td_score = ''
 
-        tbody1.push "</tr>"
+              # 定期評量
+              if _system_show_model is "domain" and course.Domain isnt pre_domain
+                # 領域
+                if domain.Exams[exam.ExamID]?.AvgCScore?
+                  td_score = Number(domain.Exams[exam.ExamID].AvgCScore).toFixed(_places)
+                  if domain.Exams[exam.ExamID].AvgCScore < 60
+                    tbody1.push """<td class="my-fail" rowspan="#{domain.CourseCount}">#{td_score}</td>"""
+                  else
+                    tbody1.push """<td rowspan="#{domain.CourseCount}">#{td_score}</td>"""
+                else
+                  tbody1.push """<td rowspan="#{domain.CourseCount}"></td>"""
 
-        # 上次迴圈的領域名
-        pre_domain = course.Domain
+                if domain.Exams[exam.ExamID].Flag is "up"
+                  tbody1.push """<td class="my-effect" rowspan="#{domain.CourseCount}"><span class="my-progress">↑</span></td>"""
+                else if domain.Exams[exam.ExamID].Flag is "down"
+                  tbody1.push """<td class="my-effect" rowspan="#{domain.CourseCount}"><span class="my-regress">↓</span></td>"""
+                else
+                  tbody1.push """<td class="my-effect" rowspan="#{domain.CourseCount}">&nbsp;</td>"""
+
+              else if _system_show_model is "subject"
+                # 科目
+                if exam.Avg isnt '未開放'
+                  # 顯示成績，未達60分以紅色表示
+                  if exam.Avg? and exam.Avg < 60
+                    tbody1.push """<td class="my-fail" my-data="#{exam.ExamID}">#{td_score}</td>"""
+                  else
+                    tbody1.push """<td my-data="#{exam.ExamID}">#{td_score}</td>"""
+
+                  if exam.Flag is "up"
+                    tbody1.push """<td class="my-effect"><span class="my-progress">↑</span></td>"""
+                  else if exam.Flag is "down"
+                    tbody1.push """<td class="my-effect"><span class="my-regress">↓</span></td>"""
+                  else
+                    tbody1.push """<td class="my-effect">&nbsp;</td>"""
+                else
+                  tbody1.push """
+                    <td rel="tooltip"
+                      title="#{if exam.EndTime then exam.EndTime.toString() + "後開放" else "尚未開放"}">
+                      未開放</td>
+                    <td class="my-effect">&nbsp;</td>
+                  """
+            else
+              if _system_show_model is "subject"
+                tbody1.push """<td>&nbsp;</td><td>&nbsp;</td>"""
+              else if _system_show_model is "domain" and course.Domain isnt pre_domain
+                tbody1.push """
+                  <td rowspan="#{domain.CourseCount}"></td>
+                  <td class="my-effect" rowspan="#{domain.CourseCount}">&nbsp;</td>"""
+
+          # 高雄平時評量
+          if _system_type is "kh"
+            if _system_show_model is "subject" and course.FixScore is '未開放'
+                tbody1.push """<td my-data="Ordinarily" rel="tooltip"
+                  title="#{if course.FixEndTime then course.FixEndTime.toString() + "後開放" else "尚未開放"}">
+                  未開放</td>
+                """
+            else
+              if _system_show_model is "domain"
+                # 領域：平時評量加權
+                if course.Domain isnt pre_domain
+                  if domain.AvgFScore?
+                    if domain.AvgFScore < 60
+                      tbody1.push """<td rowspan="#{domain.CourseCount}" class="my-fail" my-data="Ordinarily">#{Number(domain.AvgFScore).toFixed(_places)}</td>"""
+                    else
+                      tbody1.push """<td rowspan="#{domain.CourseCount}" my-data="Ordinarily">#{Number(domain.AvgFScore).toFixed(_places)}</td>"""
+                  else
+                    tbody1.push """<td rowspan="#{domain.CourseCount}" my-data="Ordinarily"></td>"""
+              else if _system_show_model is "subject"
+                # 科目：平時評量成績
+                if course.FixScore?
+                  if course.FixScore < 60
+                    tbody1.push """<td class="my-fail" my-data="Ordinarily">#{course.FixScore}</td>"""
+                  else
+                    tbody1.push """<td my-data="Ordinarily">#{course.FixScore}</td>"""
+                else
+                  tbody1.push """<td my-data="Ordinarily"></td>"""
+
+          tbody1.push "</tr>"
+
+          # 上次迴圈的領域名
+          pre_domain = course.Domain
 
 
       # 定期評量平均、及加權總平均

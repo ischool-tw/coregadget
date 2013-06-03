@@ -377,7 +377,7 @@
           _results = [];
           for (key in _ref) {
             exam = _ref[key];
-            if ((exam.Avg != null) && exam.Avg !== '未開放' && credit) {
+            if ((exam.Avg != null) && exam.Avg !== '未開放' && credit && course.Doamin !== '彈性課程') {
               exam_data.Domain["domain:" + course.Domain].Exams[exam.ExamID].TotalCredit = FloatMath(credit, '+', exam_data.Domain["domain:" + course.Domain].Exams[exam.ExamID].TotalCredit);
               exam_data.Domain["domain:" + course.Domain].Exams[exam.ExamID].TotalCScore = FloatMath(FloatMath(exam.Avg, '*', credit), '+', exam_data.Domain["domain:" + course.Domain].Exams[exam.ExamID].TotalCScore);
               exam_data.ExamList['exam:' + exam.ExamID].TotalECredit = FloatMath(credit, '+', exam_data.ExamList['exam:' + exam.ExamID].TotalECredit);
@@ -430,7 +430,7 @@
 
           credit = course.Credit;
           fix_score = course.FixScore;
-          if ((course.FixScore != null) && course.FixScore !== '未開放' && credit) {
+          if ((course.FixScore != null) && course.FixScore !== '未開放' && credit && course.Doamin !== '彈性課程') {
             exam_data.Domain["domain:" + course.Domain].TotalFCredit = FloatMath(credit, '+', exam_data.Domain["domain:" + course.Domain].TotalFCredit);
             exam_data.Domain["domain:" + course.Domain].TotalFScore = FloatMath(FloatMath(fix_score, '*', credit), '+', exam_data.Domain["domain:" + course.Domain].TotalFScore);
             exam_data.FixExam.TotalTFCredit = FloatMath(credit, '+', exam_data.FixExam.TotalTFCredit);
@@ -443,14 +443,6 @@
           domain = _ref2[key];
           if (domain.TotalFCredit > 0) {
             domain.AvgFScore = FloatFormat(FloatMath(domain.TotalFScore, '/', domain.TotalFCredit), _math_type, _places);
-            ii += 1;
-            if (ii !== 1) {
-              if (domain.AvgFScore > pre_score) {
-                domain.Flag = 'up';
-              } else if (domain.AvgFScore < pre_score) {
-                domain.Flag = 'down';
-              }
-            }
             pre_score = domain.AvgFScore;
           }
         }
@@ -524,108 +516,112 @@
         $(exam_data.Course).each(function(key, course) {
           var domain;
 
-          domain = exam_data.Domain['domain:' + course.Domain];
-          tbody1.push("<tr>");
-          if (course.Domain !== pre_domain) {
-            tbody1.push("<th rowspan=\"" + domain.CourseCount + "\">" + course.Domain + "</th>");
-          }
-          tbody1.push("<th>" + course.Subject + "</th>\n<th>" + course.Credit + "</th>");
-          $(exam_data.ExamList).each(function(key, item) {
-            var exam, td_score, _ref;
+          if (_system_show_model === 'domain' && course.Domain === '彈性課程') {
 
-            exam = course.Exams[item.ExamID];
-            td_score = null;
-            if (exam) {
-              switch (_system_type) {
-                case "kh":
-                  td_score = exam.Avg != null ? exam.Avg : '';
-                  break;
-                case "hs":
-                  if ((exam.Score1 != null) && (exam.Score2 != null)) {
-                    td_score = "<span class=\"my-avg-score\"> " + (Number(exam.Avg).toFixed(_places)) + " </span>( " + exam.Score1 + " / " + exam.Score2 + " )";
-                  } else if (exam.Score1 != null) {
-                    td_score = exam.Score1;
-                  } else if (exam.Score2 != null) {
-                    td_score = exam.Score2;
-                  } else {
-                    td_score = '';
-                  }
-              }
-              if (_system_show_model === "domain" && course.Domain !== pre_domain) {
-                if (((_ref = domain.Exams[exam.ExamID]) != null ? _ref.AvgCScore : void 0) != null) {
-                  td_score = Number(domain.Exams[exam.ExamID].AvgCScore).toFixed(_places);
-                  if (domain.Exams[exam.ExamID].AvgCScore < 60) {
-                    tbody1.push("<td class=\"my-fail\" rowspan=\"" + domain.CourseCount + "\">" + td_score + "</td>");
-                  } else {
-                    tbody1.push("<td rowspan=\"" + domain.CourseCount + "\">" + td_score + "</td>");
-                  }
-                } else {
-                  tbody1.push("<td rowspan=\"" + domain.CourseCount + "\"></td>");
-                }
-                if (domain.Exams[exam.ExamID].Flag === "up") {
-                  return tbody1.push("<td class=\"my-effect\" rowspan=\"" + domain.CourseCount + "\"><span class=\"my-progress\">↑</span></td>");
-                } else if (domain.Exams[exam.ExamID].Flag === "down") {
-                  return tbody1.push("<td class=\"my-effect\" rowspan=\"" + domain.CourseCount + "\"><span class=\"my-regress\">↓</span></td>");
-                } else {
-                  return tbody1.push("<td class=\"my-effect\" rowspan=\"" + domain.CourseCount + "\">&nbsp;</td>");
-                }
-              } else if (_system_show_model === "subject") {
-                if (exam.Avg !== '未開放') {
-                  if ((exam.Avg != null) && exam.Avg < 60) {
-                    tbody1.push("<td class=\"my-fail\" my-data=\"" + exam.ExamID + "\">" + td_score + "</td>");
-                  } else {
-                    tbody1.push("<td my-data=\"" + exam.ExamID + "\">" + td_score + "</td>");
-                  }
-                  if (exam.Flag === "up") {
-                    return tbody1.push("<td class=\"my-effect\"><span class=\"my-progress\">↑</span></td>");
-                  } else if (exam.Flag === "down") {
-                    return tbody1.push("<td class=\"my-effect\"><span class=\"my-regress\">↓</span></td>");
-                  } else {
-                    return tbody1.push("<td class=\"my-effect\">&nbsp;</td>");
-                  }
-                } else {
-                  return tbody1.push("<td rel=\"tooltip\"\n  title=\"" + (exam.EndTime ? exam.EndTime.toString() + "後開放" : "尚未開放") + "\">\n  未開放</td>\n<td class=\"my-effect\">&nbsp;</td>");
-                }
-              }
-            } else {
-              if (_system_show_model === "subject") {
-                return tbody1.push("<td>&nbsp;</td><td>&nbsp;</td>");
-              } else if (_system_show_model === "domain" && course.Domain !== pre_domain) {
-                return tbody1.push("<td rowspan=\"" + domain.CourseCount + "\"></td>\n<td class=\"my-effect\" rowspan=\"" + domain.CourseCount + "\">&nbsp;</td>");
-              }
+          } else {
+            domain = exam_data.Domain['domain:' + course.Domain];
+            tbody1.push("<tr>");
+            if (course.Domain !== pre_domain) {
+              tbody1.push("<th rowspan=\"" + domain.CourseCount + "\">" + course.Domain + "</th>");
             }
-          });
-          if (_system_type === "kh") {
-            if (_system_show_model === "subject" && course.FixScore === '未開放') {
-              tbody1.push("<td my-data=\"Ordinarily\" rel=\"tooltip\"\ntitle=\"" + (course.FixEndTime ? course.FixEndTime.toString() + "後開放" : "尚未開放") + "\">\n未開放</td>");
-            } else {
-              if (_system_show_model === "domain") {
-                if (course.Domain !== pre_domain) {
-                  if (domain.AvgFScore != null) {
-                    if (domain.AvgFScore < 60) {
-                      tbody1.push("<td rowspan=\"" + domain.CourseCount + "\" class=\"my-fail\" my-data=\"Ordinarily\">" + (Number(domain.AvgFScore).toFixed(_places)) + "</td>");
+            tbody1.push("<th>" + course.Subject + "</th>\n<th>" + course.Credit + "</th>");
+            $(exam_data.ExamList).each(function(key, item) {
+              var exam, td_score, _ref;
+
+              exam = course.Exams[item.ExamID];
+              td_score = null;
+              if (exam) {
+                switch (_system_type) {
+                  case "kh":
+                    td_score = exam.Avg != null ? exam.Avg : '';
+                    break;
+                  case "hs":
+                    if ((exam.Score1 != null) && (exam.Score2 != null)) {
+                      td_score = "<span class=\"my-avg-score\"> " + (Number(exam.Avg).toFixed(_places)) + " </span>( " + exam.Score1 + " / " + exam.Score2 + " )";
+                    } else if (exam.Score1 != null) {
+                      td_score = exam.Score1;
+                    } else if (exam.Score2 != null) {
+                      td_score = exam.Score2;
                     } else {
-                      tbody1.push("<td rowspan=\"" + domain.CourseCount + "\" my-data=\"Ordinarily\">" + (Number(domain.AvgFScore).toFixed(_places)) + "</td>");
+                      td_score = '';
+                    }
+                }
+                if (_system_show_model === "domain" && course.Domain !== pre_domain) {
+                  if (((_ref = domain.Exams[exam.ExamID]) != null ? _ref.AvgCScore : void 0) != null) {
+                    td_score = Number(domain.Exams[exam.ExamID].AvgCScore).toFixed(_places);
+                    if (domain.Exams[exam.ExamID].AvgCScore < 60) {
+                      tbody1.push("<td class=\"my-fail\" rowspan=\"" + domain.CourseCount + "\">" + td_score + "</td>");
+                    } else {
+                      tbody1.push("<td rowspan=\"" + domain.CourseCount + "\">" + td_score + "</td>");
                     }
                   } else {
-                    tbody1.push("<td rowspan=\"" + domain.CourseCount + "\" my-data=\"Ordinarily\"></td>");
+                    tbody1.push("<td rowspan=\"" + domain.CourseCount + "\"></td>");
+                  }
+                  if (domain.Exams[exam.ExamID].Flag === "up") {
+                    return tbody1.push("<td class=\"my-effect\" rowspan=\"" + domain.CourseCount + "\"><span class=\"my-progress\">↑</span></td>");
+                  } else if (domain.Exams[exam.ExamID].Flag === "down") {
+                    return tbody1.push("<td class=\"my-effect\" rowspan=\"" + domain.CourseCount + "\"><span class=\"my-regress\">↓</span></td>");
+                  } else {
+                    return tbody1.push("<td class=\"my-effect\" rowspan=\"" + domain.CourseCount + "\">&nbsp;</td>");
+                  }
+                } else if (_system_show_model === "subject") {
+                  if (exam.Avg !== '未開放') {
+                    if ((exam.Avg != null) && exam.Avg < 60) {
+                      tbody1.push("<td class=\"my-fail\" my-data=\"" + exam.ExamID + "\">" + td_score + "</td>");
+                    } else {
+                      tbody1.push("<td my-data=\"" + exam.ExamID + "\">" + td_score + "</td>");
+                    }
+                    if (exam.Flag === "up") {
+                      return tbody1.push("<td class=\"my-effect\"><span class=\"my-progress\">↑</span></td>");
+                    } else if (exam.Flag === "down") {
+                      return tbody1.push("<td class=\"my-effect\"><span class=\"my-regress\">↓</span></td>");
+                    } else {
+                      return tbody1.push("<td class=\"my-effect\">&nbsp;</td>");
+                    }
+                  } else {
+                    return tbody1.push("<td rel=\"tooltip\"\n  title=\"" + (exam.EndTime ? exam.EndTime.toString() + "後開放" : "尚未開放") + "\">\n  未開放</td>\n<td class=\"my-effect\">&nbsp;</td>");
                   }
                 }
-              } else if (_system_show_model === "subject") {
-                if (course.FixScore != null) {
-                  if (course.FixScore < 60) {
-                    tbody1.push("<td class=\"my-fail\" my-data=\"Ordinarily\">" + course.FixScore + "</td>");
-                  } else {
-                    tbody1.push("<td my-data=\"Ordinarily\">" + course.FixScore + "</td>");
+              } else {
+                if (_system_show_model === "subject") {
+                  return tbody1.push("<td>&nbsp;</td><td>&nbsp;</td>");
+                } else if (_system_show_model === "domain" && course.Domain !== pre_domain) {
+                  return tbody1.push("<td rowspan=\"" + domain.CourseCount + "\"></td>\n<td class=\"my-effect\" rowspan=\"" + domain.CourseCount + "\">&nbsp;</td>");
+                }
+              }
+            });
+            if (_system_type === "kh") {
+              if (_system_show_model === "subject" && course.FixScore === '未開放') {
+                tbody1.push("<td my-data=\"Ordinarily\" rel=\"tooltip\"\ntitle=\"" + (course.FixEndTime ? course.FixEndTime.toString() + "後開放" : "尚未開放") + "\">\n未開放</td>");
+              } else {
+                if (_system_show_model === "domain") {
+                  if (course.Domain !== pre_domain) {
+                    if (domain.AvgFScore != null) {
+                      if (domain.AvgFScore < 60) {
+                        tbody1.push("<td rowspan=\"" + domain.CourseCount + "\" class=\"my-fail\" my-data=\"Ordinarily\">" + (Number(domain.AvgFScore).toFixed(_places)) + "</td>");
+                      } else {
+                        tbody1.push("<td rowspan=\"" + domain.CourseCount + "\" my-data=\"Ordinarily\">" + (Number(domain.AvgFScore).toFixed(_places)) + "</td>");
+                      }
+                    } else {
+                      tbody1.push("<td rowspan=\"" + domain.CourseCount + "\" my-data=\"Ordinarily\"></td>");
+                    }
                   }
-                } else {
-                  tbody1.push("<td my-data=\"Ordinarily\"></td>");
+                } else if (_system_show_model === "subject") {
+                  if (course.FixScore != null) {
+                    if (course.FixScore < 60) {
+                      tbody1.push("<td class=\"my-fail\" my-data=\"Ordinarily\">" + course.FixScore + "</td>");
+                    } else {
+                      tbody1.push("<td my-data=\"Ordinarily\">" + course.FixScore + "</td>");
+                    }
+                  } else {
+                    tbody1.push("<td my-data=\"Ordinarily\"></td>");
+                  }
                 }
               }
             }
+            tbody1.push("</tr>");
+            return pre_domain = course.Domain;
           }
-          tbody1.push("</tr>");
-          return pre_domain = course.Domain;
         });
         tbody1.push("<tr><th colspan=\"3\">加權平均</th>");
         $(exam_data.ExamList).each(function(key, exam) {
