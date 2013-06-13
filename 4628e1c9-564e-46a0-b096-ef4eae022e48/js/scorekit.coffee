@@ -38,6 +38,8 @@ getSemester = () ->
 			if response.Result?
 				params.CurrentSchoolYear = response.Result.SystemConfig.DefaultSchoolYear
 				params.CurrentSemester = response.Result.SystemConfig.DefaultSemester
+				params.CurrentSchoolYear = 101
+				params.CurrentSemester = 2
 
 				gadget.getContract("emba.teacher").send {
 					service: "default.GetSubjectScoreLock",
