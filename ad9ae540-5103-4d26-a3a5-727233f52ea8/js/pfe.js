@@ -1,6 +1,7 @@
 // 進修及研習課程
 $(function() {
     LessonPlanManager.ControlPFE = function(target) {
+        $('#form_pfe').validate();
         var target = $(target)
             , _location = location.href.replace('content.htm', 'upload_return.html').replace('develope.html', 'upload_return.html').replace('#', '')
             , _isPFEReady = false
@@ -32,7 +33,7 @@ $(function() {
                 //#region 處理研習分類選單
                 var category_dropdown = SetCategoryList(_category, '0');
                 if (category_dropdown) {
-                    $(newForm).find('div[data-type="StudyCategory"]').append('<select>' + category_dropdown + '</select>');
+                    $(newForm).find('div[data-type="StudyCategory"]').append('<select name="catetory_' + source.getFormsCount() + '" class="isStudyCategory">' + category_dropdown + '</select>');
                 }
                 //#endregion
             },
@@ -72,19 +73,18 @@ $(function() {
         };
         //#endregion
 
+        //#region 研習分類多層選單
         target.on('change', 'select', function() {
             $(this).nextAll('select').remove();
             var parent_id = $(this).val();
             if (parent_id) {
-                $(this).closest('td').removeClass('my-error').find('span').remove();
                 var category_dropdown = SetCategoryList(_category, parent_id);;
                 if (category_dropdown) {
                     $(this).closest('div[data-type="StudyCategory"]').append('<select>' + category_dropdown + '</select>');
                 }
-            } else {
-                $(this).closest('td').addClass('my-error').append('<span class="help-inline">必填</span>');
             }
         });
+        //#endregion
 
         target.on('focus', 'input.date:not(.hasDatepicker)', function() {
             $( this ).datepicker({
@@ -162,6 +162,7 @@ $(function() {
         });
         //#endregion
 
+        //#region 刪除檔案
         target.on('click', '.my-trash', function() {
             var container = $(this).closest('p');
             if (container.find('a').attr('file-id')) {
@@ -170,7 +171,9 @@ $(function() {
                 container.remove();
             }
         });
+        //#endregion
 
+        //#region 取消，還原為最終儲存資料
         target.find('[data-action=cancel]').click(function() {
             _wantDel = {
                 StudyCondition: [],
@@ -178,27 +181,48 @@ $(function() {
             };
             getPFE(_pfe);
         });
+        //#endregion
+
+        //#region 驗證提示樣式設定
+        target.find('form').validate({
+            debug: true, // 為 true 時不會 submit
+            errorElement: "span", //錯誤時使用元素
+            errorClass: "help-inline", //錯誤時使用樣式
+            highlight: function(element) {
+                // 將未通過驗證的表單元素設置高亮度
+                $(element).addClass('valid-fail');
+                if (element.name == 'StudyDate' || element.name == 'EndDate') {
+                    $(element).closest('td').addClass("my-error-" + element.name);
+                } else {
+                    $(element).closest('td').addClass("my-error");
+                }
+            },
+            unhighlight: function(element) {
+                // 與 highlight 相反
+                $(element).removeClass('valid-fail');
+                if (element.name == 'StudyDate' || element.name == 'EndDate') {
+                    $(element).closest('td').removeClass("my-error-" + element.name);
+                } else {
+                    $(element).closest('td').removeClass("my-error");
+                }
+            },
+            errorPlacement: function (error, element) {
+                // 錯誤標籤的顯示位置
+                if (element.is(':radio') || element.is(':checkbox')) {
+                    error.appendTo(element.closest('td'));
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+        //#endregion
 
         target.find('[data-action=save]').click(function() {
             var btn = $(this);
             if (btn.hasClass('disabled')) return;
 
-            var valid_dropdown = function() {
-                var ret = true;
-                $(target.find('table')).each(function(index, elem) {
-                    if (!$(elem).find('div[data-type="StudyCategory"] select:last').val()) {
-                        ret = false;
-                        $(elem).find('td.my-cateogry').addClass('my-error').append('<span class="help-inline">必填</span>');
-                    }
-                });
-                return ret;
-            };
-
-            var valid_list = valid_dropdown();
-            var valid_form = target.find('form').valid();
-
             // 驗證通過
-            if (valid_list && valid_form) {
+            if (target.find('form').valid()) {
                 btn.text('儲存中...').addClass('disabled');
 
                 var must_count = 0, run_count = 0;
@@ -365,6 +389,7 @@ $(function() {
                                 Feedback: elem.find('[name=Feedback]').val() || '',
                                 StudyName: elem.find('[name=StudyName]').val() || '',
                                 StudyDate: elem.find('[name=StudyDate]').val() || '',
+                                EndDate: elem.find('[name=EndDate]').val() || '',
                                 CategoryID: elem.find('div[data-type="StudyCategory"] select:last').val() || '',
                             }
                         }
@@ -424,11 +449,11 @@ $(function() {
                     (_wantDel.FileCondition.length > 0) ? delFile({ Request : { File: _wantDel.FileCondition } }, actionEnd) : actionEnd(true);
                 });
             } else {
-                target.find('td.my-error:first').find('input, select').first().focus();
+                target.find('.valid-fail:first').focus();
             }
         });
 
-        //#region 顯示研習資料
+        //#region 取得研習資料
         var getPFE = function(myPFE) {
             var getData = function(callback) {
                 connection.send({
@@ -480,6 +505,7 @@ $(function() {
 
             if (_isPFEReady) {
                 // 設定動態新增項目的預設值
+                // 使用sheepItPlugin，會依照資料的名稱，自動產生表單及填值
                 if (myPFE) {
                     _sheepItForm.reset(LessonPlanManager.Util.handleArray(myPFE));
                 } else {
@@ -590,3 +616,24 @@ var PFEFileInfo = function(vars) {
     });
 }
 //#endregion
+
+//#region 驗證開始日小於結束日
+var isAfterStartDate = function(startDateStr, endDateStr) {
+    var sDate = new Date(startDateStr),
+        eDate = new Date(endDateStr);
+
+    if(sDate > eDate) {
+        return false;
+    } else {
+        return true;
+    }
+};
+//#endregion
+
+jQuery.validator.addMethod("isAfterStartDate", function(value, element) {
+    return isAfterStartDate($(element).parent().children("input:first").val(), value);
+}, "開始日大於結束日");
+
+jQuery.validator.addMethod("isStudyCategory", function(value, element) {
+    return $(element).parent().children("select:last").val();
+}, "必填");
