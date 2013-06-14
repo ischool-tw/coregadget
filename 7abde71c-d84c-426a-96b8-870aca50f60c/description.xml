@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs
+      title="選課系統">
+    <Icon>icon.png</Icon>
+  </ModulePrefs>
+</Module>
