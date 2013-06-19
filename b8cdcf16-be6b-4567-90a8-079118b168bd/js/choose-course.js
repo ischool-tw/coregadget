@@ -521,27 +521,48 @@ jQuery(function () {
             },
             set_registration_confirm : function() {
                 var self = MyViewModel;
-                _gg.connection.send({
-                    service: "_.SetRegistrationConfirm",
-                    body: '<Request><Request><Confirm>true</Confirm></Request></Request>',
-                    result: function (response, error, http) {
-                        if (error !== null) {
-                            $('#save-data').button('reset');
-                            $('#myModal [data-dismiss="modal"]').show();
-                            _gg.set_error_message('#errorMessage', 'SetRegistrationConfirm', error);
-                        } else {
-                            if (response.Result && response.Result.ExecuteCount) {
-                                if (parseInt(response.Result.ExecuteCount, 10) > 0) {
-                                    self.sc_confirm(true);
-                                    $('#myModal').modal('hide');
-                                    $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
-                                    setTimeout("$('#mainMsg').html('')", 1500);
+                conn_log.ready(function(){
+                    _gg.connection.send({
+                        service: "_.SetRegistrationConfirm",
+                        body: '<Request><Request><Confirm>true</Confirm></Request></Request>',
+                        result: function (response, error, http) {
+                            if (error !== null) {
+                                $('#save-data').button('reset');
+                                $('#myModal [data-dismiss="modal"]').show();
+                                _gg.set_error_message('#errorMessage', 'SetRegistrationConfirm', error);
+                            } else {
+                                if (response.Result && response.Result.ExecuteCount) {
+                                    if (parseInt(response.Result.EffectRows, 10) > 0) {
+                                        self.sc_confirm(true);
+
+                                        gadget.getContract("emba.student").send({
+                                            service: "public.AddLog",
+                                            body: {
+                                                Request: {
+                                                    Log: {
+                                                        Actor: conn_log.getUserInfo().UserName,
+                                                        ActionType: "確認最終選課結果",
+                                                        Action: "送出最終選課結果",
+                                                        TargetCategory: "student",
+                                                        ClientInfo: {
+                                                            ClientInfo: {}
+                                                        },
+                                                        ActionBy: "ischool web 選課小工具",
+                                                        Description: '學生「' + self.student.StudentName() + '」送出最終選課結果'
+                                                    }
+                                                }
+                                            }
+                                        });
+
+                                        $('#myModal').modal('hide');
+                                        $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
+                                        setTimeout("$('#mainMsg').html('')", 1500);
+                                    }
                                 }
                             }
                         }
-                    }
+                    });
                 });
-
             },
 
             // TODO: 衝堂課程
