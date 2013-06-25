@@ -116,7 +116,7 @@ Exam = do ->
             list = []
             $(response.Response.Course).each (index, item) ->
               list.push """
-                <option value="#{item.CourseID}">#{item.Subject or ''}</option>
+                <option value="#{item.CourseID}">#{item.CourseName or ''}</option>
               """
 
               # 將定期評量 Exam 新增至物件
