@@ -134,7 +134,7 @@
               $(response.Response.Course).each(function(index, item) {
                 var classInterval, _ref;
 
-                list.push("<option value=\"" + item.CourseID + "\">" + (item.Subject || '') + "</option>");
+                list.push("<option value=\"" + item.CourseID + "\">" + (item.CourseName || '') + "</option>");
                 if (((_ref = item.Exams) != null ? _ref.Exam : void 0) != null) {
                   $(item.Exams.Exam).each(function(index, exam) {
                     return item.Exams.Exam['exam_' + exam.ExamID] = exam;
