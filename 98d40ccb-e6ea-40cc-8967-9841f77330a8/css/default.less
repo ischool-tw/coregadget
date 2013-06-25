@@ -1,0 +1,53 @@
+.table th, .table td {
+  text-align:center;
+}
+
+th:first-child {
+  width:8%;
+  white-space:nowrap;
+}
+
+textarea {
+  width:90%;
+}
+
+.table tbody:last-child td {
+  text-align:left;
+}
+
+.span12 label {
+  margin-left:10px;
+}
+
+/*自訂*/
+.my-err-info {
+  cursor: pointer;
+}
+
+.btn-print {
+  margin-right: 10px;
+}
+
+.my-performance {
+  overflow: auto;
+  max-height: 150px;
+  min-width: 200px;
+  max-width: 920px;
+}
+
+.my-print-page {
+  .table {
+    border: 1px solid #DDD;
+
+    th, td {
+      border-left: 1px solid #DDD;
+    }
+  }
+  .my-performance {
+    overflow: visible;
+    max-height: inherit;
+    min-width: 200px;
+    max-width: 920px;
+  }
+}
+
