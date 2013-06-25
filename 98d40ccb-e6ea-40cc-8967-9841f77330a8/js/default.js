@@ -150,6 +150,8 @@
                 return getAvgScore(this.value);
               });
               return $("#curr_course_list option:first").trigger('change');
+            } else {
+              return $("#tabAnalysis tbody:eq(0)").html("<tr><td>目前無資料</td></tr>");
             }
           }
         }
