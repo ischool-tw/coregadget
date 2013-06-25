@@ -2,8 +2,6 @@ jQuery ->
   $("#tabAnalysis tbody:eq(0)").html "<tr><td>載入中...</td></tr>"
 
 
-
-
   # 數據分析時才顯示「列印」
   $("#mainButtonGroup").on "click", "a[data-toggle='tab']", (e) ->
     if @.hash is "#tabAnalysis"
@@ -141,6 +139,8 @@ Exam = do ->
               getAvgScore(@.value)
 
             $("#curr_course_list option:first").trigger('change')
+          else
+            $("#tabAnalysis tbody:eq(0)").html "<tr><td>目前無資料</td></tr>"
 
 
   # 清除畫面
