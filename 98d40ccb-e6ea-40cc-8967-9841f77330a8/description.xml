@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="教學分析" description="老師-教學分析">
-    <Title lang="zh-TW">教學分析</Title>
+  <ModulePrefs title="評量分析" description="老師-評量分析">
+    <Title lang="zh-TW">評量分析</Title>
     <Icon>icon.png</Icon>
     <Mobile />
     <Title lang="zh-CN">

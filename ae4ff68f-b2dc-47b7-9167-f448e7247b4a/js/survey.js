@@ -310,6 +310,7 @@ var _gg = function() {
                 _reply_status = curr_survey.ReplyStatus,
                 req_q, req_c, that_questions, that_case;
 
+            //#region 顯示題目
             var processQuestion = function() {
                 if (req_q && req_c) {
                     var down_question = [], top_question = [];
@@ -413,6 +414,8 @@ var _gg = function() {
                     }
                 }
             };
+            //#endregion
+
 
             if (_reply_status === '1') {
                 // 已送出

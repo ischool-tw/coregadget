@@ -4,6 +4,66 @@ _gg.connection = gadget.getContract("ischool.CampusLite.staff");
 jQuery(function () {
     _gg.GetAllClassList();
 
+    $('#myTab')
+        .click(function() {
+            $(this).find('li.active').removeClass('active');
+        })
+        .find('a').click(function(){
+            $('#tabName').html($(this).html());
+        })
+        .first().trigger('click');
+
+    // TODO: 匯入設定
+    var field = {
+        'StudentName':'姓名',
+        'SeatNo':'座號',
+        'StudentNumber':'學號',
+        'SaLoginName':'帳號',
+        'IDNumber':'身分證',
+        'Gender':'性別',
+        'Birthdate':'生日',
+        'PermanentPhone':'戶籍電話',
+        'SmsPhone':'行動電話',
+        'PermanentZipCode':'戶籍郵遞區號',
+        'PermanentCounty':'戶籍縣市',
+        'PermanentTown':'戶籍鄉鎮市區',
+        'PermanentDetailAddress':'戶籍村里街號',
+        'ContactPhone':'通訊電話',
+        'MailingZipCode':'通訊郵遞區號',
+        'MailingCounty':'通訊縣市',
+        'MailingTown':'通訊鄉鎮市區',
+        'MailingDetailAddress':'通訊村里街號',
+        'ParentCode':'家長代碼',
+        'StudentCode':'學生代碼',
+        'ClassName':'班級'
+    };
+    $('#import').importlist({
+        columns          : field,
+        oncomplete       : _gg.save_import,
+        haveTitleControl : '#import input:checkbox[data-action=checktitle]',
+        inputControl     : '#import textarea',
+        outputControl    : '#import div[data-tab=result]',
+        parseControl     : '#import button[data-action=parse]',
+        importControl    : '#import button[data-action=done]',
+        errorElement     : '#mainMsg'
+    });
+
+    // TODO: 匯出全選
+    $('#tab_export')
+        .find('#checkall').click(function() {
+            var that = this;
+            $('#tab_export .controls input:checkbox').prop('checked', function() {
+                return $(that).prop('checked');
+            });
+        }).end()
+        .find('button[data-action=export]').click(function() {
+            if ($('#tab_export .controls input:checkbox:checked').length === 0) {
+                $('#tab_export textarea').val('無匯出資料');
+            } else {
+                _gg.export_data();
+            }
+        });
+
     // TODO: scroll bar
     $('.my-scrollbar2, #namelist').alternateScroll();
 
@@ -80,7 +140,7 @@ jQuery(function () {
                 $(this).button("loading");
                 _gg.saveBaseInfo();
             } else {
-                err_msg.html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  資料驗證失敗，請重新檢查！\n</div>");
+                _gg.set_error_message('#errorMessage', '', '資料驗證失敗，請重新檢查！');
             }
         });
 
@@ -287,7 +347,7 @@ _gg.GetStudentList = function(search_type) {
         myclass = _gg.class;
         request = '<Request><Condition><ClassID>' + myclass.ClassID + '</ClassID></Condition></Request>';
     } else {
-        request = '<Request><Field><ClassName/></Field><Condition><StudentName>%' + ($('#filter-keyword').val() || '') + '%</StudentName></Condition></Request>';
+        request = '<Request><Field><All/></Field><Condition><StudentName>%' + ($('#filter-keyword').val() || '') + '%</StudentName></Condition></Request>';
     }
 
     $('#namelist tbody').html('');
@@ -373,7 +433,16 @@ _gg.GetStudentInfo = function() {
     if (_gg.student) {
         _gg.connection.send({
             service: "student.GetStudentInfo",
-            body: '<Request><Condition><StudentID>' + _gg.student.StudentID + '</StudentID></Condition></Request>',
+            body: {
+                Request: {
+                    Field: {
+                        All: ''
+                    },
+                    Condition: {
+                        StudentID: _gg.student.StudentID
+                    }
+                }
+            },
             result: function (response, error, http) {
                 if (error !== null) {
                     _gg.set_error_message('#mainMsg', 'GetStudentInfo', error);
@@ -682,12 +751,12 @@ _gg.saveBaseInfo = function() {
         if (studentid === '0') {
             _type = 'add';
             _service = 'student.AddStudent';
-            _body ='<Request><Student><Field>' + request.join('') + '</Field></Student></Request>';
+            _body ='<Request><Student>' + request.join('') + '</Student></Request>';
             _txt = '新增成功';
         } else {
             _type = 'update';
             _service = 'student.SetStudentInfo';
-            _body ='<Request><Student><Field>' + request.join('') + '</Field><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Student></Request>',
+            _body ='<Request><Student>' + request.join('') + '<Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Student></Request>',
             _txt = '儲存成功';
         }
 
@@ -726,7 +795,7 @@ _gg.saveBaseInfo = function() {
         } else {
             _txt='姓名為必填值！';
         }
-        $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n " + _txt + " \n</div>");
+        _gg.set_error_message('#errorMessage', '', _txt);
     }
 };
 
@@ -754,7 +823,7 @@ _gg.delStudent = function() {
             }
         });
     } else {
-        $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n 學生編號不正確，無法刪除！ \n</div>");
+        _gg.set_error_message('#mainMsg', '', '學生編號不正確，無法刪除！');
     }
 };
 
@@ -776,33 +845,379 @@ _gg.GetNewCode = function(selector) {
     });
 };
 
-// TODO: 錯誤訊息
-_gg.set_error_message = function(select_str, serviceName, error) {
-    var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i> <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
-    if (error !== null) {
-        if (error.dsaError) {
-            if (error.dsaError.status === "504") {
-                switch (error.dsaError.message) {
-                    case '901':
-                        tmp_msg = '<strong>帳號重複，請改用其他帳號!</strong>';
-                        break;
-                    case '902':
-                        tmp_msg = '<strong>身分證字號重複，請重新輸入!</strong>';
-                        break;
-                    case '903':
-                        tmp_msg = '<strong>學號重複，請重新輸入!</strong>';
-                        break;
-                    case '904':
-                        tmp_msg = '<strong>家長代碼重複，請改用其他代碼!</strong>';
-                        break;
-                    case '905':
-                        tmp_msg = '<strong>學生代碼重複，請改用其他代碼!</strong>';
-                        break;
+// TODO: 儲存批次匯入
+_gg.save_import = function(list) {
+    $("#tab_import button[data-action=done]").button("loading");
+
+    var _name = [], _sa_login_name = [], _id_number = [], _student_number = [], _parent_code = [], _student_code = [], _class_name = [];
+    var error_item = {
+        studentname   : true,
+        loginname     : [],
+        idnumber      : [],
+        studentnumber : [],
+        parentcode    : [],
+        studentcode   : [],
+        classname     : [],
+        gender        : []
+    };
+
+    $(list).each(function(index, item) {
+        // 姓名 必填
+        // 帳號, 身分證字號, 學號, 家長代碼, 學生代碼  不可重複
+        // 性別轉換 1:男 0:女
+
+        if (item.StudentName) {
+            _name.push(item.StudentName);
+        } else {
+            error_item.studentname = false;
+        }
+
+        var loginname = (item.SaLoginName || '');
+        if (loginname) {
+            if ($.inArray(loginname, _sa_login_name) === -1) {
+                _sa_login_name.push(loginname);
+            } else {
+                error_item.loginname.push(loginname);
+            }
+        }
+
+        var idnumber = (item.IDNumber || '');
+        if (idnumber) {
+            if ($.inArray(idnumber, _id_number) === -1) {
+                _id_number.push(idnumber);
+            } else {
+                error_item.idnumber.push(idnumber);
+            }
+        }
+
+        var studentnumber = (item.StudentNumber || '');
+        if (studentnumber) {
+            if ($.inArray(studentnumber, _student_number) === -1) {
+                _student_number.push(studentnumber);
+            } else {
+                error_item.studentnumber.push(studentnumber);
+            }
+        }
+
+        var parentcode = (item.ParentCode || '');
+        if (parentcode) {
+            if ($.inArray(parentcode, _parent_code) === -1) {
+                _parent_code.push(parentcode);
+            } else {
+                error_item.parentcode.push(parentcode);
+            }
+        }
+
+        var studentcode = (item.StudentCode || '');
+        if (studentcode) {
+            if ($.inArray(studentcode, _student_code) === -1) {
+                _student_code.push(studentcode);
+            } else {
+                error_item.studentcode.push(studentcode);
+            }
+        }
+
+        var gender = (item.Gender || '');
+        if (gender) {
+            if (gender !== '男' && gender !== '女') {
+                error_item.gender.push(gender);
+            }
+        }
+
+        var classname = (item.ClassName || '');
+        if (classname) {
+            if ($.inArray(classname, _class_name) === -1) {
+                _class_name.push(classname);
+            }
+        }
+    });
+
+    _gg.connection.send({
+        service: "student.ValidateImport",
+        body: {
+            Request: {
+                Condition : {
+                    'SaLoginName' : "'" +  _sa_login_name.join("', '") + "'",
+                    'IDNumber' : "'" +  _id_number.join("', '") + "'",
+                    'StudentNumber' : "'" +  _student_number.join("', '") + "'",
+                    'ParentCode' : "'" +  _parent_code.join("', '") + "'",
+                    'StudentCode' : "'" +  _student_code.join("', '") + "'",
+                    'ClassName' : "'" +  _class_name.join("', '") + "'"
+                }
+            }
+        },
+        result: function (response, error, http) {
+            if (error !== null) {
+                $("#tab_import button[data-action=done]").button("reset");
+                _gg.set_error_message('#mainMsg', 'ValidateImport', error);
+            } else {
+                var _ref;
+                if (((_ref = response.Response) != null ? _ref.Fail : void 0) != null) {
+                    $(response.Response.Fail).each(function(index, item) {
+                        if (item.Value) {
+                            switch (item.Title) {
+                                case 'login_name':
+                                    error_item.loginname.push(item.Value);
+                                    break;
+                                case 'id_number':
+                                    error_item.idnumber.push(item.Value);
+                                    break;
+                                case 'student_number':
+                                    error_item.studentnumber.push(item.Value);
+                                    break;
+                                case 'parent_code':
+                                    error_item.parentcode.push(item.Value);
+                                    break;
+                                case 'student_code':
+                                    error_item.studentcode.push(item.Value);
+                                    break;
+                                case 'class_name':
+                                    _class_name = $.grep(_class_name, function(value) {
+                                        return item.Value !== value;
+                                    });
+                                    break;
+                            }
+                        }
+                    });
+
+                    var error_txt = [];
+                    if (!error_item.studentname) { error_txt.push('姓名為必填值！'); };
+                    if (error_item.loginname.length > 0) {
+                        error_txt.push('帳號不可重複！(' + _gg.htmlEncode(error_item.loginname.join(', ')) + ')');
+                    }
+                    if (error_item.idnumber.length > 0) {
+                        error_txt.push('身分證號不可重複！(' + _gg.htmlEncode(error_item.idnumber.join(', ')) + ')');
+                    }
+                    if (error_item.studentnumber.length > 0) {
+                        error_txt.push('學號不可重複！(' + _gg.htmlEncode(error_item.studentnumber.join(', ')) + ')');
+                    }
+                    if (error_item.parentcode.length > 0) {
+                        error_txt.push('家長代碼不可重複！(' + _gg.htmlEncode(error_item.parentcode.join(', ')) + ')');
+                    }
+                    if (error_item.studentcode.length > 0) {
+                        error_txt.push('學生代碼不可重複！(' + _gg.htmlEncode(error_item.studentcode.join(', ')) + ')');
+                    }
+                    if (error_item.gender.length > 0) {
+                        error_txt.push('性別請使用「男」、「女」！(' + _gg.htmlEncode(error_item.gender.join(', ')) + ')');
+                    }
+                    if (_class_name.length > 0) {
+                        error_item.classname = _class_name;
+                        error_txt.push('指定的班級不存在！(' + _gg.htmlEncode(error_item.classname.join(', ')) + ')');
+                    }
+
+                    if (error_txt.length > 0) {
+                         $("#tab_import button[data-action=done]").button("reset");
+                        _gg.set_error_message('#mainMsg', '', error_txt.join('<br />'));
+                    } else {
+                        $(list).each(function(index, item) {
+                            if (item.SaLoginName) {
+                                delete item.ParentCode;
+                                delete item.StudentCode;
+                            } else {
+                                if (!item.ParentCode) {
+                                    item.ParentCode = null;
+                                }
+                                if (!item.StudentCode) {
+                                    item.StudentCode = null;
+                                }
+                            }
+
+                            item.PermanentAddress = {
+                                AddressList : {
+                                    Address : {
+                                        ZipCode : (item.PermanentZipCode || ''),
+                                        County : (item.PermanentCounty || ''),
+                                        Town: (item.PermanentTown || ''),
+                                        DetailAddress: (item.PermanentDetailAddress || '')
+                                    }
+                                }
+                            };
+
+                            item.MailingAddress = {
+                                AddressList : {
+                                    Address : {
+                                        ZipCode : (item.MailingZipCode || ''),
+                                        County : (item.MailingCounty || ''),
+                                        Town: (item.MailingTown || ''),
+                                        DetailAddress: (item.MailingDetailAddress || '')
+                                    }
+                                }
+                            };
+                        });
+
+                        _gg.connection.send({
+                            service: "student.AddStudent",
+                            body: {
+                                Request: {
+                                    Student: list
+                                }
+                            },
+                            result: function (response, error, http) {
+                                if (error !== null) {
+                                    $("#tab_import button[data-action=done]").button("reset");
+                                    _gg.set_error_message('#mainMsg', 'AddStudent', error);
+                                } else {
+                                    var success_count = 0;
+
+                                    if (response.Result && response.Result.EffectRows) {
+                                        success_count = response.Result.EffectRows;
+                                        _gg.GetAllClassList();
+                                    }
+
+                                    $("#tab_import button[data-action=done]").button("reset");
+                                    $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功，共匯入" + success_count + "筆！\n</div>");
+                                    setTimeout("$('#mainMsg').html('')", 3000);
+                                }
+                            }
+                        });
+
+                    }
                 }
             }
         }
-        $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
-        $('.my-err-info').click(function(){alert('請拍下此圖，並與客服人員連絡，謝謝您。\n' + JSON.stringify(error, null, 2))});
+    });
+};
+
+// TODO: 匯出資料
+_gg.export_data = function() {
+    $('button[data-action=export]').button('loading');
+    $('#tab_export textarea').val('');
+    var items = [], titles = [], field_name = {};
+    var checkboxs = $('#tab_export .controls input:checkbox:checked');
+    var curr_page = 1;
+    var page_size = 500;
+
+    checkboxs.each(function() {
+        var title_name = $(this).attr('data-title');
+        switch (title_name) {
+            case '戶籍地址':
+                titles.push('戶籍郵遞區號');
+                titles.push('戶籍縣市');
+                titles.push('戶籍鄉鎮市區');
+                titles.push('戶籍村里街號');
+                break;
+            case '通訊地址':
+                titles.push('通訊郵遞區號');
+                titles.push('通訊縣市');
+                titles.push('通訊鄉鎮市區');
+                titles.push('通訊村里街號');
+                break;
+            default:
+                titles.push(title_name);
+        }
+    });
+
+    items.push(titles.join('\t'));
+
+    // TODO: service 欄位名稱
+    checkboxs.each(function() { field_name[$(this).val()] = ''; });
+    var get_student_data = function(_start_page, _page_size) {
+        var curr_length = 0;
+        _gg.connection.send({
+            service: "student.GetStudentInfo",
+            body: {
+                Request: {
+                    Field: field_name,
+                    Pagination: {
+                        StartPage : _start_page,
+                        PageSize  : _page_size
+                    }
+                }
+            },
+            result: function (response, error, http) {
+                $('button[data-action=export]').button('reset');
+                if (error !== null) {
+                    _gg.set_error_message('#mainMsg', 'GetStudentInfo', error);
+                } else {
+                    if (response.Response && response.Response.Student) {
+                        curr_length = response.Response.Student.length;
+                        $(response.Response.Student).each(function(index, student) {
+                            var data1 = [];
+                            $(checkboxs).each(function() {
+                                var tmp_gender = '', _ref, _ref1;
+                                var name = $(this).val();
+                                switch (name) {
+                                    case 'Gender':
+                                        if (student.Gender === '1') {
+                                            tmp_gender = '男';
+                                        } else if (student.Gender === '0') {
+                                            tmp_gender = '女';
+                                        }
+                                        data1.push(tmp_gender);
+                                        break;
+                                    case 'PermanentAddress':
+                                        // TODO: 戶籍地址
+                                        if (((_ref = student.PermanentAddress) != null ? (_ref1 = _ref.AddressList) != null ? _ref1.Address : void 0 : void 0) != null){
+                                            var tmp_address= student.PermanentAddress.AddressList.Address;
+                                            data1.push(tmp_address.ZipCode || '');
+                                            data1.push(tmp_address.County || '');
+                                            data1.push(tmp_address.Town || '');
+                                            data1.push(tmp_address.DetailAddress || '');
+                                        };
+
+                                        break;
+                                    case 'MailingAddress':
+                                        // TODO: 通訊地址
+                                        if (((_ref = student.MailingAddress) != null ? (_ref1 = _ref.AddressList) != null ? _ref1.Address : void 0 : void 0) != null){
+                                            var tmp_address= student.MailingAddress.AddressList.Address;
+                                            data1.push(tmp_address.ZipCode || '');
+                                            data1.push(tmp_address.County || '');
+                                            data1.push(tmp_address.Town || '');
+                                            data1.push(tmp_address.DetailAddress || '');
+                                        };
+                                        break;
+                                    default:
+                                        data1.push(student[name]);
+                                }
+                            })
+                            items.push(data1.join('\t'));
+                        });
+                    }
+                    if (curr_length < _page_size) {
+                        $('#tab_export textarea').val(items.join('\n'));
+                    } else {
+                        curr_page += 1;
+                        get_student_data(curr_page, page_size);
+                    }
+                }
+            }
+        });
+    };
+
+    get_student_data(curr_page, page_size);
+};
+
+// TODO: 錯誤訊息
+_gg.set_error_message = function(select_str, serviceName, error) {
+    if (serviceName) {
+        var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i> <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
+        if (error !== null) {
+            if (error.dsaError) {
+                if (error.dsaError.status === "504") {
+                    switch (error.dsaError.message) {
+                        case '901':
+                            tmp_msg = '<strong>帳號重複，請改用其他帳號!</strong>';
+                            break;
+                        case '902':
+                            tmp_msg = '<strong>身分證字號重複，請重新輸入!</strong>';
+                            break;
+                        case '903':
+                            tmp_msg = '<strong>學號重複，請重新輸入!</strong>';
+                            break;
+                        case '904':
+                            tmp_msg = '<strong>家長代碼重複，請改用其他代碼!</strong>';
+                            break;
+                        case '905':
+                            tmp_msg = '<strong>學生代碼重複，請改用其他代碼!</strong>';
+                            break;
+                    }
+                }
+            }
+            $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
+            $('.my-err-info').click(function(){alert('請拍下此圖，並與客服人員連絡，謝謝您。\n' + JSON.stringify(error, null, 2))});
+        }
+    } else {
+        $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + error + "\n</div>");
     }
 };
 
@@ -833,3 +1248,7 @@ jQuery.validator.addMethod("ClassName", function(value, element) {
         return true;
     }
 }, "無此班級");
+
+_gg.htmlEncode = function(value) {
+    return $('<div/>').text(value).html();
+};

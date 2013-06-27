@@ -12,20 +12,20 @@
   <link href="css/bootstrap.css" rel="stylesheet" />
   <link href="css/bootstrap-responsive.css" rel="stylesheet" />
   <link href="css/mybootstrap.css" rel="stylesheet" />
-  <!--<link href="css/base.less" rel="stylesheet/less" />
-  <link href="css/default.less" rel="stylesheet/less" />-->
   <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css" rel="stylesheet"/>
   <link href="css/base.css" rel="stylesheet" />
   <link href="css/default.css" rel="stylesheet" />
   <script src="js/jquery.min.js"></script>
-  <!--<script src="js/less.min.js"></script>-->
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
   <script src="js/jquery.ui.touch-punch.min.js"></script>
   <script src="js/facescroll.js"></script>
+  <script src="datatables/js/jquery.dataTables.min.js"></script>
+  <script src="datatables/js/DT_bootstrap.js"></script>
   <script src="js/bootstrap.js"></script>
   <script src="js/jquery.validate.min.js"></script>
   <script src="js/jquery.metadata.js"></script>
   <script src="js/messages_tw.js"></script>
+  <script src="js/jquery.import_list.js"></script>
   <script src="js/student.js"></script>
 </head>
   <div id="gadget" class="my-page">
@@ -33,11 +33,18 @@
       <div class="row-fluid">
         <div class="span12">
           <div class="tabbable">
-            <h1>學生
+            <h1 class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span id="tabName">學生總覽</span> <b class="caret"></b></a>
+              <ul id="myTab" class="dropdown-menu">
+                  <li><a href="#tab_list" data-toggle="tab">學生總覽</a></li>
+                  <li><a href="#tab_import" data-toggle="tab">多筆匯入</a></li>
+                  <li><a href="#tab_export" data-toggle="tab">匯出</a></li>
+              </ul>
               <a href="#editModal" id="addstudent" class="btn btn-mini pull-right" data-toggle="modal"><i class="icon-plus"></i> 新增</a>
             </h1>
+
             <div id="myTabContent" class="tab-content">
-                <div class="tab-pane fade active in" id="student1">
+                <div class="tab-pane fade active in" id="tab_list">
                   <div class="container-fluid">
                       <div class="row-fluid">
                           <div class="span3">
@@ -76,8 +83,6 @@
                                         <div class="span6">
                                           <div id="s-FreshmanPhoto" title="入學照" class="pull-left"></diV>
                                           <div id="s-GraduatePhoto" title="畢業照" class="pull-left"></diV>
-                                          <!-- <img id="s-FreshmanPhoto" src="" alt="入學照" title="入學照" class="my-photo pull-left">
-                                          <img id="s-GraduatePhoto" src="" alt="畢業照" title="畢業照" class="my-photo pull-left"> -->
                                         </div>
                                         <div class="span6">
                                           <table class="table table-condensed table-striped">
@@ -173,6 +178,95 @@
                             </div>
                         </div>
                   </div>
+                </div>
+                <div class="tab-pane fade in" id="tab_import">
+                  <div id="import">
+                    <div>
+                      <textarea class="my-import-text" placeholder="姓名(必填)... 班級... 座號... 學號... 身分證... 性別... 生日(2000/06/15)... 戶籍電話... 戶籍郵遞區號... 戶籍縣市... 戶籍鄉鎮市區... 戶籍地址... 行動電話... 通訊電話... 通訊郵遞區號... 通訊縣市... 通訊鄉鎮市區... 通訊地址... 帳號... 學生代碼... 家長代碼..."></textarea>
+                    </div>
+                    <div class="well">
+                      <p class="pull-right"><span class="label label-important">使用方式</span> 請從 Excel 複製，再貼上內容</p>
+                      <div class="controls">
+                        <label class="control-label">
+                            <input type="checkbox" data-action="checktitle">  第一行為標題列
+                        </label>
+                        <button class="btn btn-success" type="button" data-action="parse">驗證資料</button>
+                      </div>
+                    </div>
+                    <div class="my-import-text" data-tab="result"></div>
+                    <div class="well">
+                      <button class="btn btn-success" type="button" data-action="done" autocomplete="off" data-loading-text="處理中...">匯入</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-pane fade in" id="tab_export">
+                  <div class="well">
+                    <div class="row-fluid">
+                      <p class="pull-right"><span class="label label-important">使用方式</span>
+                        <br />1. 開啟 Excel，先將「儲存格格式」設為「文字」
+                        <br />2. 複製文字框內容，再於 Excel 貼上
+                      </p>
+                      <div class="pull-left">
+                        <p><b>選擇匯出欄位：</b></p>
+                        <label class="checkbox">
+                          <input type="checkbox" value="checkall" id="checkall" checked="checked"> 選擇全部
+                        </label>
+                      </div>
+                      <div class="controls span2">
+                        <label class="checkbox">
+                          <input type="checkbox" data-title="姓名" value="StudentName" checked="checked"> 姓名
+                        </label>
+                        <label class="checkbox">
+                          <input type="checkbox" data-title="班級" value="ClassName" checked="checked"> 班級
+                        </label>
+                        <label class="checkbox">
+                          <input type="checkbox" data-title="座號" value="SeatNo" checked="checked"> 座號
+                        </label>
+                        <label class="checkbox">
+                          <input type="checkbox" data-title="學號" value="StudentNumber" checked="checked"> 學號
+                        </label>
+                        <label class="checkbox">
+                          <input type="checkbox" data-title="帳號" value="SaLoginName" checked="checked"> 帳號
+                        </label>
+                      </div>
+                      <div class="controls span2">
+                        <label class="checkbox">
+                          <input type="checkbox" data-title="身分證" value="IDNumber" checked="checked"> 身分證
+                        </label>
+                        <label class="checkbox">
+                          <input type="checkbox" data-title="性別" value="Gender" checked="checked"> 性別
+                        </label>
+                        <label class="checkbox">
+                          <input type="checkbox" data-title="生日" value="Birthdate" checked="checked"> 生日
+                        </label>
+                        <label class="checkbox">
+                          <input type="checkbox" data-title="學生代碼" value="StudentCode" checked="checked"> 學生代碼
+                        </label>
+                        <label class="checkbox">
+                          <input type="checkbox" data-title="家長代碼" value="ParentCode" checked="checked"> 家長代碼
+                        </label>
+                      </div>
+                      <div class="controls span2">
+                        <label class="checkbox">
+                          <input type="checkbox" data-title="戶籍電話" value="PermanentPhone" checked="checked"> 戶籍電話
+                        </label>
+                        <label class="checkbox">
+                          <input type="checkbox" data-title="戶籍地址" value="PermanentAddress" checked="checked"> 戶籍地址
+                        </label>
+                        <label class="checkbox">
+                          <input type="checkbox" data-title="行動電話" value="SmsPhone" checked="checked"> 行動電話
+                        </label>
+                        <label class="checkbox">
+                          <input type="checkbox" data-title="通訊電話" value="ContactPhone" checked="checked"> 通訊電話
+                        </label>
+                        <label class="checkbox">
+                          <input type="checkbox" data-title="通訊地址" value="MailingAddress" checked="checked"> 通訊地址
+                        </label>
+                      </div>
+                    </div>
+                    <button class="btn btn-success" type="button" data-action="export" autocomplete="off" data-loading-text="處理中...">匯出</button>
+                  </div>
+                  <textarea class="my-import-text"></textarea>
                 </div>
             </div>
           </div>

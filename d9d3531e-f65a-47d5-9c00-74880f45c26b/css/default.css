@@ -142,3 +142,35 @@ h1 {
   color: white;
   background: #69C;
 }
+.dataTables_wrapper > div.row-fluid:first-child {
+  display: none;
+}
+div.modal div.my-Msg div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+textarea.my-import-text {
+  width: 100%;
+  height: 300px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+div.my-import-text {
+  width: 100%;
+  max-height: 300px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow: auto;
+}
+.my-import-table thead th {
+  text-align: center;
+  vertical-align: middle;
+}
+.well {
+  padding: 13px;
+}
