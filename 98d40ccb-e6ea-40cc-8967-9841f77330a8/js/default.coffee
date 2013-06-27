@@ -393,7 +393,7 @@ Exam = do ->
       <!DOCTYPE html>
       <html>
         <head>
-          <title>教學分析</title>
+          <title>評量分析</title>
           <link href="css/bootstrap.css" rel="stylesheet" />
           <link href="css/bootstrap-responsive.css" rel="stylesheet" />
           <link href="css/mybootstrap.css" rel="stylesheet" />
@@ -402,7 +402,7 @@ Exam = do ->
         </head>
         <body style="width:880px;height:auto;padding:40px 20px" onload="window.print();">
         <div style="width:880px;" class="my-print-page">
-          <h3>#{$('#currShoolYear').html()}  #{$("#curr_course_list option:selected").text()} 教學分析</h3>
+          <h3>#{$('#currShoolYear').html()}  #{$("#curr_course_list option:selected").text()} 評量分析</h3>
           #{content}
         </div>
         </body>
