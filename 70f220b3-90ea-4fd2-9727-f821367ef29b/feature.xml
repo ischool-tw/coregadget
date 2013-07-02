@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+    <ModulePrefs
+        title="座位表管理">
+        <Icon>src/icon.png</Icon>
+    </ModulePrefs>
+    <Content type="html">
+    	<![CDATA[
+			<script type="text/javascript" charset="utf-8" src="js/jquery.min.js"></script>
+			<script type="text/javascript" charset="utf-8" src="js/jquery.tools.min.js"></script>
+			<script type="text/javascript" charset="utf-8">
+			
+			    gadget.autofit(document.getElementById("widget"));
+			
+			    var _swf = "src/widget.swf";
+			    var _connection = gadget.getContract("ta");
+			
+			    _connection.send({
+			        service: "DS.Base.Connect",
+			        body: { RequestSessionID: "" },
+			        result: function (response, error, http) {
+			
+			            var accessPoint = _connection.getAccessPoint();
+			            var securityToken =
+							"<SecurityToken Type='Session'>" +
+								"<SessionID>" + response.SessionID + "</SessionID>" +
+							"</SecurityToken>";
+			
+			            var url = _swf + "?accessPoint=" + accessPoint + "&securityToken=" + securityToken
+			
+			            flashembed("widget", url);
+			        }
+			    });
+			</script>
+			
+			<div id="widget">
+		]]>
+    </Content>
+</Module>
