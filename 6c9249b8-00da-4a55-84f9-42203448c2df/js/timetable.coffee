@@ -341,8 +341,8 @@ TimeTable = do ->
                   tooltip_html = ""
                   info = []
                   course_group_name = ""
-
                   tt = extendTimetable["" + ii + jj]
+
                   if tt
 
                     # 節次的開始時間、結束時間
@@ -351,8 +351,8 @@ TimeTable = do ->
                       minutesLater = new Date(tt.BeginTime)
                       minutesLater.setMinutes minutesLater.getMinutes() + parseInt(tt.Duration, 10)
                       course_time = """<li class="my-time">( #{$.formatDate(beginTime, "HHmm") + "-" + $.formatDate(minutesLater, "HHmm")} )</li>"""
-                    if tt.Disable is "t"
 
+                    if tt.Disable is "t"
                       # timetable不排課
                       _tbody.push """
                         <td class="#{getTDCSS(1)}">
@@ -457,12 +457,12 @@ TimeTable = do ->
                             course_group_name = ("【" + item.CourseGroup + "】" or "")  if kind is "class" and item.CourseGroup
                             info.push """<div class="my-more">#{that.length - 4}</div>"""  if index > 3
 
-                          tooltip_html = """rel="tooltip" data-placement="top" data-original-title="#{course_group_name}<ol>#{tool_tip.join("")}</ol>"""  if course_group_name or tool_tip.length > 0
+                          tooltip_html = """rel="tooltip" data-placement="top" data-original-title="#{course_group_name}<ol>#{tool_tip.join("")}</ol>" """  if course_group_name or tool_tip.length > 0
                           _tbody.push """
                             <td class="#{getTDCSS(that.length)}" #{tooltip_html}>
                               <div class="my-container-more" style="position:relative;">
                                 <table class="my-subtable">#{info.join("")}</table>
-                                ${course_time}
+                                #{course_time}
                               </div>
                             </td>
                           """
@@ -479,7 +479,8 @@ TimeTable = do ->
 
           $("#timeTable").find("table").removeClass().addClass("table table-bordered " + getTableCSS(max_Period)).end().find("thead").html(_thead.join("")).end().find("tbody").html(_tbody.join("")).find("td[rel=tooltip]").tooltip()
           _myself.scheduler_list = $("#timeTable").html()  unless _myself.scheduler_list
-
+      else
+        $("#timeTable").find("thead").html("").end().find("tbody").html "<tr><td>目前無資料</td></tr>"
 
   # 我的課表
   runMydata = ->

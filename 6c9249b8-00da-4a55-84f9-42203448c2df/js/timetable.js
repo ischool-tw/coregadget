@@ -458,9 +458,9 @@
                               }
                             });
                             if (course_group_name || tool_tip.length > 0) {
-                              tooltip_html = "rel=\"tooltip\" data-placement=\"top\" data-original-title=\"" + course_group_name + "<ol>" + (tool_tip.join("")) + "</ol>";
+                              tooltip_html = "rel=\"tooltip\" data-placement=\"top\" data-original-title=\"" + course_group_name + "<ol>" + (tool_tip.join("")) + "</ol>\" ";
                             }
-                            _tbody.push("<td class=\"" + (getTDCSS(that.length)) + "\" " + tooltip_html + ">\n  <div class=\"my-container-more\" style=\"position:relative;\">\n    <table class=\"my-subtable\">" + (info.join("")) + "</table>\n    ${course_time}\n  </div>\n</td>");
+                            _tbody.push("<td class=\"" + (getTDCSS(that.length)) + "\" " + tooltip_html + ">\n  <div class=\"my-container-more\" style=\"position:relative;\">\n    <table class=\"my-subtable\">" + (info.join("")) + "</table>\n    " + course_time + "\n  </div>\n</td>");
                           } else {
                             _tbody.push("<td class=\"" + (getTDCSS(1)) + "\"></td>");
                           }
@@ -485,6 +485,8 @@
               return _myself.scheduler_list = $("#timeTable").html();
             }
           }
+        } else {
+          return $("#timeTable").find("thead").html("").end().find("tbody").html("<tr><td>目前無資料</td></tr>");
         }
       }
     };
