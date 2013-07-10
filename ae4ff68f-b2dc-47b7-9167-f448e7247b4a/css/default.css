@@ -39,9 +39,6 @@ label {
 table.table-striped tbody tr.my-iscase th {
   text-align: left;
 }
-table.table-striped tbody tr.my-iscase td.my-casename {
-  padding-left: 19px;
-}
 form tr.error span.help-inline {
   color: #B94A48;
 }
@@ -50,4 +47,22 @@ table.table-striped tbody tr th.my-hierarchy {
   background: #bbe6e2;
   color: #145240;
   text-align: left;
+}
+.my-question-container {
+  position: relative;
+}
+.my-question-container .my-question-number {
+  position: absolute;
+}
+.my-question-container .my-question-title {
+  margin-left: 30px;
+}
+.my-casename .my-question-container {
+  margin: 6px;
+}
+.my-casename .my-question-number {
+  position: absolute;
+}
+.my-casename .my-question-title {
+  margin-left: 45px;
 }

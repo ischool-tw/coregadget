@@ -410,27 +410,35 @@ var _gg = function() {
 
                                 if (hierarchy.Question) {
                                     $(hierarchy.Question).each(function(index, item) {
-                                        var question_idx = (item.QuestionOrder || '') + '. ';
+                                        var question_idx = (item.QuestionOrder || '') + '.';
 
                                         //#region 題目
                                         if (item.IsCase === 't') {
                                             // 個案題
-                                            question_html += '<tr class="my-iscase"><td colspan="2">' +
-                                                (item.IsRequired === 't' ? '<span class="text-error">*</span>&nbsp;' : '&nbsp;&nbsp;') +
+                                            question_html += '<tr class="my-iscase"><td colspan="2"><div class="my-question-container">' +
+                                                '<div class="my-question-number">' +
+                                                (item.IsRequired === 't' ? '<span class="text-error">*</span>' : '') +
                                                 question_idx +
-                                                (item.QuestionTitle || '') + '</td></tr>';
+                                                '</div>' +
+                                                '<div class="my-question-title">' + (item.QuestionTitle || '') + '</div></div></td></tr>';
 
                                             $(that_case).each(function(index, data) {
-                                                var case_idx = (item.QuestionOrder || '') + '-' + (index+1) + '.&nbsp;';
+                                                var case_idx = (item.QuestionOrder || '') + '-' + (index+1) + '.';
                                                 question_html += '<tr class="my-iscase">' +
-                                                    '<td class="my-casename">' + case_idx + data.CaseName + '</td>' + get_option(item, data.CaseID) + '</tr>';
+                                                    '<td class="my-casename">' +
+                                                    '<div class="my-question-container">' +
+                                                    '<div class="my-question-number">' + case_idx + '</div>' +
+                                                    '<div class="my-question-title">' + (data.CaseName || '') + '</div></div></td>' +
+                                                    get_option(item, data.CaseID) + '</tr>';
                                             });
                                         } else {
                                             // 其他
-                                            question_html += '<tr><td>' +
-                                                (item.IsRequired === 't' ? '<span class="text-error">*</span>&nbsp;' : '&nbsp;&nbsp;') +
+                                            question_html += '<tr><td><div class="my-question-container">' +
+                                                '<div class="my-question-number">' +
+                                                (item.IsRequired === 't' ? '<span class="text-error">*</span>' : '') +
                                                 question_idx +
-                                                (item.QuestionTitle || '') + '</td>' +
+                                                '</div>' +
+                                                '<div class="my-question-title">' + (item.QuestionTitle || '') + '</div></div></td>' +
                                                 get_option(item, '') +
                                                 '</tr>';
                                         }
