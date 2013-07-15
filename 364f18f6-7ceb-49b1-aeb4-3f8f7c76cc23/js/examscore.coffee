@@ -1,5 +1,3 @@
-new
-
 jQuery ->
   $("#ExamScore tbody").html "<tr><td>載入中...</td></tr>"
 
@@ -669,6 +667,8 @@ Exam = do ->
 
   # 浮點數運算
   FloatMath = (x, operators, y) ->
+    x = Number(x)
+    y = Number(y)
     arg1 = x + ''
     arg2 = y + ''
     try
@@ -685,14 +685,16 @@ Exam = do ->
 
     switch operators
       when "+"
-        ((Number(arg1) * Math.pow(10, m)) + (Number(arg2) * Math.pow(10, m))) / Math.pow(10, m)
+        (FloatMath(x, '*', Math.pow(10, m)) + FloatMath(y, '*', Math.pow(10, m))) / Math.pow(10, m)
       when "-"
-        ((Number(arg1) * Math.pow(10, m)) - (Number(arg2) * Math.pow(10, m))) / Math.pow(10, m)
+        (FloatMath(x, '*', Math.pow(10, m)) - FloatMath(y, '*', Math.pow(10, m))) / Math.pow(10, m)
       when "*"
         m = r1 + r2
         (Number(arg1.replace(".", "")) * Number(arg2.replace(".", ""))) / Math.pow(10, m)
       when "/"
-        (Number(arg1) * Math.pow(10, m)) / (Number(arg2) * Math.pow(10, m))
+        return FloatMath(x, '*', Math.pow(10, m)) / FloatMath(y, '*', Math.pow(10, m));
+      else
+        return ''
 
 
   #四捨五入、無條件捨去、無條件進位
@@ -700,11 +702,11 @@ Exam = do ->
     places = places or 0
     switch type
       when "ceil"
-        (Math.ceil(arg1 * Math.pow(10, places))) / Math.pow(10, places) #無條件進位
+        FloatMath(Math.ceil(FloatMath(arg1, '*', Math.pow(10, places))), '/', Math.pow(10, places)) #無條件進位
       when "floor"
-        (Math.floor(arg1 * Math.pow(10, places))) / Math.pow(10, places) #無條件捨去
+        FloatMath(Math.floor(FloatMath(arg1, '*', Math.pow(10, places))), '/', Math.pow(10, places)) #無條件捨去
       when "round"
-        (Math.round(arg1 * Math.pow(10, places))) / Math.pow(10, places) #四捨五入
+        FloatMath(Math.round(FloatMath(arg1, '*', Math.pow(10, places))), '/', Math.pow(10, places)) #四捨五入
       else
         arg1
 
