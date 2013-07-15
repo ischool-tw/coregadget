@@ -13,10 +13,8 @@
 <script type="text/javascript" charset="utf-8" src="js/jquery.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="js/jquery.tools.min.js"></script>
 <script type="text/javascript" charset="utf-8">
-
-	gadget.autofit(document.getElementById("widget"));
 	
-	var _flashObj;
+	gadget.autofit(document.getElementById("widget"));
 	
 	var _swf = "src/widget.swf";
 	var _connection = gadget.getContract("ta");
@@ -34,19 +32,8 @@
 	
 	        var url = _swf + "?accessPoint=" + accessPoint + "&securityToken=" + securityToken
 	
-	        _flashObj = flashembed("widget", url);
+	        flashembed("widget", url);
 	    }
-	});
-	
-	gadget.onLeave(function(){
-		if (_flashObj.getApi().leaveStatus() == "false") {
-			gadget.setExterior({hint: "成績尚未儲存!"});
-			return "成績尚未儲存!";
-		}
-		else {
-			gadget.setExterior({hint: ""});
-			return "";
-		}
 	});
 </script>
 
