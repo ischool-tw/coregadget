@@ -2,7 +2,7 @@
 (function() {
   var Exam;
 
-  new jQuery(function() {
+  jQuery(function() {
     $("#ExamScore tbody").html("<tr><td>載入中...</td></tr>");
     $("input:radio[name='show_model'][value='" + (gadget.params.system_show_model || "subject") + "']").prop('checked', true);
     $("#children-list").on("click", "a", function(evnet) {
@@ -678,6 +678,8 @@
     FloatMath = function(x, operators, y) {
       var arg1, arg2, e, m, r1, r2;
 
+      x = Number(x);
+      y = Number(y);
       arg1 = x + '';
       arg2 = y + '';
       try {
@@ -695,25 +697,27 @@
       m = Math.max(r1, r2);
       switch (operators) {
         case "+":
-          return ((Number(arg1) * Math.pow(10, m)) + (Number(arg2) * Math.pow(10, m))) / Math.pow(10, m);
+          return (FloatMath(x, '*', Math.pow(10, m)) + FloatMath(y, '*', Math.pow(10, m))) / Math.pow(10, m);
         case "-":
-          return ((Number(arg1) * Math.pow(10, m)) - (Number(arg2) * Math.pow(10, m))) / Math.pow(10, m);
+          return (FloatMath(x, '*', Math.pow(10, m)) - FloatMath(y, '*', Math.pow(10, m))) / Math.pow(10, m);
         case "*":
           m = r1 + r2;
           return (Number(arg1.replace(".", "")) * Number(arg2.replace(".", ""))) / Math.pow(10, m);
         case "/":
-          return (Number(arg1) * Math.pow(10, m)) / (Number(arg2) * Math.pow(10, m));
+          return FloatMath(x, '*', Math.pow(10, m)) / FloatMath(y, '*', Math.pow(10, m));
+        default:
+          return '';
       }
     };
     FloatFormat = function(arg1, type, places) {
       places = places || 0;
       switch (type) {
         case "ceil":
-          return (Math.ceil(arg1 * Math.pow(10, places))) / Math.pow(10, places);
+          return FloatMath(Math.ceil(FloatMath(arg, '*', Math.pow(10, places))), '/', Math.pow(10, places));
         case "floor":
-          return (Math.floor(arg1 * Math.pow(10, places))) / Math.pow(10, places);
+          return FloatMath(Math.floor(FloatMath(arg, '*', Math.pow(10, places))), '/', Math.pow(10, places));
         case "round":
-          return (Math.round(arg1 * Math.pow(10, places))) / Math.pow(10, places);
+          return FloatMath(Math.round(FloatMath(arg, '*', Math.pow(10, places))), '/', Math.pow(10, places));
         default:
           return arg1;
       }
