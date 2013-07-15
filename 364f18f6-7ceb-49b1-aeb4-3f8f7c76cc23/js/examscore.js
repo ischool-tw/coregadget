@@ -713,11 +713,11 @@
       places = places || 0;
       switch (type) {
         case "ceil":
-          return FloatMath(Math.ceil(FloatMath(arg, '*', Math.pow(10, places))), '/', Math.pow(10, places));
+          return FloatMath(Math.ceil(FloatMath(arg1, '*', Math.pow(10, places))), '/', Math.pow(10, places));
         case "floor":
-          return FloatMath(Math.floor(FloatMath(arg, '*', Math.pow(10, places))), '/', Math.pow(10, places));
+          return FloatMath(Math.floor(FloatMath(arg1, '*', Math.pow(10, places))), '/', Math.pow(10, places));
         case "round":
-          return FloatMath(Math.round(FloatMath(arg, '*', Math.pow(10, places))), '/', Math.pow(10, places));
+          return FloatMath(Math.round(FloatMath(arg1, '*', Math.pow(10, places))), '/', Math.pow(10, places));
         default:
           return arg1;
       }
