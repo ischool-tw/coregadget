@@ -702,11 +702,11 @@ Exam = do ->
     places = places or 0
     switch type
       when "ceil"
-        FloatMath(Math.ceil(FloatMath(arg, '*', Math.pow(10, places))), '/', Math.pow(10, places)) #無條件進位
+        FloatMath(Math.ceil(FloatMath(arg1, '*', Math.pow(10, places))), '/', Math.pow(10, places)) #無條件進位
       when "floor"
-        FloatMath(Math.floor(FloatMath(arg, '*', Math.pow(10, places))), '/', Math.pow(10, places)) #無條件捨去
+        FloatMath(Math.floor(FloatMath(arg1, '*', Math.pow(10, places))), '/', Math.pow(10, places)) #無條件捨去
       when "round"
-        FloatMath(Math.round(FloatMath(arg, '*', Math.pow(10, places))), '/', Math.pow(10, places)) #四捨五入
+        FloatMath(Math.round(FloatMath(arg1, '*', Math.pow(10, places))), '/', Math.pow(10, places)) #四捨五入
       else
         arg1
 
