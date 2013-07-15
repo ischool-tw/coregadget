@@ -74,7 +74,7 @@ _gg.GetStudentDetail = function() {
                             );
 
                             if ($.isNumeric(item.Hours)) {
-                                count_hour += (parseFloat(item.Hours, 10) * 100);
+                                count_hour = _gg.FloatMath(count_hour, '+', parseFloat(item.Hours, 10));
                             }
                         });
                     }
@@ -85,13 +85,49 @@ _gg.GetStudentDetail = function() {
                         $('table[data-type=detail] tbody').html('<tr><td colspan="5">目前無資料</td></tr>');
                     }
 
-                    count_hour = (count_hour / 100);
                     $('table[data-type=total] td').html(count_hour);
                 }
             }
         });
     }
 };
+
+// 浮點運算
+_gg.FloatMath = function(x, operators, y) {
+  var arg1, arg2, e, m, r1, r2;
+
+  x = Number(x);
+  y = Number(y);
+  arg1 = x + '';
+  arg2 = y + '';
+  try {
+    r1 = arg1.split(".")[1].length;
+  } catch (_error) {
+    e = _error;
+    r1 = 0;
+  }
+  try {
+    r2 = arg2.split(".")[1].length;
+  } catch (_error) {
+    e = _error;
+    r2 = 0;
+  }
+  m = Math.max(r1, r2);
+  switch (operators) {
+    case "+":
+      return (_gg.FloatMath(x, '*', Math.pow(10, m)) + _gg.FloatMath(y, '*', Math.pow(10, m))) / Math.pow(10, m);
+    case "-":
+      return (_gg.FloatMath(x, '*', Math.pow(10, m)) - _gg.FloatMath(y, '*', Math.pow(10, m))) / Math.pow(10, m);
+    case "*":
+      m = r1 + r2;
+      return (Number(arg1.replace(".", "")) * Number(arg2.replace(".", ""))) / Math.pow(10, m);
+    case "/":
+      return _gg.FloatMath(x, '*', Math.pow(10, m)) / _gg.FloatMath(y, '*', Math.pow(10, m));
+    default:
+      return '';
+  }
+};
+
 
 // TODO: 錯誤訊息
 _gg.set_error_message = function(select_str, serviceName, error) {
