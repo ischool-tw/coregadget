@@ -1,0 +1,12 @@
+table th , table td{
+	text-align:center !important;
+}
+
+table td:first-child {
+	text-align:left !important;
+}
+
+.my-info {
+	margin:10px 5px 0 0;
+	color:#666;
+}
