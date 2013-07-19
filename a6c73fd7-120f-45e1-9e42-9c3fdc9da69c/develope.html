@@ -10,7 +10,9 @@
   <script>
     init({
       application: "dev.sh_d",
-      paramValues: {}
+      paramValues: {
+        "system_position": "student"
+      }
     });
   </script>
 
@@ -26,6 +28,14 @@
 <body>
   <div class="my-page" id="gadget">
     <div id="mainMsg"></div>
+    <div id="children" class="my-child">
+      <div class="my-childname">
+        <ul></ul>
+      </div>
+      <div class="my-childbar">
+        <i class="icon-user"></i><span id="child_name"></span>
+      </div>
+    </div>
     <div class="row-fluid">
       <div class="span12">
         <h1>重補修缺曠查詢</h1>
