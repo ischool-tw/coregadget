@@ -1,12 +1,55 @@
-table th , table td{
-	text-align:center !important;
+.my-score {
+  padding: 0 !important;
 }
-
-table td:first-child {
-	text-align:left !important;
+.my-score .table {
+  background: #fff !important;
+  margin: 0;
 }
-
-.my-info {
-	margin:10px 5px 0 0;
-	color:#666;
+.my-score .table td {
+  background: #fff !important;
+}
+.my-score .table th:first-child,
+.my-score .table td:first-child {
+  border-left: none;
+}
+table table thead th {
+  background: none;
+  border-bottom: none;
+}
+.my-page {
+  position: relative;
+}
+.my-child {
+  position: absolute;
+  top: -1px;
+  left: 450px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  border-radius: 0 0 3px 3px;
+  z-index: 999;
+}
+.my-childbar {
+  text-align: center;
+  clear: both;
+}
+.my-childname {
+  overflow: hidden;
+  height: 0;
+}
+.my-childname ul {
+  margin: 0;
+}
+.my-childname ul li {
+  float: left;
+  padding: 5px 10px;
+  list-style-type: none;
+  border-left: 1px solid #ddd;
+  border-bottom: 1px solid #e1e1e1;
+  cursor: pointer;
+}
+.my-childname ul li:first-child {
+  border-left: none;
+}
+.my-childname ul li:hover {
+  background: #fafafa;
 }

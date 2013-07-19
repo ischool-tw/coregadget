@@ -1,15 +1,71 @@
 ﻿jQuery(function () {
     Attendance.init();
+
+    $('body').on('click', '#children li', function() {
+        $('#child_name').html($(this).html());
+        $('#select1, #select2').html('');
+        $('#Attendance tbody').html('載入中...');
+        Attendance.childrenChange($(this).attr('index'));
+    });
 });
 
 Attendance = function() {
-    _connection = gadget.getContract('ischool.retake.student');
-    _attendances = [];
+    var _system_position = gadget.params.system_position || "student";
+    var _connection = (_system_position === "student" ? gadget.getContract("ischool.retake.student") : gadget.getContract("ischool.retake.parent"));
+    var _attendances = [];
+    var _students = [];
+    var _student = {};
+
 
     var main = function() {
+        if (_system_position === 'parent') {
+            _connection.send({
+                service: "_.GetStudentInfo",
+                body: {},
+                result: function (response, error, http) {
+                    if (error !== null) {
+                        set_error_message('#mainMsg', 'GetStudentInfo', error);
+                    } else {
+                        var ret = [];
+                        if (response.Result && response.Result.Student) {
+                            $(response.Result.Student).each(function(index, item) {
+                                _students[index] = item;
+                                ret.push('<li index="' + index + '">' + (item.StudentName || '未設定') + '</li>');
+                            });
+
+                            $('#children ul')
+                                .html(ret.join(''))
+                                .find('li:first').trigger('click');
+                            $('#children').hover(
+                                function() {
+                                    $('#children .my-childname').height('auto');
+                                },
+                                function() {
+                                    $('#children .my-childname').height(0);
+                                }
+                            );
+                        } else {
+                            $("#children").html('目前無資料');
+                        }
+                    }
+                }
+            });
+        } else {
+            $("#children").remove();
+            getAttendance();
+        }
+    }
+
+    // 取得缺曠資料
+    var getAttendance = function() {
+        _attendances = [];
         _connection.send({
             service: "_.GetAttendance",
-            body: {},
+            body: {
+                Request: {
+                    StudentId: (_student.StudentId || '')
+                }
+            },
             result: function (response, error, http) {
                 if (error !== null) {
                     set_error_message('#mainMsg', 'GetAttendance', error);
@@ -32,8 +88,8 @@ Attendance = function() {
         var optionsSeme = [];
         $(_attendances).each(function(index, item){
             var text = item.SchoolYear + '學年度';
-            text += (item.Semester === '0') ? '暑期' : '第' + item.Semester + '學期';
-            text += '第' + item.Month + '梯次';
+            text += (item.Semester === '0') ? ' 暑期' : ' 第' + item.Semester + '學期';
+            text += ' ' + item.Month + '梯次';
             optionsSeme.push('<option value="' + index + '"' +
                 ' data-schoolYear="' + item.SchoolYear + '"' +
                 ' data-semester="' + item.Semester + '"' +
@@ -105,26 +161,23 @@ Attendance = function() {
                     $(attendance.Course).each(function(index, course){
                         $(course.AttendanceDate).each(function(index, adate){
                             if (!attendance.AllDates['D' + adate.Date]) {
-                                var tmp = {
+                                attendance.AllDates['D' + adate.Date] = {
                                     Date: new Date(adate.Date || ''),
                                     Courses: []
                                 };
-                                tmp['Course' + course.CourseId] = adate;
-                                tmp['Course' + course.CourseId].CourseName = course.CourseName;
-                                tmp.Courses.push(adate);
-                                attendance.AllDates['D' + adate.Date] = tmp;
-                                attendance.AllDates.push(tmp);
-                            } else {
-                                if (!attendance.AllDates['D' + adate.Date]['Course' + course.CourseId]) {
-                                    attendance.AllDates['D' + adate.Date]['Course' + course.CourseId] = adate;
-                                    attendance.AllDates['D' + adate.Date]['Courses'].push(adate);
-                                }
+                                attendance.AllDates.push(attendance.AllDates['D' + adate.Date]);
+                            }
+                            if (!attendance.AllDates['D' + adate.Date]['Course' + course.CourseId]) {
+                                var tmp2 = adate;
+                                tmp2.CourseName = course.CourseName;
+
+                                attendance.AllDates['D' + adate.Date]['Course' + course.CourseId] = tmp2;
+                                attendance.AllDates['D' + adate.Date]['Courses'].push(tmp2);
                             }
                         });
                     });
                     attendance.AllDates.sort($.by('desc', 'Date'));
                 }
-
 
                 $(attendance.AllDates).each(function(index, adate){
                     $(adate.Courses).each(function(index, course){
@@ -195,9 +248,6 @@ Attendance = function() {
         $('body').scrollTop(0);
     };
 
-
-
-
     return {
         init: function() {
             main();
@@ -207,6 +257,12 @@ Attendance = function() {
         },
         courseChange: function() {
             setAttendance();
+        },
+        childrenChange: function(id) {
+            if (id) {
+                _student = _students[id];
+                getAttendance();
+            }
         }
     }
 }();
