@@ -14,7 +14,7 @@ Attendance = function() {
     var main = function() {
         // 取得年級、班級、學生
         _connection.send({
-            service: "_.GetClassStudent",
+            service: "_.GetRetakeClassStudent",
             body: {},
             result: function (response, error, http) {
                 if (error !== null) {
