@@ -1,4 +1,4 @@
-﻿jQuery(function () {
+jQuery(function () {
     Attendance.init();
 
     $('body').on('click', '#children li', function() {
@@ -12,7 +12,6 @@
 Attendance = function() {
     var _system_position = gadget.params.system_position || "student";
     var _connection = (_system_position === "student" ? gadget.getContract("ischool.retake.student") : gadget.getContract("ischool.retake.parent"));
-    var _attendances = [];
     var _students = [];
     var _student = {};
 
@@ -58,35 +57,136 @@ Attendance = function() {
 
     // 取得缺曠資料
     var getAttendance = function() {
-        _attendances = [];
-        _connection.send({
-            service: "_.GetAttendance",
-            body: {
-                Request: {
-                    StudentId: (_student.StudentId || '')
-                }
-            },
-            result: function (response, error, http) {
-                if (error !== null) {
-                    set_error_message('#mainMsg', 'GetAttendance', error);
-                } else {
-                    if (response.Attendance && response.Attendance.Seme) {
-                        _attendances = myHandleArray(response.Attendance.Seme);
-                        _attendances.sort($.by('desc', 'SchoolYear', $.by('desc', 'Semester', $.by('desc', 'Month'))));
-                    } else {
-                        $('#Attendance tbody').html('<tr><td colspan="10">目前無資料</td></tr>');
-                    }
+        var bAttendance = false;
+        var bNotExam = false;
+        var attendances = [];
+        var courses = [];
 
+        var dataFinish = function() {
+            if (bAttendance && bNotExam) {
+                if (courses.length > 0) {
+                    // 以課程為主，合併缺曠資料
+                    $(courses).each(function(index, seme){
+                        var key = 'sems' + seme.SchoolYear + '-' + seme.Semester + '-' + seme.Month;
+                        $(seme.Course).each(function(index, course){
+                            if (attendances[key] && attendances[key]['c' + course.CourseId]) {
+                                course.Attendance = attendances[key]['c' + course.CourseId];
+                            }
+                        });
+                    });
+
+                    // 再合併 課程 與 日期分類缺曠資料
+                    $.extend(true, courses, attendances);
+
+                    // 排序
+                    courses.sort($.by('desc', 'SchoolYear', $.by('desc', 'Semester', $.by('desc', 'Month'))));
+
+                    // 加入學生的物件中
+                    _student.courses = courses;
+
+                    // console.log(courses);
                     setSemeSelectList();
+                } else {
+                    $('#Attendance tbody').html('<tr><td colspan="10">目前無資料</td></tr>');
+                    $('#NotExam tbody').html('<tr><td colspan="3">目前無資料</td></tr>');
                 }
             }
-        });
+        }
+
+        var getData = function() {
+            // 取得缺曠
+            _connection.send({
+                service: "_.GetAttendance",
+                body: {
+                    Request: {
+                        StudentId: (_student.StudentId || '')
+                    }
+                },
+                result: function (response, error, http) {
+                    if (error !== null) {
+                        set_error_message('#mainMsg', 'GetAttendance', error);
+                    } else {
+                        if (response.Attendance && response.Attendance.Seme) {
+                            attendances = myHandleArray(response.Attendance.Seme);
+
+                            $(attendances).each(function(index, seme){
+                                var key = 'sems' + seme.SchoolYear + '-' + seme.Semester + '-' + seme.Month;
+                                attendances[key] = seme.Course;
+                                attendances[key].ColDates = [];
+
+
+                                $(seme.Course).each(function(index, course){
+                                    attendances[key]['c' + course.CourseId] = course;
+
+                                    // 以日期來分類缺曠資料
+                                    $(course.AttendanceDate).each(function(index, adate){
+                                        if (!attendances[key].ColDates['D' + adate.Date]) {
+                                            attendances[key].ColDates['D' + adate.Date] = {
+                                                Date: new Date(adate.Date || ''),
+                                                Courses: []
+                                            };
+                                            attendances[key].ColDates.push(attendances[key].ColDates['D' + adate.Date]);
+                                        }
+                                        if (!attendances[key].ColDates['D' + adate.Date]['Course' + course.CourseId]) {
+                                            var tmp2 = adate;
+                                            tmp2.CourseName = course.CourseName;
+
+                                            attendances[key].ColDates['D' + adate.Date]['Course' + course.CourseId] = tmp2;
+                                            attendances[key].ColDates['D' + adate.Date]['Courses'].push(tmp2);
+                                        }
+                                    });
+                                    attendances[key].ColDates.sort($.by('desc', 'Date'));
+                                });
+                            });
+                        }
+                        bAttendance = true;
+                        dataFinish();
+                    }
+                }
+            });
+
+            // 取得所有課程及扣考/缺課次數
+            _connection.send({
+                service: "_.GetNotExam",
+                body: {
+                    Request: {
+                        StudentId: (_student.StudentId || '')
+                    }
+                },
+                result: function (response, error, http) {
+                    if (error !== null) {
+                        set_error_message('#mainMsg', 'GetNotExam', error);
+                    } else {
+                        if (response.Courses && response.Courses.Seme) {
+                            courses = myHandleArray(response.Courses.Seme);
+
+                            $(courses).each(function(index, seme){
+                                var key = 'sems' + seme.SchoolYear + '-' + seme.Semester + '-' + seme.Month;
+                                courses[key] = seme.Course;
+                            });
+                        }
+
+                        bNotExam = true;
+                        dataFinish();
+                    }
+                }
+            });
+        };
+
+        if (_student.attendances) {
+            bAttendance = true;
+            bNotExam = true;
+            dataFinish();
+        } else {
+            getData();
+        }
     }
 
     // 顯示梯次的下拉選單
     var setSemeSelectList = function() {
+        var courses = _student.courses;
         var optionsSeme = [];
-        $(_attendances).each(function(index, item){
+        $(courses).each(function(index, item){
             var text = item.SchoolYear + '學年度';
             text += (item.Semester === '0') ? ' 暑期' : ' 第' + item.Semester + '學期';
             text += ' ' + item.Month + '梯次';
@@ -105,13 +205,14 @@ Attendance = function() {
 
     // 顯示課程的下拉選單
     var setCourseSelectList = function() {
+        var attendances = _student.courses;
         var optionsCourse = [];
         var key = $('#select1').val();
         optionsCourse.push('<option value="-1">所有課程</option>');
 
-        if (_attendances[key]) {
-            _attendances[key].Course = myHandleArray(_attendances[key].Course);
-            $(_attendances[key].Course).each(function(index, course){
+        if (attendances[key]) {
+            attendances[key].Course = myHandleArray(attendances[key].Course);
+            $(attendances[key].Course).each(function(index, course){
                 optionsCourse.push('<option value="' + index + '">' + course.CourseName + '</option>');
             });
             $('#select2').html(optionsCourse.join(''));
@@ -122,13 +223,40 @@ Attendance = function() {
         }
     };
 
+    // 顯示所有課程的扣考情況
+    var showNotExam = function() {
+        var key1 = $('#select1').val();
+        var key2 = $('#select2').val();
+        var items = [];
+        var courses = _student.courses[key1];
+        if (courses) {
+            $(courses.Course).each(function(index, course){
+                if (key2 === '-1' || key2 === index.toString()) {
+                    items.push('' +
+                        '<tr>' +
+                          '<td>' + (course.CourseName || '') + '</td>' +
+                          '<td>' + (course.SumPeriod || 0) + '</td>' +
+                          '<td>' + (course.NotExam === 't' ? 'V' : '&nbsp;') + '</td>' +
+                        '</tr>'
+                    );
+                }
+            });
+        }
+
+        if (items.length > 0) {
+            $('#NotExam tbody').html(items.join(''));
+        } else {
+            $('#NotExam tbody').html('<tr><td colspan="3">目前無資料</td></tr>');
+        }
+    };
+
     // 顯示缺曠
-    var setAttendance = function() {
+    var showAttendance = function() {
         var key1 = $('#select1').val();
         var key2 = $('#select2').val();
         var items = [];
         var courseName = '';
-        var attendance = _attendances[key1];
+        var courses = _student.courses[key1];
 
         var processData = function(data) {
             $(data).each(function(index, adate){
@@ -153,43 +281,22 @@ Attendance = function() {
             });
         };
 
-        if (attendance) {
+        if (courses) {
             if (key2 === '-1') {
                 // 所有課程
-                if (!(attendance && attendance.AllDates)) {
-                    attendance.AllDates = [];
-                    $(attendance.Course).each(function(index, course){
-                        $(course.AttendanceDate).each(function(index, adate){
-                            if (!attendance.AllDates['D' + adate.Date]) {
-                                attendance.AllDates['D' + adate.Date] = {
-                                    Date: new Date(adate.Date || ''),
-                                    Courses: []
-                                };
-                                attendance.AllDates.push(attendance.AllDates['D' + adate.Date]);
-                            }
-                            if (!attendance.AllDates['D' + adate.Date]['Course' + course.CourseId]) {
-                                var tmp2 = adate;
-                                tmp2.CourseName = course.CourseName;
-
-                                attendance.AllDates['D' + adate.Date]['Course' + course.CourseId] = tmp2;
-                                attendance.AllDates['D' + adate.Date]['Courses'].push(tmp2);
-                            }
+                if (courses.Course && courses.Course.ColDates) {
+                    $(courses.Course.ColDates).each(function(index, adate){
+                        $(adate.Courses).each(function(index, course){
+                            courseName = course.CourseName;
+                            processData(course);
                         });
                     });
-                    attendance.AllDates.sort($.by('desc', 'Date'));
                 }
-
-                $(attendance.AllDates).each(function(index, adate){
-                    $(adate.Courses).each(function(index, course){
-                        courseName = course.CourseName;
-                        processData(course);
-                    });
-                });
             } else {
                 // 單一課程
-                courseName = attendance['Course'][key2]['CourseName'];
-                if (attendance['Course'][key2] && attendance['Course'][key2]['AttendanceDate']) {
-                    processData(attendance['Course'][key2]['AttendanceDate']);
+                if (courses.Course && courses.Course[key2] && courses.Course[key2]['AttendanceDate']) {
+                    courseName = courses['Course'][key2]['CourseName'];
+                    processData(courses['Course'][key2]['AttendanceDate']);
                 }
             }
         }
@@ -256,7 +363,8 @@ Attendance = function() {
             setCourseSelectList();
         },
         courseChange: function() {
-            setAttendance();
+            showNotExam();
+            showAttendance();
         },
         childrenChange: function(id) {
             if (id) {
