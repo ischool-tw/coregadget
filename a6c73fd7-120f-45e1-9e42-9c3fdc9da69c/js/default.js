@@ -80,7 +80,10 @@ Attendance = function() {
 
                     // 排序
                     courses.sort($.by('desc', 'SchoolYear', $.by('desc', 'Semester', $.by('desc', 'Month'))));
+
+                    // 加入學生的物件中
                     _student.courses = courses;
+
                     // console.log(courses);
                     setSemeSelectList();
                 } else {
