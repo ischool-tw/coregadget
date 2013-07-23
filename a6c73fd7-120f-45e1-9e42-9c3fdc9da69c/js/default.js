@@ -70,13 +70,13 @@ Attendance = function() {
                         var key = 'sems' + seme.SchoolYear + '-' + seme.Semester + '-' + seme.Month;
                         $(seme.Course).each(function(index, course){
                             if (attendances[key] && attendances[key]['c' + course.CourseId]) {
-                                course.Attendance = attendances[key]['c' + course.CourseId];
+                                course.AttendanceDate = attendances[key]['c' + course.CourseId].AttendanceDate;
                             }
                         });
-                    });
 
-                    // 再合併 課程 與 日期分類缺曠資料
-                    $.extend(true, courses, attendances);
+                        // 合併日期分類缺曠資料
+                        seme.ColDates = (attendances[key] && attendances[key].ColDates) ? attendances[key].ColDates : [];
+                    });
 
                     // 排序
                     courses.sort($.by('desc', 'SchoolYear', $.by('desc', 'Semester', $.by('desc', 'Month'))));
@@ -84,7 +84,7 @@ Attendance = function() {
                     // 加入學生的物件中
                     _student.courses = courses;
 
-                    // console.log(courses);
+                    console.log(courses);
                     setSemeSelectList();
                 } else {
                     $('#Attendance tbody').html('<tr><td colspan="10">目前無資料</td></tr>');
@@ -284,8 +284,8 @@ Attendance = function() {
         if (courses) {
             if (key2 === '-1') {
                 // 所有課程
-                if (courses.Course && courses.Course.ColDates) {
-                    $(courses.Course.ColDates).each(function(index, adate){
+                if (courses.ColDates) {
+                    $(courses.ColDates).each(function(index, adate){
                         $(adate.Courses).each(function(index, course){
                             courseName = course.CourseName;
                             processData(course);
