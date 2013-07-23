@@ -101,6 +101,13 @@ Attendance = function() {
         var bNotExam = false;
         var bAttendance = false;
 
+        var toShow = function() {
+            if (_showSId === student.StudentId) {
+                showNotExam(student);
+                showAttendance(student);
+            }
+        }
+
         // 資料處理
         var dataFinish = function() {
             if (bNotExam && bAttendance) {
@@ -113,11 +120,7 @@ Attendance = function() {
                         }
                     });
                 });
-
-                if (_showSId === student.StudentId) {
-                    showNotExam(student);
-                    showAttendance(student);
-                }
+                toShow();
             }
         };
 
@@ -180,9 +183,7 @@ Attendance = function() {
         };
 
         if (student.attendances && student.notExam) {
-            bNotExam = true;
-            bAttendance = true;
-            dataFinish();
+            toShow();
         } else {
             getNotExam();
             getAttendance();
