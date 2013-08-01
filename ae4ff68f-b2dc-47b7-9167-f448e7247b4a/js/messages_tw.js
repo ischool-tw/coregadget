@@ -19,5 +19,6 @@ jQuery.extend(jQuery.validator.messages, {
         rangelength: jQuery.validator.format("請輸入長度介於 {0} 和 {1} 之間的字串"),
         range: jQuery.validator.format("請輸入介於 {0} 和 {1} 之間的數值"),
         max: jQuery.validator.format("請輸入不大於 {0} 的數值"),
-        min: jQuery.validator.format("請輸入不小於 {0} 的數值")
+        min: jQuery.validator.format("請輸入不小於 {0} 的數值"),
+        extMaxLength: jQuery.validator.format("超過 {0} 字元")
 });
