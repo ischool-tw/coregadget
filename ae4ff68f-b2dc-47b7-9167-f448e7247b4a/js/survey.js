@@ -1,10 +1,10 @@
 jQuery(function () {
-    _gg.on_init();
+    SurveyManger.on_init();
 
     // 點選評鑑列表
     $('#tab_survey_list').on('click', 'a[data-index]', function() {
         var index = $(this).attr('data-index');
-        _gg.load_form(index);
+        SurveyManger.load_form(index);
 
         $('#tab_survey_list').hide();
         $('#tab_form').show();
@@ -18,22 +18,22 @@ jQuery(function () {
         .on('click', 'button[data-action=preview]', function() {
             $('#mainMsg').html('');
             if ($('#form1').valid()) {
-                // TODO: 驗證通過，預覽
+                // 驗證通過，預覽
                 previewClick();
             } else {
                 $('tr.error:first').find('textarea, input').first().focus();
                 $('body').scrollTop(0);
-                _gg.set_error_message('#mainMsg', '', '資料驗證失敗，請重新檢查！');
+                SurveyManger.msg('#mainMsg', '', '資料驗證失敗，請重新檢查！');
             }
         })
         .on('click', 'button[data-action=temp]', function() {
             $('#mainMsg').html('');
-            _gg.saveReply('0', getReply2Obj());
+            SurveyManger.saveReply('0', getReply2Obj());
         });
 
     $('#save-data').click(function() {
         $("#save-data").button('loading'); // 按鈕設為處理中
-        _gg.saveReply('1', getReply2Obj());
+        SurveyManger.saveReply('1', getReply2Obj());
     });
 
     //#region 將結果轉成物件
@@ -77,6 +77,7 @@ jQuery(function () {
     //#region 預覽
     var previewClick = function() {
         $('#tab_form')
+            .find('.my-preview-remove').hide().end()
             .find('[data-type=form]').hide().end()
             .find('[data-type=preview]').show().end()
             .find('form')
@@ -102,6 +103,7 @@ jQuery(function () {
     var previewCancel = function() {
         $('#mainMsg').html('');
         $('#tab_form')
+            .find('.my-preview-remove').show().end()
             .find('[data-type=form]').show().end()
             .find('[data-type=preview]').hide().end()
             .find('form')
@@ -118,7 +120,7 @@ jQuery(function () {
 
     //#region 返回評鑑列表
     var formCancel = function() {
-        _gg.reload_list();
+        SurveyManger.reload_list();
         $('#mainMsg').html('');
         $('#tab_form').hide();
         $('#tab_survey_list').show();
@@ -152,30 +154,31 @@ jQuery(function () {
 });
 
 
-var _gg = function() {
-    var connection = gadget.getContract("emba.survey.student"),
-        student_name,
-        school_year,
-        semester,
-        surveylist = [],
-        courses = [],
-        questions = [],
-        curr_survey,
-        conn_log = gadget.getContract("emba.student");
+var SurveyManger = function() {
+    var _connection = gadget.getContract("emba.survey.student"),
+        _student_name,
+        _school_year,
+        _semester,
+        _surveylist = [],
+        _courses = [],
+        _questions = [],
+        _curr_survey,
+        _conn_log = gadget.getContract("emba.student")
+        _textarea_maxLength = 500;
 
     //#region 取得學年度學期
     var getCurrentSemester = function() {
-        connection.send({
+        _connection.send({
             service: "_.GetCurrentSemester",
             body: '',
             result: function (response, error, http) {
                 if (error !== null) {
-                    _gg.set_error_message('#mainMsg', 'GetCurrentSemester', error);
+                    set_error_message('#mainMsg', 'GetCurrentSemester', error);
                 } else {
                     if (response.Current) {
                         $(response.Current).each(function(index, item) {
-                            school_year = item.SchoolYear;
-                            semester = item.Semester;
+                            _school_year = item.SchoolYear;
+                            _semester = item.Semester;
                         });
                     }
                     initialize();
@@ -187,16 +190,16 @@ var _gg = function() {
 
     //#region 取得個人基本資料
     var getMyInfo = function() {
-        connection.send({
+        _connection.send({
             service: "_.GetMyInfo",
             body: '',
             result: function (response, error, http) {
                 if (error !== null) {
-                    _gg.set_error_message('#mainMsg', 'GetMyInfo', error);
+                    set_error_message('#mainMsg', 'GetMyInfo', error);
                 } else {
                     if (response.StudentInfo) {
                         $(response.StudentInfo).each(function(index, item) {
-                            student_name = item.StudentName;
+                            _student_name = item.StudentName;
                         });
                     }
                 }
@@ -206,38 +209,38 @@ var _gg = function() {
     //#endregion
 
     //#region 填寫狀態
-    var getStatus = function(_status, _index) {
-        switch(_status) {
+    var getStatus = function(status, index) {
+        switch(status) {
             case '0':
-                return '<td><a href="javascript: void(0);" class="btn btn-warning" data-index="' + _index + '">暫存</a></td>';
+                return '<td><a href="javascript: void(0);" class="btn btn-warning" data-index="' + index + '">暫存</a></td>';
                 break;
             case '1':
                 return '<td><span class="btn disabled">已完成</span></td>';
                 break;
             default:
-                return '<td><a href="javascript: void(0);" class="btn btn-danger" data-index="' + _index + '">尚未填寫</a></td>';
+                return '<td><a href="javascript: void(0);" class="btn btn-danger" data-index="' + index + '">尚未填寫</a></td>';
         }
     };
     //#endregion
 
     //#region 取得問卷
-    var getSurveyList = function(_schoolyear, _semester) {
-        connection.send({
+    var getSurveyList = function(schoolyear, semester) {
+        _connection.send({
             service: "_.GetSurvey",
             body: {
                 Request: {
                     Condition: {
-                        SchoolYear: _schoolyear || '',
-                        Semester: _semester || ''
+                        SchoolYear: schoolyear || '',
+                        Semester: semester || ''
                     }
                 }
             },
             result: function (response, error, http) {
                 if (error !== null) {
-                    _gg.set_error_message('#mainMsg', 'GetSurvey', error);
+                    set_error_message('#mainMsg', 'GetSurvey', error);
                 } else {
                     if (response.Response && response.Response.Survey) {
-                        surveylist = myHandleArray(response.Response.Survey);
+                        _surveylist = myHandleArray(response.Response.Survey);
                         showSurveyList();
                     } else {
                         $('#tab_survey_list tbody').html('<tr><td colspan="4">目前無資料</td></tr>');
@@ -250,17 +253,17 @@ var _gg = function() {
 
     //#region 顯示問卷列表
     var showSurveyList = function() {
-        connection.send({
+        _connection.send({
             service: "_.GetCurrentDateTime",
             body: {},
             result: function (response, error, http) {
                 if (error !== null) {
-                    _gg.set_error_message('#mainMsg', 'GetCurrentDateTime', error);
+                    set_error_message('#mainMsg', 'GetCurrentDateTime', error);
                 } else {
                     var tmp_Date  = new Date(response.DateTime);
                     var items = [];
-                    $(surveylist).each(function(index, item) {
-                        // TODO: 填寫評鑑鈕
+                    $(_surveylist).each(function(index, item) {
+                        // 填寫評鑑鈕
                         var status_html;
                         if (item.ReplyStatus !== '1') {
                             if (item.OpeningTime && item.EndTme) {
@@ -276,6 +279,7 @@ var _gg = function() {
                         } else {
                             status_html = getStatus(item.ReplyStatus, index);
                         }
+
                         items.push(
                             '<tr>' +
                             '  <td>' + (item.CourseName || '') + '</td>' +
@@ -297,50 +301,50 @@ var _gg = function() {
     //#endregion
 
     //#region 取得課程資訊
-    var getCourseInfo = function(_course_id) {
-        if (_course_id) {
-            if (!courses[_course_id]) {
-                courses[_course_id] = [];
-                connection.send({
+    var getCourseInfo = function(course_id) {
+        if (course_id) {
+            if (!_courses[course_id]) {
+                _courses[course_id] = [];
+                _connection.send({
                     service: "_.GetCourseInfo",
                     body: {
                         Request: {
                             Condition: {
-                                CourseID: _course_id
+                                CourseID: course_id
                             }
                         }
                     },
                     result: function (response, error, http) {
                         if (error !== null) {
-                            _gg.set_error_message('#mainMsg', 'GetCourseInfo', error);
+                            set_error_message('#mainMsg', 'GetCourseInfo', error);
                         } else {
                             if (response.Response && response.Response.Course) {
-                                courses[_course_id] = response.Response.Course;
+                                _courses[course_id] = response.Response.Course;
                             }
-                            show_FormCurseInfo(courses[_course_id]);
+                            show_FormCurseInfo(_courses[course_id]);
                         }
                     }
                 });
             } else {
-                show_FormCurseInfo(courses[_course_id]);
+                show_FormCurseInfo(_courses[course_id]);
             }
         }
     };
     //#endregion
 
     //#region 取得題目及選項及個案
-    var show_question = function(_curr_survey) {
+    var show_question = function() {
         $('#tab_form tbody[data-type=questions]').html('');
         $('#tab_form tbody.my-tbody-hierarchy').remove();
 
         var hierarchy = [];
 
-        if (curr_survey) {
-            var _course_id = curr_survey.CourseID,
-                _teacher_id = curr_survey.TeacherID,
-                _survey_id = curr_survey.SurveyID,
-                _reply_answer =  curr_survey.ReplyAnswer,
-                _reply_status = curr_survey.ReplyStatus,
+        if (_curr_survey) {
+            var course_id = _curr_survey.CourseID,
+                teacher_id = _curr_survey.TeacherID,
+                survey_id = _curr_survey.SurveyID,
+                reply_answer =  _curr_survey.ReplyAnswer,
+                reply_status = _curr_survey.ReplyStatus,
                 req_q, req_c, that_questions, that_case;
 
             //#region 顯示題目
@@ -349,9 +353,9 @@ var _gg = function() {
                     var down_question = [], top_question = [];
 
                     //#region 選項
-                    var get_option = function(item, _caseid) {
+                    var get_option = function(item, caseid) {
                         var validate_css = (item.IsRequired === 't' ? 'required' : ''); // 是否必填，驗證的plugin用
-                        var unique = 'q' + (item.QuestionID || '') + (_caseid || ''); // 組合題號、個案編號為唯一值，填值用
+                        var unique = 'q' + (item.QuestionID || '') + (caseid || ''); // 組合題號、個案編號為唯一值，填值用
                         var tmp_html = [];
                         tmp_html.push('<td data-qid="' + (item.QuestionID || '') + '">');
 
@@ -362,7 +366,7 @@ var _gg = function() {
                                         tmp_html.push(
                                             '<label class="radio">' +
                                             '<input type="radio" name="' + unique + '" class="' + validate_css + '"' +
-                                            ' data-caseid="' + _caseid + '"' +
+                                            ' data-caseid="' + caseid + '"' +
                                             ' data-title="' + (value.OptionTitle || '') + '"' +
                                             ' value="' + (value.OptionOrder || '') + '">' + (value.OptionTitle || '') +
                                             '</label>'
@@ -371,9 +375,11 @@ var _gg = function() {
                                 }
                                 break;
                             case '問答題':
-                                tmp_html.push('<textarea name="' + unique + '" rows="5" class="' + validate_css + ' input-xxlarge"' +
-                                    ' data-caseid="' + _caseid + '"' +
-                                    '></textarea>');
+                                tmp_html.push('<textarea name="' + unique + '" rows="5" class=" {extMaxLength: ' + _textarea_maxLength + '} ' + validate_css + ' input-block-level"' +
+                                    ' data-caseid="' + caseid + '"' +
+                                    ' data-maxLength="' + _textarea_maxLength + '"' +
+                                    '></textarea>' +
+                                    '<div class="my-note-text my-preview-remove">(請勿超過' + _textarea_maxLength + '字元)</div>');
                                 break;
                             case '複選題':
                                 if (item.Options && item.Options.Option) {
@@ -381,7 +387,7 @@ var _gg = function() {
                                         tmp_html.push(
                                             '<label class="checkbox">' +
                                             '<input type="checkbox" name="' + unique + '" class="' + validate_css + '"' +
-                                            ' data-caseid="' + _caseid + '"' +
+                                            ' data-caseid="' + caseid + '"' +
                                             ' data-title="' + (value.OptionTitle || '') + '"' +
                                             ' value="' + (value.OptionOrder || '') + '">' + (value.OptionTitle || '') +
                                             '</label>'
@@ -460,8 +466,8 @@ var _gg = function() {
                             var container = $('#tab_form tbody.my-tbody-hierarchy');
 
                             //#region 設定之前的作答情況
-                            if (_reply_answer.Answers && _reply_answer.Answers.Question) {
-                                $(_reply_answer.Answers.Question).each(function(key, answer) {
+                            if (reply_answer.Answers && reply_answer.Answers.Question) {
+                                $(reply_answer.Answers.Question).each(function(key, answer) {
                                     var caseid, option,
                                         qid = answer.QuestionID || '';
                                     $(answer.Answer).each(function(a, b) {
@@ -484,19 +490,19 @@ var _gg = function() {
             };
             //#endregion
 
-            if (_reply_status === '1') {
+            if (reply_status === '1') {
                 // 已送出
                 $('#tab_form tbody[data-type=questions]').html('<tr><td colspan="2">本評鑑已作答</td></tr>');
             } else {
-                if (_survey_id && _course_id && _teacher_id) {
+                if (survey_id && course_id && teacher_id) {
                     //#region 取得個案
-                    connection.send({
+                    _connection.send({
                         service: "_.GetCourseTeacherCase",
                         body: {
                             Request: {
                                 Condition: {
-                                    CourseID: _course_id,
-                                    TeacherID: _teacher_id
+                                    CourseID: course_id,
+                                    TeacherID: teacher_id
                                 },
                                 Order: {
                                     CaseID: 'asc'
@@ -505,7 +511,7 @@ var _gg = function() {
                         },
                         result: function (response, error, http) {
                             if (error !== null) {
-                                _gg.set_error_message('#mainMsg', 'GetCourseTeacherCase', error);
+                                set_error_message('#mainMsg', 'GetCourseTeacherCase', error);
                             } else {
                                 that_case = [];
                                 if (response.Response && response.Response.Case) {
@@ -524,14 +530,14 @@ var _gg = function() {
                     //#endregion
 
                     //#region 取得題目及選項
-                    if (!questions[_survey_id]) {
-                        questions[_survey_id] = [];
-                        connection.send({
+                    if (!_questions[survey_id]) {
+                        _questions[survey_id] = [];
+                        _connection.send({
                             service: "_.GetQuestion",
                             body: {
                                 Request: {
                                     Condition: {
-                                        SurveyID: _survey_id
+                                        SurveyID: survey_id
                                     },
                                     Order: {
                                         QuestionOrder: 'asc', OptionOrder: 'asc'
@@ -540,9 +546,9 @@ var _gg = function() {
                             },
                             result: function (response, error, http) {
                                 if (error !== null) {
-                                    _gg.set_error_message('#mainMsg', 'GetQuestion', error);
+                                    set_error_message('#mainMsg', 'GetQuestion', error);
                                 } else {
-                                    questions[_survey_id] = that_questions = response.Questions;
+                                    _questions[survey_id] = that_questions = response.Questions;
                                     req_q = true;
                                     processQuestion();
                                 }
@@ -550,7 +556,7 @@ var _gg = function() {
                         });
                     } else {
                         req_q = true;
-                        that_questions = questions[_survey_id];
+                        that_questions = _questions[survey_id];
                         processQuestion();
                     }
                     //#endregion
@@ -597,25 +603,25 @@ var _gg = function() {
 
     //#region 顯示初始畫面
     var initialize = function() {
-        if (school_year && semester) {
-            $('#tabName').html(school_year + '學年度' + (semester === '0' ? '暑期' : '第' + semester + '學期'));
-            getSurveyList(school_year, semester);
+        if (_school_year && _semester) {
+            $('#tabName').html(_school_year + '學年度' + (_semester === '0' ? '暑期' : '第' + _semester + '學期'));
+            getSurveyList(_school_year, _semester);
         }
     };
     //#endregion
 
     //#region 顯示填寫畫面的課程資訊
-    var show_FormCurseInfo = function(_course) {
+    var show_FormCurseInfo = function(course) {
         var teacher_name, description, items = [];
-        teacher_name = curr_survey.TeacherName;
-        description = curr_survey.Description;
+        teacher_name = _curr_survey.TeacherName;
+        description = _curr_survey.Description;
 
         items.push(
             '<tr class="my-table">' +
-                '<td>' + (_course.NewSubjectCode || '') + '</td>' +
-                '<td>' + (_course.CourseName || '') + '</td>' +
+                '<td>' + (course.NewSubjectCode || '') + '</td>' +
+                '<td>' + (course.CourseName || '') + '</td>' +
                 '<td>' + (teacher_name || '') + '</td>' +
-                '<td>' + (_course.StudentCount || '') + '</td>' +
+                '<td>' + (course.StudentCount || '') + '</td>' +
             '</tr>'
         );
         $('#tab_form tbody[data-type=title]').html(items.join(''));
@@ -639,7 +645,6 @@ var _gg = function() {
         return result;
     };
     //#endregion
-
 
     //#region 數字轉國字
     var intToChineseNumberString = function (useLowerType) {
@@ -714,10 +719,22 @@ var _gg = function() {
     var conver2Chinese = new intToChineseNumberString(true);
     //#endregion
 
+    $.validator.addMethod('extMaxLength', function (value, element) {
+        var maxlen = parseInt($(element).attr('data-maxLength'));
+        if (maxlen > 0) {
+            var remaining = (maxlen - (parseInt($(element).val().replace(/(\r\n|\n|\r)/gm, '').length)));
+            if (remaining < 0) {
+                return false;
+            }
+        }
+
+        return true;
+    });
+
 
     //#region 回傳值
     return {
-        set_error_message: function(select_str, serviceName, error) {
+        msg: function(select_str, serviceName, error) {
             set_error_message(select_str, serviceName, error);
         }
         ,on_init: function() {
@@ -725,33 +742,33 @@ var _gg = function() {
             getMyInfo();
             initialize();
         }
-        ,load_form: function(_index) {
+        ,load_form: function(index) {
             $('#tab_form').find('[data-type=form]').show().end().find('[data-type=preview]').hide();
-            var _course_id;
-            curr_survey = surveylist[_index];
-            if (curr_survey) {
-                curr_survey.idx = _index;
-                _course_id = curr_survey.CourseID;
-                getCourseInfo(_course_id);
-                show_question(curr_survey);
+            var course_id;
+            _curr_survey = _surveylist[index];
+            if (_curr_survey) {
+                _curr_survey.idx = index;
+                course_id = _curr_survey.CourseID;
+                getCourseInfo(course_id);
+                show_question();
             }
         }
         //#region 儲存評鑑結果
-        ,saveReply: function(_status, _answer) {
-            if (curr_survey) {
-                connection.send({
+        ,saveReply: function(status, answer) {
+            if (_curr_survey) {
+                _connection.send({
                     service: "_.SetReply",
                     body: {
                         'Request':{
                             'Reply':{
                                 'Field':{
-                                    'Answer': _answer || '',
-                                    'Status': _status || ''
+                                    'Answer': answer || '',
+                                    'Status': status || ''
                                 },
                                 'Condition':{
-                                    'CourseID'  : curr_survey.CourseID || '',
-                                    'SurveyID'  : curr_survey.SurveyID || '',
-                                    'TeacherID' : curr_survey.TeacherID || ''
+                                    'CourseID'  : _curr_survey.CourseID || '',
+                                    'SurveyID'  : _curr_survey.SurveyID || '',
+                                    'TeacherID' : _curr_survey.TeacherID || ''
                                 }
                             }
                         }
@@ -763,9 +780,9 @@ var _gg = function() {
                             $("#save-data").button("reset");
                         } else {
                             $('body').scrollTop(0);
-                            curr_survey.ReplyAnswer = _answer;
-                            curr_survey.ReplyStatus = _status;
-                            $('#tab_survey_list td').has('a[data-index=' + curr_survey.idx + ']').after(getStatus(_status, curr_survey.idx)).remove();
+                            _curr_survey.ReplyAnswer = answer;
+                            _curr_survey.ReplyStatus = status;
+                            $('#tab_survey_list td').has('a[data-index=' + _curr_survey.idx + ']').after(getStatus(status, _curr_survey.idx)).remove();
                             $("#save-data").button("reset");
                             $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
                             setTimeout("$('#mainMsg').html('')", 1500);
@@ -774,14 +791,14 @@ var _gg = function() {
                             $('#tab_survey_list').show();
 
                             //#region 儲存log
-                            var status_name = (_status === '1') ? '儲存' : '暫存';
+                            var status_name = (status === '1') ? '儲存' : '暫存';
                             var log_add_content = [];
                             log_add_content.push(
-                                '學生「' + (student_name || '') + '」' +
+                                '學生「' + (_student_name || '') + '」' +
                                 status_name +
-                                '「' + school_year + '學年度' + (semester === '0' ? '暑期' : '第' + semester + '學期') + '」' +
-                                ' 課程「' + (curr_survey.CourseName || '') + '」' +
-                                ' 老師「' + (curr_survey.TeacherName || '') + '」' +
+                                '「' + _school_year + '學年度' + (_semester === '0' ? '暑期' : '第' + _semester + '學期') + '」' +
+                                ' 課程「' + (_curr_survey.CourseName || '') + '」' +
+                                ' 老師「' + (_curr_survey.TeacherName || '') + '」' +
                                 '的教學評鑑'
                             );
 
@@ -794,7 +811,7 @@ var _gg = function() {
 
                             gadget.getContract("emba.student").send({
                                 service: "public.AddLog",
-                                body: "<Request>\n  <Log>\n     <Actor>" + conn_log.getUserInfo().UserName + "</Actor>\n        <ActionType>" + status_name + "</ActionType>\n       <Action>" + status_name + "評鑑</Action>\n       <TargetCategory>student</TargetCategory>\n      <ClientInfo><ClientInfo></ClientInfo></ClientInfo>\n        <ActionBy>ischool web 教學評鑑小工具</ActionBy>\n      <Description>" + log_add_content.join('\n') + "</Description>\n    </Log>\n</Request>"
+                                body: "<Request>\n  <Log>\n     <Actor>" + _conn_log.getUserInfo().UserName + "</Actor>\n        <ActionType>" + status_name + "</ActionType>\n       <Action>" + status_name + "評鑑</Action>\n       <TargetCategory>student</TargetCategory>\n      <ClientInfo><ClientInfo></ClientInfo></ClientInfo>\n        <ActionBy>ischool web 教學評鑑小工具</ActionBy>\n      <Description>" + log_add_content.join('\n') + "</Description>\n    </Log>\n</Request>"
                             });
                             //#endregion
                         }
