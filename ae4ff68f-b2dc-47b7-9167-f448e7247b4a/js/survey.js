@@ -23,6 +23,7 @@ jQuery(function () {
             } else {
                 $('tr.error:first').find('textarea, input').first().focus();
                 $('body').scrollTop(0);
+                if ($('tr.error span.my-star').length > 0) { alert('您還有【必填】題目未填寫，請填答完整後再送出'); }
                 SurveyManger.msg('#mainMsg', '', '資料驗證失敗，請重新檢查！');
             }
         })
@@ -423,7 +424,7 @@ var SurveyManger = function() {
                                             // 個案題
                                             question_html += '<tr class="my-iscase"><td colspan="2"><div class="my-question-container">' +
                                                 '<div class="my-question-number">' +
-                                                (item.IsRequired === 't' ? '<span class="text-error">*</span>' : '') +
+                                                (item.IsRequired === 't' ? '<span class="text-error my-star">*</span>' : '<span class="my-star">&nbsp;&nbsp;&nbsp;</span>') +
                                                 question_idx +
                                                 '</div>' +
                                                 '<div class="my-question-title">' + (item.QuestionTitle || '') + '</div></div></td></tr>';
@@ -441,7 +442,7 @@ var SurveyManger = function() {
                                             // 其他
                                             question_html += '<tr><td><div class="my-question-container">' +
                                                 '<div class="my-question-number">' +
-                                                (item.IsRequired === 't' ? '<span class="text-error">*</span>' : '') +
+                                                (item.IsRequired === 't' ? '<span class="text-error my-star">*</span>' : '<span class="my-star">&nbsp;&nbsp;&nbsp;</span>') +
                                                 question_idx +
                                                 '</div>' +
                                                 '<div class="my-question-title">' + (item.QuestionTitle || '') + '</div></div></td>' +
