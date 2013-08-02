@@ -41,6 +41,8 @@ label {
 }
 
 /*自訂*/
+@import url(http://fonts.googleapis.com/css?family=Bevan);
+
 .my-err-info {
   cursor: pointer;
 }
@@ -52,8 +54,14 @@ table.table-striped tbody tr.my-iscase {
   }
 }
 
-form tr.error span.help-inline {
-  color: #B94A48;
+form tr.error {
+  span.help-inline {
+    color: #B94A48;
+  }
+
+  .my-question-title {
+    font-weight: bold;
+  }
 }
 
 table.table-striped tbody tr th.my-hierarchy {
@@ -71,13 +79,13 @@ table.table-striped tbody tr th.my-hierarchy {
   }
 
   .my-question-title {
-    margin-left: 30px;
+    margin-left: 35px;
   }
 }
 
 .my-casename {
   .my-question-container {
-    margin: 6px;
+    margin-left: 9px;
   }
 
   .my-question-number {
@@ -95,4 +103,9 @@ table.table-striped tbody tr th.my-hierarchy {
 
 #tab_form form table tr th:first-child {
   min-width: 350px;
+}
+
+.my-star {
+  font-family: 'Bevan', cursive;
+  font-weight: 400;
 }
