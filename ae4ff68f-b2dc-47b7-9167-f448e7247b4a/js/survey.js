@@ -1,7 +1,7 @@
 jQuery(function () {
     SurveyManger.on_init();
 
-    // 點選評鑑列表
+    // 點選課程評鑑
     $('#tab_survey_list').on('click', 'a[data-index]', function() {
         var index = $(this).attr('data-index');
         SurveyManger.load_form(index);
@@ -273,8 +273,10 @@ var SurveyManger = function() {
 
                                 if (Startdate <= tmp_Date && Enddate >= tmp_Date) {
                                     status_html = getStatus(item.ReplyStatus, index);
+                                } else if (Enddate < tmp_Date) {
+                                    status_html = '<td>已過期</td>';
                                 } else {
-                                    status_html = '<td>未開放登錄</td>';
+                                    status_html = '<td>尚未開放</td>';
                                 }
                             }
                         } else {
@@ -488,12 +490,13 @@ var SurveyManger = function() {
                         $('#tab_form tbody[data-type=questions]').html('<tr><td colspan="2">目前無題目</td></tr>');
                     }
                 }
+                $('#tab_form').find('[data-type=form]').show();
             };
             //#endregion
 
             if (reply_status === '1') {
                 // 已送出
-                $('#tab_form tbody[data-type=questions]').html('<tr><td colspan="2">本評鑑已作答</td></tr>');
+                $('#tab_form tbody[data-type=questions]').html('<tr><td colspan="2">本評鑑已作答<br/><button type="button" class="btn" data-action="form_cancel">返回</button></td></tr>');
             } else {
                 if (survey_id && course_id && teacher_id) {
                     //#region 取得個案
@@ -626,7 +629,7 @@ var SurveyManger = function() {
             '</tr>'
         );
         $('#tab_form tbody[data-type=title]').html(items.join(''));
-        $('#tab_form tbody[data-type=note]').html(description || '');
+        $('#tab_form tbody[data-type=note] td').html(description || '&nbsp;');
     };
     //#endregion
 
@@ -744,7 +747,7 @@ var SurveyManger = function() {
             initialize();
         }
         ,load_form: function(index) {
-            $('#tab_form').find('[data-type=form]').show().end().find('[data-type=preview]').hide();
+            $('#tab_form').find('[data-type=form], [data-type=preview]').hide()
             var course_id;
             _curr_survey = _surveylist[index];
             if (_curr_survey) {
