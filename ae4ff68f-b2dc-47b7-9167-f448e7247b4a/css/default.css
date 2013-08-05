@@ -80,3 +80,12 @@ table.table-striped tbody tr th.my-hierarchy {
   font-family: 'Bevan', cursive;
   font-weight: 400;
 }
+#course_info thead th:nth-child(1) {
+  width: 15%;
+}
+#course_info thead th:nth-child(3) {
+  width: 30%;
+}
+#course_info thead th:nth-child(4) {
+  width: 15%;
+}
