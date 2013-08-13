@@ -1,3 +1,6 @@
+線上測試
+http://ischool-tw.github.com/coregadget/
+
 Core Gadget
 ===========
 
@@ -102,5 +105,6 @@ Campus Lite
 * 91c910a2-9b16-49ea-a1a7-0fbb1b13a86b 學校基本資料
 * d9384e08-4b1e-4373-b119-7c6146c7a212 校長設定
 
-線上測試
-http://ischool-tw.github.com/coregadget/
+雲端學院
+-----------
+* f27d76b9-de33-4804-85f2-2433cf002c29 小考成績輸入(老師)
