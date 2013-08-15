@@ -249,7 +249,7 @@ var _gg = function() {
                                     StudentNumber  : item.StudentNumber,
                                     SeatNo         : item.SeatNo,
                                     SemsHistory    : item.SemsHistory,
-                                    ColScore          : {},
+                                    ColScore       : {},
                                     ClubID         : item.ClubID,
                                     ClubName       : item.ClubName,
                                     CadreName      : tmp_cadreName,
@@ -328,12 +328,13 @@ var _gg = function() {
                                     StudentNumber  : item.StudentNumber,
                                     SeatNo         : item.SeatNo,
                                     SemsHistory    : item.SemsHistory,
-                                    Score          : {},
+                                    ColScore       : {},
                                     ClubID         : '',
                                     ClubName       : item.ClubName,
                                     CadreName      : tmp_cadreName,
                                     ResultScore    : item.ResultScore,
-                                    SCUID          : ''
+                                    SCUID          : '',
+                                    Location       : ''
                                 };
                                 tmp_this_semes[semeid].Students.push(tmp_student);
                             }
@@ -385,7 +386,7 @@ var _gg = function() {
                                     ClassID       : item.ClassID,
                                     ClassName     : item.ClassName,
                                     DisplayOrder  : item.DisplayOrder,
-                                    ColScore         : {},
+                                    ColScore      : {},
                                     ClubID        : item.ClubID,
                                     ClubName      : item.ClubName,
                                     ResultScore   : item.ResultScore,
