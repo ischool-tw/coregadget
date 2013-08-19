@@ -24,13 +24,13 @@
       <div id="mainMsg"></div>
       <script type="text/html" id="Item1Tmpl">
         <div class="my-sure" data-bind="if: currentData.Item() == '1' || currentData.Item() == '2'">
-            <button type="button" class="btn btn-success" ac-type="save1" data-toggle="modal" data-target="#myModal" rel="tooltip" title="紅底為衝堂課程" data-placement="left">送出</button>
+            <button type="button" class="btn btn-success" ac-type="save1" data-toggle="modal" data-target="#myModal" rel="tooltip" title="紅底為不得重複加選" data-placement="left">送出</button>
             <button type="button" class="btn" data-bind="click: reset_add_quit">重設</button>
         </div>
       </script>
       <script type="text/html" id="Item0Tmpl">
-        <div class="my-sure" data-bind="visible: !sc_confirm()">
-            <button type="button" class="btn btn-success" ac-type="save0" data-toggle="modal" data-target="#myModal">確認最終選課結果</button>
+        <div class="my-sure" data-bind="visible: sc__confirm_load()">
+            <button type="button" class="btn btn-success" ac-type="save0" data-target="#myModal">確認最終選課結果</button>
             <button type="button" class="btn" data-bind="click: printCourse">列印加退選單</button>
         </div>
       </script>
@@ -42,10 +42,10 @@
                     <li data-bind="if: currentData.Item() === '1' || currentData.Item() === '2' || currentData.Item() === 's1' || currentData.Item() === 's2'"><a href="#sa01" data-toggle="tab">可選課程</a></li>
                     <li data-bind="if: currentData.Item() === '0' || currentData.Item() === 's3' || currentData.Item() === 's4'"><a href="#sa06" data-toggle="tab">選課最終確認</a></li>
                     <li><a href="#sa02" data-toggle="tab">課程總表</a></li>
-                    <li><a href="#sa03" data-toggle="tab">衝堂課程</a></li>
+                    <li><a href="#sa03" data-toggle="tab">衝堂與限制複選課程</a></li>
                     <li><a href="#sa04" data-toggle="tab">選課注意事項</a></li>
                     <li><a href="#sa05" data-toggle="tab">選課問答集</a></li>
-                    <li><a href="https://docs.google.com/a/emba.ntu.edu.tw/file/d/0BwoHPiZoQyRiS3pCM0J4Vy1PbVk/edit" target="_blank">課程計劃</a></li>
+                    <li><a data-bind="attr: { href: weburl }" target="_blank">課程計劃</a></li>
                 </ul>
             </h1>
             <div id="myTabContent" class="tab-content">
