@@ -56,7 +56,7 @@ jQuery(function () {
         });
 
 
-    $('body').on('click', 'button[data-target=#myModal]', function() {
+    $('body').on('click', 'button[data-target=#myModal]', function(e) {
         $('#save-data').button('reset');
         $('#myModal [data-dismiss="modal"]').show();
         $('#errorMessage').html('');
@@ -101,12 +101,18 @@ jQuery(function () {
                     .end().find('#save-data').hide();
             }
         } else if (action_type === 'save0') {
-            title = '確認最終選課結果';
-            html_txt = '<p>送出後不能再列印加退選單，您確定要送出嗎？</p>';
+            if (vm.sc_confirm() === true) {
+                alert('您已進行過確認');
+            } else {
+                title = '確認最終選課結果';
+                html_txt = '<p>送出後不能再列印加退選單，您確定要送出嗎？</p>';
 
-            $('#myModal').find('h3').html(title)
-                .end().find('.modal-body').html(html_txt).addClass('alert-danger')
-                .end().find('#save-data').show().attr('action-type', 'reg-confirm');
+                $('#myModal').find('h3').html(title)
+                    .end().find('.modal-body').html(html_txt).addClass('alert-danger')
+                    .end().find('#save-data').show().attr('action-type', 'reg-confirm')
+                    .end().modal('show');
+
+            }
         }
     });
 });
@@ -116,6 +122,27 @@ jQuery(function () {
         var conn_log = gadget.getContract("emba.student");
         var _all_opening_data = {};
         return {
+            weburl: ko.observable('javascript:void(0);'),
+            get_weburl: function() {
+                var self = MyViewModel;
+                _gg.connection.send({
+                    service: "_.GetWebUrl",
+                    body: {
+                        Request: {
+                            Name: '課程規劃'
+                        }
+                    },
+                    result: function (response, error, http) {
+                        if (error !== null) {
+                            _gg.set_error_message('#mainMsg', 'GetWebUrl', error);
+                        } else {
+                            if (response.Response && response.Response.Urls) {
+                                self.weburl(response.Response.Urls.Url || 'javascript:void(0);');
+                            }
+                        }
+                    }
+                });
+            },
             get_openingdata : function() {
                 var self = MyViewModel;
                 var set_currentData = function(item) {
@@ -184,7 +211,7 @@ jQuery(function () {
                 Item0 : ko.observable('')
             },
 
-            // TODO: 課程總表
+            // 課程總表
             all_course : ko.observableArray(),
             all_col_course : {},
             get_all_course : function() {
@@ -242,7 +269,7 @@ jQuery(function () {
                 });
             },
 
-            // TODO: 退選訊息、Mail樣版
+            // 退選訊息、Mail樣版
             configuration : {
                 email_content1_template     : ko.observable(),
                 email_content2_template     : ko.observable(),
@@ -282,7 +309,7 @@ jQuery(function () {
                 });
             },
 
-            // TODO: 可選課程(已選)
+            // 可選課程(已選)
             curr_attend : ko.observableArray([]),
             get_attend : function(callback) {
                 var self = MyViewModel;
@@ -325,7 +352,7 @@ jQuery(function () {
                     if (self.conflict_col_course[_courseID]) {
                         var _conflict = [];
                         $(self.conflict_col_course[_courseID]).each(function(key, value) {
-                            // TODO: 與已選課程比較
+                            // 與已選課程比較
                             $(self.curr_attend()).each(function(index, item) {
                                 if (item.CourseID === value && !item.WillQuit()) {
                                     if (!status) {
@@ -337,7 +364,7 @@ jQuery(function () {
                                 }
                             });
 
-                            // TODO: 與加選課程比較
+                            // 與加選課程比較
                             $(self.can_choose_course()).each(function(index, item) {
                                 if (item.CourseID === value && item.WillAdd()) {
                                     if (!status) {
@@ -350,7 +377,7 @@ jQuery(function () {
                             });
                         });
 
-                        // TODO: 有衝堂，幫自己加註
+                        // 有衝堂，幫自己加註
                         if (!status && _conflict) {
                             $(self.curr_attend()).each(function(index, item) {
                                 if (item.CourseID === _courseID) {
@@ -359,7 +386,7 @@ jQuery(function () {
                             });
                         }
 
-                        // TODO: 勾選，幫自己清除衝堂
+                        // 勾選，幫自己清除衝堂
                         if (status) {
                             $(self.curr_attend()).each(function(index, item) {
                                 if (item.CourseID === _courseID) {
@@ -372,7 +399,7 @@ jQuery(function () {
                 }
             },
 
-            // TODO: 可選課程(可加選)
+            // 可選課程(可加選)
             can_choose_course : ko.observableArray(),
             get_can_choose_course : function() {
                 var self = MyViewModel;
@@ -411,7 +438,7 @@ jQuery(function () {
                     if (self.conflict_col_course[_courseID]) {
                         var _conflict = [];
                         $(self.conflict_col_course[_courseID]).each(function(key, value) {
-                            // TODO: 與已選課程比較
+                            // 與已選課程比較
                             $(self.curr_attend()).each(function(index, item) {
                                 if (item.CourseID === value && !item.WillQuit()) {
                                     if (status) {
@@ -423,7 +450,7 @@ jQuery(function () {
                                 }
                             });
 
-                            // TODO: 與加選課程比較
+                            // 與加選課程比較
                             $(self.can_choose_course()).each(function(index, item) {
                                 if (item.CourseID === value && item.WillAdd()) {
                                     if (status) {
@@ -436,7 +463,7 @@ jQuery(function () {
                             });
                         });
 
-                        // TODO: 有衝堂，幫自己加註
+                        // 有衝堂，幫自己加註
                         if (status && _conflict) {
                             $(self.can_choose_course()).each(function(index, item) {
                                 if (item.CourseID === _courseID) {
@@ -445,7 +472,7 @@ jQuery(function () {
                             });
                         }
 
-                        // TODO: 取消勾選，幫自己清除衝堂
+                        // 取消勾選，幫自己清除衝堂
                         if (!status) {
                             $(self.can_choose_course()).each(function(index, item) {
                                 if (item.CourseID === _courseID) {
@@ -458,7 +485,7 @@ jQuery(function () {
                 }
             },
 
-            // TODO: 選課最終確認
+            // 選課最終確認
             sc_attend : ko.observableArray(),
             get_sc_attend : function() {
                 var self = MyViewModel;
@@ -490,8 +517,10 @@ jQuery(function () {
                 });
             },
 
-            // TODO: 確認最終選課結果
+            // 確認最終選課結果
+            sc__confirm_load : ko.observable(false),
             sc_confirm : ko.observable(false),
+            sc_date_confirm : ko.observable(''),
             get_registration_confirm : function() {
                 var self = MyViewModel;
 
@@ -509,9 +538,11 @@ jQuery(function () {
                         if (error !== null) {
                             _gg.set_error_message('#mainMsg', 'GetRegistrationConfirm', error);
                         } else {
+                            self.sc__confirm_load(true);
                             if (response.Response && response.Response.Confirm) {
                                 if (response.Response.Confirm.Confirm === 't') {
                                     self.sc_confirm(true);
+                                    self.sc_date_confirm(response.Response.Confirm.ConfirmDate)
                                 }
                             }
                         }
@@ -534,6 +565,8 @@ jQuery(function () {
                                 if (response.Result && response.Result.ExecuteCount) {
                                     if (parseInt(response.Result.EffectRows, 10) > 0) {
                                         self.sc_confirm(true);
+                                        var d = new Date();
+                                        self.sc_date_confirm(d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate());
 
                                         gadget.getContract("emba.student").send({
                                             service: "public.AddLog",
@@ -565,7 +598,7 @@ jQuery(function () {
                 });
             },
 
-            // TODO: 衝堂課程
+            // 衝堂課程
             conflict_col_course : {},
             get_conflict_course : function() {
                 var self = MyViewModel;
@@ -650,7 +683,7 @@ jQuery(function () {
                 }
             },
 
-            // TODO: 選課注意事項, 選課問答集
+            // 選課注意事項, 選課問答集
             faq : {
                 'A' : ko.observableArray(), //選課注意事項
                 'B' : ko.observableArray() //選課問答
@@ -730,66 +763,107 @@ jQuery(function () {
 
             },
 
-            // TODO: 列印
+            // 列印
             printCourse : function() {
                 var self = MyViewModel;
-                var content = '', page_count;
-                if (self.all_course().length <= 14) {
-                    content = $('div.my-print-page').html();
+                if (self.sc_confirm() === true) {
+                    alert('您已於' + self.sc_date_confirm() + '進行確認，請先致電EMBA辦公室進行註銷，才能列印加退選單');
                 } else {
-                    $('.my-print-page tbody[data-type=none]').remove();
-                    page_count = (parseInt(self.sc_attend().length / 28, 10)) + (self.sc_attend().length % 28 > 14 ? 2 : 1) ;
-
-                    for (i=1; i<=page_count; i+=1) {
-                        content += $('.my-print-page > div[data-area=title]').html();
-                        if (page_count > 1) { content += '<div class="my-pages">頁次：' + i + '/' + page_count + '</div>' };
-
-                        var start = 28 * (i - 1);
-                        var end   = (28 * i ) - 1;
-                        var page = $('.my-print-page > div[data-area=course]').clone();
-                        $(page).find('tbody tr').each(function(index, item) {
-                            if (!(index >= start && index <= end)) {
-                                $(item).remove();
+                    var content = '', page_count;
+                    conn_log.ready(function(){
+                        _gg.connection.send({
+                            service: "_.SetRegistrationPrint",
+                            body: '<Request><SetStatus></SetStatus></Request>',
+                            result: function (response, error, http) {
+                                if (error !== null) {
+                                    $('#save-data').button('reset');
+                                    $('#myModal [data-dismiss="modal"]').show();
+                                    _gg.set_error_message('#errorMessage', 'SetRegistrationPrint', error);
+                                } else {
+                                    if (response.Result && response.Result.ExecuteCount) {
+                                        if (parseInt(response.Result.EffectRows, 10) > 0) {
+                                            gadget.getContract("emba.student").send({
+                                                service: "public.AddLog",
+                                                body: {
+                                                    Request: {
+                                                        Log: {
+                                                            Actor: conn_log.getUserInfo().UserName,
+                                                            ActionType: "列印加退選單",
+                                                            Action: "點選列印加退選單",
+                                                            TargetCategory: "student",
+                                                            ClientInfo: {
+                                                                ClientInfo: {}
+                                                            },
+                                                            ActionBy: "ischool web 選課小工具",
+                                                            Description: '學生「' + self.student.StudentName() + '」點選列印加退選單'
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
                             }
                         });
-                        content += $(page).html();
+                    });
 
-                        if (i <= (parseInt(self.sc_attend().length / 28, 10))) {
-                            content += "<P style='page-break-after:always'>&nbsp;</P>";
-                        } else {
-                            if (self.sc_attend().length % 28 > 14) {
+                    if (self.all_course().length <= 14) {
+                        content = $('div.my-print-page').html();
+                    } else {
+                        $('.my-print-page tbody[data-type=none]').remove();
+                        page_count = (parseInt(self.sc_attend().length / 28, 10)) + (self.sc_attend().length % 28 > 14 ? 2 : 1) ;
+
+                        for (i=1; i<=page_count; i+=1) {
+                            content += $('.my-print-page > div[data-area=title]').html();
+                            if (page_count > 1) { content += '<div class="my-pages">頁次：' + i + '/' + page_count + '</div>' };
+
+                            var start = 28 * (i - 1);
+                            var end   = (28 * i ) - 1;
+                            var page = $('.my-print-page > div[data-area=course]').clone();
+                            $(page).find('tbody tr').each(function(index, item) {
+                                if (!(index >= start && index <= end)) {
+                                    $(item).remove();
+                                }
+                            });
+                            content += $(page).html();
+
+                            if (i <= (parseInt(self.sc_attend().length / 28, 10))) {
                                 content += "<P style='page-break-after:always'>&nbsp;</P>";
+                            } else {
+                                if (self.sc_attend().length % 28 > 14) {
+                                    content += "<P style='page-break-after:always'>&nbsp;</P>";
+                                }
                             }
                         }
+                        if (self.sc_attend().length % 28 > 14) {
+                            content += $('.my-print-page > div[data-area=title]').html();
+                            if (page_count > 1) { content += '<div class="my-pages">頁次：' + page_count + '/' + page_count + '</div>' };
+                            content += $('.my-print-page > div[data-area=sign]').html();
+                        } else {
+                            content += $('.my-print-page > div[data-area=sign]').html();
+                        }
                     }
-                    if (self.sc_attend().length % 28 > 14) {
-                        content += $('.my-print-page > div[data-area=title]').html();
-                        if (page_count > 1) { content += '<div class="my-pages">頁次：' + page_count + '/' + page_count + '</div>' };
-                        content += $('.my-print-page > div[data-area=sign]').html();
-                    } else {
-                        content += $('.my-print-page > div[data-area=sign]').html();
-                    }
+
+                    var tmp = $(content);
+                    $(tmp).find('#printEndTime').append(self.currentData.EndTime() || '');
+                    content = $('<div>').append(tmp).html();
+
+                    content = "<!DOCTYPE html>\n" +
+                            "<html>\n" +
+                            "<head>\n" +
+                            "<title>加退選單</title>\n" +
+                            "<link type=\"text/css\" rel=\"stylesheet\" href=\"css/default.css\"/>\n" +
+                            "</head>\n" +
+                            "<body style='width:880px;padding:40px 20px' onload=\"window.print();\">\n" +
+                            "<div class='my-print-page'>" +
+                            content +
+                            "</div>\n  </body>\n</html>";
+                    var doc = window.open('about:blank', '_blank', '');
+                    doc.document.open();
+                    doc.document.write(content);
+                    doc.document.close();
+                    doc.focus();
                 }
-
-                var tmp = $(content);
-                $(tmp).find('#printEndTime').append(self.currentData.EndTime() || '');
-                content = $('<div>').append(tmp).html();
-
-                content = "<!DOCTYPE html>\n" +
-                        "<html>\n" +
-                        "<head>\n" +
-                        "<title>加退選單</title>\n" +
-                        "<link type=\"text/css\" rel=\"stylesheet\" href=\"css/default.css\"/>\n" +
-                        "</head>\n" +
-                        "<body style='width:880px;padding:40px 20px' onload=\"window.print();\">\n" +
-                        "<div class='my-print-page'>" +
-                        content +
-                        "</div>\n  </body>\n</html>";
-                var doc = window.open('about:blank', '_blank', '');
-                doc.document.open();
-                doc.document.write(content);
-                doc.document.close();
-                doc.focus();
             }
             ,
             reset_add_quit : function() {
@@ -807,7 +881,7 @@ jQuery(function () {
 
             check_add_quit_btn : function() {
                 if ($('#sa01 tr.my-error').length > 0) {
-                    $('#sa01 button[ac-type=save1]').attr('disabled', true).html('衝堂了').tooltip('show');
+                    $('#sa01 button[ac-type=save1]').attr('disabled', true).html('不得重複加選').tooltip('show');
                 } else {
                     $('#sa01 button[ac-type=save1]').attr('disabled', false).html('送出').tooltip('hide');
                 }
@@ -888,7 +962,7 @@ jQuery(function () {
 
                 var complete_process = function() {
                     if (add_complete && quit_complete) {
-                        // TODO: 送出Email
+                        // 送出Email
                         var send_Mail = function() {
                             var receiver = [], mail_subject = '', mail_tmpl_name = '', course_html = '';
                             for (var ii=1; ii<=5; ii+=1) {
@@ -1075,7 +1149,7 @@ jQuery(function () {
                 self.currentData.FullSemester = ko.computed(function(){
                     switch (self.currentData.Semester()) {
                         case '0':
-                            return '暑期';
+                            return '夏季學期';
                         case '1':
                             return '第一學期';
                         case '2':
@@ -1195,6 +1269,7 @@ jQuery(function () {
             }
         };
     })();
+    MyViewModel.get_weburl();
     MyViewModel.set_full_semester();
     MyViewModel.get_student_info();
     MyViewModel.get_faq();
@@ -1240,13 +1315,13 @@ ko.bindingHandlers.conflict_list = {
             $elem.attr('rel', 'tooltip');
             $elem.tooltip({
                 placement :'right',
-                title     : '與「' + title.join(', ') + '」衝堂'
+                title     : '與「' + title.join(', ') + '」不得重複加選'
             });
         }
     }
 };
 
-// TODO: 錯誤訊息
+// 錯誤訊息
 _gg.set_error_message = function(select_str, serviceName, error) {
     if (serviceName) {
         var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
