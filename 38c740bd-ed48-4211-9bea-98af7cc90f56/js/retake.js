@@ -3,10 +3,10 @@ _gg.connection = gadget.getContract("ischool.retake.teacher");
 _gg.col_courses = {};
 
 jQuery(function () {
-    // TODO: 載入資料
+    // 載入資料
     _gg.loadData();
 
-    // TODO: 驗證提示樣式設定
+    // 驗證提示樣式設定
     $.validator.setDefaults({
         debug: true,
         errorElement: "span",
@@ -19,10 +19,11 @@ jQuery(function () {
         },
         errorPlacement: function (error, element) {
             error.insertAfter(element);
-        }
+        },
+        ignoreTitle: true
     });
 
-    // TODO: 編輯畫面
+    // 編輯畫面
     $("#editModal").modal({
         show: false
     });
@@ -36,19 +37,19 @@ jQuery(function () {
         var err_msg = $('#errorMessage');
         err_msg.html('');
         if ($("#editModal form").valid()) {
-            $(this).removeClass('btn-danger').addClass('btn-success').button('loading'); // TODO: 按鈕為處理中
+            $(this).removeClass('btn-danger').addClass('btn-success').button('loading'); // 按鈕為處理中
             _gg.SaveSorce();
         } else {
             err_msg.html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  資料驗證失敗，請重新檢查！\n</div>");
         }
     });
 
-    // TODO: 切換課程
+    // 切換課程
     $('#changeCourse').bind('change', function(event) {
         _gg.GetScore(this.value);
     });
 
-    // TODO: 輸入成績
+    // 輸入成績
     $('#score_list').on('click', 'a', function(e) {
         var scoreType, courseID;
         scoreType = $(this).attr("edit-target");
@@ -70,7 +71,7 @@ jQuery(function () {
                     edit_title = '平時成績比例(' + (_gg.weight.SS3Weight || '')  + '%)';
                     break;
                 case 'Score':
-                    opening = _gg.opening.ss2Status;
+                    opening = _gg.opening.ss2Status; //學期成績的輸入期間與期末考成績輸入期間相同
                     edit_title = '學期成績';
                     break;
             }
@@ -87,18 +88,43 @@ jQuery(function () {
                         );
 
                         if (value.NotExam === 't') {
-                            ret.push('<span>' + (value[scoreType] || '') + ' (扣考)</span>');
+                            ret.push('<span class="help-inline" style="padding-top: 5px;">' + (value[scoreType] || '') + ' (扣考)</span>');
                         } else {
+                            var input_s1 = (scoreType === 'SubScore1' ? '@@input' : value['SubScore1']);
+                            var input_s2 = (scoreType === 'SubScore2' ? '@@input' : value['SubScore2']);
+                            var input_s3 = (scoreType === 'SubScore3' ? '@@input' : value['SubScore3']);
+
                             ret.push(
-                                '        <input type="text" name="s' + (value.StudentNumber || '') + '" class="{digits:true, range:[0, 100]} input-large" id="' + (value.SCSelectID || '') + '"' +
-                                ' placeholder="成績..." value="' + (value[scoreType] || '') + '">'
+                                '    <input type="text" name="s' + (value.StudentNumber || '') + '"' +
+                                ' class="{digits:true, range:[0, 100]} input-large"' +
+                                ' id="' + (value.SCSelectID || '') + '"' +
+                                ' placeholder="成績..." value="' + (value[scoreType] || '') + '"'
                             );
+
+                            if (scoreType !== 'Score') {
+                                ret.push(' data-s1="' + input_s1 + '"' +
+                                    ' data-s2="' + input_s2 + '"' +
+                                    ' data-s3="' + input_s3 + '"' +
+                                    ' title="試算達60的最低評分：' + (_gg.funMinScore(input_s1, input_s2, input_s3) || '') + '"'
+                                );
+                            }
+
+                            ret.push('>');
+
+                            // 除了學期成績，皆列出試算學期成績
+                            if (scoreType !== 'Score') {
+                                ret.push('<span class="my-Unofficial-title">試算 = ' +
+                                    '<span class="my-Unofficial">' +
+                                    (_gg.funWeightScore(value.SubScore1, value.SubScore2, value.SubScore3) || '') +
+                                    '</span></span>'
+                                );
+                            }
                         }
 
                         ret.push(
-                                '    </div>' +
-                                '</div>'
-                            );
+                            '    </div>' +
+                            '</div>'
+                        );
                     });
                 }
                 $('#editModal').find('h3').html(edit_title).end().find('fieldset').html(ret.join(''));
@@ -110,7 +136,7 @@ jQuery(function () {
         }
     });
 
-    // TODO: 登錄資料上下鍵、Enter鍵切換輸入框
+    // 登錄資料上下鍵、Enter鍵切換輸入框
     $('#editModal').on('keyup', 'input:text', function(e) {
         if (e.which === 38) {
             $(this).parent().parent().prevAll().find('input:text').first().focus();
@@ -118,10 +144,17 @@ jQuery(function () {
         if (e.which === 40 || e.which === 13) {
             $(this).parent().parent().nextAll().find('input:text').first().focus();
         }
+
+        if (this.type === 'text') {
+            var s1 = ($(this).attr('data-s1') === '@@input') ? $(this).val() : $(this).attr('data-s1');
+            var s2 = ($(this).attr('data-s2') === '@@input') ? $(this).val() : $(this).attr('data-s2');
+            var s3 = ($(this).attr('data-s3') === '@@input') ? $(this).val() : $(this).attr('data-s3');
+            $(this).closest('.controls').find('.my-Unofficial').html(_gg.funWeightScore(s1, s2, s3));
+        }
     });
 });
 
-// TODO: 錯誤訊息
+// 錯誤訊息
 _gg.set_error_message = function(select_str, serviceName, error) {
     var tmp_msg = '';
     if (error !== null) {
@@ -147,12 +180,16 @@ _gg.set_error_message = function(select_str, serviceName, error) {
     }
 };
 
-// TODO: 載入資料
+// 載入資料
 _gg.loadData = function () {
-    // TODO: 取得重補修期間名冊
+    // 取得重補修期間名冊
     _gg.connection.send({
         service: "_.GetTimeList",
-        body: '<Request><Condition></Condition></Request>',
+        body: {
+            Request: {
+                Condition: ''
+            }
+        },
         result: function (response, error, http) {
             if (error !== null) {
                 _gg.set_error_message('#mainMsg', 'GetTimeList', error);
@@ -167,7 +204,7 @@ _gg.loadData = function () {
         }
     });
 
-    // TODO: 取得比重
+    // 取得比重
     _gg.connection.send({
         service: "_.GetWeight",
         body: '',
@@ -188,7 +225,7 @@ _gg.loadData = function () {
         }
     });
 
-    // TODO: 判斷是否為開放期間
+    // 判斷是否為開放期間
     var check_opening = function(data) {
         var ret = {};
         if (data.StartDate && data.EndDate) {
@@ -209,7 +246,7 @@ _gg.loadData = function () {
         return ret;
     };
 
-    // TODO: 取得開放期間
+    // 取得開放期間
     _gg.connection.send({
         service: "_.GetScoreInputDate",
         body: '',
@@ -258,10 +295,14 @@ _gg.loadData = function () {
         }
     });
 
-    // TODO: 重補修授課課程清單
+    // 重補修授課課程清單
     _gg.connection.send({
         service: "_.GetCourse",
-        body: '<Request><Condition></Condition></Request>',
+        body: {
+            Request: {
+                Condition: ''
+            }
+        },
         result: function (response, error, http) {
             if (error !== null) {
                 _gg.set_error_message('#mainMsg', 'GetCourse', error);
@@ -278,7 +319,7 @@ _gg.loadData = function () {
                     $('#changeCourse').html(items.join(''));
                     _gg.GetScore(tmp_courseID);
                 } else {
-                    $('#changeCourse').remove();
+                    $('#changeCourse').parent().remove();
                     $('#score_list').html('您無重補修授課資料！');
                 }
             }
@@ -287,13 +328,19 @@ _gg.loadData = function () {
 };
 
 
-// TODO: 載入學生成績
+// 載入學生成績
 _gg.GetScore = function (courseID) {
     if (courseID) {
         if (!_gg.col_courses[courseID]) {
             _gg.connection.send({
                 service: "_.GetSCSelect",
-                body: '<Request><Condition><CourseID>' + courseID + '</CourseID></Condition></Request>',
+                body: {
+                    Request: {
+                        Condition: {
+                            CourseID: courseID
+                        }
+                    }
+                },
                 result: function (response, error, http) {
                     if (error !== null) {
                         _gg.set_error_message('#mainMsg', 'GetSCSelect', error);
@@ -326,7 +373,7 @@ _gg.GetScore = function (courseID) {
     }
 };
 
-// TODO: 成績列表
+// 成績列表
 _gg.SetScore = function (courseID) {
     if (courseID) {
         var students = _gg.col_courses[courseID].Students;
@@ -355,7 +402,7 @@ _gg.SetScore = function (courseID) {
         var ret = items.join('');
         if (ret) {
             $('#score_list tbody').html(ret);
-            // TODO: 扣考 tooltip
+            // 扣考 tooltip
             $('#score_list tr.my-noexam').tooltip();
         } else {
             $('#score_list tbody').html('<tr><td colspan="10">無學生資料</td></tr>');
@@ -363,10 +410,10 @@ _gg.SetScore = function (courseID) {
     }
 };
 
-// TODO: 試算學期成績
+// 試算學期成績
 _gg.funWeightScore = function (SubScore1, SubScore2, SubScore3) {
     if (_gg.weight) {
-        var a = 0, b = 0, c = 0, d = 0;
+        var a = 0, b = 0, c = 0;
         if ($.isNumeric(SubScore1) && $.isNumeric(_gg.weight.SS1Weight)) {
             a = parseInt(SubScore1, 10) * parseInt(_gg.weight.SS1Weight, 10);
         }
@@ -382,8 +429,42 @@ _gg.funWeightScore = function (SubScore1, SubScore2, SubScore3) {
     return 0;
 };
 
+// 本次成績若要使試算成績達60分，最低需評幾分
+_gg.funMinScore = function (SubScore1, SubScore2, SubScore3) {
+    // 目前評分項目，請傳入「@@input」
+    if (_gg.weight) {
+        var total_other_score = 0;
+        var input_weight = 0;
+        if (SubScore1 !== '@@input') {
+            if ($.isNumeric(SubScore1) && $.isNumeric(_gg.weight.SS1Weight)) {
+                total_other_score += parseInt(SubScore1, 10) * parseInt(_gg.weight.SS1Weight, 10);
+            }
+        } else {
+            input_weight = _gg.weight.SS1Weight;
+        }
+        if (SubScore2 !== '@@input') {
+            if ($.isNumeric(SubScore2) && $.isNumeric(_gg.weight.SS2Weight)) {
+                total_other_score += parseInt(SubScore2, 10) * parseInt(_gg.weight.SS2Weight, 10);
+            }
+        } else {
+            input_weight = _gg.weight.SS2Weight;
+        }
+        if (SubScore3 !== '@@input') {
+            if ($.isNumeric(SubScore3) && $.isNumeric(_gg.weight.SS3Weight)) {
+                total_other_score += parseInt(SubScore3, 10) * parseInt(_gg.weight.SS3Weight, 10);
+            }
+        } else {
+            input_weight = _gg.weight.SS3Weight;
+        }
 
-// TODO: 儲存成績
+        input_weight = ($.isNumeric(input_weight)) ? parseInt(input_weight, 10) : 0;
+
+        return Math.ceil((5950 - total_other_score) / input_weight);
+    }
+    return 0;
+};
+
+// 儲存成績
 _gg.SaveSorce = function () {
 
     var courseid, scoreType;
@@ -448,5 +529,4 @@ _gg.SaveSorce = function () {
             }
         }
     }
-
 };

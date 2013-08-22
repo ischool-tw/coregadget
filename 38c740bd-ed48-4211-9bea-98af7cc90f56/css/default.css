@@ -56,3 +56,12 @@ input[type="text"].error-remark {
 .table tbody tr.my-noexam span {
   padding-top: 5px;
 }
+.form-horizontal .control-label {
+  width: 110px;
+}
+.form-horizontal .controls {
+  margin-left: 120px;
+}
+.my-Unofficial-title {
+  margin-left: 5px;
+}
