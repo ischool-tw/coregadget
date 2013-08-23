@@ -102,10 +102,18 @@ jQuery(function () {
                             );
 
                             if (scoreType !== 'Score') {
+                                var minScore = _gg.funMinScore(input_s1, input_s2, input_s3);
+                                if (minScore > 100) {
+                                    minScore = '滿分亦無法讓試算達60分';
+                                } else if (minScore < 0) {
+                                    minScore = '試算已達60分';
+                                } else {
+                                    minScore = '試算達60分的最低評分：' + minScore;
+                                }
                                 ret.push(' data-s1="' + input_s1 + '"' +
                                     ' data-s2="' + input_s2 + '"' +
                                     ' data-s3="' + input_s3 + '"' +
-                                    ' title="試算達60的最低評分：' + (_gg.funMinScore(input_s1, input_s2, input_s3) || '') + '"'
+                                    ' title="' + minScore + '"'
                                 );
                             }
 
