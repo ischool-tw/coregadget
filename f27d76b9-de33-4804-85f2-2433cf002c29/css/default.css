@@ -39,11 +39,11 @@ input[type="color"],
 .my-student-list:hover {
   cursor: pointer;
 }
-#examTable tr + th:nth-child(1),
-#examTable tr + th:nth-child(3) {
+#examTable thead tr:first th:nth-child(1),
+#examTable thead tr:first th:nth-child(3) {
   width: 13%;
 }
-#examTable tr + th:nth-child(2) {
+#examTable thead tr:first th:nth-child(2) {
   width: 10%;
 }
 #examTable thead tr + tr th {

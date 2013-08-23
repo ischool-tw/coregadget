@@ -326,7 +326,7 @@ ScoreManager = function() {
                 tmp_score = sample;
             }
 
-console.log(tmp_score);
+
             _connection_score.send({
                 service: "beta.UpdateSubExamScore",
                 body: {

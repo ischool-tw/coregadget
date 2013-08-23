@@ -46,14 +46,16 @@ table .my-dropdown
 }
 
 #examTable {
-  tr + th:nth-child(1), tr + th:nth-child(3) {
-    width: 13%;
-  }
-  tr + th:nth-child(2) {
-    width: 10%;
-  }
-  thead tr + tr th {
-    width: 7%;
+  thead {
+    tr:first th:nth-child(1), tr:first th:nth-child(3) {
+      width: 13%;
+    }
+    tr:first th:nth-child(2) {
+      width: 10%;
+    }
+    tr + tr th {
+      width: 7%;
+    }
   }
   .my-focus-student {
     td {
