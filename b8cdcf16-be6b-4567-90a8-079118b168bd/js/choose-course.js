@@ -102,7 +102,13 @@ jQuery(function () {
             }
         } else if (action_type === 'save0') {
             if (vm.sc_confirm() === true) {
-                alert('您已進行過確認');
+                title = '確認最終選課結果';
+                html_txt = '<p>您已在 ' + vm.sc_date_confirm() + ' 進行過確認</p>';
+
+                $('#myModal').find('h3').html(title)
+                    .end().find('.modal-body').html(html_txt).addClass('alert-danger')
+                    .end().find('#save-data').hide()
+                    .end().modal('show');
             } else {
                 title = '確認最終選課結果';
                 html_txt = '<p>送出後不能再列印加退選單，您確定要送出嗎？</p>';
@@ -111,7 +117,18 @@ jQuery(function () {
                     .end().find('.modal-body').html(html_txt).addClass('alert-danger')
                     .end().find('#save-data').show().attr('action-type', 'reg-confirm')
                     .end().modal('show');
+            }
+        } else if (action_type === 'printCourse') {
+            if (vm.sc_confirm() === true) {
+                title = '列印加退選單';
+                html_txt = '<p>您已於 ' + vm.sc_date_confirm() + ' 進行確認，請先致電EMBA辦公室進行註銷，才能列印加退選單</p>';
 
+                $('#myModal').find('h3').html(title)
+                    .end().find('.modal-body').html(html_txt).addClass('alert-danger')
+                    .end().find('#save-data').hide()
+                    .end().modal('show');
+            } else {
+                vm.printCourse();
             }
         }
     });
@@ -129,7 +146,7 @@ jQuery(function () {
                     service: "_.GetWebUrl",
                     body: {
                         Request: {
-                            Name: '課程規劃'
+                            Name: '課程計劃'
                         }
                     },
                     result: function (response, error, http) {
@@ -881,7 +898,7 @@ jQuery(function () {
 
             check_add_quit_btn : function() {
                 if ($('#sa01 tr.my-error').length > 0) {
-                    $('#sa01 button[ac-type=save1]').attr('disabled', true).html('不得重複加選').tooltip('show');
+                    $('#sa01 button[ac-type=save1]').attr('disabled', true).html('衝堂或不得重複加選').tooltip('show');
                 } else {
                     $('#sa01 button[ac-type=save1]').attr('disabled', false).html('送出').tooltip('hide');
                 }
@@ -1315,7 +1332,7 @@ ko.bindingHandlers.conflict_list = {
             $elem.attr('rel', 'tooltip');
             $elem.tooltip({
                 placement :'right',
-                title     : '與「' + title.join(', ') + '」不得重複加選'
+                title     : '與「' + title.join(', ') + '」衝堂或不得重複加選'
             });
         }
     }
