@@ -538,6 +538,7 @@ jQuery(function () {
             sc__confirm_load : ko.observable(false),
             sc_confirm : ko.observable(false),
             sc_date_confirm : ko.observable(''),
+            sc_msg_received : ko.observable(''),
             get_registration_confirm : function() {
                 var self = MyViewModel;
 
@@ -559,7 +560,10 @@ jQuery(function () {
                             if (response.Response && response.Response.Confirm) {
                                 if (response.Response.Confirm.Confirm === 't') {
                                     self.sc_confirm(true);
-                                    self.sc_date_confirm(response.Response.Confirm.ConfirmDate)
+                                    self.sc_date_confirm(response.Response.Confirm.ConfirmDate);
+                                }
+                                if (response.Response.Confirm.ReceivedDate) {
+                                    self.sc_msg_received('EMBA辦公室已於' + response.Response.Confirm.ReceivedDate + '收到' + self.student.StudentName() + '同學的加退選單');
                                 }
                             }
                         }
@@ -783,104 +787,101 @@ jQuery(function () {
             // 列印
             printCourse : function() {
                 var self = MyViewModel;
-                if (self.sc_confirm() === true) {
-                    alert('您已於' + self.sc_date_confirm() + '進行確認，請先致電EMBA辦公室進行註銷，才能列印加退選單');
-                } else {
-                    var content = '', page_count;
-                    conn_log.ready(function(){
-                        _gg.connection.send({
-                            service: "_.SetRegistrationPrint",
-                            body: '<Request><SetStatus></SetStatus></Request>',
-                            result: function (response, error, http) {
-                                if (error !== null) {
-                                    $('#save-data').button('reset');
-                                    $('#myModal [data-dismiss="modal"]').show();
-                                    _gg.set_error_message('#errorMessage', 'SetRegistrationPrint', error);
-                                } else {
-                                    if (response.Result && response.Result.ExecuteCount) {
-                                        if (parseInt(response.Result.EffectRows, 10) > 0) {
-                                            gadget.getContract("emba.student").send({
-                                                service: "public.AddLog",
-                                                body: {
-                                                    Request: {
-                                                        Log: {
-                                                            Actor: conn_log.getUserInfo().UserName,
-                                                            ActionType: "列印加退選單",
-                                                            Action: "點選列印加退選單",
-                                                            TargetCategory: "student",
-                                                            ClientInfo: {
-                                                                ClientInfo: {}
-                                                            },
-                                                            ActionBy: "ischool web 選課小工具",
-                                                            Description: '學生「' + self.student.StudentName() + '」點選列印加退選單'
-                                                        }
+                var content = '', page_count;
+                conn_log.ready(function(){
+                    _gg.connection.send({
+                        service: "_.SetRegistrationPrint",
+                        body: '<Request><SetStatus></SetStatus></Request>',
+                        result: function (response, error, http) {
+                            if (error !== null) {
+                                $('#save-data').button('reset');
+                                $('#myModal [data-dismiss="modal"]').show();
+                                _gg.set_error_message('#errorMessage', 'SetRegistrationPrint', error);
+                            } else {
+                                if (response.Result && response.Result.ExecuteCount) {
+                                    if (parseInt(response.Result.EffectRows, 10) > 0) {
+                                        gadget.getContract("emba.student").send({
+                                            service: "public.AddLog",
+                                            body: {
+                                                Request: {
+                                                    Log: {
+                                                        Actor: conn_log.getUserInfo().UserName,
+                                                        ActionType: "列印加退選單",
+                                                        Action: "點選列印加退選單",
+                                                        TargetCategory: "student",
+                                                        ClientInfo: {
+                                                            ClientInfo: {}
+                                                        },
+                                                        ActionBy: "ischool web 選課小工具",
+                                                        Description: '學生「' + self.student.StudentName() + '」點選列印加退選單'
                                                     }
                                                 }
-                                            });
-                                        }
+                                            }
+                                        });
                                     }
                                 }
                             }
-                        });
+                        }
                     });
+                });
 
-                    if (self.all_course().length <= 14) {
-                        content = $('div.my-print-page').html();
-                    } else {
-                        $('.my-print-page tbody[data-type=none]').remove();
-                        page_count = (parseInt(self.sc_attend().length / 28, 10)) + (self.sc_attend().length % 28 > 14 ? 2 : 1) ;
+                if (self.all_course().length <= 14) {
+                    content = $('div.my-print-page').html();
+                } else {
+                    $('.my-print-page tbody[data-type=none]').remove();
+                    page_count = (parseInt(self.sc_attend().length / 28, 10)) + (self.sc_attend().length % 28 > 14 ? 2 : 1) ;
 
-                        for (i=1; i<=page_count; i+=1) {
-                            content += $('.my-print-page > div[data-area=title]').html();
-                            if (page_count > 1) { content += '<div class="my-pages">頁次：' + i + '/' + page_count + '</div>' };
+                    for (i=1; i<=page_count; i+=1) {
+                        content += $('.my-print-page > div[data-area=title]').html();
+                        if (page_count > 1) { content += '<div class="my-pages">頁次：' + i + '/' + page_count + '</div>' };
 
-                            var start = 28 * (i - 1);
-                            var end   = (28 * i ) - 1;
-                            var page = $('.my-print-page > div[data-area=course]').clone();
-                            $(page).find('tbody tr').each(function(index, item) {
-                                if (!(index >= start && index <= end)) {
-                                    $(item).remove();
-                                }
-                            });
-                            content += $(page).html();
+                        var start = 28 * (i - 1);
+                        var end   = (28 * i ) - 1;
+                        var page = $('.my-print-page > div[data-area=course]').clone();
+                        $(page).find('tbody tr').each(function(index, item) {
+                            if (!(index >= start && index <= end)) {
+                                $(item).remove();
+                            }
+                        });
+                        content += $(page).html();
 
-                            if (i <= (parseInt(self.sc_attend().length / 28, 10))) {
+                        if (i <= (parseInt(self.sc_attend().length / 28, 10))) {
+                            content += "<P style='page-break-after:always'>&nbsp;</P>";
+                        } else {
+                            if (self.sc_attend().length % 28 > 14) {
                                 content += "<P style='page-break-after:always'>&nbsp;</P>";
-                            } else {
-                                if (self.sc_attend().length % 28 > 14) {
-                                    content += "<P style='page-break-after:always'>&nbsp;</P>";
-                                }
                             }
                         }
-                        if (self.sc_attend().length % 28 > 14) {
-                            content += $('.my-print-page > div[data-area=title]').html();
-                            if (page_count > 1) { content += '<div class="my-pages">頁次：' + page_count + '/' + page_count + '</div>' };
-                            content += $('.my-print-page > div[data-area=sign]').html();
-                        } else {
-                            content += $('.my-print-page > div[data-area=sign]').html();
-                        }
                     }
-
-                    var tmp = $(content);
-                    $(tmp).find('#printEndTime').append(self.currentData.EndTime() || '');
-                    content = $('<div>').append(tmp).html();
-
-                    content = "<!DOCTYPE html>\n" +
-                            "<html>\n" +
-                            "<head>\n" +
-                            "<title>加退選單</title>\n" +
-                            "<link type=\"text/css\" rel=\"stylesheet\" href=\"css/default.css\"/>\n" +
-                            "</head>\n" +
-                            "<body style='width:880px;padding:40px 20px' onload=\"window.print();\">\n" +
-                            "<div class='my-print-page'>" +
-                            content +
-                            "</div>\n  </body>\n</html>";
-                    var doc = window.open('about:blank', '_blank', '');
-                    doc.document.open();
-                    doc.document.write(content);
-                    doc.document.close();
-                    doc.focus();
+                    if (self.sc_attend().length % 28 > 14) {
+                        content += $('.my-print-page > div[data-area=title]').html();
+                        if (page_count > 1) { content += '<div class="my-pages">頁次：' + page_count + '/' + page_count + '</div>' };
+                        content += $('.my-print-page > div[data-area=sign]').html();
+                    } else {
+                        content += $('.my-print-page > div[data-area=sign]').html();
+                    }
                 }
+
+                var tmp = $(content);
+                $(tmp).find('#printEndTime').append(self.currentData.EndTime() || '');
+                content = $('<div>').append(tmp).html();
+
+                content = "<!DOCTYPE html>\n" +
+                        "<html>\n" +
+                        "<head>\n" +
+                        "<title>加退選單</title>\n" +
+                        "<link type=\"text/css\" rel=\"stylesheet\" href=\"css/default.css\"/>\n" +
+                        "</head>\n" +
+                        "<body style='width:880px;padding:40px 20px' onload=\"window.print();\">\n" +
+                        "<div class='my-print-page'>" +
+                        content +
+                        "</div>\n  </body>\n</html>";
+                var doc = window.open('about:blank', '_blank', '');
+                doc.document.open();
+                doc.document.write(content);
+                doc.document.close();
+                doc.focus();
+
             }
             ,
             reset_add_quit : function() {
