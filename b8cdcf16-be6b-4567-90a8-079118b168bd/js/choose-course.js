@@ -563,7 +563,7 @@ jQuery(function () {
                                     self.sc_date_confirm(response.Response.Confirm.ConfirmDate);
                                 }
                                 if (response.Response.Confirm.ReceivedDate) {
-                                    self.sc_msg_received('EMBA辦公室已於' + response.Response.Confirm.ReceivedDate + '收到' + self.student.StudentName() + '同學的加退選單');
+                                    // self.sc_msg_received('EMBA辦公室已於' + response.Response.Confirm.ReceivedDate + '收到' + self.student.StudentName() + '同學的加退選單');
                                 }
                             }
                         }
