@@ -24,14 +24,15 @@
       <div id="mainMsg"></div>
       <script type="text/html" id="Item1Tmpl">
         <div class="my-sure" data-bind="if: currentData.Item() == '1' || currentData.Item() == '2'">
-            <button type="button" class="btn btn-success" ac-type="save1" data-toggle="modal" data-target="#myModal" rel="tooltip" title="紅底為不得重複加選" data-placement="left">送出</button>
+            <button type="button" class="btn btn-success" ac-type="save1" data-toggle="modal" data-target="#myModal" rel="tooltip" title="紅底為衝堂或不得重複加選" data-placement="left">送出</button>
             <button type="button" class="btn" data-bind="click: reset_add_quit">重設</button>
         </div>
       </script>
       <script type="text/html" id="Item0Tmpl">
         <div class="my-sure" data-bind="visible: sc__confirm_load()">
             <button type="button" class="btn btn-success" ac-type="save0" data-target="#myModal">確認最終選課結果</button>
-            <button type="button" class="btn" data-bind="click: printCourse">列印加退選單</button>
+            <button type="button" class="btn" ac-type="printCourse" data-target="#myModal">列印加退選單</button>
+            <span class="my-received-msg" data-bind="text: sc_msg_received"></span>
         </div>
       </script>
       <div class="row-fluid">
