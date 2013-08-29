@@ -272,9 +272,9 @@ var CreditsManager = function() {
             $('#competition').val(curr_credits.Competition || '0');
             $('#verification').val(curr_credits.Verification || '0');
             $('#merit').html(curr_credits.Merit || '0');
-            $('#meritA').val(curr_credits.Detail.MeritA || '0');
-            $('#meritB').val(curr_credits.Detail.MeritB || '0');
-            $('#meritC').val(curr_credits.Detail.MeritC || '0');
+            $('#meritA').val((curr_credits.Detail && curr_credits.Detail.MeritA) ? curr_credits.Detail.MeritA : '0');
+            $('#meritB').val((curr_credits.Detail && curr_credits.Detail.MeritB) ? curr_credits.Detail.MeritB : '0');
+            $('#meritC').val((curr_credits.Detail && curr_credits.Detail.MeritC) ? curr_credits.Detail.MeritC : '0');
             $('#term').val(curr_credits.Term || '0');
         } else {
             $('#balanced').after(curr_credits.Balanced || '').remove();
