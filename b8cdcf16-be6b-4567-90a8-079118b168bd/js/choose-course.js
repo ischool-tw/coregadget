@@ -278,6 +278,7 @@ jQuery(function () {
                                 } else if (self.currentData.Item() === 's2' || self.currentData.Item() === 's3') {
                                     self.get_conflict_course();
                                 } else if (self.currentData.Item() === 's4') {
+                                    self.get_registration_confirm();
                                     self.get_sc_attend();
                                 }
                             }
@@ -560,16 +561,24 @@ jQuery(function () {
                             if (response.Response && response.Response.Confirm) {
                                 if (response.Response.Confirm.Confirm === 't') {
                                     self.sc_confirm(true);
-                                    self.sc_date_confirm(response.Response.Confirm.ConfirmDate);
+                                    if (response.Response.Confirm.ConfirmDate) {
+                                        var d1 = new Date(response.Response.Confirm.ConfirmDate);
+                                        self.sc_date_confirm(d1.getFullYear() + '/' + (d1.getMonth() + 1) + '/' + d1.getDate());
+                                    }
                                 }
                                 if (response.Response.Confirm.ReceivedDate) {
-                                    // self.sc_msg_received('EMBA辦公室已於' + response.Response.Confirm.ReceivedDate + '收到' + self.student.StudentName() + '同學的加退選單');
+                                    if (response.Response.Confirm.ReceivedDate) {
+                                        var d2 = new Date(response.Response.Confirm.ReceivedDate);
+                                        var rDate = d2.getFullYear() + '/' + (d2.getMonth() + 1) + '/' + d2.getDate() + ' ';
+                                        rDate += (d2.getHours().toString().length == 1 ? '0' : '') + d2.getHours();
+                                        rDate += ":" + (d2.getMinutes().toString().length == 1 ? '0' : '') + d2.getMinutes();
+                                    }
+                                    self.sc_msg_received('EMBA辦公室已於 ' + rDate + ' 收到' + self.student.StudentName() + '同學的加退選單');
                                 }
                             }
                         }
                     }
                 });
-
             },
             set_registration_confirm : function() {
                 var self = MyViewModel;
@@ -1198,6 +1207,7 @@ jQuery(function () {
                 var Status;
 
                 if (self.currentData.Item()) {
+                    // 在階段內
                     $('#sa01 button[ac-type=save1]').tooltip({
                         trigger : "manual"
                     });
@@ -1244,26 +1254,42 @@ jQuery(function () {
                         }
                     }
 
-                    $('#sa01 .memb-list, #sa06 .memb-list').remove();
                     switch (Status) {
                         case 1:
+                            $('#sa01 .memb-list, #sa06 .memb-list').remove();
                             $('#sa01').html('<p>目前尚未開放選課</p>');
                             $('#sa02, #sa03').html('<p>目前無資料</p>');
                             MyViewModel.currentData.Item('s1');
                             break;
                         case 2:
+                            $('#sa01 .memb-list, #sa06 .memb-list').remove();
                             $('#sa01').html('<p>目前尚未開放第二階段選課</p>');
                             MyViewModel.currentData.Item('s2');
                             break;
                         case 3:
+                            $('#sa01 .memb-list, #sa06 .memb-list').remove();
                             $('#sa06').html('<p>尚未公告選課最終結果</p>');
                             MyViewModel.currentData.Item('s3');
                             break;
                         case 4:
+                            $('#sa01 .memb-list, button[ac-type="save0"], button[ac-type="printCourse"]').remove();
                             $('#sa02, #sa03').html('<p>本學期選課已結束，目前尚未開放下一學期選課</p>');
+                            // 收到加退選單資訊，呈現到加退選結束時間+10日
+                            if (_all_opening_data['Level0_EndTime']) {
+                                var L0EndTime = new Date(_all_opening_data['Level0_EndTime']);
+                                var level0addDays = new Date(L0EndTime.getFullYear(),L0EndTime.getMonth(),L0EndTime.getDate()+11);
+                                var today = new Date();
+                                if (today > level0addDays) {
+                                    $('#sa06 .memb-list').remove();
+                                }
+                            } else {
+                                $('#sa06 .memb-list').remove();
+                            }
+
                             MyViewModel.currentData.Item('s4');
                             break;
                         default:
+                            $('#sa01 .memb-list, #sa06 .memb-list').remove();
                             $('h1').html('選課');
                             $('#myTabContent').html('<p>目前尚未開放選課</p>');
                     }
