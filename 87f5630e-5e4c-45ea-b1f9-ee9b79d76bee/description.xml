@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="校長設定" description="管理員-校長設定">
-    <Title lang="zh-TW">校長設定</Title>
+  <ModulePrefs title="比序積分" description="學生-比序積分">
+    <Title lang="zh-TW">比序積分</Title>
     <Icon>icon.png</Icon>
     <Mobile />
     <Title lang="zh-CN">
