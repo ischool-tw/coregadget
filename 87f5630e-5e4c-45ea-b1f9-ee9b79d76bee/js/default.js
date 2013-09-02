@@ -46,9 +46,7 @@ $(function(){
                 max: 10,
                 customrule: {
                     myrule: function(value) {
-                        var correct = ['0','2','4','6','8','10','2.5','5','7.5'];
-                        value = value.replace('.0', '');
-                        return ($.inArray(value, correct) === -1) ? false : true;
+                        return (/^\d+(\.\d)?$/.test(value)) ? true : false;
                     }
                 }
             },
@@ -56,29 +54,15 @@ $(function(){
                 required: true,
                 min: 0,
                 max: 20,
-                digits: true,
-                customrule: {
-                    myrule: function(value) {
-                        if (Number(value) < 20) {
-                            return (Number(value) % 3 === 0);
-                        } else {
-                            return true;
-                        }
-                    }
-                }
+                digits: true
             },
             competition: {
                 required: true,
                 min: 0,
                 max: 20,
-                digits: true,
                 customrule: {
                     myrule: function(value) {
-                        if (Number(value) < 20) {
-                            return (Number(value) % 3 === 0);
-                        } else {
-                            return true;
-                        }
+                        return (/^\d+(\.\d\d?)?$/.test(value)) ? true : false;
                     }
                 }
             },
@@ -88,18 +72,10 @@ $(function(){
                 max: 20,
                 digits: true
             },
-            meritA: {
+            merit: {
                 customrule: {
-                    myrule: function() {
-                        var value = $('#merit').text();
-                        if (value) {
-                            if ($.isNumeric(value)) {
-                                if (Number(value) >= 0 || Number(value) <= 20) {
-                                    return true;
-                                }
-                            }
-                        }
-                        return false;
+                    myrule: function(value) {
+                        return (/^\d+(\.\d)?$/.test(value)) ? true : false;
                     }
                 }
             },
@@ -107,12 +83,7 @@ $(function(){
                 required: true,
                 min: 0,
                 max: 10,
-                digits: true,
-                customrule: {
-                    myrule: function(value) {
-                        return Number(value) % 2 === 0;
-                    }
-                }
+                digits: true
             }
         }
     });
@@ -129,45 +100,11 @@ $(function(){
         CreditsManager.setSaveStatus();
         if (e.which === 13 || e.which === 40) {
             // enter:13 ,down:40
-            if ($(this).nextAll('input:text').length > 0) {
-                $(this).nextAll('input:text:first').select().focus();
-            } else {
-                $(this).closest('tr').next('tr').find('input:text:first').select().focus();
-            }
+            $(this).closest('tr').next('tr').find('input:text:first').select().focus();
         } else if (e.which === 38) {
             // up:38
-            if ($(this).prevAll('input:text').length > 0) {
-                $(this).prevAll('input:text:first').select().focus();
-            } else {
-                $(this).closest('tr').prev('tr').find('input:text:last').select().focus();
-            }
+            $(this).closest('tr').prev('tr').find('input:text:last').select().focus();
         }
-    });
-
-    // 獎勵紀錄即時加總
-    $('input:text[id^=merit]').keyup(function(e) {
-        var values = [
-            {
-                x: 5,
-                y: $('#meritA').val() || 0
-            },
-            {
-                x: 2,
-                y: $('#meritB').val() || 0
-            },
-            {
-                x: 0.3,
-                y: $('#meritC').val() || 0
-            }
-        ];
-        var total = 0;
-        $(values).each(function(index, item) {
-            var x = item.x;
-            var y = (/^\d+$/.test(item.y)) ? Number(item.y) : 0;
-            total = $.FloatMath($.FloatMath(x,'*', y), '+', total);
-        });
-        total = (total > 10) ? 10 : total;
-        $('#merit').html(total);
     });
 });
 
@@ -271,10 +208,7 @@ var CreditsManager = function() {
             $('#fitness').val(curr_credits.Fitness || '0');
             $('#competition').val(curr_credits.Competition || '0');
             $('#verification').val(curr_credits.Verification || '0');
-            $('#merit').html(curr_credits.Merit || '0');
-            $('#meritA').val((curr_credits.Detail && curr_credits.Detail.MeritA) ? curr_credits.Detail.MeritA : '0');
-            $('#meritB').val((curr_credits.Detail && curr_credits.Detail.MeritB) ? curr_credits.Detail.MeritB : '0');
-            $('#meritC').val((curr_credits.Detail && curr_credits.Detail.MeritC) ? curr_credits.Detail.MeritC : '0');
+            $('#merit').val(curr_credits.Merit || '0');
             $('#term').val(curr_credits.Term || '0');
         } else {
             $('#balanced').after(curr_credits.Balanced || '').remove();
@@ -282,7 +216,7 @@ var CreditsManager = function() {
             $('#fitness').after(curr_credits.Fitness || '').remove();
             $('#competition').after(curr_credits.Competition || '').remove();
             $('#verification').after(curr_credits.Verification || '').remove();
-            $('#merit').closest('td').html(curr_credits.Merit || '');
+            $('#merit').after(curr_credits.Merit || '').remove();
             $('#term').after(curr_credits.Term || '').remove();
         }
     };
@@ -299,16 +233,11 @@ var CreditsManager = function() {
                         Balanced: $('#balanced').val() || '',
                         Competition: $('#competition').val() || '',
                         Fitness: $('#fitness').val() || '',
-                        Merit: $('#merit').text() || '',
+                        Merit: $('#merit').val() || '',
                         Services: $('#services').val() || '',
                         Term: $('#term').val() || '',
                         Verification: $('#verification').val() || '',
-                        Condition: $('#condition').val() || '',
-                        Detail: {
-                            MeritA: $('#meritA').val() || '',
-                            MeritB: $('#meritB').val() || '',
-                            MeritC: $('#meritC').val() || ''
-                        }
+                        Condition: $('#condition').val() || ''
                     }
                 }
             },

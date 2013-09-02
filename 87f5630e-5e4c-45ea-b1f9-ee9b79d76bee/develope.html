@@ -53,6 +53,7 @@
                     <th>服務學習</th>
                     <td><input class="input-block-level" id="services" name="services" type="text"/></td>
                     <td>
+                      範圍：00.0 - 10.0<br />
                       100學年度入學國中一年級學生，每學期服務滿6小時以上2.5分<br />
                       101學年度起入學國中一年級，每學期服務滿6小時以上2分
                     </td>
@@ -61,13 +62,17 @@
                   <tr>
                     <th>體適能</th>
                     <td><input class="input-block-level" id="fitness" name="fitness" type="text"/></td>
-                    <td>單項中等以上，每學年3分</td>
+                    <td>
+                      範圍：0 - 20<br/>
+                      單項中等以上，每學年3分
+                    </td>
                     <td>上限20分</td>
                   </tr>
                   <tr>
                     <th>競賽表現</th>
                     <td><input class="input-block-level" id="competition" name="competition" type="text"/></td>
                     <td>
+                      範圍：00.00 - 20.00<br/>
                       國際性競賽前8名或全國性競賽前3名者，9分<br />
                       全國性競賽4-8名者或區域性（縣市性）競賽前3名者，6分<br />
                       區域性（縣市性）競賽第4-8名者，3分
@@ -77,18 +82,14 @@
                   <tr>
                     <th>檢定證照</th>
                     <td><input class="input-block-level" id="verification" name="verification" type="text"/></td>
-                    <td></td>
+                    <td>範圍：0 - 20</td>
                     <td>上限20分</td>
                   </tr>
                   <tr>
                     <th>獎勵紀錄</th>
+                    <td><input class="input-block-level" id="merit" name="merit" type="text"/></td>
                     <td>
-                      大功 <input class="input-mini" id="meritA" name="meritA" type="text"/>
-                      小功 <input class="input-mini" id="meritB" name="meritB" type="text"/><br /><br />
-                      嘉獎 <input class="input-mini" id="meritC" name="meritC" type="text"/>
-                      積分：<span id="merit"></span>
-                    </td>
-                    <td>
+                      範圍：00.0 - 10.0<br/>
                       大功，5分<br />
                       小功，2分<br />
                       嘉獎，0.3分
