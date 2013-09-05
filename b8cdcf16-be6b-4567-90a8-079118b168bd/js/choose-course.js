@@ -1265,7 +1265,7 @@ jQuery(function () {
                             $('#sa01 .memb-list, #sa06 .memb-list').remove();
                             $('#sa01').html('<p>目前尚未開放選課</p>');
                             if (_all_opening_data['Level0_BeginTime']) {
-                                basicDate = new Date(_all_opening_data['Level0_BeginTime']);
+                                basicDate = new Date(_all_opening_data['Level1_BeginTime']);
                                 addDays = new Date(basicDate.getFullYear(),basicDate.getMonth(),basicDate.getDate()-6);
                                 if (today < addDays) {
                                     $('#sa02, #sa03').html('<p>目前無資料</p>');
