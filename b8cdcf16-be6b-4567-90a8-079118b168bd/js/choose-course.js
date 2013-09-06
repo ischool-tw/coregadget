@@ -280,6 +280,8 @@ jQuery(function () {
                                 } else if (self.currentData.Item() === 's4') {
                                     self.get_registration_confirm();
                                     self.get_sc_attend();
+                                } else if (self.currentData.Item() === 's5') {
+                                    self.get_conflict_course();
                                 }
                             }
                         }
@@ -1202,12 +1204,11 @@ jQuery(function () {
             // 依學生狀態決定顯示內容
             checkNowStatus : function() {
                 var self = MyViewModel;
-                var tmp_Date = new Date();
-                var Startdate, Enddate
+                var today = new Date();
+                var Startdate, Enddate;
                 var Status;
                 var basicDate;
                 var addDays;
-                var today = new Date();
 
                 if (self.currentData.Item()) {
                     // 在階段內
@@ -1223,7 +1224,7 @@ jQuery(function () {
 
                     if (_all_opening_data['Level0_EndTime']) {
                         Enddate = new Date(_all_opening_data['Level0_EndTime']);
-                        if (Enddate < tmp_Date) {
+                        if (Enddate < today) {
                             Status = 4;
                         }
                     }
@@ -1232,7 +1233,7 @@ jQuery(function () {
                         if (_all_opening_data['Level0_BeginTime']) {
                             Startdate = new Date(_all_opening_data['Level2_EndTime']);
                             Enddate = new Date(_all_opening_data['Level0_BeginTime']);
-                            if (Startdate < tmp_Date && Enddate > tmp_Date) {
+                            if (Startdate < today && Enddate > today) {
                                 Status = 3;
                             }
                         } else {
@@ -1244,33 +1245,36 @@ jQuery(function () {
                         Startdate = new Date(_all_opening_data['Level1_EndTime']);
                         if (_all_opening_data['Level2_BeginTime']) {
                             Enddate = new Date(_all_opening_data['Level2_BeginTime']);
-                            if (Startdate < tmp_Date && Enddate > tmp_Date) {
+                            if (Startdate < today && Enddate > today) {
                                 Status = 2;
                             }
-                        } else if (Startdate < tmp_Date) {
+                        } else if (Startdate < today) {
                             Status = 2;
                         }
                     }
 
                     if (_all_opening_data['Level1_BeginTime']) {
                         Startdate = new Date(_all_opening_data['Level1_BeginTime']);
-                        if (Startdate > tmp_Date) {
-                            if (Startdate)
-                            Status = 1;
+                        addDays = new Date(Startdate.getFullYear(),Startdate.getMonth(),Startdate.getDate()-6);
+                        if (Startdate > today) {
+                            if (today >= addDays) {
+                                Status = 5;
+                            } else {
+                                Status = 1;
+                            }
                         }
                     }
 
                     switch (Status) {
+                        case 5:
+                            $('#sa01 .memb-list, #sa06 .memb-list').remove();
+                            $('#sa01').html('<p>目前尚未開放選課</p>');
+                            MyViewModel.currentData.Item('s5');
+                            break;
                         case 1:
                             $('#sa01 .memb-list, #sa06 .memb-list').remove();
                             $('#sa01').html('<p>目前尚未開放選課</p>');
-                            if (_all_opening_data['Level0_BeginTime']) {
-                                basicDate = new Date(_all_opening_data['Level1_BeginTime']);
-                                addDays = new Date(basicDate.getFullYear(),basicDate.getMonth(),basicDate.getDate()-6);
-                                if (today < addDays) {
-                                    $('#sa02, #sa03').html('<p>目前無資料</p>');
-                                }
-                            }
+                            $('#sa02, #sa03').html('<p>目前無資料</p>');
                             MyViewModel.currentData.Item('s1');
                             break;
                         case 2:
