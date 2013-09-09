@@ -1,5 +1,6 @@
 $(function(){
     $('input:text').hide();
+    $("span[data-type=Opening]").after('<p>參考文件：<a href="http://topic.parenting.com.tw/issue/12yearseducation/criteria/09.pdf" target="_blank">12年國教完全指南</a></p>')
     gadget.onLeave(function() {
         if (!CreditsManager.getSaveStatus()) {
             return '您尚未儲存，確認要離開此網頁嗎?';
@@ -230,14 +231,14 @@ var CreditsManager = function() {
             body: {
                 Request: {
                     Credits: {
-                        Balanced: $('#balanced').val() || '',
-                        Competition: $('#competition').val() || '',
-                        Fitness: $('#fitness').val() || '',
-                        Merit: $('#merit').val() || '',
-                        Services: $('#services').val() || '',
-                        Term: $('#term').val() || '',
-                        Verification: $('#verification').val() || '',
-                        Condition: $('#condition').val() || ''
+                        Balanced: Number($('#balanced').val() || ''),
+                        Competition: Number($('#competition').val() || ''),
+                        Fitness: Number($('#fitness').val() || ''),
+                        Merit: Number($('#merit').val() || ''),
+                        Services: Number($('#services').val() || ''),
+                        Term: Number($('#term').val() || ''),
+                        Verification: Number($('#verification').val() || ''),
+                        Condition: Number($('#condition').val() || '')
                     }
                 }
             },
