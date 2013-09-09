@@ -32,21 +32,19 @@ $ ->
 
 getSemester = () ->
 	gadget.getContract("emba.teacher").send {
-		service: "default.GetSemester",
+		service: "default.GetScoreInputSemester",
 		body: "",
 		result: (response, error, http) ->
-			if response.Result?
-				params.CurrentSchoolYear = response.Result.SystemConfig.DefaultSchoolYear
-				params.CurrentSemester = response.Result.SystemConfig.DefaultSemester
-				params.CurrentSchoolYear = 101
-				params.CurrentSemester = 2
+			if response.InputSemester?
+				params.InputSchoolYear = response.InputSemester.SchoolYear
+				params.InputSemester = response.InputSemester.Semester
 
 				gadget.getContract("emba.teacher").send {
 					service: "default.GetSubjectScoreLock",
 					body: """
 						<Request>
-							<SchoolYear>#{params.CurrentSchoolYear}</SchoolYear>
-							<Semester>#{params.CurrentSemester}</Semester>
+							<SchoolYear>#{params.InputSchoolYear}</SchoolYear>
+							<Semester>#{params.InputSemester}</Semester>
 						</Request>""",
 					result: (response, error, http) ->
 						if response.Result?
@@ -57,14 +55,14 @@ getSemester = () ->
 	}
 
 getCourses = () ->
-	$(".course-select").html "<option value='0'>- 課程 -</option>"
+	$(".course-select").html "<option value='0'>- #{params.InputSchoolYear} 學年度 #{if params.InputSemester is '0' then '夏季' else '第' + params.InputSemester}學期 課程 -</option>"
 	params.courses = []
 	gadget.getContract("emba.teacher").send {
 		service: "default.GetMyCourses",
 		body: """
 			<Request>
-				<SchoolYear>#{params.CurrentSchoolYear}</SchoolYear>
-				<Semester>#{params.CurrentSemester}</Semester>
+				<SchoolYear>#{params.InputSchoolYear}</SchoolYear>
+				<Semester>#{params.InputSemester}</Semester>
 			</Request>""",
 		result: (response, error, http) ->
 			if response.Result?
@@ -73,7 +71,7 @@ getCourses = () ->
 					$(".course-select").append "<option value='#{@CourseID}'>#{@CourseTitle}</option>"
 
 			if params.SubjectScoreLock is 't'
-				$(".course-select").attr 'disabled', 'disabled'
+				$(".course-select").prop 'disabled', true
 	}
 
 getCourseTeacherList = () ->
@@ -90,6 +88,13 @@ getCourseTeacherList = () ->
 	}
 
 bindScores = () ->
+	if params.currentCourse? and params.currentCourse.Confirmed isnt 'true'
+		$(".save").prop "disabled", false
+		$(".upload").prop "disabled", false
+	else
+		$(".save").prop "disabled", true
+		$(".upload").prop "disabled", true
+
 	getCourseTeacherList()
 
 	$(".score-table tbody").html ""
@@ -310,8 +315,8 @@ uploadScore = () ->
 													$(params.courses).each () ->
 													if @CourseID is params.currentCourse.CourseID
 														@Confirmed = "true"
-													$(".save").attr "disabled", "disabled"
-													$(".upload").attr "disabled", "disabled"
+													$(".save").prop "disabled", true
+													$(".upload").prop "disabled", true
 												else
 													alert "上傳成績失敗! 請稍候重試。"
 
@@ -353,14 +358,14 @@ printScore = (type) ->
 			print_pages.push $("<div>#{$(".print-page").html()}</div>") for i in [0...page_count]
 
 			$(print_pages).each (index, page) ->
-				$(page).find(".title").html "<div>臺灣大學 #{params.currentCourse.SchoolYear} 學年度第 #{if params.currentCourse.Semester is '0' then '暑期' else params.currentCourse.Semester} 學期成績報告單</div>"
+				$(page).find(".title").html "<div>臺灣大學 #{params.currentCourse.SchoolYear} 學年度 #{if params.currentCourse.Semester is '0' then '夏季' else '第' + params.currentCourse.Semester}學期成績報告單</div>"
 				$(page).find(".course-info .subject-code").html "課程編號：#{params.currentCourse.NewSubjectCode} (#{params.currentCourse.SubjectCode})"
 				$(page).find(".course-info .subject-name").html "科目名稱：#{params.currentCourse.SubjectName}"
 				$(page).find(".course-info .class-name").html "班次：#{params.currentCourse.ClassName}"
 				$(page).find(".course-info .credit").html "學分：#{params.currentCourse.Credit}"
 				$(page).find(".course-info .course-teacher").html $(".teacher-list").html()
 				$(page).find(".course-info .page-index").html "頁次：#{index + 1} / #{print_pages.length}"
-				$(page).find(".teacher-sign .subject-code").html "課程編號：#{params.currentCourse.NewSubjectCode} (#{params.currentCourse.SubjectCode}"
+				$(page).find(".teacher-sign .subject-code").html "課程編號：#{params.currentCourse.NewSubjectCode} (#{params.currentCourse.SubjectCode})"
 				$(page).find(".teacher-sign .subject-name").html "科目名稱：#{params.currentCourse.SubjectName}"
 				$(page).find(".teacher-sign .class-name").html "班次：#{params.currentCourse.ClassName}"
 				$(page).find(".score-detail table tbody").html ""
