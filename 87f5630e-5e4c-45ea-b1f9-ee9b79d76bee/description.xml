@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="比序積分" description="學生-比序積分">
-    <Title lang="zh-TW">比序積分</Title>
+  <ModulePrefs title="免試入學多元學習成績試算" description="學生-免試入學多元學習成績試算">
+    <Title lang="zh-TW">免試入學多元學習成績試算</Title>
     <Icon>icon.png</Icon>
     <Mobile />
     <Title lang="zh-CN">
