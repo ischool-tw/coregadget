@@ -21,15 +21,15 @@ query_paper = () ->
 						teacherName = []
 						$(item.AdvisorList.Advisor).each () ->
 							teacherName.push @Name if @Name isnt ''
-						
+
 						item.TeacherName = teacherName.join ", "
-						
+
 						items.push """
 							<tr>
 								<td>#{item.StudentName}#{if item.DepartmentName isnt '' then " (#{item.DepartmentName})" else ''}</td>
 								<td>#{item.TeacherName}</td>
 								<td>#{item.PaperName}</td>
-								<td>#{item.SchoolYear} - #{if item.Semester is '0' then '暑假' else item.Semester}</td>
+								<td>#{item.SchoolYear} - #{if item.Semester is '0' then '夏季學期' else item.Semester}</td>
 							</tr>"""
 
 					$("table[target='paper-result'] tbody").html items.join ""
