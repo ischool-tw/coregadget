@@ -26,7 +26,7 @@ bind_payment = () ->
                     items.push """
                         <tr>
                             <td>#{item.SchoolYear}</td>
-                            <td>#{if item.Semester is "0" then "暑假" else "第 #{item.Semester} 學期"}</td>
+                            <td>#{if item.Semester is "0" then "夏季學期" else "第 #{item.Semester} 學期"}</td>
                             <td>已繳費</td>
                             <td>#{if item.ModifiedDate isnt "" then item.ModifiedDate.substr(0, 10) else ""}</td>
                         </tr>""" if item.IsPaied is "1"
