@@ -608,7 +608,7 @@ var SurveyManger = function() {
     //#region 顯示初始畫面
     var initialize = function() {
         if (_school_year && _semester) {
-            $('#tabName').html(_school_year + '學年度' + (_semester === '0' ? '暑期' : '第' + _semester + '學期'));
+            $('#tabName').html(_school_year + '學年度' + (_semester === '0' ? '夏季學期' : '第' + _semester + '學期'));
             getSurveyList(_school_year, _semester);
         }
     };
@@ -800,7 +800,7 @@ var SurveyManger = function() {
                             log_add_content.push(
                                 '學生「' + (_student_name || '') + '」' +
                                 status_name +
-                                '「' + _school_year + '學年度' + (_semester === '0' ? '暑期' : '第' + _semester + '學期') + '」' +
+                                '「' + _school_year + '學年度' + (_semester === '0' ? '夏季學期' : '第' + _semester + '學期') + '」' +
                                 ' 課程「' + (_curr_survey.CourseName || '') + '」' +
                                 ' 老師「' + (_curr_survey.TeacherName || '') + '」' +
                                 '的教學評鑑'
