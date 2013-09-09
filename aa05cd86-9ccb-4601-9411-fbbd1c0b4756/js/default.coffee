@@ -15,7 +15,7 @@ $ ->
 			$("#absence input[target='schoolYear']").val(response.Result.SystemConfig.DefaultSchoolYear)
 			semester = response.Result.SystemConfig.DefaultSemester
 			$("#absence span[target='semester']").attr "value", semester
-			semester = "暑期" if semester is "0"
+			semester = "夏季學期" if semester is "0"
 			semester = "第 1 學期" if semester is "1"
 			semester = "第 2 學期" if semester is "2"
 			$("#absence span[target='semester']").html(semester)
@@ -39,7 +39,7 @@ query_absence = () ->
 					items.push """
 						<tr>
 							<td>#{item.SchoolYear}</td>
-							<td>#{if item.Semester is "0" then "暑假" else "第 #{item.Semester} 學期"}</td>
+							<td>#{if item.Semester is "0" then "夏季學期" else "第 #{item.Semester} 學期"}</td>
 							<td>#{item.CourseName}</td>
 							<td>#{item.SubjectCode}</td>
 							<td>#{item.StartTime.substr(0, 10)}</td>
