@@ -34,7 +34,7 @@ getCurrentCourse = () ->
 									<tr>
 										<td>#{item.SerialNo}</td>
 										<td>#{item.SchoolYear}</td>
-										<td>#{if item.Semester is "0" then "暑期" else item.Semester}</td>
+										<td>#{if item.Semester is "0" then "夏季學期" else item.Semester}</td>
 										<td>#{item.SubjectName}</td>
 										<td>#{item.ClassName}</td>
 										<td>#{item.CourseType}</td>
@@ -109,7 +109,7 @@ getSubjectSemesterScore = () ->
 						<tr>
 							<td>#{item.SerialNo}</td>
 							<td>#{item.SchoolYear}</td>
-							<td>#{if item.Semester is "0" then "暑期" else item.Semester}</td>
+							<td>#{if item.Semester is "0" then "夏季學期" else item.Semester}</td>
 							<td>#{item.SubjectCode}</td>
 							<td>#{item.NewSubjectCode}</td>
 							<td>#{if item.Score is '' and item.SchoolYear is '' and item.Semester is '' then "#{item.SubjectName} / #{item.OffsetCourse}" else item.SubjectName}</td>
