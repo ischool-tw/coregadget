@@ -84,7 +84,7 @@ Attendance = function() {
                     // 加入學生的物件中
                     _student.courses = courses;
 
-                    console.log(courses);
+                    // console.log(courses);
                     setSemeSelectList();
                 } else {
                     $('#Attendance tbody').html('<tr><td colspan="10">目前無資料</td></tr>');
