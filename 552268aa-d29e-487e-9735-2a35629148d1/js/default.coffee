@@ -453,7 +453,7 @@ getAttendance = () ->
             $("#attendance .my-thumbnails").html """
               #{items.join ""}
             """
-            console.log items.join ""
+            # console.log items.join ""
             $("#attendance-container").addClass("hide").html """
               <div>
                 <table class="table table-striped table-bordered my-table">
@@ -604,18 +604,21 @@ getDiscipline = () ->
             $("#demerit-c-detail").removeClass("hide").html "<div>一般：#{sum_merit.dc}</div><div>非明細：#{sum_none_merit.dc}</div>"
             $("#discipline-note").removeClass "hide"
 
-          if items.join("") is ""
+          if items.join("") is "" and have_none is false
             $("#discipline-container").removeClass("hide").html("目前無資料")
           else
-            $("#discipline-view").removeClass "hide"
-            $("#discipline .my-thumbnails").removeClass "hide"
-            $("#discipline-container").html """
-              <table class="table table-striped">
-                <tbody>
-                  #{items.join("")}
-                </tbody>
-              </table>
-            """
+            if have_none is true
+              $("#discipline .my-thumbnails").removeClass "hide"
+            else
+              $("#discipline-view").removeClass "hide"
+              $("#discipline .my-thumbnails").removeClass "hide"
+              $("#discipline-container").html """
+                <table class="table table-striped">
+                  <tbody>
+                    #{items.join("")}
+                  </tbody>
+                </table>
+              """
   }
 
 # 錯誤訊息
