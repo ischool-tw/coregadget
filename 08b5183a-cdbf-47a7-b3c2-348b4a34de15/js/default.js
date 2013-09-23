@@ -428,7 +428,6 @@
               }
               $("#attendance-view").removeClass("hide");
               $("#attendance .my-thumbnails").html("" + (items.join("")));
-              console.log(items.join(""));
               return $("#attendance-container").addClass("hide").html("<div>\n  <table class=\"table table-striped table-bordered my-table\">\n    <thead>" + thead + "</thead>\n    <tbody>" + tbody + "</tbody>\n  </table>\n</div>");
             }
           }
@@ -565,12 +564,16 @@
               $("#demerit-c-detail").removeClass("hide").html("<div>一般：" + sum_merit.dc + "</div><div>非明細：" + sum_none_merit.dc + "</div>");
               $("#discipline-note").removeClass("hide");
             }
-            if (items.join("") === "") {
+            if (items.join("") === "" && have_none === false) {
               return $("#discipline-container").removeClass("hide").html("目前無資料");
             } else {
-              $("#discipline-view").removeClass("hide");
-              $("#discipline .my-thumbnails").removeClass("hide");
-              return $("#discipline-container").html("<table class=\"table table-striped\">\n  <tbody>\n    " + (items.join("")) + "\n  </tbody>\n</table>");
+              if (have_none === true) {
+                return $("#discipline .my-thumbnails").removeClass("hide");
+              } else {
+                $("#discipline-view").removeClass("hide");
+                $("#discipline .my-thumbnails").removeClass("hide");
+                return $("#discipline-container").html("<table class=\"table table-striped\">\n  <tbody>\n    " + (items.join("")) + "\n  </tbody>\n</table>");
+              }
             }
           }
         }
