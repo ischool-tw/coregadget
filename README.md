@@ -1,3 +1,6 @@
+線上測試
+http://ischool-tw.github.com/coregadget/
+
 Core Gadget
 ===========
 
@@ -50,7 +53,7 @@ Core Gadget
 
 * fd56eafc-3601-40a0-82d9-808f72a8272b 新民高中社團(學生)
 * 6080a7c0-60e7-443c-bad7-ecccb3a86bcf 新民高中社團(老師)
-* 8e83b577-17bf-4f1a-aa01-251acc06a5db 新民高中重補修(學生)
+* 8e83b577-17bf-4f1a-aa01-251acc06a5db 新民高中重補修選課(學生)
 * 38c740bd-ed48-4211-9bea-98af7cc90f56 新民高中重補修成績(老師)
 * 34a95f6c-8343-449e-99e2-434de055c553 新民高中團膳滿意度調查(學生)
 * ad9ae540-5103-4d26-a3a5-727233f52ea8 世界高中教學檔案(老師)
@@ -58,6 +61,7 @@ Core Gadget
 * 98d40ccb-e6ea-40cc-8967-9841f77330a8 世界高中評量分析小工具開發(老師)
 * a6c73fd7-120f-45e1-9e42-9c3fdc9da69c 新民高中重補修缺曠查詢(學生、家長)
 * ced3fac8-3b45-461c-9e19-e57c2e0e78da 新民高中重補修缺曠查詢(老師)
+* 87f5630e-5e4c-45ea-b1f9-ee9b79d76bee 高雄免試入學多元學習成績試算(學生)
 
 台大EMBA
 
@@ -102,5 +106,6 @@ Campus Lite
 * 91c910a2-9b16-49ea-a1a7-0fbb1b13a86b 學校基本資料
 * d9384e08-4b1e-4373-b119-7c6146c7a212 校長設定
 
-線上測試
-http://ischool-tw.github.com/coregadget/
+雲端學院
+-----------
+* f27d76b9-de33-4804-85f2-2433cf002c29 小考成績輸入(老師)
