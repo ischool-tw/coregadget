@@ -78,7 +78,7 @@ jQuery(function () {
         body: '<Request><Condition></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message('#mainMsg', 'GetTimeList', error);
+                _gg.set_error_message('#mainMsg', 'GetTimeList', error);
             } else {
                 $(response.TimeList).each(function(index, item) {
                     _gg.timelist = item;
@@ -91,7 +91,7 @@ jQuery(function () {
                         body: '<Request><Condition></Condition></Request>',
                         result: function (response, error, http) {
                             if (error !== null) {
-                                set_error_message('#mainMsg', 'GetSelectCourseDate', error);
+                                _gg.set_error_message('#mainMsg', 'GetSelectCourseDate', error);
                             } else {
                                 var tmp_html;
                                 $(response.SelectCourseDate).each(function(index, item) {
