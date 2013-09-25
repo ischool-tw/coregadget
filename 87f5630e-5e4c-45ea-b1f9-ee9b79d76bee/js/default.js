@@ -10,7 +10,7 @@ $(function(){
 
     $.validator.addMethod("customrule", function(value, element, obj) {
         return obj.myrule(value);
-    }, $.validator.format("請輸入正確的值！"));
+    }, $.validator.format("格式不正確！"));
 
     // 設定成績驗證規則
     $('form').validate({
@@ -36,7 +36,7 @@ $(function(){
                 max: 10,
                 customrule: {
                     myrule: function(value) {
-                        var correct = ['0','3','6','10'];
+                        var correct = ['00','03','06','10'];
                         return ($.inArray(value, correct) === -1) ? false : true;
                     }
                 }
@@ -47,7 +47,7 @@ $(function(){
                 max: 10,
                 customrule: {
                     myrule: function(value) {
-                        return (/^\d+(\.\d)?$/.test(value)) ? true : false;
+                        return (/^\d{2}\.{1}\d{1}$/.test(value)) ? true : false;
                     }
                 }
             },
@@ -55,7 +55,12 @@ $(function(){
                 required: true,
                 min: 0,
                 max: 20,
-                digits: true
+                digits: true,
+                customrule: {
+                    myrule: function(value) {
+                        return (/^\d{2}$/.test(value)) ? true : false;
+                    }
+                }
             },
             competition: {
                 required: true,
@@ -63,7 +68,7 @@ $(function(){
                 max: 20,
                 customrule: {
                     myrule: function(value) {
-                        return (/^\d+(\.\d\d?)?$/.test(value)) ? true : false;
+                        return (/^\d{2}\.{1}\d{2}$/.test(value)) ? true : false;
                     }
                 }
             },
@@ -71,12 +76,19 @@ $(function(){
                 required: true,
                 min: 0,
                 max: 20,
-                digits: true
-            },
-            merit: {
+                digits: true,
                 customrule: {
                     myrule: function(value) {
-                        return (/^\d+(\.\d)?$/.test(value)) ? true : false;
+                        return (/^\d{2}$/.test(value)) ? true : false;
+                    }
+                }
+            },
+            merit: {
+                min: 0,
+                max: 10,
+                customrule: {
+                    myrule: function(value) {
+                        return (/^\d{2}\.{1}\d{1}$/.test(value)) ? true : false;
                     }
                 }
             },
@@ -84,7 +96,12 @@ $(function(){
                 required: true,
                 min: 0,
                 max: 10,
-                digits: true
+                digits: true,
+                customrule: {
+                    myrule: function(value) {
+                        return (/^\d{2}$/.test(value)) ? true : false;
+                    }
+                }
             }
         }
     });
@@ -204,13 +221,13 @@ var CreditsManager = function() {
         if (_isOpening) {
             $('div.my-sure').removeClass('hide');
             $('input:text').show();
-            $('#balanced').val(curr_credits.Balanced || '0');
-            $('#services').val(curr_credits.Services || '0');
-            $('#fitness').val(curr_credits.Fitness || '0');
-            $('#competition').val(curr_credits.Competition || '0');
-            $('#verification').val(curr_credits.Verification || '0');
-            $('#merit').val(curr_credits.Merit || '0');
-            $('#term').val(curr_credits.Term || '0');
+            $('#balanced').val(curr_credits.Balanced || '');
+            $('#services').val(curr_credits.Services || '');
+            $('#fitness').val(curr_credits.Fitness || '');
+            $('#competition').val(curr_credits.Competition || '');
+            $('#verification').val(curr_credits.Verification || '');
+            $('#merit').val(curr_credits.Merit || '');
+            $('#term').val(curr_credits.Term || '');
         } else {
             $('#balanced').after(curr_credits.Balanced || '').remove();
             $('#services').after(curr_credits.Services || '').remove();
@@ -231,14 +248,14 @@ var CreditsManager = function() {
             body: {
                 Request: {
                     Credits: {
-                        Balanced: Number($('#balanced').val() || ''),
-                        Competition: Number($('#competition').val() || ''),
-                        Fitness: Number($('#fitness').val() || ''),
-                        Merit: Number($('#merit').val() || ''),
-                        Services: Number($('#services').val() || ''),
-                        Term: Number($('#term').val() || ''),
-                        Verification: Number($('#verification').val() || ''),
-                        Condition: Number($('#condition').val() || '')
+                        Balanced: ($('#balanced').val() || ''),
+                        Competition: ($('#competition').val() || ''),
+                        Fitness: ($('#fitness').val() || ''),
+                        Merit: ($('#merit').val() || ''),
+                        Services: ($('#services').val() || ''),
+                        Term: ($('#term').val() || ''),
+                        Verification: ($('#verification').val() || ''),
+                        Condition: ($('#condition').val() || '')
                     }
                 }
             },
