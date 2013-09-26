@@ -22,7 +22,6 @@
     <script src="js/bootstrap.js"></script>
     <script src="js/startup.js"></script>
     <script src="js/util.js"></script>
-    <script src="js/setscore.js"></script>
   </head>
   <body>
     <div id="gadget" class="my-page">
@@ -30,16 +29,16 @@
       <div class="row-fluid">
         <div class="span12">
           <h1>成績輸入</h1>
-          <div class="btn-group my-dropdown" id="selectCourse">
+          <div class="btn-group my-dropdown" id="selectCourse" js="selectCourse">
             <a href="javascript:void(0);" class="btn dropdown-toggle" data-toggle="dropdown">
-              <span data-type="menu-name"></span> <span class="caret"></span>
+              <span js="menu-name"></span> <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
             </ul>
           </div>
           <div class="row-fluid">
             <div class="span9">
-              <table class="table table-bordered table-striped" id="examTable">
+              <table class="table table-bordered table-striped" js="examDateTable">
                 <thead>
                   <tr>
                     <th rowspan="2">學號</th>
@@ -64,54 +63,52 @@
               </table>
             </div>
             <div class="span3">
-              <table class="table table-bordered table-striped" id="inputArea">
-                <thead>
-                  <tr>
-                    <th colspan="2">學生資料</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>學號</td>
-                    <td><span id="studentNumber"></span></td>
-                  </tr>
-                  <tr>
-                    <td>座號</td>
-                    <td><input type="text" class="input-block-level" placeholder="座號" id="seatNo"></td>
-                  </tr>
-                  <tr>
-                    <td>姓名</td>
-                    <td><span id="studentName"></span></td>
-                  </tr>
-                </tbody>
-                <thead>
-                  <tr>
-                    <th colspan="2">
-                      <div class="btn-group my-dropdown" id="selectExam">
-                        <a href="javascript:void(0);" class="btn dropdown-toggle" data-toggle="dropdown">
-                          <span data-type="menu-name">第1次段考</span> <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                          <li><a href="javascript:void(0);">第1次段考</a></li>
-                          <li><a href="javascript:void(0);">第2次段考</a></li>
-                          <li><a href="javascript:void(0);">第3次段考</a></li>
-                          <li><a href="javascript:void(0);">第1次小考</a></li>
-                          <li><a href="javascript:void(0);">第2次小考</a></li>
-                          <li><a href="javascript:void(0);">第3次小考</a></li>
-                          <li><a href="javascript:void(0);">第4次小考</a></li>
-                          <li><a href="javascript:void(0);">第5次小考</a></li>
-                        </ul>
-                      </div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>成績</td>
-                    <td><input type="text" class="input-block-level" placeholder="成績" id="inputScore"></td>
-                  </tr>
-                </tbody>
-              </table>
+              <div js="jumpSeatNo">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th colspan="2">學生資料</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>學號</td>
+                      <td><span js="studentNumber"></span></td>
+                    </tr>
+                    <tr>
+                      <td>座號</td>
+                      <td><input type="text" class="input-block-level" placeholder="座號" js="seatNo"></td>
+                    </tr>
+                    <tr>
+                      <td>姓名</td>
+                      <td><span js="studentName"></span></td>
+                    </tr>
+                  </tbody>
+                  <thead>
+                    <tr>
+                      <th colspan="2">
+                        <div class="btn-group my-dropdown" js="selectExam">
+                          <a href="javascript:void(0);" class="btn dropdown-toggle" data-toggle="dropdown">
+                            <span js="examSelect"></span> <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu" js="dropdown-menu">
+                          </ul>
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>成績</td>
+                      <td><input type="text" class="input-block-level" placeholder="成績" js="scoreInput"></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><a href="javascript:void(0);" class="btn" js="save">儲存</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div id="scoreMsg" js="scoreMsg"></div>
+              </div>
             </div>
           </div>
         </div>

@@ -45,7 +45,7 @@ table .my-dropdown
   cursor: pointer;
 }
 
-#examTable {
+[js=examDateTable] {
   thead {
     tr:first th:nth-child(1), tr:first th:nth-child(3) {
       width: 13%;
@@ -57,14 +57,14 @@ table .my-dropdown
       width: 7%;
     }
   }
-  .my-focus-student {
-    td {
-        background-color: #bbe6e2;
-    }
+
+  tbody tr td.my-focus-student {
+    color: white;
+    background: #69C;
   }
 };
 
-#inputArea {
+[js=jumpSeatNo] {
   position: fixed;
   max-width: 230px;
 }

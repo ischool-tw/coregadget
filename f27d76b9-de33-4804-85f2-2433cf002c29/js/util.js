@@ -43,7 +43,8 @@ ScoreManager.Util = function() {
         } else {
             $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + error + "\n</div>");
         }
-        $('body').scrollTop(0);
+        if (select_str === '#mainMsg') { $('body').scrollTop(0); }
+
     };
 
     return {

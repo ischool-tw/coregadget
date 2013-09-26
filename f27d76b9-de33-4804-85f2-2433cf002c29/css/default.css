@@ -39,20 +39,21 @@ input[type="color"],
 .my-student-list:hover {
   cursor: pointer;
 }
-#examTable thead tr:first th:nth-child(1),
-#examTable thead tr:first th:nth-child(3) {
+[js=examDateTable] thead tr:first th:nth-child(1),
+[js=examDateTable] thead tr:first th:nth-child(3) {
   width: 13%;
 }
-#examTable thead tr:first th:nth-child(2) {
+[js=examDateTable] thead tr:first th:nth-child(2) {
   width: 10%;
 }
-#examTable thead tr + tr th {
+[js=examDateTable] thead tr + tr th {
   width: 7%;
 }
-#examTable .my-focus-student td {
-  background-color: #bbe6e2;
+[js=examDateTable] tbody tr td.my-focus-student {
+  color: white;
+  background: #69C;
 }
-#inputArea {
+[js=jumpSeatNo] {
   position: fixed;
   max-width: 230px;
 }

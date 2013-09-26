@@ -1,4 +1,5 @@
 jQuery(function () {
+
     // 切換試別
     $("#selectExam li a").click(function(){
         $('#selectExam span[data-type=menu-name]').html($(this).text());
@@ -8,18 +9,18 @@ jQuery(function () {
         }
     });
 
-    // 登錄資料按下Enter、向下鍵切換輸入框
-    $("#seatNo").on("keyup", function(e) {
-        if (e.which === 13 || e.which === 40) {
-            $("#inputScore").select().focus();
-        }
-    });
 
     // 座號移出焦點後，重設學生
     $("#seatNo").on("focusout", function() {
         if ($(this).val()) { ScoreManager.SetScore.changeStudent(); }
     });
 
+    // 登錄資料按下Enter、向下鍵切換輸入框
+    $("#seatNo").on("keyup", function(e) {
+        if (e.which === 13 || e.which === 40) {
+            $("#inputScore").select().focus();
+        }
+    });
 
     // 成績輸入框按下Enter儲存成績
     $("#inputScore").on("keyup", function(e) {
@@ -51,6 +52,28 @@ jQuery(function () {
             ScoreManager.SetScore.clickStudent(sid);
         }
     });
+
+    // 下一位學生
+    var nextStudent = function(sid) {
+        var _course = ScoreManager.StartUp.getCurrCourse();
+        var next_idx = 0;
+        $(_course.student_order).each(function(index, student) {
+            if (student.StudentId === sid) {
+                if (_course.student_order[index + 1]) {
+                    next_idx = index + 1;
+                }
+                return false;
+            }
+        });
+        $('#seatNo').val(_course.student_order[next_idx].SeatNo);
+        setFormStudent(_course.student_order[next_idx].StudentId);
+
+        // 儲存後，自動跳號後的focus元素
+        var _model = getInputModel();
+        if (_model === 'SeatNo') {
+            $('#seatNo').select().focus();
+        }
+    };
 });
 
 ScoreManager.SetScore = function() {
@@ -198,28 +221,6 @@ ScoreManager.SetScore = function() {
             return false;
         } else {
             set_error_message('#mainMsg', '', '座號不正確');
-        }
-    };
-
-    // 下一位學生
-    var nextStudent = function(sid) {
-        var _course = ScoreManager.StartUp.getCurrCourse();
-        var next_idx = 0;
-        $(_course.student_order).each(function(index, student) {
-            if (student.StudentId === sid) {
-                if (_course.student_order[index + 1]) {
-                    next_idx = index + 1;
-                }
-                return false;
-            }
-        });
-        $('#seatNo').val(_course.student_order[next_idx].SeatNo);
-        setFormStudent(_course.student_order[next_idx].StudentId);
-
-        // 儲存後，自動跳號後的focus元素
-        var _model = getInputModel();
-        if (_model === 'SeatNo') {
-            $('#seatNo').select().focus();
         }
     };
 
