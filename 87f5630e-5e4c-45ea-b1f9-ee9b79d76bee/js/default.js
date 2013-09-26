@@ -9,8 +9,8 @@ $(function(){
     });
 
     $.validator.addMethod("customrule", function(value, element, obj) {
-        return obj.myrule(value);
-    }, $.validator.format("格式不正確！"));
+        return obj.myrule(value, element);
+    }, $.validator.format("格式或內容不正確！"));
 
     // 設定成績驗證規則
     $('form').validate({
@@ -36,7 +36,7 @@ $(function(){
                 max: 10,
                 customrule: {
                     myrule: function(value) {
-                        var correct = ['00','03','06','10'];
+                        var correct = ['0','3','6','10','00','03','06'];
                         return ($.inArray(value, correct) === -1) ? false : true;
                     }
                 }
@@ -47,7 +47,7 @@ $(function(){
                 max: 10,
                 customrule: {
                     myrule: function(value) {
-                        return (/^\d{2}\.{1}\d{1}$/.test(value)) ? true : false;
+                        return (/^\d{0,2}\.{0,1}\d{0,1}$/.test(value)) ? true : false;
                     }
                 }
             },
@@ -58,7 +58,7 @@ $(function(){
                 digits: true,
                 customrule: {
                     myrule: function(value) {
-                        return (/^\d{2}$/.test(value)) ? true : false;
+                        return (/^\d{0,2}$/.test(value)) ? true : false;
                     }
                 }
             },
@@ -68,7 +68,7 @@ $(function(){
                 max: 20,
                 customrule: {
                     myrule: function(value) {
-                        return (/^\d{2}\.{1}\d{2}$/.test(value)) ? true : false;
+                        return (/^\d{0,2}\.{0,1}\d{0,2}$/.test(value)) ? true : false;
                     }
                 }
             },
@@ -79,16 +79,17 @@ $(function(){
                 digits: true,
                 customrule: {
                     myrule: function(value) {
-                        return (/^\d{2}$/.test(value)) ? true : false;
+                        return (/^\d{0,2}$/.test(value)) ? true : false;
                     }
                 }
             },
             merit: {
+                required: true,
                 min: 0,
                 max: 10,
                 customrule: {
                     myrule: function(value) {
-                        return (/^\d{2}\.{1}\d{1}$/.test(value)) ? true : false;
+                        return (/^\d{0,2}\.{0,1}\d{0,1}$/.test(value)) ? true : false;
                     }
                 }
             },
@@ -99,7 +100,7 @@ $(function(){
                 digits: true,
                 customrule: {
                     myrule: function(value) {
-                        return (/^\d{2}$/.test(value)) ? true : false;
+                        return (/^\d{0,2}$/.test(value)) ? true : false;
                     }
                 }
             }
@@ -243,6 +244,42 @@ var CreditsManager = function() {
     var saveCredits = function() {
         $('#mainMsg').html('');
         $('a[data-action="save"]').text("儲存中...").addClass("disabled");
+
+        var toFormatNumber = function(format, value) {
+            value = value || '';
+            var result = value;
+            var frm = format.split('.');
+            var val = value.split('.');
+            var format_left_width = frm[0].length || 0;
+            var format_right_width = (frm[1]) ? frm[1].length : 0;
+            var value_left_width = val[0].length || 0;
+            var value_right_width = (val[1]) ? val[1].length : 0;
+
+            if ((format_left_width-value_left_width) > 0) {
+                for (var i=0; i < format_left_width-value_left_width; i++) {
+                    result = '0' + result;
+                }
+            }
+            if ((format_right_width-value_right_width) > 0) {
+                if (value.indexOf('.') === -1) {
+                    result += '.';
+                }
+                for (var i=0; i < format_right_width-value_right_width; i++) {
+                    result += '0';
+                }
+            }
+            return result;
+        };
+
+        $('#balanced').val(toFormatNumber('00', $('#balanced').val()));
+        $('#competition').val(toFormatNumber('00.00', $('#competition').val()));
+        $('#fitness').val(toFormatNumber('00', $('#fitness').val()));
+        $('#merit').val(toFormatNumber('00.0', $('#merit').val()));
+        $('#services').val(toFormatNumber('00.0', $('#services').val()));
+        $('#term').val(toFormatNumber('00', $('#term').val()));
+        $('#verification').val(toFormatNumber('00', $('#verification').val()));
+        $('#condition').val(toFormatNumber('00', $('#condition').val()));
+
         _connection.send({
             service: "_.UpdateCredits",
             body: {
