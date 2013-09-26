@@ -303,3 +303,8 @@ body {
 	overflow:hidden;
 	line-height:999px;
 }
+
+table thead th {
+	background: #DDDDE1 url(images/thbg.png) 0 0 repeat-x;
+	border-bottom: 1px solid #ACACAC;
+}
