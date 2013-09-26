@@ -81,7 +81,7 @@ h2 {
   -webkit-box-shadow: 0px 0px 6px #999;
   box-shadow: 0px 0px 6px #999;
 }
-#namelist tbody tr,
+#namelist tbody tr[studentid],
 #namelist dl {
   cursor: pointer;
 }
@@ -129,6 +129,14 @@ ul.ui-autocomplete li {
   font-size: 15px;
 }
 /*自訂*/
+#mainMsg {
+  z-index: 5000;
+  position: fixed;
+  max-width: 1020px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
 .my-err-info {
   cursor: pointer;
 }
@@ -142,9 +150,6 @@ h1 {
 .my-scrollbar {
   height: 624px;
 }
-.my-photo {
-  margin-right: 12px;
-}
 .my-widget-header {
   padding-left: 7px;
 }
@@ -152,7 +157,29 @@ h1 {
   cursor: pointer;
   float: right;
 }
+#namelist table thead th {
+  background: #dddde1 url(images/thbg.png) 0 0 repeat-x;
+  border-bottom: 1px solid #ACACAC;
+}
 #namelist table tbody tr.action td {
   color: white;
   background: #69C;
+}
+#studentInfo table tr th {
+  min-width: 90px;
+  max-width: 120px;
+  width: 20%;
+}
+.modal-body .form-horizontal .controls {
+  text-align: left;
+}
+.modal-body .my-code {
+  padding-top: 5px;
+  font-family: consolas;
+}
+.monospaced {
+  font-family: consolas;
+}
+#parentInfo table tbody tr {
+  cursor: pointer;
 }

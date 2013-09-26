@@ -93,11 +93,11 @@ h2 {
   -webkit-box-shadow: 0px 0px 6px #999;
   box-shadow: 0px 0px 6px #999;
 }
-#namelist tbody tr, #namelist dl {
-    cursor:pointer;
+#namelist tbody tr[studentid], #namelist dl {
+  cursor:pointer;
 }
 #namelist dl:hover {
-    border:1px solid #ccc;
+  border:1px solid #ccc;
 }
 .my-scrollbar {
     height:500px;
@@ -147,8 +147,17 @@ ul.ui-autocomplete {
 }
 
 /*自訂*/
+#mainMsg {
+  z-index: 5000;
+  position: fixed;
+  max-width: 1020px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
 .my-err-info {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 h1 {
@@ -161,11 +170,7 @@ h1 {
 }
 
 .my-scrollbar {
-    height:624px;
-}
-
-.my-photo {
-  margin-right: 12px;
+  height:624px;
 }
 
 .my-widget-header {
@@ -178,8 +183,39 @@ h1 {
 }
 
 #namelist {
-  table tbody tr.action td {
-    color: white;
-    background: #69C;
+  table {
+    thead th {
+      background: #DDDDE1 url(images/thbg.png) 0 0 repeat-x;
+      border-bottom: 1px solid #ACACAC;
+    }
+    tbody tr.action td {
+      color: white;
+      background: #69C;
+    }
   }
+}
+
+#studentInfo table tr {
+  th {
+    min-width: 90px;
+    max-width: 120px;
+    width: 20%;
+  }
+}
+
+.modal-body .form-horizontal .controls {
+  text-align: left;
+}
+
+.modal-body .my-code {
+  padding-top: 5px;
+  font-family: consolas;
+}
+
+.monospaced {
+  font-family: consolas;
+}
+
+#parentInfo table tbody tr {
+  cursor: pointer;
 }
