@@ -64,34 +64,6 @@ GroupManager.Util = function() {
     }
 }();
 
-// 驗證班級
-jQuery.validator.addMethod("ClassName", function(value, element) {
-    if (value) {
-        if (StudentManager.classes) {
-            var tmp_check = false;
-            $(StudentManager.classes).each(function(index, item) {
-                if (value === item.ClassName) {
-                    $('#edit-ClassName')
-                        .attr('ClassId', item.ClassId)
-                        .attr('ClassName', item.ClassName)
-                    tmp_check = true;
-                    return false; // 跳出迴圈
-                }
-            });
-            return tmp_check;
-        } else {
-            // 無班級時，只允許空值
-            if (value === '') {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    } else {
-        return true;
-    }
-}, "無此班級");
-
 // 排序
 //ex: s.sort($.by('desc', 'last', $.by('asc', 'first')));
 (function($) {

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs title="成為老師" description="訪客-成為老師">
+    <Title lang="zh-TW">成為老師</Title>
+    <Icon>icon.png</Icon>
+    <Mobile />
+    <Title lang="zh-CN">成为老师
+    </Title>
+    <Title lang="en-US">
+    </Title>
+  </ModulePrefs>
+</Module>

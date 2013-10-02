@@ -1,0 +1,48 @@
+.my-group {
+    box-sizing:border-box;
+    width:24%;
+    float:left;
+    border:1px solid #eee;
+    padding:5px 10px;
+    margin:5px;
+}
+
+.my-group > div:first-child {
+    width:78%;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
+    float:left;
+}
+
+/*自訂*/
+#mainMsg {
+  z-index: 5000;
+  position: fixed;
+  max-width: 1020px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+.my-err-info {
+  cursor: pointer;
+}
+.alert.alert-error {
+  background-color: rgba(242, 222, 222, 0.8);
+}
+.alert.alert-success {
+  background-color: rgba(223, 240, 216, 0.8);
+}
+.modal-body .form-horizontal .controls {
+  text-align: left;
+}
+.modal-body .my-code {
+  padding-top: 5px;
+  font-family: consolas;
+}
+.monospaced {
+  font-family: consolas;
+}
+.my-group-subtitle {
+  color: #aeaeae;
+}

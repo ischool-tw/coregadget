@@ -31,7 +31,7 @@ GroupManager.Util = function() {
                                 tmp_msg = tmp_msg.replace('GroupId', '群組系統編號');
                                 tmp_msg = tmp_msg.replace('GroupName', '群組名稱');
                                 tmp_msg = tmp_msg.replace('GroupCode', '群組代碼');
-                                tmp_msg = tmp_msg.replace('StudentId', '系統編號');
+                                tmp_msg = tmp_msg.replace('StudentId', '組員系統編號');
                         }
                     } else if (error.dsaError.message) {
                         tmp_msg = error.dsaError.message;
@@ -63,6 +63,36 @@ GroupManager.Util = function() {
         }
     }
 }();
+
+// 驗證老師
+jQuery.validator.addMethod("TeacherName", function(value, element) {
+    if (value) {
+        if (GroupManager.teachers) {
+            var tmp_check = false;
+            // if (GroupManager.teachers['t' + ])
+            $(GroupManager.teachers).each(function(index, item) {
+                if (value === item.TName) {
+                    $('#edit-TeacherName')
+                        .attr('TeacherID', item.TeacherId)
+                        .attr('TeacherName', item.TeacherName)
+                        .attr('Nickname', item.Nickname);
+                    tmp_check = true;
+                    return false; // 跳出迴圈
+                }
+            });
+            return tmp_check;
+        } else {
+            // 無教師時，只允許空值
+            if (value === '') {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    } else {
+        return true;
+    }
+}, "無此教師");
 
 // 排序
 //ex: s.sort($.by('desc', 'last', $.by('asc', 'first')));

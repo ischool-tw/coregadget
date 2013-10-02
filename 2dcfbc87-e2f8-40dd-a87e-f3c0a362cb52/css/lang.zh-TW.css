@@ -1,0 +1,25 @@
+[lang=zh-TW] [multi-lang-text=取消]:before
+{
+	content: "取消";
+}
+[lang=zh-TW] [multi-lang-text=處理中]:before
+{
+	content: "處理中";
+}
+[lang=zh-TW] [multi-lang-text=成為學生]:before
+{
+	content: "成為學生";
+}
+[lang=zh-TW] [multi-lang-text=註冊成為學生]:before
+{
+	content: "註冊成為學生";
+}
+[lang=zh-TW] [multi-lang-text=您已具有學生身份]:before
+{
+	content: "您已具有學生身份";
+}
+[lang=zh-TW] [multi-lang-text=呼叫服務失敗]:before
+{
+	content: "呼叫服務失敗!";
+}
+

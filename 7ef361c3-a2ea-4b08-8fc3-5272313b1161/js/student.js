@@ -43,7 +43,7 @@ jQuery(function () {
     });
 
     // 搜尋
-    $("#filter-keyword").on('keyup', function() {
+    $("#filter-keyword").on('change', function() {
         var keyword = $('#filter-keyword').val();
         if (keyword.length >= 2) {
             var allStudents = [];
