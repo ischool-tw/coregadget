@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtm">
+<head>
+  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+  <script>
+    init({
+      application: "dev.sh_d",
+      paramValues: {}
+    });
+  </script>
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <link href="css/font-awesome.css" rel="stylesheet" />
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/jquery.validate.min.js"></script>
+  <script src="js/jquery.metadata.js"></script>
+  <script src="js/messages_tw.js"></script>
+  <script src="js/default.js"></script>
+  <script src="js/util.js"></script>
+</head>
+<body>
+  <div class="my-page" id="gadget">
+    <div id="mainMsg"></div>
+    <div class="row-fluid">
+      <div class="span12">
+        <h1>群組資訊
+          <div class="input-prepend input-append pull-right">
+            <span class="add-on">+</span>
+            <input class="input-medium" id="join-Group" placeholder="群組代碼" type="text">
+            <button class="btn" type="button" js="join">加入</button>
+          </div>
+        </h1>
+        <div js="panel_group_list">
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr/>
+  <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal hide fade" js="panel_quit" role="dialog" tabindex="-1">
+    <div class="modal-header">
+      <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+      <h3>退出群組</h3>
+      <div js="errorMessage"></div>
+    </div>
+    <div class="modal-body alert-danger">
+      <p>您確定要退出嗎？</p>
+    </div>
+    <div class="modal-footer">
+      <a aria-hidden="true" class="btn" data-dismiss="modal" href="javascript:void(0);">取消</a>
+      <a class="btn btn-danger" href="javascript:void(0);" js="quit" data-loading-text="退出中...">退出</a>
+    </div>
+  </div>
+
+</body>
+</html>

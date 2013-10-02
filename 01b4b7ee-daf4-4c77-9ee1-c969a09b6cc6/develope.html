@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+  <script>
+    init({
+      application: "dev.sh_d",
+      paramValues: {}
+    });
+  </script>
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <link href="css/font-awesome.css" rel="stylesheet" />
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/jquery.validate.min.js"></script>
+  <script src="js/jquery.metadata.js"></script>
+  <script src="js/messages_tw.js"></script>
+  <script src="js/default.js"></script>
+  <script src="js/util.js"></script>
+</head>
+<body>
+  <div class="my-page" id="gadget">
+    <div id="mainMsg"></div>
+    <div class="row-fluid">
+      <div class="span12">
+        <h1>
+          我的家長
+          <div class="input-prepend input-append pull-right">
+            <span class="add-on">+</span>
+            <button class="btn" type="button" js="create">建立</button>
+          </div>
+        </h1>
+        <div class="row-fluid">
+          <div class="span12">
+            <div class="pull-left" js="configCode">
+              家長代碼：<span js="parentCode"></span>&nbsp;&nbsp;
+              <a href="javascript:void(0);" js="refresh" title="重設代碼"><i class="icon-refresh"></i></a>
+              <!-- <a href="javascript:void(0);" js="empty" title="清除代碼"><i class="icon-trash my-trash-color"></i></a> -->
+            </div>
+            <table class="table table-bordered table-striped clearfix" id="parentDBTable">
+              <thead>
+                <tr>
+                  <th>姓名</th>
+                  <th>稱謂</th>
+                  <th>帳號</th>
+                  <th>編輯</th>
+                  <th>刪除</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr/>
+
+  <div aria-hidden="true" aria-labelledby="myModalLabel1" class="modal hide fade" js="editParent" role="dialog" tabindex="-1">
+    <div class="modal-header">
+      <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+      <h3></h3>
+      <div js="errorMessage"></div>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label">*帳號</label>
+                <div class="controls">
+                    <input type="text" class="{required:true} input-xxlarge" name="edit-LinkAccount" placeholder="login@ischool.com.tw" required>
+                    <span for="edit-LinkAccount" class="help-inline">必填</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">姓氏</label>
+                <div class="controls">
+                    <input type="text" class="input-xxlarge" name="edit-LastName" placeholder="姓氏..." maxlength="20">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">名字</label>
+                <div class="controls">
+                    <input type="text" class="input-xxlarge" name="edit-FirstName" placeholder="名字..." maxlength="50">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">稱謂</label>
+                <div class="controls">
+                    <input type="text" class="input-xxlarge" name="edit-RelationName" placeholder="爸爸、媽媽..." maxlength="300">
+                </div>
+            </div>
+        </fieldset>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <a aria-hidden="true" class="btn" data-dismiss="modal" href="#">取消</a>
+      <a class="btn btn-primary" href="#" js="save" data-loading-text="儲存中...">儲存</a>
+    </div>
+  </div>
+
+  <div aria-hidden="true" aria-labelledby="myModalLabel2" class="modal hide fade" js="delParent" role="dialog" tabindex="-1">
+    <div class="modal-header">
+      <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+      <h3>刪除家長</h3>
+      <div js="errorMessage"></div>
+    </div>
+    <div class="modal-body alert-danger">
+      <p>您確定要刪除嗎？</p>
+    </div>
+    <div class="modal-footer">
+      <a aria-hidden="true" class="btn" data-dismiss="modal" href="#">取消</a>
+      <a class="btn btn-danger" href="#" js="delete" data-loading-text="刪除中...">刪除</a>
+    </div>
+  </div>
+</body>
+</html>

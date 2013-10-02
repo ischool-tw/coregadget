@@ -202,9 +202,6 @@ jQuery(function() {
                 // 驗證通過
                 target.find('[js^="action-"]').addClass("disabled");
                 saveBaseInfo(currteacher);
-            } else {
-                target.find('[js^="action-"]').removeClass("disabled");
-                TeacherManager.Util.msg('#errorMessage', '', '資料驗證失敗，請重新檢查！');
             }
         });
 

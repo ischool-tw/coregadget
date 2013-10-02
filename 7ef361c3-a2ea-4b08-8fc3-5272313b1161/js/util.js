@@ -18,7 +18,7 @@ StudentManager.Util = function() {
     // 錯誤訊息
     var mySetErrorMessage = function(select_str, serviceName, error) {
         if (serviceName) {
-            var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
+            var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗</strong>(' + serviceName + ')';
             if (error !== null) {
                 if (error.dsaError) {
                     if (error.dsaError.status === "504") {
@@ -38,6 +38,8 @@ StudentManager.Util = function() {
                                 tmp_msg = tmp_msg.replace('ClassId', '班級');
                                 tmp_msg = tmp_msg.replace('StudentCode', '學生代碼');
                                 tmp_msg = tmp_msg.replace('ParentCode', '家長代碼');
+
+                                tmp_msg = tmp_msg.replace('RelationId', '家長系統編號');
                         }
                     } else if (error.dsaError.message) {
                         tmp_msg = error.dsaError.message;

@@ -584,8 +584,6 @@ jQuery(function () {
                 // 驗證通過
                 $(this).button("loading");
                 saveBaseInfo();
-            } else {
-                StudentManager.Util.msg('#editModal [js="errorMessage"]', '', '資料驗證失敗，請重新檢查！');
             }
         });
 
@@ -799,7 +797,7 @@ jQuery(function () {
                             var idx = $(currStudent.Parents).index(currParent);
                             if (idx !== -1) {
                                 currStudent.Parents.splice(idx, 1);
-                                currStudent.Parents['p' + currParent.RelactionId] = undefined;
+                                currStudent.Parents['p' + currParent.RelationId] = undefined;
                             }
                             $('#infolist').trigger('modifyParent');
 
@@ -832,8 +830,6 @@ jQuery(function () {
                 // 驗證通過
                 $(this).button("loading");
                 saveParentInfo();
-            } else {
-                StudentManager.Util.msg('#parentModal [js="errorMessage"]', '', '資料驗證失敗，請重新檢查！');
             }
         });
 
@@ -857,7 +853,7 @@ jQuery(function () {
             // 清除樣式
             var validator = target.find("form").validate();
             validator.resetForm();
-            $(this).find('.error').removeClass("error");
+            target.find('.error').removeClass("error");
 
             target.find('[js="action-save"]').button("reset");
 
