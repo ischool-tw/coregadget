@@ -1,11 +1,11 @@
-// TODO: 設定編輯時資料
+// 設定編輯時資料
 _gg.SetModifyData = function () {
     var data_scope;
 
-    // TODO: 設定編輯內容
+    // 設定編輯內容
     var set_form = function (question, relative_data) {
 
-        // TODO: 建立控制項及預設值
+        // 建立控制項及預設值
         var get_cotrol = function (question, arydata, aryremark, qplaceholder) {
             var qkey         = question.TagName || (question.GroupName + '_' + question.Name);
             var qoption      = question.Options;
@@ -19,7 +19,7 @@ _gg.SetModifyData = function () {
 
             if (qoption && qoption.item) {
                 if (usecontrol === 'radio' || usecontrol === 'select' || usecontrol === 'checkbox') {
-                    // TODO: 大於10個就以線性呈現
+                    // 大於10個就以線性呈現
                     if (qoption.item.length > 10) {
                         tmp_class = ' inline';
                         tmp_remark_class = 'input-mini';
@@ -28,8 +28,10 @@ _gg.SetModifyData = function () {
                     $(qoption.item).each(function (index, opt) {
 
                         tmp_defaultState = '';
+                        qremark = '';
+                        tmp_remark_html = '';
 
-                        // TODO: 預設值
+                        // 預設值
                         tmp_index = $.inArray(opt.key, arydata);
                         if (tmp_index !== -1) {
                             if (usecontrol === 'select') {
@@ -79,7 +81,7 @@ _gg.SetModifyData = function () {
             return ret_html;
         };
 
-        // TODO: 依題目類型決定控制項要執行的方式
+        // 依題目類型決定控制項要執行的方式
         var qvalue = (question.SelectValue || '');
         var qtype  = (question.QuestionType || '');
         var qplaceholder = (question.Placeholder || '');
@@ -149,7 +151,7 @@ _gg.SetModifyData = function () {
         return control_html;
     };
 
-    // TODO: 個人資料
+    // 個人資料
     var set_personal = function (questions) {
         var tmp_items = [];
         $(questions).each(function (index, value) {
@@ -168,7 +170,7 @@ _gg.SetModifyData = function () {
         $('#' + data_scope + ' fieldset').html(tmp_items.join(""));
     };
 
-    // TODO: 監護人資料
+    // 監護人資料
     var set_guardian = function (questions) {
         var tmp_items = [];
         $(questions).each(function (index, value) {
@@ -187,7 +189,7 @@ _gg.SetModifyData = function () {
         $('#' + data_scope + ' fieldset').html(tmp_items.join(""));
     };
 
-    // TODO: 尊親屬資料資料
+    // 尊親屬資料資料
     var set_parents = function (questions, run_model) {
 
         var tmp_items = [];
@@ -294,14 +296,14 @@ _gg.SetModifyData = function () {
             $('#accordionparents').html(tmp_items.join(""));
         }
 
-        // TODO: 尊親屬刪除鈕
+        // 尊親屬刪除鈕
         $('#accordionparents [data-action=del]').bind('click', function () {
             $(this).closest(".accordion-group").remove();
         });
 
     };
 
-    // TODO: 兄弟姊妹資料
+    // 兄弟姊妹資料
     var set_siblings = function (questions, run_model) {
 
         var tmp_items = [];
@@ -413,15 +415,18 @@ _gg.SetModifyData = function () {
             $('#accordionsiblings').html(tmp_items.join(""));
         }
 
-        // TODO: 兄弟姊妹刪除鈕
+        // 兄弟姊妹刪除鈕
         $('#accordionsiblings [data-action=del]').bind('click', function () {
             $(this).closest(".accordion-group").remove();
         });
     };
 
-    // TODO: 身高體重
+    // 身高體重
     var set_psize = function (questions) {
-
+        var target = $('#'+ data_scope);
+        $(_gg.contrastGrade).each(function(index, contrast){
+            target.find('span[js="grade' + index + '"]').html(contrast.TrueGradeYear);
+        });
         $(questions).each(function (key, value) {
             if (value.CanStudentEdit === "是") {
                 var tmp_data  = value.SelectValue;
@@ -439,7 +444,7 @@ _gg.SetModifyData = function () {
         });
     };
 
-    // TODO: 家庭訊息
+    // 家庭訊息
     var set_home = function (questions) {
         var tmp_items = [];
         $(questions).each(function (index, value) {
@@ -458,7 +463,7 @@ _gg.SetModifyData = function () {
         $('#' + data_scope + ' fieldset').html(tmp_items.join(""));
     };
 
-    // TODO: 學習
+    // 學習
     var set_learn = function (questions) {
         var tmp_items = [];
         $(questions).each(function (index, value) {
@@ -477,7 +482,7 @@ _gg.SetModifyData = function () {
         $('#' + data_scope + ' fieldset').html(tmp_items.join(""));
     };
 
-    // TODO: 幹部資訊
+    // 幹部資訊
     var set_cadre = function (questions) {
 
         $(questions).each(function (key, value) {
@@ -491,22 +496,11 @@ _gg.SetModifyData = function () {
             }
         });
 
-        var tmp_chinese_grade;
-        switch (_gg.grade) {
-            case "1":
-                tmp_chinese_grade = "一";
-                break;
-            case "2":
-                tmp_chinese_grade = "二";
-                break;
-            case "3":
-                tmp_chinese_grade = "三";
-                break;
-        }
-        $('#' + data_scope + ' [data-type=grade]').html(tmp_chinese_grade);
+        var trueGradeYear = _gg.contrastGrade[_gg.grade].TrueGradeYear || '';
+        $('#' + data_scope + ' [data-type=grade]').html(trueGradeYear);
     };
 
-    // TODO: 自我認識
+    // 自我認識
     var set_oneself = function (questions) {
         var tmp_items = [];
         var tmp_grade = (_gg.grade || "1");
@@ -530,7 +524,7 @@ _gg.SetModifyData = function () {
         $('#' + data_scope + ' fieldset').html(tmp_items.join(""));
     };
 
-    // TODO: 生活感想
+    // 生活感想
     var set_life = function (questions) {
 
         var tmp_items = [];
@@ -557,7 +551,7 @@ _gg.SetModifyData = function () {
 
     };
 
-    // TODO: 畢業後規劃
+    // 畢業後規劃
     var set_plan = function (questions) {
         $(questions).each(function (index, value) {
             if (value.CanStudentEdit === "是") {
@@ -567,7 +561,7 @@ _gg.SetModifyData = function () {
         });
     };
 
-    // TODO: 自傳
+    // 自傳
     var set_memoir = function (questions) {
         var tmp_items = [];
         $(questions).each(function (index, value) {
@@ -600,7 +594,7 @@ _gg.SetModifyData = function () {
     return {
         setForm: function (scope){
             data_scope = scope;
-            // TODO: 編輯畫面
+            // 編輯畫面
             if (data_scope) {
                 switch (data_scope) {
                     case 'personal':
@@ -644,13 +638,13 @@ _gg.SetModifyData = function () {
             $("#" + data_scope + " form").validate();
         },
         addParent: function () {
-            // TODO: 新增尊親屬
+            // 新增尊親屬
             data_scope = 'parents';
             set_parents(_gg.col_Question.A3, 'add');
             $("#" + data_scope + " form").validate();
         },
         addSibling: function () {
-            // TODO: 新增兄弟姐妹
+            // 新增兄弟姐妹
             data_scope = 'siblings';
             set_siblings(_gg.col_Question.A4, 'add');
             $("#" + data_scope + " form").validate();

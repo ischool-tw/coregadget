@@ -50,3 +50,6 @@ input[type="text"].error-remark {
   margin-bottom: 5px;
   display: block;
 }
+.my-student-list-widget .accordion {
+  height: auto;
+}
