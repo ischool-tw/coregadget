@@ -89,3 +89,7 @@ table.table-striped tbody tr th.my-hierarchy {
 #course_info thead th:nth-child(4) {
   width: 15%;
 }
+.my-navtabs {
+margin-bottom: 0;
+border-bottom: none;
+}
