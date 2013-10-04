@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -23,74 +23,95 @@
   <script src="js/jquery.metadata.js"></script>
   <script src="js/messages_tw.js"></script>
   <script src="js/survey.js"></script>
+  <script src="js/surveyHistory.js"></script>  
 </head>
 <body>
   <div id="gadget" class="my-page">
-      <div id="mainMsg"></div>
-      <div class="row-fluid">
-        <div class="span12">
-          <h1><span id="tabName"></span> 課程問卷調查</h1>
-          <div id="tab_survey_list">
-            <table class="table table-bordered table-striped table-list">
-              <thead>
-                <tr>
-                  <th>課程名稱</th>
-                  <th>任課教師</th>
-                  <th>填寫期間</th>
-                  <th>填寫評鑑</th>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
-          </div>
-          <div id="tab_form">
-            <table id="course_info" class="table table-bordered">
+    <div id="mainMsg"></div>
+    <div class="row-fluid">
+      <div class="span12">
+        <h1>
+          <ul id="myTab" class="nav nav-tabs my-navtabs">
+              
+            <li class="active"><a href="#tab1" data-toggle="tab">問卷調查</a></li>
+            <li><a href="#tab2" data-toggle="tab">歷史填答記錄</a></li>
+              
+          </ul>
+        </h1>
+        <div class="tab-content">
+          <div class="tab-pane active" id="tab1">
+            <div class="tab-pane active" id="sa06">
+              <div class="alert alert-info">
+                <div id="teaching_evaluation_precautions" style="background-color:white;">
+                </div>              
+              </div>
+            </div>
+            <h4 style='font-size: 22px;font-size: 1.2rem;'><span id="tabName"></span> 課程問卷調查</h4>
+            <div id="tab_survey_list">
+              <table class="table table-bordered table-striped table-list">
                 <thead>
                   <tr>
-                    <th>課號</th>
                     <th>課程名稱</th>
                     <th>任課教師</th>
-                    <th>修課人數</th>
+                    <th>填寫期間</th>
+                    <th>填寫評鑑</th>
                   </tr>
                 </thead>
-                <tbody data-type="title">
-                </tbody>
-                <thead>
-                  <tr>
-                    <th colspan="4">評鑑說明</th>
-                  </tr>
-                </thead>
-                <tbody data-type="note">
-                  <tr>
-                    <td colspan="4"></td>
-                  </tr>
-                </tbody>
-            </table>
-            <form id="form1">
-              <table class="table table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th>題項<span class="text-error">（*為必填欄位）</span></th>
-                    <th>選項</th>
-                  </tr>
-                </thead>
-                <tbody data-type="questions">
+                <tbody>
                 </tbody>
               </table>
-            </form>
-            <div class="my-sure" data-type="form">
-                <button class="btn btn-info" data-loading-text="儲存中..." data-action="temp">暫存不送出</button>
-                <button class="btn btn-success" data-action="preview">預覽並送出</button>
-                <button class="btn" data-action="form_cancel">取消</button>
             </div>
-            <div class="my-sure" data-type="preview">
-                <button class="btn btn-success" data-loading-text="儲存中..." id="save-data">送出</button>
-                <button class="btn" data-action="preview_cancel">取消</button>
+            <div id="tab_form">
+              <table id="course_info" class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>課號</th>
+                      <th>課程名稱</th>
+                      <th>任課教師</th>
+                      <th>修課人數</th>
+                    </tr>
+                  </thead>
+                  <tbody data-type="title">
+                  </tbody>
+                  <thead>
+                    <tr>
+                      <th colspan="4">評鑑說明</th>
+                    </tr>
+                  </thead>
+                  <tbody data-type="note">
+                    <tr>
+                      <td colspan="4"></td>
+                    </tr>
+                  </tbody>
+              </table>
+              <form id="form1">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>題項<span class="text-error">（*為必填欄位）</span></th>
+                      <th>選項</th>
+                    </tr>
+                  </thead>
+                  <tbody data-type="questions">
+                  </tbody>
+                </table>
+              </form>
+              <div class="my-sure" data-type="form">
+                  <button class="btn btn-info" data-loading-text="儲存中..." data-action="temp">暫存不送出</button>
+                  <button class="btn btn-success" data-action="preview">預覽並送出</button>
+                  <button class="btn" data-action="form_cancel">取消</button>
+              </div>
+              <div class="my-sure" data-type="preview">
+                  <button class="btn btn-success" data-loading-text="儲存中..." id="save-data">送出</button>
+                  <button class="btn" data-action="preview_cancel">取消</button>
+              </div>
             </div>
           </div>
+          <div class="tab-pane" id="tab2">
+              <div id="survey-history"></div>
+          </div>
         </div>
-      </div>
+    </div>      
   </div>
   <hr />
 </body>
