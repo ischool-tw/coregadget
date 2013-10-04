@@ -164,8 +164,9 @@ var SurveyManger = function() {
         _courses = [],
         _questions = [],
         _curr_survey,
-        _conn_log = gadget.getContract("emba.student")
-        _textarea_maxLength = 500;
+        _conn_log = gadget.getContract("emba.student"),
+        _textarea_maxLength = 500,
+        _teaching_evaluation_precautions = '';
 
     //#region 取得學年度學期
     var getCurrentSemester = function() {
@@ -187,6 +188,36 @@ var SurveyManger = function() {
             }
         });
     };
+    //#endregion
+
+    //#region 取得評鑑注意事項
+    var getPrecautions = function() {
+        _connection.send({
+            service: "_.GetCSConfiguration",
+            body: '<Request><Condition><ConfName>teaching_evaluation_precautions</ConfName></Condition></Request>',
+            result: function (response, error, http) {
+                if (error !== null) {
+                    set_error_message('#mainMsg', 'GetCSConfiguration', error);
+                } else {
+                    // <Response>
+                    //     <Configuration>
+                    //         <ConfName>teaching_evaluation_precautions</ConfName>
+                    //         <ConfContent>
+                    //             <![CDATA['由desktop提供之樣版內容']]></ConfContent>
+                    //     </Configuration>
+                    // </Response>
+
+                    if (response.Response && response.Response.Configuration) {
+                        $(response.Response.Configuration).each(function(index, item) {
+                            _teaching_evaluation_precautions = item.ConfContent;
+                            $('#teaching_evaluation_precautions').html(_teaching_evaluation_precautions);
+                        });
+                    }
+                }
+            }
+        });
+    };
+
     //#endregion
 
     //#region 取得個人基本資料
@@ -742,6 +773,7 @@ var SurveyManger = function() {
             set_error_message(select_str, serviceName, error);
         }
         ,on_init: function() {
+            getPrecautions();
             getCurrentSemester();
             getMyInfo();
             initialize();
@@ -783,6 +815,9 @@ var SurveyManger = function() {
                             set_error_message('#mainMsg', 'SetReply', error);
                             $("#save-data").button("reset");
                         } else {
+                            //  問卷填寫內容異動，通知「歷史填答記錄」更新頁面
+                            SurveyChanged_Handler.SurveyChanged();
+
                             $('body').scrollTop(0);
                             _curr_survey.ReplyAnswer = answer;
                             _curr_survey.ReplyStatus = status;
