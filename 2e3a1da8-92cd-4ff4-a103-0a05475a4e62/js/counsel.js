@@ -5,14 +5,24 @@ _gg.grade = '';
 _gg.chineseGrade = '';
 _gg.init = false;
 _gg.students = [];
+_gg.student = {};
+_gg.loadDataReady = false;
+_gg.contrastGrade = [];
 
 jQuery(function () {
-    // TODO: 點選 checkbox 後的註解輸入框時，使事件失效，才不會影響 checkbox
+    $('#baseinfo a[rel="tooltip"]').tooltip({placement: "right"});
+    $('#baseinfo a[rel="tooltip"]').tooltip('show');
+    $("body").on("click", function(e) {
+        $('#baseinfo a[rel="tooltip"]').tooltip('hide');
+        $(this).off(e);
+    });
+
+    // 點選 checkbox 後的註解輸入框時，使事件失效，才不會影響 checkbox
     $("body").on("click", "input:text[valide-type$=remark]", function(e) {
         e.preventDefault();
     });
 
-    // TODO: datepicker 中文化
+    // datepicker 中文化
     $.datepicker.setDefaults({
         dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"]
         ,monthNames: ["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]
@@ -27,7 +37,7 @@ jQuery(function () {
       _gg.resetStudentList();
     });
 
-    // TODO: 學生清單事件
+    // 學生清單事件
     $("#student-list").on("click", ".accordion-body a", function(e) {
         if (_gg.init) {
             $('#student-list li').removeClass('active');
@@ -41,7 +51,7 @@ jQuery(function () {
         }
     });
 
-    // TODO: 學生關鍵字搜尋
+    // 學生關鍵字搜尋
     _gg.resetStudentList = function() {
         var accordionHTML, className, firstClassName, items;
         className = "";
@@ -57,12 +67,31 @@ jQuery(function () {
                         accordionHTML += "      </ul>\n    </div>\n  </div>\n</div>";
                         items.splice(0);
                     }
-                    accordionHTML += "<div class='accordion-group'>\n  <div class='accordion-heading'>\n    <a class='accordion-toggle' data-toggle='collapse' data-parent='#student-list' href='#collapse" + index + "'><i class='icon-user'></i>" + this.ClassName + "</a>\n  </div>\n  <div id='collapse" + index + "' class='accordion-body collapse " + (firstClassName === '' ? 'in' : '') + "'>\n    <div class='accordion-inner'>\n      <ul class='nav nav-pills nav-stacked'>";
+                    accordionHTML += '<div class="accordion-group">' +
+                        '  <div class="accordion-heading">' +
+                        '    <a class="accordion-toggle" data-toggle="collapse" data-parent="#student-list" href="#collapse' + index + '"><i class="icon-user"></i>' + (this.ClassName || '') + '</a>' +
+                        '  </div>' +
+                        '  <div id="collapse' + index + '" class="accordion-body collapse ' + (firstClassName === '' ? 'in' : '') + '">' +
+                        '    <div class="accordion-inner">' +
+                        '      <ul class="nav nav-pills nav-stacked">';
                     if (firstClassName === '') {
                         firstClassName = this.ClassName;
                     }
                 }
-                items.push("<li>\n  <a href='#' student-index='" + index + "'>\n    <span class='my-seat-no label label-inverse my-label'>" + this.SeatNo + "</span>\n    <span class='my-student-name'>" + this.StudentName + "</span>\n    <span class='my-student-number'>" + this.StudentNumber + "</span>\n    <i class='icon-chevron-right pull-right'></i>\n  </a>\n</li>");
+                items.push('<li>' +
+                    '  <a href="#" student-index="' + index + '">');
+
+                if (this.Kind === '認輔學生') {
+                    items.push('<span class="my-student-class"><i class="icon-bookmark"></i>' + (this.ClassName || '') + '</span>');
+                } else {
+                    items.push('<span class="my-seat-no label label-inverse my-label">' + (this.SeatNo || '&nbsp;') + '</span>');
+                }
+                items.push(
+                    '    <span class="my-student-name">' + (this.StudentName || '') + '</span>' +
+                    '    <span class="my-student-number">' + (this.StudentNumber || '') + '</span>' +
+                    '    <i class="icon-chevron-right pull-right"></i>' +
+                    '  </a>' +
+                    '</li>');
             }
         });
         accordionHTML += items.join("");
@@ -70,32 +99,47 @@ jQuery(function () {
         $("#student-list").html(accordionHTML);
     };
 
-    // TODO: 取得帶班學生、認輔學生
+    // 取得帶班學生、認輔學生
     _gg.connection.send({
         service: "_.GetClassStudent",
         body: "",
         result: function(response, error, xhr) {
-            var accordionHTML, className, items, _ref, classStudentCount = 0;
+            var _ref, classStudentCount = 0;
             if (error != null) {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>\n</div>");
+                _gg.set_error_message('#mainMsg', 'GetClassStudent', error);
             } else {
                 if (((_ref = response.Response) != null ? _ref.Student : void 0) != null) {
                     _gg.students = $(response.Response.Student);
-                    className = "";
-                    items = [];
-                    accordionHTML = "";
+                    var className = '', items = [], accordionHTML = '';
                     _gg.students.each(function(index, student) {
                         classStudentCount += 1;
                         if (this.ClassName !== className) {
                             className = this.ClassName;
-                            if (accordionHTML != null) {
+                            if (accordionHTML !== '') {
                                 accordionHTML += items.join("");
                                 accordionHTML += "      </ul>\n    </div>\n  </div>\n</div>";
                                 items.splice(0);
                             }
-                            accordionHTML += "<div class='accordion-group'>\n  <div class='accordion-heading'>\n    <a class='accordion-toggle' data-toggle='collapse' data-parent='#student-list' href='#collapse" + index + "'><i class='icon-user'></i>" + this.ClassName + "</a>\n  </div>\n  <div id='collapse" + index + "' class='accordion-body collapse " + (index === 0 ? 'in' : '') + "'>\n    <div class='accordion-inner'>\n      <ul class='nav nav-pills nav-stacked'>";
+                            accordionHTML += '<div class="accordion-group">' +
+                                '<div class="accordion-heading">' +
+                                '    <a class="accordion-toggle" data-toggle="collapse" data-parent="#student-list" href="#collapse' + index + '">' +
+                                '    <i class="icon-user"></i>' + (this.ClassName || '') + '</a>' +
+                                '</div>' +
+                                '<div id="collapse' + index + '" class="accordion-body collapse ' + (index === 0 ? 'in' : '') + '">' +
+                                '  <div class="accordion-inner">' +
+                                '    <ul class="nav nav-pills nav-stacked">';
+
                         }
-                        items.push("<li " + (index === 0 ? " class='active'" : '') + ">\n  <a href='#' student-index='" + index + "'>\n    <span class='my-seat-no label label-inverse my-label'>" + this.SeatNo + "</span>\n    <span class='my-student-name'>" + this.StudentName + "</span>\n    <span class='my-student-number'>" + this.StudentNumber + "</span>\n    <i class='icon-chevron-right pull-right'></i>\n  </a>\n</li>");
+                        items.push(
+                            '<li ' + (index === 0 ? ' class="active"' : '') + '>' +
+                            '  <a href="#" student-index="' + index + '">' +
+                            '    <span class="my-seat-no label label-inverse my-label">' + (this.SeatNo || '&nbsp;') + '</span>' +
+                            '    <span class="my-student-name">' + (this.StudentName || '') + '</span>' +
+                            '    <span class="my-student-number">' + (this.StudentNumber || '') + '</span>' +
+                            '    <i class="icon-chevron-right pull-right"></i>' +
+                            '  </a>' +
+                            '</li>'
+                        );
                         if (index === 0) {
                             _gg.student = student;
                             _gg.loadCounselData();
@@ -107,34 +151,51 @@ jQuery(function () {
                 }
             }
 
-            // TODO: 認輔學生
+            // 認輔學生
             _gg.connection.send({
                 service: "_.GetCounselStudent",
                 body: "",
                 result: function(response, error, xhr) {
-                    var accordionHTML, className, items, _ref, total_index;
+                    var _ref;
                     if (error != null) {
-                        $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>\n</div>");
+                        _gg.set_error_message('#mainMsg', 'GetCounselStudent', error);
                     } else {
                         if (((_ref = response.Response) != null ? _ref.Student : void 0) != null) {
-                            className = "認輔學生";
-                            items = [];
-                            accordionHTML = "";
+                            var items = [], accordionHTML = '', total_index = 0;
                             $(response.Response.Student).each(function(index, student) {
+                                student.Kind = '認輔學生';
                                 _gg.students.push(student);
-                                student.ClassName = className;
                                 total_index = index + classStudentCount;
                                 if (index === 0) {
-                                    accordionHTML += "<div class='accordion-group'>\n  <div class='accordion-heading'>\n    <a class='accordion-toggle' data-toggle='collapse' data-parent='#student-list' href='#collapse" + total_index + "'><i class='icon-user'></i>" + className + "</a>\n  </div>\n  <div id='collapse" + total_index + "' class='accordion-body collapse " + (total_index === 0 ? 'in' : '') + "'>\n    <div class='accordion-inner'>\n      <ul class='nav nav-pills nav-stacked'>";
+                                    items.push(
+                                        '<div class="accordion-group">' +
+                                        '  <div class="accordion-heading">' +
+                                        '    <a class="accordion-toggle" data-toggle="collapse" data-parent="#student-list" href="#collapse' + total_index + '">' +
+                                        '    <i class="icon-user"></i>認輔學生</a>' +
+                                        '  </div>' +
+                                        '  <div id="collapse' + total_index + '" class="accordion-body collapse ' + (total_index === 0 ? 'in' : '') + '">' +
+                                        '    <div class="accordion-inner">' +
+                                        '      <ul class="nav nav-pills nav-stacked">'
+                                    );
                                 }
-                                items.push("<li " + (total_index === 0 ? " class='active'" : '') + ">\n  <a href='#' student-index='" + total_index + "'>\n    <span class='my-seat-no label label-inverse my-label'>" + this.SeatNo + "</span>\n    <span class='my-student-name'>" + this.StudentName + "</span>\n    <span class='my-student-number'>" + this.StudentNumber + "</span>\n    <i class='icon-chevron-right pull-right'></i>\n  </a>\n</li>");
+
+                                items.push(
+                                    '<li ' + (total_index === 0 ? ' class="active"' : '') + '>' +
+                                    '  <a href="#" student-index="' + total_index + '">' +
+                                    '    <span class="my-student-class"><i class="icon-bookmark"></i>' + (this.ClassName || '') + '</span>' +
+                                    '    <span class="my-student-name">' + (this.StudentName || '') + '</span>' +
+                                    '    <span class="my-student-number">' + (this.StudentNumber || '') + '</span>' +
+                                    '    <i class="icon-chevron-right pull-right"></i>' +
+                                    '  </a>' +
+                                    '</li>'
+                                );
                                 if (total_index === 0 ) {
                                     _gg.student = student;
                                     _gg.loadCounselData();
                                 }
                             });
-                            accordionHTML += items.join("");
-                            accordionHTML += "      </ul>\n    </div>\n  </div>\n</div>";
+                            items.push('</ul></div></div></div>');
+                            accordionHTML = items.join("");
                             $("#student-list").append(accordionHTML);
                         }
                     }
@@ -151,7 +212,7 @@ jQuery(function () {
       $(this).css("overflow", "hidden");
     });
 
-    // TODO: 設定驗證錯誤時的樣式
+    // 設定驗證錯誤時的樣式
     $.validator.setDefaults({
         debug: true,
         errorElement: "span",
@@ -181,12 +242,12 @@ jQuery(function () {
         }
     });
 
-    // TODO: 驗證時間格式 hh:mm
+    // 驗證時間格式 hh:mm
     jQuery.validator.addMethod("time", function(value, element) {
         return this.optional(element) || /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/i.test(value);
     }, "請輸入正確格式，如「12:00」");
 
-    // TODO: 家中排行
+    // 家中排行
     $('#siblings [name=AnySiblings]').bind('click', function (e) {
         if (e.target.value === '1') {
             $('#siblings [data-type=家庭狀況_兄弟姊妹_排行]')
@@ -201,30 +262,31 @@ jQuery(function () {
         }
     });
 
-    // TODO: 尊親屬新增鈕
+    // 尊親屬新增鈕
     $('#parents-add-data').bind('click', function () {
          _gg.SetModifyData.addParent();
     });
 
-     // TODO: 兄弟姊妹新增鈕
+     // 兄弟姊妹新增鈕
     $('#siblings-add-data').bind('click', function () {
-         _gg.SetModifyData.addSibling();
+        $('#siblings [name=AnySiblings][value=more]').trigger('click');
+        _gg.SetModifyData.addSibling();
     });
 
-    // TODO: 晤談紀錄新增鈕
+    // 晤談紀錄新增鈕
     $('#talk-add-data').bind('click', function () {
         _gg.editInterview = null;
     });
 
-    // TODO: 晤談紀錄編輯、刪除鈕
+    // 晤談紀錄編輯、刪除鈕
     $("#E1").on("click", "a[data-toggle=modal]", function(e) {
         _gg.editInterview = _gg.interviewRecord[$(this).attr("interview-index")];
     });
 
-    // TODO: 晤談紀錄設定
+    // 晤談紀錄設定
     _gg.SetModifyData.setTalkValidRules();
 
-    // TODO: 晤談紀錄查詢
+    // 晤談紀錄查詢
     $("#filter-interview-start").datepicker({ dateFormat: "yy/mm/dd" });
     $("#filter-interview-end").datepicker({ dateFormat: "yy/mm/dd" });
     $("#filter-interview").validate();
@@ -243,17 +305,17 @@ jQuery(function () {
                 if (iDate) {
 
                     if (startD && endD)  {
-                        // TODO: 限制區間
+                        // 限制區間
                         if (new Date(start_date) <= iDate && new Date(end_date) >= iDate) {
                             iNode.show();
                         }
                     } else if (startD) {
-                        // TODO: 開始日之後
+                        // 開始日之後
                         if (new Date(start_date) <= iDate) {
                             iNode.show();
                         }
                     } else if (endD) {
-                        // TODO: 結束日之前
+                        // 結束日之前
                         if (new Date(end_date) >= iDate) {
                             iNode.show();
                         }
@@ -261,7 +323,7 @@ jQuery(function () {
                 }
             });
 
-            // TODO: 搜尋結果不分頁
+            // 搜尋結果不分頁
             $("#E1Page").hide();
         } else {
             $('#E1 div.my-baseinfo-item').show();
@@ -270,10 +332,10 @@ jQuery(function () {
         }
     });
 
-    // TODO: 晤談新增編輯日期
+    // 晤談新增編輯日期
     $("#InterviewDate").datepicker({ dateFormat: "yy/mm/dd" });
 
-    // TODO: 編輯視窗的相關設定
+    // 編輯視窗的相關設定
     $('.modal').modal({
         keyboard: false,
         show: false
@@ -287,31 +349,31 @@ jQuery(function () {
     $(".modal").on("show", function (e) {
         var that = this;
         var show_model = function () {
-            // TODO: 重設按鈕
+            // 重設按鈕
             $(that).find("button[edit-target]").button('reset');
 
-            // TODO: 移除表單驗證訊息
+            // 移除表單驗證訊息
             var validator = $(that).find('form').validate();
             validator.resetForm();
             $(that).find('.error').removeClass("error");
 
-            // TODO: 產生表單
+            // 產生表單
             _gg.SetModifyData.setForm(that.id);
 
-            // TODO: 修正 modal 中有 Collapse，Collapse 展開時會觸發 modal 的 show
+            // 修正 modal 中有 Collapse，Collapse 展開時會觸發 modal 的 show
             $(that).find('.accordion').on('show', function (event) {
                 event.stopPropagation();
             });
         };
 
-        // TODO: 資料尚未載入完成，使 modal.show 失效
+        // 資料尚未載入完成，使 modal.show 失效
         if (_gg.init) {
             if (this.id === 'deltalk') {
-                // TODO: 重設按鈕
+                // 重設按鈕
                 $(that).find("button[edit-target]").button('reset');
             } else if ($(this).find("[edit-target]").attr("edit-target") === 'E1' && !_gg.editInterview) {
-                $(that).find("button[edit-target]").button('reset'); // TODO: 重設按鈕
-                // TODO: 移除表單驗證訊息
+                $(that).find("button[edit-target]").button('reset'); // 重設按鈕
+                // 移除表單驗證訊息
                 var validator = $(that).find('form').validate();
                 validator.resetForm();
                 $(that).find('.error').removeClass("error");
@@ -325,20 +387,21 @@ jQuery(function () {
         }
     });
 
-    // TODO: 編輯畫面按下儲存鈕
-    $('.modal button[edit-target]').bind('click', function(e) {
+    // 編輯畫面按下儲存鈕
+    $('.modal').on('click', 'button[edit-target]', function(e) {
         var data_scope = $(this).closest(".modal").attr("id");
 
         if ($("#" + data_scope + " form").valid()) {
-            $(this).removeClass('btn-danger').addClass('btn-success').button('loading'); // TODO: 按鈕為處理中
+            $(this).button('loading'); // 按鈕為處理中
             _gg.SetSaveData(data_scope);
         } else {
-            $(this).removeClass('btn-success').addClass('btn-danger');
+            $("#" + data_scope + "_errorMessage").html("<div class='alert alert-error'>\n" +
+                "<button class='close' data-dismiss='alert'>×</button>\n  資料驗證失敗，請重新檢查！\n</div>");
         }
     });
 
-    // TODO: 切換年級
-    $('.my-schoolyear-semester-widget .btn').live("click", function () {
+    // 切換年級
+    $('.my-schoolyear-semester-widget').on("click", '.btn', function () {
         _gg.grade = $(this).attr("grade");
         _gg.chineseGrade = $(this).attr("chinese-grade");
         _gg.SetData('B1');
@@ -347,16 +410,16 @@ jQuery(function () {
         _gg.SetData('B4');
         _gg.SetData('B5');
 
-         if (_gg.grade === "3") {
+         if (_gg.grade === (_gg.student.contrastGrade.length-1).toString()) {
             $('#B5').hide();
         } else {
             $('#B5').show();
         }
     });
 
-    // TODO: 顯示資料
+    // 顯示資料
     _gg.SetData = function (data_scope) {
-        // TODO: 處理部份類型的值
+        // 處理部份類型的值
         var input_value = function (qtype, qvalue) {
             var tmp_data = '';
             if (qtype) {
@@ -398,7 +461,7 @@ jQuery(function () {
             return tmp_data;
         };
 
-        // TODO: 個人資料
+        // 個人資料
         var input_A1_value = function() {
             var questions = _gg.col_Question.A1;
             var tmp_key, tmp_data;
@@ -410,7 +473,7 @@ jQuery(function () {
             });
         };
 
-        // TODO: 監護人資料
+        // 監護人資料
         var input_A2_value = function() {
             var questions = _gg.col_Question.A2;
             var tmp_key, tmp_data;
@@ -422,7 +485,7 @@ jQuery(function () {
             });
         };
 
-        // TODO: 尊親屬資料
+        // 尊親屬資料
         var input_A3_value = function() {
             var tmp_html, tmp_items = [];
             $.each(_gg.relative, function (index, item) {
@@ -449,7 +512,7 @@ jQuery(function () {
             $('#A3 tbody').html(tmp_items.join(""));
         };
 
-        // TODO: 兄弟姊妹資料
+        // 兄弟姊妹資料
         var input_A4_value = function() {
             var tmp_html, tmp_items = [];
             var tmp_key, tmp_data;
@@ -479,11 +542,15 @@ jQuery(function () {
             $('#A4 tbody').html(tmp_items.join(""));
         };
 
-        // TODO: 身高及體重
+        // 身高及體重
         var input_A5_value = function() {
+            var target = $('#A5');
             var questions = _gg.col_Question.A5;
             var tmp_key, tmp_data;
             $('#A5 [data-type]').html('');
+            $(_gg.contrastGrade).each(function(index, contrast){
+                target.find('span[js="grade' + index + '"]').html(contrast.TrueGradeYear);
+            });
             $.each(questions, function (index, item) {
                 tmp_key = item.GroupName + '_' + item.Name;
                 tmp_data = item.SelectValue;
@@ -498,7 +565,7 @@ jQuery(function () {
             });
         };
 
-        // TODO: 家庭訊息
+        // 家庭訊息
         var input_B1_value = function() {
             var questions = _gg.col_Question.B1;
             var tmp_key, tmp_data, tmp_items = [];
@@ -511,7 +578,7 @@ jQuery(function () {
             $('#B1 tbody').html(tmp_items.join(""));
         };
 
-        // TODO: 學習
+        // 學習
         var input_B2_value = function() {
             var questions = _gg.col_Question.B2;
             var tmp_key, tmp_data, tmp_items = [];
@@ -524,12 +591,12 @@ jQuery(function () {
             $('#B2 tbody').html(tmp_items.join(""));
         };
 
-        // TODO: 幹部資訊
+        // 幹部資訊
         var input_B3_value = function() {
             var questions = _gg.col_Question.B3;
             var tmp_key, tmp_data;
             var tmp_grade = (_gg.grade || "1");
-            var tmp_chinese_grade = (_gg.chineseGrade || '一');
+            var tmp_trueGradeYear = _gg.contrastGrade[tmp_grade].TrueGradeYear || '';
 
             $('#B3 [data-type]').html('');
 
@@ -541,10 +608,10 @@ jQuery(function () {
                     $('#B3 [data-type=' + tmp_key + 'b]').html(tmp_data['S' + tmp_grade + 'b'] || '');
                 }
             });
-            $('#B3 [data-type=grade]').html(tmp_chinese_grade);
+            $('#B3 [data-type=grade]').html(tmp_trueGradeYear);
         };
 
-        // TODO: 自我認識，題目可能因為年級而不同
+        // 自我認識，題目可能因為年級而不同
         var input_B4_value = function() {
             var questions = _gg.col_Question.B4;
             var tmp_key, tmp_data, tmp_items = [];
@@ -567,7 +634,7 @@ jQuery(function () {
             $('#B4 tbody').html(tmp_items.join(""));
         };
 
-        // TODO: 生活感想，題目可能因為年級而不同
+        // 生活感想，題目可能因為年級而不同
         var input_B5_value = function() {
             var questions = _gg.col_Question.B5;
             var tmp_key, tmp_data, tmp_items = [];
@@ -600,7 +667,7 @@ jQuery(function () {
             $('#B5 #accordion2').html(tmp_items.join(""));
         };
 
-        // TODO: 畢業後規劃
+        // 畢業後規劃
         var input_C1_value = function() {
             var questions = _gg.col_Question.C1;
             var tmp_key, tmp_data, tmp_items = [];
@@ -630,7 +697,7 @@ jQuery(function () {
             });
         };
 
-        // TODO: 晤談紀錄
+        // 晤談紀錄
         var input_E1_value = function() {
             var obj2str = function(content) {
                 var ret_str = '';
@@ -752,12 +819,12 @@ jQuery(function () {
                 });
                 $('#E1').html(tmp_items.join(""));
 
-                // TODO: 分頁
+                // 分頁
                 $("#E1").pager('div.my-baseinfo-item', {navId: 'E1Page'});
             }
         };
 
-        // TODO: 心理測驗
+        // 心理測驗
         var input_F1_value = function() {
             var questions = _gg.quizData;
             var tmp_items = [];
@@ -803,7 +870,9 @@ jQuery(function () {
         // 如果未指定範圍，就重新顯示全部資料
         if (_gg.init) {
             if (data_scope === 'All') {
-                $('a[data-toggle=modal]').removeClass("disabled");
+                if (_gg.student.Kind !== '認輔學生') {
+                    $('a[data-toggle=modal]').removeClass("disabled").prop('disabled', false);
+                }
 
                 $.each(_gg.col_Question, function(key, value) {
                     eval('input_' + key + '_value()');
@@ -814,3 +883,28 @@ jQuery(function () {
         }
     };
 });
+
+
+// 錯誤訊息
+_gg.set_error_message = function(select_str, serviceName, error) {
+    var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
+    if (error !== null) {
+        if (error.dsaError) {
+            if (error.dsaError.status === "504") {
+                switch (error.dsaError.message) {
+                    case '501':
+                        tmp_msg = '<strong>很抱歉，您無讀取資料權限！</strong>';
+                        break;
+                }
+            } else if (error.dsaError.message) {
+                tmp_msg = error.dsaError.message;
+            }
+        } else if (error.loginError.message) {
+            tmp_msg = error.loginError.message;
+        } else if (error.message) {
+            tmp_msg = error.message;
+        }
+        $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
+        $('.my-err-info').click(function(){alert('請拍下此圖，並與客服人員連絡，謝謝您。\n' + JSON.stringify(error, null, 2))});
+    }
+};

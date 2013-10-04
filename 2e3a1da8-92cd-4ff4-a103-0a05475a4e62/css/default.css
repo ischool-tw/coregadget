@@ -45,3 +45,11 @@ input[type="text"].error-remark {
   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
+.my-student-class {
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+.my-student-list-widget .accordion {
+  height: auto;
+}

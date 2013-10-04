@@ -5,18 +5,15 @@
   <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
   <script>
     init({
-      application: "dev.sh_d", //"h.trialschool.tw", //"http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_kh",
+      application: "dev.sh_d",
       paramValues: {}
     });
   </script>
   <link href="css/bootstrap.css" rel="stylesheet" />
   <link href="css/bootstrap-responsive.css" rel="stylesheet" />
-  <!--<link href="css/base.less" rel="stylesheet/less" />
-  <link href="css/default.less" rel="stylesheet/less" />-->
   <link href="css/base.css" rel="stylesheet" />
   <link href="css/default.css" rel="stylesheet" />
   <script src="js/jquery.min.js"></script>
-  <!--<script src="js/less.min.js"></script>-->
   <script src="js/jquery.validate.min.js"></script>
   <script src="js/jquery.metadata.js"></script>
   <script src="js/api.js"></script>
@@ -52,7 +49,7 @@
                 <div class="span5">
                   <div class="my-baseinfo-item well" id="A1">
                     <div class="my-label-title">
-                      <a data-toggle="modal" href="#personal" class="btn btn-success">
+                      <a data-toggle="modal" href="#personal" class="btn btn-success" rel="tooltip" title="非停用狀態，點擊後可編輯">
                         <i class="icon-edit icon-white"></i>個人資料</a>
                     </div>
                     <table class="table">
@@ -172,17 +169,17 @@
                               <th>體重</th>
                             </tr>
                             <tr>
-                              <th nowrap>一上</th>
+                              <th nowrap><span js="grade1"></span>上</th>
                               <td width="36%" data-type="本人概況_身高S1a"></td>
                               <td width="37%" data-type="本人概況_體重S1a"></td>
                             </tr>
                             <tr>
-                              <th nowrap>二上</th>
+                              <th nowrap><span js="grade2"></span>上</th>
                               <td data-type="本人概況_身高S2a"></td>
                               <td data-type="本人概況_體重S2a"></td>
                             </tr>
                             <tr>
-                              <th nowrap>三上</th>
+                              <th nowrap><span js="grade3"></span>上</th>
                               <td data-type="本人概況_身高S3a"></td>
                               <td data-type="本人概況_體重S3a"></td>
                             </tr>
@@ -198,18 +195,18 @@
                               <th>體重</th>
                             </tr>
                             <tr>
-                              <th nowrap>一下</th>
+                              <th nowrap><span js="grade1"></span>下</th>
                               <td width="36%" data-type="本人概況_身高S1b"></td>
                               <td width="37%" data-type="本人概況_體重S1b"></td>
                             </tr>
                             <tr>
-                              <th nowrap>二下
+                              <th nowrap><span js="grade2"></span>下
                               </th>
                               <td data-type="本人概況_身高S2b"></td>
                               <td data-type="本人概況_體重S2b"></td>
                             </tr>
                             <tr>
-                              <th nowrap>三下</th>
+                              <th nowrap><span js="grade3"></span>下</th>
                               <td data-type="本人概況_身高S3b"></td>
                               <td data-type="本人概況_體重S3b"></td>
                             </tr>
@@ -471,51 +468,51 @@
           <fieldset>
             <div class="control-group">
               <label class="control-label">
-                一上身高</label>
+                <span js="grade1"></span>上身高</label>
               <div class="controls">
-                <input type="text" class="{number:true, min:0} input-mini" name="tallS1a" data-type="本人概況_身高S1a" placeholder="一上身高" tabindex="2001">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS1a" data-type="本人概況_身高S1a" placeholder="身高" tabindex="2001">
                 cm
               </div>
             </div>
             <div class="control-group">
               <label class="control-label">
-                一上體重</label>
+                <span js="grade1"></span>上體重</label>
               <div class="controls">
-                <input type="text" class="{number:true, min:0} input-mini" name="weightS1a" data-type="本人概況_體重S1a" placeholder="一上體重" tabindex="2002">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS1a" data-type="本人概況_體重S1a" placeholder="體重" tabindex="2002">
                 kg
               </div>
             </div>
             <hr/>
             <div class="control-group">
               <label class="control-label">
-                二上身高</label>
+                <span js="grade2"></span>上身高</label>
               <div class="controls">
-                <input type="text" class="{number:true, min:0} input-mini" name="tallS2a" data-type="本人概況_身高S2a" placeholder="二上身高" tabindex="2005">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS2a" data-type="本人概況_身高S2a" placeholder="身高" tabindex="2005">
                 cm
               </div>
             </div>
             <div class="control-group">
               <label class="control-label">
-                二上體重</label>
+                <span js="grade2"></span>上體重</label>
               <div class="controls">
-                <input type="text" class="{number:true, min:0} input-mini" name="weightS2a" data-type="本人概況_體重S2a" placeholder="二上體重" tabindex="2006">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS2a" data-type="本人概況_體重S2a" placeholder="體重" tabindex="2006">
                 kg
               </div>
             </div>
             <hr/>
             <div class="control-group">
               <label class="control-label">
-                三上身高</label>
+                <span js="grade3"></span>上身高</label>
               <div class="controls">
-                <input type="text" class="{number:true, min:0} input-mini" name="tallS3a" data-type="本人概況_身高S3a" placeholder="三上身高" tabindex="2009">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS3a" data-type="本人概況_身高S3a" placeholder="身高" tabindex="2009">
                 cm
               </div>
             </div>
             <div class="control-group">
               <label class="control-label">
-                三上體重</label>
+                <span js="grade3"></span>上體重</label>
               <div class="controls">
-                <input type="text" class="{number:true, min:0} input-mini" name="weightS3a" data-type="本人概況_體重S3a" placeholder="三上體重" tabindex="2010">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS3a" data-type="本人概況_體重S3a" placeholder="體重" tabindex="2010">
                 kg
               </div>
             </div>
@@ -525,51 +522,51 @@
           <fieldset>
             <div class="control-group">
               <label class="control-label">
-                一下身高</label>
+                <span js="grade1"></span>下身高</label>
               <div class="controls">
-                <input type="text" class="{number:true, min:0} input-mini" name="tallS1b" data-type="本人概況_身高S1b" placeholder="一下身高" tabindex="2003">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS1b" data-type="本人概況_身高S1b" placeholder="身高" tabindex="2003">
                 cm
               </div>
             </div>
             <div class="control-group">
               <label class="control-label">
-                一下體重</label>
+                <span js="grade1"></span>下體重</label>
               <div class="controls">
-                <input type="text" class="{number:true, min:0} input-mini" name="weightS1b" data-type="本人概況_體重S1b" placeholder="一下體重" tabindex="2004">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS1b" data-type="本人概況_體重S1b" placeholder="體重" tabindex="2004">
                 kg
               </div>
             </div>
             <hr/>
             <div class="control-group">
               <label class="control-label">
-                二下身高</label>
+                <span js="grade2"></span>下身高</label>
               <div class="controls">
-                <input type="text" class="{number:true, min:0} input-mini" name="tallS2b" data-type="本人概況_身高S2b" placeholder="二下身高" tabindex="2007">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS2b" data-type="本人概況_身高S2b" placeholder="身高" tabindex="2007">
                 cm
               </div>
             </div>
             <div class="control-group">
               <label class="control-label">
-                二下體重</label>
+                <span js="grade2"></span>下體重</label>
               <div class="controls">
-                <input type="text" class="{number:true, min:0} input-mini" name="weightS2b" data-type="本人概況_體重S2b" placeholder="二下體重" tabindex="2008">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS2b" data-type="本人概況_體重S2b" placeholder="體重" tabindex="2008">
                 kg
               </div>
             </div>
             <hr/>
             <div class="control-group">
               <label class="control-label">
-                三下身高</label>
+                <span js="grade3"></span>下身高</label>
               <div class="controls">
-                <input type="text" class="{number:true, min:0} input-mini" name="tallS3b" data-type="本人概況_身高S3b" placeholder="三下身高" tabindex="2011">
+                <input type="text" class="{number:true, min:0} input-mini" name="tallS3b" data-type="本人概況_身高S3b" placeholder="身高" tabindex="2011">
                 cm
               </div>
             </div>
             <div class="control-group">
               <label class="control-label">
-                三下體重</label>
+                <span js="grade3"></span>下體重</label>
               <div class="controls">
-                <input type="text" class="{number:true, min:0} input-mini" name="weightS3b" data-type="本人概況_體重S3b" placeholder="三下體重" tabindex="2012">
+                <input type="text" class="{number:true, min:0} input-mini" name="weightS3b" data-type="本人概況_體重S3b" placeholder="體重" tabindex="2012">
                 kg
               </div>
             </div>
