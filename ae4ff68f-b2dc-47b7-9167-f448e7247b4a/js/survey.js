@@ -250,7 +250,7 @@ var SurveyManger = function() {
                 return '<td><span class="btn disabled">已完成</span></td>';
                 break;
             default:
-                return '<td><a href="javascript: void(0);" class="btn btn-danger" data-index="' + index + '">尚未填寫</a></td>';
+                return '<td><a href="javascript: void(0);" class="btn btn-danger" data-index="' + index + '">開始填寫</a></td>';
         }
     };
     //#endregion

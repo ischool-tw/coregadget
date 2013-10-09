@@ -25,6 +25,7 @@ var CallbackQueue = CallbackQueue || {
         CallbackQueue.Queues[index]();
     }
 };
+
 var SurveyChanged_Handler = SurveyChanged_Handler || {
     Subscribers: [],
     Subscribe: function(object){
@@ -36,11 +37,12 @@ var SurveyChanged_Handler = SurveyChanged_Handler || {
           SurveyChanged_Handler.Subscribers[i]();
         }
     }
-}
+};
+
 var SurveyAfterChanged = function(){
     CallbackQueue.ResetIndex();
     CallbackQueue.DeQueue(0);
-}
+};
 
 var GetAchievingRate = function() {
     connection.send({
@@ -111,8 +113,8 @@ var GetReplyHistory = function() {
                             var ret = [];//<h1><span id="tabName"></span> 課程問卷調查</h1>
                             ret.push("<p><h4><span></span>" + item.SchoolYear + '學年度' + (item.Semester === '0' ? '夏季學期' : '第' + item.Semester + '學期') + "</h4></p>" +
                                      "<table id='" + item.SchoolYear + "-" + item.Semester + "' class='table table-bordered table-striped table-list'>" +
-                                     "<thead><tr><th>課程名稱</th><th style='width: 120px;'>符合填答課程條件</th><th style='width: 120px;'>問卷數</th><th style='width: 120px;'>已完成</th></tr></thead>" + 
-                                     "<tbody></tbody><tfoot><tr><td colspan='4' style='text-align: center'></td></tr></tfoot>");  
+                                     "<thead><tr><th>課程名稱</th><th style='width: 150px;'>符合填答課程條件</th><th style='width: 150px;'>問卷數</th><th style='width: 150px;'>已完成</th></tr></thead>" + 
+                                     "<tbody></tbody><tfoot><tr><td colspan='4' style='text-align: center; background-color:rgb(217, 237, 247); font-weight: 900; vertical-align:middle;'></td></tr></tfoot>");  
                             //console.log(ret);
                             $('#survey-history').append(ret.join(''));
                             //$('tfoot>tr>td').css('text-align', 'center');
@@ -134,16 +136,16 @@ var GetReplyHistory = function() {
                         _is_qualify = (item.AnswerCount) ? true : false;
 
                         if (!_is_qualify){
-                            _qualify_string = '<span class="label label-important">不符合優先選課條件</span>';
+                            _qualify_string = "<span class='label label-important' style='font-size:14px'>不符合優先選課條件</span>";
                         }
                         else{
                             if (!_achievingRate)
-                                _qualify_string = '<span class="label label-important">不符合優先選課條件</span>';
+                                _qualify_string = "<span class='label label-important' style='font-size:14px'>不符合優先選課條件</span>";
                             else {
                                 if (parseInt(_answerRate) >= parseInt(_achievingRate))
-                                    _qualify_string = "<span class='label label-success'>符合優先選課條件</span>";
+                                    _qualify_string = "<span class='label label-success' style='font-size:14px'>符合優先選課條件</span>";
                                 else
-                                    _qualify_string = '<span class="label label-important">不符合優先選課條件</span>';
+                                    _qualify_string = "<span class='label label-important' style='font-size:14px'>不符合優先選課條件</span>";
                             }                            
                         }
 
@@ -157,7 +159,7 @@ var GetReplyHistory = function() {
                         */
                         //console.log(_answerCount);
 
-                        $('#' + item.SchoolYear + "-" + item.Semester + ' >tfoot>tr>td').html('填答問卷數(A)：' + _answerCount + new Array(20).join('&nbsp;') + '總問卷數(B)：' + _surveyCount + new Array(20).join('&nbsp;') + '問卷填答率(A/B)：' + _answerRate + '<small>%</small>' + new Array(20).join('&nbsp;') + _qualify_string);
+                        $('#' + item.SchoolYear + "-" + item.Semester + ' >tfoot>tr>td').html('填答問卷數(A)：' + _answerCount + new Array(20).join('&nbsp;') + '總問卷數(B)：' + _surveyCount + new Array(20).join('&nbsp;') + '問卷填答率(<img src="img/AchivingRate.png" style="height:40px;">)：' + _answerRate + '<small>%' + new Array(2).join('&nbsp;') + '(小數點後無條件進位)</small>' + new Array(20).join('&nbsp;') + _qualify_string);
 
                         _school_year = item.SchoolYear;
                         _semester = item.Semester;
