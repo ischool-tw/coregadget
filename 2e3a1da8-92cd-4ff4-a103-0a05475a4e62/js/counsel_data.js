@@ -153,6 +153,7 @@ _gg.loadCounselData = function () {
                     // 2. 因學期對照表不含現在學期，故另外加入
                     if (contrast.TrueGradeYear === student.GradeYear) {
                         student.GradeYear = index.toString();
+                        _gg.student.TrueGradeYear = contrast.TrueGradeYear;
                         contrast.SchoolYear = _gg.schoolYear;
                     }
 
@@ -164,7 +165,7 @@ _gg.loadCounselData = function () {
                                 if (item.SchoolYear)
                                 var schoolYear = (parseInt(item.SchoolYear, 10) || 0);
                                 if (contrast.SchoolYear < schoolYear) {
-                                    contrast.SchoolYear = schoolYear;
+                                    contrast.SchoolYear = item.SchoolYear;
                                 }
                             }
                         });

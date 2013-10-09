@@ -126,6 +126,8 @@ _gg.col_Question = {
 _gg.loadCounselData = function () {
     _gg.init = false;
     var questionsData;
+    var bGetData = false;
+    var bGradeOpening = false;
 
     // 預設編輯鈕為 disabled
     $('a[data-toggle=modal]').addClass("disabled");
@@ -134,6 +136,13 @@ _gg.loadCounselData = function () {
     var set_error_message = function(serviceName, error) {
         $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗</strong>(" + serviceName + ")\n</div>");
     };
+
+    var DefaultDataFinish = function() {
+        if (bGetData && bGradeOpening) {
+            _gg.init = true;
+            _gg.SetData("All");
+        }
+    }
 
     _gg.GetData = function () {
         if (_gg.singleRecord && _gg.semesterData && _gg.multipleRecord &&
@@ -191,8 +200,8 @@ _gg.loadCounselData = function () {
                     });
                 });
             });
-            _gg.init = true;
-            _gg.SetData("All");
+            bGetData = true;
+            DefaultDataFinish();
         }
     };
 
@@ -363,6 +372,7 @@ _gg.loadCounselData = function () {
                         // 2. 因學期對照表不含現在學期，故另外加入
                         if (contrast.TrueGradeYear === student.GradeYear) {
                             _gg.student.GradeYear = index.toString();
+                            _gg.student.TrueGradeYear = contrast.TrueGradeYear;
                             contrast.SchoolYear = _gg.schoolYear;
                         }
 
@@ -371,10 +381,9 @@ _gg.loadCounselData = function () {
                             $(student.SemsHistory.History).each(function(index, item){
                                 // 覆寫年級對應學年度，處理學生重讀
                                 if (contrast.TrueGradeYear === item.GradeYear) {
-                                    if (item.SchoolYear)
                                     var schoolYear = (parseInt(item.SchoolYear, 10) || 0);
                                     if (contrast.SchoolYear < schoolYear) {
-                                        contrast.SchoolYear = schoolYear;
+                                        contrast.SchoolYear = item.GradeYear;
                                     }
                                 }
                             });
@@ -397,7 +406,7 @@ _gg.loadCounselData = function () {
                 }
 
                 if (callback && $.isFunction(callback)) {
-                    callback(_gg.student.GradeYear || '');
+                    callback(_gg.student.TrueGradeYear || '');
                 }
             }
         }
@@ -504,7 +513,8 @@ _gg.loadCounselData = function () {
 
     Main(function(data) {
         OpeningHours(data, function(){
-            _gg.SetData("All"); // 顯示資料
+            bGradeOpening = true;
+            DefaultDataFinish();
         })
     });
 };
