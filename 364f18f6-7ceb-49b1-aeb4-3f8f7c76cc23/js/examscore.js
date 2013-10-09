@@ -631,7 +631,7 @@
         if (_system_type === "kh") {
           if (exam_data.FixExam.TotalTFCredit) {
             if ((exam_data.FixExam.AvgTFScore != null) && exam_data.FixExam.AvgTFScore < 60) {
-              tbody1.push("<td class=\"my-fail\" my-data=\"" + exam.ExamID + "\" colspan=\"2\">" + (Number(exam_data.FixExam.AvgTFScore).toFixed(_places)) + "</td>");
+              tbody1.push("<td class=\"my-fail\" colspan=\"2\">" + (Number(exam_data.FixExam.AvgTFScore).toFixed(_places)) + "</td>");
             } else {
               tbody1.push("<td colspan=\"2\">" + (Number(exam_data.FixExam.AvgTFScore).toFixed(_places)) + "</td>");
             }
