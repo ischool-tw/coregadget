@@ -112,7 +112,7 @@
 }
 [lang=zh-TW] [multi-lang-text=呼叫服務失敗]:before
 {
-	content: "呼叫服務失敗或網路異常，請稍候重試!";
+	content: "呼叫服務失敗";
 }
 [lang=zh-TW] [multi-lang-text=圖片過大]:before
 {
@@ -129,4 +129,8 @@
 [lang=zh-TW] [multi-lang-text=請輸入稱謂]:after
 {
 	content: "請輸入稱謂";
+}
+[lang=zh-TW] [multi-lang-text=設定帳戶]:after
+{
+	content: "請先至「設定帳戶」中填寫您的姓名";
 }

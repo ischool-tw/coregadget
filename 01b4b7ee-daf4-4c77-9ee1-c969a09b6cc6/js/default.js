@@ -1,6 +1,6 @@
 var ParentManager = ParentManager || {};
-ParentManager.connection_public = gadget.getContract("basic.public");
-ParentManager.connection_student = gadget.getContract("basic.student");
+ParentManager.connection_public = gadget.getContract("cloud.public");
+ParentManager.connection_student = gadget.getContract("cloud.student");
 ParentManager.parents = [];
 
 jQuery(function () {

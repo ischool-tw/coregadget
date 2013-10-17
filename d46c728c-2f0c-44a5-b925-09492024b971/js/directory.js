@@ -19,15 +19,15 @@ jQuery(function () {
     });
 
     $('body')
-        // TODO: popover 點選x時關閉
+        // popover 點選x時關閉
         .on('click', 'div.popover button.close', function() {
             $('[rel=popover]').popover('hide');
         })
-        // TODO: 開啟 popover
+        // 開啟 popover
         .on('click', '[rel=popover]', function() {
             $(this).popover('show');
         })
-        // TODO: 點選列表中的大頭照連結
+        // 點選列表中的大頭照連結
         .on('click', 'div.my-stlist > a', function() {
             if ($(this).attr('href') === '#teacherInfo') {
                 _gg.teacher = _gg.teachers[$(this).attr('index')];
@@ -37,7 +37,7 @@ jQuery(function () {
                 _gg.getStudentInfo();
             }
         })
-        // TODO: 計算字數
+        // 計算字數
         .on('keyup', '.my-message-input', function (event) {
             $(".my-message-word").html(140 - $(this).val().length);
 
@@ -54,14 +54,14 @@ jQuery(function () {
                 $(".my-message-button").prop('disabled', false);
             }
         })
-        // TODO: 點選傳訊鈕。初始化訊息送出鈕為 disabled，處理收訊者選項
+        // 點選傳訊鈕。初始化訊息送出鈕為 disabled，處理收訊者選項
         .on('click', 'a[action-type=msgForm], button[action-type=msgForm]', function() {
             $('div.my-Msg').html('');
             $(".my-message-word").html(140);
             $('.my-message-input').val('');
             $(".my-message-button").prop('disabled', true);
 
-            // TODO: 群組傳訊
+            // 群組傳訊
             if (this.id === 'sendGroup') {
                 $('#mySendMsg input:radio:first').attr('checked', 'checked');
                 var tmp_tab = $('#myTab li.active a').attr('href');
@@ -77,14 +77,14 @@ jQuery(function () {
                 }
             }
         })
-        // TODO: 送出訊息
+        // 送出訊息
         .on('click', '.my-message-button', function() {
             $(this).button("loading");
             var that = this;
             _gg.sendMessage(that);
         });
 
-    // TODO: 個性簽名的 tooltip
+    // 個性簽名的 tooltip
     $('#student1 div[rel=tooltip], #teacher1 div[rel=tooltip], #studentInfo button[rel=tooltip]').tooltip("show").tooltip("toggle");
 
     $.datepicker.setDefaults({
@@ -93,7 +93,7 @@ jQuery(function () {
         ,dateFormat: "yy/mm/dd"
     });
 
-    // TODO: 搜尋
+    // 搜尋
     // $("#filter-keyword").keyup(function() {
     //     _gg.ResetTeacherList();
     // });
@@ -102,7 +102,7 @@ jQuery(function () {
     //     _gg.ResetTeacherList();
     // });
 
-    // TODO:  切換下拉選單
+    //  切換下拉選單
     $('#myTab').on('click', 'a', function() {
         $('#mainMsg').html('');
         if ($(this).attr('href') === '#teacher1') {
@@ -120,38 +120,40 @@ jQuery(function () {
         }
     });
 
-    // TODO: 點選老師
+    // 點選老師
     $('#teacher1').on('click', 'a', function() {
         _gg.teacher = _gg.teachers[$(this).attr('Index')];
     })
 
-    // TODO: 點選學生
+    // 點選學生
     $('#student1').on('click', 'a', function() {
         _gg.student = _gg.students[$(this).attr('Index')];
     })
 
     $("#teacherInfo, #studentInfo")
-        // TODO: 關閉 popover
+        // 關閉 popover
         .on('hidden', function() {
             $('[rel=popover]').popover('hide');
         })
-        // TODO: 重設 StudentCode
+        // 重設 StudentCode
         .on('click', 'a[action-type=refreshS]', function() {
             _gg.resetStudentCode();
         })
-        // TODO: 重設 ParentCode
+        // 重設 ParentCode
         .on('click', 'a[action-type=refreshP]', function() {
             _gg.resetParentCode();
         })
-        // TODO: 點選切換人員鈕，關閉 popvoer
+        // 點選切換人員鈕，關閉 popvoer
         .on('click', '.modal-footer a', function() {
+            $(this).closest('.modal-footer').find('div.my-pulse').remove();
+            $(this).append('<div class="my-pulse"></div>');
             $('[rel=popover]').popover('hide');
         })
 
-    // TODO: 提示照片格式
+    // 提示照片格式
     $('#edit-Photo').tooltip({trigger:'hover'});
 
-    // TODO: 驗證設定
+    // 驗證設定
     $.validator.setDefaults({
         debug: false, // 為 true 時不會 submit
         errorElement: "span", //錯誤時使用元素
@@ -172,7 +174,7 @@ jQuery(function () {
 
 
 
-    // TODO: 取得我的基本資料
+    // 取得我的基本資料
     _gg.connection.send({
         service: "_.GetMyInfo",
         body: '',
@@ -192,7 +194,7 @@ jQuery(function () {
                     $('#save-myself').click(function() {
                         $('#mainMsg').html('');
                         if ($("#profile form").valid()) {
-                            // TODO: 驗證通過
+                            // 驗證通過
                             $(this).button("loading");
                             _gg.saveMyInfo();
                         } else {
@@ -208,7 +210,7 @@ jQuery(function () {
                     });
                 }
 
-                // TODO: 取得我的班級 + 授課清單
+                // 取得我的班級 + 授課清單
                 _gg.connection.send({
                     service: "_.GetMyClassCourseList",
                     body: '',
@@ -231,13 +233,13 @@ jQuery(function () {
                             }
                         }
 
-                        // TODO: 下拉選單
+                        // 下拉選單
                         var dropdown_txt = '<li><a href="#profile" data-toggle="tab" class="my-highLightItem">個人資訊</a></li>' +
                             '<li><a href="#teacher1" data-toggle="tab" class="my-highLightItem">教師通訊錄</a></li>';
 
                         $('#myTab').html(dropdown_txt + dropdown_list.join(''));
 
-                        // TODO: 尚未填寫個人資料時，預設載入個人資訊頁
+                        // 尚未填寫個人資料時，預設載入個人資訊頁
                         if (_gg.myself.ProfileID && (_gg.myself.PrivacyT !== '' || _gg.myself.PrivacyS !== '' || _gg.myself.PrivacyP !== '')) {
                             if ($('#myTab a:[Kind=class]').size() > 0) {
                                 $('#myTab a:[Kind=class]:first').trigger('click');
@@ -247,7 +249,7 @@ jQuery(function () {
                                 $('#myTab a:[href=#teacher1]').trigger('click');
                             }
                         } else {
-                            // TODO: 未填, 載入個人資訊頁
+                            // 未填, 載入個人資訊頁
                             $('#myTab a:[href=#profile]').trigger('click');
                         }
                     }
@@ -257,14 +259,14 @@ jQuery(function () {
     });
 });
 
-// TODO: 顯示個人基本資料
+// 顯示個人基本資料
 _gg.getMyInfo = function () {
     $('#profile').find('input:text, textarea').val('')
         .end().find('input:checkbox').attr('checked', false)
         .end().find('#edit-Photo').html('');
 
     var myself = _gg.myself;
-    // TODO: 處理照片
+    // 處理照片
     var photo;
     var photo_base64 = '';
     if (myself.Photo) {
@@ -288,14 +290,14 @@ _gg.getMyInfo = function () {
     $('#edit-TeacherName').val(myself.TeacherName || '');
     $('#edit-Tagline').val(myself.Tagline || '');
 
-    // TODO: 處理分享對象
+    // 處理分享對象
     var privacy_checked = function(origin, privacyName) {
         if (origin) {
             var result = parseInt(origin, 10); // 轉為10進制
             var items = [1, 2, 4, 8, 16, 32];
 
             $(items).each(function(key, value) {
-                // TODO: 位元運算
+                // 位元運算
                 if (result & value) {
                     $('input:checkbox[name=' + privacyName + ']').filter('[value=' + value +']').attr('checked', true);
                 }
@@ -308,7 +310,7 @@ _gg.getMyInfo = function () {
     privacy_checked(myself.PrivacyP, 'parent');
 };
 
-// TODO: 顯示教師通訊錄
+// 顯示教師通訊錄
 _gg.getTeacherList = function() {
     var curr_page = 1,
         page_size = 50,
@@ -376,7 +378,7 @@ _gg.getTeacherList = function() {
     get_teacher_data(curr_page, page_size);
 };
 
-// TODO: 顯示教師詳細資料
+// 顯示教師詳細資料
 _gg.getTeacherInfo = function() {
     $('#teacherInfo').find('h3, #t-Tagline, #t-photo, #t-info').html('');
 
@@ -414,7 +416,7 @@ _gg.getTeacherInfo = function() {
     }
 };
 
-// TODO: 顯示班級、課程通訊錄
+// 顯示班級、課程通訊錄
 _gg.getStudentList = function() {
     $('#student1').html('');
     _gg.students = [];
@@ -487,7 +489,7 @@ _gg.getStudentList = function() {
     }
 };
 
-// TODO: 顯示學生、家長詳細資料
+// 顯示學生、家長詳細資料
 _gg.getStudentInfo = function() {
     $('#studentInfo').find('.slides, .modal-footer').html('');
     _gg.parents = [];
@@ -505,15 +507,7 @@ _gg.getStudentInfo = function() {
                         controlsContainer: "#studentInfo .modal-footer",
                         directionNav: false
                     })
-                .end().find('.flex-control-nav')
-                    .one('click', function() {
-                        $(this).closest('ol').find('div.my-pulse').remove();
-                    })
-                    .find('li a')
-                        .append('<div class="my-pulse"></div>')
-                        .click(function() {
-                            $('[rel=popover]').popover('hide');
-                        });
+                .end().find('.flex-control-nav li a:first').append('<div class="my-pulse"></div>');
         }
     };
 
@@ -549,14 +543,14 @@ _gg.getStudentInfo = function() {
             '    </div>' +
             '    <div class="modal-body">' +
             '        <div class="my-ppimg">' + photo +
-            '            <button class="btn"' + btn_attr + ' action-type="msgForm" rel="popover" data-trigger=&lt;manual&gt; data-content="&lt;textarea class=&quot;span4 my-message-input&quot; rows=&quot;10&quot;&gt;&lt;/textarea&gt;' +
+            '            <button class="btn"' + btn_attr + ' action-type="msgForm" rel="popover" data-trigger="manual" data-content="&lt;textarea class=&quot;span4 my-message-input&quot; rows=&quot;10&quot;&gt;&lt;/textarea&gt;' +
             '                &lt;br/&gt;' +
             '                &lt;button class=&quot;btn btn-success pull-right my-message-button&quot; action-type=&quot;to_student&quot; autocomplete=&quot;off&quot; data-loading-text=&quot;傳送中...&quot;&gt;送出&lt;/button&gt;"' +
             ' data-original-title="&lt;i class=&quot;icon-comment&quot;&gt;&lt;/i&gt; &lt;span class=&quot;my-message-word&quot;&gt;140&lt;/span&gt; &lt;button type=&quot;button&quot; class=&quot;close&quot; data-dismiss=&quot;popover&quot; aria-hidden=&quot;true&quot;&gt;×&lt;/button&gt;">' +
             '                <i class="icon-comment"></i> 傳送訊息' +
             '            </button>';
 
-        // TODO: 班級學生才秀代碼
+        // 班級學生才秀代碼
         if (_gg.studentlist.kind === 'class') {
             ss += '' +
             '            <div class="accordion" id="accordion2">' +
@@ -639,7 +633,7 @@ _gg.getStudentInfo = function() {
                                 '    </div>' +
                                 '    <div class="modal-body">' +
                                 '        <div class="my-ppimg">' + photo +
-                                '            <button class="btn" action-type="msgForm" rel="popover" data-trigger=&lt;manual&gt; data-content="&lt;textarea class=&quot;span4 my-message-input&quot; rows=&quot;10&quot;&gt;&lt;/textarea&gt;' +
+                                '            <button class="btn" action-type="msgForm" rel="popover" data-trigger="manual" data-content="&lt;textarea class=&quot;span4 my-message-input&quot; rows=&quot;10&quot;&gt;&lt;/textarea&gt;' +
                                 '                &lt;br/&gt;' +
                                 '                &lt;label class=&quot;checkbox inline&quot;&gt;' +
                                 '                &lt;input type=&quot;checkbox&quot; value=&quot;1&quot;&gt;' +
@@ -672,9 +666,9 @@ _gg.getStudentInfo = function() {
     }
 };
 
-// TODO: 個人基本資料-上傳照片
+// 個人基本資料-上傳照片
 _gg.updatePhoto = function() {
-    // TODO: 處理上傳圖片
+    // 處理上傳圖片
     $('#edit-Photo').click(function(evt) {
         $('#mainMsg').html('');
         $('#files').val('').trigger('click');
@@ -689,7 +683,7 @@ _gg.updatePhoto = function() {
 
         var file = evt.target.files[0];
 
-        // TODO: 限制檔案大小
+        // 限制檔案大小
         var fileSize = 0; //檔案大小
         var SizeLimit = 1024 * 50;  //上傳上限，單位:byte, 50KB
         if ($.browser.msie) {
@@ -734,7 +728,7 @@ _gg.updatePhoto = function() {
     });
 };
 
-// TODO: 儲存個人基本資料
+// 儲存個人基本資料
 _gg.saveMyInfo = function() {
     var myself = _gg.myself;
     var teachername = $('#edit-TeacherName').val() || '';
@@ -749,7 +743,7 @@ _gg.saveMyInfo = function() {
         var email = $('#edit-Email').val() || '';
         var tagline = $('#edit-Tagline').val() || '';
 
-        // TODO: 處理分享對象
+        // 處理分享對象
         var privacy_t = 0, privacy_s = 0, privacy_p = 0;
 
         $("#profile input:checkbox:checked").each(function(index, item) {
@@ -790,7 +784,7 @@ _gg.saveMyInfo = function() {
                     $("#save-myself").button("reset");
                     _gg.set_error_message('#mainMsg', 'SetMyInfo', error);
                 } else {
-                    // TODO: 重設資料
+                    // 重設資料
                     myself.TeacherName = teachername;
                     myself.Photo = photo;
                     myself.Gender = gender;
@@ -817,7 +811,7 @@ _gg.saveMyInfo = function() {
     }
 };
 
-// TODO: 處理選擇性公開資訊
+// 處理選擇性公開資訊
 _gg.getProfile = function(obj) {
     var birthdate = '<li><i class="icon-gift" />' + (obj.Birthdate === 'not public' ? '未公開' : (obj.Birthdate || '')) + '</li>';
     var contact_phone = '<li><i class="icon-headphones" />' + (obj.ContactPhone === 'not public' ? '未公開' : (obj.ContactPhone || '')) + '</li>';
@@ -829,7 +823,7 @@ _gg.getProfile = function(obj) {
     return (birthdate + contact_phone + cell_phone + Email + contact_address + about_me);
 };
 
-// TODO: 重設 StudentCode
+// 重設 StudentCode
 _gg.resetStudentCode = function() {
     var student = _gg.student;
     if (student) {
@@ -852,7 +846,7 @@ _gg.resetStudentCode = function() {
     }
 };
 
-// TODO: 重設 ParentCode
+// 重設 ParentCode
 _gg.resetParentCode = function() {
     var student = _gg.student;
     if (student) {
@@ -875,13 +869,13 @@ _gg.resetParentCode = function() {
     }
 };
 
-// TODO: 傳送訊息
+// 傳送訊息
 _gg.sendMessage = function(e) {
     var getList1 = false, getList2 = false, tmp_recipients = [];
     var content = '', receiverName = '', receiverID = '', that_msg_id, that_msg_obj, that_msg_type;
     var that_send_obj = $(e); // 送出鈕物件
 
-    // TODO: 開始傳送
+    // 開始傳送
     var saveMsg = function() {
         if (getList1 && getList2) {
             $.unique(tmp_recipients); // 移除重複的元素，但會產出空元素
@@ -956,7 +950,7 @@ _gg.sendMessage = function(e) {
         }
     };
 
-    // TODO: 取得收訊者 ProfileID, 及訊息
+    // 取得收訊者 ProfileID, 及訊息
     var target = that_send_obj.attr('action-type');
 
     var n = 0;
@@ -985,7 +979,7 @@ _gg.sendMessage = function(e) {
                 break;
 
             case 'to_teachers':
-                // TODO: 全校教師
+                // 全校教師
                 var teachers = _gg.teachers;
                 $(teachers).each(function(index, item) {
                     if (item) {
@@ -1004,7 +998,7 @@ _gg.sendMessage = function(e) {
             case 'to_family':
                 if (n > 0) {
                     var parents = _gg.parents;
-                    // TODO: 某學生所有親屬
+                    // 某學生所有親屬
                     $(parents).each(function(index, item) {
                         tmp_recipients.push(item.ProfileID);
                     })
@@ -1017,7 +1011,7 @@ _gg.sendMessage = function(e) {
                 break;
 
             case 'to_students':
-                // TODO: 此課程、班級 的 所有學生與家長 or 所有學生 or 所有家長
+                // 此課程、班級 的 所有學生與家長 or 所有學生 or 所有家長
                 var kind = $('#mySendMsg input:radio:checked').val(); //sp, s, p
 
                 switch (kind) {
@@ -1055,7 +1049,7 @@ _gg.sendMessage = function(e) {
                             request = '<Request><Condition><CourseID>' + cid + '</CourseID></Condition></Request>';
                         }
                     }
-                    // TODO: 某班級的全部家長 ProfileID or 某課程的全部家長 ProfileID
+                    // 某班級的全部家長 ProfileID or 某課程的全部家長 ProfileID
                     _gg.connection.send({
                         service: service,
                         body: request,
@@ -1093,7 +1087,7 @@ _gg.sendMessage = function(e) {
     }
 };
 
-// TODO: 錯誤訊息
+// 錯誤訊息
 _gg.set_error_message = function(select_str, serviceName, error) {
     if (serviceName) {
         var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';

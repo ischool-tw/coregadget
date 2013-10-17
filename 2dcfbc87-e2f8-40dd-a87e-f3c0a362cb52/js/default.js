@@ -46,26 +46,28 @@ jQuery(function () {
 
         // 1. 取得account
         // 2. 註冊成學生
-        var connection = gadget.getContract("basic.guest");
+        var connection = gadget.getContract("cloud.guest");
         target.find('[js="create"]').click(function(){
-            if($(this).hasClass("disabled"))return;
+            var that = $(this);
+            if(that.hasClass("disabled"))return;
             target.find('[js="errorMessage"]').html('');
-            $(this).attr("multi-lang-text", "處理中").addClass("disabled");
-            connection.send({
-                service: "beta.GetAccount",
-                body: {},
-                result: function (response, error, http) {
-                    if (error !== null) {
-                        set_error_message(target.find('[js="errorMessage"]'), 'GetAccount', error);
-                        $(this).attr("multi-lang-text", "註冊成為學生").removeClass("disabled");
-                    } else {
-                        var account = response.Account || '';
-                        if (account) {
+            that.attr("multi-lang-text", "處理中").addClass("disabled");
+            // connection.send({
+            //     service: "beta.GetAccount",
+            //     body: {},
+            //     result: function (response, error, http) {
+            //         if (error !== null) {
+            //             set_error_message(target.find('[js="errorMessage"]'), 'GetAccount', error);
+            //             that.attr("multi-lang-text", "註冊成為學生").removeClass("disabled");
+            //         } else {
+            //             var account = response.Account || '';
+            //             if (account) {
                             $.ajax({
-                                url: 'https://auth.ischool.com.tw/service/getaccountinfo.php?account='+ encodeURIComponent(account),
+                                // url: 'https://auth.ischool.com.tw/service/getaccountinfo.php?account='+ encodeURIComponent(account),
+                                url: 'https://auth.ischool.com.tw/service/checkstatus.php',
                                 dataType: 'json',
                                 success: function(data){
-                                    if (data) {
+                                    if (data && (data.lastName || data.firstName)) {
                                         connection.send({
                                             service: "beta.BecomeStudent",
                                             body: {
@@ -82,7 +84,7 @@ jQuery(function () {
                                                         }
                                                     } else {
                                                         set_error_message(target.find('[js="errorMessage"]'), 'BecomeStudent', error);
-                                                        $(this).attr("multi-lang-text", "註冊成為學生").removeClass("disabled");
+                                                        that.attr("multi-lang-text", "註冊成為學生").removeClass("disabled");
                                                     }
                                                 } else {
                                                     target.find('.modal-body').html('<p multi-lang-text="您已具有學生身份"></p>');
@@ -90,13 +92,16 @@ jQuery(function () {
                                                 }
                                             }
                                         });
+                                    } else {
+                                        set_error_message(target.find('[js="errorMessage"]'), '', '<strong multi-lang-text="設定帳戶"></strong>');
+                                        that.attr("multi-lang-text", "註冊成為學生").removeClass("disabled");
                                     }
                                 }
                             });
-                        }
-                    }
-                }
-            });
+            //             }
+            //         }
+            //     }
+            // });
         });
 
     });

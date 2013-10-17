@@ -525,7 +525,7 @@ $(function () {
             // 跳至該學生
             var top_val = $("tr[data-sid=" + currentStudent.StudentId + "]").offset().top-205;
             top_val = (top_val < 0) ? 0 : top_val;
-            $('body').animate({scrollTop: top_val}, 500);
+            $('body, html').animate({scrollTop: top_val}, 500);
         }
 
         target.find("[js=seatNo]").on("keyup", function(e) {

@@ -5,7 +5,9 @@
   <script>
     init({
       application: "dev.sh_d",
-      paramValues: {}
+      paramValues: {
+        system_category: "campus"
+      }
     });
   </script>
   <link href="css/bootstrap.css" rel="stylesheet" />
@@ -41,7 +43,9 @@
             </ul>
           </div>
           <div class="span9" js="panel_single_group">
-            <div class="pull-left"><span js="groupName"></span>群組代碼：<span js="groupCode"></span>
+            <div class="pull-left">
+              <span class="my-groupName" js="groupName"></span>
+              群組代碼：<span class="my-groupCode monospaced" js="groupCode"></span>
               <a href="javascript:void(0);" title="重設代碼" js="refresh">
                 <i class="icon-refresh"></i>
               </a>
@@ -49,11 +53,17 @@
                 <i class="icon-trash my-trash-color"></i>
               </a>
             </div>
-            <div class="pull-right">組員人數：<span js="totalMember"></span></div>
+            <div class="pull-right">
+              成員人數：<span js="totalMember"></span>
+              <a class="btn" href="javascript:void(0);" title="加入成員" js="joinMember">
+                <i class="icon-plus"></i>
+                加入成員</a>
+            </div>
             <table class="table table-bordered table-striped clearfix">
               <thead>
                 <tr>
-                  <th>學生姓名</th>
+                  <th>成員編號</th>
+                  <th>成員姓名</th>
                   <th>家長代碼</th>
                   <th>移除</th>
                 </tr>
@@ -74,7 +84,7 @@
       <div js="errorMessage"></div>
     </div>
     <div class="modal-body">
-      <form class="form-horizontal">
+      <form class="form-horizontal" action="javascript:return false;">
         <fieldset>
           <div class="control-group">
             <label class="control-label"></label>
@@ -94,7 +104,7 @@
   <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal hide fade" js="panel_remove" role="dialog" tabindex="-1">
     <div class="modal-header">
       <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
-      <h3>移除組員</h3>
+      <h3>移除成員</h3>
       <div js="errorMessage"></div>
     </div>
     <div class="modal-body alert-danger">
@@ -103,6 +113,60 @@
     <div class="modal-footer">
       <a aria-hidden="true" class="btn" data-dismiss="modal" href="javascript:void(0);">取消</a>
       <a class="btn btn-danger" href="javascript:void(0);" js="delete" data-loading-text="移除中...">移除</a>
+    </div>
+  </div>
+    <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal hide fade" js="panel_joinMember" role="dialog" tabindex="-1">
+    <div class="modal-header">
+      <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+      <h3>加入成員</h3>
+      <div js="errorMessage"></div>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal" novalidate="novalidate" action="javascript:return false;">
+        <fieldset>
+          <div class="control-group">
+            <label class="control-label">方式</label>
+            <div class="controls">
+              <select name="mainChoose">
+                <option value="invite">電子郵件邀請</option>
+                <option value="class">iSchool班級</option>
+                <option value="course">iSchool課程</option>
+              </select>
+            </div>
+          </div>
+          <div class="control-group" js="subPanel_list" class="hide">
+            <label class="control-label">名稱</label>
+            <div class="controls">
+              <select name="subChoose">
+              </select>
+            </div>
+          </div>
+          <div class="control-group" js="subPanel_members" class="hide">
+            <label class="control-label">名單</label>
+            <div class="controls">
+              <p>
+                <label class="checkbox">
+                  <input type="checkbox" js="controlCKB">
+                  全選
+                </label>
+              </p>
+              <p js="chooseMember">
+              </p>
+            </div>
+          </div>
+          <div class="control-group" js="subPanel_invite" class="hide">
+            <label class="control-label">Email</label>
+            <div class="controls">
+              <input type="text" class="input-xxlarge" name="email" placeholder="請輸入受邀者的email">
+              <p>邀請多人請以「,」區隔email</p>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <a aria-hidden="true" class="btn" data-dismiss="modal" href="javascript:void(0);">取消</a>
+      <a class="btn btn-danger" href="javascript:void(0);" js="join" data-loading-text="處理中...">送出</a>
     </div>
   </div>
 </body>

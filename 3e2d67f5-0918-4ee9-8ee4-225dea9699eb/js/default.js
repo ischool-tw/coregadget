@@ -1,5 +1,5 @@
 ﻿var GroupManager = GroupManager || {};
-GroupManager.connection_student = gadget.getContract('basic.student');
+GroupManager.connection_student = gadget.getContract('cloud.student');
 GroupManager.groups = [];
 
 $(document).ready(function () {

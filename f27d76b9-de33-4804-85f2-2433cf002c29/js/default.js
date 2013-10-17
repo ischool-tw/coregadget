@@ -78,7 +78,7 @@ ScoreManager = function() {
     _connection_basic.ready(function() {
         console.log(new Date() - tt);
     });
-    var _connection_score = gadget.getContract("couldSchool.multi")
+    var _connection_score = gadget.getContract("cloud.multi")
     var _courses = [];
     var _course = {};
     var _subExam = ['第1次段考','第2次段考','第3次段考','第1次小考','第2次小考','第3次小考','第4次小考','第5次小考'];

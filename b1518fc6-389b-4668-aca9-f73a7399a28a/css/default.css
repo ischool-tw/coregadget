@@ -42,11 +42,21 @@ ul li:nth-child(even) {
   height: 14px;
   padding-top: 14px;
 }
+.span9 > .pull-right > .btn {
+  margin: 0 0 10px 5px;
+}
+.modal-body label {
+  display: inline-block;
+  margin-right: 10px;
+}
+.modal-body .control-group {
+  text-align: left;
+}
 /*自訂*/
 #mainMsg {
   z-index: 5000;
   position: fixed;
-  max-width: 1020px;
+  top: -2px;
   left: 0;
   width: 100%;
   text-align: center;
@@ -55,15 +65,21 @@ ul li:nth-child(even) {
   cursor: pointer;
 }
 .alert.alert-error {
-  background-color: rgba(242, 222, 222, 0.8);
+  background-color: rgba(242, 222, 222, 0.9);
 }
 .alert.alert-success {
-  background-color: rgba(223, 240, 216, 0.8);
+  background-color: rgba(223, 240, 216, 0.9);
 }
 .modal-body .form-horizontal .controls {
   text-align: left;
 }
+div[js="panel_single_group"] .pull-left {
+  margin: 10px 0;
+}
 div[js="panel_single_group"] thead th:nth-child(1) {
+  width: 14%;
+}
+div[js="panel_single_group"] thead th:nth-child(2) {
   width: 30%;
 }
 div[js="panel_single_group"] thead th:last-child {
@@ -71,4 +87,13 @@ div[js="panel_single_group"] thead th:last-child {
 }
 .my-trash-color {
   color: #C00;
+}
+.my-groupName {
+  font-weight: bold;
+}
+.my-groupCode {
+  margin-right: 5px;
+}
+.monospaced {
+  font-family: consolas;
 }

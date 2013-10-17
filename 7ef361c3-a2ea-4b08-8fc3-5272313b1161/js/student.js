@@ -1,6 +1,6 @@
 var StudentManager = StudentManager || {};
-StudentManager.connection_public = gadget.getContract("basic.public");
-StudentManager.connection_staff = gadget.getContract("basic.staff");
+StudentManager.connection_public = gadget.getContract("cloud.public");
+StudentManager.connection_staff = gadget.getContract("cloud.staff");
 
 jQuery(function () {
     $('#myTab')
@@ -68,7 +68,7 @@ jQuery(function () {
         // 取得全部班級資訊
         var getAllClassList = function(callback) {
             StudentManager.connection_staff.send({
-                service: "GetClass",
+                service: "beta.GetClass",
                 body: '',
                 result: function (response, error, http) {
                     if (error !== null) {
@@ -165,7 +165,7 @@ jQuery(function () {
         var getStudent = function(callback) {
             var classes = StudentManager.classes;
             StudentManager.connection_staff.send({
-                service: "GetStudent",
+                service: "beta.GetStudent",
                 body: {StudentStatus: '1, 2'},
                 result: function (response, error, http) {
                     if (error !== null) {

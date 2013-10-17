@@ -8,8 +8,6 @@
 }
 .my-group > div:first-child {
   width: 78%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   overflow: hidden;
   float: left;
 }
@@ -17,7 +15,7 @@
 #mainMsg {
   z-index: 5000;
   position: fixed;
-  max-width: 1020px;
+  top: -2px;
   left: 0;
   width: 100%;
   text-align: center;
@@ -26,10 +24,10 @@
   cursor: pointer;
 }
 .alert.alert-error {
-  background-color: rgba(242, 222, 222, 0.8);
+  background-color: rgba(242, 222, 222, 0.9);
 }
 .alert.alert-success {
-  background-color: rgba(223, 240, 216, 0.8);
+  background-color: rgba(223, 240, 216, 0.9);
 }
 .modal-body .form-horizontal .controls {
   text-align: left;
@@ -43,4 +41,16 @@
 }
 .my-group-subtitle {
   color: #aeaeae;
+}
+.my-group {
+  height: 52px;
+}
+.my-groupName {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.my-groupName:hover {
+  text-overflow: inherit;
+  white-space: normal;
 }

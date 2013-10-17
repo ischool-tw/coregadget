@@ -1,6 +1,6 @@
 ﻿var GroupManager = GroupManager || {};
-GroupManager.connection_public = gadget.getContract("basic.public");
-GroupManager.connection_staff = gadget.getContract('basic.staff');
+GroupManager.connection_public = gadget.getContract("cloud.public");
+GroupManager.connection_staff = gadget.getContract("cloud.staff");
 GroupManager.groups = [];
 
 $(document).ready(function () {
@@ -121,10 +121,14 @@ $(document).ready(function () {
                 $(groups).each(function(index, group) {
                     ret.push(
                         '<div class="my-group">' +
-                        '  <div>' + group.GroupName + '' +
-                        '    <br/><small class="my-group-subtitle">' + (group.GroupTeachers || '未指定')  + ' / ' + (group.GroupCode || '未指定') + '</small>' +
+                        '  <div>' +
+                        '    <div class="my-groupName">' + group.GroupName + '</div>' +
+                        '    <div>' +
+                        '      <small class="my-group-subtitle">' + (group.GroupTeachers || '未指定')  + ' / ' +
+                        '      <span class="monospaced">' + (group.GroupCode || '未指定') + '</span></small>' +
+                        '    </div>' +
                         '  </div>' +
-                        '  <div data-gid="' + group.GroupId + '" js="edit">' +
+                        '  <div class="pull-right" data-gid="' + group.GroupId + '" js="edit">' +
                         '    <a href="javascript:void(0);" class="btn" role="button">' +
                         '      <i class="icon-edit"></i>' +
                         '    </a>' +
@@ -154,6 +158,7 @@ $(document).ready(function () {
         });
 
         // 初始時載入
+        target.html('<p>載入中...</p>');
         getGroup();
     });
 
@@ -238,6 +243,7 @@ $(document).ready(function () {
                                 GroupId: groupId,
                                 GroupName: groupName,
                                 GroupCode: groupCode,
+                                Sequence: '1',
                                 TeacherId: teacherId
                             }
                         }
@@ -283,8 +289,9 @@ $(document).ready(function () {
                                         }
                                         group.GroupTeachers = teachers.join('');
 
-                                        if (!groups['g'+group.GroupId]) {
-                                            groups['g'+group.GroupId] = group;
+                                        if (!GroupManager.groups['g'+group.GroupId]) {
+                                            GroupManager.groups.push(group);
+                                            GroupManager.groups['g'+group.GroupId] = group;
                                         }
                                     });
                                 }

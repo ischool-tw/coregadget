@@ -1,0 +1,75 @@
+.my-group {
+  box-sizing: border-box;
+  width: 24%;
+  float: left;
+  border: 1px solid #eee;
+  padding: 5px 10px;
+  margin: 5px;
+}
+.my-group > div:first-child {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.my-page {
+  position: relative;
+}
+.my-child {
+  position: absolute;
+  top: -1px;
+  left: 450px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  border-radius: 0 0 3px 3px;
+  z-index: 999;
+}
+.my-childbar {
+  text-align: center;
+  clear: both;
+}
+.my-childname {
+  overflow: hidden;
+  height: 0;
+}
+.my-childname ul {
+  margin: 0;
+}
+.my-childname ul li {
+  float: left;
+  padding: 5px 10px;
+  list-style-type: none;
+  border-left: 1px solid #ddd;
+  border-bottom: 1px solid #e1e1e1;
+  cursor: pointer;
+}
+.my-childname ul li:first-child {
+  border-left: none;
+}
+.my-childname ul li:hover {
+  background: #fafafa;
+}
+/*自訂*/
+#mainMsg {
+  z-index: 5000;
+  position: fixed;
+  top: -2px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+.my-err-info {
+  cursor: pointer;
+}
+.alert.alert-error {
+  background-color: rgba(242, 222, 222, 0.9);
+}
+.alert.alert-success {
+  background-color: rgba(223, 240, 216, 0.9);
+}
+.my-group {
+  height: 36px;
+}
+.my-group > div:first-child:hover {
+  text-overflow: inherit;
+  white-space: normal;
+}

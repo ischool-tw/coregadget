@@ -1,5 +1,5 @@
-var _connection_public = gadget.getContract("basic.public");
-var _connection_basic = gadget.getContract("basic.staff");
+var _connection_public = gadget.getContract("cloud.public");
+var _connection_staff = gadget.getContract("cloud.staff");
 jQuery(function() {
     TeacherManager.init();
 
@@ -103,7 +103,7 @@ jQuery(function() {
                     };
                 }
 
-                _connection_basic.send({
+                _connection_staff.send({
                     service: send.service,
                     body: send.body,
                     result: function (response, error, http) {
@@ -139,7 +139,7 @@ jQuery(function() {
         var delBaseInfo = function(teacher) {
             var teacherId = teacher.TeacherId;
             if (teacherId) {
-                _connection_basic.send({
+                _connection_staff.send({
                     service: "beta.DelTeacher",
                     body: {
                         TeacherId: teacherId
@@ -252,8 +252,8 @@ var TeacherManager = function () {
         _teachers = [];
         $('#namelist').html('資料載入中...');
 
-        _connection_basic.send({
-            service: "GetTeacher",
+        _connection_staff.send({
+            service: "beta.GetTeacher",
             body: {
                 TeacherStatus: '1'
             },

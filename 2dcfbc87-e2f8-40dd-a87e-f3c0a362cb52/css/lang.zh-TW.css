@@ -22,4 +22,7 @@
 {
 	content: "呼叫服務失敗!";
 }
-
+[lang=zh-TW] [multi-lang-text=設定帳戶]:after
+{
+    content: "請先至「設定帳戶」中填寫您的姓名";
+}

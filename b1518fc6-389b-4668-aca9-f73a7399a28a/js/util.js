@@ -6,7 +6,7 @@ GroupManager.Util = function() {
         result = void 0;
         if (!$.isArray(obj)) {
             result = [];
-           if (obj) {
+            if (obj) {
               result.push(obj);
             }
         } else {

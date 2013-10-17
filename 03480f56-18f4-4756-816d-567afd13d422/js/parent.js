@@ -14,7 +14,7 @@ jQuery(function () {
         // 錯誤訊息
         var set_error_message = function(element, serviceName, error) {
             if (serviceName) {
-                var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗</strong>(' + serviceName + ')';
+                var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong multi-lang-text="呼叫服務失敗"></strong>(' + serviceName + ')';
                 if (error !== null) {
                     if (error.dsaError) {
                         if (error.dsaError.status === "504") {
@@ -48,7 +48,7 @@ jQuery(function () {
             var relationship = target.find('[js="relationship"]').val();
             if (code && relationship) {
                 var public_connection = public_connection || gadget.getContract("auth.guest");
-                var parent_connection = gadget.getContract("basic.parent");
+                var parent_connection = gadget.getContract("cloud.parent");
                 public_connection.send({
                     service: "Join.AsParent",
                     body: {
@@ -63,12 +63,13 @@ jQuery(function () {
                             target.find('[js="save-data"]').attr("multi-lang-text", "送出").removeClass("disabled");
                         } else {
                             public_connection.ready(function(){
-                                var account = public_connection.getUserInfo().UserName;
+                                // var account = public_connection.getUserInfo().UserName;
                                 $.ajax({
-                                    url: 'https://auth.ischool.com.tw/service/getaccountinfo.php?account='+ encodeURIComponent(account),
+                                    // url: 'https://auth.ischool.com.tw/service/getaccountinfo.php?account='+ encodeURIComponent(account),
+                                    url: 'https://auth.ischool.com.tw/service/checkstatus.php',
                                     dataType: 'json',
                                     success: function(data){
-                                        if (data) {
+                                        if (data && (data.lastName || data.firstName)) {
                                             parent_connection.send({
                                                 service: "beta.UpdateMyInfo",
                                                 body: {
@@ -84,6 +85,9 @@ jQuery(function () {
                                                     }
                                                 }
                                             });
+                                        } else {
+                                            set_error_message(target.find('[js="errorMessage"]'), '', '<strong multi-lang-text="設定帳戶"></strong>');
+                                            target.find('[js="save-data"]').attr("multi-lang-text", "送出").removeClass("disabled");
                                         }
                                     }
                                 });
