@@ -263,9 +263,9 @@
                             if (extension.AssignmentScore) {
                               ext_assignmentScore = Number(extension.AssignmentScore);
                             }
-                            if (ext_score && ext_assignmentScore) {
+                            if ((ext_score != null) && (ext_assignmentScore != null)) {
                               return avg_score = FloatMath(FloatMath(ext_score, '+', ext_assignmentScore), '/', 2);
-                            } else if (ext_score) {
+                            } else if (ext_score != null) {
                               return avg_score = ext_score;
                             } else {
                               return avg_score = ext_assignmentScore;
