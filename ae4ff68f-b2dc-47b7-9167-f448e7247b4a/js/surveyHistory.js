@@ -1,6 +1,8 @@
 
 var connection = gadget.getContract("emba.survey.student");   
 var oAchievingRate = {};
+var oConfiguration = {};
+var oSurveyHistoryTemplateDescriptionSubfix = 'survey-history-description';
 
 var CallbackQueue = CallbackQueue || {
     Queues: [],
@@ -74,10 +76,39 @@ var GetAchievingRate = function() {
     });
 };
 
+var GetTextTemplate = function() {
+    connection.send({
+        service: "_.GetCSConfiguration",
+        body: {},
+        result: function (response, error, http) {
+            if (error !== null) {
+                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetTextTemplate)\n</div>");
+            } else {
+                /*
+                <Response>
+                    <Configuration>
+                        <ConfName>101-2-survey-history-description</ConfName>
+                        <ConfContent>
+                            <![CDATA[]]>
+                        </ConfContent>
+                    </Configuration>
+                </Response>
+                */
+                if (response.Response && response.Response.Configuration) {
+                    oConfiguration = response.Response.Configuration;
+                    console.log(JSON.stringify(oConfiguration));
+                    //  告訴大家我成功了
+                    CallbackQueue.JobFinished();
+                }
+            }
+        }
+    });
+};
+
 var GetReplyHistory = function() {
     connection.send({
         service: "_.GetReplyHistory",
-        body: "<Request><Order><SchoolYear></SchoolYear><Semester></Semester><EndTime></EndTime><CourseID></CourseID></Order></Request>",
+        body: "<Request><Order><SchoolYear>DESC</SchoolYear><Semester>DESC</Semester><EndTime></EndTime><CourseID></CourseID></Order></Request>",
         result: function (response, error, http){
             if (error !== null) {
                 $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetReplyHistory)\n</div>");
@@ -96,8 +127,6 @@ var GetReplyHistory = function() {
 
                 if (response.Response && response.Response.ReplyHistory) {
                     console.log(JSON.stringify(response.Response.ReplyHistory));
-                    //  告訴大家我成功了
-                    CallbackQueue.JobFinished();
 
                     var _school_year = '';                    
                     var _semester = '';
@@ -105,35 +134,49 @@ var GetReplyHistory = function() {
                     var _answerCount = 0;
                     var _achievingRate;
                     var _is_qualify = true;
-                    var _qualify_string;
+                    var _qualify_string = '';
+                    var _survey_detail_string = '';
 
                     $(response.Response.ReplyHistory).each(function(index, item) {
                         //  學年期更換，加學年期標題
                         if (item.SchoolYear != _school_year || item.Semester != _semester) {
-                            var ret = [];//<h1><span id="tabName"></span> 課程問卷調查</h1>
-                            ret.push("<p><h4><span></span>" + item.SchoolYear + '學年度' + (item.Semester === '0' ? '夏季學期' : '第' + item.Semester + '學期') + "</h4></p>" +
-                                     "<table id='" + item.SchoolYear + "-" + item.Semester + "' class='table table-bordered table-striped table-list'>" +
-                                     "<thead><tr><th>課程名稱</th><th style='width: 150px;'>符合填答課程條件</th><th style='width: 150px;'>問卷數</th><th style='width: 150px;'>已完成</th></tr></thead>" + 
-                                     "<tbody></tbody><tfoot><tr><td colspan='4' style='text-align: center; background-color:rgb(217, 237, 247); font-weight: 900; vertical-align:middle;'></td></tr></tfoot>");  
+                            var ret = "<p><h4><span></span>" + item.SchoolYear + '學年度' + (item.Semester === '0' ? '夏季學期' : '第' + item.Semester + '學期') + "</h4></p>" +                             
+                                     "<table id='" + item.SchoolYear + "-" + item.Semester + "' class='table table-bordered table-striped table-list survey-history-table'>" +
+                                     "<thead><tr><th>課程名稱</th><th>問卷數</th><th>問卷完成數</th><th>符合填答課程條件</th></tr></thead><tbody>" + 
+                                     "<tr><td>合計</td><td></td><td></td><td rowspan='2'></td></tr>" + 
+                                     "<tr><td>問卷填答率</td><td colspan='2'></td></tr></tbody>" + 
+                                     "<tfoot><tr><td colspan='4'></td></tr></tfoot></table><p>&nbsp;</p>";  
                             //console.log(ret);
-                            $('#survey-history').append(ret.join(''));
+                            $('#survey-history').append(ret);
                             //$('tfoot>tr>td').css('text-align', 'center');
                             _surveyCount = 0;
                             _answerCount = 0;
                             _achievingRate = '';
-                            // _is_qualify = true;
+                            _is_qualify = true;
 
                             $(oAchievingRate).each(function(x, y){
                                 if (item.SchoolYear === y.SchoolYear && item.Semester === y.Semester)
                                     _achievingRate = y.Rate;
-                            });
+                            });                            
+
+                            var _survey_history_template_key = item.SchoolYear + '-' + item.Semester + '-' + oSurveyHistoryTemplateDescriptionSubfix;
+                            $(oConfiguration).each(function(x, y){
+                                console.log(x.ConfName);
+                                if (y.ConfName == _survey_history_template_key){
+                                    $('#' + item.SchoolYear + "-" + item.Semester).find("tfoot:last-child>tr:last-child>td").html(y.ConfContent);
+                                }
+                            });                            
                         }
-                        $("#" + item.SchoolYear + "-" + item.Semester + " > tbody:last").before("<tr><td>" + item.CourseName + "</td><td>" + (item.AnswerCount ? '是' : '否') + "</td><td>" + item.SurveyCount + "</td><td>" + (item.AnswerCount ? item.AnswerCount : '0') + "</td></tr>");
+                        _survey_detail_string = "<tr><td>" + item.CourseName + "</td><td>" + item.SurveyCount + "</td>" + 
+                                                (item.AnswerCount ? "<td>" + item.AnswerCount + "</td>" : "<td style='color:red'>0</td>") + 
+                                                (item.AnswerCount ? "<td>是</td>" : "<td style='color:red'>否</td>") + "</tr>";
+                        $("#" + item.SchoolYear + "-" + item.Semester + " > tbody:last").before(_survey_detail_string);
                         
                         _surveyCount += parseInt(item.SurveyCount);
                         _answerCount += parseInt(item.AnswerCount ? item.AnswerCount : '0');
                         _answerRate = Math.ceil(_answerCount*100/_surveyCount);
-                        _is_qualify = (item.AnswerCount) ? true : false;
+                        _is_qualify = ((item.AnswerCount) ? true : false) && _is_qualify;
+                        console.log(item.AnswerCount + "-" + _is_qualify);
 
                         if (!_is_qualify){
                             _qualify_string = "<span class='label label-important' style='font-size:14px'>不符合優先選課條件</span>";
@@ -157,14 +200,20 @@ var GetReplyHistory = function() {
                         Math.floor() 取小於這個數的最大整數
                         Math.ceil() 取大於這個數的最小整數
                         */
-                        //console.log(_answerCount);
-
-                        $('#' + item.SchoolYear + "-" + item.Semester + ' >tfoot>tr>td').html('填答問卷數(A)：' + _answerCount + new Array(20).join('&nbsp;') + '總問卷數(B)：' + _surveyCount + new Array(20).join('&nbsp;') + '問卷填答率(<img src="img/AchivingRate.png" style="height:40px;">)：' + _answerRate + '<small>%' + new Array(2).join('&nbsp;') + '(小數點後無條件進位)</small>' + new Array(20).join('&nbsp;') + _qualify_string);
+                        //console.log(_answerCount);$("#102-0").find("tr:nth-last-child(2)")
+                        console.log(_surveyCount);
+                        $('#' + item.SchoolYear + "-" + item.Semester).find("tbody>tr:nth-last-child(2)>td:nth-child(2)").html(_surveyCount);
+                        $('#' + item.SchoolYear + "-" + item.Semester).find("tbody>tr:nth-last-child(2)>td:nth-child(3)").html(_answerCount);
+                        $('#' + item.SchoolYear + "-" + item.Semester).find("tbody>tr:nth-last-child(2)>td:last-child").html(_qualify_string);
+                        $('#' + item.SchoolYear + "-" + item.Semester).find("tbody>tr:last-child>td:nth-child(2)").html(_answerRate + "%");
 
                         _school_year = item.SchoolYear;
                         _semester = item.Semester;
                     });
                 }
+
+                //  告訴大家我成功了
+                CallbackQueue.JobFinished();
             }
         }
     });
@@ -179,6 +228,7 @@ $(document).ready(function() {
     SurveyChanged_Handler.Subscribe(SurveyAfterChanged);
 
     CallbackQueue.Queue(ClearHTML);
+    CallbackQueue.Queue(GetTextTemplate);
     CallbackQueue.Queue(GetAchievingRate);
     CallbackQueue.Queue(GetReplyHistory);
     CallbackQueue.DeQueue(0);
