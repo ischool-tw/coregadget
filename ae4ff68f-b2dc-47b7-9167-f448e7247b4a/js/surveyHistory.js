@@ -68,9 +68,8 @@ var GetAchievingRate = function() {
                 if (response.Response && response.Response.AchievingRate) {
                     oAchievingRate = response.Response.AchievingRate;
                     console.log(JSON.stringify(oAchievingRate));
-                    //  告訴大家我成功了
-                    CallbackQueue.JobFinished();
                 }
+                CallbackQueue.JobFinished();
             }
         }
     });
@@ -97,9 +96,8 @@ var GetTextTemplate = function() {
                 if (response.Response && response.Response.Configuration) {
                     oConfiguration = response.Response.Configuration;
                     console.log(JSON.stringify(oConfiguration));
-                    //  告訴大家我成功了
-                    CallbackQueue.JobFinished();
                 }
+                CallbackQueue.JobFinished();
             }
         }
     });
@@ -170,7 +168,7 @@ var GetReplyHistory = function() {
                         _survey_detail_string = "<tr><td>" + item.CourseName + "</td><td>" + item.SurveyCount + "</td>" + 
                                                 (item.AnswerCount ? "<td>" + item.AnswerCount + "</td>" : "<td style='color:red'>0</td>") + 
                                                 (item.AnswerCount ? "<td>是</td>" : "<td style='color:red'>否</td>") + "</tr>";
-                        $("#" + item.SchoolYear + "-" + item.Semester + " > tbody:last").before(_survey_detail_string);
+                        $("#" + item.SchoolYear + "-" + item.Semester + " > tbody:first").before(_survey_detail_string);
                         
                         _surveyCount += parseInt(item.SurveyCount);
                         _answerCount += parseInt(item.AnswerCount ? item.AnswerCount : '0');
@@ -212,7 +210,6 @@ var GetReplyHistory = function() {
                     });
                 }
 
-                //  告訴大家我成功了
                 CallbackQueue.JobFinished();
             }
         }
