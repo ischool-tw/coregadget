@@ -258,11 +258,13 @@ Exam = do ->
                         $(exam.ScoreDetail.Extension.Extension).each (index, extension) ->
                           # 定期分數
                           ext_score = Number(extension.Score) if extension.Score
+
                           # 新竹平時分數
                           ext_assignmentScore = Number(extension.AssignmentScore) if extension.AssignmentScore
-                          if ext_score and ext_assignmentScore
+
+                          if ext_score? and ext_assignmentScore?
                             avg_score = FloatMath(FloatMath(ext_score, '+', ext_assignmentScore), '/', 2)
-                          else if ext_score
+                          else if ext_score?
                             avg_score = ext_score
                           else
                             avg_score = ext_assignmentScore
