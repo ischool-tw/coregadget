@@ -52,56 +52,38 @@ jQuery(function () {
             if(that.hasClass("disabled"))return;
             target.find('[js="errorMessage"]').html('');
             that.attr("multi-lang-text", "處理中").addClass("disabled");
-            // connection.send({
-            //     service: "beta.GetAccount",
-            //     body: {},
-            //     result: function (response, error, http) {
-            //         if (error !== null) {
-            //             set_error_message(target.find('[js="errorMessage"]'), 'GetAccount', error);
-            //             that.attr("multi-lang-text", "註冊成為學生").removeClass("disabled");
-            //         } else {
-            //             var account = response.Account || '';
-            //             if (account) {
-                            $.ajax({
-                                // url: 'https://auth.ischool.com.tw/service/getaccountinfo.php?account='+ encodeURIComponent(account),
-                                url: 'https://auth.ischool.com.tw/service/checkstatus.php',
-                                dataType: 'json',
-                                success: function(data){
-                                    if (data && (data.lastName || data.firstName)) {
-                                        connection.send({
-                                            service: "beta.BecomeStudent",
-                                            body: {
-                                                StudentName: (data.lastName || '') + (data.firstName || '')
-                                            },
-                                            result: function (response, error, http) {
-                                                if (error !== null) {
-                                                    if (error.dsaError &&
-                                                        error.dsaError.header &&
-                                                        error.dsaError.header.DSFault &&
-                                                        error.dsaError.header.DSFault.Fault) {
-                                                        if (error.dsaError.header.DSFault.Fault.Code === '901') {
-                                                            target.find('.modal-body').html('<p multi-lang-text="您已具有學生身份"></p>');
-                                                        }
-                                                    } else {
-                                                        set_error_message(target.find('[js="errorMessage"]'), 'BecomeStudent', error);
-                                                        that.attr("multi-lang-text", "註冊成為學生").removeClass("disabled");
-                                                    }
-                                                } else {
-                                                    target.find('.modal-body').html('<p multi-lang-text="您已具有學生身份"></p>');
-                                                    window.parent.appsLoader.reflashApplicationList(); // 重新整理選單
-                                                }
-                                            }
-                                        });
-                                    } else {
-                                        set_error_message(target.find('[js="errorMessage"]'), '', '<strong multi-lang-text="設定帳戶"></strong>');
-                                        that.attr("multi-lang-text", "註冊成為學生").removeClass("disabled");
-                                    }
+
+            var data = gadget.getUserInfo();
+            if (data && (data.lastName || data.firstName)) {
+                connection.send({
+                    service: "beta.BecomeStudent",
+                    body: {
+                        StudentName: (data.lastName || '') + (data.firstName || '')
+                    },
+                    result: function (response, error, http) {
+                        if (error !== null) {
+                            if (error.dsaError &&
+                                error.dsaError.header &&
+                                error.dsaError.header.DSFault &&
+                                error.dsaError.header.DSFault.Fault) {
+                                if (error.dsaError.header.DSFault.Fault.Code === '901') {
+                                    target.find('.modal-body').html('<p multi-lang-text="您已具有學生身份"></p>');
                                 }
-                            });
-            //             }
-            //         }
-            //     }
-            // });
+                            } else {
+                                set_error_message(target.find('[js="errorMessage"]'), 'BecomeStudent', error);
+                                that.attr("multi-lang-text", "註冊成為學生").removeClass("disabled");
+                            }
+                        } else {
+                            target.find('.modal-body').html('<p multi-lang-text="您已具有學生身份"></p>');
+                            window.parent.appsLoader.reflashApplicationList(); // 重新整理選單
+                        }
+                    }
+                });
+            } else {
+                set_error_message(target.find('[js="errorMessage"]'), '', '<strong multi-lang-text="設定帳戶"></strong>');
+                that.attr("multi-lang-text", "註冊成為學生").removeClass("disabled");
+            }
+                                
         });
 
     });

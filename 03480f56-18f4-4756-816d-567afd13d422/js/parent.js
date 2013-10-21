@@ -62,36 +62,28 @@ jQuery(function () {
                             set_error_message(target.find('[js="errorMessage"]'), 'Join.AsParent', error);
                             target.find('[js="save-data"]').attr("multi-lang-text", "送出").removeClass("disabled");
                         } else {
-                            public_connection.ready(function(){
-                                // var account = public_connection.getUserInfo().UserName;
-                                $.ajax({
-                                    // url: 'https://auth.ischool.com.tw/service/getaccountinfo.php?account='+ encodeURIComponent(account),
-                                    url: 'https://auth.ischool.com.tw/service/checkstatus.php',
-                                    dataType: 'json',
-                                    success: function(data){
-                                        if (data && (data.lastName || data.firstName)) {
-                                            parent_connection.send({
-                                                service: "beta.UpdateMyInfo",
-                                                body: {
-                                                    LastName: data.lastName || '',
-                                                    FirstName: data.firstName || '',
-                                                    UUID: data.uuid || ''
-                                                },
-                                                result: function (response, error, http) {
-                                                    if (error !== null) {
-                                                        set_error_message(target.find('[js="errorMessage"]'), 'UpdateMyInfo', error);
-                                                    } else {
-                                                        window.parent.appsLoader.reflashApplicationList(); // 重新整理選單
-                                                    }
-                                                }
-                                            });
+                            var data = gadget.getUserInfo();
+                            if (data && (data.lastName || data.firstName)) {
+                                parent_connection.send({
+                                    service: "beta.UpdateMyInfo",
+                                    body: {
+                                        LastName: data.lastName || '',
+                                        FirstName: data.firstName || '',
+                                        UUID: data.uuid || ''
+                                    },
+                                    result: function (response, error, http) {
+                                        if (error !== null) {
+                                            set_error_message(target.find('[js="errorMessage"]'), 'UpdateMyInfo', error);
                                         } else {
-                                            set_error_message(target.find('[js="errorMessage"]'), '', '<strong multi-lang-text="設定帳戶"></strong>');
-                                            target.find('[js="save-data"]').attr("multi-lang-text", "送出").removeClass("disabled");
+                                            window.parent.appsLoader.reflashApplicationList(); // 重新整理選單
                                         }
                                     }
                                 });
-                            });
+                            } else {
+                                set_error_message(target.find('[js="errorMessage"]'), '', '<strong multi-lang-text="設定帳戶"></strong>');
+                                target.find('[js="save-data"]').attr("multi-lang-text", "送出").removeClass("disabled");
+                            }
+                                    
                         }
                     }
                 });
