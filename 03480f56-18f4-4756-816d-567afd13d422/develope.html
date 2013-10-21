@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+  <script>
+    init({
+      application: "dev.sh_d",
+      paramValues: {}
+    });
+  </script>
+  <link href="css/lang.zh-TW.css" rel="stylesheet" />
+  <link href="css/lang.zh-CN.css" rel="stylesheet" />
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/parent.js"></script>
+</head>
+<body lang="zh-TW">
+  <div id="gadget">
+    <!--輸入代碼-->
+    <div js="myModal" class="modal">
+      <div class="modal-header">
+        <h3 js="myModalLabel"  multi-lang-text="身份驗證"></h3>
+        <div js="errorMessage"></div>
+      </div>
+      <div class="modal-body">
+        <label multi-lang-text="家長代碼"></label>
+        <input type="text" class="input-xlarge" js="inputCode" placeholder="Parent Code">
+        <label multi-lang-text="稱謂"></label>
+        <input type="text" class="input-xlarge" js="relationship" placeholder="Relationship to you">
+        <p><i class="icon-info-sign"></i> <span  multi-lang-text="取得代碼Q"></span></p><p><span  multi-lang-text="取得代碼A"></span></p>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:void(0);" class="btn btn-success" js="save-data" multi-lang-text="送出"></a>
+        <a href="javascript:void(0);" class="btn" js="exit-gadget" multi-lang-text="取消"></a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

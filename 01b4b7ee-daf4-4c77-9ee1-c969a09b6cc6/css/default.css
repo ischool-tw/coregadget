@@ -1,0 +1,34 @@
+#parentDBTable th,
+#parentDBTable td {
+  text-align: center;
+}
+#parentDBTable tr td:nth-last-child(-n + 2) {
+  width: 5%;
+}
+#parentDBTable td:last-child a {
+  color: #C00;
+}
+.my-trash-color {
+  color: #C00;
+}
+/*自訂*/
+#mainMsg {
+  z-index: 5000;
+  position: fixed;
+  top: -2px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+.my-err-info {
+  cursor: pointer;
+}
+.alert.alert-error {
+  background-color: rgba(242, 222, 222, 0.9);
+}
+.alert.alert-success {
+  background-color: rgba(223, 240, 216, 0.9);
+}
+.modal-body .form-horizontal .controls {
+  text-align: left;
+}

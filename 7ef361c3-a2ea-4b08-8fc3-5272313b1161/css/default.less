@@ -43,7 +43,7 @@ h2 {
   text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
 }
 .my-widget .my-widget-content {
-    overflow:inherit;
+  overflow:inherit;
   padding: 20px 15px 15px;
   background: white;
   border: 1px solid #D5D5D5;
@@ -93,14 +93,14 @@ h2 {
   -webkit-box-shadow: 0px 0px 6px #999;
   box-shadow: 0px 0px 6px #999;
 }
-#namelist tbody tr, #namelist dl {
-    cursor:pointer;
+#namelist tbody tr[studentid], #namelist dl {
+  cursor:pointer;
 }
 #namelist dl:hover {
-    border:1px solid #ccc;
+  border:1px solid #ccc;
 }
 .my-scrollbar {
-    height:500px;
+  height:500px;
 }
 .my-scrollbar2 dl, .my-classlist li {
   float:left;
@@ -110,11 +110,11 @@ h2 {
   border:1px solid #eee;
 }
 .my-scrollbar2 {
-    height:548px;
+  height:548px;
 
-    dd {
-      text-align:center;
-    }
+  dd {
+    text-align:center;
+  }
 }
 
 .my-classlist li {
@@ -147,10 +147,23 @@ ul.ui-autocomplete {
 }
 
 /*自訂*/
-.my-err-info {
-    cursor: pointer;
+#mainMsg {
+  z-index: 5000;
+  position: fixed;
+  top: -2px;
+  left: 0;
+  width: 100%;
+  text-align: center;
 }
-
+.my-err-info {
+  cursor: pointer;
+}
+.alert.alert-error {
+  background-color: rgba(242, 222, 222, 0.9);
+}
+.alert.alert-success {
+  background-color: rgba(223, 240, 216, 0.9);
+}
 h1 {
   line-height: 40px;
   margin: 10px 0;
@@ -161,11 +174,7 @@ h1 {
 }
 
 .my-scrollbar {
-    height:624px;
-}
-
-.my-photo {
-  margin-right: 12px;
+  height:624px;
 }
 
 .my-widget-header {
@@ -178,8 +187,39 @@ h1 {
 }
 
 #namelist {
-  table tbody tr.action td {
-    color: white;
-    background: #69C;
+  table {
+    thead th {
+      background: #DDDDE1 url(images/thbg.png) 0 0 repeat-x;
+      border-bottom: 1px solid #ACACAC;
+    }
+    tbody tr.action td {
+      color: white;
+      background: #69C;
+    }
   }
+}
+
+#studentInfo table tr {
+  th {
+    min-width: 90px;
+    max-width: 120px;
+    width: 20%;
+  }
+}
+
+.modal-body .form-horizontal .controls {
+  text-align: left;
+}
+
+.modal-body .my-code {
+  padding-top: 5px;
+  font-family: consolas;
+}
+
+.monospaced {
+  font-family: consolas;
+}
+
+#parentInfo table tbody tr {
+  cursor: pointer;
 }

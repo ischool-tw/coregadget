@@ -1,0 +1,59 @@
+.table th,
+.table td {
+  text-align: center;
+  vertical-align: middle;
+}
+table thead th {
+  vertical-align: middle !important;
+}
+.my-dropdown {
+  margin-bottom: 5px;
+}
+table .my-dropdown,
+select,
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.uneditable-input {
+  margin-bottom: 0 !important;
+}
+/*自訂*/
+.my-err-info {
+  cursor: pointer;
+}
+.my-no-pass {
+  color: red;
+}
+.my-student-list:hover {
+  cursor: pointer;
+}
+[js=examDateTable] thead tr:first th:nth-child(1),
+[js=examDateTable] thead tr:first th:nth-child(3) {
+  width: 13%;
+}
+[js=examDateTable] thead tr:first th:nth-child(2) {
+  width: 10%;
+}
+[js=examDateTable] thead tr + tr th {
+  width: 7%;
+}
+[js=examDateTable] tbody tr td.my-focus-student {
+  color: white;
+  background: #69C;
+}
+[js=jumpSeatNo] {
+  position: fixed;
+  max-width: 230px;
+}

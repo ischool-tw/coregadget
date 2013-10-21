@@ -1,0 +1,99 @@
+.span3 ul li {
+  white-space: nowrap;
+  overflow: hidden;
+}
+.span9 th,
+.span9 td {
+  text-align: center;
+}
+.span9 td:last-child {
+  width: 5%;
+}
+.span9 td:last-child a {
+  color: #C00;
+}
+.nav-tabs.nav-stacked > li:first-child > a {
+  -webkit-border-top-right-radius: 0;
+  border-top-right-radius: 0;
+  -webkit-border-top-left-radius: 0;
+  border-top-left-radius: 0;
+  -moz-border-radius-topright: 0;
+  -moz-border-radius-topleft: 0;
+}
+.nav-tabs.nav-stacked > li:last-child > a {
+  -webkit-border-bottom-right-radius: 0;
+  border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  border-bottom-left-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  -moz-border-radius-bottomleft: 0;
+}
+ul li {
+  float: left !important;
+}
+ul li:nth-child(odd) {
+  width: 80%;
+}
+ul li:nth-child(even) {
+  width: 15%;
+  margin-left: -1px;
+}
+.nav-tabs.nav-stacked > li:nth-child(even) > a {
+  height: 14px;
+  padding-top: 14px;
+}
+.span9 > .pull-right > .btn {
+  margin: 0 0 10px 5px;
+}
+.modal-body label {
+  display: inline-block;
+  margin-right: 10px;
+}
+.modal-body .control-group {
+  text-align: left;
+}
+/*自訂*/
+#mainMsg {
+  z-index: 5000;
+  position: fixed;
+  top: -2px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+.my-err-info {
+  cursor: pointer;
+}
+.alert.alert-error {
+  background-color: rgba(242, 222, 222, 0.9);
+}
+.alert.alert-success {
+  background-color: rgba(223, 240, 216, 0.9);
+}
+.modal-body .form-horizontal .controls {
+  text-align: left;
+}
+div[js="panel_single_group"] .pull-left {
+  margin: 10px 0;
+}
+div[js="panel_single_group"] thead th:nth-child(1) {
+  width: 14%;
+}
+div[js="panel_single_group"] thead th:nth-child(2) {
+  width: 30%;
+}
+div[js="panel_single_group"] thead th:last-child {
+  width: 7%;
+}
+.my-trash-color {
+  color: #C00;
+}
+.my-groupName {
+  font-weight: bold;
+}
+.my-groupCode {
+  margin-right: 5px;
+}
+.monospaced {
+  font-family: consolas;
+}

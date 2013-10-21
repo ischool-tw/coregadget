@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+  <script>
+    init({
+      application: "dev.sh_d",
+      paramValues: {}
+    });
+  </script>
+  <link href="css/lang.zh-TW.css" rel="stylesheet" />
+  <link href="css/lang.zh-CN.css" rel="stylesheet" />
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/default.js"></script>
+</head>
+<body lang="zh-TW">
+  <div id="gadget">
+    <div js="myModal" class="modal in">
+      <div class="modal-header">
+        <h3 js="myModalLabel"  multi-lang-text="成為學生"></h3>
+        <div js="errorMessage"></div>
+      </div>
+      <div class="modal-body">
+        <a href="javascript:void(0);" class="btn btn-success" js="create" multi-lang-text="註冊成為學生"></a>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:void(0);" class="btn" js="exit-gadget" multi-lang-text="取消"></a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
