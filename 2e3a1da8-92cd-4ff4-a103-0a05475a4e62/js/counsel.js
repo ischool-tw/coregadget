@@ -872,6 +872,8 @@ jQuery(function () {
             if (data_scope === 'All') {
                 if (_gg.student.Kind !== '認輔學生') {
                     $('a[data-toggle=modal]').removeClass("disabled").prop('disabled', false);
+                } else {
+                    $('#talk-add-data').removeClass("disabled").prop('disabled', false);
                 }
 
                 $.each(_gg.col_Question, function(key, value) {
