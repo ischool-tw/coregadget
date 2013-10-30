@@ -170,19 +170,20 @@ myHandleArray = (obj) ->
 resetSchoolYearSeme = () ->
   student = global.student
   items = []
-  if student.SemsHistory?.History?
-    items.push """
-      <button class='btn btn-large active' school-year='#{global.schoolYear}' semester='#{global.semester}'>
-        #{global.schoolYear + '' + global.semester}
-      </button>
-    """
+  items.push """
+    <button class='btn btn-large active' school-year='#{global.schoolYear}' semester='#{global.semester}'>
+      #{global.schoolYear + '' + global.semester}
+    </button>
+  """
 
+  if student.SemsHistory?.History?
     $(student.SemsHistory.History.sort $.by("desc", "SchoolYear", $.by("desc", "Semester"))).each (index, item) ->
       unless @.SchoolYear is global.schoolYear and @.Semester is global.semester
         items.push """
           <button class='btn btn-large' school-year='#{@.SchoolYear}' semester='#{@.Semester}'>#{@.SchoolYear + '' + @.Semester}</button>
         """
-    $("#behavior .btn-group").html(items.join(""))
+
+  $("#behavior .btn-group").html(items.join(""))
 
 # 清除德性成績
 resetMorality = () ->
