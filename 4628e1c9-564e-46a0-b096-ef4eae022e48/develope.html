@@ -4,123 +4,167 @@
     <meta content='text/html;charset=utf-8' />
     <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
   	<script>
-    init({
-      application: "http://dev.ischool.com.tw:8080/cs4/tp.ntu.emba.dev",
-      paramValues: {}
-    });
+	    init({
+	      application: "http://dev.ischool.com.tw:8080/cs4/tp.ntu.emba.dev",
+	      paramValues: {}
+	    });
   	</script>
+	<script src="js/jquery.min.js"></script>
+  	<link href="css/bootstrap.css" rel="stylesheet" />
+  	<link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  	<link href="css/mybootstrap.css" rel="stylesheet" />
+	<link type="text/css" rel="stylesheet/less" href="css/styles.less"/>
+	<link type="text/css" rel="stylesheet/less" href="css/scorekit.css"/>
+ 	<link href="css/base.css" rel="stylesheet" />
+  	<link href="css/default.css" rel="stylesheet" />
+	<script src="js/less.js"></script>
+	<script src="js/emba.teacher.js"></script>
+  	<script src="js/bootstrap.js"></script>
 </head>
 <body leftmargin='0' topmargin='0' marginwidth='0' bgcolor='#FFFFFF' style='margin: 0;'>
-<link type="text/css" rel="stylesheet/less" href="css/styles.less"/>
-<link type="text/css" rel="stylesheet/less" href="css/scorekit.less"/>
-<script src="js/less.js"></script>
+	<!--<div id="widget">-->
+	<div id="gadget" class="my-page">
+	    <div id="mainMsg"></div>
+	    <div class="row-fluid">
+	    	<div class="span12">
+			    <h1><span id="InputSemester"></span>
+			      <ul id="myTab" class="nav nav-tabs my-navtabs">          
+			        <li class="active"><a href="#tab1" data-toggle="tab">成績登分</a></li>
+			        <li><a href="#tab2" data-toggle="tab">說明</a></li>          
+			      </ul>
+			    </h1>
 
-<script src="js/jquery.min.js"></script>
-<script src="js/scorekit.js"></script>
-<div id="widget">
-	<div class="page-container">
-		<div class="header">
-			<span class="link">
-				<a href="http://web.ischool.com.tw/main.htm#menu" target="_blank">回myEMBA首頁</a>
-			</span>
-		</div>
-		<div class="toolbar-div">
-			<button class="i-button save"><span>儲存</span></button>
-			<button class="i-button upload"><span>上傳成績</span></button>
-			<button class="i-button print"><span>列印成績報告單</span></button>
-			<button class="i-button print2"><span>產生空白成績確認單</span></button>
-		</div>
-		<div class="content-div">
-			<div class="score-div">
-				<table class="score-table">
-					<thead>
-						<tr>
-							<td colspan="2" style="text-align: left;"><span class="i-label teacher-list"></span></td>
-							<td colspan="3" style="text-align: right;"><select class="i-dropdownlist course-select"></select></td>
-						</tr>
-						<tr>
-							<th class='i-label' width="200px">系所組別</th>
-							<th class='i-label' width="100px">學號</th>
-							<th class='i-label' width="100px">學生姓名</th>
-							<th class='i-label' width="80px">學期成績</th>
-							<th class='i-label' width="80px">備註</th>
-						</tr>
-					</thead>
-					<tbody></tbody>
-				</table>
+			    <div class="tab-content">
+					<div class="tab-pane active" id="tab1">
+			            <div id="tab1Msg"></div>
+						<div class="page-container">
+							<div class="toolbar-div">
+								<button id="btnSave" class="i-button save"><span>暫存</span></button>
+								<button id="btnUpload" class="i-button upload"><span>確認並上傳成績</span></button>
+								<button id="btnPrintScoreSheet" class="i-button print"><span>列印成績報告單</span></button>
+								<button id="btnPrintEmptyScoreSheet" class="i-button print2"><span>產生空白成績確認單</span></button>
+							</div>
+							<div class="content-div">
+								<div class="score-div">
+									<table id="tblStudentList" class="score-table">
+										<thead>
+											<tr>
+												<td colspan="2" style="text-align: left;"><span id="lblTeacherList" class="i-label teacher-list"></span></td>
+												<td colspan="3" style="text-align: right;"><select id="cboTeacherCourses" class="i-dropdownlist course-select"></select></td>
+											</tr>
+											<tr>
+												<th class='i-label' width="200px">系所組別</th>
+												<th class='i-label' width="100px">學號</th>
+												<th class='i-label' width="100px">學生姓名</th>
+												<th class='i-label' width="80px">學期成績</th>
+												<th class='i-label' width="80px">備註</th>
+											</tr>
+										</thead>
+										<tbody></tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+
+						<div class="print-page">
+							<div class="title">臺灣大學____學年度第____學期成績報告單</div>
+							<div class="course-info">
+								<table>
+									<tr>
+										<td><div class="subject-code">課程編號：</div></td>
+										<td><div class="class-name">班次：</div></td>
+										<td><div class="subject-name">科目名稱：</div></td>
+										<td><div class="credit">學分：</div></td>
+									</tr>
+									<tr>
+										<td colspan="3"><div class="course-teacher">任課教師：</div></td>
+										<td><div class="page-index">頁次：</div></td>
+									</tr>
+								</table>
+							</div>
+							<div class="score-detail">
+								<table>
+									<thead>
+										<tr>
+											<th><div style="width:100px">系所<br/>組別</div></th>
+											<th><div style="width:20px">年<br/>級</div></th>
+											<th><div style="width:80px">學號</div></th>
+											<th><div style="width:100px">姓名</div></th>
+											<th><div style="width:40px">學期<br/>成績</div></th>
+											<th><div style="width:40px">備註</div></th>
+											<th><div style="width:100px">系所<br/>組別</div></th>
+											<th><div style="width:20px">年<br/>級</div></th>
+											<th><div style="width:80px">學號</div></th>
+											<th><div style="width:100px">姓名</div></th>
+											<th><div style="width:40px">學期<br/>成績</div></th>
+											<th><div style="width:60px">備註</div></th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+							<div class="teacher-sign">
+								<table>
+									<tr>
+										<td><div class="subject-code">課程編號：</div></td>
+										<td><div class="subject-name">科目名稱：</div></td>
+										<td><div class="class-name">班次：</div></td>
+										<td><div style="width:140px"></div></td>
+									</tr>
+									<tr>
+										<td style="vertical-align:top"><div></div></td>
+										<td style="vertical-align:top">
+											<div></div>
+										</td>
+										<td></td>
+										<td style="vertical-align:top;text-align:right">
+											<div></div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="tab2">
+						<div id="explanation"></div>
+					</div>
+				</div>
+
+				<div class="footer">
+					<img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/red_logo.jpg">
+					<img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/bot_logo.png">
+					<p style="text-align: left;">
+						<font color="#999999">台北市羅斯福路四段一號 臺灣大學管理學院壹號館六樓 EMBA辦公室<br>
+						TEL:886-2-33661010 FAX:886-2-23636073<br>
+						Copyright © 2005 National Taiwan University All Rights Reserved
+						</font>
+					</p>
+				</div>
+				
+				<!-- Modal -->
+
+				<div class="modal fade" id="confirmbox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-dialog">
+				    	<div class="modal-content">
+				      		<div class="modal-header">
+				        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				        		<h4 class="modal-title" id="myModalLabel">成績上傳確認</h4>
+				      		</div>
+				      		<div class="modal-body">
+				        		<p id="confirmMessage"></p>
+				    		</div>
+						    <div class="modal-footer">
+						    	<button id="confirmFalse" type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+						        <button id="confirmTrue" type="button" class="btn btn-primary">確認</button>
+						    </div>
+				    	</div><!-- /.modal-content -->
+				  	</div><!-- /.modal-dialog -->
+				</div>
+				<!-- /.modal -->
+
 			</div>
 		</div>
-		<div class="footer">
-			<img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/red_logo.jpg">
-			<img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/bot_logo.png">
-			<p style="text-align: left;">
-				<font color="#999999">台北市羅斯福路四段一號 臺灣大學管理學院壹號館六樓 EMBA辦公室<br>
-				TEL:886-2-33661010 FAX:886-2-23636073<br>
-				Copyright © 2005 National Taiwan University All Rights Reserved
-				</font>
-			</p>
-		</div>
 	</div>
-
-	<div class="print-page">
-		<div class="title">臺灣大學____學年度第____學期成績報告單</div>
-		<div class="course-info">
-			<table>
-				<tr>
-					<td><div class="subject-code">課程編號：</div></td>
-					<td><div class="class-name">班次：</div></td>
-					<td><div class="subject-name">科目名稱：</div></td>
-					<td><div class="credit">學分：</div></td>
-				</tr>
-				<tr>
-					<td colspan="3"><div class="course-teacher">任課教師：</div></td>
-					<td><div class="page-index">頁次：</div></td>
-				</tr>
-			</table>
-		</div>
-		<div class="score-detail">
-			<table>
-				<thead>
-					<tr>
-						<th><div style="width:100px">系所<br/>組別</div></th>
-						<th><div style="width:20px">年<br/>級</div></th>
-						<th><div style="width:80px">學號</div></th>
-						<th><div style="width:100px">姓名</div></th>
-						<th><div style="width:40px">學期<br/>成績</div></th>
-						<th><div style="width:40px">備註</div></th>
-						<th><div style="width:100px">系所<br/>組別</div></th>
-						<th><div style="width:20px">年<br/>級</div></th>
-						<th><div style="width:80px">學號</div></th>
-						<th><div style="width:100px">姓名</div></th>
-						<th><div style="width:40px">學期<br/>成績</div></th>
-						<th><div style="width:60px">備註</div></th>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-		</div>
-		<div class="teacher-sign">
-			<table>
-				<tr>
-					<td><div class="subject-code">課程編號：</div></td>
-					<td><div class="subject-name">科目名稱：</div></td>
-					<td><div class="class-name">班次：</div></td>
-					<td><div style="width:140px">歸檔編號：</div></td>
-				</tr>
-				<tr>
-					<td style="vertical-align:top"><div>教師簽章：</div></td>
-					<td style="vertical-align:top">
-						<div>聯絡電話：(O)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(H)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(行動)</div>
-					</td>
-					<td></td>
-					<td style="vertical-align:top;text-align:right">
-						<div>____年____月____日</div>
-					</td>
-				</tr>
-			</table>
-		</div>
-	</div>
-</div>
 </body>
 </html>
