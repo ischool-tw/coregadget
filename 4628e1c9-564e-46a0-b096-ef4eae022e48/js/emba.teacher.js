@@ -223,7 +223,7 @@ var CreateTeacher = function() {
             result: function(response, error, http) {
                 if (error !== null) {
                     _InternalError.push('呼叫服務(' + Service.GetMyCourses + ')失敗或網路異常，請稍候重試！');
-                    console.log(error);
+                    //console.log(error);
                 } else {
                     if (response.Result && response.Result.Course){
                         //  記錄授課清單。
@@ -242,7 +242,8 @@ var CreateTeacher = function() {
                                 'IsRequired': item.IsRequired,
                                 'Confirmed': item.Confirmed,
                                 'Role': item.Role,
-                                'IsScored': item.IsScored
+                                'IsScored': item.IsScored,
+                                'SerialNo': item.SerialNo
                             };
                         });
                         // Teacher.Publish(_TeacherCourses, 'teacher_course_loaded');
@@ -572,7 +573,7 @@ var CreateTeacher = function() {
                         if (student.ScoreID) {
                             var score = {
                                 Score: student.IsCancel === "t" ? "X" : student.Score,
-                                IsPass: $.inArray(student.Score, pass_score !== -1) ? true : false,
+                                IsPass: $.inArray(student.Score, pass_score) !== -1 ? true : false,
                                 Remark: student.IsCancel === "t" ? "已停修" : student.Remark,
                                 ScoreID: student.ScoreID
                             };
@@ -580,7 +581,7 @@ var CreateTeacher = function() {
                         } else {
                             var score = {
                                 Score: student.IsCancel === "t" ? "X" : student.Score,
-                                IsPass: $.inArray(student.Score, pass_score !== -1) ? true : false,
+                                IsPass: $.inArray(student.Score, pass_score) !== -1 ? true : false,
                                 Remark: student.IsCancel === "t" ? "已停修" : student.Remark,
                                 OffsetCourse: "",
                                 RefCourseID: vCourseID,
@@ -641,7 +642,7 @@ var CreateTeacher = function() {
                         if (student.ScoreID) {
                             var score = {
                                 Score: student.IsCancel === "t" ? "X" : student.Score,
-                                IsPass: $.inArray(student.Score, pass_score !== -1) ? true : false,
+                                IsPass: $.inArray(student.Score, pass_score) !== -1 ? true : false,
                                 Remark: student.IsCancel === "t" ? "已停修" : student.Remark,
                                 ScoreID: student.ScoreID
                             };
@@ -649,7 +650,7 @@ var CreateTeacher = function() {
                         } else {
                             var score = {
                                 Score: student.IsCancel === "t" ? "X" : student.Score,
-                                IsPass: $.inArray(student.Score, pass_score !== -1) ? true : false,
+                                IsPass: $.inArray(student.Score, pass_score) !== -1 ? true : false,
                                 Remark: student.IsCancel === "t" ? "已停修" : student.Remark,
                                 OffsetCourse: "",
                                 RefCourseID: vCourseID,
@@ -768,9 +769,14 @@ var CreateEvent = function() {
         ComboBox_DataBind: function(vTeacher) {
             $('#InputSemester').html(ScoreInputSemester.SchoolYear + " 學年度 " + (ScoreInputSemester.Semester === '0' ? '夏季' : '第' + ScoreInputSemester.Semester) + "學期");
             $('#cboTeacherCourses').html("<option value='0'>- 請選擇課程 -</option>");
+            var arrTeacher =[];
             for(var key in vTeacher) {
-                $('#cboTeacherCourses').append("<option value='" + vTeacher[key].CourseID + "'>" + vTeacher[key].CourseTitle + "</option>");
+                arrTeacher.push(vTeacher[key]);
             }
+            $(arrTeacher).sort(function(a, b) {return (a.SerialNo - b.SerialNo);}).each(function(index, item) {
+                $('#cboTeacherCourses').append("<option value='" + item.CourseID + "'>" + item.CourseTitle + "</option>");
+            });
+            _DisableSaveButtion();
         },
 
         ComboBox_SelectedIndexChanged: function(vCourseID) {
@@ -808,11 +814,16 @@ var CreateEvent = function() {
             $("#tblStudentList>tbody").html('');
             var pCourseStudents = Teacher.GetCourseStudents(vCourseID);        
             if (pCourseStudents) {
-                for(var student_number in pCourseStudents) {
+                var arrStudent =[];
+                for(var key in pCourseStudents) {
+                    arrStudent.push(pCourseStudents[key]);
+                }
+                $(arrStudent).sort(function(a, b) {
+                    var aStudentNumber = a.StudentNumber.toLowerCase();
+                    var bStudentNumber = b.StudentNumber.toLowerCase();
+                    return ((aStudentNumber < bStudentNumber) ? -1 : ((aStudentNumber > bStudentNumber) ? 1 : 0));
+                }).each(function(index, student) {
                     var remark_item, score_item;
-                    var student = pCourseStudents[student_number];
-                    // console.log(student);
-                    score_item = '';
                     //  若已鎖定不得成績輸入，則沒有成績輸入方塊，反之則有。
                     if (pSubjectScoreLock || (pSelectedCourse && pSelectedCourse.Confirmed === 'true')) {  
                         score_item = "<td>" + student.Score + "</td>";
@@ -831,7 +842,8 @@ var CreateEvent = function() {
                       student.Remark = "已停修";
                     }
                     $("#tblStudentList>tbody").append("<tr><td>" + student.Department + "</td><td>" + student.StudentNumber + "</td><td>" + student.Name + "</td>" + score_item + remark_item + "</tr>");
-                }
+
+                });
             }
 
             //  成績輸入方塊「上、下、Enter」選取文字效果
@@ -997,8 +1009,8 @@ var CreateEvent = function() {
                     print_content.push($(page).html());
                 });
                 content = print_content.join("<P style='page-break-after:always'>&nbsp;</P>");
-                content = "<html>\n <head>\n        <link type=\"text/css\" rel=\"stylesheet\" href=\"css/scorekit.css\"/>\n    </head>\n   <body>\n        <div style='width:880px;padding:40px 20px'>" + content + "</div>\n  </body>\n</html>";
-                doc = window.open('about:blank', '_blank', '');
+                content = "<!DOCTYPE html>\n<html>\n <head><title></title>\n        <link type=\"text/css\" rel=\"stylesheet\" href=\"css/scorekit.css\"/>\n    </head>\n   <body onload=\"window.print();\">\n        <div style='width:880px;padding:40px 20px'>" + content + "</div>\n  </body>\n</html>";
+                doc = window.open('', '_blank', '');
                 doc.document.open();
                 doc.document.write(content);
                 doc.document.close();

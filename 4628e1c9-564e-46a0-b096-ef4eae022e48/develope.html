@@ -144,6 +144,18 @@
 				
 				<!-- Modal -->
 
+				<!--
+				<div class="modal" id="confirmbox" style="display: none">
+    				<div class="modal-body">
+        				<p id="confirmMessage">Any confirmation message?</p>
+				    </div>
+				    <div class="modal-footer">
+				        <button class="btn" id="confirmFalse">Cancel</button>
+				        <button class="btn btn-primary" id="confirmTrue">OK</button>
+				    </div>
+				</div>
+				-->
+
 				<div class="modal fade" id="confirmbox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 				  	<div class="modal-dialog">
 				    	<div class="modal-content">
@@ -151,11 +163,11 @@
 				        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				        		<h4 class="modal-title" id="myModalLabel">成績上傳確認</h4>
 				      		</div>
-				      		<div class="modal-body">
+				      		<div class="modal-body" style="text-align: left;">
 				        		<p id="confirmMessage"></p>
 				    		</div>
 						    <div class="modal-footer">
-						    	<button id="confirmFalse" type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+						    	<button id="confirmFalse" type="button" class="btn" data-dismiss="modal">取消</button>
 						        <button id="confirmTrue" type="button" class="btn btn-primary">確認</button>
 						    </div>
 				    	</div><!-- /.modal-content -->
