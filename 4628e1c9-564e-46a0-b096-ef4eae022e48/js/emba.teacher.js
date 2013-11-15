@@ -298,6 +298,39 @@ var CreateTeacher = function() {
         });
     };
   
+    //    取得選取課程之「俢課學生」及其成績資料，上傳成績前更新「ScoreID, IsCancel」，確保取得學生成績最新資料。
+    var _GetCourseStudentPreUpload = function() {
+        gadget.getContract(Contract.Teacher).send({
+            service: Service.GetStudents,
+            body: {
+                Request: {
+                  SchoolYear: ScoreInputSemester.SchoolYear,
+                  Semester: ScoreInputSemester.Semester
+                }
+            },
+            result: function(response, error, http) {
+                if (error !== null) {
+                    _InternalError.push('呼叫服務(' + Service.GetStudents + ')失敗或網路異常，請稍候重試！');
+                } else {
+                    if (response.Result && response.Result.Student){
+                        //  記錄修課學生。
+                        $(response.Result.Student).each(function(index, item) {
+                            if (!_CourseStudents[item.CourseID]) {
+                                _CourseStudents[item.CourseID] = {};
+                            }
+                            if (_CourseStudents[item.CourseID][item.StudentNumber]) {
+                                _CourseStudents[item.CourseID][item.StudentNumber].ScoreID = item.ScoreID;
+                                _CourseStudents[item.CourseID][item.StudentNumber].IsCancel = item.IsCancel;
+                            }
+                        });
+                    }
+                }
+                //    無論如何都要 Callback，參數「stop_if_error」傳給 Callback 代理程式，以判斷是否執行下一個 function。
+                _CallbackQueue.JobFinished();
+            }
+        });
+    };
+  
     //    取得成績輸入學年期之所有課程的授課教師。
     var _GetCourseTeachers = function() {
         gadget.getContract(Contract.Teacher).send({
@@ -504,7 +537,7 @@ var CreateTeacher = function() {
     }; 
 
     //  對外發佈訊息
-    var _CallbackComplete = function(type, o) {
+    var _RaiseEvent = function(type, o) {
         _CallbackQueue.JobFinished();        
 
         Teacher.Publish(o, type);                 
@@ -522,8 +555,8 @@ var CreateTeacher = function() {
 
             _CallbackQueue.Push(_GetScoreInputSemester);
             _CallbackQueue.Push([_GetSubjectScoreLock, _GetTeacherCourses, _GetCourseStudents, _GetCourseTeachers, function() {_GetTextTemplate('teacher_score_input_explanation_template')}, function() {_GetTextTemplate('teacher_score_upload_reminder_template')}]);
-            _CallbackQueue.Push(function() {_CallbackComplete('teacher_course_loaded', _TeacherCourses)});   
-            _CallbackQueue.Push(function() {_CallbackComplete('explanation_template_loaded', _TextTemplate)});                                  
+            _CallbackQueue.Push(function() {_RaiseEvent('teacher_course_loaded', _TeacherCourses)});   
+            _CallbackQueue.Push(function() {_RaiseEvent('explanation_template_loaded', _TextTemplate)});                                  
             _CallbackQueue.Start();
         },
 
@@ -600,15 +633,16 @@ var CreateTeacher = function() {
                 }
                 this.ClearInternalError();
 
+                _CallbackQueue.Push(_GetCourseStudentPreUpload);
                 _CallbackQueue.Push([function() {_UpdateSubjectSemesterScore(update_content)}, function() {_AddSubjectSemesterScore(add_content)}]);
                 var o = {
                     InternalError: _InternalError,
                     WarningMessage: '',
                     SuccessMessage: '成績已暫存。'
                 };
-                _CallbackQueue.Push(function() {_CallbackComplete('save_subject_semester_score_complete', o)});   
+                _CallbackQueue.Push(function() {_RaiseEvent('save_subject_semester_score_complete', o)});   
                 _CallbackQueue.Push(function() {_GetCourseStudents(vCourseID)});
-                _CallbackQueue.Push(function() {_CallbackComplete('refresh_subject_semester_score', vCourseID)});
+                _CallbackQueue.Push(function() {_RaiseEvent('refresh_subject_semester_score', vCourseID)});
 
                 _CallbackQueue.Start();             
             }
@@ -621,7 +655,7 @@ var CreateTeacher = function() {
                     WarningMessage: '請完成所有成績輸入再繳交，謝謝。',
                     SuccessMessage: ''
                 };
-                _CallbackQueue.Push(function() {_CallbackComplete('update_course_ext_complete', o)});  
+                _CallbackQueue.Push(function() {_RaiseEvent('update_course_ext_complete', o)});  
                 _CallbackQueue.Start();
                 return;
             }
@@ -669,6 +703,7 @@ var CreateTeacher = function() {
                 }
                 this.ClearInternalError();
 
+                _CallbackQueue.Push(_GetCourseStudentPreUpload);
                 _CallbackQueue.Push([function() {_UpdateSubjectSemesterScore(update_content)}, function() {_AddSubjectSemesterScore(add_content)}, function() {_UpdateCourseExt(vCourseID)}, function() {_AddLog(vCourseID, vCourseName)}]);
 
                 var oo = {
@@ -677,9 +712,9 @@ var CreateTeacher = function() {
                     SuccessMessage: '成績已上傳。'
                 };
 
-                _CallbackQueue.Push(function() {_CallbackComplete('update_course_ext_complete', oo)}); 
+                _CallbackQueue.Push(function() {_RaiseEvent('update_course_ext_complete', oo)}); 
                 _CallbackQueue.Push(function() {_GetCourseStudents(vCourseID)});
-                _CallbackQueue.Push(function() {_CallbackComplete('refresh_subject_semester_score', vCourseID)});
+                _CallbackQueue.Push(function() {_RaiseEvent('refresh_subject_semester_score', vCourseID)});
 
                 _CallbackQueue.Start();    
             }
