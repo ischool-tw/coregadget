@@ -44,7 +44,7 @@ var getConfirm = function (confirmMessage, callback){
 
 var CreateCallbackQueue = function() {
     //  結構為2維陣列的工作排程，第1維表示單執行緒，第2維表示多執行緒
-    var Queues = [];
+    var _Queues = [];
 
     //  執行中的工作
     var _Current = [];
@@ -70,7 +70,7 @@ var CreateCallbackQueue = function() {
 
     //  執行目前工作
     var _DoCurrentJob = function() {
-        _Current = Queues.shift();
+        _Current = _Queues.shift();
         _Finished = _Current.slice(0);
         _Execute(_Current);
     };
@@ -78,14 +78,14 @@ var CreateCallbackQueue = function() {
     return {
         Push: function(object) {
             if (typeof object === 'object' && typeof object.length === 'number' && typeof object.splice === 'function' && !(object.propertyIsEnumerable('length'))) {
-                Queues.push(object);
+                _Queues.push(object);
             } else {
-                Queues.push([object]);
+                _Queues.push([object]);
             }
         }, 
 
         Start: function() {
-            if (Queues.length === 0) {
+            if (_Queues.length === 0) {
                 _InternalError.push('無工作排程可執行。');
                 return;
             }
@@ -95,13 +95,20 @@ var CreateCallbackQueue = function() {
         JobFinished: function() {
             _Finished.shift();
 
-            if (Queues.length === 0 && _Finished.length === 0 && _Current.length === 0) {
+            if (_Queues.length === 0 && _Finished.length === 0 && _Current.length === 0) {
                 return;
             }
 
             if (_Finished.length === 0) {
                 _DoCurrentJob();                  
             }
+        },
+
+        Clear: function() {
+            _Queues = [];
+            _Current = [];
+            _Finished = [];  
+            _InternalError = [];              
         }
     }
 };
@@ -197,15 +204,17 @@ var CreateTeacher = function() {
             result: function(response, error, http) {
                 if (error !== null) {
                     _InternalError.push('呼叫服務(' + Service.GetScoreInputSemester + ')失敗或網路異常，請稍候重試！');
+                    _ThrowError();
                 } else {
                     if (response.InputSemester != null) {
                         ScoreInputSemester.SchoolYear = response.InputSemester.SchoolYear;
                         ScoreInputSemester.Semester = response.InputSemester.Semester;
                     }
+                    _CallbackQueue.JobFinished();
                 }
                 // console.log('ScoreInputSemester.SchoolYear：' + ScoreInputSemester.SchoolYear);
                 // console.log('ScoreInputSemester.Semester：' + ScoreInputSemester.Semester);
-                _CallbackQueue.JobFinished();
+                
             }
         });
     };
@@ -223,7 +232,7 @@ var CreateTeacher = function() {
             result: function(response, error, http) {
                 if (error !== null) {
                     _InternalError.push('呼叫服務(' + Service.GetMyCourses + ')失敗或網路異常，請稍候重試！');
-                    //console.log(error);
+                    _ThrowError();
                 } else {
                     if (response.Result && response.Result.Course){
                         //  記錄授課清單。
@@ -243,14 +252,15 @@ var CreateTeacher = function() {
                                 'Confirmed': item.Confirmed,
                                 'Role': item.Role,
                                 'IsScored': item.IsScored,
-                                'SerialNo': item.SerialNo
+                                'SerialNo': item.SerialNo,
+                                'CourseType': item.CourseType,
+                                'Compliant': true
                             };
                         });
                         // Teacher.Publish(_TeacherCourses, 'teacher_course_loaded');
                     }
+                    _CallbackQueue.JobFinished();
                 }
-                //    無論如何都要 Callback，參數「stop_if_error」傳給 Callback 代理程式，以判斷是否執行下一個 function。
-                _CallbackQueue.JobFinished();
             }
         });
     };
@@ -268,6 +278,7 @@ var CreateTeacher = function() {
             result: function(response, error, http) {
                 if (error !== null) {
                     _InternalError.push('呼叫服務(' + Service.GetStudents + ')失敗或網路異常，請稍候重試！');
+                    _ThrowError();
                 } else {
                     if (response.Result && response.Result.Student){
                         //  記錄修課學生。
@@ -291,9 +302,8 @@ var CreateTeacher = function() {
                             }
                         });
                     }
+                    _CallbackQueue.JobFinished();
                 }
-                //    無論如何都要 Callback，參數「stop_if_error」傳給 Callback 代理程式，以判斷是否執行下一個 function。
-                _CallbackQueue.JobFinished();
             }
         });
     };
@@ -311,6 +321,7 @@ var CreateTeacher = function() {
             result: function(response, error, http) {
                 if (error !== null) {
                     _InternalError.push('呼叫服務(' + Service.GetStudents + ')失敗或網路異常，請稍候重試！');
+                    _ThrowError();
                 } else {
                     if (response.Result && response.Result.Student){
                         //  記錄修課學生。
@@ -324,9 +335,8 @@ var CreateTeacher = function() {
                             }
                         });
                     }
+                    _CallbackQueue.JobFinished();
                 }
-                //    無論如何都要 Callback，參數「stop_if_error」傳給 Callback 代理程式，以判斷是否執行下一個 function。
-                _CallbackQueue.JobFinished();
             }
         });
     };
@@ -344,6 +354,7 @@ var CreateTeacher = function() {
             result: function(response, error, http) {
                 if (error !== null) {
                     _InternalError.push('呼叫服務(' + Service.GetCourseTeacherList + ')失敗或網路異常，請稍候重試！');
+                    _ThrowError();
                 } else {
                     if (response.Result && response.Result.Teacher){
                         //  記錄授課教師。
@@ -355,9 +366,8 @@ var CreateTeacher = function() {
                             _CourseTeachers[item.CourseID].push(item.TeacherName);
                         });
                     }
+                    _CallbackQueue.JobFinished();
                 }
-                //    無論如何都要 Callback，參數「stop_if_error」傳給 Callback 代理程式，以判斷是否執行下一個 function。
-                _CallbackQueue.JobFinished();
             }
         });
     };    
@@ -375,13 +385,13 @@ var CreateTeacher = function() {
             result: function(response, error, http) {
                 if (error !== null) {
                     _InternalError.push('呼叫服務(' + Service.GetSubjectScoreLock + ')失敗或網路異常，請稍候重試！');
+                    _ThrowError();
                 } else {
                     if (response.Result) {
                         _SubjectScoreLock = response.Result.IsLocked;
+                        _CallbackQueue.JobFinished();
                     }
                 }
-                //    無論如何都要 Callback，參數「stop_if_error」傳給 Callback 代理程式，以判斷是否執行下一個 function。
-                _CallbackQueue.JobFinished();
             }
         });
     };
@@ -398,13 +408,16 @@ var CreateTeacher = function() {
             result: function(response, error, http) {
                 if (error !== null) {
                     _InternalError.push('呼叫服務(' + Service.AddSubjectSemesterScore + ')失敗或網路異常，請稍候重試！');
+                    _ThrowError();
                 } else {
                     if (!response.Result) {
                         _InternalError.push("新增成績失敗！請稍候重試。");
+                        _ThrowError();
+                        return;
+                    } else {
+                        _CallbackQueue.JobFinished();
                     }
                 }
-                //    無論如何都要 Callback，參數「stop_if_error」傳給 Callback 代理程式，以判斷是否執行下一個 function。
-                _CallbackQueue.JobFinished();
             }
         });
     };
@@ -421,13 +434,15 @@ var CreateTeacher = function() {
             result: function(response, error, http) {
                 if (error !== null) {
                     _InternalError.push('呼叫服務(' + Service.UpdateSubjectSemesterScore + ')失敗或網路異常，請稍候重試！');
+                    _ThrowError();
                 } else {
                     if (!response.Result) {
                         _InternalError.push("修改成績失敗！請稍候重試。");
+                        _ThrowError();
+                    } else {
+                        _CallbackQueue.JobFinished();
                     }
                 }
-                //    無論如何都要 Callback，參數「stop_if_error」傳給 Callback 代理程式，以判斷是否執行下一個 function。
-                _CallbackQueue.JobFinished();
             }
         });
     };
@@ -442,6 +457,7 @@ var CreateTeacher = function() {
             result: function (response, error, http) {
                 if (error !== null) {
                     _InternalError.push('呼叫服務(' + Service.GetCSConfiguration + ')失敗或網路異常，請稍候重試！');
+                    _ThrowError();
                 } else {
                     /*
                     <Response>
@@ -460,34 +476,10 @@ var CreateTeacher = function() {
                             _ReminderTemplate = response.Response.Configuration.ConfContent;
                         }
                     }
+                    _CallbackQueue.JobFinished();
                 }
-                _CallbackQueue.JobFinished();
             }
         });
-    };
-
-    //  驗證是否可上傳成績
-    var _VerifySemesterScore = function(vCourseID) {
-        var pCourseStudents = _CourseStudents[vCourseID];  
-        var isValidate = true;
-
-        var student_count = 0;
-        if (pCourseStudents) {      
-            for(var student_number in pCourseStudents) {
-                var student = pCourseStudents[student_number];
-                student_count = student_count + 1;
-
-                if (!student.Score) {
-                    isValidate = false;
-                }
-            }
-        } else {
-            isValidate = false;
-        }
-        if (student_count === 0) {
-            return false;
-        }
-        return isValidate;
     };
 
     //  Update CourseExt
@@ -505,12 +497,13 @@ var CreateTeacher = function() {
             result: function(response, error, http) {
                 if (error !== null) {
                     _InternalError.push('呼叫服務(' + Service.UpdateCourseExt + ')失敗或網路異常，請稍候重試！');
+                    _ThrowError();
                 } else {
                     if (response.Result != null) {
                         _TeacherCourses[vCourseID].Confirmed = 'true';
+                        _CallbackQueue.JobFinished();
                     }
                 }
-                _CallbackQueue.JobFinished();
             }
         });
     };
@@ -529,7 +522,7 @@ var CreateTeacher = function() {
             body: "<Request>\n  <Log>\n     <Actor>" + (gadget.getContract(Contract.Teacher).getUserInfo().UserName) + "</Actor>\n        <ActionType>更新</ActionType>\n       <Action>更新成績</Action>\n     <TargetCategory>ischool.emba.subject_semester_score</TargetCategory>\n      <ClientInfo><ClientInfo></ClientInfo></ClientInfo>\n        <ActionBy>ischool web 成績輸入小工具</ActionBy>\n      <Description>" + log + "</Description>\n    </Log>\n</Request>",
             result: function(response, error, http) {
                 if (error !== null) {
-                    _InternalError.push('呼叫服務(' + Service.AddLog + ')失敗或網路異常，請稍候重試！');
+                    //_InternalError.push('呼叫服務(' + Service.AddLog + ')失敗或網路異常，請稍候重試！');                    
                 } 
                 _CallbackQueue.JobFinished();
             }
@@ -542,6 +535,18 @@ var CreateTeacher = function() {
 
         Teacher.Publish(o, type);                 
     };
+
+    //  錯誤處理
+    var _ThrowError = function() {
+        var o = {
+                    InternalError: _InternalError,
+                    WarningMessage: '',
+                    SuccessMessage: ''
+                };
+
+        _RaiseEvent('show_internal_error', o);
+        _CallbackQueue.Clear();
+    }    
 
     return {
         ClearInternalError: function() {
@@ -587,7 +592,31 @@ var CreateTeacher = function() {
         IsSubjectScoreLock: function() {
 
             return _SubjectScoreLock === 't' ? true : false;
-        },    
+        },  
+
+        //  驗證是否可上傳成績
+        VerifySemesterScore: function(vCourseID) {
+            var pCourseStudents = _CourseStudents[vCourseID];  
+            var isValidate = true;
+
+            var student_count = 0;
+            if (pCourseStudents) {      
+                for(var student_number in pCourseStudents) {
+                    var student = pCourseStudents[student_number];
+                    student_count = student_count + 1;
+
+                    if (!student.Score) {
+                        isValidate = false;
+                    }
+                }
+            } else {
+                isValidate = false;
+            }
+            if (student_count === 0) {
+                return false;
+            }
+            return isValidate;
+        },
 
         SaveSubjectSemesterScore: function(vCourseID) {
             var pCourseStudents = _CourseStudents[vCourseID];    
@@ -649,17 +678,6 @@ var CreateTeacher = function() {
         },
     
         UpdateCourseExt: function(vCourseID, vCourseName) {
-            if (!_VerifySemesterScore(vCourseID)) {
-                var o = {
-                    InternalError: _InternalError,
-                    WarningMessage: '請完成所有成績輸入再繳交，謝謝。',
-                    SuccessMessage: ''
-                };
-                _CallbackQueue.Push(function() {_RaiseEvent('update_course_ext_complete', o)});  
-                _CallbackQueue.Start();
-                return;
-            }
-
             var pCourseStudents = _CourseStudents[vCourseID];    
             var pCourse = _TeacherCourses[vCourseID];
             var pass_score = ["A+", "A", "A-", "B+", "B", "B-"];
@@ -718,7 +736,196 @@ var CreateTeacher = function() {
 
                 _CallbackQueue.Start();    
             }
-        }     
+        },
+
+        GetSelectedCourseScoreStatistics: function(vCourseID) {
+            //  修課人數
+            var statisticsAttendAmount = 0;
+            //  登分人數
+            var statisticsScoredAmount = 0;
+            //  A+登分比例
+            var statisticsAPlusScoredRate = 0;
+            //  A+登分比例人數
+            var statisticsAPlusScoredRateAmount = 0;
+            //  A登分比例
+            var statisticsAScoredRate = 0;
+            //  A登分比例人數
+            var statisticsAScoredRateAmount = 0;
+            //  A-登分比例
+            var statisticsAMinusScoredRate = 0;
+            //  A-登分比例人數
+            var statisticsAMinusScoredRateAmount = 0;
+            //  B+登分比例
+            var statisticsBPlusScoredRate = 0;
+            //  B+登分比例人數
+            var statisticsBPlusScoredRateAmount = 0;
+            //  B及以下登分比例
+            var statisticsBScoredRate = 0;
+            //  B及以下登分比例人數
+            var statisticsBScoredRateAmount = 0;
+            //  A加總登分比例
+            var statisticsASumScoredRate = 0;
+            //  A加總登分比例人數
+            var statisticsASumScoredRateAmount = 0;
+            //  B加總登分比例
+            var statisticsBSumScoredRate = 0;
+            //  B加總登分比例人數
+            var statisticsBSumScoredRateAmount = 0;
+            //  A+需減少人數
+            var statisticsAPlusReduceAmount = 0;
+            //  A需減少人數
+            var statisticsAReduceAmount = 0;
+            //  A-需減少人數
+            var statisticsAMinusReduceAmount = 0;
+            //  B+需增加人數 
+            var statisticsBPlusAddAmount = 0;
+            //  B需增加人數  
+            var statisticsBAddAmount = 0;
+            //  A需減少總人數
+            var statisticsASumReduceAmount = 0;
+            //  B需增加總人數
+            var statisticsBSumAddAmount = 0;
+            //  A+登分人數
+            var statisticsAPlusScoredAmount = 0;
+            //  A登分人數
+            var statisticsAScoredAmount = 0;
+            //  A-登分人數
+            var statisticsAMinusScoredAmount = 0;
+            //  B+登分人數
+            var statisticsBPlusScoredAmount = 0;
+            //  B及以下登分人數
+            var statisticsBScoredAmount = 0;
+            //  A登分總人數
+            var statisticsASumScoredAmount = 0;
+            //  B登分總人數
+            var statisticsBSumScoredAmount = 0;    
+
+            //  所有成績
+            // var pass_score = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "F"];
+
+            //  所有修課學生
+            var pCourseStudents = _CourseStudents[vCourseID];  
+            if (pCourseStudents) {    
+                for(var student_number in pCourseStudents) {
+                    var student = pCourseStudents[student_number];
+
+                    if (student.IsCancel !== "t")
+                    {                        
+                        statisticsAttendAmount += 1;
+                        if (student.Score) {
+                            statisticsScoredAmount += 1;
+
+                            switch (student.Score) {
+                                case "A+":
+                                    statisticsAPlusScoredAmount += 1;
+                                    break; 
+                                case "A":
+                                    statisticsAScoredAmount += 1;
+                                    break; 
+                                case "A-":
+                                    statisticsAMinusScoredAmount += 1;
+                                    break; 
+                                case "B+":
+                                    statisticsBPlusScoredAmount += 1;
+                                    break; 
+                                case "B":
+                                    statisticsBScoredAmount += 1;
+                                    break; 
+                                case "B-":
+                                    statisticsBScoredAmount += 1;
+                                    break; 
+                                case "C+":
+                                    statisticsBScoredAmount += 1;
+                                    break; 
+                                case "C":
+                                    statisticsBScoredAmount += 1;
+                                    break; 
+                                case "C-":
+                                    statisticsBScoredAmount += 1;
+                                    break; 
+                                case "F":
+                                    statisticsBScoredAmount += 1;
+                                    break; 
+
+                            }
+                        }
+                    }
+                }                
+            }
+
+            // JavaScript的四捨五入、無條件捨去、無條件進位
+            // Math.round() 四捨五入
+            // Math.floor() 取小於這個數的最大整數
+            // Math.ceil() 取大於這個數的最小整數
+
+            var statisticsAPlusScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsAPlusScoredAmount * 1000/statisticsAttendAmount)/10);
+            var statisticsAScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsAScoredAmount * 1000/statisticsAttendAmount)/10);
+            var statisticsAMinusScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsAMinusScoredAmount * 1000/statisticsAttendAmount)/10);
+            var statisticsBPlusScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsBPlusScoredAmount * 1000/statisticsAttendAmount)/10);
+            var statisticsBScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsBScoredAmount * 1000/statisticsAttendAmount)/10);
+            var statisticsASumScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round((statisticsAPlusScoredAmount + statisticsAScoredAmount + statisticsAMinusScoredAmount) * 1000/statisticsAttendAmount)/10);
+            var statisticsBSumScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round((statisticsBPlusScoredAmount + statisticsBScoredAmount) * 1000/statisticsAttendAmount)/10);
+                        
+            statisticsAPlusScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsAPlusScoredAmount * 1000/statisticsAttendAmount)/10) + "%";
+            statisticsAScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsAScoredAmount * 1000/statisticsAttendAmount)/10) + "%";
+            statisticsAMinusScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsAMinusScoredAmount * 1000/statisticsAttendAmount)/10) + "%";
+            statisticsBPlusScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsBPlusScoredAmount * 1000/statisticsAttendAmount)/10) + "%";
+            statisticsBScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsBScoredAmount * 1000/statisticsAttendAmount)/10) + "%";
+            statisticsASumScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round((statisticsAPlusScoredAmount + statisticsAScoredAmount + statisticsAMinusScoredAmount) * 1000/statisticsAttendAmount)/10) + "%";
+            statisticsBSumScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round((statisticsBPlusScoredAmount + statisticsBScoredAmount) * 1000/statisticsAttendAmount)/10) + "%";
+            statisticsASumScoredAmount = statisticsAPlusScoredAmount + statisticsAScoredAmount + statisticsAMinusScoredAmount;
+            statisticsBSumScoredAmount = statisticsBPlusScoredAmount + statisticsBScoredAmount;
+            
+            statisticsAPlusScoredRateAmount = Math.floor(statisticsAttendAmount * 0.25);
+            statisticsAScoredRateAmount = Math.floor(statisticsAttendAmount * 0.4);
+            statisticsAMinusScoredRateAmount = Math.floor(statisticsAttendAmount * 0.25);
+            statisticsBPlusScoredRateAmount = Math.ceil(statisticsAttendAmount * 0.1);
+            statisticsBScoredRateAmount = Math.ceil(statisticsAttendAmount * 0.05);
+            statisticsASumScoredRateAmount = Math.floor(statisticsAttendAmount * 0.8);
+            statisticsBSumScoredRateAmount = Math.ceil(statisticsAttendAmount * 0.2);
+
+            statisticsAPlusReduceAmount = ((statisticsAPlusScoredAmount - statisticsAPlusScoredRateAmount) > 0) ? (statisticsAPlusScoredAmount - statisticsAPlusScoredRateAmount) : 0;
+            statisticsAReduceAmount = ((statisticsAScoredAmount - statisticsAScoredRateAmount) > 0) ? (statisticsAScoredAmount - statisticsAScoredRateAmount) : 0;
+            statisticsAMinusReduceAmount = ((statisticsAMinusScoredAmount - statisticsAMinusScoredRateAmount) > 0) ? (statisticsAMinusScoredAmount - statisticsAMinusScoredRateAmount) : 0;
+            statisticsBPlusAddAmount = ((statisticsBPlusScoredRateAmount - statisticsBPlusScoredAmount) > 0) ? (statisticsBPlusScoredRateAmount - statisticsBPlusScoredAmount) : 0;
+            statisticsBAddAmount = ((statisticsBScoredRateAmount - statisticsBScoredAmount) > 0) ? (statisticsBScoredRateAmount - statisticsBScoredAmount) : 0;
+            statisticsASumReduceAmount = ((statisticsASumScoredAmount - statisticsASumScoredRateAmount) > 0) ? (statisticsASumScoredAmount - statisticsASumScoredRateAmount) : 0;
+            statisticsBSumAddAmount = ((statisticsBSumScoredRateAmount - statisticsBSumScoredAmount) > 0) ? (statisticsBSumScoredRateAmount - statisticsBSumScoredAmount) : 0;
+            
+            return {
+                'AttendAmount': statisticsAttendAmount,
+                'ScoredAmount': statisticsScoredAmount,        
+                'APlusScoredRate': statisticsAPlusScoredRate,
+                'AScoredRate': statisticsAScoredRate,
+                'AMinusScoredRate': statisticsAMinusScoredRate,
+                'BPlusScoredRate': statisticsBPlusScoredRate,
+                'BScoredRate': statisticsBScoredRate,
+                'ASumScoredRate': statisticsASumScoredRate, 
+                'BSumScoredRate': statisticsBSumScoredRate,
+                'APlusReduceAmount': statisticsAPlusReduceAmount,    
+                'AReduceAmount': statisticsAReduceAmount, 
+                'AMinusReduceAmount': statisticsAMinusReduceAmount,
+                'BPlusAddAmount': statisticsBPlusAddAmount,
+                'BAddAmount': statisticsBAddAmount, 
+                'ASumReduceAmount': statisticsASumReduceAmount,
+                'BSumAddAmount': statisticsBSumAddAmount,
+                'APlusScoredAmount': statisticsAPlusScoredAmount,
+                'AScoredAmount': statisticsAScoredAmount,
+                'AMinusScoredAmount': statisticsAMinusScoredAmount,
+                'BPlusScoredAmount': statisticsBPlusScoredAmount,
+                'BScoredAmount': statisticsBScoredAmount,
+                'ASumScoredAmount': statisticsASumScoredAmount,    
+                'BSumScoredAmount': statisticsBSumScoredAmount,
+                'BSumScoredAmount': statisticsBSumScoredAmount,
+                'APlusScoredRateNumber': statisticsAPlusScoredRateNumber,
+                'AScoredRateNumber': statisticsAScoredRateNumber,
+                'AMinusScoredRateNumber': statisticsAMinusScoredRateNumber,
+                'BPlusScoredRateNumber': statisticsBPlusScoredRateNumber,
+                'BScoredRateNumber': statisticsBScoredRateNumber,
+                'ASumScoredRateNumber': statisticsASumScoredRateNumber,
+                'BSumScoredRateNumber': statisticsBSumScoredRateNumber
+            }
+        }
     };
 };
 
@@ -796,6 +1003,135 @@ var CreateEvent = function() {
         } 
     };
 
+    var _ShowScoreStatisticsDetail = function(vCourseID) {
+        var statistics = Teacher.GetSelectedCourseScoreStatistics(vCourseID);
+        var pSelectedCourse = Teacher.GetSelectedCourse(vCourseID);
+
+        if (!pSelectedCourse) {
+            pSelectedCourse = {};
+        } 
+        pSelectedCourse.Compliant = true;
+        // 修課人數：statistics-attend-amount
+        $("#statistics-attend-amount").html(statistics.AttendAmount);
+        // 登分人數：
+        if (statistics.ScoredAmount < statistics.AttendAmount) {
+            $("#statistics-scored-amount").html("<font color='red'>" + statistics.ScoredAmount + "</font>");
+            pSelectedCourse.Compliant = false;
+        }
+        else {
+            $("#statistics-scored-amount").html(statistics.ScoredAmount);
+        }
+        // A+登分比例：
+        if (statistics.APlusScoredRateNumber > 25) {
+            $("#statistics-a-plus-scored-rate").html("<font color='red'>" + statistics.APlusScoredRate + "</font>");
+            pSelectedCourse.Compliant = false;
+        } else {
+            $("#statistics-a-plus-scored-rate").html(statistics.APlusScoredRate);
+        }
+        // A 登分比例：
+        if (statistics.AScoredRateNumber > 40) {
+            pSelectedCourse.Compliant = false;
+            $("#statistics-a-scored-rate").html("<font color='red'>" + statistics.AScoredRate + "</font>");
+        } else {
+            $("#statistics-a-scored-rate").html(statistics.AScoredRate);
+        }
+        // A-登分比例：
+        if (statistics.AMinusScoredRateNumber > 25) {
+            pSelectedCourse.Compliant = false;
+            $("#statistics-a-minus-scored-rate").html("<font color='red'>" + statistics.AMinusScoredRate + "</font>");
+        } else {
+            $("#statistics-a-minus-scored-rate").html(statistics.AMinusScoredRate);
+        }
+        // B+登分比例：
+        if (statistics.BPlusScoredRateNumber < 10) {
+            pSelectedCourse.Compliant = false;
+            $("#statistics-b-plus-scored-rate").html("<font color='red'>" + statistics.BPlusScoredRate + "</font>");
+        } else {
+            $("#statistics-b-plus-scored-rate").html(statistics.BPlusScoredRate);
+        }
+        // B 登分比例：
+        if (statistics.BScoredRateNumber < 5) {
+            pSelectedCourse.Compliant = false;
+            $("#statistics-b-scored-rate").html("<font color='red'>" + statistics.BScoredRate + "</font>");
+        } else {
+            $("#statistics-b-scored-rate").html(statistics.BScoredRate);
+        }
+        // A 的加總登分比例：
+        if (statistics.ASumScoredRateNumber > 80) {
+            pSelectedCourse.Compliant = false;
+            $("#statistics-a-sum-scored-rate").html("<font color='red'>" + statistics.ASumScoredRate + "</font>");
+        } else {
+            $("#statistics-a-sum-scored-rate").html(statistics.ASumScoredRate);
+        }
+        // B 的加總登分比例：
+        if (statistics.BSumScoredRateNumber < 20) {
+            pSelectedCourse.Compliant = false;
+            $("#statistics-b-sum-scored-rate").html("<font color='red'>" + statistics.BSumScoredRate + "</font>");
+        } else {
+            $("#statistics-b-sum-scored-rate").html(statistics.BSumScoredRate);
+        }
+        // A+ 登分人數
+        $("#statistics-a-plus-scored-amount").html(statistics.APlusScoredAmount);
+        // A 登分人數
+        $("#statistics-a-scored-amount").html(statistics.AScoredAmount);
+        // A- 登分人數
+        $("#statistics-a-minus-scored-amount").html(statistics.AMinusScoredAmount);
+        // B+ 登分人數
+        $("#statistics-b-plus-scored-amount").html(statistics.BPlusScoredAmount);
+        // B及以下登分人數
+        $("#statistics-b-scored-amount").html(statistics.BScoredAmount);
+        // A 登分總人數
+        $("#statistics-a-sum-scored-amount").html(statistics.ASumScoredAmount);
+        // B 登分總人數
+        $("#statistics-b-sum-scored-amount").html(statistics.BSumScoredAmount);
+        // A+需減少人數：
+        if (statistics.APlusReduceAmount > 0) {
+            $("#statistics-a-plus-reduce-amount").html("<font color='red'>" + statistics.APlusReduceAmount + "</font>");
+        } else {
+            $("#statistics-a-plus-reduce-amount").html(statistics.APlusReduceAmount);
+        }
+        // A需減少人數：
+        if (statistics.AReduceAmount > 0) {
+            $("#statistics-a-reduce-amount").html("<font color='red'>" + statistics.AReduceAmount + "</font>");
+        } else {
+            $("#statistics-a-reduce-amount").html(statistics.AReduceAmount);
+        }
+        // A-需減少人數：
+        if (statistics.AMinusReduceAmount > 0) {
+            $("#statistics-a-minus-reduce-amount").html("<font color='red'>" + statistics.AMinusReduceAmount + "</font>");
+        } else {
+            $("#statistics-a-minus-reduce-amount").html(statistics.AMinusReduceAmount);
+        }
+        // B+需增加人數：
+        if (statistics.BPlusAddAmount > 0) {
+            $("#statistics-b-plus-add-amount").html("<font color='red'>" + statistics.BPlusAddAmount + "</font>");
+        } else {
+            $("#statistics-b-plus-add-amount").html(statistics.BPlusAddAmount);
+        }
+        // B及以下需增加人數：
+        if (statistics.BAddAmount > 0) {
+            $("#statistics-b-add-amount").html("<font color='red'>" + statistics.BAddAmount + "</font>");
+        } else {
+            $("#statistics-b-add-amount").html(statistics.BAddAmount);
+        }
+        // A需減少總人數：
+        if (statistics.ASumReduceAmount > 0) {
+            $("#statistics-a-sum-reduce-amount").html("<font color='red'>" + statistics.ASumReduceAmount + "</font>");
+        } else {
+            $("#statistics-a-sum-reduce-amount").html(statistics.ASumReduceAmount);
+        }
+        // B需增加總人數：
+        if (statistics.BSumAddAmount > 0) {
+            $("#statistics-b-sum-add-amount").html("<font color='red'>" + statistics.BSumAddAmount + "</font>");
+        } else {
+            $("#statistics-b-sum-add-amount").html(statistics.BSumAddAmount);
+        }
+
+        //$("#statistics-b-plus-scoredable-amount").html(statistics.statisticsBPl);
+        // B及以下可登分人數：statistics-b-scoredable-amount
+        //$("#statistics-attend-amount").html(statistics.statisticsAttendAmount);
+    };
+
     return {
         Template_Loaded: function(vTemplate) {
             $('#explanation').html(vTemplate);
@@ -847,9 +1183,9 @@ var CreateEvent = function() {
 
             //  修課學生
             $("#tblStudentList>tbody").html('');
-            var pCourseStudents = Teacher.GetCourseStudents(vCourseID);        
+            var pCourseStudents = Teacher.GetCourseStudents(vCourseID);   
+            var arrStudent = [];     
             if (pCourseStudents) {
-                var arrStudent =[];
                 for(var key in pCourseStudents) {
                     arrStudent.push(pCourseStudents[key]);
                 }
@@ -880,6 +1216,26 @@ var CreateEvent = function() {
 
                 });
             }
+
+            //  課程為「核心」課程，則顯示成績分佈統計表，反之隱藏。
+            if (pSelectedCourse) {
+                if (pSelectedCourse.CourseType.indexOf("核心") >= 0) {
+                    $("#statistics-container").show();
+                } else {
+                    $("#statistics-container").hide();
+                }
+            } else {
+                $("#statistics-container").hide();
+            } 
+            
+            // 列舉成績分佈統計表中的變數
+            // 課程名稱：statistics-course-name
+            if (pSelectedCourse) {
+                $("#statistics-course-name").html(pSelectedCourse.CourseTitle);
+            } else {
+                $("#statistics-course-name").html('');
+            }          
+            _ShowScoreStatisticsDetail(vCourseID);
 
             //  成績輸入方塊「上、下、Enter」選取文字效果
             $('input').on('keydown', function(e) {
@@ -926,7 +1282,7 @@ var CreateEvent = function() {
                 $(this).val(fixed_value);
 
                 student.Score = fixed_value;
-                // student.Remark = 
+                _ShowScoreStatisticsDetail(vCourseID);
             });
         },
 
@@ -938,6 +1294,13 @@ var CreateEvent = function() {
         UpdateCourseExt: function(vCourseID, vCourseName) {
             _DisableSaveButtion();
             Teacher.UpdateCourseExt(vCourseID, vCourseName);
+        },
+
+        ShowInternalError: function(message) {
+            if (message && message.InternalError && message.InternalError.length > 0) {
+                _ShowErrorMessage(message.InternalError);
+            }
+            _EnableSaveButtion($("#cboTeacherCourses").val());
         },
 
         UpdateCourseExt_Complete: function(message) {
@@ -1078,6 +1441,8 @@ $(document).ready(function() {
     Teacher.Subscribe(Event.UpdateCourseExt_Complete, 'update_course_ext_complete');
     //  更新學生成績資料(主要是取回新增之成績的 ScoreID, 下次再暫存才會 Update 而不是又新增乙次)
     Teacher.Subscribe(Event.RefreshStudentScore, 'refresh_subject_semester_score');
+    //  錯誤處理
+    Teacher.Subscribe(Event.ShowInternalError, 'show_internal_error');    
     //  Data Model 開始取得資料
     Teacher.Init();
 
@@ -1088,11 +1453,31 @@ $(document).ready(function() {
 
     //  「儲存(暫存)成績」
     $("#btnSave").on('click', function() {
+        $('#mainMsg').html('');
         Event.SaveSubjectSemesterScore($("#cboTeacherCourses").val());
     });
 
     //  確認並上傳成績
     $("#btnUpload").on('click', function() {
+        $('#mainMsg').html('');
+        if (!Teacher.VerifySemesterScore($("#cboTeacherCourses").val())) {
+            $('#tab1Msg').html("<div class='alert alert-error'>" + "請完成所有成績輸入再繳交！" + "</div>");
+            clearTimeout(timeoutID);
+            timeoutID = window.setTimeout(function() { 
+               $('#tab1Msg').html('');
+            }, 3000);
+            return;
+        }
+        var timeoutID;
+        var currentCourse = Teacher.GetSelectedCourse($("#cboTeacherCourses").val());
+        if (!currentCourse.Compliant) {
+            $('#tab1Msg').html("<div class='alert alert-error'>" + "成績不符合評分規定，請先修正！" + "</div>");
+            clearTimeout(timeoutID);
+            timeoutID = window.setTimeout(function() { 
+               $('#tab1Msg').html('');
+            }, 3000);
+            return;
+        }
         getConfirm(Teacher.GetReminderTemplate, function(result) {
             if (result) {
                 Event.UpdateCourseExt($("#cboTeacherCourses").val(), $("#cboTeacherCourses").find("option:selected").text());

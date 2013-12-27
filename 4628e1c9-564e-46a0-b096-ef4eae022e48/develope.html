@@ -10,14 +10,14 @@
 	    });
   	</script>
 	<script src="js/jquery.min.js"></script>
+	<script src="js/less.js"></script>
   	<link href="css/bootstrap.css" rel="stylesheet" />
   	<link href="css/bootstrap-responsive.css" rel="stylesheet" />
   	<link href="css/mybootstrap.css" rel="stylesheet" />
 	<link type="text/css" rel="stylesheet/less" href="css/styles.less"/>
-	<link type="text/css" rel="stylesheet/less" href="css/scorekit.css"/>
- 	<link href="css/base.css" rel="stylesheet" />
-  	<link href="css/default.css" rel="stylesheet" />
-	<script src="js/less.js"></script>
+	<link type="text/css" rel="stylesheet" href="css/scorekit.css"/>
+ 	<link type="text/css" rel="stylesheet" href="css/base.css" />
+  	<link type="text/css" rel="stylesheet" href="css/default.css" />
 	<script src="js/emba.teacher.js"></script>
   	<script src="js/bootstrap.js"></script>
 </head>
@@ -39,10 +39,10 @@
 			            <div id="tab1Msg"></div>
 						<div class="page-container">
 							<div class="toolbar-div">
-								<button id="btnSave" class="i-button save"><span>暫存</span></button>
-								<button id="btnUpload" class="i-button upload"><span>確認並上傳成績</span></button>
-								<button id="btnPrintScoreSheet" class="i-button print"><span>列印成績報告單</span></button>
-								<button id="btnPrintEmptyScoreSheet" class="i-button print2"><span>產生空白成績確認單</span></button>
+								<a id="btnSave" class="btn btn-info btn-xs" onClick="JavaScript:void(0);"><span>暫存</span></a>
+								<a id="btnUpload" class="btn btn-info btn-xs" onClick="JavaScript:void(0);"><span>確認並上傳成績</span></a>
+								<a id="btnPrintScoreSheet" class="btn btn-info btn-xs" onClick="JavaScript:void(0);"><span>列印成績報告單</span></a>
+								<a id="btnPrintEmptyScoreSheet" class="btn btn-info btn-xs" onClick="JavaScript:void(0);"><span>產生空白成績確認單</span></a>
 							</div>
 							<div class="content-div">
 								<div class="score-div">
@@ -50,7 +50,8 @@
 										<thead>
 											<tr>
 												<td colspan="2" style="text-align: left;"><span id="lblTeacherList" class="i-label teacher-list"></span></td>
-												<td colspan="3" style="text-align: right;"><select id="cboTeacherCourses" class="i-dropdownlist course-select"></select></td>
+												<td colspan="3" style="text-align: right;"><select id="cboTeacherCourses"></select>
+												</td>
 											</tr>
 											<tr>
 												<th class='i-label' width="200px">系所組別</th>
@@ -102,7 +103,7 @@
 									</thead>
 									<tbody>
 									</tbody>
-								</table>
+								</table>								
 							</div>
 							<div class="teacher-sign">
 								<table>
@@ -141,20 +142,6 @@
 						</font>
 					</p>
 				</div>
-				
-				<!-- Modal -->
-
-				<!--
-				<div class="modal" id="confirmbox" style="display: none">
-    				<div class="modal-body">
-        				<p id="confirmMessage">Any confirmation message?</p>
-				    </div>
-				    <div class="modal-footer">
-				        <button class="btn" id="confirmFalse">Cancel</button>
-				        <button class="btn btn-primary" id="confirmTrue">OK</button>
-				    </div>
-				</div>
-				-->
 
 				<div class="modal fade" id="confirmbox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 				  	<div class="modal-dialog">
@@ -174,6 +161,119 @@
 				  	</div><!-- /.modal-dialog -->
 				</div>
 				<!-- /.modal -->
+<!-- #fixed-ad{
+  background:#FF0066; color:#FFCC99;
+  border:4px solid #FF9999; padding:5px;
+  width:80px; height:120px;
+  position:fixed; top:100px; right:10px;
+  _position: absolute; /* position fixed for IE6 */
+  _top:expression(documentElement.scrollTop+100);
+  z-index:3;		left:645px;
+} -->
+				<div id="statistics-container" style="position:fixed; top:193px; left:645px;_top:expression(documentElement.scrollTop+100);z-index:3;">
+					<table border=1 cellpadding=0 cellspacing=0 style="text-align: center; width:360px;">
+					 <tr>
+					  <td>課程<br>名稱</td>
+					  <td id="statistics-course-name" colspan=4>管理會計&nbsp;05</td>
+					 </tr>
+					 <tr>
+					  <td>修課<br>人數</td>
+					  <td id="statistics-attend-amount" colspan=4></td>
+					 </tr>
+					 <tr>
+					  <td>登分<br>人數</td>
+					  <td id="statistics-scored-amount" colspan=4></td>
+					 </tr>
+					 <tr>
+					  <td colspan=5>&nbsp;</td>
+					 </tr>
+					 <tr>
+					  <td>等第</td>
+					  <td>評分<br>比例</td>
+					  <td>登分<br>比例</td>
+					  <td>加總<br>比例</td>
+					  <td>加總登<br>分比例</td>
+					 </tr>
+					 <tr>
+					  <td>A+</td>
+					  <td>≦25%</td>
+					  <td id="statistics-a-plus-scored-rate"></td>
+					  <td rowspan=3>不超過80%</td>
+					  <td id="statistics-a-sum-scored-rate" rowspan=3></td>
+					 </tr>
+					 <tr>
+					  <td>A</td>
+					  <td>≦40%</td>
+					  <td id="statistics-a-scored-rate"></td>
+					 </tr>
+					 <tr>
+					  <td>A-</td>
+					  <td>≦25%</td>
+					  <td id="statistics-a-minus-scored-rate"></td>
+					 </tr>
+					 <tr>
+					  <td>B+</td>
+					  <td>≧10%</td>
+					  <td id="statistics-b-plus-scored-rate"></td>
+					  <td rowspan=2>至少20%</td>
+					  <td id="statistics-b-sum-scored-rate" rowspan=2></td>
+					 </tr>
+					 <tr>
+					  <td>B及以下</td>
+					  <td>≧5%</td>
+					  <td id="statistics-b-scored-rate"></td>
+					 </tr>
+					 <tr>
+					  <td colspan=5>&nbsp;</td>
+					 </tr>
+ 					<tr>
+					  <td>等第</td>
+					  <tD>登分<br>人數</td>
+					  <td>需減少<br>人數</td>
+					  <td>登分<br>總人數</td>
+					  <td>需減少<br>總人數</td>
+ 					</tr>
+					 <tr>
+					  <td>A+</td>
+					  <td id="statistics-a-plus-scored-amount"></td>
+					  <td id="statistics-a-plus-reduce-amount"></td>
+					  <td id="statistics-a-sum-scored-amount" rowspan=3></td>
+					  <td id="statistics-a-sum-reduce-amount" rowspan=3></td>
+					 </tr>
+					 <tr>
+					  <td>A</td>
+					  <td id="statistics-a-scored-amount"></td>
+					  <td id="statistics-a-reduce-amount"></td>
+					 </tr>
+					 <tr>
+					  <td>A-</td>
+					  <td id="statistics-a-minus-scored-amount"></td>
+					  <td id="statistics-a-minus-reduce-amount"></td>
+					 </tr>
+					 <tr>
+					  <td colspan=5>&nbsp;</td>
+					 </tr>
+					 <tr>
+					  <td>等第</td>
+					  <td>登分<br>人數</td>
+					  <td>需增加<br>人數</td>
+					  <td>登分<br>總人數</td>
+					  <td>需增加<br>總人數</td>
+					 </tr>
+					 <tr>
+					  <td>B+</td>
+					  <td id="statistics-b-plus-scored-amount"></td>
+					  <td id="statistics-b-plus-add-amount"></td>
+					  <td id="statistics-b-sum-scored-amount" rowspan=2></td>
+					  <td id="statistics-b-sum-add-amount" rowspan=2></td>
+					 </tr>
+					 <tr>
+					  <td>B及以下</td>
+					  <td id="statistics-b-scored-amount"></td>
+					  <td id="statistics-b-add-amount"></td>
+					 </tr>
+					</table>
+				</div>
 
 			</div>
 		</div>

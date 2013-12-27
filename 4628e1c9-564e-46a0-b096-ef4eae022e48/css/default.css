@@ -135,3 +135,36 @@ div.modal div.my-Msg div {
   background: #fffdc5;
   color: #7e631e;
 }
+.btn.disabled,
+.btn[disabled] {
+  color: #333333;
+  cursor: default;
+  background-color: #e6e6e6;
+  background-image: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+}
+select {
+  width: 100%;
+  margin: 4px 0;
+  padding: 0px;
+  font-family: "微軟正黑體","Helvetica Neue", Helvetica, 
+  Arial, sans-serif;
+  border: 1px solid #cccccc;
+  height: 30px;
+  vertical-align: middle;
+  text-align: center;
+  font-weight: bold;
+}
+.i-label {
+  color: #4d90fe;
+  font-weight: bold;
+  line-height: 1.33em;
+  font-size: 14px;
+}
+#statistics-container {
+  display: none;
+}
