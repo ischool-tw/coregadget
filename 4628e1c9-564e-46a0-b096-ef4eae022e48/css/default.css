@@ -156,14 +156,13 @@ select {
   border: 1px solid #cccccc;
   height: 30px;
   vertical-align: middle;
-  text-align: center;
   font-weight: bold;
 }
 .i-label {
   color: #4d90fe;
   font-weight: bold;
   line-height: 1.33em;
-  font-size: 14px;
+  font-size: 16px;
 }
 #statistics-container {
   display: none;

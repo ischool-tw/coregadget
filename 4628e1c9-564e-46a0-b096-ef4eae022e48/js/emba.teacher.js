@@ -30,15 +30,19 @@ var getConfirm = function (confirmMessage, callback){
         backdrop:'static',
         keyboard: false,
     });
-
+    // console.log('callback:' + callback)
     $('#confirmMessage').html(confirmMessage);
     $('#confirmFalse').click(function(){
         $('#confirmbox').modal('hide');
-        if (callback) callback(false);
+        if (callback) {
+            callback(false);
+        } 
     });
     $('#confirmTrue').click(function(){
         $('#confirmbox').modal('hide');
-        if (callback) callback(true);
+        if (callback) {
+            callback(true);
+        }
     });
 };  
 
@@ -972,37 +976,6 @@ var CreateEvent = function() {
         }
     };
 
-    var _DisableSaveButtion = function() {
-        $("#btnSave").prop("disabled", true);
-        $("#btnUpload").prop("disabled", true);
-    };
-
-    var _EnableSaveButtion = function(vCourseID) {
-        //  是否已鎖定不得成績輸入？
-        var pSubjectScoreLock = Teacher.IsSubjectScoreLock();
-
-        //  是否已「確認」？
-        var pSelectedCourse = Teacher.GetSelectedCourse(vCourseID);
-        //  若未鎖定不得成績輸入，則判斷是否已確認。
-        if (!pSubjectScoreLock) {        
-            if (pSelectedCourse) {
-                if (pSelectedCourse.Confirmed === 'true') {
-                    $("#btnSave").prop("disabled", true);
-                    $("#btnUpload").prop("disabled", true);
-                } else {
-                    $("#btnSave").prop("disabled", false);
-                    $("#btnUpload").prop("disabled", false);
-                }
-            } else {
-                $("#btnSave").prop("disabled", true);
-                $("#btnUpload").prop("disabled", true);
-            }
-        } else {
-            $("#btnSave").prop("disabled", true);
-            $("#btnUpload").prop("disabled", true);            
-        } 
-    };
-
     var _ShowScoreStatisticsDetail = function(vCourseID) {
         var statistics = Teacher.GetSelectedCourseScoreStatistics(vCourseID);
         var pSelectedCourse = Teacher.GetSelectedCourse(vCourseID);
@@ -1126,13 +1099,40 @@ var CreateEvent = function() {
         } else {
             $("#statistics-b-sum-add-amount").html(statistics.BSumAddAmount);
         }
-
-        //$("#statistics-b-plus-scoredable-amount").html(statistics.statisticsBPl);
-        // B及以下可登分人數：statistics-b-scoredable-amount
-        //$("#statistics-attend-amount").html(statistics.statisticsAttendAmount);
     };
 
     return {
+        DisableSaveButtion: function() {
+            $("#btnSave").prop("disabled", true);
+            $("#btnUpload").prop("disabled", true);
+        },
+
+        EnableSaveButtion: function(vCourseID) {
+            //  是否已鎖定不得成績輸入？
+            var pSubjectScoreLock = Teacher.IsSubjectScoreLock();
+
+            //  是否已「確認」？
+            var pSelectedCourse = Teacher.GetSelectedCourse(vCourseID);
+            //  若未鎖定不得成績輸入，則判斷是否已確認。
+            if (!pSubjectScoreLock) {        
+                if (pSelectedCourse) {
+                    if (pSelectedCourse.Confirmed === 'true') {
+                        $("#btnSave").prop("disabled", true);
+                        $("#btnUpload").prop("disabled", true);
+                    } else {
+                        $("#btnSave").prop("disabled", false);
+                        $("#btnUpload").prop("disabled", false);
+                    }
+                } else {
+                    $("#btnSave").prop("disabled", true);
+                    $("#btnUpload").prop("disabled", true);
+                }
+            } else {
+                $("#btnSave").prop("disabled", true);
+                $("#btnUpload").prop("disabled", true);            
+            } 
+        },
+
         Template_Loaded: function(vTemplate) {
             $('#explanation').html(vTemplate);
         },
@@ -1147,7 +1147,7 @@ var CreateEvent = function() {
             $(arrTeacher).sort(function(a, b) {return (a.SerialNo - b.SerialNo);}).each(function(index, item) {
                 $('#cboTeacherCourses').append("<option value='" + item.CourseID + "'>" + item.CourseTitle + "</option>");
             });
-            _DisableSaveButtion();
+            Event.DisableSaveButtion();
         },
 
         ComboBox_SelectedIndexChanged: function(vCourseID) {
@@ -1241,17 +1241,18 @@ var CreateEvent = function() {
             $('input').on('keydown', function(e) {
                 var current_td_index = $(this).closest('td').index();
                 if (e.which === 13 || e.which === 40) {
-                    $(this).closest('td').closest('tr').next().find('td:nth-child(' + (current_td_index + 1) + ')>input').focus();
+                    $(this).closest('td').closest('tr').next().find('td:nth-child(' + (current_td_index + 1) + ')>input').focus();                    
+                    e.preventDefault();
                 }
                 if (e.which === 38) {
                     $(this).closest('td').closest('tr').prev().find('td:nth-child(' + (current_td_index + 1) + ')>input').focus();
+                    e.preventDefault();
                 }
             });
             
             var timeoutID;
             $("input[type=text]").focus(function() { 
-                var save_this = $(this);                
-
+                var save_this = $(this);  
                 clearTimeout(timeoutID);
                 timeoutID = window.setTimeout (function(){ 
                    save_this.select(); 
@@ -1287,12 +1288,12 @@ var CreateEvent = function() {
         },
 
         SaveSubjectSemesterScore: function(vCourseID) {
-            _DisableSaveButtion();
+            Event.DisableSaveButtion();
             Teacher.SaveSubjectSemesterScore(vCourseID);
         },
 
         UpdateCourseExt: function(vCourseID, vCourseName) {
-            _DisableSaveButtion();
+            Event.DisableSaveButtion();
             Teacher.UpdateCourseExt(vCourseID, vCourseName);
         },
 
@@ -1300,7 +1301,7 @@ var CreateEvent = function() {
             if (message && message.InternalError && message.InternalError.length > 0) {
                 _ShowErrorMessage(message.InternalError);
             }
-            _EnableSaveButtion($("#cboTeacherCourses").val());
+            Event.EnableSaveButtion($("#cboTeacherCourses").val());
         },
 
         UpdateCourseExt_Complete: function(message) {
@@ -1313,7 +1314,7 @@ var CreateEvent = function() {
             if (message && message.WarningMessage) {
                 _ShowWarningMessage(message.WarningMessage);
             }
-            _EnableSaveButtion($("#cboTeacherCourses").val());
+            Event.EnableSaveButtion($("#cboTeacherCourses").val());
         },
 
         SaveSubjectSemesterScore_Complete: function(message) {
@@ -1326,7 +1327,7 @@ var CreateEvent = function() {
             if (message && message.WarningMessage) {
                 _ShowWarningMessage(message.WarningMessage);
             }
-            _EnableSaveButtion($("#cboTeacherCourses").val());
+            Event.EnableSaveButtion($("#cboTeacherCourses").val());
         },
 
         RefreshStudentScore: function(vCourseID) {
@@ -1459,6 +1460,7 @@ $(document).ready(function() {
 
     //  確認並上傳成績
     $("#btnUpload").on('click', function() {
+        Event.DisableSaveButtion();
         $('#mainMsg').html('');
         if (!Teacher.VerifySemesterScore($("#cboTeacherCourses").val())) {
             $('#tab1Msg').html("<div class='alert alert-error'>" + "請完成所有成績輸入再繳交！" + "</div>");
@@ -1466,23 +1468,37 @@ $(document).ready(function() {
             timeoutID = window.setTimeout(function() { 
                $('#tab1Msg').html('');
             }, 3000);
+            Event.EnableSaveButtion($("#cboTeacherCourses").val());
             return;
         }
-        var timeoutID;
         var currentCourse = Teacher.GetSelectedCourse($("#cboTeacherCourses").val());
-        if (!currentCourse.Compliant) {
-            $('#tab1Msg').html("<div class='alert alert-error'>" + "成績不符合評分規定，請先修正！" + "</div>");
-            clearTimeout(timeoutID);
-            timeoutID = window.setTimeout(function() { 
-               $('#tab1Msg').html('');
-            }, 3000);
-            return;
+        if (currentCourse.CourseType.indexOf("核心") >= 0) {
+            var timeoutID;
+            if (!currentCourse.Compliant) {
+                $('#tab1Msg').html("<div class='alert alert-error'>" + "成績不符合評分規定，請先修正！" + "</div>");
+                clearTimeout(timeoutID);
+                timeoutID = window.setTimeout(function() { 
+                   $('#tab1Msg').html('');
+                }, 3000);
+                Event.EnableSaveButtion($("#cboTeacherCourses").val());
+                return;
+            }
         }
         getConfirm(Teacher.GetReminderTemplate, function(result) {
             if (result) {
                 Event.UpdateCourseExt($("#cboTeacherCourses").val(), $("#cboTeacherCourses").find("option:selected").text());
+            } else {
+                Event.EnableSaveButtion($("#cboTeacherCourses").val());
             }
         });
+        // var confirmed_upload = getConfirm(Teacher.GetReminderTemplate);
+        // console.log(confirmed_upload);
+        // if (confirmed_upload) {            
+        //     Event.UpdateCourseExt($("#cboTeacherCourses").val(), $("#cboTeacherCourses").find("option:selected").text());
+        // } else {
+        //     Event.EnableSaveButtion($("#cboTeacherCourses").val());
+        //     return;
+        // }
     });
 
     //  列印空白成績單
