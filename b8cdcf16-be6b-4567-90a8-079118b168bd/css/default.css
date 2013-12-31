@@ -135,3 +135,16 @@ div.modal div.my-Msg div {
   background: #fffdc5;
   color: #7e631e;
 }
+.footer {
+  border-top: 1px solid #ccc;
+  padding-top: 4px;
+  height: 70px;
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: 0px;
+  background: #fff;
+  color: #999999;
+  font-size: 14px; 
+  line-height: 20px;
+}

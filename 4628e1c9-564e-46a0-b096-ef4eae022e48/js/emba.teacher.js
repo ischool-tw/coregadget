@@ -1446,7 +1446,7 @@ $(document).ready(function() {
     Teacher.Subscribe(Event.ShowInternalError, 'show_internal_error');    
     //  Data Model 開始取得資料
     Teacher.Init();
-
+    
     //  課程之下拉式選單的值改變時
     $("#cboTeacherCourses").on('change', function() {
         Event.ComboBox_SelectedIndexChanged($("#cboTeacherCourses").val());

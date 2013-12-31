@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="休學記錄" description="學生-休學記錄">
-    <Title lang="zh-TW">休學記錄</Title>
+  <ModulePrefs title="休學紀錄" description="學生-休學紀錄">
+    <Title lang="zh-TW">休學紀錄</Title>
     <Icon>icon.png</Icon>
     <Mobile />
     <Title lang="zh-CN">

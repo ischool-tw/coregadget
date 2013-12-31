@@ -114,6 +114,19 @@ border-bottom: none;
 .survey-history-table th:first-child {
   width: inherit;
 }
+.footer {
+  border-top: 1px solid #ccc;
+  padding-top: 4px;
+  height: 70px;
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: 0px;
+  background: #fff;
+  color: #999999;
+  font-size: 14px; 
+  line-height: 20px;
+}
 /*
 .survey-history-table tbody tr:nth-last-child(2) td {
   border-top:2px solid #000000; 
