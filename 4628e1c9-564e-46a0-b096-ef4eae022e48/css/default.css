@@ -175,15 +175,15 @@ select {
   border-style: solid;
   border-width: 1px;
   border-spacing: 0px;
-  padding: 3px;
+  padding: 3px 0;
 }
 #statistics-summary tr td:nth-child(1) {
     background-color: rgb(220, 230, 240);
     font-weight: bold;    
-    width: 64px;
+    width: 72px;
 }
 #statistics-reduce tr td:nth-child(1), #statistics-increase tr td:nth-child(1) {
-    width: 67px;
+    width: 70px;
 }
 #statistics-rate tr td:nth-child(1) {
     width: 70px;
