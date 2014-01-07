@@ -180,13 +180,13 @@ select {
 #statistics-summary tr td:nth-child(1) {
     background-color: rgb(220, 230, 240);
     font-weight: bold;    
-    width: 69px;
+    width: 67px;
 }
 #statistics-reduce tr td:nth-child(1), #statistics-increase tr td:nth-child(1) {
     width: 67px;
 }
 #statistics-rate tr td:nth-child(1) {
-    width: 67px;
+    width: 68px;
 }
 #statistics-rate tr:nth-child(1), #statistics-reduce tr:nth-child(1), #statistics-increase tr:nth-child(1) {
     background-color: rgb(220, 230, 240);
