@@ -112,7 +112,7 @@ var CreateCallbackQueue = function() {
             _Queues = [];
             _Current = [];
             _Finished = [];  
-            _InternalError = [];              
+            _InternalError = []; 
         }
     }
 };
@@ -548,8 +548,8 @@ var CreateTeacher = function() {
                     SuccessMessage: ''
                 };
 
-        _RaiseEvent('show_internal_error', o);
         _CallbackQueue.Clear();
+        _RaiseEvent('show_internal_error', o);
     }    
 
     return {
@@ -1059,43 +1059,43 @@ var CreateEvent = function() {
         $("#statistics-b-sum-scored-amount").html(statistics.BSumScoredAmount);
         // A+需減少人數：
         if (statistics.APlusReduceAmount > 0) {
-            $("#statistics-a-plus-reduce-amount").html("<font color='red'>" + statistics.APlusReduceAmount + "</font>");
+            $("#statistics-a-plus-reduce-amount").html("<font color='red'>" + "-" + statistics.APlusReduceAmount + "</font>");
         } else {
             $("#statistics-a-plus-reduce-amount").html(statistics.APlusReduceAmount);
         }
         // A需減少人數：
         if (statistics.AReduceAmount > 0) {
-            $("#statistics-a-reduce-amount").html("<font color='red'>" + statistics.AReduceAmount + "</font>");
+            $("#statistics-a-reduce-amount").html("<font color='red'>" + "-" + statistics.AReduceAmount + "</font>");
         } else {
             $("#statistics-a-reduce-amount").html(statistics.AReduceAmount);
         }
         // A-需減少人數：
         if (statistics.AMinusReduceAmount > 0) {
-            $("#statistics-a-minus-reduce-amount").html("<font color='red'>" + statistics.AMinusReduceAmount + "</font>");
+            $("#statistics-a-minus-reduce-amount").html("<font color='red'>" + "-" + statistics.AMinusReduceAmount + "</font>");
         } else {
             $("#statistics-a-minus-reduce-amount").html(statistics.AMinusReduceAmount);
         }
         // B+需增加人數：
         if (statistics.BPlusAddAmount > 0) {
-            $("#statistics-b-plus-add-amount").html("<font color='red'>" + statistics.BPlusAddAmount + "</font>");
+            $("#statistics-b-plus-add-amount").html("<font color='red'>" + "+" + statistics.BPlusAddAmount + "</font>");
         } else {
             $("#statistics-b-plus-add-amount").html(statistics.BPlusAddAmount);
         }
         // B及以下需增加人數：
         if (statistics.BAddAmount > 0) {
-            $("#statistics-b-add-amount").html("<font color='red'>" + statistics.BAddAmount + "</font>");
+            $("#statistics-b-add-amount").html("<font color='red'>" + "+" + statistics.BAddAmount + "</font>");
         } else {
             $("#statistics-b-add-amount").html(statistics.BAddAmount);
         }
         // A需減少總人數：
         if (statistics.ASumReduceAmount > 0) {
-            $("#statistics-a-sum-reduce-amount").html("<font color='red'>" + statistics.ASumReduceAmount + "</font>");
+            $("#statistics-a-sum-reduce-amount").html("<font color='red'>" + "-" + statistics.ASumReduceAmount + "</font>");
         } else {
             $("#statistics-a-sum-reduce-amount").html(statistics.ASumReduceAmount);
         }
         // B需增加總人數：
         if (statistics.BSumAddAmount > 0) {
-            $("#statistics-b-sum-add-amount").html("<font color='red'>" + statistics.BSumAddAmount + "</font>");
+            $("#statistics-b-sum-add-amount").html("<font color='red'>" + "+" + statistics.BSumAddAmount + "</font>");
         } else {
             $("#statistics-b-sum-add-amount").html(statistics.BSumAddAmount);
         }
