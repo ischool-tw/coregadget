@@ -167,3 +167,59 @@ select {
 #statistics-container {
   display: none;
 }
+#statistics-summary {
+  font-family: "微軟正黑體","Helvetica Neue", Helvetica, Arial, sans-serif
+}
+#statistics-summary td, #statistics-rate td, #statistics-reduce td, #statistics-increase td {
+  border-color: #ccc;
+  border-style: solid;
+  border-width: 1px;
+  border-spacing: 0px;
+  padding: 3px;
+}
+#statistics-summary tr td:nth-child(1) {
+    background-color: rgb(220, 230, 240);
+    font-weight: bold;
+}
+#statistics-rate tr:nth-child(1), #statistics-reduce tr:nth-child(1), #statistics-increase tr:nth-child(1) {
+    background-color: rgb(220, 230, 240);
+    font-weight: bold;
+}
+
+/*成績分布統計
+#statistics-summary {
+    --color: rgb(221, 221, 225);
+    background-color: rgb(221, 221, 225);
+    border-right-color: #acacac;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-spacing: 0;
+    border-top-color: currentColor;
+    border-top-style: none;
+    border-top-width: 0px;
+    font-family: "微軟正黑體","Helvetica Neue", Helvetica, Arial, sans-serif
+    text-align:center;
+    vertical-align:middle;
+}
+#statistics-container table, 
+.survey-history-table tbody tr:nth-child(1) td,
+.survey-history-table tbody tr:nth-child(2) td {
+  font-weight: 900;
+  background-color:rgb(217, 237, 246);
+}
+.survey-history-table tbody td:first-child {
+  text-align: center;
+}
+.survey-history-table {
+  width: 100%;
+}
+.survey-history-table td,
+.survey-history-table th {
+  vertical-align: middle;
+  width: 180px;
+}
+.survey-history-table td:first-child,
+.survey-history-table th:first-child {
+  width: inherit;
+}
+*/

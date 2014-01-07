@@ -635,7 +635,7 @@ var CreateTeacher = function() {
                 for(var student_number in pCourseStudents) {
                     var student = pCourseStudents[student_number];
 
-                    if (student.Score) {
+                    //if (student.Score) {
                         if (student.ScoreID) {
                             var score = {
                                 Score: student.IsCancel === "t" ? "X" : student.Score,
@@ -662,7 +662,7 @@ var CreateTeacher = function() {
                             };
                             add_content.push(score);
                         }
-                    }
+                    //}
                 }
                 this.ClearInternalError();
 
@@ -1228,13 +1228,13 @@ var CreateEvent = function() {
                 $("#statistics-container").hide();
             } 
             
-            // 列舉成績分佈統計表中的變數
             // 課程名稱：statistics-course-name
             if (pSelectedCourse) {
                 $("#statistics-course-name").html(pSelectedCourse.CourseTitle);
             } else {
                 $("#statistics-course-name").html('');
-            }          
+            }
+            // 列舉成績分佈統計表中的變數  
             _ShowScoreStatisticsDetail(vCourseID);
 
             //  成績輸入方塊「上、下、Enter」選取文字效果
