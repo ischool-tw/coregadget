@@ -180,7 +180,7 @@ select {
 #statistics-summary tr td:nth-child(1) {
     background-color: rgb(220, 230, 240);
     font-weight: bold;    
-    width: 67px;
+    width: 71px;
 }
 #statistics-reduce tr td:nth-child(1), #statistics-increase tr td:nth-child(1) {
     width: 67px;
