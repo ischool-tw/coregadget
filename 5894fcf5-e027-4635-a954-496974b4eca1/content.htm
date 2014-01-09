@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content='text/html;charset=utf-8' />
+    <script type='text/javascript'>
+        var gadget = window.parent.getGadgetProxy((function () {
+            var vars = [], hash;
+            var p = window.location.href.slice(window.location.href.indexOf('?') + 1);
+            if (p.indexOf("#") >= 0)
+                p = p.substring(0, p.indexOf("#"));
+            var hashes = p.split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = decodeURI(hashes[i]);
+                var key = hash.substring(0, hash.indexOf("="));
+                vars.push(key);
+                vars[key] = hash.substring(hash.indexOf("=") + 1);
+            }
+            return vars;
+        } ()).id);
+        try { window.parent = null; } catch (exc) { }
+    </script>
+</head>
+<body leftmargin='0' topmargin='0' marginwidth='0' bgcolor='#FFFFFF' style='margin: 0; border: 0 none;'>
+<script src="web/coffee-script.js"></script>
+<script src="web/less.js"></script>
+<script src="web/jquery.min.js"></script>
+<script src="web/kendo.all.min.js"></script>
+<link href="web/kendo.common.min.css" rel="stylesheet"/>
+<link href="web/kendo.metro.min.css" rel="stylesheet"/>
+
+<script type="text/coffeescript" src="web/main.coffee"></script>
+<link type="text/css" rel="stylesheet/less" href="web/default.less"/>
+
+<div id="widget" class="k-content">
+	<div id="content"></div>
+</div>
+</body>
+</html>
