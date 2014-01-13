@@ -5,7 +5,6 @@
 .table th,
 .table td {
   /*position:relative;*/
-
   text-align: center;
   vertical-align: middle;
 }
@@ -406,6 +405,16 @@
 }
 .my-subtable li.my-week + li {
   text-indent: 25px;
+}
+.my-subtable:hover {
+  background: #cedede;
+}
+.my-container-more {
+  overflow: hidden;
+}
+.my-container-more:hover {
+  overflow: visible;
+  z-index: 1000;
 }
 .my-row6 .my-container-more {
   height: 144px;
