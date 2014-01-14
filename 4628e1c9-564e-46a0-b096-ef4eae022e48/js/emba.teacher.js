@@ -1502,6 +1502,25 @@ $(document).ready(function() {
         Event.PrintScore('score', $("#cboTeacherCourses").val());
     });
     
+    //  登分頁籤
+    $("#tabScored").on('click', function () {
+        var currentCourse = Teacher.GetSelectedCourse($("#cboTeacherCourses").val());
+        //  課程為「核心」課程，則顯示成績分佈統計表，反之隱藏。
+        if (currentCourse) {
+            if (currentCourse.CourseType.indexOf("核心") >= 0) {
+                $("#statistics-container").show();
+            } else {
+                $("#statistics-container").hide();
+            }
+        } else {
+            $("#statistics-container").hide();
+        }
+    })
+
+    //  說明頁籤
+    $("#tabDescription").on('click', function () {
+        $("#statistics-container").hide();
+    })
 });  
 
 
