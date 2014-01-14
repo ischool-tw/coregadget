@@ -29,7 +29,7 @@
                 }
               });
               item.TeacherName = teacherName.join(", ");
-              return items.push("<tr>\n	<td>" + item.StudentName + (item.DepartmentName !== '' ? " (" + item.DepartmentName + ")" : '') + "</td>\n	<td>" + item.TeacherName + "</td>\n	<td>" + item.PaperName + "</td>\n	<td>" + item.SchoolYear + " - " + (item.Semester === '0' ? '夏季學期' : item.Semester) + "</td>\n</tr>");
+              return items.push("<tr>\n	<td>" + item.StudentName + (item.DepartmentName !== '' ? " (" + item.DepartmentName + ")" : '') + "</td>\n	<td>" + item.TeacherName + "</td>\n	<td>" + item.PaperName + "</td>\n	<td>" + item.SchoolYear + "學年度" + (item.Semester === '0' ? '夏季' : '第' + item.Semester) + '學期' + "</td>\n</tr>");
             });
             return $("table[target='paper-result'] tbody").html(items.join(""));
           }

@@ -1202,7 +1202,6 @@ var CreateEvent = function() {
                     } else {
                         score_item = "<td>" + "<input class='input-block-level' type='text' value='" + student.Score + "' style='width:60px;text-align:center;border:1px solid #ddd;'/></td>";
                         remark_item = "<td>" + "<input maxlength='20' class='input-block-level' type='text' value='" + student.Remark + "' style='width:80px;text-align:center;border:1px solid #ddd;'/></td>";
-
                     }
 
                     //remark_item = "<td>" + student.ScoreID + "</td>";
@@ -1491,14 +1490,6 @@ $(document).ready(function() {
                 Event.EnableSaveButtion($("#cboTeacherCourses").val());
             }
         });
-        // var confirmed_upload = getConfirm(Teacher.GetReminderTemplate);
-        // console.log(confirmed_upload);
-        // if (confirmed_upload) {            
-        //     Event.UpdateCourseExt($("#cboTeacherCourses").val(), $("#cboTeacherCourses").find("option:selected").text());
-        // } else {
-        //     Event.EnableSaveButtion($("#cboTeacherCourses").val());
-        //     return;
-        // }
     });
 
     //  列印空白成績單
