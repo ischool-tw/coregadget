@@ -755,11 +755,11 @@ jQuery(function () {
                             '</tr>' +
                             '<tr>' +
                               '<th>晤談對象</th>' +
-                              '<td>' + (item.InterviewType || '') + '</td>' +
+                              '<td>' + (item.IntervieweeType || '') + '</td>' +
                             '</tr>' +
                             '<tr>' +
                               '<th>晤談方式</th>' +
-                              '<td>' + (item.IntervieweeType || '') + '</td>' +
+                              '<td>' + (item.InterviewType|| '') + '</td>' +
                             '</tr>' +
                           '</table>' +
                         '</div>' +
