@@ -1,5 +1,5 @@
 var _connection_basic = gadget.getContract("basic.teacher");
-var _connection_score = gadget.getContract("couldSchool.multi");
+var _connection_score = gadget.getContract("cloud.multi");
 
 var ScoreManager = function() {
     var _courses = [];
@@ -13,7 +13,7 @@ var ScoreManager = function() {
 
     _connection_basic.send({
         service: "GetMyCourse",
-        body: {},
+        body: {CurrentSemester: true},
         result: function (response, error, http) {
             if (error !== null) {
                 ScoreManager.Util.msg('#mainMsg', 'GetMyCourse', error);
@@ -25,7 +25,8 @@ var ScoreManager = function() {
                         ret.push('<li><a href="javascript:void(0);" data-index="' + index + '" data-cid="' + item.CourseId + '">' +
                             (item.SchoolYear || '') +
                             (item.Semester || '') + ' ' +
-                            (item.CourseName || '') +
+                            (item.Subject || '') +
+                            ' ' + $.arabic2roman(item.Level || '') +
                             '</a></li>');
                     });
                     $("#selectCourse ul.dropdown-menu").html(ret.join(''));
