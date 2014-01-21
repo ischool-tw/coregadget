@@ -210,7 +210,7 @@ var CreateTeacher = function() {
                     _InternalError.push('呼叫服務(' + Service.GetScoreInputSemester + ')失敗或網路異常，請稍候重試！');
                     _ThrowError();
                 } else {
-                    if (response.InputSemester != null) {
+                    if (response.InputSemester !== null) {
                         ScoreInputSemester.SchoolYear = response.InputSemester.SchoolYear;
                         ScoreInputSemester.Semester = response.InputSemester.Semester;
                     }
@@ -658,6 +658,7 @@ var CreateTeacher = function() {
                                 Credit: pCourse.Credit,
                                 IsRequired: pCourse.IsRequired === "true" ? true : false,
                                 SubjectCode: pCourse.SubjectCode,
+                                NewSubjectCode: pCourse.NewSubjectCode,
                                 SubjectName: pCourse.SubjectName
                             };
                             add_content.push(score);

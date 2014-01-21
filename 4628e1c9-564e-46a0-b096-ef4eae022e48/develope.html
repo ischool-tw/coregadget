@@ -16,161 +16,163 @@
   	<link href="css/mybootstrap.css" rel="stylesheet" />
 	<link type="text/css" rel="stylesheet/less" href="css/styles.less"/>
 	<link type="text/css" rel="stylesheet" href="css/scorekit.css"/>
- 	<link type="text/css" rel="stylesheet" href="css/base.css" />
   	<link type="text/css" rel="stylesheet" href="css/default.css" />
+    <link type="text/css" rel="stylesheet" href="css/base.css" />
 	<script src="js/emba.teacher.js"></script>
   	<script src="js/bootstrap.js"></script>
 </head>
-<body leftmargin='0' topmargin='0' marginwidth='0' bgcolor='#FFFFFF' style='margin: 0;'>
+<body>
 	<!--<div id="widget">-->
-	<div id="gadget" class="my-page">
-	    <div id="mainMsg"></div>
-	    <div class="row-fluid">
-	    	<div class="span12">
-			    <h1><span id="InputSemester"></span>
-			      <ul id="myTab" class="nav nav-tabs my-navtabs">          
-			        <li id="tabScored" class="active"><a href="#tab1" data-toggle="tab">成績登分</a></li>
-			        <li id="tabDescription"><a href="#tab2" data-toggle="tab">說明</a></li>          
-			      </ul>
-			    </h1>
+    <div id="gadget" class="my-page">
+        <div id="mainMsg"></div>
+        <div class="row-fluid">
+            <div class="span12">
+                <h1>
+                    <span id="InputSemester"></span>
+                    <ul id="myTab" class="nav nav-tabs my-navtabs">
+                        <li id="tabScored" class="active"><a href="#tab1" data-toggle="tab">成績登分</a></li>
+                        <li id="tabDescription"><a href="#tab2" data-toggle="tab">說明</a></li>
+                    </ul>
+                </h1>
 
-			    <div class="tab-content">
-					<div class="tab-pane active" id="tab1">
-			            <div id="tab1Msg"></div>
-						<div class="page-container">
-							<div class="toolbar-div">
-								<button id="btnSave" class="btn btn-info btn-xs"><span>暫存</span></button>
-								<button id="btnUpload" class="btn btn-info btn-xs"><span>確認並上傳成績</span></button>
-								<button id="btnPrintScoreSheet" class="btn btn-info btn-xs"><span>列印成績報告單</span></button>
-								<button id="btnPrintEmptyScoreSheet" class="btn btn-info btn-xs"><span>產生空白成績確認單</span></button>
-							</div>
-							<div class="content-div">
-								<div class="score-div">
-									<table id="tblStudentList" class="score-table">
-										<thead>
-											<tr>
-												<td colspan="2" style="text-align: left;"><span id="lblTeacherList" class="i-label teacher-list"></span></td>
-												<td colspan="3" style="text-align: right;"><select id="cboTeacherCourses"></select>
-												</td>
-											</tr>
-											<tr>
-												<th class='i-label' width="200px">系所組別</th>
-												<th class='i-label' width="100px">學號</th>
-												<th class='i-label' width="100px">學生姓名</th>
-												<th class='i-label' width="80px">學期成績</th>
-												<th class='i-label' width="80px">備註</th>
-											</tr>
-										</thead>
-										<tbody></tbody>
-									</table>
-								</div>
-							</div>
-						</div>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab1">
+                        <div id="tab1Msg" style="width:617px;"></div>
+                        <div class="page-container">
+                            <div class="toolbar-div">
+                                <button id="btnSave" class="btn btn-info btn-xs"><span>暫存</span></button>
+                                <button id="btnUpload" class="btn btn-info btn-xs"><span>確認並上傳成績</span></button>
+                                <button id="btnPrintScoreSheet" class="btn btn-info btn-xs"><span>列印成績報告單</span></button>
+                                <button id="btnPrintEmptyScoreSheet" class="btn btn-info btn-xs"><span>產生空白成績確認單</span></button>
+                            </div>
+                            <div class="content-div">
+                                <div class="score-div">
+                                    <table id="tblStudentList" class="score-table">
+                                        <thead>
+                                            <tr>
+                                                <td colspan="2" style="text-align: left;"><span id="lblTeacherList" class="i-label teacher-list"></span></td>
+                                                <td colspan="3" style="text-align: right;">
+                                                    <select id="cboTeacherCourses"></select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class='i-label' width="200px">系所組別</th>
+                                                <th class='i-label' width="100px">學號</th>
+                                                <th class='i-label' width="100px">學生姓名</th>
+                                                <th class='i-label' width="80px">學期成績</th>
+                                                <th class='i-label' width="80px">備註</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 
-						<div class="print-page">
-							<div class="title">臺灣大學____學年度第____學期成績報告單</div>
-							<div class="course-info">
-								<table>
-									<tr>
-										<td><div class="subject-code">課程編號：</div></td>
-										<td><div class="class-name">班次：</div></td>
-										<td><div class="subject-name">科目名稱：</div></td>
-										<td><div class="credit">學分：</div></td>
-									</tr>
-									<tr>
-										<td colspan="3"><div class="course-teacher">任課教師：</div></td>
-										<td><div class="page-index">頁次：</div></td>
-									</tr>
-								</table>
-							</div>
-							<div class="score-detail">
-								<table>
-									<thead>
-										<tr>
-											<th><div style="width:100px">系所<br/>組別</div></th>
-											<th><div style="width:20px">年<br/>級</div></th>
-											<th><div style="width:80px">學號</div></th>
-											<th><div style="width:100px">姓名</div></th>
-											<th><div style="width:40px">學期<br/>成績</div></th>
-											<th><div style="width:40px">備註</div></th>
-											<th><div style="width:100px">系所<br/>組別</div></th>
-											<th><div style="width:20px">年<br/>級</div></th>
-											<th><div style="width:80px">學號</div></th>
-											<th><div style="width:100px">姓名</div></th>
-											<th><div style="width:40px">學期<br/>成績</div></th>
-											<th><div style="width:60px">備註</div></th>
-										</tr>
-									</thead>
-									<tbody>
-									</tbody>
-								</table>								
-							</div>
-							<div class="teacher-sign">
-								<table>
-									<tr>
-										<td><div class="subject-code">課程編號：</div></td>
-										<td><div class="subject-name">科目名稱：</div></td>
-										<td><div class="class-name">班次：</div></td>
-										<td><div style="width:140px"></div></td>
-									</tr>
-									<tr>
-										<td style="vertical-align:top"><div></div></td>
-										<td style="vertical-align:top">
-											<div></div>
-										</td>
-										<td></td>
-										<td style="vertical-align:top;text-align:right">
-											<div></div>
-										</td>
-									</tr>
-								</table>
-							</div>
-						</div>
-					</div>
-					<div class="tab-pane" id="tab2">
-						<div id="explanation"></div>
-					</div>
-				</div>
+                        <div class="print-page">
+                            <div class="title">臺灣大學____學年度第____學期成績報告單</div>
+                            <div class="course-info">
+                                <table>
+                                    <tr>
+                                        <td><div class="subject-code">課程編號：</div></td>
+                                        <td><div class="class-name">班次：</div></td>
+                                        <td><div class="subject-name">科目名稱：</div></td>
+                                        <td><div class="credit">學分：</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3"><div class="course-teacher">任課教師：</div></td>
+                                        <td><div class="page-index">頁次：</div></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="score-detail">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th><div style="width:100px">系所<br />組別</div></th>
+                                            <th><div style="width:20px">年<br />級</div></th>
+                                            <th><div style="width:80px">學號</div></th>
+                                            <th><div style="width:100px">姓名</div></th>
+                                            <th><div style="width:40px">學期<br />成績</div></th>
+                                            <th><div style="width:40px">備註</div></th>
+                                            <th><div style="width:100px">系所<br />組別</div></th>
+                                            <th><div style="width:20px">年<br />級</div></th>
+                                            <th><div style="width:80px">學號</div></th>
+                                            <th><div style="width:100px">姓名</div></th>
+                                            <th><div style="width:40px">學期<br />成績</div></th>
+                                            <th><div style="width:60px">備註</div></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <div class="teacher-sign">
+                                <table>
+                                    <tr>
+                                        <td><div class="subject-code">課程編號：</div></td>
+                                        <td><div class="subject-name">科目名稱：</div></td>
+                                        <td><div class="class-name">班次：</div></td>
+                                        <td><div style="width:140px"></div></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="vertical-align:top"><div></div></td>
+                                        <td style="vertical-align:top">
+                                            <div></div>
+                                        </td>
+                                        <td></td>
+                                        <td style="vertical-align:top;text-align:right">
+                                            <div></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab2">
+                        <div id="explanation"></div>
+                    </div>
+                </div>
 
-				<div class="footer">
-					<img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/red_logo.jpg">
-					<img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/bot_logo.png">
-					<p style="text-align: left;">
-						<font color="#999999">10617台北市大安區羅斯福路四段一號 臺灣大學管理學院一號館六樓 EMBA辦公室<br>
-						TEL:886-2-33661010 FAX:886-2-23636073<br>
-						Copyright © National Taiwan University All Rights Reserved
-						</font>
-					</p>
-				</div>
+                <div class="footer">
+                    <img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/red_logo.jpg" />
+                    <img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/bot_logo.png" />
+                    <p style="text-align: left;">
+                        <font color="#999999">
+                            10617台北市大安區羅斯福路四段一號 臺灣大學管理學院一號館六樓 EMBA辦公室<br />
+                            TEL:886-2-33661010 FAX:886-2-23636073<br />
+                            Copyright © National Taiwan University All Rights Reserved
+                        </font>
+                    </p>
+                </div>
 
-				<div class="modal fade" id="confirmbox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				  	<div class="modal-dialog">
-				    	<div class="modal-content">
-				      		<div class="modal-header">
-				        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				        		<h4 class="modal-title" id="myModalLabel">成績上傳確認</h4>
-				      		</div>
-				      		<div class="modal-body" style="text-align: left;">
-				        		<p id="confirmMessage"></p>
-				    		</div>
-						    <div class="modal-footer">
-						    	<button id="confirmFalse" type="button" class="btn" data-dismiss="modal">取消</button>
-						        <button id="confirmTrue" type="button" class="btn btn-primary">確認</button>
-						    </div>
-				    	</div><!-- /.modal-content -->
-				  	</div><!-- /.modal-dialog -->
-				</div>
-				<!-- /.modal -->
-<!-- #fixed-ad{
-  background:#FF0066; color:#FFCC99;
-  border:4px solid #FF9999; padding:5px;
-  width:80px; height:120px;
-  position:fixed; top:100px; right:10px;
-  _position: absolute; /* position fixed for IE6 */
-  _top:expression(documentElement.scrollTop+100);
-  z-index:3;		left:645px;
-} -->
-				<div id="statistics-container" style="position:fixed; top:193px; left:645px;_top:expression(documentElement.scrollTop+100);z-index:3;">
+                <div class="modal fade" id="confirmbox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="myModalLabel">成績上傳確認</h4>
+                            </div>
+                            <div class="modal-body" style="text-align: left;">
+                                <p id="confirmMessage"></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="confirmFalse" type="button" class="btn" data-dismiss="modal">取消</button>
+                                <button id="confirmTrue" type="button" class="btn btn-primary">確認</button>
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+                <!-- #fixed-ad{
+                  background:#FF0066; color:#FFCC99;
+                  border:4px solid #FF9999; padding:5px;
+                  width:80px; height:120px;
+                  position:fixed; top:100px; right:10px;
+                  _position: absolute; /* position fixed for IE6 */
+                  _top:expression(documentElement.scrollTop+100);
+                  z-index:3;		left:645px;
+                } -->
+                <div id="statistics-container" style="position:fixed; top:137px; left:645px;_top:expression(documentElement.scrollTop+100);z-index:3;">
                     <table id="statistics-summary" border=1 cellpadding=0 cellspacing=0 style="text-align:center; width:360px;">
                         <tr>
                             <td>課程<br />名稱</td>
@@ -186,86 +188,86 @@
                         </tr>
                     </table>
                     <div style="font-weight: bold; height: 30px; padding-top:6px; font-size: 15px;">核心課程評分分佈比例</div>
-                        <table id="statistics-rate" border=1 cellpadding=0 cellspacing=0 style="text-align: center; width:360px;">
-                            <tr>
-                                <td>等第</td>
-                                <td style="width:60px;">評分<br />比例</td>
-                                <td style="width:60px;">登分<br />比例</td>
-                                <td style="width:95px;">加總<br />比例</td>
-                                <td style="width:60px;">加總登<br />分比例</td>
-                            </tr>
-                            <tr>
-                                <td>A+</td>
-                                <td>≦25%</td>
-                                <td id="statistics-a-plus-scored-rate"></td>
-                                <td rowspan=3>不超過80%</td>
-                                <td id="statistics-a-sum-scored-rate" rowspan=3></td>
-                            </tr>
-                            <tr>
-                                <td>A</td>
-                                <td>≦40%</td>
-                                <td id="statistics-a-scored-rate"></td>
-                            </tr>
-                            <tr>
-                                <td>A-</td>
-                                <td>≦25%</td>
-                                <td id="statistics-a-minus-scored-rate"></td>
-                            </tr>
-                            <tr>
-                                <td>B+</td>
-                                <td>≧10%</td>
-                                <td id="statistics-b-plus-scored-rate"></td>
-                                <td rowspan=2>至少20%</td>
-                                <td id="statistics-b-sum-scored-rate" rowspan=2></td>
-                            </tr>
-                            <tr>
-                                <td>B及以下</td>
-                                <td>≧5%</td>
-                                <td id="statistics-b-scored-rate"></td>
-                            </tr>
-                        </table>
-                        <div style="font-weight: bold; height: 30px; padding-top:6px; font-size: 15px;">登分人數調整表</div>
-                        <table id="statistics-reduce" border=1 cellpadding=0 cellspacing=0 style="text-align: center; width:360px;">
-                            <tr>
-                                <td>等第</td>
-                                <td style="width:60px;">登分<br />人數</td>
-                                <td style="width:60px;">需調整<br />人數</td>
-                                <td style="width:95px;">登分<br />總人數</td>
-                                <td style="width:60px;">需調整<br />總人數</td>
-                            </tr>
-                            <tr>
-                                <td>A+</td>
-                                <td id="statistics-a-plus-scored-amount"></td>
-                                <td id="statistics-a-plus-reduce-amount"></td>
-                                <td id="statistics-a-sum-scored-amount" rowspan=3></td>
-                                <td id="statistics-a-sum-reduce-amount" rowspan=3></td>
-                            </tr>
-                            <tr>
-                                <td>A</td>
-                                <td id="statistics-a-scored-amount"></td>
-                                <td id="statistics-a-reduce-amount"></td>
-                            </tr>
-                            <tr>
-                                <td>A-</td>
-                                <td id="statistics-a-minus-scored-amount"></td>
-                                <td id="statistics-a-minus-reduce-amount"></td>
-                            </tr>
-                            <tr>
-                                <td>B+</td>
-                                <td id="statistics-b-plus-scored-amount"></td>
-                                <td id="statistics-b-plus-add-amount"></td>
-                                <td id="statistics-b-sum-scored-amount" rowspan=2></td>
-                                <td id="statistics-b-sum-add-amount" rowspan=2></td>
-                            </tr>
-                            <tr>
-                                <td>B及以下</td>
-                                <td id="statistics-b-scored-amount"></td>
-                                <td id="statistics-b-add-amount"></td>
-                            </tr>
-                        </table>
-                    </div>
-			</div>
-		</div>
-	</div>
+                    <table id="statistics-rate" border=1 cellpadding=0 cellspacing=0 style="text-align: center; width:360px;">
+                        <tr>
+                            <td>等第</td>
+                            <td style="width:60px;">評分<br />比例</td>
+                            <td style="width:60px;">登分<br />比例</td>
+                            <td style="width:95px;">加總<br />比例</td>
+                            <td style="width:60px;">加總登<br />分比例</td>
+                        </tr>
+                        <tr>
+                            <td>A+</td>
+                            <td>≦25%</td>
+                            <td id="statistics-a-plus-scored-rate"></td>
+                            <td rowspan=3>不超過80%</td>
+                            <td id="statistics-a-sum-scored-rate" rowspan=3></td>
+                        </tr>
+                        <tr>
+                            <td>A</td>
+                            <td>≦40%</td>
+                            <td id="statistics-a-scored-rate"></td>
+                        </tr>
+                        <tr>
+                            <td>A-</td>
+                            <td>≦25%</td>
+                            <td id="statistics-a-minus-scored-rate"></td>
+                        </tr>
+                        <tr>
+                            <td>B+</td>
+                            <td>≧10%</td>
+                            <td id="statistics-b-plus-scored-rate"></td>
+                            <td rowspan=2>至少20%</td>
+                            <td id="statistics-b-sum-scored-rate" rowspan=2></td>
+                        </tr>
+                        <tr>
+                            <td>B及以下</td>
+                            <td>≧5%</td>
+                            <td id="statistics-b-scored-rate"></td>
+                        </tr>
+                    </table>
+                    <div style="font-weight: bold; height: 30px; padding-top:6px; font-size: 15px;">登分人數調整表</div>
+                    <table id="statistics-reduce" border=1 cellpadding=0 cellspacing=0 style="text-align: center; width:360px;">
+                        <tr>
+                            <td>等第</td>
+                            <td style="width:60px;">登分<br />人數</td>
+                            <td style="width:60px;">需調整<br />人數</td>
+                            <td style="width:95px;">登分<br />總人數</td>
+                            <td style="width:60px;">需調整<br />總人數</td>
+                        </tr>
+                        <tr>
+                            <td>A+</td>
+                            <td id="statistics-a-plus-scored-amount"></td>
+                            <td id="statistics-a-plus-reduce-amount"></td>
+                            <td id="statistics-a-sum-scored-amount" rowspan=3></td>
+                            <td id="statistics-a-sum-reduce-amount" rowspan=3></td>
+                        </tr>
+                        <tr>
+                            <td>A</td>
+                            <td id="statistics-a-scored-amount"></td>
+                            <td id="statistics-a-reduce-amount"></td>
+                        </tr>
+                        <tr>
+                            <td>A-</td>
+                            <td id="statistics-a-minus-scored-amount"></td>
+                            <td id="statistics-a-minus-reduce-amount"></td>
+                        </tr>
+                        <tr>
+                            <td>B+</td>
+                            <td id="statistics-b-plus-scored-amount"></td>
+                            <td id="statistics-b-plus-add-amount"></td>
+                            <td id="statistics-b-sum-scored-amount" rowspan=2></td>
+                            <td id="statistics-b-sum-add-amount" rowspan=2></td>
+                        </tr>
+                        <tr>
+                            <td>B及以下</td>
+                            <td id="statistics-b-scored-amount"></td>
+                            <td id="statistics-b-add-amount"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
