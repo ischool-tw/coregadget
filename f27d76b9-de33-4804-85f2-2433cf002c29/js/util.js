@@ -58,10 +58,10 @@ ScoreManager.Util = function() {
 }();
 
 
-// 排序
-//ex: s.sort($.by('desc', 'last', $.by('asc', 'first')));
 (function($) {
-    return $.by = function(model, name, minor) {
+    // 排序
+    //ex: s.sort($.by('desc', 'last', $.by('asc', 'first')));
+    $.by = function(model, name, minor) {
         return function(o, p) {
             var a, b;
             if (o && p && typeof o === "object" && typeof p === "object") {
@@ -94,4 +94,63 @@ ScoreManager.Util = function() {
             }
         };
     };
+
+
+    // 阿拉伯數字 轉 羅馬數字
+    $.arabic2roman = function(numeral) {
+        //NUMBER & ITS CHAR LENGTH, FROM INPUT TAG
+        var l = numeral.length;
+        //NUMBER PATTERN FOR VALIDITY
+        var num = /^[0-9]+$/;
+        //ROMAN NUMERAL PATTERN FOR VALIDITY
+        var roman = /^(M{1,4})?(CD|CM|D?C{0,3})?(XL|XC|L?X{0,3})?(IV|IX|V?I{0,3})?$/i;
+
+        //ROMAN/ARABIC CONVERSION TABLE
+        r = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM", "M", "MM", "MMM", "MMMM"];
+        n = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000, 4000];
+
+
+
+        //IF ROMAN NUMERAL IS VALID, IT'LL CONVERT TO THE NEW SYSTEM
+        if (numeral.match(roman)) {
+            var converted = 0;
+            var numeral = numeral.toUpperCase();
+            var group = roman.exec(numeral); //GROUPS THE PATTERN
+
+            //CONVERSION PROCESS
+            for (i = 1; i < group.length; i++) {
+                for (j = 0; j < r.length; j++) {
+                    if (group[i] == r[j]) {
+                        converted += n[j];
+                    }
+                }
+            }
+        } else {
+            if (numeral.match(num)) {
+                var converted = '';
+                //IF NUMBER < 5000, IT'LL CONVERT TO A ROMAN NUMERAL
+                if (numeral > 0 && numeral < 5000) {
+                    for (i = 0; i < l; i++) {
+                        var digit = numeral[i];
+                        var e = (l - 1) - i; //REVERSE THE ORDER FOR EACH DIGIT
+
+                        var place = Math.pow(10, e); //EXPONENT FOR EACH DIGIT
+                        var pv = digit * place; //PLACE VALUE TO BE COMPARED WITH THE NUMBER ARRAY
+
+                        //CONVERSION PROCESS
+                        for (j = 0; j < n.length; j++) {
+                            if (pv == n[j]) {
+                                converted += r[j];
+                            }
+                        }
+                    }
+                }
+            } else {
+                converted = 'Invalid number';
+            }
+        }
+        return converted;
+    };
 })(jQuery);
+
+
