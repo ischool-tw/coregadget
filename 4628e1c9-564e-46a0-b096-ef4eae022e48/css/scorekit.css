@@ -112,15 +112,3 @@
 .header .link {
   margin-left: 12px;
 }
-.footer {
-  border-top: 1px solid #ccc;
-  padding-top: 4px;
-  height: 70px;
-  position: fixed;
-  left: 8px;
-  right: 8px;
-  bottom: 0px;
-  background: #fff;
-  font-size: 14px;
-  line-height: 20px;
-}
