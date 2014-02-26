@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs title="幹部查詢" description="國高中通用學生幹部查詢功能">
+    <Title lang="zh-TW">幹部查詢</Title>
+    <Icon>img/icon.png</Icon>
+    <Mobile />
+    <Title lang="zh-CN">
+    </Title>
+    <Title lang="en-US">
+    </Title>
+  </ModulePrefs>
+</Module>
