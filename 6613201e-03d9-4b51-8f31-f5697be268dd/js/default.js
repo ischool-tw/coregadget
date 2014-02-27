@@ -111,7 +111,7 @@
         items = [];
         if (response.Result != null) {
           $(response.Result.Score).each(function(index, item) {
-              items.push("<tr>\n	<td>" + item.SerialNo + "</td>\n	<td>" + item.SchoolYear + "</td>\n	<td>" + (item.Semester === "0" ? "夏季" : "第" + item.Semester) + "學期" + "</td>\n	<td>" + item.SubjectCode + "</td>\n	<td>" + item.ClassName + "</td>\n	<td>" + (item.Score === '' && item.SchoolYear === '' && item.Semester === '' ? "" + item.SubjectName + " / " + item.OffsetCourse : item.SubjectName) + "</td>\n	<td>" + (item.IsPass === "t" ? item.Credit : "(" + item.Credit + ")") + "</td>\n	<td>" + (item.Score === '' && item.SchoolYear === '' && item.Semester === '' ? '抵免' : item.Score) + "</td>\n</tr>");
+              items.push("<tr>\n	<td>" + item.SerialNo + "</td>\n	<td>" + item.SchoolYear + "</td>\n	<td>" + (item.Semester === "0" ? "夏季" : "第" + item.Semester) + "學期" + "</td>\n	<td>" + item.SubjectCode + "</td>\n	<td>" + item.ClassName + "</td>\n	<td>" + (item.OffsetCourse !== '' ? "" + item.SubjectName + " / " + item.OffsetCourse : item.SubjectName) + "</td>\n	<td>" + (item.IsPass === "t" ? item.Credit : "(" + item.Credit + ")") + "</td>\n	<td>" + (item.OffsetCourse !== '' ? '抵免' : (item.ScoreConfirmed === "t" ? item.Score : "成績未到")) + "</td>\n</tr>");
             if (this.IsPass === 't') {
               return $("td[graduation-subject-code='" + this.SubjectCode + "']").html('已取得學分');
             }
