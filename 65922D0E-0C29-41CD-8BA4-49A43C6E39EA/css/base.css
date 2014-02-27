@@ -1,0 +1,21 @@
+/* CSS Document */
+
+.my-card h2 {
+	font-size:14px;
+	color:#666;
+}
+
+.my-card p {
+	color:#000;
+	margin:0;
+}
+
+.item-thumbnail-left.my-card > img:first-child {
+	max-width: 105px;
+	max-height: 135px;
+}
+
+.item-thumbnail-left.my-card {
+	min-height: 140px;
+	padding-left:120px;
+}

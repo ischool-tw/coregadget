@@ -1,0 +1,159 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta charset="UTF-8">
+	<title>Address Book</title>
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link href="css/ionic.css" rel="stylesheet">
+	<link href="css/base.css" rel="stylesheet">
+	<script src="js/ionic.js"></script>
+	<script src="js/angular/angular.js"></script>
+	<script src="js/angular/angular-animate.js"></script>
+	<script src="js/angular/angular-route.js"></script>
+	<script src="js/angular/angular-touch.js"></script>
+	<script src="js/angular/angular-sanitize.js"></script>
+	<script src="js/angular-ui/angular-ui-router.js"></script>
+	<script src="js/ionic-angular.js"></script>
+	<script src="js/gadget.js"></script>
+	<script>
+     init({
+      application: "dev.jh_kh",
+      paramValues: {
+        "system_type": "kh",
+        "system_exam_must_enddate": "true",
+        "system_fix_must_enddate": "true",
+        "system_show_model": "subject",
+        "system_position": "parent"
+      },
+      oAuth: {
+        clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+        clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311'
+      }
+    });
+  	</script>
+</head>
+
+<body ng-app="starter" ng-controller="MenuCtrl" ng-init="init()">
+	<div>
+		<side-menus>
+			<fade-bar></fade-bar>
+			<pane side-menu-content>
+
+				<header class="bar bar-header bar-stable">
+					<button class="button button-icon" ng-click="openLeft()"><i class="icon ion-navicon"></i></button>
+					<h1 class="title" ng-show="activeClass">{{activeClass}} 通訊錄</h1>
+				</header>
+
+				<content has-header="true" padded="true">
+					<div class="list">
+						<a class="item item-avatar" ng-click="studentClick(student)" ng-repeat="student in data[activeClass].students">
+							<img src="images/photo_male.png">
+							<h2>{{student.Name}}</h2>
+							<p>學號：{{student.StudentNubmer}} 座號：{{student.SeatNo}}</p>
+						</a>
+					</div>
+				</content>
+			</pane>
+			
+			<side-menu side="left">
+				<header class="bar bar-header bar-dark" fade-header>
+					<h1 class="title">班級</h1>
+				</header>
+				<content has-header="true">
+					<ul class="list">
+						<a href="#" class="item" ng-click="selected(s.className)" ng-repeat="s in data">{{s.className}}</a>
+					</ul>
+				</content>
+			</side-menu>
+			<div>
+	</div>
+
+<script id="info.htm" type="text/ng-template">
+
+ <div class="modal">
+  <fade-bar></fade-bar>
+	<header class="bar bar-header bar-stable">
+		<a class="button button-icon" ng-click="getBack()"><i class="icon ion-chevron-left"></i></a>
+		<h1 class="title">{{activeStudent.Name}}</h1>
+	</header>
+	<content has-header="true" padded="true">
+		<div class="item-thumbnail-left item-avatar my-card" href="#">
+			<img src="images/photo_male.png">
+			<div style="position:absolute; top:20px; margin-left:20px;">
+				<h2>學號</h2>
+				<p>{{activeStudent.StudentNubmer}}</p>
+				<h2>座號</h2>
+				<p>{{activeStudent.SeatNo}}</p>
+			</div>
+		</div>
+		<div class="card my-card">
+			<div class="item item-divider"> 基本資料 </div>
+			<div class="item item-text-wrap">
+				<h2>性別</h2>
+				<p>{{activeStudent.Gender}}</p>
+			</div>
+			<div class="item item-text-wrap">
+				<h2>生日</h2>
+				<p>{{activeStudent.Birthdate}}</p>
+			</div>
+			<div class="item item-text-wrap">
+				<h2>身分證號</h2>
+				<p>{{activeStudent.IdNumber}}</p>
+			</div>
+		</div>
+		<div class="card my-card">
+			<div class="item item-divider"> 家長電話 </div>
+			<a class="item item-icon-right" href="#">
+			<h2>監護人</h2>
+			<p>{{activeStudent.CustdoianOtherInfo.CustodianOtherInfo.Phone}}</p>
+			<i class="icon ion-ios7-telephone-outline"></i> </a> <a class="item item-icon-right" href="#">
+			<h2>父親</h2>
+			<p>{{activeStudent.FatherOtherInfo.FatherOtherInfo.Phone}}</p>
+			<i class="icon ion-ios7-telephone-outline"></i> </a> <a class="item item-icon-right" href="#">
+			<h2>母親</h2>
+			<p>{{activeStudent.MotherOtherInfo.MotherOtherInfo.Phone}}</p>
+			<i class="icon ion-ios7-telephone-outline"></i> </a> </div>
+		<div class="card my-card">
+			<div class="item item-divider"> 學生電話 </div>
+			<a class="item item-icon-right" href="#">
+			<h2>戶籍</h2>
+			<p>{{activeStudent.PermanentPhone}}</p>
+			<i class="icon ion-ios7-telephone-outline"></i> </a> <a class="item item-icon-right" href="#">
+			<h2>聯絡</h2>
+			<p>{{activeStudent.ContactPhone}}</p>
+			<i class="icon ion-ios7-telephone-outline"></i> </a> <a class="item item-icon-right" href="#">
+			<h2>行動</h2>
+			<p>{{activeStudent.SmsPhone}}</p>
+			<i class="icon ion-ios7-telephone-outline"></i> </a> <a class="item item-icon-right" href="#">
+			<h2>其他1</h2>
+			<p>{{activeStudent.OtherPhones.PhoneList.PhoneNumber[0]}}</p>
+			</a> <a class="item item-icon-right" href="#">
+			<h2>其他2</h2>
+			<p>{{activeStudent.OtherPhones.PhoneList.PhoneNumber[1]}}</p>
+			</a> <a class="item item-icon-right" href="#">
+			<h2>其他3</h2>
+			<p>{{activeStudent.OtherPhones.PhoneList.PhoneNumber[2]}}</p>
+			</a> </div>
+		<div class="card my-card">
+			<div class="item item-divider"> 地址 </div>
+			<div class="item item-text-wrap">
+				<h2>戶籍</h2>
+				<p>{{getAddress(activeStudent.PermanentAddress.AddressList.Address)}}</p>
+			</div>
+			<div class="item item-text-wrap">
+				<h2>通訊</h2>
+				<p>{{getAddress(activeStudent.MailingAddress.AddressList.Address)}}</p>
+			</div>
+			<div class="item item-text-wrap">
+				<h2>其他</h2>
+				<p ng-repeat="elem in activeStudent.OtherAddresses.AddressList.Address">{{getAddress(elem)}}</p>
+			</div>
+		</div>
+	</content>
+  </div>
+</script>
+
+</body>
+<script src="js/default.js"></script>
+</html>
