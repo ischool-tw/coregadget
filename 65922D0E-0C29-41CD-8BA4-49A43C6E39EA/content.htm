@@ -1,0 +1,68 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta charset="UTF-8">
+	<title>Address Book</title>
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link href="css/ionic.css" rel="stylesheet">
+	<link href="css/base.css" rel="stylesheet">
+	<script src="js/ionic.js"></script>
+	<script src="js/angular/angular.js"></script>
+	<script src="js/angular/angular-animate.js"></script>
+	<script src="js/angular/angular-route.js"></script>
+	<script src="js/angular/angular-touch.js"></script>
+	<script src="js/angular/angular-sanitize.js"></script>
+	<script src="js/angular-ui/angular-ui-router.js"></script>
+	<script src="js/ionic-angular.js"></script>
+	<script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+	<script>
+    init({
+      application: "dev.jh_kh", //"h.trialschool.tw", //"http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_kh",
+      paramValues: {}
+    });
+  	</script>
+</head>
+<!--
+	<div data-ng-init="init()">data here</div>
+	<h1 ng-repeat="s in data">
+		{{s.Name + " " + s.SeatNo}}
+	</h1>
+	-->
+<body ng-app="starter" ng-controller="MenuCtrl" ng-init="init()">
+	<div>
+		<side-menus>
+			<fade-bar></fade-bar>
+			<pane side-menu-content>
+
+				<header class="bar bar-header bar-stable">
+					<button class="button button-icon" ng-click="openLeft()"><i class="icon ion-navicon"></i></button>
+					<h1 class="title" ng-show="activeClass">{{activeClass}} 通訊錄</h1>
+				</header>
+
+				<content has-header="true" padded="true">
+					<div class="list">
+						<a class="item item-avatar" ng-click="studentClick(student)" ng-repeat="student in data[activeClass].students">
+							<img src="images/photo_male.png">
+							<h2>{{student.Name}}</h2>
+							<p>學號：{{student.StudentNubmer}} 座號：{{student.SeatNo}}</p>
+						</a>
+					</div>
+				</content>
+			</pane>
+			
+			<side-menu side="left">
+				<header class="bar bar-header bar-dark" fade-header>
+					<h1 class="title">班級</h1>
+				</header>
+				<content has-header="true">
+					<ul class="list">
+						<a href="#" class="item" ng-click="selected(s.className)" ng-repeat="s in data">{{s.className}}</a>
+					</ul>
+				</content>
+			</side-menu>
+			<div>
+	</div>
+</body>
+<script src="js/default.js"></script>
+</html>
