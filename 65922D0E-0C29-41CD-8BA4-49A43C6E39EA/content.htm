@@ -15,20 +15,25 @@
 	<script src="js/angular/angular-sanitize.js"></script>
 	<script src="js/angular-ui/angular-ui-router.js"></script>
 	<script src="js/ionic-angular.js"></script>
-	<script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+	<script src="js/gadget.js"></script>
 	<script>
-    init({
-      application: "dev.jh_kh", //"h.trialschool.tw", //"http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_kh",
-      paramValues: {}
+     init({
+      application: "dev.jh_kh",
+      paramValues: {
+        "system_type": "kh",
+        "system_exam_must_enddate": "true",
+        "system_fix_must_enddate": "true",
+        "system_show_model": "subject",
+        "system_position": "parent"
+      },
+      oAuth: {
+        clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+        clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311'
+      }
     });
   	</script>
 </head>
-<!--
-	<div data-ng-init="init()">data here</div>
-	<h1 ng-repeat="s in data">
-		{{s.Name + " " + s.SeatNo}}
-	</h1>
-	-->
+
 <body ng-app="starter" ng-controller="MenuCtrl" ng-init="init()">
 	<div>
 		<side-menus>
@@ -63,6 +68,92 @@
 			</side-menu>
 			<div>
 	</div>
+
+<script id="info.htm" type="text/ng-template">
+
+ <div class="modal">
+  <fade-bar></fade-bar>
+	<header class="bar bar-header bar-stable">
+		<a class="button button-icon" ng-click="getBack()"><i class="icon ion-chevron-left"></i></a>
+		<h1 class="title">{{activeStudent.Name}}</h1>
+	</header>
+	<content has-header="true" padded="true">
+		<div class="item-thumbnail-left item-avatar my-card" href="#">
+			<img src="images/photo_male.png">
+			<div style="position:absolute; top:20px; margin-left:20px;">
+				<h2>學號</h2>
+				<p>{{activeStudent.StudentNubmer}}</p>
+				<h2>座號</h2>
+				<p>{{activeStudent.SeatNo}}</p>
+			</div>
+		</div>
+		<div class="card my-card">
+			<div class="item item-divider"> 基本資料 </div>
+			<div class="item item-text-wrap">
+				<h2>性別</h2>
+				<p>{{activeStudent.Gender}}</p>
+			</div>
+			<div class="item item-text-wrap">
+				<h2>生日</h2>
+				<p>{{activeStudent.Birthdate}}</p>
+			</div>
+			<div class="item item-text-wrap">
+				<h2>身分證號</h2>
+				<p>{{activeStudent.IdNumber}}</p>
+			</div>
+		</div>
+		<div class="card my-card">
+			<div class="item item-divider"> 家長電話 </div>
+			<a class="item item-icon-right" href="#">
+			<h2>監護人</h2>
+			<p>{{activeStudent.CustdoianOtherInfo.CustodianOtherInfo.Phone}}</p>
+			<i class="icon ion-ios7-telephone-outline"></i> </a> <a class="item item-icon-right" href="#">
+			<h2>父親</h2>
+			<p>{{activeStudent.FatherOtherInfo.FatherOtherInfo.Phone}}</p>
+			<i class="icon ion-ios7-telephone-outline"></i> </a> <a class="item item-icon-right" href="#">
+			<h2>母親</h2>
+			<p>{{activeStudent.MotherOtherInfo.MotherOtherInfo.Phone}}</p>
+			<i class="icon ion-ios7-telephone-outline"></i> </a> </div>
+		<div class="card my-card">
+			<div class="item item-divider"> 學生電話 </div>
+			<a class="item item-icon-right" href="#">
+			<h2>戶籍</h2>
+			<p>{{activeStudent.PermanentPhone}}</p>
+			<i class="icon ion-ios7-telephone-outline"></i> </a> <a class="item item-icon-right" href="#">
+			<h2>聯絡</h2>
+			<p>{{activeStudent.ContactPhone}}</p>
+			<i class="icon ion-ios7-telephone-outline"></i> </a> <a class="item item-icon-right" href="#">
+			<h2>行動</h2>
+			<p>{{activeStudent.SmsPhone}}</p>
+			<i class="icon ion-ios7-telephone-outline"></i> </a> <a class="item item-icon-right" href="#">
+			<h2>其他1</h2>
+			<p>{{activeStudent.OtherPhones.PhoneList.PhoneNumber[0]}}</p>
+			</a> <a class="item item-icon-right" href="#">
+			<h2>其他2</h2>
+			<p>{{activeStudent.OtherPhones.PhoneList.PhoneNumber[1]}}</p>
+			</a> <a class="item item-icon-right" href="#">
+			<h2>其他3</h2>
+			<p>{{activeStudent.OtherPhones.PhoneList.PhoneNumber[2]}}</p>
+			</a> </div>
+		<div class="card my-card">
+			<div class="item item-divider"> 地址 </div>
+			<div class="item item-text-wrap">
+				<h2>戶籍</h2>
+				<p>{{getAddress(activeStudent.PermanentAddress.AddressList.Address)}}</p>
+			</div>
+			<div class="item item-text-wrap">
+				<h2>通訊</h2>
+				<p>{{getAddress(activeStudent.MailingAddress.AddressList.Address)}}</p>
+			</div>
+			<div class="item item-text-wrap">
+				<h2>其他</h2>
+				<p ng-repeat="elem in activeStudent.OtherAddresses.AddressList.Address">{{getAddress(elem)}}</p>
+			</div>
+		</div>
+	</content>
+  </div>
+</script>
+
 </body>
 <script src="js/default.js"></script>
 </html>

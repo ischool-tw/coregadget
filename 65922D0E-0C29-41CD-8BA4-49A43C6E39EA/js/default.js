@@ -33,12 +33,13 @@ app.controller('MenuCtrl', function($scope,$ionicModal) {
                       	}
                       	else
                       	{
-                      		alert("no data");
+                      		alert("查無班級資料");
                       	}
                   }
                   else
                   {
-                  	alert("error");
+                  	alert("系統無此帳號身分");
+                    return;
                   }
               }
           });
@@ -94,7 +95,7 @@ app.controller('MenuCtrl', function($scope,$ionicModal) {
   };
 
   // Create our modal
-  $ionicModal.fromTemplateUrl('studentInfo.htm', function(modal) {
+  $ionicModal.fromTemplateUrl('info.htm', function(modal) {
     $scope.taskModal = modal;
   }, {
     scope: $scope
