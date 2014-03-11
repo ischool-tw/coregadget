@@ -46,13 +46,15 @@
 				<div class="col-md-6" ng-repeat="student in data[activeClass].students">
 						<a ng-click="studentClick(student)">
 							<div class="media my-media">
-								<img class="media-object pull-left" src="img/photo_male.png">
+								<img style="width:107px;height:137px" ng-if="student.Photo != ''" class="media-object pull-left" ng-src="data:image/png;base64,{{student.Photo}}">
+								<img ng-if="student.Photo == '' && student.Gender == '女'" class="media-object pull-left" src="img/photo_female.png">
+								<img ng-if="student.Photo == '' && student.Gender != '女'" class="media-object pull-left" src="img/photo_male.png">
 								<div class="media-body">
 									<h4 class="media-heading"> {{student.Name}}<span class="label label-default pull-right">{{student.SeatNo}}</span></h4>
 									<p><i class="fa fa-barcode"></i> {{student.StudentNubmer}}</p>
 									<p><i class="fa fa-gift"></i> {{student.Birthdate}}</p>
 									<p><i class="fa fa-phone"></i> {{student.SmsPhone}}</p>
-									<p><i class="fa fa-home"></i> {{getAddress(student.PermanentAddress.AddressList.Address)}}</p>
+									<p><i class="fa fa-home"></i> {{getAddress(student.MailingAddress.AddressList.Address)}}</p>
 								</div>
 							</div>
 						</a>
@@ -77,7 +79,11 @@
 				<div class="col-md-2">
 					<div class="panel panel-default">
 					  <div class="panel-heading">照片</div>
-					  <div class="panel-body"><img src="img/photo_male.png"></div>
+					  <div class="panel-body">
+					  	<img style="width:107px;height:137px" ng-if="activeStudent.Photo != ''" ng-src="data:image/png;base64,{{activeStudent.Photo}}"/>
+					  	<img ng-if="activeStudent.Photo == '' && activeStudent.Gender == '女'"src="img/photo_female.png"/>
+					  	<img ng-if="activeStudent.Photo == '' && activeStudent.Gender != '女'"src="img/photo_male.png"/>
+					  </div>
 					  </div>
 				</div>
 				<div class="col-md-4">
@@ -116,9 +122,9 @@
 					  <div class="panel-heading">家長電話</div>
 					  <!-- List group -->
 					  <ul class="list-group my-em">
-						<li class="list-group-item"><em>監護人電話</em>{{activeStudent.CustdoianOtherInfo.CustodianOtherInfo.Phone}}</li>
-						<li class="list-group-item"><em>父親電話</em>{{activeStudent.FatherOtherInfo.FatherOtherInfo.Phone}}</li>
-						<li class="list-group-item"><em>母親電話</em>{{activeStudent.MotherOtherInfo.MotherOtherInfo.Phone}}</li>
+						<li class="list-group-item"><em>監護人電話</em>{{activeStudent.CustdoianOtherInfo.CustodianOtherInfo.Phone + " " + activeStudent.CustodianName}}</li>
+						<li class="list-group-item"><em>父親電話</em>{{activeStudent.FatherOtherInfo.FatherOtherInfo.Phone + " " + activeStudent.FatherName}}</li>
+						<li class="list-group-item"><em>母親電話</em>{{activeStudent.MotherOtherInfo.MotherOtherInfo.Phone + " " + activeStudent.MotherName}}</li>
 					  </ul>
 					</div>
 				</div>

@@ -97,7 +97,7 @@ app.controller('MenuCtrl', function($scope,$timeout) {
 	};
 
   $scope.getBack = function() {
-    $scope.pageView="main";
+    $scope.selected($scope.activeClass);
     };
 
   $scope.studentClick = function(object){
