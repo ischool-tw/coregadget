@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html ng-app="starter">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="css/font-awesome.css" rel="stylesheet" type="text/css">
+<link href="css/base.css" rel="stylesheet" />
+<link href="css/defalut.css" rel="stylesheet" />
+<script src="js/angular.min.js"></script>
+<script src="js/jquery-1.8.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/default.js"></script>
+<script src="js/gadget.js"></script>
+<script>
+     init({
+      application: "dev.jh_kh",
+      paramValues: {
+        "system_type": "kh",
+        "system_exam_must_enddate": "true",
+        "system_fix_must_enddate": "true",
+        "system_show_model": "subject",
+        "system_position": "parent"
+      },
+      oAuth: {
+        clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+        clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
+      }
+    });
+  	</script>
+</head>
+
+<body ng-controller="MenuCtrl" ng-switch="pageView">
+
+<div id="gadget" class="my-page" ng-switch-when="main">
+	<div class="row">
+		<div class="col-md-12">
+			<h1>
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" id="nav_appcurrent">
+				<span id="tabName">{{activeClass}}</span> <b class="caret"></b></a> 通訊錄
+				<ul id="myTab" class="dropdown-menu">
+					<li ng-repeat="class in data"><a ng-click="selected(class.className)">{{class.className}}</a></li>
+				</ul>
+			<a id="download" class="btn btn-sm btn-default pull-right" href="#" taget="_blank" ng-show="detect()">下載通訊錄</a>
+			</h1>
+			<div class="row">
+				<div class="col-md-6" ng-repeat="student in data[activeClass].students">
+						<a ng-click="studentClick(student)">
+							<div class="media my-media">
+								<img style="width:107px;height:137px" ng-if="student.Photo != ''" class="media-object pull-left" ng-src="data:image/png;base64,{{student.Photo}}">
+								<img ng-if="student.Photo == '' && student.Gender == '女'" class="media-object pull-left" src="img/photo_female.png">
+								<img ng-if="student.Photo == '' && student.Gender != '女'" class="media-object pull-left" src="img/photo_male.png">
+								<div class="media-body">
+									<h4 class="media-heading"> {{student.Name}}<span class="label label-default pull-right">{{student.SeatNo}}</span></h4>
+									<p><i class="fa fa-barcode"></i> {{student.StudentNubmer}}</p>
+									<p><i class="fa fa-gift"></i> {{student.Birthdate}}</p>
+									<p><i class="fa fa-phone"></i> {{student.SmsPhone}}</p>
+									<p><i class="fa fa-home"></i> {{getAddress(student.MailingAddress.AddressList.Address)}}</p>
+								</div>
+							</div>
+						</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="gadget" class="my-page" ng-switch-when="info">
+	<div class="row">
+		<div class="col-md-12">
+			<h1>
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" id="nav_appcurrent">
+				<span id="tabName">{{activeClass}}</span> <b class="caret"></b></a> 通訊錄
+				<ul id="myTab" class="dropdown-menu">
+					<li ng-repeat="class in data"><a ng-click="selected(class.className)">{{class.className}}</a></li>
+				</ul>
+			<a class="btn btn-sm btn-default pull-right" ng-click="getBack()">返回</a>
+			</h1>
+			<div class="row">
+				<div class="col-md-2">
+					<div class="panel panel-default">
+					  <div class="panel-heading">照片</div>
+					  <div class="panel-body">
+					  	<img style="width:107px;height:137px" ng-if="activeStudent.Photo != ''" ng-src="data:image/png;base64,{{activeStudent.Photo}}"/>
+					  	<img ng-if="activeStudent.Photo == '' && activeStudent.Gender == '女'"src="img/photo_female.png"/>
+					  	<img ng-if="activeStudent.Photo == '' && activeStudent.Gender != '女'"src="img/photo_male.png"/>
+					  </div>
+					  </div>
+				</div>
+				<div class="col-md-4">
+					<div class="panel panel-default">
+					  <!-- Default panel contents -->
+					  <div class="panel-heading">基本資料</div>
+					  <!-- List group -->
+					  <ul class="list-group my-em">
+						<li class="list-group-item"><em>姓名</em>{{activeStudent.Name}}</li>
+						<li class="list-group-item"><em>座號</em>{{activeStudent.SeatNo}}</li>
+						<li class="list-group-item"><em>學號</em>{{activeStudent.StudentNubmer}}</li>
+						<li class="list-group-item"><em>性別</em>{{activeStudent.Gender}}</li>
+						<li class="list-group-item"><em>生日</em>{{activeStudent.Birthdate}}</li>
+						<li class="list-group-item"><em>身分證號</em>{{activeStudent.IdNumber}}</li>
+					  </ul>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="panel panel-default">
+					  <!-- Default panel contents -->
+					  <div class="panel-heading">學生電話</div>
+					  <!-- List group -->
+					  <ul class="list-group my-em">
+						<li class="list-group-item"><em>戶籍電話</em>{{activeStudent.PermanentPhone}}</li>
+						<li class="list-group-item"><em>聯絡電話</em>{{activeStudent.ContactPhone}}</li>
+						<li class="list-group-item"><em>行動電話</em>{{activeStudent.SmsPhone}}</li>
+						<li class="list-group-item"><em>其他電話1</em>{{activeStudent.OtherPhones.PhoneList.PhoneNumber[0]}}</li>
+						<li class="list-group-item"><em>其他電話2</em>{{activeStudent.OtherPhones.PhoneList.PhoneNumber[1]}}</li>
+						<li class="list-group-item"><em>其他電話3</em>{{activeStudent.OtherPhones.PhoneList.PhoneNumber[2]}}</li>
+					  </ul>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="panel panel-default">
+					  <!-- Default panel contents -->
+					  <div class="panel-heading">家長電話</div>
+					  <!-- List group -->
+					  <ul class="list-group my-em">
+						<li class="list-group-item"><em>監護人電話</em>{{activeStudent.CustdoianOtherInfo.CustodianOtherInfo.Phone + " " + activeStudent.CustodianName}}</li>
+						<li class="list-group-item"><em>父親電話</em>{{activeStudent.FatherOtherInfo.FatherOtherInfo.Phone + " " + activeStudent.FatherName}}</li>
+						<li class="list-group-item"><em>母親電話</em>{{activeStudent.MotherOtherInfo.MotherOtherInfo.Phone + " " + activeStudent.MotherName}}</li>
+					  </ul>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="panel panel-default">
+					  <!-- Default panel contents -->
+					  <div class="panel-heading">地址</div>
+					  <!-- List group -->
+					  <ul class="list-group my-em">
+						<li class="list-group-item"><em>戶籍地址</em>{{getAddress(activeStudent.PermanentAddress.AddressList.Address)}}</li>
+						<li class="list-group-item"><em>通訊地址</em>{{getAddress(activeStudent.MailingAddress.AddressList.Address)}}</li>
+						<li class="list-group-item"><em>其他地址</em>{{getAddress(activeStudent.OtherAddresses.AddressList.Address[0])}}
+						</li>
+					  </ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>
