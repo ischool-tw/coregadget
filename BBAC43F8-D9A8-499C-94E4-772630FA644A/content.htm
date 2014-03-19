@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+    <script>
+        init({
+            //application: "dev.jh_kh",
+            application: "test.kh.edu.tw",
+            paramValues: {}
+        });
+    </script>
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script>
+	  //gadget.setExterior({hint:4});
+  </script>
+</head>
+<body >
+  <div class="my-page" id="gadget" ng-app="app" ng-controller="InputStatusCntl" data-ng-init="init()">
+    <div class="row-fluid">
+      <div class="span12">
+        <h1>成績輸入進度查詢<div id="mainMsg" /></h1>
+    		<div class="pull-left">
+    			<span class="text-error">未完成輸入數：{{undone=(status|filter:{done:false}).length}}</span>
+    		</div>
+    		<div class="pull-right">
+    			<a href="javascript:void(0);" ng-click="refresh();"><i ng-class="[icon_css]"></i>重新整理</a>
+    		</div>
+        <div class="row-fluid">
+          <div class="span12">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th class="span3">班級 / 課程</th>
+                  <th class="span3">項目</th>
+                  <th class="span4">輸入時間</th>
+                  <th>狀態</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="s in status" class={{s.done|error_css}}>
+                  <td>{{s.class_course}}</td>
+                  <td>{{s.item}}</td>
+                  <td>{{s.start_time}} ~ {{s.end_time}}</td>
+                  <td>{{s.already}} / {{s.should}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr/>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/default.js"></script>
+</html>
