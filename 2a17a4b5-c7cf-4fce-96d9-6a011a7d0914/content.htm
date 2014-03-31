@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+    <script>
+        init({
+            application: "dev.sh_d",
+            //application: "test.kh.edu.tw",
+            paramValues: {}
+        });
+    </script>
+<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="css/font-awesome.css" rel="stylesheet" type="text/css">
+<link href="css/base.css" rel="stylesheet" />
+<link href="css/defalut.css" rel="stylesheet" />
+<script src="js/jquery-1.8.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+  <script>
+	  //gadget.setExterior({hint:4});
+  </script>
+</head>
+<body >
+  <div class="my-page" id="gadget" ng-app="app" ng-controller="Cntl" data-ng-init="init()">
+	<div class="row">
+		<div class="col-md-12">
+			<h1>
+				體適能查詢<div id="mainMsg" /></a>
+			</h1>
+			<table class="table table-bordered" style="margin-top:10px;" ng-repeat="f in fitness track by $index">
+				<thead>
+					<tr>
+						<th colspan="12" style="border-bottom:1px solid #ccc;">{{f.school_year}} 學年度（測驗日期：{{f.test_date|dateToISO| date : 'yyyy/MM/dd'}}）</th>
+					</tr>
+					<tr>
+						<th>身高</th>
+						<th>常模</th>
+						<th>體重</th>
+						<th>常模</th>
+						<th>坐姿體前彎</th>
+						<th>常模</th>
+						<th>立定跳遠</th>
+						<th>常模</th>
+						<th>仰臥起坐</th>
+						<th>常模</th>
+						<th>心肺適能</th>
+						<th>常模</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{f.height}}</td>
+						<td>{{f.height_degree}}</td>
+						<td>{{f.weight}}</td>
+						<td>{{f.weight_degree}}</td>
+						<td>{{f.sit_and_reach}}</td>
+						<td>{{f.sit_and_reach_degree}}</td>
+						<td>{{f.standing_long_jump}}</td>
+						<td>{{f.standing_long_jump_degree}}</td>
+						<td>{{f.sit_up}}</td>
+						<td>{{f.sit_up_degree}}</td>
+						<td>{{f.cardiorespiratory}}</td>
+            <td>{{f.cardiorespiratory_degree}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<hr />
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/default.js"></script>
+</html>
