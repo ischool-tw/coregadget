@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs title="體適能查詢" description="班導師-體適能查詢" preload="true"  iconfamily="css/images/nav06.png">
+    <Title lang="zh-TW">體適能查詢</Title>
+    <Icon>icon.png</Icon>
+    <Mobile />
+    <Title lang="zh-CN">
+    </Title>
+    <Title lang="en-US">
+    </Title>
+  </ModulePrefs>
+</Module>
