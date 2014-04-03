@@ -32,7 +32,7 @@
 				{{class_name}}<span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu" role="menu">
-				<li ng-repeat="menu in menus |orderBy:'school_year':true| unique:'class_id'|orderBy:'class_id'"><a ng-click="change_class(menu)">{{menu.class_name}}</a></li>
+				<li ng-repeat="menu in menus |orderBy:'school_year':true| unique:'class_id'|orderBy:'class_name'"><a ng-click="change_class(menu)">{{menu.class_name}}</a></li>
 				</ul>
 			</div>
 			<div class="btn-group">
@@ -65,7 +65,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="f in fitness | filter:filter_by_school_year">
+					<tr ng-repeat="f in fitness">
 						<td>{{f.seat_no}}</td>
 						<td>{{f.student_name}}</td>
 						<td>{{f.test_date | dateToISO | date:'yyyy/MM/dd'}}</td>

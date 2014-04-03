@@ -47,6 +47,15 @@ angular.module("app", [])
                         $scope.class_name = response.data[0].class_name;
                         $scope.class_id = response.data[0].class_id;
                         $scope.school_year = response.data[0].school_year;
+                        for (var i = 0; i < response.data.length; i++) {
+                          if ( response.data[i].school_year )
+                          {
+                            $scope.class_name = response.data[i].class_name;
+                            $scope.class_id = response.data[i].class_id;
+                            $scope.school_year = response.data[i].school_year;
+                            break;
+                          }
+                        };
                       }
                   }
                   else
