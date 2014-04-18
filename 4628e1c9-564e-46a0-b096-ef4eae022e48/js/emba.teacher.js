@@ -718,6 +718,7 @@ var CreateTeacher = function() {
                                 Credit: pCourse.Credit,
                                 IsRequired: pCourse.IsRequired === "true" ? true : false,
                                 SubjectCode: pCourse.SubjectCode,
+                                NewSubjectCode: pCourse.NewSubjectCode,
                                 SubjectName: pCourse.SubjectName
                             };
                             add_content.push(score);
