@@ -92,7 +92,7 @@
         items = [];
         if (response.Result != null) {
           $(response.Result.Subject).each(function(index, item) {
-            return items.push("<tr class='info'>\n	<td>" + item.NewSubjectCode + "</td>\n	<td>" + item.SubjectCode + "</td>\n	<td>" + item.ChineseName + "<br/>" + item.EnglishName + "</td>\n	<td>" + item.Credit + "</td>\n	<td>" + item.GroupName + "</td>\n	<td graduation-subject-code='" + item.SubjectCode + "'></td>\n</tr>");
+            return items.push("<tr class='info'>\n	<td>" + item.NewSubjectCode + "</td>\n	<td>" + item.SubjectCode + "</td>\n	<td>" + item.ChineseName + "<br/>" + item.EnglishName + "</td>\n	<td>" + item.Credit + "</td>\n	<td>" + item.GroupName + "</td>\n	<td graduation-subject-uid='" + item.SubjectID + "'></td>\n</tr>");
           });
         }
         $("#academic #graduation-info tbody").html(items.join(""));
@@ -113,7 +113,7 @@
           $(response.Result.Score).each(function(index, item) {
               items.push("<tr>\n	<td>" + item.SerialNo + "</td>\n	<td>" + item.SchoolYear + "</td>\n	<td>" + (item.Semester ? (item.Semester === "0" ? "夏季" : "第" + item.Semester) + "學期" : "") + "</td>\n	<td>" + item.SubjectCode + "</td>\n	<td>" + item.ClassName + "</td>\n	<td>" + (item.OffsetCourse !== '' ? "" + item.SubjectName + " / " + item.OffsetCourse : item.SubjectName) + "</td>\n	<td>" + (item.IsPass === "t" ? item.Credit : "(" + item.Credit + ")") + "</td>\n	<td>" + (item.OffsetCourse !== '' ? '抵免' : ((item.ScoreConfirmed === "" || item.ScoreConfirmed === "t") ? item.Score : "成績未到")) + "</td>\n</tr>");
             if (this.IsPass === 't') {
-              return $("td[graduation-subject-code='" + this.SubjectCode + "']").html('已取得學分');
+              return $("td[graduation-subject-uid='" + this.SubjectID + "']").html('已取得學分');
             }
           });
           return $("#academic #subject-semester-score tbody").html(items.join(""));
