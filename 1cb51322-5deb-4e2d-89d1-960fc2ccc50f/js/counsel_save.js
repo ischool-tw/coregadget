@@ -26,6 +26,13 @@ _gg.SetSaveData = function (data_scope) {
                         contents.find('[data-type=' + qkey + ']:checked').each(function () {
                             tmp_value.Data   = $(this).val() || '';
                             tmp_value.Remark = contents.find('[data-index=' + $(this).attr('data-index') + '][data-type=' + qkey + '_remark]').val() || '';
+
+                            if(qkey === "本人概況_原住民血統" && tmp_value.Data === "有"){
+                                tmp_value.Remark = contents.find('[data-index=' + $(this).attr('data-index') + '][data-type=' + qkey + '_親屬]').val() || '';
+                                tmp_value.Remark += "_";
+                                tmp_value.Remark += contents.find('[data-index=' + $(this).attr('data-index') + '][data-type=' + qkey + '_族別]').val() || '';
+                            }
+                            
                         });
                         ret_value.push(tmp_value);
                         break;

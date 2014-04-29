@@ -241,7 +241,8 @@ jQuery(function () {
                     '<td>' + (item.Job || '') + '</td>' +
                     '<td>' + (item.Institute || '') + '</td>' +
                     '<td>' + (item.JobTitle || '') + '</td>' +
-                    '<td>' + (item.EduDegree || '') + '</td>';
+                    '<td>' + (item.EduDegree || '') + '</td>' +
+                    '<td>' + (item.National || '') + '</td>';
                 tmp_items.push('<tr>' +tmp_html+ '</tr>');
             });
             $('#A3 tbody').html(tmp_items.join(""));
