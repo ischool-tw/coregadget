@@ -27,6 +27,7 @@
             var parentwindow = window.parent;
             $(window.parent.document).find('#btnLogoutWithGoogle').hide();
             $(window.parent.document).find('#btnLogout').hide();
+            $(window.parent.document).find("ul.dropdown-menu").find("dd:last-child").hide();
             if ($(window.parent.document).find('#embalogout').length == 0) {
                 $(window.parent.document).find('#btnLogoutWithGoogle').parent()
 				.append('<button class="btn btn-small" type="submit" id="embalogout"><i class="icon-arrow-left"></i><span multi-lang-text="個人面板-登出"></span></button>')
