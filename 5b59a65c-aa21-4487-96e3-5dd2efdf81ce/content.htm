@@ -68,7 +68,7 @@
 					<tr ng-repeat="f in fitness">
 						<td>{{f.seat_no}}</td>
 						<td>{{f.student_name}}</td>
-						<td>{{f.test_date | dateToISO | date:'yyyy/MM/dd'}}</td>
+						<td>{{f.test_date |myDateFormat}}</td>
 						<td>{{f.height}}</td>
 						<td>{{f.height_degree}}</td>
 						<td>{{f.weight}}</td>

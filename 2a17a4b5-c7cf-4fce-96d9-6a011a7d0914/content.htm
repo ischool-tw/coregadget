@@ -30,7 +30,7 @@
 			<table class="table table-bordered" style="margin-top:10px;" ng-repeat="f in fitness track by $index">
 				<thead>
 					<tr>
-						<th colspan="12" style="border-bottom:1px solid #ccc;">{{f.school_year}} 學年度（測驗日期：{{f.test_date|dateToISO| date : 'yyyy/MM/dd'}}）</th>
+						<th colspan="12" style="border-bottom:1px solid #ccc;">{{f.school_year}} 學年度（測驗日期：{{f.test_date|myDateFormat}}）</th>
 					</tr>
 					<tr>
 						<th>身高</th>

@@ -5,10 +5,12 @@ $(document).ready(function () {
     });
 });
 angular.module("app", [])
-.filter('dateToISO', function() {
-  return function(input) {
-    input = new Date(input).toISOString();
-    return input;
+.filter('myDateFormat',function($filter){
+  return function(text){
+    var tempdate= new Date(text.replace(/-/g,"/"));
+    console.log(tempdate);
+    if (tempdate && tempdate!= 'Invalid Date')
+      return $filter('date')(tempdate, "yyyy-MM-dd");
   };
 })
 .controller("Cntl", function($scope) {
