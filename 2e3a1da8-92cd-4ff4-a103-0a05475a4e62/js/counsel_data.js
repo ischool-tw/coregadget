@@ -17,7 +17,8 @@ _gg.col_Question = {
             { ID: 'A1', GroupName: '本人概況', Name: '血型', Alias: '血型', ControlType: 'radio' },
             { ID: 'A1', GroupName: '本人概況', Name: '宗教', Alias: '宗教', ControlType: 'radio' },
             { ID: 'A1', GroupName: '本人概況', Name: '生理缺陷', Alias: '生理缺陷', ControlType: 'checkbox' },
-            { ID: 'A1', GroupName: '本人概況', Name: '曾患特殊疾病', Alias: '曾患特殊疾病', ControlType: 'checkbox' }
+            { ID: 'A1', GroupName: '本人概況', Name: '曾患特殊疾病', Alias: '曾患特殊疾病', ControlType: 'checkbox' },
+            { ID: 'A1', GroupName: '本人概況', Name: '原住民血統', Alias: '原住民血統', ControlType: 'radio'  }
         ],
         'A2' : [
             { ID: 'A2', GroupName: '家庭狀況', Name: '監護人_姓名', Alias: '姓名' },
@@ -35,7 +36,8 @@ _gg.col_Question = {
             { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_職業', Alias: '職業', TagName: 'Job' },
             { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_工作機構', Alias: '工作機構', TagName: 'Institute' },
             { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_職稱', Alias: '職稱', TagName: 'JobTitle' },
-            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_教育程度', Alias: '教育程度', TagName: 'EduDegree', ControlType: 'select' }
+            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_教育程度', Alias: '教育程度', TagName: 'EduDegree', ControlType: 'select' },
+            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_原國籍', Alias: '原國籍', TagName: 'National' }
         ],
         'A4' :[
             { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_排行', Alias: '排行' },
@@ -104,6 +106,7 @@ _gg.col_Question = {
         ],
         'D1' :[
             { ID: 'D1', GroupName: '自傳', Name: '家中最了解我的人', Alias: '家中最了解我的人' },
+            { ID: 'D1', GroupName: '自傳', Name: '家中最了解我的人_因為', Alias: '家中最了解我的人_因為' },
             { ID: 'D1', GroupName: '自傳', Name: '常指導我做功課的人', Alias: '常指導我做功課的人' },
             { ID: 'D1', GroupName: '自傳', Name: '讀過且印象最深刻的課外書', Alias: '讀過印象最深的課外讀物' },
             { ID: 'D1', GroupName: '自傳', Name: '喜歡的人', Alias: '最喜歡的人是', Title: '最喜歡的人' },
@@ -118,6 +121,24 @@ _gg.col_Question = {
             { ID: 'D1', GroupName: '自傳', Name: '最快樂的回憶', Alias: '最快樂的回憶是', Title: '最快樂的回憶',  ControlType: 'textarea' },
             { ID: 'D1', GroupName: '自傳', Name: '最痛苦的回憶', Alias: '最痛苦的回憶是', Title: '最痛苦的回憶', ControlType: 'textarea' },
             { ID: 'D1', GroupName: '自傳', Name: '最足以描述自己的幾句話', Alias: '最足以描述自己的幾句話是', ControlType: 'textarea' },
+            { ID: 'D1', GroupName: '自傳', Name: '我在家中最怕的人是', Alias: '我在家中最怕的人是' },
+            { ID: 'D1', GroupName: '自傳', Name: '我在家中最怕的人是_因為', Alias: '我在家中最怕的人是_因為' },
+            { ID: 'D1', GroupName: '自傳', Name: '我覺得我的優點是', Alias: '我覺得我的優點是' },
+            { ID: 'D1', GroupName: '自傳', Name: '我覺得我的缺點是', Alias: '我覺得我的缺點是' },
+            { ID: 'D1', GroupName: '自傳', Name: '最喜歡的國小（國中）老師', Alias: '最喜歡的國小（國中）老師' },
+            { ID: 'D1', GroupName: '自傳', Name: '最喜歡的國小（國中）老師__因為', Alias: '最喜歡的國小（國中）老師__因為' },
+            { ID: 'D1', GroupName: '自傳', Name: '小學（國中）老師或同學常說我是', Alias: '小學（國中）老師或同學常說我是' },
+            { ID: 'D1', GroupName: '自傳', Name: '小學（國中）時我曾在班上登任過的職務有', Alias: '小學（國中）時我曾在班上登任過的職務有' },
+            { ID: 'D1', GroupName: '自傳', Name: '我在小學（國中）得過的獎有', Alias: '我在小學（國中）得過的獎有' },
+            { ID: 'D1', GroupName: '自傳', Name: '我覺得我自己的過去最滿意的是', Alias: '我覺得我自己的過去最滿意的是' },
+            { ID: 'D1', GroupName: '自傳', Name: '我排遣休閒時間的方法是', Alias: '我排遣休閒時間的方法是' },
+            { ID: 'D1', GroupName: '自傳', Name: '我最難忘的一件事是', Alias: '我最難忘的一件事是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_一年級_我目前遇到最大的困難是', Alias: '自我的心聲_一年級_我目前遇到最大的困難是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_一年級_我目前最需要的協助是', Alias: '自我的心聲_一年級_我目前最需要的協助是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_二年級_我目前遇到最大的困難是', Alias: '自我的心聲_二年級_我目前遇到最大的困難是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_二年級_我目前最需要的協助是', Alias: '自我的心聲_二年級_我目前最需要的協助是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_三年級_我目前遇到最大的困難是', Alias: '自我的心聲_三年級_我目前遇到最大的困難是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_三年級_我目前最需要的協助是', Alias: '自我的心聲_三年級_我目前最需要的協助是' },
             { ID: 'D1', GroupName: '自傳', Name: '填寫日期', Alias: '填寫日期' }
         ],
         'E1' :[],

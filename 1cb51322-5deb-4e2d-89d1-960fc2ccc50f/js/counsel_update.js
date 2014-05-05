@@ -43,7 +43,25 @@ _gg.SetModifyData = function () {
                         }
 
                         if (opt.has_remark === "True") {
-                            tmp_remark_html = '<input type="text" class="' + tmp_remark_class + '" name="' + qkey + '_remark" data-type="' + qkey + '_remark" valide-type="remark" data-index="' + index + '" placeholder="' + qplaceholder + '" value="' + qremark + '">';
+                            if(qkey === "本人概況_原住民血統"){
+
+                                var remark = new Array(2);
+                                if(qremark.match("_")){
+                                    remark = qremark.split("_");
+                                }
+                                else{
+                                    remark[0] = "";
+                                    remark[1] = "";
+                                }
+
+                                tmp_remark_html = ' 親屬<input type="text" class="input-mini" name="' + qkey + '_親屬" data-type="' + qkey + '_親屬" valide-type="remark" data-index="'+index+'" placeholder="親屬" value="' + remark[0] + '">';
+                                tmp_remark_html += ' 族別<input type="text" class="input-mini" name="' + qkey + '_族別" data-type="' + qkey + '_族別" valide-type="remark" data-index="'+index+'" placeholder="族別" value="' + remark[1] + '">';
+
+
+                            }
+                            else{
+                                tmp_remark_html = '<input type="text" class="' + tmp_remark_class + '" name="' + qkey + '_remark" data-type="' + qkey + '_remark" valide-type="remark" data-index="' + index + '" placeholder="' + qplaceholder + '" value="' + qremark + '">';
+                            }
                         }
 
                         if (usecontrol === 'select') {
