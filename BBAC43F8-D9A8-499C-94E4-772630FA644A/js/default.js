@@ -16,6 +16,7 @@ app.controller("InputStatusCntl", function($scope) {
               service: "GetInputStatus",
               body: {},
               result: function (response, error, http) {
+                console.log(response);
                   if (!error) {
                       $scope.status = [] ;
                       $scope.icon_css = "icon-refresh";
@@ -26,7 +27,20 @@ app.controller("InputStatusCntl", function($scope) {
                                     value.done = '' ;
                                   }
                                   else {
-                                    value.done = (value.should == value.already);
+                                    tmp = [] ;
+                                    if (value.use_score == '是')
+                                      tmp.push(value.score_already);
+                                    if (value.use_effort == '是')
+                                      tmp.push(value.effort_already);
+                                    if (value.use_text == '是')
+                                      tmp.push(value.effort_already);
+                                    if (tmp.length) {
+                                      value.already = Math.min.apply(Math,tmp);
+                                      value.done = (value.should == value.already);
+                                    }
+                                    else {
+                                      value.done = '';
+                                    }
                                   }
                                   $scope.status.push(value);
                               }
