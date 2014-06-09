@@ -1,15 +1,15 @@
 $(document).ready(function () {
     $(window).resize(function () {
         $("#container-nav, #container-main").height($(window).height() - 50);
-        console.log($(window).height() - 50);
+        // console.log($(window).height() - 50);
     });
 });
 angular.module("app", [])
 .filter('myDateFormat',function($filter){
   return function(text){
     var tempdate= new Date(text.replace(/-/g,"/"));
-    console.log(tempdate);
-    if (tempdate && tempdate!= 'Invalid Date')
+    // console.log(tempdate);
+    if (tempdate && tempdate!= 'Invalid Date' && !isNaN(tempdate))
       return $filter('date')(tempdate, "yyyy-MM-dd");
   };
 })
@@ -40,9 +40,10 @@ angular.module("app", [])
               body: {},
               result: function (response, error, http) {
                   if (!error) {
-                      console.log(response);
+                      // console.log(response);
                       $scope.menus = [];
-                      if (response.data) { 
+                      if (response.data) {
+                        response.data = [].concat(response.data);
                         $scope.menus = response.data;
                         $scope.class_name = response.data[0].class_name;
                         $scope.class_id = response.data[0].class_id;
@@ -74,9 +75,9 @@ angular.module("app", [])
               body: {class_id:$scope.class_id,school_year:$scope.school_year},
               result: function (response, error, http) {
                   if (!error) {
-                      console.log(response);
+                      // console.log(response);
                       $scope.fitness = [];
-                      if (response.data) { 
+                      if (response.data) {
                         $scope.fitness = response.data;
                       }
                   }
@@ -179,4 +180,3 @@ var set_error_message = function(select_str, serviceName, error) {
         });
       }
     };
-    

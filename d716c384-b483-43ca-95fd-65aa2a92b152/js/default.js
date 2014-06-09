@@ -1,15 +1,15 @@
 $(document).ready(function () {
     $(window).resize(function () {
         $("#container-nav, #container-main").height($(window).height() - 50);
-        console.log($(window).height() - 50);
+        // console.log($(window).height() - 50);
     });
 });
 angular.module("app", [])
 .filter('myDateFormat',function($filter){
   return function(text){
     var tempdate= new Date(text.replace(/-/g,"/"));
-    console.log(tempdate);
-    if (tempdate && tempdate!= 'Invalid Date')
+    // console.log(tempdate);
+    if (tempdate && tempdate!= 'Invalid Date' && !isNaN(tempdate))
       return $filter('date')(tempdate, "yyyy-MM-dd");
   };
 })
@@ -30,7 +30,7 @@ angular.module("app", [])
                     //console.log(response);
                       $scope.fitness = [] ;
                       $scope.mans = [];
-                      if (response.fitness) { 
+                      if (response.fitness) {
                         if (!angular.isArray(response.fitness)) {
                           $scope.fitness.push(response.fitness);
                         }
@@ -92,4 +92,3 @@ var set_error_message = function(select_str, serviceName, error) {
         });
       }
     };
-    
