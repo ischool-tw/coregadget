@@ -161,7 +161,7 @@ _gg.removeParentCode = function() {
     if (studentID) {
         _gg.connection.send({
             service: "_.RemoveParentCode",
-            body: '<Request><Condition><StudentID>' + studentID + '</StudentID></Condition></Request>',
+            body: '<Request><Student><StudentID>' + studentID + '</StudentID></Student></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
                     _gg.set_error_message('#mainMsg', 'RemoveParentCode', error);
