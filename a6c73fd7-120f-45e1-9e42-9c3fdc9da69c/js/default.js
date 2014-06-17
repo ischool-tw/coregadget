@@ -19,7 +19,7 @@ angular.module('attendance', [])
                     if (error !== null) {
                         $scope.set_error_message('#mainMsg', 'GetStudentInfo', error);
                     } else {
-                        //console.log(response);
+                        console.log(response);
                         $scope.$apply(function() {
                             $scope.studentsinfo = response.Result.Student;
 
@@ -57,7 +57,7 @@ angular.module('attendance', [])
                     if (error !== null) {
                         set_error_message('#mainMsg', 'GetNotExam', error);
                     } else {
-                        //console.log(response);
+                        console.log(response);
                         $scope.$apply(function() {
                             if (response !== null && response.Courses !== null && response.Courses !== '') {
                                 $scope.notexams = [].concat(response.Courses.Seme);
@@ -121,7 +121,7 @@ angular.module('attendance', [])
                     if (error !== null) {
                         set_error_message('#mainMsg', 'GetAttendance', error);
                     } else {
-                        //console.log(response);
+                        console.log(response);
                         $scope.$apply(function() {
                             if (response !== null && response.Attendance !== null && response.Attendance !== '' && response.Attendance.Seme !== null && response.Attendance.Seme !== '') {
                                 $scope.attendances = [].concat(response.Attendance.Seme);
@@ -141,6 +141,7 @@ angular.module('attendance', [])
                     angular.forEach(attendance.Course,function(course){
                         if(course.CourseId === $scope.currentCourse.CourseId || $scope.currentCourse.CourseId === 0) {
                             var items = [];
+                            course.AttendanceDate = [].concat(course.AttendanceDate);
                             angular.forEach(course.AttendanceDate,function(item){
                                 var temp = {
                                     CourseName:course.CourseName,
@@ -179,9 +180,9 @@ angular.module('attendance', [])
                     });
 
                     //-> 時間排序
-                    $scope.currentAttendanceDate.sort(function(x,y){
-                        return x.Date < y.Date;
-                    });
+                    // $scope.currentAttendanceDate.sort(function(x,y){
+                    //     return x.Date < y.Date;
+                    // });
                 }
             });
         }

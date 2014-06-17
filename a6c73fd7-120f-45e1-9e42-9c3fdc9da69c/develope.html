@@ -115,7 +115,7 @@
                         </tr>
                     </thead>
                     <tbody ng-if="currentAttendanceDate">
-                        <tr ng-repeat="item in currentAttendanceDate">
+                        <tr ng-repeat="item in currentAttendanceDate | orderBy:'-Date'">
                             <td>{{item.CourseName}}</td>
                             <td>{{item.Date}}</td>
                             <td>{{item.P1}}</td>
