@@ -1,28 +1,11 @@
-.my-score {
-  padding: 0 !important;
-}
-.my-score .table {
-  background: #fff !important;
-  margin: 0;
-}
-.my-score .table td {
-  background: #fff !important;
-}
-.my-score .table th:first-child,
-.my-score .table td:first-child {
-  border-left: none;
-}
-table table thead th {
-  background: none;
-  border-bottom: none;
-}
 .my-page {
   position: relative;
 }
+
 .my-child {
   position: absolute;
   top: -1px;
-  left: 450px;
+  left: 35%;
   overflow: hidden;
   border: 1px solid #ddd;
   border-radius: 0 0 3px 3px;
@@ -38,6 +21,7 @@ table table thead th {
 }
 .my-childname ul {
   margin: 0;
+  margin-left: -40px
 }
 .my-childname ul li {
   float: left;
@@ -53,3 +37,10 @@ table table thead th {
 .my-childname ul li:hover {
   background: #fafafa;
 }
+/*自訂
+.my-total th {
+  background: #dddde1 url(images/thbg.png) 0 0 repeat-x;
+  border-right: 1px solid #ACACAC;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}*/

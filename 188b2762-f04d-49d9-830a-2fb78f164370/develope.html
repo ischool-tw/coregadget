@@ -1,48 +1,75 @@
 ﻿<!DOCTYPE html>
-<html>
-<head>
-  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
-  <script>
-    init({
-      application: "dev.sh_d",
-      paramValues: {}
-    });
-  </script>
-  <link href="css/bootstrap.css" rel="stylesheet" />
-  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
-  <link href="css/mybootstrap.css" rel="stylesheet" />
-  <link href="datatables/css/DT_bootstrap.css" rel="stylesheet" />
-  <!--<link href="css/base.less" rel="stylesheet/less" />
-  <link href="css/default.less" rel="stylesheet/less" />-->
-  <link href="css/base.css" rel="stylesheet" />
-  <link href="css/default.css" rel="stylesheet" />
+<html ng-app="code">
 
-  <script src="js/jquery.min.js"></script>
-  <!--<script src="js/less.min.js"></script>-->
-  <script src="js/bootstrap.js"></script>
-  <script src="datatables/js/jquery.dataTables.min.js"></script>
-  <script src="datatables/js/DT_bootstrap.js"></script>
-  <script src="js/parentcode.js"></script>
+<head>
+    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+    <script>
+    init({
+        application: "dev.sh_d",
+        paramValues: {}
+    });
+    </script>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet" />
+    <link href="css/default.css" rel="stylesheet" />
+
+    <script src="js/jquery-1.8.1.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/parentcode.js"></script>
 </head>
-<body>
-  <div id="gadget" class="my-page">
-      <div id="mainMsg"></div>
-      <div class="row-fluid">
-        <div class="span12">
-          <div class="tabbable">
-            <h1><a href="#" class="dropdown-toggle" data-toggle="dropdown" id="nav_appcurrent"><span id="tabName"></span> <b class="caret"></b></a>
-                <ul id="myTab" class="dropdown-menu">
-                </ul>
-            <div class="pull-right my-code"><i class="icon-hand-up"></i> 班級代碼剩餘使用次數：<span id="joinlimit"></span></div>
-            </h1>
-            <div id="myTabContent" class="tab-content">
-              <div id="student1">
-              </div>
+
+<body ng-controller="MainCtrl">
+    <div id="gadget" class="my-page">
+        <div id="mainMsg"></div>
+        <div class="row">
+            <div class="col-md-12">
+                <h1>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                          {{currentClass.CName}} <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="item in classList" ng-class="{'active':item.selected}"><a href="javascript:;" ng-click="selectClass(item)">{{item.CName}}</a>
+                        </li>
+                    </ul>
+                    <div class="pull-right my-code"><i class="fa fa-barcode"></i> 班級代碼剩餘使用次數： {{currentClass.JoinLimit || '0'}}
+                    </div>
+                </h1>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th ng-click="sort('seatNo')">座號 <i class="fa fa-fw" ng-class="{'fa-sort':sortSeatNoType == 1,'fa-sort-asc':sortSeatNoType == 2,'fa-sort-desc':sortSeatNoType == 3,'text-muted':sortSeatNoType == 1}"></i>
+                            </th>
+                            <th ng-click="sort('name')">姓名 <i class="fa fa-fw" ng-class="{'fa-sort':sortNameType == 1,'fa-sort-asc':sortNameType == 2,'fa-sort-desc':sortNameType == 3,'text-muted':sortNameType == 1}"></i>
+                            </th>
+                            <th>學生代碼</th>
+                            <th>家長姓名</th>
+                            <th>家長代碼</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-if="classInfo">
+                        <tr ng-repeat="item in classInfo | orderBy:sortTarget">
+                            <td>{{item.SeatNo}}</td>
+                            <td>{{item.StudentName}}</td>
+                            <td>{{item.StudentCode}}</td>
+                            <td>{{item.ParentsName}}</td>
+                            <td>{{item.ParentCode}}
+                                <div class="pull-right"><a class="btn btn-default btn-xs" ng-click="resetParentCode(item)"><i class="fa fa-refresh text-muted"></i> 重設代碼</a>
+                                    <a class="btn btn-default btn-xs" ng-click="removeParentCode(item)"><i class="fa fa-trash-o text-muted"></i> 清除代碼</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-if="!classInfo">
+                        <tr>
+                            <td colspan="7">目前無資料</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-          </div>
         </div>
-      </div>
-  </div>
-  <hr/>
+    </div>
 </body>
+
 </html>

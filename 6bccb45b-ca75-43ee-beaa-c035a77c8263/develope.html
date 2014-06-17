@@ -1,91 +1,140 @@
 ﻿<!DOCTYPE html>
-<html>
+<html ng-app="learning">
+
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
-  <META HTTP-EQUIV="EXPIRES" CONTENT="0">
-  <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+    <META HTTP-EQUIV="EXPIRES" CONTENT="0">
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 
-  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
-  <script>
+    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+    <script>
     init({
-      application: "dev.sh_d",
-      paramValues: {}
+        application: "dev.sh_d",
+        paramValues: {}
     });
-  </script>
+    </script>
 
-  <link href="css/bootstrap.css" rel="stylesheet" />
-  <link href="css/bootstrap-responsive.min.css" rel="stylesheet" />
-  <link href="css/mybootstrap.css" rel="stylesheet" />
-  <!--<link href="css/base.less" rel="stylesheet/less" />
-  <link href="css/default.less" rel="stylesheet/less" />-->
-  <link href="css/base.css" rel="stylesheet" />
-  <link href="css/default.css" rel="stylesheet" />
-  <script src="js/jquery.min.js"></script>
-  <!--<script src="js/less.min.js"></script>-->
-  <script src="js/bootstrap.js"></script>
-  <script src="js/servicelearning.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <link href="css/base.css" rel="stylesheet" />
+    <link href="css/default.css" rel="stylesheet" />
+    <script src="js/jquery-1.8.1.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-animate.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/servicelearning.js"></script>
 </head>
-<body>
-  <div id="gadget" class="my-page">
-      <div id="mainMsg"></div>
-      <div class="row-fluid">
-        <div class="span12">
-            <h1>
-              <span id="tabName">服務學習時數總覽</span>
-            </h1>
-            <div id="myTabContent" class="tab-content my-TabContent">
-                <div class="tab-pane fade active in" id="sall">
-                        <form class="form-horizontal my-form-style">
-                            <select name="class"></select>
-                            <select name="semester"></select>
-                        </form>
-                        <table class="table table-bordered table-striped table-hover my-slide my-all-list" data-type="all">
-                            <thead>
-                              <tr>
+
+<body ng-controller="MainCtrl">
+    <div id="gadget" class="my-page">
+        <div id="mainMsg"></div>
+        <div class="row">
+            <div class="col-md-12">
+                <h1>
+                    <span id="tabName">服務學習時數總覽</span>
+                </h1>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        {{currentClassList.ClassName}}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li ng-repeat="item in classeslist" ng-class="{'active':item.selected}">
+                            <a href="javascript:;" ng-click="selectClassList(item)">{{item.ClassName}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span ng-if="semesters">{{currentSemester.SchoolYear}}學年度第{{currentSemester.Semester}}學期
+                            <span class="caret"></span>
+                        </span>
+                        <span ng-if="!semesters">目前無資料</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li ng-repeat="item in semesters" ng-class="{'active':item.selected}">
+                            <a href="javascript:;" ng-click="selectSemester(item)">{{item.SchoolYear}}學年度第{{item.Semester}}學期</a>
+                        </li>
+                    </ul>
+                </div>
+                <div style="overflow-x:hidden;margin-bottom:10px;">
+                    <table class="table table-bordered table-striped table-hover side-animate my-all-list" data-type="all" ng-if="!currentStudent" style="margin-top:10px;">
+                        <thead>
+                            <tr>
                                 <th>座號</th>
                                 <th>學號</th>
                                 <th>姓名</th>
                                 <th>總時數</th>
-                              </tr>
+                            </tr>
+                        </thead>
+                        <tbody ng-if="students">
+                            <tr ng-repeat="item in students" ng-click="selectStudent(item)">
+                                <td>{{item.SeatNo}}</td>
+                                <td>{{item.StudentNumber}}</td>
+                                <td>{{item.StudentName}}</td>
+                                <td>{{item.TotalHours}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-if="!students">
+                            <tr>
+                                <td colspan="4">目前無資料</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="overflow-x:hidden;margin-top:-30px;margin-bottom:10px;">
+                    <div class="side-animate" ng-if="currentStudent">
+                        <button class="btn btn-default btn-sm pull-right" style="margin-bottom:10px;" type="button" data-type="return" ng-click="removeCurrentStudent()">返回 <i class="fa fa-angle-right"></i>
+                        </button>
+                        <table class="table table-bordered table-striped" data-type="total">
+                            <thead>
+                                <tr>
+                                    <th>座號</th>
+                                    <th>學號</th>
+                                    <th>姓名</th>
+                                    <th>總時數</th>
+                                </tr>
                             </thead>
                             <tbody>
+                                <tr>
+                                    <td>{{currentStudent.SeatNo}}</td>
+                                    <td>{{currentStudent.StudentNumber}}</td>
+                                    <td>{{currentStudent.StudentName}}</td>
+                                    <td>{{currentStudent.TotalHours}}</td>
+                                </tr>
                             </tbody>
                         </table>
-                        <div class="my-slide my-detail">
-                          <button class="btn btn-mini pull-right my-btn-style" type="button" data-type="return">返回</button>
-                          <table class="table table-bordered table-striped" data-type="total">
-                              <thead>
-                                <tr>
-                                  <th>座號</th>
-                                  <th>學號</th>
-                                  <th>姓名</th>
-                                  <th>總時數</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                              </tbody>
-                          </table>
-                          <table class="table table-bordered table-striped" data-type="detail">
+                        <table class="table table-bordered table-striped" data-type="detail">
                             <thead>
-                              <tr>
-                                <th>日期</th>
-                                <th>服務內容</th>
-                                <th>時數</th>
-                                <th>主辦單位</th>
-                                <th>備註</th>
-                              </tr>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>服務內容</th>
+                                    <th>時數</th>
+                                    <th>主辦單位</th>
+                                    <th>備註</th>
+                                </tr>
                             </thead>
-                            <tbody>
+                            <tbody ng-if="currentStudent.records">
+                                <tr ng-repeat="item in currentStudent.records">
+                                    <td>{{item.OccurDate}}</td>
+                                    <td>{{item.Reason}}</td>
+                                    <td>{{item.Hours}}</td>
+                                    <td>{{item.Organizers}}</td>
+                                    <td>{{item.Remark}}</td>
+                                </tr>
                             </tbody>
-                          </table>
-                        </div>
+                            <tbody ng-if="!currentStudent.records">
+                                <tr>
+                                    <td colspan="5">目前無資料</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-      </div>
-  </div>
-  <hr />
-  <hr/>
+    </div>
 </body>
+
 </html>

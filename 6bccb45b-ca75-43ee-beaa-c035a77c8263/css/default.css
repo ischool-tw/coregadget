@@ -1,32 +1,18 @@
-table {
-  white-space: nowrap;
-}
-table td:nth-child(3n+2) {
-  white-space: normal;
-}
-td ul {
-  margin: 0;
-}
-td li {
-  list-style-type: none;
-  line-height: 22px;
-}
 /*自訂*/
-.my-slide {
-  position: relative;
-}
-.my-detail {
-  display: none;
-}
 .my-all-list tbody tr {
   cursor: pointer;
 }
-.my-TabContent {
-  overflow-x: hidden;
+.side-animate.ng-enter {
+  -webkit-transition: 1s linear all;
+  -moz-transition: 1s linear all;
+  -ms-transition: 1s linear all;
+  -o-transition: 1s linear all;
+  transition: 1s linear all;
+  position: relative;
+  opacity: 0;
+  left: 100px;
 }
-.my-form-style {
-  margin-bottom: 10px;
-}
-.my-btn-style {
-  margin-bottom: 10px;
+.side-animate.ng-enter.ng-enter-active {
+  opacity: 1;
+  left: 0;
 }

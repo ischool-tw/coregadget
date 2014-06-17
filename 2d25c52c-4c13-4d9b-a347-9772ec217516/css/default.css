@@ -1,23 +1,11 @@
-table {
-  white-space: nowrap;
-}
-table td:nth-child(3n+2) {
-  white-space: normal;
-}
-td ul {
-  margin: 0;
-}
-td li {
-  list-style-type: none;
-  line-height: 22px;
-}
 .my-page {
   position: relative;
 }
+
 .my-child {
   position: absolute;
   top: -1px;
-  left: 450px;
+  left: 35%;
   overflow: hidden;
   border: 1px solid #ddd;
   border-radius: 0 0 3px 3px;
@@ -33,6 +21,7 @@ td li {
 }
 .my-childname ul {
   margin: 0;
+  margin-left: -40px
 }
 .my-childname ul li {
   float: left;
@@ -48,10 +37,10 @@ td li {
 .my-childname ul li:hover {
   background: #fafafa;
 }
-/*自訂*/
+/*自訂
 .my-total th {
   background: #dddde1 url(images/thbg.png) 0 0 repeat-x;
   border-right: 1px solid #ACACAC;
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
-}
+}*/
