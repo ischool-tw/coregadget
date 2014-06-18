@@ -63,13 +63,15 @@ angular.module('attendance', [])
                                 $scope.notexams = [].concat(response.Courses.Seme);
 
                                 //-> 排序，由大到小
-                                $scope.notexams.sort(function(x,y){
+                                $scope.notexams.sort(function(x, y) {
                                     return x.Month < y.Month;
                                 });
 
                                 if ($scope.notexams.length > 0) { //長度要大於０，至少要有一筆記錄
                                     $scope.currentNotExam = $scope.notexams[0]; //預設選取第一筆記錄
                                     $scope.selectNotExam($scope.notexams[0]); //第一筆記錄詳細資料
+
+                                    //$scope.getAttendance();
                                 }
                             }
                         });
@@ -87,7 +89,10 @@ angular.module('attendance', [])
 
             item.selected = true;
 
-            $scope.currentNotExam.courses = [{CourseId:0, CourseName:'所有課程'}].concat($scope.currentNotExam.Course);
+            $scope.currentNotExam.courses = [{
+                CourseId: 0,
+                CourseName: '所有課程'
+            }].concat($scope.currentNotExam.Course);
 
             $scope.currentNotExam.Course = [].concat($scope.currentNotExam.Course);
 
@@ -125,6 +130,7 @@ angular.module('attendance', [])
                         $scope.$apply(function() {
                             if (response !== null && response.Attendance !== null && response.Attendance !== '' && response.Attendance.Seme !== null && response.Attendance.Seme !== '') {
                                 $scope.attendances = [].concat(response.Attendance.Seme);
+                                $scope.filterAttendance();
                             }
                         });
                     }
@@ -134,57 +140,55 @@ angular.module('attendance', [])
 
         $scope.filterAttendance = function() {
             $scope.currentAttendanceDate = [];
-            angular.forEach($scope.attendances,function(attendance){
-                if(attendance.SchoolYear === $scope.currentNotExam.SchoolYear &&
-                    attendance.Semester === $scope.currentNotExam.Semester &&
-                    attendance.Month === $scope.currentNotExam.Month) {
-                    angular.forEach(attendance.Course,function(course){
-                        if(course.CourseId === $scope.currentCourse.CourseId || $scope.currentCourse.CourseId === 0) {
-                            var items = [];
-                            course.AttendanceDate = [].concat(course.AttendanceDate);
-                            angular.forEach(course.AttendanceDate,function(item){
-                                var temp = {
-                                    CourseName:course.CourseName,
-                                    Date:item.Date,
-                                    P1:'',
-                                    P2:'',
-                                    P3:'',
-                                    P4:'',
-                                    P5:'',
-                                    P6:'',
-                                    P7:'',
-                                    P8:'',
-                                };
-                                angular.forEach([].concat(item.Attendance),function(att){
-                                    if(att.Period === "1" && att.Type === "缺課")
-                                        temp.P1 = "X";
-                                    else if(att.Period === "2" && att.Type === "缺課")
-                                        temp.P2 = "X";
-                                    else if(att.Period === "3" && att.Type === "缺課")
-                                        temp.P3 = "X";
-                                    else if(att.Period === "4" && att.Type === "缺課")
-                                        temp.P4 = "X";
-                                    else if(att.Period === "5" && att.Type === "缺課")
-                                        temp.P5 = "X";
-                                    else if(att.Period === "6" && att.Type === "缺課")
-                                        temp.P6 = "X";
-                                    else if(att.Period === "7" && att.Type === "缺課")
-                                        temp.P7 = "X";
-                                    else if(att.Period === "8" && att.Type === "缺課")
-                                        temp.P8 = "X";
+            if ($scope.currentNotExam) {
+                angular.forEach($scope.attendances, function(attendance) {
+                    if (attendance.SchoolYear === $scope.currentNotExam.SchoolYear &&
+                        attendance.Semester === $scope.currentNotExam.Semester &&
+                        attendance.Month === $scope.currentNotExam.Month) {
+                        attendance.Course = [].concat(attendance.Course);
+                        angular.forEach(attendance.Course, function(course) {
+                            if (course.CourseId === $scope.currentCourse.CourseId || $scope.currentCourse.CourseId === 0) {
+                                var items = [];
+                                course.AttendanceDate = [].concat(course.AttendanceDate);
+                                angular.forEach(course.AttendanceDate, function(item) {
+                                    var temp = {
+                                        CourseName: course.CourseName,
+                                        Date: item.Date,
+                                        P1: '',
+                                        P2: '',
+                                        P3: '',
+                                        P4: '',
+                                        P5: '',
+                                        P6: '',
+                                        P7: '',
+                                        P8: '',
+                                    };
+                                    angular.forEach([].concat(item.Attendance), function(att) {
+                                        if (att.Period === "1" && att.Type === "缺課")
+                                            temp.P1 = "X";
+                                        else if (att.Period === "2" && att.Type === "缺課")
+                                            temp.P2 = "X";
+                                        else if (att.Period === "3" && att.Type === "缺課")
+                                            temp.P3 = "X";
+                                        else if (att.Period === "4" && att.Type === "缺課")
+                                            temp.P4 = "X";
+                                        else if (att.Period === "5" && att.Type === "缺課")
+                                            temp.P5 = "X";
+                                        else if (att.Period === "6" && att.Type === "缺課")
+                                            temp.P6 = "X";
+                                        else if (att.Period === "7" && att.Type === "缺課")
+                                            temp.P7 = "X";
+                                        else if (att.Period === "8" && att.Type === "缺課")
+                                            temp.P8 = "X";
+                                    });
+                                    items.push(temp);
                                 });
-                                items.push(temp);
-                            });
-                            $scope.currentAttendanceDate = $scope.currentAttendanceDate.concat(items);
-                        }
-                    });
-
-                    //-> 時間排序
-                    // $scope.currentAttendanceDate.sort(function(x,y){
-                    //     return x.Date < y.Date;
-                    // });
-                }
-            });
+                                $scope.currentAttendanceDate = $scope.currentAttendanceDate.concat(items);
+                            }
+                        });
+                    }
+                });
+            }
         }
 
         // 錯誤訊息
@@ -224,9 +228,7 @@ angular.module('attendance', [])
         //-> 判斷身份取得資料
         if ($scope.system_position === 'parent') {
             $scope.getStudentInfo();
-        }
-
-        else {
+        } else {
             $scope.selectStudent({
                 StudentId: null
             });
