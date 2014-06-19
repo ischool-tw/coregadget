@@ -1228,7 +1228,7 @@ var CreateEvent = function() {
             //  課程為「核心」課程，則顯示成績分佈統計表，反之隱藏。
             if (pSelectedCourse) {
                 if (pSelectedCourse.CourseType.indexOf("核心") >= 0) {
-                    if (currentCourse.InputRule !== 1) {
+                    if (currentCourse.InputRule !== "1") {
                         $("#statistics-container").show();
                     } else {
                         $("#statistics-container").hide();
