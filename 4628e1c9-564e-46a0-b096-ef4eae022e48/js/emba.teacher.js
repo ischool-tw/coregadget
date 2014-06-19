@@ -628,7 +628,7 @@ var CreateTeacher = function() {
             var pCourse = _TeacherCourses[vCourseID];
             var pass_score = ["A+", "A", "A-", "B+", "B", "B-"];
 
-            if (pCourse.InputRule === 1)
+            if (pCourse.InputRule === "1")
                 pass_score = ["P"];
 
             if (pCourseStudents) {                
@@ -691,7 +691,7 @@ var CreateTeacher = function() {
             var pCourse = _TeacherCourses[vCourseID];
             var pass_score = ["A+", "A", "A-", "B+", "B", "B-"];
 
-            if (pCourse.InputRule === 1)
+            if (pCourse.InputRule === "1")
                 pass_score = ["P"];
 
             if (pCourseStudents) {                
@@ -1227,12 +1227,10 @@ var CreateEvent = function() {
 
             //  課程為「核心」課程，則顯示成績分佈統計表，反之隱藏。
             if (pSelectedCourse) {
-                if (pSelectedCourse.CourseType.indexOf("核心") >= 0) {
-                    if (currentCourse.InputRule) {
-                        $("#statistics-container").hide();
-                    } else {
-                        $("#statistics-container").show();
-                    }
+                if (pSelectedCourse.CourseType.indexOf("核心") >= 0 && pSelectedCourse.InputRule === "") {
+                    $("#statistics-container").show();
+                } else {
+                    $("#statistics-container").hide();
                 }
             } else {
                 $("#statistics-container").hide();
@@ -1281,7 +1279,7 @@ var CreateEvent = function() {
                 }
                 var valid_score = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "F", "a+", "a", "a-", "b+", "b", "b-", "c+", "c", "c-", "f"];
 
-                if (pSelectedCourse.InputRule === 1)
+                if (pSelectedCourse.InputRule === "1")
                     valid_score = ["P", "N", "p", "n"];
 
                 var value = $(this).val();
@@ -1486,7 +1484,7 @@ $(document).ready(function() {
             return;
         }
         var currentCourse = Teacher.GetSelectedCourse($("#cboTeacherCourses").val());
-        if (currentCourse.CourseType.indexOf("核心") >= 0) {
+        if (currentCourse.CourseType.indexOf("核心") >= 0 && currentCourse.InputRule === "") {
             var timeoutID;
             if (!currentCourse.Compliant) {
                 $('#tab1Msg').html("<div class='alert alert-error'>" + "成績不符合評分規定，請先修正！" + "</div>");
@@ -1522,12 +1520,8 @@ $(document).ready(function() {
         var currentCourse = Teacher.GetSelectedCourse($("#cboTeacherCourses").val());
         //  課程為「核心」課程，則顯示成績分佈統計表，反之隱藏。
         if (currentCourse) {
-            if (currentCourse.CourseType.indexOf("核心") >= 0) {
-                if (currentCourse.InputRule !== "1") {
-                    $("#statistics-container").show();
-                } else {
-                    $("#statistics-container").hide();
-                }
+            if (currentCourse.CourseType.indexOf("核心") >= 0 && currentCourse.InputRule === "") {
+                $("#statistics-container").show();
             } else {
                 $("#statistics-container").hide();
             }
