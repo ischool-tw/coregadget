@@ -258,7 +258,8 @@ var CreateTeacher = function() {
                                 'IsScored': item.IsScored,
                                 'SerialNo': item.SerialNo,
                                 'CourseType': item.CourseType,
-                                'Compliant': true
+                                'Compliant': true,
+                                'InputRule': item.InputRule
                             };
                         });
                         // Teacher.Publish(_TeacherCourses, 'teacher_course_loaded');
@@ -627,6 +628,9 @@ var CreateTeacher = function() {
             var pCourse = _TeacherCourses[vCourseID];
             var pass_score = ["A+", "A", "A-", "B+", "B", "B-"];
 
+            if (pCourse.InputRule === 1)
+                pass_score = ["P"];
+
             if (pCourseStudents) {                
                 
                 var add_content = [];
@@ -686,6 +690,9 @@ var CreateTeacher = function() {
             var pCourseStudents = _CourseStudents[vCourseID];    
             var pCourse = _TeacherCourses[vCourseID];
             var pass_score = ["A+", "A", "A-", "B+", "B", "B-"];
+
+            if (pCourse.InputRule === 1)
+                pass_score = ["P"];
 
             if (pCourseStudents) {                
                 
@@ -1271,6 +1278,10 @@ var CreateEvent = function() {
                     return;
                 }
                 var valid_score = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "F", "a+", "a", "a-", "b+", "b", "b-", "c+", "c", "c-", "f"];
+
+                if (pSelectedCourse.InputRule === 1)
+                    valid_score = ["P", "N", "p", "n"];
+
                 var value = $(this).val();
                 var fixed_value = '';
                 // score_type = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "F", "X", "***", ""];
@@ -1510,7 +1521,11 @@ $(document).ready(function() {
         //  課程為「核心」課程，則顯示成績分佈統計表，反之隱藏。
         if (currentCourse) {
             if (currentCourse.CourseType.indexOf("核心") >= 0) {
-                $("#statistics-container").show();
+                if (currentCourse.InputRule !== 1) {
+                    $("#statistics-container").show();
+                } else {
+                    $("#statistics-container").hide();
+                }
             } else {
                 $("#statistics-container").hide();
             }
