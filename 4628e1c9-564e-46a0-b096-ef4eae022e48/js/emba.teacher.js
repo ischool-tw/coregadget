@@ -859,6 +859,9 @@ var CreateTeacher = function() {
                                 case "F":
                                     statisticsBScoredAmount += 1;
                                     break; 
+                                case "X":
+                                    statisticsBScoredAmount += 1;
+                                    break; 
 
                             }
                         }
@@ -1277,7 +1280,7 @@ var CreateEvent = function() {
                     student.Remark = $.trim($(this).val());
                     return;
                 }
-                var valid_score = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "F", "a+", "a", "a-", "b+", "b", "b-", "c+", "c", "c-", "f"];
+                var valid_score = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "F", "X", "a+", "a", "a-", "b+", "b", "b-", "c+", "c", "c-", "f", "x"];
 
                 if (pSelectedCourse.InputRule === "1")
                     valid_score = ["P", "N", "p", "n"];
