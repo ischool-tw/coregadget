@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+    <script>
+        init({
+            application: "dev.sh_d",
+            paramValues: {}
+        });
+    </script>
+  <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <link href="css/defalut.css" rel="stylesheet" />
+    <link href="css/base.css" rel="stylesheet" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+<body >
+  <div class="my-page" id="gadget" ng-app="app" ng-controller="ServiceLearningCreationItemsCntl" ng-init="init()">
+  
+        <h1>服務學習</h1>
+        <div id="mainMsg"></div>
+        <h4>開放中項目</h4>
+        <table class="table table-bordered table-striped table-hover text-center">
+            <thead>
+                <tr>
+                    <th class="col-md-1">服務日期</th>
+                    <th class="col-md-1">服務地點</th>
+                    <th class="col-md-1">預計時數</th>
+                    <th class="col-md-2">服務事由</th>
+                    <th class="col-md-1">備註</th>
+                    <th class="col-md-1">人數上限</th>
+                    <th class="col-md-1">報名人數</th>
+                    <th class="col-md-2">報名結束時間</th>
+                    <th class="col-md-1">參加</th>
+                    <th class="col-md-1">核可</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in list | filtList:'opened'">
+                    <td>{{item.occur_date | myDateFormat:"yyyy-MM-dd"}}</td>
+                    <td class="text-left">{{item.location}}</td>
+                    <td>{{item.expected_hours}}</td>
+                    <td class="text-left">{{item.reason}}</td>
+                    <td class="text-left">{{item.remark}}</td>
+                    <td>{{item.participate_limit}}</td>
+                    <td>{{item.count}}</td>
+                    <td>{{item.regist_end_time | myDateFormat:"yyyy-MM-dd HH:mm"}}</td>
+                    <td><input type="checkbox" ng-model="item.want_participate" ng-checked="item.slcipr_uid" ng-disabled="item.is_authorized" ng-change="save(item)"></td>
+                    <td>
+                        <i class="fa fa-check" ng-show="item.can_participate == 't'"></i>
+                        <i class="fa fa-times" ng-show="item.is_authorized && item.slcipr_uid && item.can_participate == 'f'"></i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4>已參加項目</h4>
+        <table class="table table-bordered table-striped table-hover text-center">
+            <thead>
+                <tr>
+                    <th class="col-md-1">服務日期</th>
+                    <th class="col-md-1">服務地點</th>
+                    <th class="col-md-1">預計時數</th>
+                    <th class="col-md-2">服務事由</th>
+                    <th class="col-md-1">備註</th>
+                    <th class="col-md-1">人數上限</th>
+                    <th class="col-md-1">報名人數</th>
+                    <th class="col-md-1">參加</th>
+                    <th class="col-md-1">核可</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in list | filtList:'finished'">
+                    <td>{{item.occur_date | myDateFormat:"yyyy-MM-dd"}}</td>
+                    <td class="text-left">{{item.location}}</td>
+                    <td>{{item.expected_hours}}</td>
+                    <td class="text-left">{{item.reason}}</td>
+                    <td class="text-left">{{item.remark}}</td>
+                    <td>{{item.participate_limit}}</td>
+                    <td>{{item.count}}</td>
+                    <td><input type="checkbox" ng-checked="item.slcipr_uid" disabled></td>
+                    <td>
+                        <i class="fa fa-check" ng-show="item.can_participate == 't'"></i>
+                        <i class="fa fa-times" ng-show="item.is_authorized && item.slcipr_uid && item.can_participate == 'f'"></i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+    </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/default.js"></script>
+</html>
