@@ -65,7 +65,7 @@
                             <td>{{item.StudentID}}</td>
                             <td>{{item.SeatNo}}</td>
                             <td class="text-left">
-                                {{item.StudentChineseName}} {{item.StudentEnglishName ? '('+item.StudentEnglishName+')' : ''}}
+                                {{item.StudentChineseName}} {{item.StudentNickname ? '('+item.StudentNickname+')' : ''}}
                             </td>
                             <td ng-repeat="exam in examList" style="cursor:pointer;" ng-click="selectStudent(item,exam)">
                                 <span ng-class="{'text-danger':item[exam.Name] < 60}">{{item[exam.Name]}}</span>
@@ -129,7 +129,7 @@
                             <td>Name</td>
                             <td>
                                 {{current.Student.StudentChineseName}}
-                                <br>{{current.Student.StudentEnglishName}}
+                                <br>{{current.Student.StudentNickname}}
                             </td>
                         </tr>
                     </tbody>
