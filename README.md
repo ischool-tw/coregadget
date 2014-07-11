@@ -100,6 +100,7 @@ Core Gadget
 實驗中學
 
 * 01e38222-23fd-4f20-851f-470953b92bec （雙語部）成績輸入(老師)
+* 08c978fe-8c20-4eaf-b690-ebb36864a69d （雙語部）Conduct輸入(老師)
 
 
 Campus Lite
