@@ -23,7 +23,7 @@
 </head>
 <body ng-controller="MainCtrl">
     <div id="gadget" class="my-page" ng-if="config && courseList">
-        <h1>{{current.SchoolYear}} {{current.Semester == '1' ? '1st' : (current.Semester == '2' ? '2nd' :'')}} Semester Grade</h1>
+        <h1>{{current.SchoolYear}} {{current.Semester == '1' ? '1st' : (current.Semester == '2' ? '2nd' :'')}} Semester Gradebook</h1>
         <div class="alert alert-info" ng-if="examList[0].Opening || examList[1].Opening">
             <span ng-repeat="item in examList">
                 <p ng-if="item.Opening" style="margin:0;">{{item.Name}}: {{item.Begin}} ~ {{item.End}} {{item.Message}}</p>
