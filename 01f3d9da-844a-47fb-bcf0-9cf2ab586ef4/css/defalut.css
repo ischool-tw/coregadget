@@ -1,0 +1,89 @@
+body.modal-open {
+margin-right: auto;
+}
+
+table table thead th {
+	background:none;
+	border-bottom:none;
+}
+
+.table th {
+	text-align:center;
+}
+
+.table td span {
+	display:block;
+}
+
+.my-grade thead th {
+	padding: 5px !important;
+}
+
+.my-grade tr.active, .my-interview tbody td {
+	text-align: center;
+}
+
+.my-interview tbody td:nth-child(5) {
+	text-align: left;
+}
+
+.my-interview .my-view {
+	display: block;
+}
+
+.my-interview dt, .my-interview dd {
+	padding: 10px 0 5px 0;
+}
+
+.my-interview dd {
+	border-bottom: 1px solid #ddd;
+}
+
+.my-interview dd:last-child {
+	border: none;
+}
+
+.modal-body .label {
+	font-weight:normal;
+	padding: .2em .6em;
+}
+
+.my-page {
+  position: relative;
+}
+
+.my-child {
+  position: absolute;
+  top: -1px;
+  left: 35%;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  border-radius: 0 0 3px 3px;
+  z-index: 999;
+}
+.my-childbar {
+  text-align: center;
+  clear: both;
+}
+.my-childname {
+  overflow: hidden;
+  height: 0;
+}
+.my-childname ul {
+  margin: 0;
+  margin-left: -40px;
+}
+.my-childname ul li {
+  float: left;
+  padding: 5px 10px;
+  list-style-type: none;
+  border-left: 1px solid #ddd;
+  border-bottom: 1px solid #e1e1e1;
+  cursor: pointer;
+}
+.my-childname ul li:first-child {
+  border-left: none;
+}
+.my-childname ul li:hover {
+  background: #fafafa;
+}
