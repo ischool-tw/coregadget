@@ -1,4 +1,8 @@
 jQuery ->
+  gadget.onSizeChanged (size) ->
+    $("#container-main").height(size.height - 47)
+
+
   $("#ExamScore tbody").html "<tr><td>載入中...</td></tr>"
 
   $("input:radio[name='show_model'][value='#{gadget.params.system_show_model or "subject"}']").prop('checked', true)
@@ -16,6 +20,8 @@ jQuery ->
     semester = $(@).attr("semester")
     $(".tooltip").remove()
     $("#ExamScore").find('thead').html('').end().find('tbody').html "<tr><td>載入中...</td></tr>"
+    $("#ScoreInterval tbody").html """<tr><td colspan="12">載入中...</td></tr>"""
+    $("#ExamDropDown").find("ul").html("").end().find("a[data-toggle='dropdown']").html("")
     Exam.score(schoolYear, semester)
 
   # 切換成績模式
@@ -176,6 +182,8 @@ Exam = do ->
   resetData = ->
     $("#ExamScore thead").html ""
     $("#ExamScore tbody").html ""
+    $("#ScoreInterval tbody").html ""
+    $("#ExamDropDown").find("ul").html("").end().find("a[data-toggle='dropdown']").html("")
 
 
   # 取得評量成績
@@ -184,15 +192,50 @@ Exam = do ->
     _semester = semester
     isCurrSemester = (schoolYear is _curr_schoolyear and semester is _curr_semester)
 
-    if (_exam_score[_student.StudentID][schoolYear + semester])
+    getCourseExamScoreReady = false
+    getAllStudentScoreReady = false
+    courseInterval = []
+    fixInterval = []
+
+
+    margeScore = () ->
+      if getCourseExamScoreReady and getAllStudentScoreReady
+        $(courseInterval).each (index, item) ->
+          if _exam_score[_student.StudentID][schoolYear + semester] && _exam_score[_student.StudentID][schoolYear + semester].Course
+            $(_exam_score[_student.StudentID][schoolYear + semester].Course).each (index, course) ->
+              if course.CourseID is item.CourseID
+                item.ScoreDetail = [].concat(item.ScoreDetail)
+                $(item.ScoreDetail).each (index, scoreDetail) ->
+                  if course.Exams[scoreDetail.ExamID]
+                    course.Exams[scoreDetail.ExamID].Interval = scoreDetail
+
+        $(fixInterval).each (index, item) ->
+          if _exam_score[_student.StudentID][schoolYear + semester] && _exam_score[_student.StudentID][schoolYear + semester].Course
+            $(_exam_score[_student.StudentID][schoolYear + semester].Course).each (index, course) ->
+              if course.CourseID is item.CourseID
+                course.Interval = item
+
+        if $("#Semester button.active").attr("school-year") is schoolYear and $("#Semester button.active").attr("semester") is semester
+          showScore(_exam_score[_student.StudentID][schoolYear + semester], isCurrSemester)
+          showInterval(_exam_score[_student.StudentID][schoolYear + semester], isCurrSemester)
+
+
+    if _exam_score[_student.StudentID][schoolYear + semester]
       showScore(_exam_score[_student.StudentID][schoolYear + semester], isCurrSemester)
+      showInterval(_exam_score[_student.StudentID][schoolYear + semester], isCurrSemester)
     else
       request = Content:
         Condition:
           SchoolYear: schoolYear
           Semester: semester
 
-      if _system_position is "parent" then request.Content.Condition.StudentID = _student.StudentID
+      request2 =
+        SchoolYear: schoolYear
+        Semester: semester
+
+      if _system_position is "parent"
+        request.Content.Condition.StudentID = _student.StudentID
+        request2.StudentID = _student.StudentID
 
       _connection.send
         service: "_.GetJHCourseExamScore"
@@ -251,6 +294,8 @@ Exam = do ->
                     ext_score = null
                     ext_assignmentScore = null
                     avg_score = null
+                    weight_score1 = course.FixTime.Extension.ScorePercentage or 50 if course.FixTime?.Extension?.ScorePercentage?
+                    weight_score2 = 100 - (1 * weight_score1)
 
                     if exam.ExamID
                       # 設定定期評量成績
@@ -263,7 +308,7 @@ Exam = do ->
                           ext_assignmentScore = Number(extension.AssignmentScore) if extension.AssignmentScore
 
                           if ext_score? and ext_assignmentScore?
-                            avg_score = FloatMath(FloatMath(ext_score, '+', ext_assignmentScore), '/', 2)
+                            avg_score = FloatMath(FloatMath(FloatMath(ext_score, '*', weight_score1), '+', FloatMath(ext_assignmentScore, '*', weight_score2)), '/', 100)
                           else if ext_score?
                             avg_score = ext_score
                           else
@@ -305,6 +350,7 @@ Exam = do ->
 
                 # 科目的定期及平時評量資料
                 aCourse[course.Domain + ":" + course.Subject] = {
+                  CourseID: course.CourseID
                   Index: course.Domain + ":" + course.Subject
                   Domain: course.Domain
                   Subject: course.Subject
@@ -330,8 +376,23 @@ Exam = do ->
             else
               _exam_score[_student.StudentID][schoolYear + semester] = null
 
-            if $("#Semester button.active").attr("school-year") is schoolYear and $("#Semester button.active").attr("semester") is semester
-              showScore(_exam_score[_student.StudentID][schoolYear + semester], isCurrSemester)
+            getCourseExamScoreReady = true
+            margeScore()
+
+
+      _connection.send
+        service: "_.GetJHAllStudentScore"
+        body: request2
+        result: (response, error, http) ->
+          if error isnt null
+            set_error_message "#mainMsg", "GetJHAllStudentScore", error
+          else
+            if response.ExamScoreList?.Course
+              courseInterval = [].concat(response.ExamScoreList.Course)
+              fixInterval = [].concat(response.FixScoreList.Course)
+
+            getAllStudentScoreReady = true
+            margeScore()
 
   # 領域定期、平時加權平均
   avgScore = (exam_data, isCurrSemester) ->
@@ -646,7 +707,137 @@ Exam = do ->
       $("#ExamScore").find("thead").html(thead_html).end().find("tbody").html(tbody_html).end().find("td[rel='tooltip']").tooltip()
     else
       $("#ExamScore").find("thead").html("").end().find("tbody").html "<tr><td>目前無資料</td></tr>"
+      $("#ScoreInterval tbody").html """<tr><td colspan="12">目前無資料</td></tr>"""
 
+  # 換算我的組距落點
+  switchLevel = (score) ->
+    if score >= 0 and score < 10
+      "Level0"
+    else if score >= 10 and score < 20
+      "Level10"
+    else if score >= 20 and score < 30
+      "Level20"
+    else if score >= 30 and score < 40
+      "Level30"
+    else if score >= 40 and score < 50
+      "Level40"
+    else if score >= 50 and score < 60
+      "Level50"
+    else if score >= 60 and score < 70
+      "Level60"
+    else if score >= 70 and score < 80
+      "Level70"
+    else if score >= 80 and score < 90
+      "Level80"
+    else if score >= 90 and score <= 100
+      "Level90"
+    else
+      ""
+
+  # 顯示組距選單
+  showInterval= (exam_data, isCurrSemester) ->
+    false if _system_show_model isnt "subject"
+
+    dropdownList = []
+    if exam_data
+      # 表頭
+      $(exam_data.ExamList).each (key, exam) ->
+        dropdownList.push """<li><a href="#" my-examid="#{exam.ExamID}">#{exam.ExamName}</a></li>"""
+
+    if _system_type is "kh"
+      dropdownList.push """<li><a href="#" my-examid="-999">平時評量</a></li>"""
+
+    $("#ExamDropDown").find("ul").html(dropdownList.join("")).end().find("a[data-toggle='dropdown']").html("")
+    $("#ExamDropDown .dropdown-menu a").click ->
+      $("#ScoreInterval tbody").html """<tr><td colspan="12">載入中...</td></tr>"""
+      $("#ExamDropDown a[data-toggle='dropdown']").html($(@).text()).attr('my-examid', $(@).attr('my-examid'))
+      interval_process(exam_data, isCurrSemester)
+
+    $("#ExamDropDown .dropdown-menu a:first").trigger("click")
+
+
+  # 顯示組距
+  interval_process= (exam_data, isCurrSemester) ->
+    # console.log exam_data
+    levelList = ["Level90", "Level80", "Level70", "Level60", "Level50", "Level40", "Level30", "Level20", "Level10", "Level0"]
+    tbody1 = []
+    tbody_html = ""
+    pre_domain = null
+    curr_examid = $("#ExamDropDown a[data-toggle='dropdown']").attr('my-examid')
+
+    if exam_data
+      # 領域科目
+      $(exam_data.Course).each (key, course) ->
+        domain = exam_data.Domain['domain:' + course.Domain]
+
+        tbody1.push """<tr>"""
+
+        if course.Domain isnt pre_domain
+          tbody1.push """<th rowspan="#{domain.CourseCount}">#{course.Domain}</th>"""
+
+        if course.Domain is '彈性課程'
+          tbody1.push """
+            <th>#{course.Subject}</th>
+          """
+        else
+          tbody1.push """
+            <th>#{course.Subject}</th>
+          """
+
+        exam = course.Exams[curr_examid]
+        td_score = null
+        my_level = ''
+
+        if exam
+          # 科目
+          if exam.Avg isnt '未開放'
+            # 有成績且可顯示時資料處理
+            my_level = switchLevel(Number(exam.Avg)) if exam.Avg
+
+            for key of levelList
+              if levelList[key] == my_level
+                tbody1.push """<td class="my-fail">#{exam.Interval[levelList[key]]}</td>"""
+              else
+                tbody1.push """<td>#{exam.Interval[levelList[key]]}</td>"""
+
+          else
+            tbody1.push """
+              <td>
+                #{if exam.EndTime then exam.EndTime.toString() + "後開放" else "尚未開放"}
+              </td>
+            """
+        else if curr_examid is "-999"
+          # 高雄平時評量
+          if _system_type is "kh"
+            if course.FixScore is '未開放'
+                tbody1.push """<td>
+                  #{if course.FixEndTime then course.FixEndTime.toString() + "後開放" else "尚未開放"}
+                  </td>
+                """
+            else
+                # 科目：平時評量成績
+                my_level = switchLevel(Number(course.FixScore)) if course.FixScore
+                for key of levelList
+                  if levelList[key] == my_level
+                    tbody1.push """<td class="my-fail">#{course.Interval[levelList[key]]}</td>"""
+                  else
+                    tbody1.push """<td>#{course.Interval[levelList[key]]}</td>"""
+
+        else
+          tbody1.push "<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>"
+
+
+
+        tbody1.push "</tr>"
+
+        # 上次迴圈的領域名
+        pre_domain = course.Domain
+
+      tbody1.push """</tr>"""
+      tbody_html = tbody1.join("")
+      $("#ScoreInterval tbody").html(tbody_html)
+    else
+      $("#ScoreInterval tbody").html """<tr><td colspan="12">目前無資料</td></tr>"""
 
 
   # 錯誤訊息
@@ -770,6 +961,11 @@ Exam = do ->
     'setModel': (model) ->
       _system_show_model = model
       loadScore(_schoolYear, _semester)
+      if _system_show_model is "subject"
+        $('#ExamDropDown, #ScoreInterval').removeClass('hidden')
+      else
+        $('#ExamDropDown, #ScoreInterval').addClass('hidden')
+
     'onChangeStudent': (index)->
       resetData()
       _student = _students[index]

@@ -12,7 +12,7 @@
         "system_show_model": "subject",
         "system_position": "student"
       }
-      // paramValues: {"system_type": "hs"}
+      // paramValues: {"system_type": "hc"}
     });
   </script>
   <link href="css/bootstrap.css" rel="stylesheet" />
@@ -48,6 +48,31 @@
           <div>
             <table class="table table-bordered" id="ExamScore">
               <thead></thead>
+              <tbody></tbody>
+            </table>
+            <div class="dropdown" id="ExamDropDown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1"></a>
+              <b class="caret"></b>
+              <ul class="dropdown-menu">
+              </ul>
+            </div>
+            <table class="table table-bordered" id="ScoreInterval">
+              <thead>
+                <tr class="my-nofill">
+                  <th>領域名稱</th>
+                  <th>科目名稱</th>
+                  <th>100-90</th>
+                  <th>89-80</th>
+                  <th>79-70</th>
+                  <th>69-60</th>
+                  <th>59-50</th>
+                  <th>49-40</th>
+                  <th>39-30</th>
+                  <th>29-20</th>
+                  <th>19-10</th>
+                  <th>9-0</th>
+                </tr>
+              </thead>
               <tbody></tbody>
             </table>
           </div>
