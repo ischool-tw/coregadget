@@ -18,7 +18,7 @@
       schoolYear = $(this).attr("school-year");
       semester = $(this).attr("semester");
       $("#ExamScore").find('thead').html('').end().find('tbody').html("<tr><td>載入中...</td></tr>");
-      $("#ScoreInterval tbody").html("<tr><td colspan=\"11\">載入中...</td></tr>");
+      $("#ScoreInterval tbody").html("<tr><td colspan=\"12\">載入中...</td></tr>");
       $("#ExamDropDown").find("ul").html("").end().find("a[data-toggle='dropdown']").html("");
       Exam.score(schoolYear, semester);
       return $(".tooltip").remove();
@@ -155,7 +155,7 @@
         if (getCourseExamScoreReady && getAllStudentScoreReady) {
           $(courseInterval).each(function(index, item) {
             return $(_exam_score[schoolYear + semester]).each(function(index, course) {
-              if (course.CourseID === item.CourseID) {
+              if (course.Subject === item.Subject) {
                 item.ScoreDetail = [].concat(item.ScoreDetail);
                 course.Exam = [].concat(course.Exam);
                 $(item.ScoreDetail).each(function(index, scoreDetail) {
@@ -238,7 +238,7 @@
       thead1 = [];
       thead2 = [];
       dropdownList = [];
-      levelList = ["Level90", "Level80", "Level70", "Level60", "Level50", "Level40", "Level30", "Level20", "Level10", "Level0"];
+      levelList = ["Level0", "Level10", "Level20", "Level30", "Level40", "Level50", "Level60", "Level70", "Level80", "Level90", "Level100"];
       if (exam_data) {
         $(exam_data).each(function(index, course) {
           return $(course.Exam).each(function(index, exam) {
@@ -255,7 +255,7 @@
       }
       $("#ExamDropDown").find("ul").html(dropdownList.join("")).end().find("a[data-toggle='dropdown']").html("");
       $("#ExamDropDown .dropdown-menu a").click(function() {
-        $("#ScoreInterval tbody").html("<tr><td colspan=\"11\">載入中...</td></tr>");
+        $("#ScoreInterval tbody").html("<tr><td colspan=\"12\">載入中...</td></tr>");
         $("#ExamDropDown a[data-toggle='dropdown']").html($(this).text()).attr('my-examid', $(this).attr('my-examid'));
         return interval_process();
       });
@@ -365,7 +365,7 @@
           return $("#ExamDropDown .dropdown-menu a:first").trigger("click");
         } else {
           $("#ExamScore").find("thead").html("").end().find("tbody").html("<tr><td>目前無資料</td></tr>");
-          return $("#ScoreInterval tbody").html("<tr><td colspan=\"11\">目前無資料</td></tr>");
+          return $("#ScoreInterval tbody").html("<tr><td colspan=\"12\">目前無資料</td></tr>");
         }
       };
       switchLevel = function(score) {
@@ -410,7 +410,7 @@
                 ext_score = null;
                 my_level = null;
                 td_score = null;
-                if (exam) {
+                if ((exam != null ? exam.Interval : void 0) != null) {
                   if (isCurrSemester) {
                     if (_system_exam_must_enddate === "true") {
                       if (((_ref = exam.ScoreDetail) != null ? _ref.EndTime : void 0) != null) {
@@ -438,10 +438,10 @@
                     }
                     return _results;
                   } else {
-                    return tbody1.push("<td colspan=\"10\">\n  " + (endtime ? endtime + "後開放" : "尚未開放") + "\n</td>");
+                    return tbody1.push("<td colspan=\"11\">\n  " + (endtime ? endtime + "後開放" : "尚未開放") + "\n</td>");
                   }
                 } else {
-                  return tbody1.push("<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>");
+                  return tbody1.push("<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>");
                 }
               }
             });
@@ -450,7 +450,7 @@
           tbody_html = tbody1.join("");
           return $("#ScoreInterval tbody").html(tbody_html);
         } else {
-          return $("#ScoreInterval tbody").html("<tr><td colspan=\"11\">目前無資料</td></tr>");
+          return $("#ScoreInterval tbody").html("<tr><td colspan=\"12\">目前無資料</td></tr>");
         }
       };
       if (isCurrSemester && _system_exam_must_enddate === "true") {

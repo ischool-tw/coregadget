@@ -2,6 +2,8 @@ jQuery ->
   gadget.onSizeChanged (size) ->
     $("#container-main").height(size.height - 47)
 
+  Exam.removeInterval()
+
 
   $("#ExamScore tbody").html "<tr><td>載入中...</td></tr>"
 
@@ -20,7 +22,7 @@ jQuery ->
     semester = $(@).attr("semester")
     $(".tooltip").remove()
     $("#ExamScore").find('thead').html('').end().find('tbody').html "<tr><td>載入中...</td></tr>"
-    $("#ScoreInterval tbody").html """<tr><td colspan="12">載入中...</td></tr>"""
+    $("#ScoreInterval tbody").html """<tr><td colspan="13">載入中...</td></tr>"""
     $("#ExamDropDown").find("ul").html("").end().find("a[data-toggle='dropdown']").html("")
     Exam.score(schoolYear, semester)
 
@@ -77,7 +79,6 @@ Exam = do ->
     _student = {
       StudentID : 0
     }
-
 
   # 目前學年度
   getCurrSemester = ->
@@ -200,20 +201,21 @@ Exam = do ->
 
     margeScore = () ->
       if getCourseExamScoreReady and getAllStudentScoreReady
-        $(courseInterval).each (index, item) ->
-          if _exam_score[_student.StudentID][schoolYear + semester] && _exam_score[_student.StudentID][schoolYear + semester].Course
-            $(_exam_score[_student.StudentID][schoolYear + semester].Course).each (index, course) ->
-              if course.CourseID is item.CourseID
-                item.ScoreDetail = [].concat(item.ScoreDetail)
-                $(item.ScoreDetail).each (index, scoreDetail) ->
-                  if course.Exams[scoreDetail.ExamID]
-                    course.Exams[scoreDetail.ExamID].Interval = scoreDetail
+        if _system_type is "hc"
+          $(courseInterval).each (index, item) ->
+            if _exam_score[_student.StudentID][schoolYear + semester] && _exam_score[_student.StudentID][schoolYear + semester].Course
+              $(_exam_score[_student.StudentID][schoolYear + semester].Course).each (index, course) ->
+                if course.Subject is item.Subject
+                  item.ScoreDetail = [].concat(item.ScoreDetail)
+                  $(item.ScoreDetail).each (index, scoreDetail) ->
+                    if course.Exams[scoreDetail.ExamID]
+                      course.Exams[scoreDetail.ExamID].Interval = scoreDetail
 
-        $(fixInterval).each (index, item) ->
-          if _exam_score[_student.StudentID][schoolYear + semester] && _exam_score[_student.StudentID][schoolYear + semester].Course
-            $(_exam_score[_student.StudentID][schoolYear + semester].Course).each (index, course) ->
-              if course.CourseID is item.CourseID
-                course.Interval = item
+          $(fixInterval).each (index, item) ->
+            if _exam_score[_student.StudentID][schoolYear + semester] && _exam_score[_student.StudentID][schoolYear + semester].Course
+              $(_exam_score[_student.StudentID][schoolYear + semester].Course).each (index, course) ->
+                if course.Subject is item.Subject
+                  course.Interval = item
 
         if $("#Semester button.active").attr("school-year") is schoolYear and $("#Semester button.active").attr("semester") is semester
           showScore(_exam_score[_student.StudentID][schoolYear + semester], isCurrSemester)
@@ -222,7 +224,7 @@ Exam = do ->
 
     if _exam_score[_student.StudentID][schoolYear + semester]
       showScore(_exam_score[_student.StudentID][schoolYear + semester], isCurrSemester)
-      showInterval(_exam_score[_student.StudentID][schoolYear + semester], isCurrSemester)
+      showInterval(_exam_score[_student.StudentID][schoolYear + semester], isCurrSemester) if _system_type is "hc"
     else
       request = Content:
         Condition:
@@ -707,7 +709,7 @@ Exam = do ->
       $("#ExamScore").find("thead").html(thead_html).end().find("tbody").html(tbody_html).end().find("td[rel='tooltip']").tooltip()
     else
       $("#ExamScore").find("thead").html("").end().find("tbody").html "<tr><td>目前無資料</td></tr>"
-      $("#ScoreInterval tbody").html """<tr><td colspan="12">目前無資料</td></tr>"""
+      $("#ScoreInterval tbody").html """<tr><td colspan="13">目前無資料</td></tr>"""
 
   # 換算我的組距落點
   switchLevel = (score) ->
@@ -749,7 +751,7 @@ Exam = do ->
 
     $("#ExamDropDown").find("ul").html(dropdownList.join("")).end().find("a[data-toggle='dropdown']").html("")
     $("#ExamDropDown .dropdown-menu a").click ->
-      $("#ScoreInterval tbody").html """<tr><td colspan="12">載入中...</td></tr>"""
+      $("#ScoreInterval tbody").html """<tr><td colspan="13">載入中...</td></tr>"""
       $("#ExamDropDown a[data-toggle='dropdown']").html($(@).text()).attr('my-examid', $(@).attr('my-examid'))
       interval_process(exam_data, isCurrSemester)
 
@@ -759,7 +761,7 @@ Exam = do ->
   # 顯示組距
   interval_process= (exam_data, isCurrSemester) ->
     # console.log exam_data
-    levelList = ["Level90", "Level80", "Level70", "Level60", "Level50", "Level40", "Level30", "Level20", "Level10", "Level0"]
+    levelList = ["Level0", "Level10", "Level20", "Level30", "Level40", "Level50", "Level60", "Level70", "Level80", "Level90", "Level100"]
     tbody1 = []
     tbody_html = ""
     pre_domain = null
@@ -788,7 +790,7 @@ Exam = do ->
         td_score = null
         my_level = ''
 
-        if exam
+        if exam?.Interval?
           # 科目
           if exam.Avg isnt '未開放'
             # 有成績且可顯示時資料處理
@@ -802,7 +804,7 @@ Exam = do ->
 
           else
             tbody1.push """
-              <td>
+              <td colspan="11">
                 #{if exam.EndTime then exam.EndTime.toString() + "後開放" else "尚未開放"}
               </td>
             """
@@ -810,7 +812,7 @@ Exam = do ->
           # 高雄平時評量
           if _system_type is "kh"
             if course.FixScore is '未開放'
-                tbody1.push """<td>
+                tbody1.push """<td colspan="11">
                   #{if course.FixEndTime then course.FixEndTime.toString() + "後開放" else "尚未開放"}
                   </td>
                 """
@@ -824,7 +826,7 @@ Exam = do ->
                     tbody1.push """<td>#{course.Interval[levelList[key]]}</td>"""
 
         else
-          tbody1.push "<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>"
+          tbody1.push "<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>"
 
 
 
@@ -837,7 +839,7 @@ Exam = do ->
       tbody_html = tbody1.join("")
       $("#ScoreInterval tbody").html(tbody_html)
     else
-      $("#ScoreInterval tbody").html """<tr><td colspan="12">目前無資料</td></tr>"""
+      $("#ScoreInterval tbody").html """<tr><td colspan="13">目前無資料</td></tr>"""
 
 
   # 錯誤訊息
@@ -966,8 +968,11 @@ Exam = do ->
       else
         $('#ExamDropDown, #ScoreInterval').addClass('hidden')
 
-    'onChangeStudent': (index)->
+    'onChangeStudent': (index) ->
       resetData()
       _student = _students[index]
       getStudentRuleSeme()
+
+    'removeInterval': () ->
+        if _system_type is "kh" then $('#ExamDropDown, #ScoreInterval').remove()
   }

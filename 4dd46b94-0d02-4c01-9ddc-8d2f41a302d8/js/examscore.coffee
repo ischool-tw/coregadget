@@ -17,7 +17,7 @@ jQuery ->
     schoolYear = $(this).attr("school-year")
     semester = $(this).attr("semester")
     $("#ExamScore").find('thead').html('').end().find('tbody').html "<tr><td>載入中...</td></tr>"
-    $("#ScoreInterval tbody").html """<tr><td colspan="11">載入中...</td></tr>"""
+    $("#ScoreInterval tbody").html """<tr><td colspan="12">載入中...</td></tr>"""
     $("#ExamDropDown").find("ul").html("").end().find("a[data-toggle='dropdown']").html("")
     Exam.score schoolYear, semester
     $(".tooltip").remove()
@@ -142,7 +142,7 @@ Exam = do ->
       if (getCourseExamScoreReady and getAllStudentScoreReady)
         $(courseInterval).each (index, item) ->
           $(_exam_score[schoolYear + semester]).each (index, course) ->
-            if course.CourseID is item.CourseID
+            if course.Subject is item.Subject
               item.ScoreDetail = [].concat(item.ScoreDetail)
               course.Exam = [].concat(course.Exam)
               $(item.ScoreDetail).each (index, scoreDetail) ->
@@ -210,7 +210,7 @@ Exam = do ->
     thead1 = []
     thead2 = []
     dropdownList = []
-    levelList = ["Level90", "Level80", "Level70", "Level60", "Level50", "Level40", "Level30", "Level20", "Level10", "Level0"]
+    levelList = ["Level0", "Level10", "Level20", "Level30", "Level40", "Level50", "Level60", "Level70", "Level80", "Level90", "Level100"];
 
     if exam_data
       $(exam_data).each (index, course) ->
@@ -224,7 +224,7 @@ Exam = do ->
 
     $("#ExamDropDown").find("ul").html(dropdownList.join("")).end().find("a[data-toggle='dropdown']").html("")
     $("#ExamDropDown .dropdown-menu a").click ->
-      $("#ScoreInterval tbody").html """<tr><td colspan="11">載入中...</td></tr>"""
+      $("#ScoreInterval tbody").html """<tr><td colspan="12">載入中...</td></tr>"""
       $("#ExamDropDown a[data-toggle='dropdown']").html($(@).text()).attr('my-examid', $(@).attr('my-examid'))
       interval_process()
 
@@ -331,7 +331,7 @@ Exam = do ->
 
       else
         $("#ExamScore").find("thead").html("").end().find("tbody").html "<tr><td>目前無資料</td></tr>"
-        $("#ScoreInterval tbody").html """<tr><td colspan="11">目前無資料</td></tr>"""
+        $("#ScoreInterval tbody").html """<tr><td colspan="12">目前無資料</td></tr>"""
 
     switchLevel = (score) ->
         if score >= 0 and score < 10
@@ -377,7 +377,7 @@ Exam = do ->
               my_level = null
               td_score = null
 
-              if exam
+              if exam?.Interval?
                 # 目前學年度時，依設定是否於輸入截止才顯示
                 if isCurrSemester
                   if _system_exam_must_enddate is "true"
@@ -399,19 +399,19 @@ Exam = do ->
 
                 else
                   tbody1.push """
-                    <td colspan="10">
+                    <td colspan="11">
                       #{if endtime then endtime + "後開放" else "尚未開放"}
                     </td>
                   """
               else
-                tbody1.push "<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>"
+                tbody1.push "<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>"
 
           tbody1.push "</tr>"
 
         tbody_html = tbody1.join("")
         $("#ScoreInterval tbody").html(tbody_html)
       else
-        $("#ScoreInterval tbody").html """<tr><td colspan="11">目前無資料</td></tr>"""
+        $("#ScoreInterval tbody").html """<tr><td colspan="12">目前無資料</td></tr>"""
 
 
     # 先取得目前時間，再處理資料顯示

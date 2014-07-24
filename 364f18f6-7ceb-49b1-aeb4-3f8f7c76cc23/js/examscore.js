@@ -6,6 +6,7 @@
     gadget.onSizeChanged(function(size) {
       return $("#container-main").height(size.height - 47);
     });
+    Exam.removeInterval();
     $("#ExamScore tbody").html("<tr><td>載入中...</td></tr>");
     $("input:radio[name='show_model'][value='" + (gadget.params.system_show_model || "subject") + "']").prop('checked', true);
     $("#children-list").on("click", "a", function(evnet) {
@@ -20,7 +21,7 @@
       semester = $(this).attr("semester");
       $(".tooltip").remove();
       $("#ExamScore").find('thead').html('').end().find('tbody').html("<tr><td>載入中...</td></tr>");
-      $("#ScoreInterval tbody").html("<tr><td colspan=\"12\">載入中...</td></tr>");
+      $("#ScoreInterval tbody").html("<tr><td colspan=\"13\">載入中...</td></tr>");
       $("#ExamDropDown").find("ul").html("").end().find("a[data-toggle='dropdown']").html("");
       return Exam.score(schoolYear, semester);
     });
@@ -189,29 +190,31 @@
       fixInterval = [];
       margeScore = function() {
         if (getCourseExamScoreReady && getAllStudentScoreReady) {
-          $(courseInterval).each(function(index, item) {
-            if (_exam_score[_student.StudentID][schoolYear + semester] && _exam_score[_student.StudentID][schoolYear + semester].Course) {
-              return $(_exam_score[_student.StudentID][schoolYear + semester].Course).each(function(index, course) {
-                if (course.CourseID === item.CourseID) {
-                  item.ScoreDetail = [].concat(item.ScoreDetail);
-                  return $(item.ScoreDetail).each(function(index, scoreDetail) {
-                    if (course.Exams[scoreDetail.ExamID]) {
-                      return course.Exams[scoreDetail.ExamID].Interval = scoreDetail;
-                    }
-                  });
-                }
-              });
-            }
-          });
-          $(fixInterval).each(function(index, item) {
-            if (_exam_score[_student.StudentID][schoolYear + semester] && _exam_score[_student.StudentID][schoolYear + semester].Course) {
-              return $(_exam_score[_student.StudentID][schoolYear + semester].Course).each(function(index, course) {
-                if (course.CourseID === item.CourseID) {
-                  return course.Interval = item;
-                }
-              });
-            }
-          });
+          if (_system_type === "hc") {
+            $(courseInterval).each(function(index, item) {
+              if (_exam_score[_student.StudentID][schoolYear + semester] && _exam_score[_student.StudentID][schoolYear + semester].Course) {
+                return $(_exam_score[_student.StudentID][schoolYear + semester].Course).each(function(index, course) {
+                  if (course.Subject === item.Subject) {
+                    item.ScoreDetail = [].concat(item.ScoreDetail);
+                    return $(item.ScoreDetail).each(function(index, scoreDetail) {
+                      if (course.Exams[scoreDetail.ExamID]) {
+                        return course.Exams[scoreDetail.ExamID].Interval = scoreDetail;
+                      }
+                    });
+                  }
+                });
+              }
+            });
+            $(fixInterval).each(function(index, item) {
+              if (_exam_score[_student.StudentID][schoolYear + semester] && _exam_score[_student.StudentID][schoolYear + semester].Course) {
+                return $(_exam_score[_student.StudentID][schoolYear + semester].Course).each(function(index, course) {
+                  if (course.Subject === item.Subject) {
+                    return course.Interval = item;
+                  }
+                });
+              }
+            });
+          }
           if ($("#Semester button.active").attr("school-year") === schoolYear && $("#Semester button.active").attr("semester") === semester) {
             showScore(_exam_score[_student.StudentID][schoolYear + semester], isCurrSemester);
             return showInterval(_exam_score[_student.StudentID][schoolYear + semester], isCurrSemester);
@@ -220,7 +223,9 @@
       };
       if (_exam_score[_student.StudentID][schoolYear + semester]) {
         showScore(_exam_score[_student.StudentID][schoolYear + semester], isCurrSemester);
-        return showInterval(_exam_score[_student.StudentID][schoolYear + semester], isCurrSemester);
+        if (_system_type === "hc") {
+          return showInterval(_exam_score[_student.StudentID][schoolYear + semester], isCurrSemester);
+        }
       } else {
         request = {
           Content: {
@@ -694,7 +699,7 @@
         return $("#ExamScore").find("thead").html(thead_html).end().find("tbody").html(tbody_html).end().find("td[rel='tooltip']").tooltip();
       } else {
         $("#ExamScore").find("thead").html("").end().find("tbody").html("<tr><td>目前無資料</td></tr>");
-        return $("#ScoreInterval tbody").html("<tr><td colspan=\"12\">目前無資料</td></tr>");
+        return $("#ScoreInterval tbody").html("<tr><td colspan=\"13\">目前無資料</td></tr>");
       }
     };
     switchLevel = function(score) {
@@ -738,7 +743,7 @@
       }
       $("#ExamDropDown").find("ul").html(dropdownList.join("")).end().find("a[data-toggle='dropdown']").html("");
       $("#ExamDropDown .dropdown-menu a").click(function() {
-        $("#ScoreInterval tbody").html("<tr><td colspan=\"12\">載入中...</td></tr>");
+        $("#ScoreInterval tbody").html("<tr><td colspan=\"13\">載入中...</td></tr>");
         $("#ExamDropDown a[data-toggle='dropdown']").html($(this).text()).attr('my-examid', $(this).attr('my-examid'));
         return interval_process(exam_data, isCurrSemester);
       });
@@ -746,7 +751,7 @@
     };
     interval_process = function(exam_data, isCurrSemester) {
       var curr_examid, levelList, pre_domain, tbody1, tbody_html;
-      levelList = ["Level90", "Level80", "Level70", "Level60", "Level50", "Level40", "Level30", "Level20", "Level10", "Level0"];
+      levelList = ["Level0", "Level10", "Level20", "Level30", "Level40", "Level50", "Level60", "Level70", "Level80", "Level90", "Level100"];
       tbody1 = [];
       tbody_html = "";
       pre_domain = null;
@@ -767,7 +772,7 @@
           exam = course.Exams[curr_examid];
           td_score = null;
           my_level = '';
-          if (exam) {
+          if ((exam != null ? exam.Interval : void 0) != null) {
             if (exam.Avg !== '未開放') {
               if (exam.Avg) {
                 my_level = switchLevel(Number(exam.Avg));
@@ -780,12 +785,12 @@
                 }
               }
             } else {
-              tbody1.push("<td>\n  " + (exam.EndTime ? exam.EndTime.toString() + "後開放" : "尚未開放") + "\n</td>");
+              tbody1.push("<td colspan=\"11\">\n  " + (exam.EndTime ? exam.EndTime.toString() + "後開放" : "尚未開放") + "\n</td>");
             }
           } else if (curr_examid === "-999") {
             if (_system_type === "kh") {
               if (course.FixScore === '未開放') {
-                tbody1.push("<td>\n" + (course.FixEndTime ? course.FixEndTime.toString() + "後開放" : "尚未開放") + "\n</td>");
+                tbody1.push("<td colspan=\"11\">\n" + (course.FixEndTime ? course.FixEndTime.toString() + "後開放" : "尚未開放") + "\n</td>");
               } else {
                 if (course.FixScore) {
                   my_level = switchLevel(Number(course.FixScore));
@@ -800,7 +805,7 @@
               }
             }
           } else {
-            tbody1.push("<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>");
+            tbody1.push("<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>");
           }
           tbody1.push("</tr>");
           return pre_domain = course.Domain;
@@ -809,7 +814,7 @@
         tbody_html = tbody1.join("");
         return $("#ScoreInterval tbody").html(tbody_html);
       } else {
-        return $("#ScoreInterval tbody").html("<tr><td colspan=\"12\">目前無資料</td></tr>");
+        return $("#ScoreInterval tbody").html("<tr><td colspan=\"13\">目前無資料</td></tr>");
       }
     };
     set_error_message = function(select_str, serviceName, error) {
@@ -967,6 +972,11 @@
         resetData();
         _student = _students[index];
         return getStudentRuleSeme();
+      },
+      'removeInterval': function() {
+        if (_system_type === "kh") {
+          return $('#ExamDropDown, #ScoreInterval').remove();
+        }
       }
     };
   })();
