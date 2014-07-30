@@ -625,7 +625,7 @@ jQuery(function () {
 
                                         $('#myModal').modal('hide');
                                         $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
-                                        setTimeout("$('#mainMsg').html('')", 1500);
+                                        setTimeout("$('#mainMsg').html('')", 3000);
                                     }
                                 }
                             }
@@ -1054,7 +1054,7 @@ jQuery(function () {
                                                   }
                                                  }).done(function(response) {
                                                     $('#mainMsg').html("<div class='alert alert-success'>\n  發送選課結果通知成功！\n</div>");
-                                                    setTimeout("$('#mainMsg').html('')", 1500);
+                                                    setTimeout("$('#mainMsg').html('')", 3000);
                                                  });
                                             }
                                         }
@@ -1070,7 +1070,7 @@ jQuery(function () {
 
                         $('#myModal').modal('hide');
                         $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
-                        setTimeout("$('#mainMsg').html('')", 1500);
+                        setTimeout("$('#mainMsg').html('')", 3000);
                     }
                 };
 
