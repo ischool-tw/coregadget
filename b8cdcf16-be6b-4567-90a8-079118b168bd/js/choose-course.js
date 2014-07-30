@@ -1062,23 +1062,7 @@ jQuery(function () {
                                                  }).done(function(response) {
                                                    //console.log(response); // if you're into that sorta thing
                                                  });
-
-                                            //     var m = new mandrill.Mandrill(response.Response.apikey);
-
-                                            //     var params = {
-                                            //         "message": {
-                                            //             "from_email":"paul.wang@ischool.com.tw",
-                                            //             "to":[{"email":"paul.wang@ischool.com.tw"}],
-                                            //             "subject": mail_subject,
-                                            //             "html": self.configuration[mail_tmpl_name]() + course_html
-                                            //         }
-                                            //     };
-                                            //     m.messages.send(params, function(res) {
-                                            //         log(res);
-                                            //     }, function(err) {
-                                            //         log(err);
-                                            //     });
-                                            // }
+                                            }
                                         }
                                     }
                                 });
