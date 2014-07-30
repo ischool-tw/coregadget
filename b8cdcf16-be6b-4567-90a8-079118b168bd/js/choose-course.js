@@ -30,7 +30,7 @@ jQuery(function () {
             $("#cs_content2_template").show();
             $("#cs_content1_template").hide();
         }            
-    })
+    });
 
     $('#myTab a[data-toggle="tab"]').on('show', function (e) {
         if ($(e.relatedTarget).attr('href') === '#sa01') {
@@ -42,7 +42,7 @@ jQuery(function () {
                 }
             }
         }
-    })
+    });
 
     $('#myModal').on('click', '#save-data', function() {
         if ($(this).prop('disabled') === false) {
