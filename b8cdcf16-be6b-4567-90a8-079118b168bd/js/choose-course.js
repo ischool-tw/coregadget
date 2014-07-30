@@ -1029,7 +1029,7 @@ jQuery(function () {
                                     body: {
                                         Request: {
                                             Receiver: receivers,
-                                            Subject: mail_subject + "(通知時間：" + now + ")",
+                                            Subject: mail_subject,
                                             HtmlContent: self.configuration[mail_tmpl_name]() + course_html
                                         }
                                     },
