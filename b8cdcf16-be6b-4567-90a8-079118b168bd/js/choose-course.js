@@ -20,6 +20,18 @@ jQuery(function () {
         return '';
     });
 
+    $(document).ready(function(){
+        if (vm.currentData.Item() === '1') {
+            $("#cs_content1_template").html(vm.configuration.cs_content1_template());
+            $("#cs_content1_template").show();
+            $("#cs_content2_template").hide();
+        } else if (vm.currentData.Item() === '2') {
+            $("#cs_content2_template").html(vm.configuration.cs_content2_template());
+            $("#cs_content2_template").show();
+            $("#cs_content1_template").hide();
+        }            
+    })
+
     $('#myTab a[data-toggle="tab"]').on('show', function (e) {
         if ($(e.relatedTarget).attr('href') === '#sa01') {
             if (stop_exit()) {
@@ -178,12 +190,10 @@ jQuery(function () {
                         case '1':
                             tmp_txt = '第一階段電腦選課：' +  (item.BeginTime || '未設定') + ' 至 ' + (item.EndTime || '未設定') + ' 止。';
                             self.course_opening_info.Item1(self.course_opening_info.Item1() + tmp_txt);
-                            self.set_cs_content1_template();
                             break;
                         case '2':
                             tmp_txt = '<br />第二階段電腦選課：' +  (item.BeginTime || '未設定') + ' 至 ' + (item.EndTime || '未設定') + ' 止。';
                             self.course_opening_info.Item1(self.course_opening_info.Item1() + tmp_txt);
-                            self.set_cs_content1_template();
                             break;
                         case '0':
                             tmp_txt = '加退選：' +  (item.BeginTime || '未設定') + ' 至 ' + (item.EndTime || '未設定') + ' 止。';
@@ -297,7 +307,9 @@ jQuery(function () {
                 email_content2_template     : ko.observable(),
                 cs_cancel1_content_template : ko.observable(),
                 cs_cancel2_content_template : ko.observable(),
-                cs_final_message            : ko.observable()
+                cs_final_message            : ko.observable(),
+                cs_content1_template        : ko.observable(),
+                cs_content2_template        : ko.observable()
             },
             get_configuration : function() {
                 var self = MyViewModel;
@@ -312,7 +324,9 @@ jQuery(function () {
                                     'cs_final_message',
                                     'email_content2_template',
                                     'email_content1_template',
-                                    'cs_cancel2_content_template'
+                                    'cs_cancel2_content_template',
+                                    'cs_content1_template',
+                                    'cs_content2_template'
                                 ]
                             }
                         }
@@ -1327,70 +1341,8 @@ jQuery(function () {
                     $('h1').html('選課');
                     $('#myTabContent').html('很抱歉，您無權限操作此功能');
                 }
-            },
-
-
-            //#region 設定第一階段選課說明文字
-            set_cs_content1_template = function() {
-                _gg.connection.send({
-                    service: "default.GetCSConfiguration",
-                    body: '<Request><Condition><ConfName>cs_content1_template</ConfName></Condition></Request>',
-                    result: function (response, error, http) {
-                        if (error !== null) {
-                            set_error_message('#mainMsg', 'GetCSConfiguration', error);
-                        } else {
-                            // <Response>
-                            //     <Configuration>
-                            //         <ConfName>cs_content1_template</ConfName>
-                            //         <ConfContent>
-                            //             <![CDATA['由desktop提供之樣版內容']]></ConfContent>
-                            //     </Configuration>
-                            // </Response>
-
-                            if (response.Response && response.Response.Configuration) {
-                                $(response.Response.Configuration).each(function(index, item) {
-                                    _cs_content_template = item.ConfContent;
-                                    $('#cs_content1_template').html(_cs_content_template);
-                                    $('#cs_content1_template').show();
-                                    $('#cs_content2_template').hide();
-                                });
-                            }
-                        }
-                    }
-                });
-            },
-            //#endregion
-
-            //#region 設定第二階段選課說明文字
-            set_cs_content2_template = function() {
-                _gg.connection.send({
-                    service: "default.GetCSConfiguration",
-                    body: '<Request><Condition><ConfName>cs_content2_template</ConfName></Condition></Request>',
-                    result: function (response, error, http) {
-                        if (error !== null) {
-                            set_error_message('#mainMsg', 'GetCSConfiguration', error);
-                        } else {
-                            // <Response>
-                            //     <Configuration>
-                            //         <ConfName>cs_content2_template</ConfName>
-                            //         <ConfContent>
-                            //             <![CDATA['由desktop提供之樣版內容']]></ConfContent>
-                            //     </Configuration>
-                            // </Response>
-
-                            if (response.Response && response.Response.Configuration) {
-                                $(response.Response.Configuration).each(function(index, item) {
-                                    _cs_content_template = item.ConfContent;
-                                    $('#cs_content2_template').html(_cs_content_template);
-                                    $('#cs_content1_template').hide();
-                                    $('#cs_content2_template').show();
-                                });
-                            }
-                        }
-                    }
-                });
             }
-            //#endregion
+          
         };
     })();
     MyViewModel.get_weburl();
