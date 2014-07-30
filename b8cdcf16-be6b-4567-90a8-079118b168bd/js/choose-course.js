@@ -1030,8 +1030,8 @@ jQuery(function () {
                                     body: {
                                         Request: {
                                             Receiver: receivers,
-                                            Subject: 'mail_subject_time',
-                                            TextContent: 'self.configuration[mail_tmpl_name]() + course_html'
+                                            Subject: '1',
+                                            TextContent: '2'
                                         }
                                     },
                                     result: function (response, error, http) {
