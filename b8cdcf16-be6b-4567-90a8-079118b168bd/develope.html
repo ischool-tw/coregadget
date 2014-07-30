@@ -51,7 +51,16 @@
             </h1>
             <div id="myTabContent" class="tab-content">
               <div class="tab-pane fade" id="sa01">
-                  <div class="alert alert-info" data-bind="html: course_opening_info.Item1"></div>
+                  <div class="alert alert-info-course_opening_info" data-bind="html: course_opening_info.Item1"></div>
+
+                  <!--第一(二)階段選課說明文字-->
+                  <div class="alert alert-info">
+                    <div id="cs_content1_template" style="color:black; background-color:white;">
+                    </div>              
+                    <div id="cs_content2_template" style="color:black; background-color:white;">
+                    </div>              
+                  </div>
+
                   <div data-bind="template: { name: 'Item1Tmpl'}" class='memb-list'></div>
                   <table class="table table-bordered table-striped">
                         <thead>
