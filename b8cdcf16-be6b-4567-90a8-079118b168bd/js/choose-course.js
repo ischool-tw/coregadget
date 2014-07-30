@@ -1414,7 +1414,7 @@ _gg.set_error_message = function(select_str, serviceName, error) {
 //#region 設定第一階段選課說明文字
 var set_cs_content1_template = function() {
     _connection.send({
-        service: "GetCSConfiguration",
+        service: "default.GetCSConfiguration",
         body: '<Request><Condition><ConfName>cs_content1_template</ConfName></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
@@ -1445,7 +1445,7 @@ var set_cs_content1_template = function() {
 //#region 設定第二階段選課說明文字
 var set_cs_content2_template = function() {
     _connection.send({
-        service: "GetCSConfiguration",
+        service: "default.GetCSConfiguration",
         body: '<Request><Condition><ConfName>cs_content2_template</ConfName></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
