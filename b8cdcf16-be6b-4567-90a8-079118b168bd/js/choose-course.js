@@ -1026,7 +1026,7 @@ jQuery(function () {
                                 var now = y+"/"+m+"/"+d+" "+h+":"+mi+":"+s;
                                 var mail_subject_time = mail_subject + "<通知時間：" + now + ">";
                                 _gg.connection.send({
-                                    service: "default.GetMandrillApiKey",
+                                    service: "_.GetMandrillApiKey",
                                     body: '',
                                     result: function(response, error, http) {
                                         if (error !== null) {
