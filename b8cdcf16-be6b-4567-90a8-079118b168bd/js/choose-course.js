@@ -1216,6 +1216,13 @@ jQuery(function () {
 
                 if (self.currentData.Item()) {
                     // 在階段內
+                    if (MyViewModel.currentData.Item() === '1') {
+                        $("#cs_content_template").html(self.configuration.cs_content1_template());
+                    };
+                    if (MyViewModel.currentData.Item() === '2') {
+                        $("#cs_content_template").html(self.configuration.cs_content2_template());
+                    };
+                    
                     $('#sa01 button[ac-type=save1]').tooltip({
                         trigger : "manual"
                     });
