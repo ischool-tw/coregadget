@@ -1015,13 +1015,21 @@ jQuery(function () {
                                 }
 
                                 course_html = course_add_html + course_quit_html + '<p>選課結果：</p>' + get_course_html(self.curr_attend());
+                                var n = new Date();
+                                var y = n.getFullYear();
+                                var m = (n.getMonth()+1< 10)?("0" + (n.getMonth() + 1)):(n.getMonth() + 1);
+                                var d = (n.getDate()< 10)?("0" + (n.getDate())):(n.getDate());
+                                var h = (n.getHours() + 8< 10)?("0" + (n.getHours() + 8)):(n.getHours() + 8);
+                                var mi = (n.getMinutes()< 10)?("0" + (n.getMinutes())):(n.getMinutes());
+                                var s = (n.getSeconds()< 10)?("0" + (n.getSeconds())):(n.getSeconds());
 
+                                var now = y+"/"+m+"/"+d+" "+h+":"+mi+":"+s;
                                 _gg.connection.send({
                                     service: "_.SendMail",
                                     body: {
                                         Request: {
                                             Receiver: receivers,
-                                            Subject: mail_subject,
+                                            Subject: mail_subject + "(通知時間：" + now + ")",
                                             HtmlContent: self.configuration[mail_tmpl_name]() + course_html
                                         }
                                     },
@@ -1222,7 +1230,7 @@ jQuery(function () {
                     if (MyViewModel.currentData.Item() === '2') {
                         $("#cs_content_template").html(self.configuration.cs_content2_template());
                     };
-                    
+
                     $('#sa01 button[ac-type=save1]').tooltip({
                         trigger : "manual"
                     });
