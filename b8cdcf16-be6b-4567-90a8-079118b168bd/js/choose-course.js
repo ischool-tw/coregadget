@@ -90,7 +90,7 @@ jQuery(function () {
                 } else if (vm.currentData.Item() === '2') {
                     html_txt = vm.configuration.cs_cancel2_content_template();
                 }
-                html_txt += '<p>退出課程：' + (quit_txt || '無') + '</p><p>加選課程：' + (add_txt || '無') + '</p>';
+                html_txt += '<p><font size="4" color="red">退出課程</font>：' + (quit_txt || '無') + '</p><p><font size="4" color="red">加選課程</font>：' + (add_txt || '無') + '</p>';
 
                 $('#myModal').find('h3').html(title)
                     .end().find('.modal-body').html('<div>' + html_txt + '</div>')
