@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs
+      title="台大生活便利通" popupURL="http://life.ntu.edu.tw/">
+    <Icon>src/icon.png</Icon>
+  </ModulePrefs>
+</Module>

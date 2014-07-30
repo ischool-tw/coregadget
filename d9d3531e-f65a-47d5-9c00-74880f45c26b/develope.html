@@ -1,220 +1,170 @@
 ﻿<!DOCTYPE html>
 <html>
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
-  <script>
-    init({
-      application: "dev.sh_d",
-      paramValues: {}
-    });
-  </script>
-  <link href="css/bootstrap.css" rel="stylesheet" />
-  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
-  <link href="css/mybootstrap.css" rel="stylesheet" />
-  <!--<link href="css/base.less" rel="stylesheet/less" />
-  <link href="css/default.less" rel="stylesheet/less" />-->
-  <link href="css/base.css" rel="stylesheet" />
-  <link href="css/default.css" rel="stylesheet" />
-  <script src="js/jquery.min.js"></script>
-  <!--<script src="js/less.min.js"></script>-->
-  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
-  <script src="js/jquery.ui.touch-punch.min.js"></script>
-  <script src="js/facescroll.js"></script>
-  <script src="js/bootstrap.js"></script>
-  <script src="js/jquery.validate.min.js"></script>
-  <script src="js/jquery.metadata.js"></script>
-  <script src="js/messages_tw.js"></script>
-  <script src="js/teacher.js"></script>
-</head>
-<body>
-  <div id="gadget" class="my-page">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+    <script>
+      init({
+        application: "dev.sh_d",
+        paramValues: {}
+      });
+    </script>
+    <link href="css/bootstrap.css" rel="stylesheet"/>
+    <link href="css/bootstrap-responsive.css" rel="stylesheet"/>
+    <link href="css/mybootstrap.css" rel="stylesheet"/>
+    <link href="css/base.css" rel="stylesheet"/>
+    <link href="css/default.css" rel="stylesheet"/>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/jquery.metadata.js"></script>
+    <script src="js/messages_tw.js"></script>
+    <script src="js/teacher.js"></script>
+    <script src="js/util.js"></script>
+  </head>
+  <body>
+    <div class="my-page" id="gadget">
       <div id="mainMsg"></div>
       <div class="row-fluid">
         <div class="span12">
           <div class="tabbable">
-            <h1>教師
+            <h1>
+              教師
               <a href="#editModal" id="addteacher" class="btn btn-mini pull-right" data-toggle="modal"><i class="icon-plus"></i> 新增</a>
+
             </h1>
-            <div id="myTabContent" class="tab-content">
-                <div class="tab-pane fade active in" id="teacher1">
-                  <div class="container-fluid">
-                      <div class="row-fluid" id="container-main">
-                          <div class="span8">
-                              <div id="model" class="btn-group" data-toggle="buttons-radio">
-                                <button class="btn active" data-type="list" title="切換為列表式"><i class="icon-align-justify"></i></button>
-                                <button class="btn" data-type="img" title="切換為照片式"><i class="icon-th-large"></i></button>
-                              </div>
-                              <div id="namelist">
-                                  <div class="my-scrollbar2">
-                                  </div>
-                              </div>
-                          </div>
-                          <div class="span4">
-                              <div class="my-roster-search-widget">
-                                  <div class="my-entry-search-div">
-                                      <div class="my-entry-search-hint" id="filter-teacher"><i class="icon-search"></i></div>
-                                      <input id="filter-keyword" type="text" class="my-entry-search" value="" autocomplete="off" placeholder="教師姓名...">
-                                  </div>
-                              </div>
-                              <div class="my-widget" data-type="info">
-                                  <div class="my-widget-header">
-                                      <a href="#editModal" class="btn hide" data-toggle="modal"><i class="icon-edit"></i>編輯</a>
-                                      <a href="#delModal" class="btn hide" data-toggle="modal" action-type="del"><i class="icon-trash"></i>刪除</a>
-                                  </div>
-                                  <div class="my-widget-content">
-                                      <div class="row-fluid">
-                                          <div class="span5" id="t-Photo">
-                                          </div>
-                                          <div class="span7">
-                                              <table class="table table-condensed table-striped">
-                                                  <tbody>
-                                                      <tr>
-                                                          <th>姓名</th>
-                                                          <td id="t-TeacherName"></td>
-                                                      </tr>
-                                                      <tr>
-                                                          <th width="40%">暱稱</th>
-                                                          <td width="60%" id="t-Nickname"></td>
-                                                      </tr>
-                                                      <tr>
-                                                          <th>性別</th>
-                                                          <td id="t-Gender"></td>
-                                                      </tr>
-                                                      <tr>
-                                                          <th>&nbsp;</th>
-                                                          <td>&nbsp;</td>
-                                                      </tr>
-                                                  </tbody>
-                                              </table>
-                                          </div>
-                                          <div class="row-fluid">
-                                              <div class="span12">
-                                                  <table class="table table-condensed table-striped">
-                                                      <tbody>
-                                                          <tr>
-                                                              <th width="20%">帳號</th>
-                                                          </tr>
-                                                          <tr>
-                                                              <td id="t-StLoginName"></td>
-                                                          </tr>
-                                                          <tr>
-                                                              <th>電話</th>
-                                                          </tr>
-                                                          <tr>
-                                                              <td id="t-ContactPhone"></td>
-                                                          </tr>
-                                                          <tr>
-                                                              <th>Email</th>
-                                                          </tr>
-                                                          <tr>
-                                                              <td id="t-Email"></td>
-                                                          </tr>
-                                                          <tr>
-                                                              <th>教師代碼</th>
-                                                          </tr>
-                                                          <tr>
-                                                              <td id="t-TeacherCode"></td>
-                                                          </tr>
-                                                      </tbody>
-                                                  </table>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
+            <div class="tab-content" id="myTabContent">
+              <div class="tab-pane in active" id="tab_list">
+                <div class="container-fluid">
+                  <div class="row-fluid">
+                    <div class="my-roster-search-widget">
+                      <div class="my-entry-search-div">
+                        <div class="my-entry-search-hint" id="filter-teacher">
+                          <i class="icon-search"></i>
+                        </div>
+                        <input autocomplete="off" class="my-entry-search" id="filter-keyword" placeholder="教師姓名、帳號、代碼" type="search" value="">
                       </div>
+                    </div>
+                    <div class="my-widget hide" id="editProfile">
+                      <table class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th colspan="2">教師資料
+                              <a class="btn btn-mini pull-right" data-toggle="modal" href="#editModal" js="addteacher">
+                              <i class="icon-plus"></i>
+                              新增</a>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>姓名</td>
+                            <td>
+                              <input type="text" class="input-block-level {required:true}" name="dit-TeacherName" js="edit-TeacherName" placeholder="姓名...">
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>暱稱</td>
+                            <td>
+                              <input type="text" class="input-block-level" name="edit-Nickname" js="edit-Nickname" placeholder="暱稱...">
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>性別</td>
+                            <td>
+                              <select class="input-block-level" name="edit-Gender" js="edit-Gender">
+                                <option value="0">女</option>
+                                <option value="1">男</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>帳號</td>
+                            <td>
+                              <input type="text" class="input-block-level" name="edit-StLoginName" js="edit-StLoginName" placeholder="abc@ischool.com.tw">
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>代碼</td>
+                            <td>
+                              <span js="edit-TeacherCode"></span>
+                              <a href="javascript:void(0);" js="refresh" title="產生代碼"><i class="icon-refresh"></i></a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="2">
+                              <a js="del" class="btn hide" data-toggle="modal" href="#delModal">
+                                <i class="icon-trash"></i>刪除</a>
+                              <a href="javascript:void(0);" class="btn" js="save">儲存
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div id="namelist"></div>
                   </div>
                 </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div class="modal hide" id="editModal">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">×</button>
+          <button class="close" data-dismiss="modal" type="button">×</button>
           <h3>資料修改</h3>
           <div id="errorMessage"></div>
         </div>
         <div class="modal-body">
           <form class="form-horizontal">
             <fieldset>
-                <div class="control-group">
-                    <label class="control-label">
-                      上傳照片<div class="my-trash" id="del_photo" title="清除相片"></div>
-                    </label>
-                    <div class="controls" rel="tooltip" data-placement="bottom" data-original-title="請使用.jpg, .png, .gif格式">
-                        <div id="preview-Photo"><img id="edit-Photo" class="my-photo" src="" photo-base64=""></div>
-                        <div>
-                            <input type='file' id='files' name='files'/>
-                        </div>
-                    </div>
+              <div class="control-group">
+                <label class="control-label">*姓名</label>
+                <div class="controls">
+                  <input class="{required:true} input-xxlarge" js="edit-TeacherName" name="edit-TeacherName" placeholder="姓名..." type="text" maxlength="20">
                 </div>
-                <div class="control-group">
-                    <label class="control-label">*姓名</label>
-                    <div class="controls">
-                        <input type="text" class="input-large {required:true}" name="dit-TeacherName" id="edit-TeacherName" placeholder="姓名...">
-                    </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label">暱稱</label>
+                <div class="controls">
+                  <input class="input-xxlarge" js="edit-Nickname" name="edit-Nickname" placeholder="暱稱..." type="text" maxlength="100">
                 </div>
-                <div class="control-group">
-                    <label class="control-label">暱稱</label>
-                    <div class="controls">
-                        <input type="text" class="input-large" name="edit-Nickname" id="edit-Nickname" placeholder="暱稱...">
-                    </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label">性別</label>
+                <div class="controls">
+                  <select class="span1" js="edit-Gender" name="edit-Gender">
+                    <option value="女">女</option>
+                    <option value="男">男</option>
+                  </select>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">性別</label>
-                    <div class="controls">
-                        <select class="span1" name="edit-Gender" id="edit-Gender">
-                            <option value="0">女</option>
-                            <option value="1">男</option>
-                        </select>
-                    </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label">帳號</label>
+                <div class="controls">
+                  <input class="{email:true} input-xxlarge" js="edit-LinkAccount" name="edit-LinkAccount" placeholder="login@ischool.com.tw" type="email" maxlength="50">
                 </div>
-                <div class="control-group">
-                    <label class="control-label">帳號</label>
-                    <div class="controls">
-                        <input type="text" class="input-large" name="edit-StLoginName" id="edit-StLoginName" placeholder="帳號...">
-                    </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label">代碼</label>
+                <div class="controls">
+                  <div class="my-code">
+                    <span js="edit-TeacherCode"></span>
+                    <a href="javascript:void(0);" title="產生代碼" js="refresh"><i class="icon-refresh"></i></a>
+                    <a href="javascript:void(0);" title="刪除代碼" js="delcode"><i class="icon-trash"></i></a>
+                  </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">電話</label>
-                    <div class="controls">
-                        <input type="text" class="input-large" name="edit-ContactPhone" id="edit-ContactPhone" placeholder="電話...">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">Email</label>
-                    <div class="controls">
-                        <input type="text" class="input-large" name="edit-Email" id="edit-Email" placeholder="Email...">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">教師代碼</label>
-                    <div class="controls">
-                        <input type="text" class="input-large" name="edit-TeacherCode" id="edit-TeacherCode" placeholder="教師代碼...">
-                        <a href="#" action-type="refresh" title="產生代碼"><i class="icon-refresh"></i></a>
-                    </div>
-                </div>
+              </div>
             </fieldset>
           </form>
         </div>
-        <div class="modal-footer"><a href="#" class="btn btn-success" id="save-data" data-loading-text="儲存中...">儲存變更</a>
-          <a href="#" class="btn" data-dismiss="modal">離開</a> </div>
-      </div>
-      <div class="modal hide" id="delModal">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">×</button>
-          <h3>刪除</h3>
-          <div id="errorMessage"></div>
+        <div class="modal-footer">
+          <a href="#" class="btn" data-dismiss="modal">取消</a>
+          <a href="javascript:void(0);" class="btn btn-primary" js="action-save">儲存</a>
+          <a href="javascript:void(0);" class="btn btn-danger" js="action-del">刪除</a>
         </div>
-        <div class="modal-body alert-danger">
-          <p>永久刪除無法回復，您確定要刪除嗎？</p>
-        </div>
-        <div class="modal-footer"><a href="#" class="btn btn-success" id="del-data" data-loading-text="刪除中...">刪除</a>
-          <a href="#" class="btn" data-dismiss="modal">離開</a> </div>
       </div>
-  </div>
-</body>
+    </div>
+    <hr />
+  </body>
 </html>

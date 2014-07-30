@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+    <ModulePrefs title="成輸輸入">
+        <Icon>src/icon.png</Icon>
+    </ModulePrefs>
+    <Content type="html">
+    	<![CDATA[
+			<link type="text/css" rel="stylesheet/less" href="css/styles.less"/>
+			<link type="text/css" rel="stylesheet/less" href="css/scorekit.less"/>
+			<script src="js/less.js"></script>
+
+			<script src="js/jquery.min.js"></script>
+			<script src="js/scorekit.js"></script>
+			<div id="widget">
+				<div class="page-container">
+					<div class="header">
+						<div class="logo"><a href="#"><img src="src/page_logo.png" border="0" /></a></div>
+						<div class="banner"><a href="#"><img src="src/banner.jpg" border="0" /></a></div>
+					</div>
+					<div class="toolbar-div">
+						<button class="i-button save"><span>儲存</span></button>
+						<button class="i-button upload"><span>上傳成績</span></button>
+						<button class="i-button print"><span>列印成績報告單</span></button>
+						<button class="i-button print2"><span>產生空白成績確認單</span></button>
+					</div>
+					<div class="content-div">
+						<div class="score-div">
+							<table class="score-table">
+								<thead>
+									<tr>
+										<td colspan="2" style="text-align: left;"><span class="i-label teacher-list"></span></td>
+										<td colspan="3" style="text-align: right;"><select class="i-dropdownlist course-select"></select></td>
+									</tr>
+									<tr>
+										<th class='i-label' width="200px">系所組別</th>
+										<th class='i-label' width="100px">學號</th>
+										<th class='i-label' width="100px">學生姓名</th>
+										<th class='i-label' width="80px">學期成績</th>
+										<th class='i-label' width="80px">備註</th>
+										<td class='i-label' width="16px" class="scroller"></td>
+									</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+						</div>
+					</div>
+					<div class="footer">
+						<img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/red_logo.jpg">
+						<img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/bot_logo.png"> 
+						<p style="text-align: left;">
+							<font color="#999999">台北市羅斯福路四段一號 臺灣大學管理學院壹號館六樓 EMBA辦公室<br>
+							TEL:886-2-33661010 FAX:886-2-23636073<br>
+							Copyright © 2005 National Taiwan University All Rights Reserved
+							</font>
+						</p>
+					</div>
+				</div>
+				
+				<div class="print-page">
+					<div class="title">臺灣大學____學年度第____學期成績報告單</div>
+					<div class="course-info">
+						<table>
+							<tr>
+								<td><div class="subject-code">課程編號：</div></td>
+								<td><div class="class-name">班次：</div></td>
+								<td><div class="subject-name">科目名稱：</div></td>
+								<td><div class="credit">學分：</div></td>
+							</tr>
+							<tr>
+								<td colspan="3"><div class="course-teacher">任課教師：</div></td>
+								<td><div class="page-index">頁次：</div></td>
+							</tr>
+						</table>
+					</div>
+					<div class="score-detail">
+						<table>
+							<thead>
+								<tr>
+									<th><div style="width:100px">系所<br/>組別</div></th>
+									<th><div style="width:20px">年<br/>級</div></th>
+									<th><div style="width:80px">學號</div></th>
+									<th><div style="width:100px">姓名</div></th>
+									<th><div style="width:40px">學期<br/>成績</div></th>
+									<th><div style="width:40px">備註</div></th>
+									<th><div style="width:100px">系所<br/>組別</div></th>
+									<th><div style="width:20px">年<br/>級</div></th>
+									<th><div style="width:80px">學號</div></th>
+									<th><div style="width:100px">姓名</div></th>
+									<th><div style="width:40px">學期<br/>成績</div></th>
+									<th><div style="width:60px">備註</div></th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+					<div class="teacher-sign">
+						<table>
+							<tr>
+								<td><div class="subject-code">課程編號：</div></td>
+								<td><div class="subject-name">科目名稱：</div></td>
+								<td><div class="class-name">班次：</div></td>
+								<td><div style="width:140px"></div></td>
+							</tr>
+							<tr>
+								<td style="vertical-align:top"><div></div></td>
+								<td style="vertical-align:top">
+									<div></div>
+								</td>
+								<td></td>
+								<td style="vertical-align:top;text-align:right">
+									<div></div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		]]>
+    </Content>
+</Module>

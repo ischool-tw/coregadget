@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="css/bootstrap.css" rel="stylesheet" />
+<link href="css/bootstrap-responsive.css" rel="stylesheet" />
+<link href="css/mybootstrap.css" rel="stylesheet" />
+<link href="css/font-awesome.css" rel="stylesheet" />
+<link href="css/base.css" rel="stylesheet" />
+<link href="css/default.css" rel="stylesheet" />
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/default.js"></script>
+</head>
+<body>
+  <div class="my-page" id="gadget">
+    <div class="row-fluid">
+      <div class="span12">
+        <h1>我的家長</h1>
+        <div class="row-fluid">
+          <div class="span12">
+            <div class="pull-left">
+              家長代碼：<span js="parentCode">ABCDEF</span>
+              <a href="javascript:void(0);" js="refreshP" title="重設代碼">
+                <i class="icon-refresh"></i>
+              </a>
+              <a href="javascript:void(0);" js="removeP" title="清除代碼">
+                <i class="icon-trash my-trash-color"></i>
+              </a>
+            </div>
+            <table class="table table-bordered table-striped clearfix" id="parentDBTable">
+              <thead>
+                <tr>
+                  <th>姓名</th>
+                  <th>稱謂</th>
+                  <th>帳號</th>
+                  <th>編輯</th>
+                  <th>刪除</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>林拔拔</td>
+                  <td>爸爸</td>
+                  <td>papa@ischool.com.tw</td>
+                  <td>
+                    <a href="#editParent" role="button" data-toggle="modal">
+                      <i class="icon-edit"></i>
+                    </a>
+                  </td>
+                  <td>
+                    <a href="#delParent" role="button" data-toggle="modal">
+                      <i class="icon-trash"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>林麻麻</td>
+                  <td>媽媽</td>
+                  <td>mama@ischool.com.tw</td>
+                  <td>
+                    <a href="#editParent" role="button" data-toggle="modal">
+                      <i class="icon-edit"></i>
+                    </a>
+                  </td>
+                  <td>
+                    <a href="#delParent" role="button" data-toggle="modal">
+                      <i class="icon-trash"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr/>
+  <div aria-hidden="true" aria-labelledby="myModalLabel1" class="modal hide fade" id="editParent" role="dialog" tabindex="-1">
+    <div class="modal-header">
+      <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+      <h3>新增家長</h3>
+    </div>
+    <div class="modal-body">
+      <form name="myForm" class="form-horizontal">
+        <fieldset>
+          <div class="control-group">
+            <label class="control-label">*帳號</label>
+            <div class="controls">
+              <input class="{required:true} input-large" name="edit-LinkAccount" placeholder="login@ischool.com.tw" type="text" ng-model="edit-LinkAccount" required>
+              <span class="error" ng-show="myForm.edit-LinkAccount.$error.required">必填</span>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">姓氏</label>
+            <div class="controls">
+              <input class="input-large" maxlength="20" name="edit-LastName" placeholder="姓氏..." type="text" ng-model="edit-LastName">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">名字</label>
+            <div class="controls">
+              <input class="input-large" maxlength="50" name="edit-FirstName" placeholder="名字..." type="text" ng-model="edit-FirstName">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">稱謂</label>
+            <div class="controls">
+              <input class="input-large" maxlength="300" name="edit-RelationName" placeholder="爸爸、媽媽..." type="text" ng-model="edit-RelationName">
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <a aria-hidden="true" class="btn" data-dismiss="modal" href="#">取消</a>
+      <a class="btn btn-primary" href="#">儲存</a>
+    </div>
+  </div>
+  <div aria-hidden="true" aria-labelledby="myModalLabel2" class="modal hide fade" id="delParent" role="dialog" tabindex="-1">
+    <div class="modal-header">
+      <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+      <h3>刪除家長</h3>
+    </div>
+    <div class="modal-body alert-danger">
+      <p>您確定要刪除嗎？</p>
+    </div>
+    <div class="modal-footer">
+      <a aria-hidden="true" class="btn" data-dismiss="modal" href="#">取消</a>
+      <a class="btn btn-danger" href="#">刪除</a>
+    </div>
+  </div>
+</body>
+</html>

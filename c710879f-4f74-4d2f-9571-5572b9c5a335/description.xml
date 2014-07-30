@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs
+      title="平時評量成績登錄">
+    <Icon>src/icon.png</Icon>
+  </ModulePrefs>
+</Module>

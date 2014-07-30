@@ -1,6 +1,14 @@
 var _gg = _gg || {};
 
 jQuery(function () {
+	gadget.onLanguageChanged(function(lang){
+		if(lang=="zh-CN"){
+			$("body").attr("lang","zh-CN");
+		}
+		else{
+			$("body").attr("lang","zh-TW");
+		}
+	});
     _gg.updatePhoto();
     $('#edit-Birthdate').datepicker();
     $('#save-myself').addClass('hide');
@@ -25,25 +33,29 @@ jQuery(function () {
 
     // TODO: 代碼確認
     $('#save-data').bind('click', function() {
+		if($(this).hasClass("disabled"))return;
         $('#errorMessage').html('');
         if ($('#inputCode').val()) {
-            $(this).button("loading");
+            //$(this).button("loading");
+			$(this).attr("multi-lang-text", "送出中").addClass("disabled");
             _gg.setAccount();
         } else {
             $('#inputCode').focus().addClass('error');
-            $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請輸入代碼！\n</div>");
+            $('#errorMessage').html("<div class='alert alert-error' multi-lang-text='請輸入代碼'>\n  <button class='close' data-dismiss='alert'>×</button></div>");
         }
     });
 
     // TODO: 基本資料儲存鈕
     $('#save-myself').click(function() {
+		if($(this).hasClass("disabled"))return;
         $('#mainMsg').html('');
         if ($("#profile form").valid()) {
             // TODO: 驗證通過
-            $(this).button("loading");
+            //$(this).button("loading");
+			$(this).attr("multi-lang-text", "儲存變更中").addClass("disabled");
             _gg.saveMyInfo();
         } else {
-            $('#mainMsg').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  資料驗證失敗，請重新檢查！\n</div>");
+            $('#mainMsg').html("<div class='alert alert-error' multi-lang-text='資料驗證失敗'>\n  <button class='close' data-dismiss='alert'>×</button></div>");
         }
     });
 
@@ -118,13 +130,13 @@ _gg.updatePhoto = function() {
         if (fileSize > SizeLimit) {
             var _filesize = (fileSize / 1024).toPrecision(4);
             var _limit = (SizeLimit / 1024).toPrecision();
-            var msg = "您所選擇的檔案大小為 " + _filesize + " KB\n已超過上傳上限 " + _limit + " KB\n不允許上傳！"
+            var msg = "<span multi-lang-text='圖片過大'>" + _filesize + "</span>"
             $('#mainMsg').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + msg + "\n</div>");
             return;
         }
 
         if (!(file.type == "image/png" || file.type == "image/jpeg")) {
-            $('#mainMsg').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請使用 .jpg 或 .png 格式！\n</div>");
+            $('#mainMsg').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button><span multi-lang-text='圖片格式錯誤'></span></div>");
             return;
         }
 
@@ -176,7 +188,8 @@ _gg.saveMyInfo = function() {
             body: '<Request><Profile><Field>' + request.join('') + '</Field></Profile></Request>',
             result: function (response, error, http) {
                 if (error !== null) {
-                    $("#save-myself").button("reset");
+                    //$("#save-myself").button("reset");
+					$("#save-myself").attr("multi-lang-text", "儲存變更").removeClass("disabled");
                     _gg.set_error_message('#mainMsg', 'SetMyInfo', error);
                 } else {
                     window.parent.appsLoader.reflashApplicationList(); //重新整理選單
@@ -184,8 +197,9 @@ _gg.saveMyInfo = function() {
             }
         });
     } else {
-        $("#save-myself").button("reset");
-        $('#mainMsg').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  姓名為必填值！\n</div>");
+        //$("#save-myself").button("reset");
+		$("#save-myself").attr("multi-lang-text", "儲存變更").removeClass("disabled");
+        $('#mainMsg').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button><span multi-lang-text='姓名為必填值'></span></div>");
     }
 };
 
@@ -201,7 +215,8 @@ _gg.setAccount = function() {
             result: function (response, error, http) {
                 if (error !== null) {
                     _gg.set_error_message('#errorMessage', 'Join.AsTeacher', error);
-                    $('#save-data').button("reset");
+                    //$('#save-data').button("reset");
+					$('#save-data').attr("multi-lang-text", "送出").removeClass("disabled");
                 } else {
                     _gg.connection = gadget.getContract("campuslite.directory.teacher");
 
@@ -236,7 +251,7 @@ _gg.setAccount = function() {
 
 // TODO: 錯誤訊息
 _gg.set_error_message = function(select_str, serviceName, error) {
-    var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
+    var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong multi-lang-text="呼叫服務失敗"></strong>(' + serviceName + ')';
     if (error !== null) {
         if (error.dsaError) {
             if (error.dsaError.status === "504") {

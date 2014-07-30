@@ -17,7 +17,8 @@ _gg.col_Question = {
             { ID: 'A1', GroupName: '本人概況', Name: '血型', Alias: '血型', ControlType: 'radio' },
             { ID: 'A1', GroupName: '本人概況', Name: '宗教', Alias: '宗教', ControlType: 'radio' },
             { ID: 'A1', GroupName: '本人概況', Name: '生理缺陷', Alias: '生理缺陷', ControlType: 'checkbox' },
-            { ID: 'A1', GroupName: '本人概況', Name: '曾患特殊疾病', Alias: '曾患特殊疾病', ControlType: 'checkbox' }
+            { ID: 'A1', GroupName: '本人概況', Name: '曾患特殊疾病', Alias: '曾患特殊疾病', ControlType: 'checkbox' },
+            { ID: 'A1', GroupName: '本人概況', Name: '原住民血統', Alias: '原住民血統', ControlType: 'radio'  }
         ],
         'A2' : [
             { ID: 'A2', GroupName: '家庭狀況', Name: '監護人_姓名', Alias: '姓名' },
@@ -35,7 +36,8 @@ _gg.col_Question = {
             { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_職業', Alias: '職業', TagName: 'Job' },
             { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_工作機構', Alias: '工作機構', TagName: 'Institute' },
             { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_職稱', Alias: '職稱', TagName: 'JobTitle' },
-            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_教育程度', Alias: '教育程度', TagName: 'EduDegree', ControlType: 'select' }
+            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_教育程度', Alias: '教育程度', TagName: 'EduDegree', ControlType: 'select' },
+            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_原國籍', Alias: '原國籍', TagName: 'National' }
         ],
         'A4' :[
             { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_排行', Alias: '排行' },
@@ -104,6 +106,7 @@ _gg.col_Question = {
         ],
         'D1' :[
             { ID: 'D1', GroupName: '自傳', Name: '家中最了解我的人', Alias: '家中最了解我的人' },
+            { ID: 'D1', GroupName: '自傳', Name: '家中最了解我的人_因為', Alias: '家中最了解我的人_因為' },
             { ID: 'D1', GroupName: '自傳', Name: '常指導我做功課的人', Alias: '常指導我做功課的人' },
             { ID: 'D1', GroupName: '自傳', Name: '讀過且印象最深刻的課外書', Alias: '讀過印象最深的課外讀物' },
             { ID: 'D1', GroupName: '自傳', Name: '喜歡的人', Alias: '最喜歡的人是', Title: '最喜歡的人' },
@@ -118,6 +121,24 @@ _gg.col_Question = {
             { ID: 'D1', GroupName: '自傳', Name: '最快樂的回憶', Alias: '最快樂的回憶是', Title: '最快樂的回憶',  ControlType: 'textarea' },
             { ID: 'D1', GroupName: '自傳', Name: '最痛苦的回憶', Alias: '最痛苦的回憶是', Title: '最痛苦的回憶', ControlType: 'textarea' },
             { ID: 'D1', GroupName: '自傳', Name: '最足以描述自己的幾句話', Alias: '最足以描述自己的幾句話是', ControlType: 'textarea' },
+            { ID: 'D1', GroupName: '自傳', Name: '我在家中最怕的人是', Alias: '我在家中最怕的人是' },
+            { ID: 'D1', GroupName: '自傳', Name: '我在家中最怕的人是_因為', Alias: '我在家中最怕的人是_因為' },
+            { ID: 'D1', GroupName: '自傳', Name: '我覺得我的優點是', Alias: '我覺得我的優點是' },
+            { ID: 'D1', GroupName: '自傳', Name: '我覺得我的缺點是', Alias: '我覺得我的缺點是' },
+            { ID: 'D1', GroupName: '自傳', Name: '最喜歡的國小（國中）老師', Alias: '最喜歡的國小（國中）老師' },
+            { ID: 'D1', GroupName: '自傳', Name: '最喜歡的國小（國中）老師__因為', Alias: '最喜歡的國小（國中）老師__因為' },
+            { ID: 'D1', GroupName: '自傳', Name: '小學（國中）老師或同學常說我是', Alias: '小學（國中）老師或同學常說我是' },
+            { ID: 'D1', GroupName: '自傳', Name: '小學（國中）時我曾在班上登任過的職務有', Alias: '小學（國中）時我曾在班上登任過的職務有' },
+            { ID: 'D1', GroupName: '自傳', Name: '我在小學（國中）得過的獎有', Alias: '我在小學（國中）得過的獎有' },
+            { ID: 'D1', GroupName: '自傳', Name: '我覺得我自己的過去最滿意的是', Alias: '我覺得我自己的過去最滿意的是' },
+            { ID: 'D1', GroupName: '自傳', Name: '我排遣休閒時間的方法是', Alias: '我排遣休閒時間的方法是' },
+            { ID: 'D1', GroupName: '自傳', Name: '我最難忘的一件事是', Alias: '我最難忘的一件事是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_一年級_我目前遇到最大的困難是', Alias: '自我的心聲_一年級_我目前遇到最大的困難是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_一年級_我目前最需要的協助是', Alias: '自我的心聲_一年級_我目前最需要的協助是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_二年級_我目前遇到最大的困難是', Alias: '自我的心聲_二年級_我目前遇到最大的困難是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_二年級_我目前最需要的協助是', Alias: '自我的心聲_二年級_我目前最需要的協助是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_三年級_我目前遇到最大的困難是', Alias: '自我的心聲_三年級_我目前遇到最大的困難是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_三年級_我目前最需要的協助是', Alias: '自我的心聲_三年級_我目前最需要的協助是' },
             { ID: 'D1', GroupName: '自傳', Name: '填寫日期', Alias: '填寫日期' }
         ],
         'E1' :[],
@@ -126,8 +147,8 @@ _gg.col_Question = {
 
 _gg.loadCounselData = function () {
     _gg.init = false;
-    // TODO: 預設編輯鈕為 disabled
-    $('a[data-toggle=modal]').addClass("disabled");
+    // 預設編輯鈕為 disabled
+    $('a[data-toggle=modal]').addClass("disabled").prop('disabled', true);
 
     var student = _gg.student;
     _gg.singleRecord = null;
@@ -140,64 +161,54 @@ _gg.loadCounselData = function () {
     _gg.interviewRecord = null;
     _gg.quizData = null;
 
-    // TODO: 家庭、學習、生活的年級按鈕
+    // 家庭、學習、生活的年級按鈕
     var funGradeYear = function () {
-        student.SemsHistory['GS'+student.GradeYear] = _gg.schoolYear; // TODO: 學期對照表不包含現在學期，所以先加入現在學年度、年級
+        if (_gg.contrastGrade.length && _gg.schoolYear) {
+            student.contrastGrade = $.extend(true, [], _gg.contrastGrade);
 
-        // TODO: 覆寫年級對應學年度，處理學生重讀
-        var tmp_alias;
-        $(student.SemsHistory.History).each(function (index, item) {
-            tmp_alias = 'GS' + item.GradeYear;
-            student.SemsHistory[tmp_alias] = student.SemsHistory[tmp_alias] || 0;
-            if (parseInt(item.SchoolYear, 10) > parseInt(student.SemsHistory[tmp_alias], 10)) {
-                student.SemsHistory[tmp_alias] = item.SchoolYear;
+            if (student) {
+                var items = [];
+                $(student.contrastGrade).each(function(index, contrast){
+                    // 設定模組年級對照表的資訊
+                    // 1. 學生年級替換成模組年級
+                    // 2. 因學期對照表不含現在學期，故另外加入
+                    if (contrast.TrueGradeYear === student.GradeYear) {
+                        student.GradeYear = index.toString();
+                        _gg.student.TrueGradeYear = contrast.TrueGradeYear;
+                        contrast.SchoolYear = _gg.schoolYear;
+                    }
+
+                    // 判斷學期對照表有無符合的年級
+                    if (student.SemsHistory && student.SemsHistory.History) {
+                        $(student.SemsHistory.History).each(function(index, item){
+                            // 覆寫年級對應學年度，處理學生重讀
+                            if (contrast.TrueGradeYear === item.GradeYear) {
+                                if (item.SchoolYear)
+                                var schoolYear = (parseInt(item.SchoolYear, 10) || 0);
+                                if (contrast.SchoolYear < schoolYear) {
+                                    contrast.SchoolYear = item.SchoolYear;
+                                }
+                            }
+                        });
+                    }
+
+                    if (contrast.SchoolYear) {
+                        items.push('<button class="btn btn-large" grade="' +index+ '">' +contrast.TrueGradeYear+ '年級(' +contrast.SchoolYear+ ')</button>');
+                    }
+                });
+
+                $(".my-schoolyear-semester-widget").html(items.join(''));
+                $(".my-schoolyear-semester-widget button:last").trigger('click');
             }
-        });
-        var tmp_html = '', tmp_school_year = 0, tmp_chinese_grade = '';
-        for (var i=1; i<=3; i++) {
-            if (student.SemsHistory['GS'+i]) {
-                tmp_school_year = student.SemsHistory['GS'+i];
-                switch (i) {
-                    case 1:
-                        tmp_chinese_grade = "一";
-                        break;
-                    case 2:
-                        tmp_chinese_grade = "二";
-                        break;
-                    case 3:
-                        tmp_chinese_grade = "三";
-                        break;
-                }
-                _gg.grade = i + '';
-                _gg.chineseGrade = tmp_chinese_grade;
 
-                tmp_html += '<button class="btn btn-large" grade="' +i+ '" chinese-grade="' +tmp_chinese_grade+ '">' +tmp_chinese_grade+ '年級(' +tmp_school_year+ ')</button>';
+            // 關閉三年級的生活感想
+            if (_gg.grade === (_gg.student.contrastGrade.length-1).toString()) {
+                $('#B5').hide();
+            } else {
+                $('#B5').show();
             }
-        }
-
-        $(".my-schoolyear-semester-widget").html(tmp_html);
-        $(".my-schoolyear-semester-widget button:last").addClass("active");
-
-        // TODO: 關閉三年級的生活感想
-        if (_gg.grade === "3") {
-            $('#B5').hide();
-        } else {
-            $('#B5').show();
         }
     }
-
-    // TODO: 錯誤訊息
-    var set_error_message = function(serviceName, error) {
-        if (error.dsaError.status === "504") {
-            if (error.dsaError.message === "501") {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>很抱歉，您無讀取資料權限！</strong>\n</div>");
-            } else {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(" + serviceName + ")\n</div>");
-            }
-        } else {
-            $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(" + serviceName + ")\n</div>");
-        }
-    };
 
     var funQuestion = function () {
         var set_Question_value = function () {
@@ -235,21 +246,21 @@ _gg.loadCounselData = function () {
         if (_gg.singleRecord &&  _gg.semesterData && _gg.multipleRecord &&
             _gg.yearlyData && _gg.relative && _gg.sibling && _gg.priorityData && _gg.interviewRecord && _gg.quizData) {
 
-            if (_gg.loadCounselData.Run === "yes") {
+            if (_gg.loadDataReady) {
                 set_Question_value();
                 funGradeYear();
                 _gg.init = true;
                 _gg.SetData("All");
             } else {
-                _gg.loadCounselData.Run = "yes";
+                _gg.loadDataReady = true;
 
-                // TODO: 取得目前學年度
+                // 取得目前學年度
                 _gg.connection.send({
                     service: "_.GetCurrentSemester",
                     body: '',
                     result: function (response, error, http) {
                         if (error !== null) {
-                            set_error_message("GetCurrentSemester", error);
+                            _gg.set_error_message('#mainMsg', 'GetCurrentSemester', error);
                         } else {
                             $(response.Result.SystemConfig).each(function (index, item) {
                                 _gg.schoolYear = item.DefaultSchoolYear;
@@ -259,16 +270,38 @@ _gg.loadCounselData = function () {
                     }
                 });
 
-                // TODO: 取得題目資訊
+                // 學校的全部年級
+                _gg.connection.send({
+                    service: "_.GetSchoolAllGrade",
+                    body: '',
+                    result: function (response, error, http) {
+                        if (error !== null) {
+                            $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗</strong>(GetSchoolAllGrade)\n</div>");
+                        } else {
+                            _gg.contrastGrade[0]={};
+                            if (response.Response && response.Response.Grade) {
+                                $(response.Response.Grade).each(function (index, item) {
+                                    _gg.contrastGrade[index+1] = {
+                                        TrueGradeYear: item.GradeYear,
+                                        SchoolYear: 0
+                                    };
+                                });
+                            }
+                            funGradeYear();
+                        }
+                    }
+                });
+
+                // 取得題目資訊
                 _gg.connection.send({
                     service: "_.GetQuestionsData",
                     body: '',
                     result: function (response, error, http) {
                         if (error !== null) {
-                            set_error_message("GetQuestionsData", error);
+                            _gg.set_error_message('#mainMsg', 'GetQuestionsData', error);
                         } else {
                             $(response.Response.QuestionsData).each(function (index, item) {
-                                // TODO: 生活感想題目由學校自行設定問題內容
+                                // 生活感想題目由學校自行設定問題內容
                                 // if (item.GroupName === '生活感想') {
                                 //     tmp_data = {
                                 //         ID             : 'B5',
@@ -300,13 +333,13 @@ _gg.loadCounselData = function () {
         }
     };
 
-    // TODO: 取得單一紀錄
+    // 取得單一紀錄
     _gg.connection.send({
         service: "_.GetSingleRecord",
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetSingleRecord", error);
+                _gg.set_error_message('#mainMsg', 'GetSingleRecord', error);
             } else {
                 if (!_gg.singleRecord) { _gg.singleRecord = {}; }
                 $(response.Response.SingleRecord).each(function (index, item) {
@@ -320,13 +353,13 @@ _gg.loadCounselData = function () {
         }
     });
 
-    // TODO: 取得每學期資料
+    // 取得每學期資料
     _gg.connection.send({
         service: "_.GetSemesterData",
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetSemesterData", error);
+                _gg.set_error_message('#mainMsg', 'GetSemesterData', error);
             } else {
                 if (!_gg.semesterData) { _gg.semesterData = {}; }
                 $(response.Response.SemesterData).each(function (index, item) {
@@ -340,13 +373,13 @@ _gg.loadCounselData = function () {
         }
     });
 
-    // TODO: 取得複選紀錄
+    // 取得複選紀錄
     _gg.connection.send({
         service: "_.GetMultipleRecord",
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetMultipleRecord", error);
+                _gg.set_error_message('#mainMsg', 'GetMultipleRecord', error);
             } else {
                 if (!_gg.multipleRecord) { _gg.multipleRecord = {}; }
                 $(response.Response.MultipleRecord).each(function (index, item) {
@@ -360,13 +393,13 @@ _gg.loadCounselData = function () {
         }
     });
 
-    // TODO: 取得每年資料
+    // 取得每年資料
     _gg.connection.send({
         service: "_.GetYearlyData",
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetYearlyData", error);
+                _gg.set_error_message('#mainMsg', 'GetYearlyData', error);
             } else {
                 if (!_gg.yearlyData) { _gg.yearlyData = {}; }
                 $(response.Response.YearlyData).each(function (index, item) {
@@ -380,13 +413,13 @@ _gg.loadCounselData = function () {
         }
     });
 
-    // TODO: 取得親屬資訊
+    // 取得親屬資訊
     _gg.connection.send({
         service: "_.GetRelative",
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetRelative", error);
+                _gg.set_error_message('#mainMsg', 'GetRelative', error);
             } else {
                 if (!_gg.relative) { _gg.relative = []; }
                 $(response.Response.Relative).each(function (index, item) {
@@ -397,13 +430,13 @@ _gg.loadCounselData = function () {
         }
     });
 
-    // TODO: 取得兄弟姐妹資訊
+    // 取得兄弟姐妹資訊
     _gg.connection.send({
         service: "_.GetSibling",
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetSibling", error);
+                _gg.set_error_message('#mainMsg', 'GetSibling', error);
             } else {
                 if (!_gg.sibling) { _gg.sibling = []; }
                 $(response.Response.Sibling).each(function (index, item) {
@@ -414,13 +447,13 @@ _gg.loadCounselData = function () {
         }
     });
 
-    // TODO: 取得優先順序資訊
+    // 取得優先順序資訊
     _gg.connection.send({
         service: "_.GetPriorityData",
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetPriorityData", error);
+                _gg.set_error_message('#mainMsg', 'GetPriorityData', error);
             } else {
                 if (!_gg.priorityData) { _gg.priorityData = {}; }
                 $(response.Response.PriorityData).each(function (index, item) {
@@ -434,13 +467,13 @@ _gg.loadCounselData = function () {
         }
     });
 
-    // TODO: 取得晤談紀錄
+    // 取得晤談紀錄
     _gg.connection.send({
         service: "_.GetInterviewRecord",
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetInterviewRecord", error);
+                _gg.set_error_message('#mainMsg', 'GetInterviewRecord', error);
             } else {
                 if (!_gg.interviewRecord) { _gg.interviewRecord = []; }
                 $(response.Result.Record).each(function (index, item) {
@@ -451,13 +484,13 @@ _gg.loadCounselData = function () {
         }
     });
 
-    // TODO: 取得心理測驗
+    // 取得心理測驗
     _gg.connection.send({
         service: "_.GetStudentQuizData",
         body: '<Request><Condition><StudentID>' + student.StudentID + '</StudentID></Condition></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                set_error_message("GetStudentQuizData", error);
+                _gg.set_error_message('#mainMsg', 'GetStudentQuizData', error);
             } else {
                 if (!_gg.quizData) { _gg.quizData = []; }
                 $(response.Response.StudentQuizData).each(function (index, item) {

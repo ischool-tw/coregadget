@@ -1,0 +1,746 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/defalut.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/default.js"></script>
+  <script src="js/jquery.flexslider.js"></script>
+  <!-- Hook up the FlexSlider -->
+    <script>
+    jQuery(function () {
+      $('.flexslider').flexslider();
+      $('a').popover({
+        'trigger'  :'manual',
+        'placement':'right'
+      });
+
+
+      $('a').click(function(){
+        $(this).popover('show');
+      });
+
+      $('#myTab').click(function(){
+        $(this).find('li.active').removeClass('active');
+      })
+      .find('a').click(function(){
+        $('#tabName').html($(this).html());
+      });
+
+      $('body').on('click', 'div.popover button.close, button[action-type=send]',function(){
+        $(this).closest('div.popover').hide();
+      });
+	  
+	  $(document).ready(function () {
+      $('div[rel=tooltip]').tooltip("show").tooltip("toggle");
+	  $('button[rel=tooltip]').tooltip("show").tooltip("toggle");
+    });
+    });
+  </script>
+</head>
+<body>
+  <div id="gadget" class="my-page">
+      <div class="row-fluid">
+        <div class="input-block-level">
+          <div class="tabbable">
+            <h1><a href="#" class="dropdown-toggle pull-left" data-toggle="dropdown" id="nav_appcurrent" style="margin-right: 5px;"><span id="tabName">教師管理</span> <b class="caret"></b></a>
+           	    <ul id="myTab" class="dropdown-menu">
+              		<li class="active"><a href="#profile" data-toggle="tab">教師管理</a></li>
+                  	<li><a href="#viewmaterial" data-toggle="tab">所有教案</a></li>
+                </ul>
+                <ul class="nav nav-tabs my-tab">
+                	<li class="active"><a href="#profile" data-toggle="tab">個人資料</a></li>
+                    <li><a href="#pfe" data-toggle="tab">進修及研習課程</a></li>
+                    <li><a href="#memoir" data-toggle="tab">自傳</a></li>
+                    <li><a href="#concept" data-toggle="tab">教育理念</a></li>
+                    <li><a href="#material" data-toggle="tab">教案</a></li>
+                </ul>
+            </h1>
+            <div id="myTabContent" class="tab-content">
+            	<div class="tab-pane fade active in" id="profile">
+                    <div class="row-fluid">
+                    	<div class="span3">
+                        	<table class="table table-bordered my-table">
+                            	<thead>
+                                  <tr>
+                                    <th>個人照片</th>
+                                  </tr>
+                              </thead>
+                                 <tbody>
+                                      <tr>
+                                        <td class="my-tablephoto">
+                                        	<div class="my-proimg"><img src="css/images/nophoto.png" /></div>
+                                        </td>
+                                      </tr>
+                              </tbody>
+                            	<thead>
+                                  <tr>
+                                    <th>身份證號（非必填）</th>
+                                  </tr>
+                              </thead>
+                                 <tbody>
+                                      <tr>
+                                        <td><input class="input-block-level" type="text" placeholder="" /></td>
+                                      </tr>
+                              </tbody>
+                                  <thead>
+                                      <tr>
+                                        <th>生日</th>
+                                      </tr>
+                                 </thead>
+                                 <tbody>
+                                      <tr>
+                                        <td>
+                                            <input class="input-block-level" type="date" placeholder="MM/DD/YYYY">
+                                        </td>
+                                      </tr>
+                              </tbody>
+                                  <thead>
+                                      <tr>
+                                        <th>聯絡電話</th>
+                                      </tr>
+                                 </thead>
+                                 <tbody>
+                                      <tr>
+                                        <td>
+                                            <input class="input-block-level" type="text" placeholder="" />
+                                        </td>
+                                      </tr>
+                              </tbody>
+                              <thead>
+                                      <tr>
+                                        <th>手機</th>
+                                      </tr>
+                                 </thead>
+                                 <tbody>
+                                      <tr>
+                                        <td>
+                                            <input class="input-block-level" type="text" placeholder="" />
+                                        </td>
+                                      </tr>
+                              </tbody>
+                                  <thead>
+                                      <tr>
+                                        <th>血型</th>
+                                      </tr>
+                                 </thead>
+                                 <tbody>
+                                      <tr>
+                                        <td>
+                                            <select name="" class="input-block-level">
+                                              <option>A</option>
+                                              <option>B</option>
+                                              <option>AB</option>
+                                              <option>O</option>
+                                            </select>
+                                        </td>
+                                      </tr>
+                              </tbody>
+                                  <thead>
+                                      <tr>
+                                        <th>群科</th>
+                                      </tr>
+                                 </thead>
+                                 <tbody>
+                                      <tr>
+                                        <td>
+                                            <select name="" class="input-block-level">
+                                              <option></option>
+                                            </select>
+                                        </td>
+                                      </tr>
+                              </tbody>
+                                  <thead>
+                                      <tr>
+                                        <th>婚姻狀況</th>
+                                      </tr>
+                                 </thead>
+                                 <tbody>
+                                      <tr>
+                                        <td>
+                                            <select name="" class="input-block-level">
+                                              <option>已婚</option>
+                                              <option>未婚</option>
+                                            </select>
+                                        </td>
+                                      </tr>
+                              </tbody>
+                            </table>
+                        </div>
+                    	<div class="span9">
+                        	<table class="table table-bordered my-table">
+                            <thead>
+                              <tr>
+                                <th colspan="6">教師證 <a href="#" class="btn btn-mini btn-inverse pull-right"><i class="icon-plus icon-white"></i></a></th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                <th nowrap="nowrap">證照號碼</th>
+                                <td><input type="text" placeholder="" /></td>
+                                <th nowrap="nowrap">科別</th>
+                                <td colspan="3">
+                                <div class="input-append">
+                                  <input class="input-large" type="text">
+                                  <button type="button" class="btn" data-dismiss="alert">&times;</button>
+                                </div></td>
+                              </tr>
+                              </tbody>
+                              <thead>
+                              <tr>
+                                <th colspan="6">學歷 <a href="#" class="btn btn-mini btn-inverse pull-right"><i class="icon-plus icon-white"></i></a></th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                <td colspan="6">
+                                <div class="input-append">
+                                  <input class="input-xxlarge" type="text">
+                                  <button type="button" class="btn" data-dismiss="alert">&times;</button>
+                                </div></td>
+                              </tr>
+                              </tbody>
+                              <thead>
+                              <tr>
+                                <th colspan="6">經歷 <a href="#" class="btn btn-mini btn-inverse pull-right"><i class="icon-plus icon-white"></i></a></th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                <td>校名</td>
+                                <td><input type="text" placeholder="" /></td>
+                                <td>職稱</td>
+                                <td><input class="input-small" type="text" placeholder="" /></td>
+                                <td nowrap="nowrap">年資</td>
+                                <td>
+                                <div class="input-append">
+                                  <input class="input-mini" type="text">
+                                  <button type="button" class="btn" data-dismiss="alert">&times;</button>
+                                </div></td>
+                              </tr>
+                              </tbody>
+                              <thead>
+                              <tr>
+                                <th colspan="6">專長證照 <a href="#" class="btn btn-mini btn-inverse pull-right"><i class="icon-plus icon-white"></i></a></th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                <td colspan="6">
+                                <div class="input-append">
+                                  <input class="input-xxlarge" type="text">
+                                  <button type="button" class="btn" data-dismiss="alert">&times;</button>
+                                </div>
+                                </td>
+                              </tr>
+                              </tbody>
+                              <thead>
+                              <tr>
+                                <th colspan="6">獲獎經歷 <a href="#" class="btn btn-mini btn-inverse pull-right"><i class="icon-plus icon-white"></i></a></th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                <td colspan="6">
+                                <div class="input-append">
+                                  <input class="input-xxlarge" type="text">
+                                  <button type="button" class="btn" data-dismiss="alert">&times;</button>
+                                </div></td>
+                              </tr>
+                              </tbody>
+                            </table>
+                        </div>
+                    </div>
+                            <div class="my-sure">
+                            <input type="button" class="btn btn-success" id="save-concept" autocomplete="off" data-loading-text="儲存中..." value="儲存變更">
+                            <input type="button" class="btn btn-inverse" value="列印">
+                            <input type="button" class="btn" id="cancel-concept" value="取消">
+                            </div>
+              	</div>
+                <div class="tab-pane fade" id="memoir">
+                	<div class="row-fluid">
+                    	<div class="input-block-level">
+                        	<textarea class="input-block-level" placeholder="請填寫自傳..."></textarea>
+                            <div class="my-sure">
+                            <input type="button" class="btn btn-success" id="save-memoir" autocomplete="off" data-loading-text="儲存中..." value="儲存變更">
+                            <input type="button" class="btn btn-inverse" value="列印">
+                            <input type="button" class="btn" id="cancel-memoir" value="取消">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="concept">
+                	<div class="row-fluid">
+                    	<div class="input-block-level">
+                        	<form class="well">
+                              <fieldset>
+                                <legend>教育理念</legend>
+                                <textarea class="input-block-level" rows="5" placeholder="請填寫教育理念..."></textarea>
+                              </fieldset>
+                            </form>
+                            <form class="well">
+                              <fieldset>
+                                <legend>座右銘</legend>
+                                <textarea class="input-block-level" rows="5" placeholder="請填寫座右銘..."></textarea>
+                              </fieldset>
+                            </form>
+                            <form class="well">
+                              <fieldset>
+                                <legend>自我期許/未來展望</legend>
+                                <textarea class="input-block-level" rows="5" placeholder="請填寫自我期許/未來展望..."></textarea>
+                              </fieldset>
+                            </form>
+                            <div class="my-sure">
+                            <input type="button" class="btn btn-success" id="save-concept" autocomplete="off" data-loading-text="儲存中..." value="儲存變更">
+                            <input type="button" class="btn btn-inverse" value="列印">
+                            <input type="button" class="btn" id="cancel-concept" value="取消">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="material">
+                	<div class="row-fluid">
+                    	<div class="input-block-level">
+                        	<p class="pull-left">
+                                <select name="select" id="select">
+                                	<option>全部</option>
+                                </select>
+                            </p>
+                        	<p class="pull-right"><a href="#addmaterial" class="btn btn-primary" data-toggle="tab"><i class="icon-pencil icon-white"></i> 新增教材</a></p>
+                        	<table class="table table-bordered my-table table-striped table-hover">
+                            	<thead>
+                                	<tr>
+                                    	<th width="10%">日期</th>
+                                        <th>主題</th>
+                                        <th width="10%">學習單</th>
+                                        <th width="10%">附件數</th>
+                                        <th width="10%">點閱</th>
+                                        <th width="5%">公開</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                	<tr>
+                                    	<td>2013/03/21</td>
+                                        <td><a href="#fixmaterial" data-toggle="tab">基礎數學（一）</a></td>
+                                        <td>3</td>
+                                        <td>3</td>
+                                        <td>158</td>
+                                        <td><i class="icon-ok"></i></td>
+                                    </tr>
+                                	<tr>
+                                    	<td>2013/03/21</td>
+                                        <td><a href="#fixmaterial" data-toggle="tab">基礎數學（二）</a></td>
+                                        <td>2</td>
+                                        <td>5</td>
+                                        <td>158</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pfe">
+                	<div class="row-fluid">
+                    	<div class="input-block-level">
+                        	<a href="#" class="btn btn-mini btn-inverse pull-right" style="margin-bottom:10px;"><i class="icon-plus icon-white"></i></a>
+                        	<table class="table table-bordered my-table2">
+                            	<tr>
+                            	  <th colspan="2"><button type="button" class="btn btn-mini pull-right" data-dismiss="alert">&times;</button></th>
+                           	  </tr>
+                            	<tr>
+                                	<th>日期（必填）</th>
+                                    <td><input type="text" placeholder="" /></td>
+                                </tr>
+                                <tr>
+                                	<th>研習名稱（必填）</th>
+                                    <td><input type="text" placeholder="" class="input-block-level" /></td>
+                                </tr>
+                                <tr>
+                                	<th>心得</th>
+                                    <td><textarea rows="5" class="input-block-level"></textarea></td>
+                                </tr>
+                                <tr>
+                                  <th>附件上傳 <a href="#" class="btn btn-mini btn-inverse"><i class="icon-plus icon-white"></i></a></th>
+                                  <td><input name="" type="file" /></td>
+                                </tr>
+                            </table>
+                            <div class="my-sure">
+                            <input type="button" class="btn btn-success" id="save-concept" autocomplete="off" data-loading-text="儲存中..." value="儲存變更">
+                            <input type="button" class="btn btn-inverse" value="列印">
+                            <input type="button" class="btn" id="cancel-concept" value="取消">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="viewmaterial">
+                	<div class="row-fluid">
+                    	<div class="input-block-level">
+                        	<p class="pull-left">
+                                <select name="select" id="select">
+                                	<option>全部</option>
+                                </select>
+                            </p>
+                        	<table class="table table-bordered my-table table-hover">
+                            	<thead>
+                                	<tr>
+                                    	<th width="10%">日期</th>
+                                        <th>主題</th>
+                                        <th width="10%">學習單</th>
+                                        <th width="10%">附件數</th>
+                                        <th width="10%">設計者</th>
+                                        <th width="10%">點閱</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                	<tr>
+                                    	<td>2013/03/21</td>
+                                        <td><a href="#materialpage" data-toggle="tab">基礎數學（一）</a></td>
+                                        <td>3</td>
+                                        <td>3</td>
+                                        <td>王大華</td>
+                                        <td>158</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="addmaterial">
+                	<div class="row-fluid">
+                    	<div class="input-block-level">
+                        	<table class="table table-bordered my-table2">
+                            	<tr>
+                                	<th>創建日期（必填）</th>
+                                    <td><input type="text" placeholder="" /></td>
+                                    <th>公開教材</th>
+                                    <td>
+                                    	<label class="checkbox">
+                                          <input type="checkbox" id="inlineCheckbox1" value="option1"> 公開
+                                        </label>
+                                    </td>
+                                </tr>
+                            </table>
+                        	<table class="table table-bordered my-table2">
+                            	<tr>
+                            	  <th>科目（必填）</th>
+                            	  <td>
+                            	    <select name="select" id="select">
+                          	      </select></td>
+                            	  <th>&nbsp;</th>
+                            	  <td colspan="2">&nbsp;</td>
+                          	  </tr>
+                            	<tr>
+                                	<th>主題名稱（必填）</th>
+                                    <td><input class="input-block-level" type="text" placeholder="" /></td>
+                                    <th>教學時間</th>
+                                    <td colspan="2"><input class="input-block-level" type="text" placeholder="" /></td>
+                                </tr>
+                                <tr>
+                                	<th>學科領域</th>
+                                    <td><input class="input-block-level" type="text" placeholder="" /></td>
+                                    <th>教學對象</th>
+                                    <td colspan="2"><input class="input-block-level" type="text" placeholder="" /></td>
+                                </tr>
+                                <tr>
+                                	<th>設計理念</th>
+                                    <td><textarea class="input-block-level" rows="5"></textarea></td>
+                                    <th>教學人數</th>
+                                    <td colspan="2"><input class="input-block-level" type="text" placeholder="" /></td>
+                                </tr>
+                                <tr>
+                                  <th>教材架構</th>
+                                  <td colspan="4"><textarea name="textarea" class="input-block-level" rows="3"></textarea></td>
+                                </tr>
+                                <tr>
+                                  <th>教學準備</th>
+                                  <td colspan="4"><textarea name="textarea2" class="input-block-level" rows="3"></textarea></td>
+                                </tr>
+                                <tr>
+                                  <th rowspan="6">教學目標</th>
+                                  <th colspan="4">認知</th>
+                                </tr>
+                                <tr>
+                                  <td colspan="4"><textarea name="textarea7" class="input-block-level" rows="3"></textarea></td>
+                                </tr>
+                                <tr>
+                                  <th colspan="4">情意</th>
+                                </tr>
+                                <tr>
+                                  <td colspan="4"><textarea name="textarea6" class="input-block-level" rows="3"></textarea></td>
+                                </tr>
+                                <tr>
+                                  <th colspan="4">技能</th>
+                                </tr>
+                                <tr>
+                                  <td colspan="4"><textarea name="textarea3" class="input-block-level" rows="3"></textarea></td>
+                                </tr>
+                                <tr>
+                                  <th colspan="5">教學內容 <a href="#" class="btn btn-mini btn-inverse"><i class="icon-plus icon-white"></i></a></th>
+                                </tr>
+                                <tr>
+                                  <th>單元目標</th>
+                                  <th>教學活動</th>
+                                  <th>時間</th>
+                                  <th>教具</th>
+                                  <th>&nbsp;</th>
+                                </tr>
+                                <tr>
+                                  <td><input class="input-block-level" type="text" placeholder="" /></td>
+                                  <td><textarea name="textarea5" class="input-block-level"></textarea></td>
+                                  <td><input class="input-block-level" type="text" placeholder="" /></td>
+                                  <td><textarea name="textarea5" class="input-block-level"></textarea></td>
+                                  <td><button type="button" class="btn btn-mini pull-right" data-dismiss="alert">&times;</button></td>
+                                </tr>
+                                <tr>
+                                  <th>教學評量</th>
+                                  <td colspan="4"><input class="input-block-level" type="text" placeholder="" /></td>
+                                </tr>
+                                <tr>
+                                  <th>教學參考資源</th>
+                                  <td colspan="4"><input class="input-block-level" type="text" placeholder="" /></td>
+                                </tr>
+                                <tr>
+                                  <th>學習單 <a href="#" class="btn btn-mini btn-inverse"><i class="icon-plus icon-white"></i></a></th>
+                                  <td colspan="4"><input name="input" type="file" /></td>
+                                </tr>
+                                <tr>
+                                  <th>附件上傳 <a href="#" class="btn btn-mini btn-inverse"><i class="icon-plus icon-white"></i></a></th>
+                                  <td colspan="4"><input name="" type="file" /></td>
+                                </tr>
+                            </table>
+                            <div class="my-sure">
+                            <input type="button" class="btn btn-success" id="save-concept" autocomplete="off" data-loading-text="儲存中..." value="儲存變更">
+                            <input type="button" class="btn" id="cancel-concept" value="取消">
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="fixmaterial">
+                	<div class="row-fluid">
+                    	<div class="input-block-level">
+                        	<table class="table table-bordered my-table2">
+                            	<tr>
+                                	<th width="10%">創建日期</th>
+                                    <td width="60%">2013/03/12</td>
+                                    <th width="10%">公開教材</th>
+                                    <td width="20%">
+                                    	非公開
+                                    </td>
+                                </tr>
+                            </table>
+                        	<table class="table table-bordered my-table2">
+                            	<tr>
+                            	  <th>科目</th>
+                            	  <td>數學</td>
+                            	  <th>&nbsp;</th>
+                            	  <td>&nbsp;</td>
+                          	  </tr>
+                            	<tr>
+                                	<th>主題名稱</th>
+                                    <td>基礎數學（二）</td>
+                                    <th>教學時間</th>
+                                    <td>3小時</td>
+                                </tr>
+                                <tr>
+                                	<th>學科領域</th>
+                                    <td>數學</td>
+                                    <th>教學對象</th>
+                                    <td>高一</td>
+                                </tr>
+                                <tr>
+                                	<th>設計理念</th>
+                                    <td>扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉</td>
+                                    <th>教學人數</th>
+                                    <td>50</td>
+                                </tr>
+                                <tr>
+                                  <th>教材架構</th>
+                                  <td colspan="3">扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉</td>
+                                </tr>
+                                <tr>
+                                  <th>教學準備</th>
+                                  <td colspan="3">扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉</td>
+                                </tr>
+                                <tr>
+                                  <th rowspan="6">教學目標</th>
+                                  <th colspan="3">認知</th>
+                                </tr>
+                                <tr>
+                                  <td colspan="3">扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉</td>
+                                </tr>
+                                <tr>
+                                  <th colspan="3">情意</th>
+                                </tr>
+                                <tr>
+                                  <td colspan="3">扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉</td>
+                                </tr>
+                                <tr>
+                                  <th colspan="3">技能</th>
+                                </tr>
+                                <tr>
+                                  <td colspan="3">扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉</td>
+                                </tr>
+                                <tr>
+                                  <th colspan="4">教學內容</th>
+                                </tr>
+                                <tr>
+                                  <th>單元目標</th>
+                                  <th>教學活動</th>
+                                  <th>時間</th>
+                                  <th>教具</th>
+                                </tr>
+                                <tr>
+                                  <td>數學復習</td>
+                                  <td>上課</td>
+                                  <td>50分鐘</td>
+                                  <td>粉筆</td>
+                                </tr>
+                                <tr>
+                                  <th>教學評量</th>
+                                  <td colspan="3">扒拉扒拉扒拉扒拉扒拉</td>
+                                </tr>
+                                <tr>
+                                  <th>教學參考資源</th>
+                                  <td colspan="3">扒拉扒拉扒拉扒拉扒拉</td>
+                                </tr>
+                                <tr>
+                                  <th>學習單</th>
+                                  <td colspan="3"><a href="#" target="_blank">基礎數學.doc</a></td>
+                                </tr>
+                                <tr>
+                                  <th>附件上傳</th>
+                                  <td colspan="3"><a href="#" target="_blank">基礎數學.doc</a></td>
+                                </tr>
+                            </table>
+                            <div class="my-sure">
+                            <input type="button" class="btn btn-success" value="編輯">
+                            <input type="button" class="btn btn-inverse" value="列印">
+                            <input type="button" class="btn btn-danger" value="刪除">
+                            <input type="button" class="btn" id="cancel-concept" value="取消">
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="materialpage">
+                	<div class="row-fluid">
+                    	<div class="input-block-level">
+                        	<table class="table table-bordered my-table2">
+                            	<tr>
+                            	  <th>科目</th>
+                            	  <td>數學</td>
+                            	  <th>&nbsp;</th>
+                            	  <td>&nbsp;</td>
+                          	  </tr>
+                            	<tr>
+                                	<th>主題名稱</th>
+                                    <td>基礎數學（二）</td>
+                                    <th>教學時間</th>
+                                    <td>3小時</td>
+                                </tr>
+                                <tr>
+                                	<th>學科領域</th>
+                                    <td>數學</td>
+                                    <th>教學對象</th>
+                                    <td>高一</td>
+                                </tr>
+                                <tr>
+                                	<th>設計理念</th>
+                                    <td>扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉</td>
+                                    <th>教學人數</th>
+                                    <td>50</td>
+                                </tr>
+                                <tr>
+                                  <th>教材架構</th>
+                                  <td colspan="3">扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉</td>
+                                </tr>
+                                <tr>
+                                  <th>教學準備</th>
+                                  <td colspan="3">扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉</td>
+                                </tr>
+                                <tr>
+                                  <th rowspan="6">教學目標</th>
+                                  <th colspan="3">認知</th>
+                                </tr>
+                                <tr>
+                                  <td colspan="3">扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉</td>
+                                </tr>
+                                <tr>
+                                  <th colspan="3">情意</th>
+                                </tr>
+                                <tr>
+                                  <td colspan="3">扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉</td>
+                                </tr>
+                                <tr>
+                                  <th colspan="3">技能</th>
+                                </tr>
+                                <tr>
+                                  <td colspan="3">扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉扒拉</td>
+                                </tr>
+                                <tr>
+                                  <th colspan="4">教學內容</th>
+                                </tr>
+                                <tr>
+                                  <th>單元目標</th>
+                                  <th>教學活動</th>
+                                  <th>時間</th>
+                                  <th>教具</th>
+                                </tr>
+                                <tr>
+                                  <td>數學復習</td>
+                                  <td>上課</td>
+                                  <td>50分鐘</td>
+                                  <td>粉筆</td>
+                                </tr>
+                                <tr>
+                                  <th>教學評量</th>
+                                  <td colspan="3">扒拉扒拉扒拉扒拉扒拉</td>
+                                </tr>
+                                <tr>
+                                  <th>教學參考資源</th>
+                                  <td colspan="3">扒拉扒拉扒拉扒拉扒拉</td>
+                                </tr>
+                                <tr>
+                                  <th>學習單</th>
+                                  <td colspan="3"><a href="#" target="_blank">基礎數學.doc</a></td>
+                                </tr>
+                                <tr>
+                                  <th>附件上傳</th>
+                                  <td colspan="3"><a href="#" target="_blank">基礎數學.doc</a></td>
+                                </tr>
+                            </table>
+                            <div class="my-sure">
+                            <input type="button" class="btn btn-inverse" value="列印">
+                            <input type="button" class="btn" id="cancel-concept" value="離開">
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <hr />
+  
+<!--選填資訊-->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">選填資訊</h3>
+    </div>
+    <div class="modal-body">
+    	<p>請大家利用時間選擇欲報名大學學群</p>
+    </div>
+    <div class="modal-footer">
+    	<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</div>
+  
+</body>
+</html>

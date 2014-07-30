@@ -1,0 +1,878 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+  <script>
+    init({
+      application: "elvira:dev.sh_d",
+      paramValues: {}
+    });
+  </script>
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <link href="css/jquery-ui-1.8.7.custom.css" rel="stylesheet" />
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js"></script>
+  <script src="js/jquery.sheepItPlugin.js"></script>
+  <script src="js/my-jquery.validate.js"></script>
+  <script src="js/jquery.metadata.js"></script>
+  <script src="js/messages_tw.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/startup.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/profile.js"></script>
+  <script src="js/pfe.js"></script>
+  <script src="js/memoir.js"></script>
+  <script src="js/concept.js"></script>
+  <script src="js/material.js"></script>
+  <script src="js/addmaterial.js"></script>
+  <script src="js/fixmaterial.js"></script>
+  <script src="js/viewmaterial.js"></script>
+  <script src="js/materialpage.js"></script>
+</head>
+<body>
+  <div class="my-page" id="gadget">
+    <div id="mainMsg"></div>
+    <div id="ieMsg"></div
+    <div class="row-fluid">
+      <div class="input-block-level">
+        <div class="tabbable">
+          <h1>
+            <a href="javascript:void(0)" class="dropdown-toggle pull-left" data-toggle="dropdown" style="margin-right: 5px;">
+              <span id="tabName">教師管理</span>
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu" id="myTab">
+              <li class="active"><a href="#profile" data-toggle="tab">教師管理</a></li>
+              <li><a href="#viewmaterial" data-toggle="tab">所有教案</a></li>
+            </ul>
+            <ul class="nav nav-tabs my-tab" id="subTab">
+              <li class="active"><a href="#profile" data-toggle="tab">個人資料</a></li>
+              <li><a href="#pfe" data-toggle="tab">進修及研習課程</a></li>
+              <li><a href="#memoir" data-toggle="tab">自傳</a></li>
+              <li><a href="#concept" data-toggle="tab">教育理念</a></li>
+              <li><a href="#material" data-toggle="tab">教案</a></li>
+            </ul>
+          </h1>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade active in" id="profile">
+              <form name="form_profile">
+                <div class="row-fluid" data-scope="print">
+                  <div class="span3">
+                    <table class="table table-bordered my-table">
+                      <thead>
+                        <tr>
+                          <th>個人相片<span class="my-trash pull-right" title="清除相片"></span></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="my-tablephoto">
+                            <div class="my-proimg" id="edit-Photo"></div>
+                            <input type="file" id="upload-photo" class="hide">
+                          </td>
+                        </tr>
+                      </tbody>
+                      <thead>
+                        <tr>
+                          <th>身份證號（非必填）</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <input class="input-block-level" placeholder="身份證號..." type="text" name="IdNumber"/>
+                          </td>
+                        </tr>
+                      </tbody>
+                      <thead>
+                        <tr>
+                          <th>生日</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <input class="{date: true, dateISO: true} date input-block-level" placeholder="MM/DD/YYYY" type="text" name="Birthdate">
+                          </td>
+                        </tr>
+                      </tbody>
+                      <thead>
+                        <tr>
+                          <th>聯絡電話</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <input class="input-block-level" placeholder="聯絡電話..." type="text" name="ContactPhone"/>
+                          </td>
+                        </tr>
+                      </tbody>
+                      <thead>
+                        <tr>
+                          <th>手機</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <input class="input-block-level" placeholder="手機..." type="text" name="CellPhone"/>
+                          </td>
+                        </tr>
+                      </tbody>
+                      <thead>
+                        <tr>
+                          <th>血型</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <select class="input-block-level" name="BloodGroup">
+                              <option value=""></option>
+                              <option value="A">A</option>
+                              <option value="B">B</option>
+                              <option value="AB">AB</option>
+                              <option value="O">O</option>
+                            </select>
+                          </td>
+                        </tr>
+                      </tbody>
+                      <thead>
+                        <tr>
+                          <th>群科</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <select class="input-block-level" name="GroupSubjectID">
+                              <option value=""></option>
+                            </select>
+                          </td>
+                        </tr>
+                      </tbody>
+                      <thead>
+                        <tr>
+                          <th>婚姻狀況</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <select class="input-block-level" name="MaritalStatus">
+                              <option value=""></option>
+                              <option value="已婚">已婚</option>
+                              <option value="未婚">未婚</option>
+                            </select>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="span9">
+                    <table class="table table-bordered my-table">
+                      <thead>
+                        <tr>
+                          <th colspan="7">教師證
+                            <a class="btn btn-mini btn-inverse pull-right" href="#" id="teacher_certify_add">
+                              <i class="icon-plus icon-white"></i>
+                            </a>
+                          </th>
+                        </tr>
+                      </thead>
+                      <!-- sheepIt Form -->
+                      <tbody id="teacher_certify">
+                        <!-- Form template-->
+                        <tr id="teacher_certify_template">
+                          <th nowrap="nowrap">證照號碼</th>
+                          <td><input class="input-block-level" placeholder="證照號碼..." type="text" name="TeacherCertify_Number" id="teacher_certify_#index#_Number"/></td>
+                          <th nowrap="nowrap">科別</th>
+                          <td colspan="3">
+                            <input class="input-block-level" placeholder="科別..." type="text" name="TeacherCertify_Subject" id="teacher_certify_#index#_Subject"/>
+                          </td>
+                          <td><button id="teacher_certify_remove_current" type="button" class="btn" data-dismiss="alert">×</button></td>
+                        </tr>
+                        <!-- /Form template-->
+
+                        <!-- No forms template -->
+                        <tr id="teacher_certify_noforms_template"><td colspan="7">目前無資料</td></tr>
+                        <!-- /No forms template-->
+                      </tbody>
+                      <!-- /sheepIt Form -->
+                      <thead>
+                        <tr>
+                          <th colspan="7">學歷
+                            <a class="btn btn-mini btn-inverse pull-right" href="#" id="education_add">
+                              <i class="icon-plus icon-white"></i>
+                            </a>
+                          </th>
+                        </tr>
+                      </thead>
+                      <!-- sheepIt Form -->
+                      <tbody id="education">
+                        <!-- Form template-->
+                        <tr id="education_template">
+                          <td colspan="6">
+                            <input class="input-block-level" placeholder="學歷..." type="text" name="Education_SchoolName" id="education_#index#_SchoolName"/>
+                          </td>
+                          <td><button id="education_remove_current" type="button" class="btn" data-dismiss="alert">×</button></td>
+                        </tr>
+                        <!-- /Form template-->
+
+                        <!-- No forms template -->
+                        <tr id="education_noforms_template"><td colspan="7">目前無資料</td></tr>
+                        <!-- /No forms template-->
+                      </tbody>
+                      <!-- /sheepIt Form -->
+                      <thead>
+                        <tr>
+                          <th colspan="7">經歷
+                            <a class="btn btn-mini btn-inverse pull-right" href="#" id="working_experience_add">
+                              <i class="icon-plus icon-white"></i>
+                            </a>
+                          </th>
+                        </tr>
+                      </thead>
+                      <!-- sheepIt Form -->
+                      <tbody id="working_experience">
+                        <!-- Form template-->
+                        <tr id="working_experience_template">
+                          <td>校名</td>
+                          <td><input  class="input-block-level" placeholder="校名..." type="text" name="WorkingExperience_SchoolName" id="working_experience_#index#_SchoolName"/></td>
+                          <td>職稱</td>
+                          <td style="width:95px"><input class="input-small" placeholder="職稱..." type="text" name="WorkingExperience_Title" id="working_experience_#index#_Title"/></td>
+                          <td nowrap="nowrap">年資</td>
+                          <td style="width:65px"><input class="input-mini" placeholder="年資..." type="text" name="WorkingExperience_Seniority" id="working_experience_#index#_Seniority"></td>
+                          <td><button id="working_experience_remove_current" type="button" class="btn" data-dismiss="alert">×</button></td>
+                        </tr>
+                        <!-- /Form template-->
+
+                        <!-- No forms template -->
+                        <tr id="working_experience_noforms_template"><td colspan="7">目前無資料</td></tr>
+                        <!-- /No forms template-->
+                      </tbody>
+                      <!-- /sheepIt Form -->
+                      <thead>
+                        <tr>
+                          <th colspan="7">專長證照
+                            <a class="btn btn-mini btn-inverse pull-right" href="#" id="skill_certify_add">
+                              <i class="icon-plus icon-white"></i>
+                            </a>
+                          </th>
+                        </tr>
+                      </thead>
+                      <!-- sheepIt Form -->
+                      <tbody id="skill_certify">
+                        <!-- Form template-->
+                        <tr id="skill_certify_template">
+                          <td colspan="6">
+                            <input class="input-block-level" placeholder="專長證照..." type="text" name="SkillCertify_Subject" id="skill_certify_#index#_Subject">
+                          </td>
+                          <td><button id="skill_certify_remove_current" type="button" class="btn" data-dismiss="alert">×</button></td>
+                        </tr>
+                        <!-- /Form template-->
+
+                        <!-- No forms template -->
+                        <tr id="skill_certify_noforms_template"><td colspan="7">目前無資料</td></tr>
+                        <!-- /No forms template-->
+                      </tbody>
+                      <!-- /sheepIt Form -->
+                      <thead>
+                        <tr>
+                          <th colspan="7">獲獎經歷
+                            <a class="btn btn-mini btn-inverse pull-right" href="#" id="accomplishments_add">
+                              <i class="icon-plus icon-white"></i>
+                            </a>
+                          </th>
+                        </tr>
+                      </thead>
+                      <!-- sheepIt Form -->
+                      <tbody id="accomplishments">
+                        <!-- Form template-->
+                        <tr id="accomplishments_template">
+                          <td colspan="6">
+                            <input class="input-block-level" placeholder="獲獎經歷..." type="text" name="Accomplishments_Subject" id="accomplishments_#index#_Subject">
+                          </td>
+                          <td><button id="accomplishments_remove_current" type="button" class="btn" data-dismiss="alert">×</button></td>
+                        </tr>
+                        <!-- /Form template-->
+
+                        <!-- No forms template -->
+                        <tr id="accomplishments_noforms_template"><td colspan="7">目前無資料</td></tr>
+                        <!-- /No forms template-->
+                      </tbody>
+                      <!-- /sheepIt Form -->
+                      <thead>
+                        <tr>
+                          <th colspan="7">著作
+                            <a class="btn btn-mini btn-inverse pull-right" href="#" id="book_add">
+                              <i class="icon-plus icon-white"></i>
+                            </a>
+                          </th>
+                        </tr>
+                      </thead>
+                      <!-- sheepIt Form -->
+                      <tbody id="book">
+                        <!-- Form template-->
+                        <tr id="book_template">
+                          <td colspan="6">
+                            <input class="input-block-level" placeholder="著作..." type="text" name="Book_Subject" id="book_#index#_Subject">
+                          </td>
+                          <td><button id="book_remove_current" type="button" class="btn" data-dismiss="alert">×</button></td>
+                        </tr>
+                        <!-- /Form template-->
+
+                        <!-- No forms template -->
+                        <tr id="book_noforms_template"><td colspan="7">目前無資料</td></tr>
+                        <!-- /No forms template-->
+                      </tbody>
+                      <!-- /sheepIt Form -->
+                    </table>
+                  </div>
+                </div>
+                <div class="my-sure">
+                  <a href="javascript:void(0);" class="btn btn-success" data-action="save">儲存變更</a>
+                  <a href="javascript:void(0);" class="btn btn-inverse" data-action="print">列印</a>
+                  <a href="javascript:void(0);" class="btn" data-action="cancel">取消</a>
+                </div>
+              </form>
+            </div>
+            <div class="tab-pane fade" id="memoir">
+              <form name="form_memoir">
+                <div class="row-fluid">
+                  <div class="input-block-level">
+                    <div class="well">
+                      <fieldset>
+                        <legend>自傳</legend>
+                        <textarea class="input-block-level" placeholder="請填寫自傳..." rows="20" name="Memoir"></textarea>
+                      </fieldset>
+                    </div>
+                    <div class="my-sure">
+                      <a href="javascript:void(0);" class="btn btn-success" data-action="save">儲存變更</a>
+                      <a href="javascript:void(0);" class="btn btn-inverse" data-action="print">列印</a>
+                      <a href="javascript:void(0);" class="btn" data-action="cancel">取消</a>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="tab-pane fade" id="concept">
+              <form name="form_concept">
+                <div class="row-fluid">
+                  <div class="input-block-level">
+                    <div class="well">
+                      <fieldset>
+                        <legend>教育理念</legend>
+                        <textarea class="input-block-level" placeholder="請填寫教育理念..." rows="5" name="Concept"></textarea>
+                      </fieldset>
+                    </div>
+                    <div class="well">
+                      <fieldset>
+                        <legend>座右銘</legend>
+                        <textarea class="input-block-level" placeholder="請填寫座右銘..." rows="5" name="Motto"></textarea>
+                      </fieldset>
+                    </div>
+                    <div class="well">
+                      <fieldset>
+                        <legend>自我期許/未來展望</legend>
+                        <textarea class="input-block-level" placeholder="請填寫自我期許/未來展望..." rows="5" name="Future"></textarea>
+                      </fieldset>
+                    </div>
+                    <div class="my-sure">
+                      <a href="javascript:void(0);" class="btn btn-success" data-action="save">儲存變更</a>
+                      <a href="javascript:void(0);" class="btn btn-inverse" data-action="print">列印</a>
+                      <a href="javascript:void(0);" class="btn" data-action="cancel">取消</a>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="tab-pane fade" id="material">
+              <div class="row-fluid">
+                <div class="input-block-level">
+                  <p class="pull-left">
+                    <select name="MyChooseSubject">
+                      <option value="">全部</option>
+                    </select>
+                  </p>
+                  <p class="pull-right">
+                    <a href="javascript:void(0);" class="btn btn-primary" data-action="add">
+                      <i class="icon-pencil icon-white"></i>
+                      新增教案</a></p>
+                  <table class="table table-bordered my-table table-striped table-hover" style="clear:both;">
+                    <thead>
+                      <tr>
+                        <th width="10%">日期</th>
+                        <th>主題</th>
+                        <th width="10%">學習單</th>
+                        <th width="10%">附件數</th>
+                        <th width="10%">點閱</th>
+                        <th width="5%">公開</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pfe">
+              <div class="row-fluid">
+                <div class="input-block-level">
+                  <div class="my-print-remove" style="clear:both;">
+                    <a class="btn btn-mini btn-inverse pull-right" href="#" style="margin-bottom:10px;" id="study_add">
+                      <i class="icon-plus icon-white"></i>
+                    </a>
+                  </div>
+                  <form name="form_pfe">
+                    <!-- sheepIt Form -->
+                    <div id="study">
+                      <!-- Form template-->
+                      <table class="table table-bordered my-table2" id="study_template">
+                        <tr class="my-print-remove">
+                          <th colspan="2"><button id="study_remove_current" type="button" class="btn btn-mini pull-right" data-dismiss="alert" data-action="remove">×</button></th>
+                        </tr>
+                        <tr>
+                          <th width="173px">日期（必填）</th>
+                          <td>
+                            <input placeholder="yyyy/mm/dd" class="{required: true, date: true, dateISO: true} date" type="text" name="StudyDate" id="study_#index#_StudyDate"/>
+                             ~
+                            <input placeholder="yyyy/mm/dd" class="{required: true, date: true, dateISO: true} isAfterStartDate date" type="text" name="EndDate" id="study_#index#_EndDate"/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>研習名稱（必填）</th>
+                          <td><input class="{required: true} input-block-level" placeholder="研習名稱..." type="text" name="StudyName" id="study_#index#_StudyName"/></td>
+                        </tr>
+                        <tr>
+                          <th>研習分類（必填）</th>
+                          <td class="my-cateogry">
+                            <div data-type="StudyCategory" id="study_#index#_StudyCategory"></div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>心得</th>
+                          <td>
+                            <textarea class="input-block-level" placeholder="心得..." rows="5" name="Feedback" id="study_#index#_Feedback"></textarea>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>附件上傳</th>
+                          <td data-type="fileContainer">
+                            <input type="file" name="userfile" id="study_#index#_userfile" size="50"/>
+                            <input type="submit" name="uploadfile" id="uploadfile_#index#" value="上傳檔案" />
+                            <div data-type="fileInfo"></div>
+                          </td>
+                        </tr>
+                      </table>
+                      <!-- /Form template-->
+
+                      <!-- No forms template -->
+                      <div id="study_noforms_template">目前無資料</div>
+                      <!-- /No forms template-->
+                    </div>
+                    <!-- /sheepIt Form -->
+                    <div class="my-sure">
+                      <a href="javascript:void(0);" class="btn btn-success" data-action="save">儲存變更</a>
+                      <a href="javascript:void(0);" class="btn btn-inverse" data-action="print">列印</a>
+                      <a href="javascript:void(0);" class="btn" data-action="cancel">取消</a>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="viewmaterial">
+              <div class="row-fluid">
+                <div class="input-block-level">
+                  <p class="">
+                    <select name="subjectList">
+                      <option value="">全部</option>
+                    </select>
+                  </p>
+                  <table class="table table-bordered my-table table-hover">
+                    <thead>
+                      <tr>
+                        <th width="10%">日期</th>
+                        <th>主題</th>
+                        <th width="10%">學習單</th>
+                        <th width="10%">附件數</th>
+                        <th width="10%">設計者</th>
+                        <th width="10%">點閱</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="addmaterial">
+              <div class="row-fluid">
+                <form name="form_addmaterial">
+                  <div class="input-block-level">
+                    <table class="table table-bordered my-table2">
+                      <tr>
+                        <th>創建日期（必填）</th>
+                        <td><input placeholder="yyyy/mm/dd" class="{required: true, date: true, dateISO: true} date input-block-level" type="text" name="Createdate"/></td>
+                        <th>公開教案</th>
+                        <td>
+                          <label class="checkbox">
+                            <input type="checkbox" value="public" name="Public">
+                            公開
+                          </label>
+                        </td>
+                      </tr>
+                    </table>
+                    <!-- sheepIt Form -->
+                    <table class="table table-bordered my-table2" id="content">
+                      <tr>
+                        <th>科目（必填）</th>
+                        <td><input class="{required: true} input-block-level" placeholder="科目..." type="text" name="Subject"/></td>
+                        <th>融入議題（必填）</th>
+                        <td colspan="2">
+                          <select name="Issues" class="{required: true}">
+                            <option value="">請選擇...</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>主題名稱（必填）</th>
+                        <td><input class="{required: true} input-block-level" placeholder="主題名稱..." type="text" name="Title"/></td>
+                        <th>教學時間</th>
+                        <td colspan="2"><input class="input-block-level" placeholder="教學時間..." type="text" name="TimeSpan"/></td>
+                      </tr>
+                      <tr>
+                        <th>學科領域</th>
+                        <td><input class="input-block-level" placeholder="學科領域..." type="text" name="Domain"/></td>
+                        <th>教學對象</th>
+                        <td colspan="2"><input class="input-block-level" placeholder="教學對象..." type="text" name="Target"/></td>
+                      </tr>
+                      <tr>
+                        <th>設計理念</th>
+                        <td>
+                          <textarea class="input-block-level" placeholder="設計理念..." rows="5" name="Rationale"></textarea>
+                        </td>
+                        <th>教學人數</th>
+                        <td colspan="2"><input class="input-block-level" placeholder="教學人數..." type="text" name="Capacity"/></td>
+                      </tr>
+                      <tr>
+                        <th>教案架構</th>
+                        <td colspan="4">
+                          <textarea class="input-block-level" placeholder="教案架構..." rows="3" name="Architecture"></textarea>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>教學準備</th>
+                        <td colspan="4">
+                          <textarea class="input-block-level" placeholder="教學準備..." rows="3" name="Materials"></textarea>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th rowspan="6">教學目標</th>
+                        <th colspan="4">認知</th>
+                      </tr>
+                      <tr>
+                        <td colspan="4">
+                          <textarea class="input-block-level" placeholder="教學目標_認知" rows="3" name="Cognition"></textarea>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th colspan="4">情意</th>
+                      </tr>
+                      <tr>
+                        <td colspan="4">
+                          <textarea class="input-block-level" placeholder="教學目標_情意" rows="3" name="Affective"></textarea>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th colspan="4">技能</th>
+                      </tr>
+                      <tr>
+                        <td colspan="4">
+                          <textarea class="input-block-level" placeholder="教學目標_技能" rows="3" name="Skill"></textarea>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th colspan="5">教學內容
+                          <a class="btn btn-mini btn-inverse" href="#" id="content_add">
+                            <i class="icon-plus icon-white"></i>
+                          </a>
+                        </th>
+                      </tr>
+                      <tr>
+                        <th>單元目標</th>
+                        <th>教學活動</th>
+                        <th>時間</th>
+                        <th>教具</th>
+                        <th>&nbsp;</th>
+                      </tr>
+                      <!-- Form template-->
+                      <tr id="content_template">
+                        <td>
+                          <textarea class="input-block-level" placeholder="單元目標..." name="ContentTarget" id="content_#index#_ContentTarget"></textarea>
+                        <td>
+                          <textarea class="input-block-level" placeholder="教學活動..." name="ContentActivity" id="content_#index#_ContentActivity"></textarea>
+                        </td>
+                        <td><input class="input-block-level" placeholder="時間..." type="text" name="ContentTimeSpan" id="content_#index#_ContentTimeSpan"/></td>
+                        <td>
+                          <textarea class="input-block-level" placeholder="教具..." name="ContentTeachingAid" id="content_#index#_ContentTeachingAid"></textarea>
+                        </td>
+                        <td><button id="content_remove_current" type="button" class="btn btn-mini pull-right" data-dismiss="alert">×</button></td>
+                      </tr>
+                      <!-- /Form template-->
+
+                      <!-- No forms template -->
+                      <tr id="content_noforms_template"><td colspan="5">目前無資料</td></tr>
+                      <!-- /No forms template-->
+                      <tr>
+                        <th>教學評量</th>
+                        <td colspan="4">
+                          <textarea class="input-block-level" placeholder="教學評量..." rows="3" name="Assessment"></textarea>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>教學參考資源</th>
+                        <td colspan="4">
+                          <textarea class="input-block-level" placeholder="教學參考資源..." rows="3" name="Reference"></textarea>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>學習單</th>
+                        <td colspan="4" data-type="fileContainer" id="fileSheet">
+                            <input type="file" name="userfileSheet" size="50"/>
+                            <input type="submit" name="uploadfileSheet" value="上傳檔案" />
+                            <div data-type="fileInfo"></div>
+                          </td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>附件上傳</th>
+                        <td colspan="4" data-type="fileContainer" id="fileAttach">
+                            <input type="file" name="userfileAttach" size="50"/>
+                            <input type="submit" name="uploadfileAttach" value="上傳檔案" />
+                            <div data-type="fileInfo"></div>
+                          </td>
+                        </td>
+                      </tr>
+                    </table>
+                    <!-- /sheepIt Form -->
+                    <div class="my-sure">
+                      <a href="javascript:void(0);" class="btn btn-success" data-action="save">儲存變更</a>
+                      <a href="#material" class="btn" data-toggle="tab" data-action="cancel">取消</a>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="fixmaterial">
+              <div class="row-fluid">
+                <div class="input-block-level">
+                  <table class="table table-bordered my-table2">
+                    <tr>
+                      <th width="10%">創建日期</th>
+                      <td width="60%" data-type="Createdate"></td>
+                      <th width="10%">公開教案</th>
+                      <td width="20%" data-type="Public"></td>
+                    </tr>
+                  </table>
+                  <table class="table table-bordered my-table2">
+                    <tr>
+                      <th>科目</th>
+                      <td data-type="Subject"></td>
+                      <th>融入議題</th>
+                      <td data-type="Issues"></td>
+                    </tr>
+                    <tr>
+                      <th style="width:145px;">主題名稱</th>
+                      <td data-type="Title"></td>
+                      <th style="width:105px;">教學時間</th>
+                      <td style="width:150px;" data-type="TimeSpan"></td>
+                    </tr>
+                    <tr>
+                      <th>學科領域</th>
+                      <td data-type="Domain"></td>
+                      <th>教學對象</th>
+                      <td data-type="Target"></td>
+                    </tr>
+                    <tr>
+                      <th>設計理念</th>
+                      <td data-type="Rationale"></td>
+                      <th>教學人數</th>
+                      <td data-type="Capacity"></td>
+                    </tr>
+                    <tr>
+                      <th>教案架構</th>
+                      <td colspan="3" data-type="Architecture"></td>
+                    </tr>
+                    <tr>
+                      <th>教學準備</th>
+                      <td colspan="3" data-type="Materials"></td>
+                    </tr>
+                    <tr>
+                      <th rowspan="6">教學目標</th>
+                      <th colspan="3">認知</th>
+                    </tr>
+                    <tr>
+                      <td colspan="3" data-type="Cognition"></td>
+                    </tr>
+                    <tr>
+                      <th colspan="3">情意</th>
+                    </tr>
+                    <tr>
+                      <td colspan="3" data-type="Affective"></td>
+                    </tr>
+                    <tr>
+                      <th colspan="3">技能</th>
+                    </tr>
+                    <tr>
+                      <td colspan="3" data-type="Skill"></td>
+                    </tr>
+                    <tr>
+                      <th colspan="4">教學內容</th>
+                    </tr>
+                    <tr data-contain="Content">
+                      <th>單元目標</th>
+                      <th>教學活動</th>
+                      <th>時間</th>
+                      <th>教具</th>
+                    </tr>
+                    <tr>
+                      <th>教學評量</th>
+                      <td colspan="3" data-type="Assessment"></td>
+                    </tr>
+                    <tr>
+                      <th>教學參考資源</th>
+                      <td colspan="3" data-type="Reference"></td>
+                    </tr>
+                    <tr>
+                      <th>學習單</th>
+                      <td colspan="3" data-type="fileSheet"></td>
+                    </tr>
+                    <tr>
+                      <th>附件上傳</th>
+                      <td colspan="3" data-type="fileAttach"></td>
+                    </tr>
+                  </table>
+                  <div class="my-sure">
+                    <a href="javascript:void(0);" class="btn btn-success" data-action="edit">編輯</a>
+                    <a href="javascript:void(0);" class="btn btn-inverse" data-action="print">列印</a>
+                    <a href="javascript:void(0);" class="btn btn-danger" data-action="del">刪除</a>
+                    <a href="#material" class="btn" data-toggle="tab" data-action="cancel">取消</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="materialpage">
+              <div class="row-fluid">
+                <div class="input-block-level">
+                  <table class="table table-bordered my-table2">
+                    <tr>
+                      <th>科目</th>
+                      <td data-type="Subject"></td>
+                      <th>融入議題</th>
+                      <td data-type="Issues"></td>
+                    </tr>
+                    <tr>
+                      <th style="width:145px;">主題名稱</th>
+                      <td data-type="Title"></td>
+                      <th style="width:105px;">教學時間</th>
+                      <td  style="width:150px;" data-type="TimeSpan"></td>
+                    </tr>
+                    <tr>
+                      <th>學科領域</th>
+                      <td data-type="Domain"></td>
+                      <th>教學對象</th>
+                      <td data-type="Target"></td>
+                    </tr>
+                    <tr>
+                      <th>設計理念</th>
+                      <td data-type="Rationale"></td>
+                      <th>教學人數</th>
+                      <td data-type="Capacity"></td>
+                    </tr>
+                    <tr>
+                      <th>教案架構</th>
+                      <td colspan="3" data-type="Architecture"></td>
+                    </tr>
+                    <tr>
+                      <th>教學準備</th>
+                      <td colspan="3" data-type="Materials"></td>
+                    </tr>
+                    <tr>
+                      <th rowspan="6">教學目標</th>
+                      <th colspan="3">認知</th>
+                    </tr>
+                    <tr>
+                      <td colspan="3" data-type="Cognition"></td>
+                    </tr>
+                    <tr>
+                      <th colspan="3">情意</th>
+                    </tr>
+                    <tr>
+                      <td colspan="3" data-type="Affective"></td>
+                    </tr>
+                    <tr>
+                      <th colspan="3">技能</th>
+                    </tr>
+                    <tr>
+                      <td colspan="3" data-type="Skill"></td>
+                    </tr>
+                    <tr>
+                      <th colspan="4">教學內容</th>
+                    </tr>
+                    <tr data-contain="Content">
+                      <th>單元目標</th>
+                      <th>教學活動</th>
+                      <th>時間</th>
+                      <th>教具</th>
+                    </tr>
+                    <tr>
+                      <th>教學評量</th>
+                      <td colspan="3" data-type="Assessment"></td>
+                    </tr>
+                    <tr>
+                      <th>教學參考資源</th>
+                      <td colspan="3" data-type="Reference"></td>
+                    </tr>
+                    <tr>
+                      <th>學習單</th>
+                      <td colspan="3" data-type="fileSheet"></td>
+                    </tr>
+                    <tr>
+                      <th>附件上傳</th>
+                      <td colspan="3" data-type="fileAttach"></td>
+                    </tr>
+                  </table>
+                  <div class="my-sure">
+                    <a href="javascript:void(0);" class="btn btn-inverse" data-action="print">列印</a>
+                    <a href="javascript:void(0);" class="btn" data-toggle="tab" data-action="cancel">取消</a>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal hide" id="delModal">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <h3>刪除教案</h3>
+      <div id="errorMessage"></div>
+    </div>
+    <div class="modal-body alert-danger">您確定要刪除此教案嗎？</div>
+    <div class="modal-footer"><a href="#" class="btn btn-success" data-action="del">我要刪除</a>
+      <a href="#" class="btn" data-dismiss="modal">取消</a>
+    </div>
+  </div>
+  <hr />
+</body>
+</html>

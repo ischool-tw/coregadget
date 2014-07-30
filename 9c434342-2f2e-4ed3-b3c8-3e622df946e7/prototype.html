@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/default.js"></script>
+  <script src="js/jquery.flexslider.js"></script>
+  <!-- Hook up the FlexSlider -->
+    <script>
+    jQuery(function () {
+      $('.flexslider').flexslider();
+      $('a').popover({
+        'trigger'  :'manual',
+        'placement':'right'
+      });
+
+
+      $('a').click(function(){
+        $(this).popover('show');
+      });
+
+      $('#myTab').click(function(){
+        $(this).find('li.active').removeClass('active');
+      })
+      .find('a').click(function(){
+        $('#tabName').html($(this).html());
+      });
+
+      $('body').on('click', 'div.popover button.close, button[action-type=send]',function(){
+        $(this).closest('div.popover').hide();
+      });
+
+	  $(document).ready(function () {
+      $('div[rel=tooltip]').tooltip("show").tooltip("toggle");
+	  $('button[rel=tooltip]').tooltip("show").tooltip("toggle");
+    });
+    });
+  </script>
+</head>
+<body>
+  <div id="gadget" class="my-page">
+      <div class="row-fluid">
+        <div class="span12">
+            <h1>建立個人資料</h1>
+            <div class="row-fluid">
+                <div class="span4">
+                	<table class="table my-table2 my-tablephoto">
+                      <tr>
+                        <th>個人相片</th>
+                        <td>
+                            <div class="my-proimg" style="background-image:url(css/images/nophoto.png);"></div>
+                        </td>
+                      </tr>
+                    </table>
+                    <table class="table my-table2">
+                      <tr>
+                        <th nowrap="nowrap">姓名</th>
+                        <td><input class="input-medium" type="text" placeholder="" /></td>
+                      </tr>
+                      <tr>
+                        <th nowrap="nowrap">性別</th>
+                        <td><select class="input-mini">
+                          <option>男</option>
+                          <option>女</option>
+                        </select></td>
+                      </tr>
+                      <tr>
+                        <th nowrap="nowrap">個性簽名</th>
+                        <td><input class="input-medium" type="text" placeholder="請輸入您想說的話" /> 25字</td>
+                      </tr>
+                    </table>
+                </div>
+                <div class="span8">
+                    <table class="table my-table2">
+                    <tr>
+                      <th nowrap="nowrap">生日</th>
+                      <td><input class="input-medium" type="date" placeholder="MM/DD/YYYY"></td>
+                    </tr>
+                    <tr>
+                      <th nowrap="nowrap">電子郵件</th>
+                      <td><input class="input-xxlarge" type="text" placeholder="" /></td>
+                    </tr>
+                    <tr>
+                      <th nowrap="nowrap">地址</th>
+                      <td><input class="input-xxlarge" type="text" placeholder=""></td>
+                    </tr>
+                    <tr>
+                      <th nowrap="nowrap">行動電話</th>
+                      <td><input class="input-xxlarge" type="text" placeholder=""></td>
+                    </tr>
+                    <tr>
+                      <th nowrap="nowrap">其它電話</th>
+                      <td><input class="input-xxlarge" type="text" placeholder=""></td>
+                    </tr>
+                    <tr>
+                      <th nowrap="nowrap">關於我</th>
+                      <td><textarea rows="5" class="input-xxlarge" placeholder=""></textarea></td>
+                    </tr>
+                  </table>
+                </div>
+            </div>
+            <div class="my-sure">
+                <a href="#to" class="btn btn-success">儲存變更</a> <a href="#to" class="btn">取消</a>
+            </div>
+        </div>
+      </div>
+  </div>
+  <hr />
+<!--輸入代碼-->
+<div id="myModal" class="modal hide fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: block;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">身份驗證</h3>
+    </div>
+    <div class="modal-body">
+            <label>學生代碼</label>
+            <input type="text" class="input-xlarge" id="inputCode" placeholder="請輸入代碼">
+            <p><i class="icon-info-sign"></i> 如何取得代碼？</p><p>請聯絡導師。</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-success">送出</button>
+      <button class="btn" data-dismiss="modal">取消</button>
+    </div>
+</div>
+<div class="modal-backdrop fade in"></div>
+</body>
+</html>

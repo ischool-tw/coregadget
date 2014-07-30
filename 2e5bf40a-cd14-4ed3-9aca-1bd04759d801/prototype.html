@@ -1,0 +1,658 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+  <link href="css/mybootstrap.css" rel="stylesheet" />
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/default.css" rel="stylesheet" />
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/jquery.flexslider.js"></script>
+  <!-- Hook up the FlexSlider -->
+    <script>
+    jQuery(function () {
+      $('.flexslider').flexslider();
+      $('a').popover({
+        'trigger'  :'manual',
+        'placement':'right'
+      });
+
+
+      $('a').click(function(){
+        $(this).popover('show');
+      });
+
+      $('#myTab').click(function(){
+        $(this).find('li.active').removeClass('active');
+      })
+      .find('a').click(function(){
+        $('#tabName').html($(this).html());
+      });
+
+      $('body').on('click', 'div.popover button.close, button[action-type=send]',function(){
+        $(this).closest('div.popover').hide();
+      });
+
+	  $(document).ready(function () {
+      $('div[rel=tooltip]').tooltip("show").tooltip("toggle");
+	  $('button[rel=tooltip]').tooltip("show").tooltip("toggle");
+    });
+    });
+  </script>
+</head>
+<body>
+  <div id="gadget" class="my-page">
+  	<div class="my-child">
+        <div class="my-childname" style="height:auto;"><!--height:auto;-->
+            <ul>
+                <li>王大華</li>
+                <li>王小華</li>
+                <li>王大華</li>
+            </ul>
+        </div>
+    	<div class="my-childbar">
+        	<i class="icon-user"></i>
+        </div>
+    </div>
+      <div class="row-fluid">
+        <div class="span12">
+          <div class="tabbable">
+            <h1><a href="#" class="dropdown-toggle" data-toggle="dropdown" id="nav_appcurrent"><span id="tabName">資一忠 通訊錄</span> <b class="caret"></b></a>
+           	    <ul id="myTab" class="dropdown-menu">
+              		<li><a href="#profile" data-toggle="tab">個人資訊</a></li>
+                  <li><a href="#teacher1" data-toggle="tab">教師通訊錄</a></li>
+                	<li><a href="#student1" data-toggle="tab">資一忠 通訊錄</a></li>
+                </ul>
+                <a href="#mySendMsg" class="btn btn-mini pull-right" data-toggle="modal"><i class="icon-comment"></i> 群組傳訊</a>
+                <div class="pull-right my-code"><i class="icon-hand-up"></i> 家長代碼：123456</div>
+            </h1>
+            <div id="myTabContent" class="tab-content">
+            	<div class="tab-pane fade" id="profile">
+                	<div class="row-fluid">
+                    	<div class="span9">
+                        	<table class="table my-table2">
+                              <tr>
+                                <th nowrap="nowrap">姓名</th>
+                                <td><input class="input-large" type="text" placeholder="" /></td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">性別</th>
+                                <td><select class="span2">
+                                  <option>男</option>
+                                  <option>女</option>
+                                </select></td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">個性簽名</th>
+                                <td><input class="input-xxlarge" type="text" placeholder="請在這裡輸入您想說的話" /> 25字</td>
+                              </tr>
+                            </table>
+                        </div>
+                    	<div class="span3">
+                        	<table class="table my-table2 my-tablephoto">
+                              <tr>
+                                <th>個人相片</th>
+                                <td>
+									<div class="my-proimg" style="background-image:url(css/images/sample.jpg);"></div>
+                                </td>
+                              </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                    	<div class="span12">
+                        	<p class="pull-right"><i class="icon-check"></i> 請勾選資訊分享對象</p>
+                        	<table class="table my-table2">
+                              <tr>
+                                <th nowrap="nowrap">生日</th>
+                                <td><input class="input-medium" type="date" placeholder="MM/DD/YYYY"></td>
+                                <td>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    學生
+                                </label>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    家長
+                                </label>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    教師
+                                </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">電子郵件</th>
+                                <td><input class="input-xxlarge" type="text" placeholder="" /></td>
+                                <td>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    學生
+                                </label>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    家長
+                                </label>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    教師
+                                </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">地址</th>
+                                <td><input class="input-xxlarge" type="text" placeholder=""></td>
+                                <td>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    學生
+                                </label>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    家長
+                                </label>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    教師
+                                </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">行動電話</th>
+                                <td><input class="input-xxlarge" type="text" placeholder=""></td>
+                                <td>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    學生
+                                </label>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    家長
+                                </label>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    教師
+                                </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">其它電話</th>
+                                <td><input class="input-xxlarge" type="text" placeholder=""></td>
+                                <td>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    學生
+                                </label>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    家長
+                                </label>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    教師
+                                </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th nowrap="nowrap">關於我</th>
+                                <td><textarea rows="5" class="input-xxlarge" placeholder=""></textarea></td>
+                                <td>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    學生
+                                </label>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    家長
+                                </label>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" value="">
+                                    教師
+                                </label>
+                                </td>
+                              </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="my-sure">
+                        <a href="#to" class="btn btn-success">儲存變更</a> <a href="#to" class="btn">取消</a>
+                    </div>
+              </div>
+            	<div class="tab-pane fade active in" id="student1">
+                    <div class="my-stlist my-teacher">
+                        <a href="#myTeacher" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample.jpg);"></div>
+                        <div class="my-stext">嘩啦啦</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="聽老師話者考試歐啪絲">聽老師話者考試歐啪絲</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample2.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample3.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample4.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample5.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample6.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample7.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample3.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample4.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample2.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample6.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample4.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample5.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample6.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample5.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample6.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample7.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample3.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample4.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample2.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample6.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample5.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample6.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample7.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample3.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample4.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample2.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myModal" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample6.jpg);"></div>
+                        <div class="my-stext">江小信 (1)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="teacher1">
+                	<div class="my-stlist">
+                        <a href="#myTeacher" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample2.jpg);"></div>
+                        <div class="my-stext">江小信 (班導師)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myTeacher" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample3.jpg);"></div>
+                        <div class="my-stext">江小信 (國文)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myTeacher" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample4.jpg);"></div>
+                        <div class="my-stext">江小信 (英文)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myTeacher" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample5.jpg);"></div>
+                        <div class="my-stext">江小信 (數學)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myTeacher" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample6.jpg);"></div>
+                        <div class="my-stext">江小信 (自然)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                    <div class="my-stlist">
+                        <a href="#myTeacher" data-toggle="modal">
+                        <div class="my-stpic" style="background-image: url(css/images/sample7.jpg);"></div>
+                        <div class="my-stext">江小信 (社會)</div>
+                        <div class="my-mur" rel="tooltip" data-placement="top" data-original-title="碎碎念碎碎念碎碎念碎碎念">碎碎念碎碎念碎碎念碎碎念</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <hr />
+<!--學生/家長-->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="flexslider">
+       	<ul class="slides">
+            <li>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="myModalLabel">江小信（1）</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="my-ppimg">
+                    	<img src="css/images/sample2.jpg" />
+                        <a href="#" class="btn" rel="popover"
+                        	data-content='<textarea class="span4" rows="10"></textarea>
+                            				<br/>
+                                            <button class="btn btn-success pull-right" action-type="send">送出</button>'
+                            data-original-title='<i class="icon-comment"></i> 剩餘字數：140 <button type="button" class="close" data-dismiss="popover" aria-hidden="true">×</button>'>
+                            <i class="icon-comment"></i> 傳送訊息
+                        </a>
+                        <div class="accordion" id="accordion2">
+                          <div class="accordion-group">
+                            <div class="accordion-heading">
+                              <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                                學生代碼
+                              </a>
+                            </div>
+                            <div id="collapseOne" class="accordion-body collapse">
+                              <div class="accordion-inner">
+                                123456 <a href="#"><i class="icon-refresh"></i></a>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="accordion-group">
+                            <div class="accordion-heading">
+                              <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                                家長代碼
+                              </a>
+                            </div>
+                            <div id="collapseTwo" class="accordion-body collapse">
+                              <div class="accordion-inner">
+                                123456 <a href="#"><i class="icon-refresh"></i></a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="alert">碎碎念碎碎念碎碎念碎碎念碎碎念碎碎念碎碎念碎碎念念</div>
+                    <ul>
+                    	<li><i class="icon-bookmark"></i> 風紀股長</li>
+                        <li><i class="icon-gift"></i> 1999-02-28</li>
+                        <li><i class="icon-headphones"></i> 035-123456</li>
+                        <li><i class="icon-headphones"></i> 0912345678</li>
+                        <li><i class="icon-envelope"></i> ischooltester@ischool.com.tw</li>
+                        <li><i class="icon-home"></i> 新竹市北大路000-00號</li>
+                        <li class="my-profile">Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. show) is triggered at the start of an event, and its past participle form (ex. shown) is trigger on the completion of an action.Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. show) is triggered at the start of an event, and its past participle form (ex. shown) is trigger on the completion of an action.Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. show) is triggered at the start of an event, and its past participle form (ex. shown) is trigger on the completion of an action.Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. show) is triggered at the start of an event, and its past participle form (ex. shown) is trigger on the completion of an action.</li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="myModalLabel">江姜疆（爸爸）</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="my-ppimg">
+                    	<img src="css/images/sample6.jpg" />
+                        <a href="#" class="btn" rel="popover"
+                        	data-content='<textarea class="span4" rows="10"></textarea>
+                            				<br/>
+                                            <label class="checkbox inline">
+                                              <input type="checkbox" value="">
+                                              傳送給江小信所有親屬
+                                            </label>
+                                            <button class="btn btn-success pull-right" action-type="send">送出</button>'
+                            data-original-title='<i class="icon-comment"></i> 剩餘字數：140 <button type="button" class="close" data-dismiss="popover" aria-hidden="true">×</button>'>
+                            <i class="icon-comment"></i> 傳送訊息
+                        </a>
+                    </div>
+                    <div class="alert">碎碎念碎碎念碎碎念碎碎念碎碎念碎碎念</div>
+                    <ul>
+                        <li><i class="icon-gift"></i> 1999-02-28</li>
+                        <li><i class="icon-headphones"></i> 035-123456</li>
+                        <li><i class="icon-headphones"></i> 0912345678</li>
+                        <li><i class="icon-envelope"></i> ischooltester@ischool.com.tw</li>
+                        <li><i class="icon-home"></i> 新竹市北大路000-00號</li>
+                        <li class="my-profile">Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. show) is triggered at the start of an event, and its past participle form (ex. shown) is trigger on the completion of an action.Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. show) is triggered at the start of an event, and its past participle form (ex. shown) is trigger on the completion of an action.Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. show) is triggered at the start of an event, and its past participle form (ex. shown) is trigger on the completion of an action.Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. show) is triggered at the start of an event, and its past participle form (ex. shown) is trigger on the completion of an action.</li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="myModalLabel">嘩啦啦（媽媽）</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="my-ppimg">
+                    	<img src="css/images/sample4.jpg" />
+                        <a href="#" class="btn" rel="popover"
+                        	data-content='<textarea class="span4" rows="10"></textarea>
+                            				<br/>
+                                            <label class="checkbox inline">
+                                              <input type="checkbox" value="">
+                                              傳送給江小信所有親屬
+                                            </label>
+                                            <button class="btn btn-success pull-right" action-type="send">送出</button>'
+                            data-original-title='<i class="icon-comment"></i> 剩餘字數：140 <button type="button" class="close" data-dismiss="popover" aria-hidden="true">×</button>'>
+                            <i class="icon-comment"></i> 傳送訊息
+                        </a>
+                    </div>
+                    <div class="alert">碎碎念碎碎念碎碎念碎碎念碎碎念碎碎念</div>
+                    <ul>
+                        <li><i class="icon-gift"></i> 1999-12-20</li>
+                        <li><i class="icon-headphones"></i> 035-123456</li>
+                        <li><i class="icon-headphones"></i> 0912345678</li>
+                        <li><i class="icon-envelope"></i> ischooltester@ischool.com.tw</li>
+                        <li><i class="icon-home"></i> 新竹市北大路000-00號</li>
+                        <li class="my-profile">Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. show) is triggered at the start of an event, and its past participle form (ex. shown) is trigger on the completion of an action.Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. show) is triggered at the start of an event, and its past participle form (ex. shown) is trigger on the completion of an action.Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. show) is triggered at the start of an event, and its past participle form (ex. shown) is trigger on the completion of an action.Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. show) is triggered at the start of an event, and its past participle form (ex. shown) is trigger on the completion of an action.</li>
+                    </ul>
+                </div>
+            </li>
+       	</ul>
+    </div>
+</div>
+
+<!--教師-->
+<div id="myTeacher" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="flexslider">
+       	<ul class="slides">
+            <li>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="myModalLabel">江小信（班導師）</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="my-ppimg">
+                    	<img src="css/images/sample.jpg" />
+                        <a href="#" class="btn" rel="popover"
+                        	data-content='<textarea class="span4" rows="10"></textarea>
+                            				<br/>
+                                            <button class="btn btn-success pull-right" action-type="send">送出</button>'
+                            data-original-title='<i class="icon-comment"></i> 剩餘字數：140 <button type="button" class="close" data-dismiss="popover" aria-hidden="true">×</button>'>
+                            <i class="icon-comment"></i> 傳送訊息
+                        </a>
+                    </div>
+                    <div class="alert">聽老師話者考試歐啪絲</div>
+                    <ul>
+                        <li><i class="icon-gift"></i> 1999-02-28</li>
+                        <li><i class="icon-headphones"></i> 035-123456</li>
+                        <li><i class="icon-headphones"></i> 0912345678</li>
+                        <li><i class="icon-envelope"></i> ischooltester@ischool.com.tw</li>
+                        <li><i class="icon-home"></i> 新竹市北大路000-00號</li>
+                        <li class="my-profile">Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. show) is triggered at the start of an event, and its past participle form (ex. shown) is trigger on the completion of an action.Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. show) is triggered at the start of an event, and its past participle form (ex. shown) is trigger on the completion of an action.Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. show) is triggered at the start of an event, and its past participle form (ex. shown) is trigger on the completion of an action.Bootstrap provides custom events for most plugin's unique actions. Generally, these come in an infinitive and past participle form - where the infinitive (ex. show) is triggered at the start of an event, and its past participle form (ex. shown) is trigger on the completion of an action.</li>
+                    </ul>
+                </div>
+            </li>
+       	</ul>
+    </div>
+</div>
+
+<!--訊息-->
+<div id="mySendMsg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <i class="icon-comment"></i> 剩餘字數：140
+    </div>
+    <div class="modal-body">
+        <p><textarea class="span5" rows="10"></textarea></p>
+    </div>
+    <div class="modal-footer">
+    	<p class="pull-left">
+        <label class="radio inline">
+          <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+          所有學生與家長
+        </label>
+        <label class="radio inline">
+          <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+          學生
+        </label>
+        <label class="radio inline">
+          <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+          家長
+        </label>
+        </p>
+        <a href="#" class="btn btn-primary">送出</a>
+    </div>
+</div>
+</body>
+</html>

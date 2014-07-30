@@ -1,0 +1,55 @@
+<html>
+<head>
+    <meta content='text/html;charset=utf-8' />
+  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+  <script>
+    init({
+      application: "http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_kh", //"http://test.iteacher.tw/cs4/test_gadget",
+      paramValues: {}
+    });
+  </script>
+</head>
+<body leftmargin='0' topmargin='0' marginwidth='0' bgcolor='#FFFFFF' style='margin: 0;'>
+<script type="text/javascript" charset="utf-8" src="js/jquery.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.tools.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+
+gadget.autofit(document.getElementById("widget"));
+
+var _flashObj;
+
+var _swf = "src/widget.swf";
+var _connection = gadget.getContract("ta");
+
+_connection.send({
+    service: "DS.Base.Connect",
+    body: { RequestSessionID: "" },
+    result: function (response, error, http) {
+
+        var accessPoint = _connection.getAccessPoint();
+        var securityToken =
+			"<SecurityToken Type='Session'>" +
+				"<SessionID>" + response.SessionID + "</SessionID>" +
+			"</SecurityToken>";
+
+        var url = _swf + "?accessPoint=" + accessPoint + "&securityToken=" + securityToken
+
+        _flashObj = flashembed("widget", url);
+    }
+});
+
+gadget.onLeave(function(){
+	if (_flashObj.getApi().leaveStatus() == "false") {
+		gadget.setExterior({hint: "成績尚未儲存!"});
+		return "成績尚未儲存!";
+	}
+	else {
+		gadget.setExterior({hint: ""});
+		return "";
+	}
+});
+</script>
+
+<div id="widget">
+</body>
+</html>

@@ -1,0 +1,135 @@
+.page-container {
+	min-width: 100%;
+	width: 100%;
+	min-height: 100%;
+	height: 100%;
+	position: relative;
+	text-align: left;
+}
+
+.toolbar-div, .content-div {
+	padding: 10px;
+}
+
+.course-select {
+	width: 100%;
+	margin: 4px 0;
+}
+
+.score-div {
+	display: block;
+	min-height: 100%;
+	height: 100%;
+	overflow: auto;
+	margin-bottom: 75px;
+}
+
+.score-table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	display: block;
+	thead {
+		th {
+			border: 1px solid #ccc;
+			padding: 4px;
+			text-align: center;
+		}
+	}
+	tbody {
+		tr {
+			color: grey;
+			height: auto;
+			&:hover {
+				background-color: rgba(31, 152, 199, 0.1);
+				border-color: rgba(31, 152, 199, 0.15);
+			}
+		}
+		td {
+			border-left: 1px solid #ccc;
+			border-right: 1px solid #ccc;
+			border-bottom: 1px solid #ccc;
+			padding: 4px;
+			text-align: center;
+			vertical-align: middle;
+			outline: none;
+		}
+	}
+}
+
+.score-item, .remark-item {
+	outline: none;
+}
+
+.print-page {
+	display: none;
+	font: 13px/1.5 Arial,sans-serif;
+}
+
+.title {
+	font: 20px/1.5 Arial,sans-serif;
+	position: relative;
+	text-align: center;
+	padding: 10px 0;
+}
+
+.score-detail table {
+	border-collapse: collapse;
+ 	border-spacing: 0;
+ 	margin: 10px 0;
+ 	thead {
+ 		tr {
+ 			text-align: center;
+ 		}
+ 		th {
+	 		border: 1px solid #000;
+	 		padding: 1px;
+	 		height: 28px;
+ 		}
+ 	}
+ 	tbody {
+	 	tr {
+	 		text-align: center;
+	 	}
+	 	td {
+		 	border: 1px solid #000;
+		 	padding: 1px;
+		 	height: 28px;
+	 	}
+ 	}
+}
+
+.course-info {
+	.subject-code { width: 300px; }
+	.subject-name { width: 300px; }
+	.class-name { width: 100px; }
+	div { padding-top: 8px; }
+}
+
+.teacher-sign {
+	.subject-code { width: 300px; }
+	.subject-name { width: 240px; }
+	.class-name { width: 100px; }
+	div { padding-top: 8px; }
+}
+
+.header {
+	width: 100%;
+	position: relative;
+	.logo {
+		margin-left: 20px;
+	}
+	.link {
+		margin-left: 12px;
+	}
+}
+
+.footer {
+	border-top: 1px solid #ccc;
+	padding-top: 4px;
+    height: 70px;
+	position: fixed;
+	left: 8px;
+	right: 8px;
+	bottom: 0px;
+	background: #fff;
+}

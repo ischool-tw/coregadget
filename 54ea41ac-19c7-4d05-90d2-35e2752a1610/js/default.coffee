@@ -109,21 +109,35 @@ jQuery ->
         }
   }
 
+# 用來處理 DSA 回傳的資料：因為當 DSA 只回傳一筆時為單一物件，沒有資料時為 undefined, 多筆時為 array
+# 所以透過此函數要全部轉換成 array
+myHandleArray = (obj) ->
+  # 只回傳一筆時為單一物件，沒有資料時為 undefined, 多筆時為 array
+  if !$.isArray(obj)
+    result = [];
+    if (obj)
+      result.push(obj)
+  else
+    result = obj
+  return result
 
 # TODO: 學年度學期
 resetSchoolYearSeme = () ->
   student = global.student
   items = []
+  items.push """
+    <button class='btn btn-large active' school-year='#{global.schoolYear}' semester='#{global.semester}'>#{global.schoolYear + '' + global.semester}</button>
+  """
+
   if student.SemsHistory?.History?
-    items.push """
-      <button class='btn btn-large active' school-year='#{global.schoolYear}' semester='#{global.semester}'>#{global.schoolYear + '' + global.semester}</button>
-    """
+    student.SemsHistory.History = myHandleArray(student.SemsHistory.History)
     $(student.SemsHistory.History.sort $.by("desc", "SchoolYear", $.by("desc", "Semester"))).each (index, item) ->
       unless @.SchoolYear is global.schoolYear and @.Semester is global.semester
         items.push """
           <button class='btn btn-large' school-year='#{@.SchoolYear}' semester='#{@.Semester}'>#{@.SchoolYear + '' + @.Semester}</button>
         """
-    $("#behavior .btn-group").html(items.join(""))
+
+  $("#behavior .btn-group").html(items.join(""))
 
 # TODO: 清除資料
 resetData = () ->
@@ -212,8 +226,11 @@ getMorality = () ->
               that = @
               tmpFace = ''
 
-              if response.Result?.DailyLifeScore?.Content?.Morality?
-                $(response.Result.DailyLifeScore.Content.Morality).each () ->
+              if response.Result?.DailyLifeScore?.Content?.Morality? then morality = response.Result.DailyLifeScore.Content.Morality
+              if response.Result?.DailyLifeScore?.TextScore?.Morality? then morality = response.Result.DailyLifeScore.TextScore.Morality
+
+              if morality
+                $(morality).each () ->
                   if @.Face is that.Face
                     tmpFace = @['@text']
                     return false
