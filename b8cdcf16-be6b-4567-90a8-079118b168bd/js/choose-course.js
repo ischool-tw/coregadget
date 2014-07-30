@@ -1024,12 +1024,13 @@ jQuery(function () {
                                 var s = (n.getSeconds()< 10)?("0" + (n.getSeconds())):(n.getSeconds());
 
                                 var now = y+"/"+m+"/"+d+" "+h+":"+mi+":"+s;
+                                var mail_subject_time = mail_subject + "<通知時間：" + now + ">";
                                 _gg.connection.send({
                                     service: "_.SendMail",
                                     body: {
                                         Request: {
                                             Receiver: receivers,
-                                            Subject: mail_subject,
+                                            Subject: mail_subject_time,
                                             HtmlContent: self.configuration[mail_tmpl_name]() + course_html
                                         }
                                     },
