@@ -1060,6 +1060,7 @@ jQuery(function () {
                                                     }
                                                   }
                                                  }).done(function(response) {
+                                                    return;
                                                    //console.log(response); // if you're into that sorta thing
                                                  });
                                             }
@@ -1078,7 +1079,7 @@ jQuery(function () {
                         $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
                         setTimeout("$('#mainMsg').html('')", 1500);
                     }
-                }
+                };
 
                 var _add = self.get_add_list();
                 if (_add.length > 0) {
