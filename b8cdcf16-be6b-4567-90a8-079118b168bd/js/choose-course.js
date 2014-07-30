@@ -1045,7 +1045,7 @@ jQuery(function () {
                                                   data: {
                                                     'key': response.Response.apikey,
                                                     'message': {
-                                                      'from_email': 'paul.wang@ischool.com.tw',
+                                                      'from_email': 'embacourse@emba.ntu.edu.tw',
                                                       'to': receiver,
                                                       'autotext': 'true',
                                                       'subject': mail_subject_time,
@@ -1053,8 +1053,8 @@ jQuery(function () {
                                                     }
                                                   }
                                                  }).done(function(response) {
-                                                    return;
-                                                   //console.log(response); // if you're into that sorta thing
+                                                    $('#mainMsg').html("<div class='alert alert-success'>\n  發送選課結果通知成功！\n</div>");
+                                                    setTimeout("$('#mainMsg').html('')", 1500);
                                                  });
                                             }
                                         }
