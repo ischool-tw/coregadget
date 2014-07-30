@@ -1000,7 +1000,12 @@ jQuery(function () {
                             var receiver = [], mail_subject = '', mail_tmpl_name = '', course_html = '';
                             for (var ii=1; ii<=5; ii+=1) {
                                 if (self.student['Email' + ii]()) {
-                                    receiver.push((self.student.StudentName() || '') + '<' + self.student['Email' + ii]() + '>');
+                                    receiver.push(
+                                    {
+                                        'email': self.student['Email' + ii](),
+                                        'name': self.student.StudentName() || '',
+                                        'type': 'to'
+                                    });
                                 }
                             }
 
@@ -1041,18 +1046,7 @@ jQuery(function () {
                                                     'key': response.Response.apikey,
                                                     'message': {
                                                       'from_email': 'paul.wang@ischool.com.tw',
-                                                      'to': [
-                                                          {
-                                                            'email': 'paul.wang@ischool.com.tw',
-                                                            'name': '汪嶸峰',
-                                                            'type': 'to'
-                                                          },
-                                                          {
-                                                            'email': 'paul.wang@ischool.com.tw',
-                                                            'name': '汪嶸峰',
-                                                            'type': 'to'
-                                                          }
-                                                        ],
+                                                      'to': receiver,
                                                       'autotext': 'true',
                                                       'subject': mail_subject_time,
                                                       'html': self.configuration[mail_tmpl_name]() + course_html
