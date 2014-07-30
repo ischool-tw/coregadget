@@ -73,7 +73,7 @@
                         <tbody data-type="quit" data-bind="foreach: curr_attend">
                           <tr data-bind="if: ChooseItem == '1', css: { 'my-error': HaveConflict().length > 0}">
                             <td rowspan="2" class="my-cbx-style" data-bind="if: $root.currentData.Item() == '1' || $root.currentData.Item() == '2'">
-                              <input type="checkbox" data-bind="checked: WillQuit, value: CourseID, conflict_list: HaveConflict()">
+                              <input type="checkbox" data-bind="checked: WillQuit, value: CourseID, conflict_list: HaveConflict()" style="width: 20px; height: 20px;">
                             </td>
                             <td data-bind="text: NewSubjectCode"></td>
                             <td data-bind="text: ClassName"></td>
