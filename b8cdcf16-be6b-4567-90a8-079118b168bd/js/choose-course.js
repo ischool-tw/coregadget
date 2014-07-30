@@ -178,10 +178,12 @@ jQuery(function () {
                         case '1':
                             tmp_txt = '第一階段電腦選課：' +  (item.BeginTime || '未設定') + ' 至 ' + (item.EndTime || '未設定') + ' 止。';
                             self.course_opening_info.Item1(self.course_opening_info.Item1() + tmp_txt);
+                            set_cs_content1_template();
                             break;
                         case '2':
                             tmp_txt = '<br />第二階段電腦選課：' +  (item.BeginTime || '未設定') + ' 至 ' + (item.EndTime || '未設定') + ' 止。';
                             self.course_opening_info.Item1(self.course_opening_info.Item1() + tmp_txt);
+                            set_cs_content1_template();
                             break;
                         case '0':
                             tmp_txt = '加退選：' +  (item.BeginTime || '未設定') + ' 至 ' + (item.EndTime || '未設定') + ' 止。';
@@ -1407,3 +1409,66 @@ _gg.set_error_message = function(select_str, serviceName, error) {
         $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + error + "\n</div>");
     }
 };
+
+
+//#region 設定第一階段選課說明文字
+var set_cs_content1_template = function() {
+    _connection.send({
+        service: "_.GetCSConfiguration",
+        body: '<Request><Condition><ConfName>cs_content1_template</ConfName></Condition></Request>',
+        result: function (response, error, http) {
+            if (error !== null) {
+                set_error_message('#mainMsg', 'GetCSConfiguration', error);
+            } else {
+                // <Response>
+                //     <Configuration>
+                //         <ConfName>cs_content1_template</ConfName>
+                //         <ConfContent>
+                //             <![CDATA['由desktop提供之樣版內容']]></ConfContent>
+                //     </Configuration>
+                // </Response>
+
+                if (response.Response && response.Response.Configuration) {
+                    $(response.Response.Configuration).each(function(index, item) {
+                        _cs_content_template = item.ConfContent;
+                        $('#cs_content1_template').html(_cs_content_template);
+                        $('#cs_content1_template').show();
+                        $('#cs_content2_template').hide();
+                    });
+                }
+            }
+        }
+    });
+};
+//#endregion
+
+//#region 設定第二階段選課說明文字
+var set_cs_content2_template = function() {
+    _connection.send({
+        service: "_.GetCSConfiguration",
+        body: '<Request><Condition><ConfName>cs_content2_template</ConfName></Condition></Request>',
+        result: function (response, error, http) {
+            if (error !== null) {
+                set_error_message('#mainMsg', 'GetCSConfiguration', error);
+            } else {
+                // <Response>
+                //     <Configuration>
+                //         <ConfName>cs_content2_template</ConfName>
+                //         <ConfContent>
+                //             <![CDATA['由desktop提供之樣版內容']]></ConfContent>
+                //     </Configuration>
+                // </Response>
+
+                if (response.Response && response.Response.Configuration) {
+                    $(response.Response.Configuration).each(function(index, item) {
+                        _cs_content_template = item.ConfContent;
+                        $('#cs_content2_template').html(_cs_content_template);
+                        $('#cs_content1_template').hide();
+                        $('#cs_content2_template').show();
+                    });
+                }
+            }
+        }
+    });
+};
+//#endregion
