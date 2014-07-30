@@ -1027,9 +1027,8 @@ jQuery(function () {
                                 var mail_subject_time = mail_subject + "<通知時間：" + now + ">";
                                 _gg.connection.send({
                                     service: "default.GetMandrillApiKey",
-                                    body: ''
-                                    },
-                                    result: function (response, error, http) {
+                                    body: '',
+                                    result: function(response, error, http) {
                                         if (error !== null) {
                                             _gg.set_error_message('#mainMsg', '發送郵件失敗', error);
                                         } else {
