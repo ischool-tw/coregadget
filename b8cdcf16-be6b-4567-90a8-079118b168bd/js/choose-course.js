@@ -1026,19 +1026,59 @@ jQuery(function () {
                                 var now = y+"/"+m+"/"+d+" "+h+":"+mi+":"+s;
                                 var mail_subject_time = mail_subject + "<通知時間：" + now + ">";
                                 _gg.connection.send({
-                                    service: "_.SendMail",
-                                    body: {
-                                        Request: {
-                                            Receiver: receivers,
-                                            Subject: '1',
-                                            TextContent: '2'
-                                        }
+                                    service: "_.GetMandrillApiKey",
+                                    body: ''
                                     },
                                     result: function (response, error, http) {
                                         if (error !== null) {
-                                            $('#save-data').button('reset');
-                                            $('#myModal [data-dismiss="modal"]').show();
-                                            _gg.set_error_message('#mainMsg', '', '郵件發送失敗！請連絡系統管理員');
+                                            _gg.set_error_message('#mainMsg', '發送郵件失敗', error);
+                                        } else {
+                                            if (response.Response) {
+
+                                                $.ajax({
+                                                  type: 'POST',
+                                                  url: 'https://mandrillapp.com/api/1.0/messages/send.json',
+                                                  data: {
+                                                    'key': response.Response.apikey,
+                                                    'message': {
+                                                      'from_email': 'paul.wang@ischool.com.tw',
+                                                      'to': [
+                                                          {
+                                                            'email': 'paul.wang@ischool.comt.w',
+                                                            'name': '汪嶸峰',
+                                                            'type': 'to'
+                                                          },
+                                                          {
+                                                            'email': 'paul.wang@ischool.comt.w',
+                                                            'name': '汪嶸峰',
+                                                            'type': 'to'
+                                                          }
+                                                        ],
+                                                      'autotext': 'true',
+                                                      'subject': mail_subject_time,
+                                                      'html': self.configuration[mail_tmpl_name]() + course_html
+                                                    }
+                                                  }
+                                                 }).done(function(response) {
+                                                   //console.log(response); // if you're into that sorta thing
+                                                 });
+
+                                            //     var m = new mandrill.Mandrill(response.Response.apikey);
+
+                                            //     var params = {
+                                            //         "message": {
+                                            //             "from_email":"paul.wang@ischool.com.tw",
+                                            //             "to":[{"email":"paul.wang@ischool.com.tw"}],
+                                            //             "subject": mail_subject,
+                                            //             "html": self.configuration[mail_tmpl_name]() + course_html
+                                            //         }
+                                            //     };
+                                            //     m.messages.send(params, function(res) {
+                                            //         log(res);
+                                            //     }, function(err) {
+                                            //         log(err);
+                                            //     });
+                                            // }
                                         }
                                     }
                                 });
