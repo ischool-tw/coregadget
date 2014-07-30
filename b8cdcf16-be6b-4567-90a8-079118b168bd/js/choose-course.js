@@ -1340,12 +1340,12 @@ jQuery(function () {
     MyViewModel.get_configuration();
 
     $(document).ready(function(){
-        if (vm.currentData.Item() === '1') {
-            $("#cs_content1_template").html(vm.configuration.cs_content1_template());
+        if (MyViewModel.currentData.Item() === '1') {
+            $("#cs_content1_template").html(MyViewModel.configuration.cs_content1_template());
             $("#cs_content1_template").show();
             $("#cs_content2_template").hide();
-        } else if (vm.currentData.Item() === '2') {
-            $("#cs_content2_template").html(vm.configuration.cs_content2_template());
+        } else if (MyViewModel.currentData.Item() === '2') {
+            $("#cs_content2_template").html(MyViewModel.configuration.cs_content2_template());
             $("#cs_content2_template").show();
             $("#cs_content1_template").hide();
         }            
