@@ -89,7 +89,7 @@
                                     </ul>
                                 </div>
                             </td>
-                            <td>
+                            <td class="text-center">
                                 <input ng-if="current.SelectMode=='ID'"
                                        ng-model="current.SelectStudentNumber"
                                        ng-keydown="submitStudentID($event)"
@@ -106,16 +106,23 @@
                                        type="text"
                                        class="form-control"
                                        select-on-click />
-                                <input ng-if="current.SelectMode=='Seq.'"
-                                       id="prve-button"
-                                       type="button"
-                                       ng-click="goPrev()"
-                                       value="<<" />
-                                <input ng-if="current.SelectMode=='Seq.'"
-                                       id="next-button"
-                                       type="button"
-                                       ng-click="goNext()"
-                                       value=">>" />
+                                <button ng-if="current.SelectMode=='Seq.'"
+                                        class="btn btn-default btn-xs"
+                                        id="prve-button"
+                                        type="button"
+                                        ng-click="goPrev()">
+                                    <<
+                                </button>
+                                <span ng-if="current.SelectMode=='Seq.'">
+                                    &nbsp;
+                                </span>
+                                <button ng-if="current.SelectMode=='Seq.'"
+                                        class="btn btn-default btn-xs"
+                                        id="next-button"
+                                        type="button"
+                                        ng-click="goNext()">
+                                    >>
+                                </button>
                             </td>
                         </tr>
                         <tr>
