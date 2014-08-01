@@ -224,7 +224,7 @@ angular.module('entergrade', [])
                                     delete item.MidtermGrade;
                                 });
                                 if ($scope.courseList.length) {
-                                    $scope.selectStudent($scope.studentList[0], item.FinalOpening == 'true' ? $scope.examList[1] : $scope.examList[0]);
+                                    $scope.setCurrent($scope.studentList[0], item.FinalOpening == 'true' ? $scope.examList[1] : $scope.examList[0], true, true);
                                 }
                             }
                         });
@@ -233,20 +233,25 @@ angular.module('entergrade', [])
             });
         }
 
-        $scope.selectStudent = function (student, exam) {
-            student.selected = true;
+        $scope.setCurrent = function (student, exam, setCondition, setFocus) {
+            if (student)
+                student.selected = true;
             if ($scope.current.Student && $scope.current.Student.selected)
                 delete $scope.current.Student.selected;
 
             $scope.current.Exam = exam;
             $scope.current.Student = student;
 
-            $scope.current.SelectStudentNumber = student.StudentNumber;
-            $scope.current.SelectSeatNo = student.SeatNo;
-            $scope.current.Score = student[exam.Name];
-            $timeout(function () {
-                $('#grade-textbox:visible').focus().select();
-            }, 1);
+            $scope.current.Score = (student || {})[exam.Name] || "";
+            if (setCondition) {
+                $scope.current.SelectStudentNumber = student.StudentNumber;
+                $scope.current.SelectSeatNo = student.SeatNo;
+            }
+            if (setFocus) {
+                $timeout(function () {
+                    $('#grade-textbox:visible').focus().select();
+                }, 1);
+            }
         }
 
         $scope.changeSelectMode = function (mode) {
@@ -255,10 +260,14 @@ angular.module('entergrade', [])
                 $('#seatno-textbox:visible,#id-textbox:visible').select().focus();
             }, 1);
         }
-
-        $scope.selectStudentID = function (event) { //輸入座號跳到該座號
+        $scope.submitStudentID = function (event) {
             if (event.keyCode !== 13) return; // 13是enter按鈕的代碼，return是跳出
-
+            if (!$scope.current.Student) return;
+            $timeout(function () {
+                $('#grade-textbox:visible').focus().select();
+            }, 1);
+        }
+        $scope.typeStudentID = function () {
             var currentIndex = $scope.current.Student ? $scope.current.Student.index : 0;
 
             var nextStudent = null;
@@ -275,13 +284,17 @@ angular.module('entergrade', [])
                     }
                 }
             });
-            if (nextStudent2 || nextStudent)
-                $scope.selectStudent(nextStudent2 || nextStudent, $scope.current.Exam);
+            $scope.setCurrent(nextStudent2 || nextStudent, $scope.current.Exam, true, false);
         }
 
-        $scope.selectStudentNo = function (event) { //輸入座號跳到該座號
+        $scope.submitStudentNo = function (event) {
             if (event.keyCode !== 13) return; // 13是enter按鈕的代碼，return是跳出
-
+            if (!$scope.current.Student) return;
+            $timeout(function () {
+                $('#grade-textbox:visible').focus().select();
+            }, 1);
+        }
+        $scope.typeStudentNo = function () {
             var currentIndex = $scope.current.Student ? $scope.current.Student.index : 0;
 
             var nextStudent = null;
@@ -298,8 +311,28 @@ angular.module('entergrade', [])
                     }
                 }
             });
-            if (nextStudent2 || nextStudent)
-                $scope.selectStudent(nextStudent2 || nextStudent, $scope.current.Exam);
+            $scope.setCurrent(nextStudent2 || nextStudent, $scope.current.Exam, true, false);
+        }
+
+        $scope.goPrev = function () {
+            var currentIndex = $scope.current.Student ? $scope.current.Student.index : 0;
+            $scope.setCurrent(
+                (currentIndex == 0) ?
+                    $scope.studentList[$scope.studentList.length -1] :
+                    $scope.studentList[currentIndex - 1]
+                , $scope.current.Exam
+                , true
+                , true);
+        }
+        $scope.goNext = function () {
+            var currentIndex = $scope.current.Student ? $scope.current.Student.index : 0;
+            $scope.setCurrent(
+                (currentIndex == $scope.studentList.length - 1) ?
+                    $scope.studentList[0] :
+                    $scope.studentList[currentIndex + 1]
+                , $scope.current.Exam
+                , true
+                , true);
         }
 
 
@@ -340,11 +373,16 @@ angular.module('entergrade', [])
                         $scope.studentList[0];
 
                     $scope.$apply(function () {
-                        $scope.current.SelectStudentNumber = nextStudent.StudentNumber;
-                        $scope.current.SelectSeatNo = nextStudent.SeatNo;
+                        //$scope.current.SelectStudentNumber = nextStudent.StudentNumber;
+                        //$scope.current.SelectSeatNo = nextStudent.SeatNo;
+                        $scope.setCurrent(nextStudent, $scope.current.Exam, true, false);
                     });
                     $timeout(function () {
-                        $('#seatno-textbox:visible,#id-textbox:visible').select().focus();
+                        if ($scope.current.SelectMode != 'Seq.')
+                            $('#seatno-textbox:visible,#id-textbox:visible').select().focus();
+                        else {
+                            $('#grade-textbox:visible').focus().select();
+                        }
                     }, 1);
                 }
             });

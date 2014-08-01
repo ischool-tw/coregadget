@@ -28,12 +28,6 @@
             <span ng-repeat="item in examList">
                 <p ng-if="item.Opening" style="margin:0;">{{item.Name}}: {{item.Begin}} ~ {{item.End}} {{item.Message}}</p>
             </span>
-            <!--
-                <div class="alert alert-info" ng-if="examList == 'true' || current.FinalOpening == 'true'">
-                    <p ng-if="current.MiddleOpening == 'true'">Midterm: {{current.MiddleBegin}} ~ {{current.MiddleEnd}} {{current.Message}}</p>
-                    <p ng-if="current.FinalOpening == 'true'">Final: {{current.FinalBegin}} ~ {{current.FinalEnd}}</p>
-                </div>
-            -->
         </div>
         <div class="btn-group">
             <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{current.Course.CourseName}} <span class="caret"></span> </a>
@@ -52,10 +46,6 @@
                             <th class="col-md-1 text-center">No.</th>
                             <th class="col-md-5 text-center">Name</th>
                             <th ng-repeat="exam in examList" class="col-md-2 text-center">{{exam.Name}}</th>
-                            <!--
-                                <th class="col-md-2 text-center">Midterm</th>
-                                <th class="col-md-2 text-center">Final</th>
-                            -->
                         </tr>
                     </thead>
                     <tbody>
@@ -67,17 +57,9 @@
                             <td class="text-left">
                                 {{item.StudentChineseName}} {{item.StudentNickname ? '('+item.StudentNickname+')' : ''}}
                             </td>
-                            <td ng-repeat="exam in examList" style="cursor:pointer;" ng-click="selectStudent(item,exam)">
+                            <td ng-repeat="exam in examList" style="cursor:pointer;" ng-click="setCurrent(item, exam, true, true)">
                                 <span ng-class="{'text-danger':item[exam.Name] < 60}">{{item[exam.Name]}}</span>
                             </td>
-                            <!--
-            <td style="cursor:pointer;" ng-click="selectStudent(item,'1')">
-                <span ng-class="{'text-danger':item.MidtermGrade < 60}">{{item.MidtermGrade}}</span>
-            </td>
-            <td style="cursor:pointer;" ng-click="selectStudent(item,'2')">
-                <span ng-class="{'text-danger':item.FinalGrade < 60}">{{item.FinalGrade}}</span>
-            </td>
-        -->
                         </tr>
                     </tbody>
                 </table>
@@ -101,30 +83,41 @@
                                         <li ng-class="{active:current.SelectMode=='No.'}">
                                             <a href="javascript:;" ng-click="changeSelectMode('No.')">No.</a>
                                         </li>
+                                        <li ng-class="{active:current.SelectMode=='Seq.'}">
+                                            <a href="javascript:;" ng-click="changeSelectMode('Seq.')">Seq.</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </td>
                             <td>
                                 <input ng-if="current.SelectMode=='ID'"
                                        ng-model="current.SelectStudentNumber"
-                                       ng-keydown="selectStudentID($event)"
+                                       ng-keydown="submitStudentID($event)"
+                                       ng-change="typeStudentID()"
                                        id="id-textbox"
                                        type="text"
                                        class="form-control"
                                        select-on-click />
                                 <input ng-if="current.SelectMode=='No.'"
                                        ng-model="current.SelectSeatNo"
-                                       ng-keydown="selectStudentNo($event)"
+                                       ng-keydown="submitStudentNo($event)"
+                                       ng-change="typeStudentNo()"
                                        id="seatno-textbox"
                                        type="text"
                                        class="form-control"
                                        select-on-click />
+                                <input ng-if="current.SelectMode=='Seq.'"
+                                       id="prve-button"
+                                       type="button"
+                                       ng-click="goPrev()"
+                                       value="<<" />
+                                <input ng-if="current.SelectMode=='Seq.'"
+                                       id="next-button"
+                                       type="button"
+                                       ng-click="goNext()"
+                                       value=">>" />
                             </td>
                         </tr>
-                        <!-- <tr>
-                            <td>No.</td>
-                            <td>{{current.Student.SeatNo}}</td>
-                        </tr> -->
                         <tr>
                             <td>Name</td>
                             <td>
@@ -141,7 +134,7 @@
                                     <a href="" class="btn btn-link btn-block dropdown-toggle" data-toggle="dropdown" style="padding:0; color:#333; text-align:left;">{{current.Exam.Name}} <span class="caret"></span> </a>
                                     <ul class="dropdown-menu" style="width:100%;">
                                         <li ng-repeat="examItem in examList" ng-class="{active:examItem==current.Exam}">
-                                            <a href="javascript:;" ng-click="selectStudent(current.Student, examItem)">{{examItem.Name}}</a>
+                                            <a href="javascript:;" ng-click="setCurrent(current.Student, examItem, false, true)">{{examItem.Name}}</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -151,10 +144,10 @@
                     <tbody>
                         <tr>
                             <td colspan="2">
-                                <div ng-if="!current.Exam.Opening"
+                                <div ng-if="!current.Exam.Opening && current.Student"
                                      ng-class="{'text-danger':current.Student[current.Exam.Name] < 60}"
                                      class="text-center">{{current.Student[current.Exam.Name]||'&nbsp;'}}</div>
-                                <input ng-if="current.Exam.Opening"
+                                <input ng-if="current.Exam.Opening && current.Student"
                                        ng-model="current.Score"
                                        ng-keydown="enterGrade($event)"
                                        id="grade-textbox"
