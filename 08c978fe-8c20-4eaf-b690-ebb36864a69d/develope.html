@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html ng-app="enterconduct">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+     <script>
+        init({
+            application: "test.b.nehs.hc.edu.tw",
+            paramValues: {},
+            oAuth: {
+                clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+                clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311'
+            }
+        });
+    </script>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/base.css" rel="stylesheet" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/enterconduct.js"></script>
+</head>
+
+<body ng-controller="MainCtrl">
+    <div id="gadget" class="my-page">
+        <h1>{{current.SchoolYear}} {{current.Semester == '1' ? '1st' : (current.Semester == '2' ? '2nd' :'')}} Semester  Grade Conduct</h1>
+        <div class="alert alert-info" ng-if="current.MiddleOpeningC == 'true' || current.FinalOpeningC == 'true'">
+            <p ng-if="current.MiddleOpeningC == 'true'">Midterm: {{current.MiddleBeginC}} ~ {{current.MiddleEndC}} {{current.Message}}</p>
+            <p ng-if="current.FinalOpeningC == 'true'">Final: {{current.FinalBeginC}} ~ {{current.FinalEndC}}</p>
+        </div>
+        <div ng-if="courseList">
+            <div class="btn-group">
+                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span ng-if="teacherType == 'homeroom'">Homeroom Teacher</span>
+                    <span ng-if="teacherType == 'subject'">Subject Teacher</span>
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li ng-if="current.HomeroomTeacher">
+                        <a href="javascript:;" ng-click="switchTeacherType('homeroom')">Homeroom teacher</a>
+                    </li>
+                    <li ng-if="current.SubjectTeacher">
+                        <a href="javascript:;" ng-click="switchTeacherType('subject')">Subject Teacher</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> {{currentCourse.ID}} , {{currentCourse.Title}} <span class="caret"></span> </a>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="item in courseList" ng-class="{active:item.selected}" ng-if="item.Show">
+                        <a href="javascript:;" ng-click="selectCourse(item)">{{item.ID}} , {{item.Title}}</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> {{currentStudent.StudentID}} , {{currentStudent.StudentChineseName}} ({{currentStudent.StudentEnglishName}}) <span class="caret"></span> </a>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="item in studentList" ng-class="{active:item.selected}">
+                        <a href="javascript:;" ng-click="selectStudent(item)">{{item.StudentID}} , {{item.StudentChineseName}} ({{item.StudentEnglishName}})</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-7">
+                    <table class="table table-bordered table-striped table-hover" ng-repeat="item in currentStudent.EditConduct.Conducts.Conduct" style="margin-bottom:-1px;">
+                        <thead>
+                            <tr>
+                                <th class="col-md-2" ng-if="currentCourse.GradeYear < 3">Midterm</th>
+                                <th class="col-md-2" ng-if="currentCourse.GradeYear < 3">Final</th>
+                                <th class="col-md-2" ng-if="currentCourse.GradeYear >= 3">Final</th>
+                                <th ng-class="{'col-md-8':currentCourse.GradeYear < 3 , 'col-md-10':currentCourse.GradeYear >= 3}">{{item.Group}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="temp in item.Item" ng-class="{'warning':temp.selected}">
+                                <td ng-if="currentCourse.GradeYear < 3" ng-click="selectConduct(temp,1)" style="cursor:pointer;">{{temp.MidtermGrade}}</td>
+                                <td ng-if="currentCourse.GradeYear < 3" ng-click="selectConduct(temp,2)" style="cursor:pointer;">{{temp.FinalGrade}}</td>
+                                <td ng-if="currentCourse.GradeYear >= 3" ng-click="selectConduct(temp,3)" style="cursor:pointer;">{{temp.Grade}}</td>
+                                <td>{{$index+1}}. {{temp.Title}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered table-striped table-hover" ng-if="teacherType == 'homeroom'">
+                        <thead>
+                            <tr>
+                                <th ng-if="currentCourse.GradeYear < 3">Midterm Comment (Shift+Enter)</th>
+                                <th ng-if="currentCourse.GradeYear < 3">Final Comment (Shift+Enter)</th>
+                                <th ng-if="currentCourse.GradeYear >= 3">Final Comment (Shift+Enter)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td ng-if="currentCourse.GradeYear < 3">
+                                    <textarea id="mcomment-textbox" class="form-control" rows="3" ng-keydown="enterComment($event)" ng-model="currentStudent.MidtermComment" ng-if="currentConduct.canInputMComment"></textarea>
+                                    <span ng-if="!currentConduct.canInputMComment">{{currentStudent.MidtermComment}}</span>
+                                </td>
+                                <td ng-if="currentCourse.GradeYear < 3">
+                                    <textarea id="fcomment-textbox" class="form-control" rows="3" ng-keydown="enterComment($event)" ng-model="currentStudent.FinalComment" ng-if="currentConduct.canInputFComment"></textarea>
+                                    <span ng-if="!currentConduct.canInputFComment">{{currentStudent.FinalComment}}</span>
+                                </td>
+                                <td ng-if="currentCourse.GradeYear >= 3">
+                                    <textarea id="comment-textbox" class="form-control" rows="3" ng-keydown="enterComment($event)" ng-model="currentStudent.Comment" ng-if="currentConduct.canInputGrade"></textarea>
+                                    <span ng-if="!currentConduct.canInputGrade">{{currentStudent.Comment}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-5">
+                    <div>
+                        <table class="table table-bordered table-striped" style="margin-bottom:-1px;">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">Student Info.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ID</td>
+                                    <td>
+                                        <input id="seatno-textbox" type="text" class="form-control" ng-model="currentStudent.tempStudentID" ng-keydown="selectStudentID($event)">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>{{currentStudent.StudentChineseName}} {{currentStudent.StudentEnglishName}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered" style="margin:0;" ng-if="currentConduct">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-9">{{currentConduct.Group}}</th>
+                                    <th class="col-md-3">{{currentConduct.Period == 1 ? 'Midterm' : 'Final'}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{currentConduct.index}}. {{currentConduct.Title}}</td>
+                                    <td>
+                                        <input id="grade-textbox" type="text" class="form-control" ng-if="currentConduct.canInputGrade" ng-model="currentConduct.tempGrade" ng-keydown="enterGrade($event)">
+                                        <span ng-if="!currentConduct.canInputGrade">{{currentConduct.tempGrade}}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div style="margin-top:10px;">
+                            <p ng-repeat="item in current.Code">
+                                {{item.Key}} = {{item.Value}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
