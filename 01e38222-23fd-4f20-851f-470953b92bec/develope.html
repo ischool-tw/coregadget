@@ -62,7 +62,7 @@
                         <tr ng-repeat="item in studentList"
                             _ng-class="{'success':(current.SelectMode=='ID'&&item.StudentID==current.SelectStudentID)||(current.SelectMode=='No.'&&item.SeatNo==current.SelectSeatNo),'warning':item.selected}"
                             ng-class="{'warning':item.selected}">
-                            <td>{{item.StudentID}}</td>
+                            <td>{{item.StudentNumber}}</td>
                             <td>{{item.SeatNo}}</td>
                             <td class="text-left">
                                 {{item.StudentChineseName}} {{item.StudentNickname ? '('+item.StudentNickname+')' : ''}}
@@ -106,7 +106,7 @@
                             </td>
                             <td>
                                 <input ng-if="current.SelectMode=='ID'"
-                                       ng-model="current.SelectStudentID"
+                                       ng-model="current.SelectStudentNumber"
                                        ng-keydown="selectStudentID($event)"
                                        id="id-textbox"
                                        type="text"

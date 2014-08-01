@@ -41,7 +41,7 @@ angular.module('entergrade', [])
                 Semester: "2",
                 SelectMode: "ID",
                 SelectSeatNo: "",
-                SelectStudentID: "",
+                SelectStudentNumber: "",
                 Score: "",
                 Course: {
                     CourseID: "4107",
@@ -115,7 +115,7 @@ angular.module('entergrade', [])
                 Semester: "",
                 SelectMode: "ID",
                 SelectSeatNo: "",
-                SelectStudentID: "",
+                SelectStudentNumber: "",
                 Score: ""
             };
             var respConfig = null;
@@ -241,7 +241,7 @@ angular.module('entergrade', [])
             $scope.current.Exam = exam;
             $scope.current.Student = student;
 
-            $scope.current.SelectStudentID = student.StudentID;
+            $scope.current.SelectStudentNumber = student.StudentNumber;
             $scope.current.SelectSeatNo = student.SeatNo;
             $scope.current.Score = student[exam.Name];
             $timeout(function () {
@@ -264,7 +264,7 @@ angular.module('entergrade', [])
             var nextStudent = null;
             var nextStudent2 = null;
             angular.forEach($scope.studentList, function (item, index) {
-                if (item.StudentID == $scope.current.SelectStudentID) {
+                if (item.StudentNumber == $scope.current.SelectStudentNumber) {
                     if (index > currentIndex) {
                         if (nextStudent2 == null)
                             nextStudent2 = item;
@@ -340,7 +340,7 @@ angular.module('entergrade', [])
                         $scope.studentList[0];
 
                     $scope.$apply(function () {
-                        $scope.current.SelectStudentID = nextStudent.StudentID;
+                        $scope.current.SelectStudentNumber = nextStudent.StudentNumber;
                         $scope.current.SelectSeatNo = nextStudent.SeatNo;
                     });
                     $timeout(function () {
