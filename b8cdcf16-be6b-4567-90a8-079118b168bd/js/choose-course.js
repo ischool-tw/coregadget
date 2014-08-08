@@ -1,4 +1,5 @@
-﻿var _gg = _gg || {};
+﻿
+var _gg = _gg || {};
 _gg.connection = gadget.getContract("emba.choose_course.student");
 jQuery(function () {
     var vm = MyViewModel;
@@ -135,7 +136,7 @@ jQuery(function () {
 });
 
 (function() {
-    this.MyViewModel = (function(){
+	this.MyViewModel = (function () {
         var conn_log = gadget.getContract("emba.student");
         var _all_opening_data = {};
         return {
@@ -291,13 +292,15 @@ jQuery(function () {
 
             // 退選訊息、Mail樣版
             configuration : {
-                email_content1_template     : ko.observable(),
-                email_content2_template     : ko.observable(),
-                cs_cancel1_content_template : ko.observable(),
-                cs_cancel2_content_template : ko.observable(),
-                cs_final_message            : ko.observable(),
-                cs_content1_template        : ko.observable(),
-                cs_content2_template        : ko.observable()
+                email_content1_template				: ko.observable(),
+                email_content2_template			    : ko.observable(),
+                cs_cancel1_content_template			: ko.observable(),
+                cs_cancel2_content_template			: ko.observable(),
+                cs_final_message			        : ko.observable(),
+                cs_content1_template			    : ko.observable(),
+                cs_content2_template				: ko.observable(),
+                email_content1_template_subject		: ko.observable(),
+                email_content2_template_subject		: ko.observable()
             },
             get_configuration : function() {
                 var self = MyViewModel;
@@ -314,7 +317,9 @@ jQuery(function () {
                                     'email_content1_template',
                                     'cs_cancel2_content_template',
                                     'cs_content1_template',
-                                    'cs_content2_template'
+                                    'cs_content2_template',
+									'email_content1_template_subject',
+									'email_content2_template_subject'
                                 ]
                             }
                         }
@@ -350,7 +355,7 @@ jQuery(function () {
                     },
                     result: function (response, error, http) {
                         if (error !== null) {
-                            _gg.set_error_message('#mainMsg', 'GetCSAttend', error);
+                        	_gg.set_error_message('#mainMsg', 'GetCSAttend', error);
                         } else {
                             if (response.Response && response.Response.Attend) {
                                 $(response.Response.Attend).each(function(index, item) {
@@ -367,6 +372,8 @@ jQuery(function () {
                                 callback();
                             }
                         }
+
+                        //self.CallbackQueue.JobFinished();
                     }
                 });
             },
@@ -439,7 +446,7 @@ jQuery(function () {
                         }
                     },
                     result: function (response, error, http) {
-                        if (error !== null) {
+                    	if (error !== null) {
                             _gg.set_error_message('#mainMsg', 'GetCanChooseCourse', error);
                         } else {
                             if (response.Response && response.Response.Course) {
@@ -452,7 +459,8 @@ jQuery(function () {
                                     }
                                 });
                             }
-                        }
+                    	}
+                    	//self.CallbackQueue.JobFinished();
                     }
                 });
             },
@@ -994,10 +1002,14 @@ jQuery(function () {
                 };
 
                 var complete_process = function() {
-                    if (add_complete && quit_complete) {
+                	if (add_complete && quit_complete) {
+                		$('#myModal').modal('hide');
+                		$('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
+                		setTimeout("$('#mainMsg').html('')", 1500);           	
                         // 送出Email
-                        var send_Mail = function() {
-                            var receiver = [], mail_subject = '', mail_tmpl_name = '', course_html = '';
+                    	var send_Mail = function () {
+							//	收件人
+                            var receiver = [], mail_tmpl_name = '', course_html = '';
                             for (var ii=1; ii<=5; ii+=1) {
                                 if (self.student['Email' + ii]()) {
                                     receiver.push(
@@ -1008,34 +1020,76 @@ jQuery(function () {
                                     });
                                 }
                             }
-
                             var receivers = receiver.join(',');
-                            if (receivers) {
+                            if (receivers) {								
+                            	//	選課結果寄出時間
+                            	var n = new Date();
+                            	var y = n.getFullYear();
+                            	var m = (n.getMonth() + 1 < 10) ? ("0" + (n.getMonth() + 1)) : (n.getMonth() + 1);
+                            	var d = (n.getDate() < 10) ? ("0" + (n.getDate())) : (n.getDate());
+                            	var h = (n.getHours() < 10) ? ("0" + (n.getHours())) : (n.getHours());
+                            	var mi = (n.getMinutes() < 10) ? ("0" + (n.getMinutes())) : (n.getMinutes());
+                            	var s = (n.getSeconds() < 10) ? ("0" + (n.getSeconds())) : (n.getSeconds());
+                            	var mail_sending_time = y + "/" + m + "/" + d + " " + h + ":" + mi + ":" + s;
+
+                            	//	信件主旨
+                            	var mail_subject = '';
+                            	//	信件內容
+                            	var mail_content = '';
+								//	階段別
+                            	var period = '';
                                 if (self.currentData.Item() === '1') {
-                                    mail_subject = '第一階段選課結果';
-                                    mail_tmpl_name = 'email_content1_template';
+                                	mail_subject = self.configuration['email_content1_template_subject']();
+                                	mail_content = self.configuration['email_content1_template']();
+                                	period = '第一階段';
                                 } else if (self.currentData.Item() === '2') {
-                                    mail_subject = '第二階段選課結果';
-                                    mail_tmpl_name = 'email_content2_template';
+                                	mail_subject = self.configuration['email_content2_template_subject']();
+                                	mail_content = self.configuration['email_content2_template']();
+                                	period = '第二階段';
                                 }
 
-                                course_html = course_add_html + course_quit_html + '<p>選課結果：</p>' + get_course_html(self.curr_attend());
-                                var n = new Date();
-                                var y = n.getFullYear();
-                                var m = (n.getMonth()+1< 10)?("0" + (n.getMonth() + 1)):(n.getMonth() + 1);
-                                var d = (n.getDate()< 10)?("0" + (n.getDate())):(n.getDate());
-                                var h = (n.getHours()< 10)?("0" + (n.getHours())):(n.getHours());
-                                var mi = (n.getMinutes()< 10)?("0" + (n.getMinutes())):(n.getMinutes());
-                                var s = (n.getSeconds()< 10)?("0" + (n.getSeconds())):(n.getSeconds());
+                            	//	加選課程清單
+                                //course_add_html
 
-                                var now = y+"/"+m+"/"+d+" "+h+":"+mi+":"+s;
-                                var mail_subject_time = mail_subject + "<通知時間：" + now + ">";
+								//	退選課程清單
+                                //course_quit_html
+                            	//	加退選狀態
+                                var status = '';
+                                var _add = self.get_add_list();
+                                if (self.get_add_list().length > 0)
+                                	status += '加';
+								if (self.get_quit_list().length > 0)
+									status += '退';
+								status += '選';
+
+                                mail_subject = mail_subject.replace(/\[\[學年度\]\]/g, self.currentData.SchoolYear());
+                                mail_subject = mail_subject.replace(/\[\[學期\]\]/g, self.currentData.FullSemester());
+                                mail_subject = mail_subject.replace(/\[\[階段別\]\]/g, period);
+                                mail_subject = mail_subject.replace(/\[\[選課結果寄出時間\]\]/g, mail_sending_time);
+                                mail_subject = mail_subject.replace(/\[\[加退選狀態\]\]/g, status);
+                                mail_subject = mail_subject.replace(/\[\[加選堂數\]\]/g, self.get_add_list().length);
+                                mail_subject = mail_subject.replace(/\[\[退選堂數\]\]/g, self.get_quit_list().length);
+                                mail_subject = mail_subject.replace(/\[\[加選課程\]\]/g, (self.get_add_list().length > 0) ? '<p>加選課程：</p>' + course_add_html : '');
+                                mail_subject = mail_subject.replace(/\[\[退選課程\]\]/g, (self.get_quit_list().length > 0) ? '<p>退選課程：</p>' + course_quit_html : '');
+                                mail_subject = mail_subject.replace(/\[\[選課結果\]\]/g, '<p>選課結果：</p>' + get_course_html(self.curr_attend()));
+
+                                mail_content = mail_content.replace(/\[\[學年度\]\]/g, self.currentData.SchoolYear());
+                                mail_content = mail_content.replace(/\[\[學期\]\]/g, self.currentData.FullSemester());
+                                mail_content = mail_content.replace(/\[\[階段別\]\]/g, period);
+                                mail_content = mail_content.replace(/\[\[選課結果寄出時間\]\]/g, mail_sending_time);
+                                mail_content = mail_content.replace(/\[\[加退選狀態\]\]/g, status);
+                                mail_content = mail_content.replace(/\[\[加選堂數\]\]/g, self.get_add_list().length);
+                                mail_content = mail_content.replace(/\[\[退選堂數\]\]/g, self.get_quit_list().length);
+                                mail_content = mail_content.replace(/\[\[加選課程\]\]/g, (self.get_add_list().length > 0) ? '<p>加選課程：</p>' + course_add_html : '');
+                                mail_content = mail_content.replace(/\[\[退選課程\]\]/g, (self.get_quit_list().length > 0) ? '<p>退選課程：</p>' + course_quit_html : '');
+                                mail_content = mail_content.replace(/\[\[選課結果\]\]/g, '<p>選課結果：</p>' + get_course_html(self.curr_attend()));
+
                                 _gg.connection.send({
                                     service: "_.GetMandrillApiKey",
                                     body: '',
                                     result: function(response, error, http) {
-                                        if (error !== null) {
-                                            _gg.set_error_message('#mainMsg', '發送郵件失敗', error);
+                                    	if (error !== null) {
+                                    		$(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + '發送「選課結果」郵件失敗！' + "</div>");
                                         } else {
                                             if (response.Response) {
 
@@ -1048,35 +1102,48 @@ jQuery(function () {
                                                       'from_email': 'embacourse@emba.ntu.edu.tw',
                                                       'to': receiver,
                                                       'autotext': 'true',
-                                                      'subject': mail_subject_time,
-                                                      'html': self.configuration[mail_tmpl_name]() + course_html
+                                                      'subject': mail_subject,
+                                                      'html': mail_content
                                                     }
                                                   }
-                                                 }).done(function(response) {
+                                                }).done(function (response) {
                                                     $('#mainMsg').html("<div class='alert alert-success'>\n  發送選課結果通知成功！\n</div>");
-                                                    setTimeout("$('#mainMsg').html('')", 3000);
+                                                    setTimeout("$('#mainMsg').html('')", 1500);
                                                  });
                                             }
-                                        }
+                                    	}
+                                    	self.CallbackQueue.JobFinished();
                                     }
                                 });
                             }
-                        };
+                    	};
 
-                        self.curr_attend.removeAll();
-                        self.can_choose_course.removeAll();
-                        self.get_attend(send_Mail);
-                        self.get_can_choose_course();
+                    	//self.curr_attend.removeAll();
+                    	//self.can_choose_course.removeAll();
+                    	//self.get_attend(send_Mail);
+                    	//self.get_can_choose_course();
 
-                        $('#myModal').modal('hide');
-                        $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
-                        setTimeout("$('#mainMsg').html('')", 3000);
+                    	self.CallbackQueue.Push(send_Mail);
+                    	self.CallbackQueue.Push(function () {
+                    		self.curr_attend.removeAll();
+                    		self.can_choose_course.removeAll();
+                    		self.CallbackQueue.JobFinished();
+                    	});
+                    	self.CallbackQueue.Push(function () {
+                    		self.get_attend();
+                    		self.CallbackQueue.JobFinished();
+                    	});
+                    	self.CallbackQueue.Push(function () {
+                    		self.get_can_choose_course();
+                    		self.CallbackQueue.JobFinished();
+                    	});
+                    	self.CallbackQueue.Start();                       
                     }
                 };
 
                 var _add = self.get_add_list();
                 if (_add.length > 0) {
-                    course_add_html = '<p>加選課程：</p>' + get_course_html(_add);
+                    course_add_html = get_course_html(_add);
                     $(_add).each(function(index, item) {
                         add_list.push('<Course><CourseID>' + item.CourseID + '</CourseID></Course>');
                         add_log.push('<Course><CourseID>' + item.CourseID + '</CourseID>' +
@@ -1141,7 +1208,7 @@ jQuery(function () {
 
                 var _quit = self.get_quit_list();
                 if (_quit.length > 0) {
-                    course_quit_html = '<p>退選課程：</p>' + get_course_html(_quit);
+                    course_quit_html = get_course_html(_quit);
                     $(_quit).each(function(index, item) {
                         quit_list.push('<Course><CourseID>' + item.CourseID + '</CourseID></Course>');
                         quit_log.push('<Course><CourseID>' + item.CourseID + '</CourseID>' +
@@ -1372,6 +1439,7 @@ jQuery(function () {
     MyViewModel.get_student_info();
     MyViewModel.get_faq();
     MyViewModel.get_configuration();
+    MyViewModel.CallbackQueue = CreateCallbackQueue();
 })();
 
 _gg.getCourseType = function(type) {
