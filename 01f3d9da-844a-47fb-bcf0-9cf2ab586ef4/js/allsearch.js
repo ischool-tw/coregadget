@@ -26,6 +26,8 @@ angular.module('allsearch', [])
                         console.log(response);
                         $scope.$apply(function() {
                             if (response !== null && response !== '') {
+
+                                $scope.IsCareersCounselor = response.IsCareersCounselor;
                                 $scope.classlist = [].concat(response.Class);
 
                                 if ($scope.classlist.length > 0) {
@@ -335,7 +337,37 @@ angular.module('allsearch', [])
             });
         }
 
-        $scope.getClassList();
+        $scope.InsertInterviewRecord = function(){
 
+            $scope.counsel_connection.send({
+                service: "_.UpdateInterviewRecord",
+                body: {
+                    StudentID: $scope.currentStudent.StudentID,
+                    Attendees: '',
+                    Content: 'Content2',
+                    InterviewDate: '2014/05/17',
+                    InterviewTime: '9:30',
+                    IsPublic: 't',
+                    Issue: 'Issue2',
+                    Means: 'Email3',
+                    RecordTaken: 'RecordTaken4',
+                    SerialNo: '103006',
+                    Venue: 6
+                },
+                result: function(response, error, http) {
+                    if (error !== null) {
+                        // $scope.set_error_message('#mainMsg', 'GetExamScore', error);
+                    } else {
+                        console.log("update");
+                        console.log(response);
+                        });
+                    }
+                }
+            });
+
+            alert($scope.currentStudent.StudentID);
+        }
+
+        $scope.getClassList();
     }
 ])

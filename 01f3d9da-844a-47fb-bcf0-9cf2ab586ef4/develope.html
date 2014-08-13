@@ -107,11 +107,11 @@
                             </li>
 
                             <!-- 輔導老師與特定身份使用者使用 -->
-                            <li class="hidden">
+                            <li ng-if="IsCareersCounselor">
                                 <a href="#tab1" data-toggle="tab">Interview Record</a>
                             </li>
 
-                            <li class="hidden">
+                            <li>
                                 <a href="#tab2" data-toggle="tab">Attendance Management</a>
                             </li>
                             <li class="dropdown">
@@ -745,7 +745,7 @@
                         <input type="checkbox" id="inlineCheckbox1" value="option1">Public
                     </label>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-primary" ng-click="InsertInterviewRecord()">Save</button>
                 </div>
             </div>
         </div>
