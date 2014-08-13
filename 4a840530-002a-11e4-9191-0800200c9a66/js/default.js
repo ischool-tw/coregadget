@@ -1,3 +1,8 @@
+function parseDateUTC(input) {
+    var reg = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/;
+    var parts = reg.exec(input);
+    return parts ? (new Date(Date.UTC(parts[1], parts[2] -1, parts[3], parts[4], parts[5],parts[6]))) : null
+}
 var app = angular
   .module("app", [])
   .filter('myDateFormat',function($filter){
@@ -13,9 +18,9 @@ var app = angular
       var returnArray = [];
       if (angular.isArray(input)) {
         for (var i = 0; i < input.length; i++) {
-          if (type == 'finished' && Date.parse(input[i].regist_end_time) < Date.now() )
+          if (type == 'finished' && parseDateUTC(input[i].regist_end_time) < Date.now() )
             returnArray.push(input[i]);
-          else if (type == 'opened' && Date.parse(input[i].regist_end_time) > Date.now() )
+          else if (type == 'opened' && parseDateUTC(input[i].regist_end_time) > Date.now() )
             returnArray.push(input[i]);
         };
         return returnArray;
@@ -23,6 +28,16 @@ var app = angular
     };
   })
   .controller("ServiceLearningCreationItemsCntl", function($scope) {
+    $scope.safeApply = function(fn) {
+  var phase = this.$root.$$phase;
+  if(phase == '$apply' || phase == '$digest') {
+    if(fn && (typeof(fn) === 'function')) {
+      fn();
+    }
+  } else {
+    this.$apply(fn);
+  }
+};
     $scope.contract = gadget.getContract("ischool.service_learning.creationitems.student");
     $scope.list = [];
     $scope.init = function() {
@@ -31,6 +46,7 @@ var app = angular
         body: {},
         result: function(response, error, http) {
           console.log(response.data);
+          console.log(response.error);
           if (!error) {
             if (response.data)
               $scope.list = [].concat(response.data);
@@ -38,7 +54,7 @@ var app = angular
             $scope.icon_css = "icon-warning-sign";
             set_error_message("#mainMsg", "GetList", error);
           }
-          $scope.$apply();
+          $scope.safeApply();
         }
       });
     }
