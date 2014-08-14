@@ -6,7 +6,7 @@ var CreateCallbackQueue = function () {
 	//  執行中的工作
 	var _Current = [];
 
-	//  已做完的工作
+	//  尚未完成的工作
 	var _Finished = [];
 
 	//  記錄所有錯誤訊息
