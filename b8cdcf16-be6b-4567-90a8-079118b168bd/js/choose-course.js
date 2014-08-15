@@ -377,6 +377,39 @@ jQuery(function () {
                     }
                 });
             },
+            get_attend_no_callback: function () {
+            	var self = MyViewModel;
+
+            	_gg.connection.send({
+            		service: "_.GetCSAttend",
+            		body: {
+            			Request: {
+            				Condition: {
+            					SchoolYear: self.currentData.SchoolYear() || '',
+            					Semester: self.currentData.Semester() || ''
+            				}
+            			}
+            		},
+            		result: function (response, error, http) {
+            			if (error !== null) {
+            				_gg.set_error_message('#mainMsg', 'GetCSAttend', error);
+            			} else {
+            				if (response.Response && response.Response.Attend) {
+            					$(response.Response.Attend).each(function (index, item) {
+            						var _course = self.all_col_course[item.CourseID];
+            						if (_course) {
+            							_course.WillQuit = ko.observable(false);
+            							_course.HaveConflict = ko.observableArray();
+            							_course.ChooseItem = item.Item;
+            							self.curr_attend.push(_course);
+            						}
+            					});
+            				}
+            			}
+            			self.CallbackQueue.JobFinished();
+            		}
+            	});
+            },
             set_quit_cousre : function(_courseID, status) {
                 if (_courseID) {
                     var self = MyViewModel;
@@ -1007,7 +1040,7 @@ jQuery(function () {
                 		$('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
                 		setTimeout("$('#mainMsg').html('')", 1500);           	
                         // 送出Email
-                    	var send_Mail = function () {
+                		var send_Mail = function (add_list_backup, quit_list_backup, course_add_html_backup, course_quit_html_backup) {
 							//	收件人
                             var receiver = [], mail_tmpl_name = '', course_html = '';
                             for (var ii=1; ii<=5; ii+=1) {
@@ -1021,7 +1054,7 @@ jQuery(function () {
                                 }
                             }
                             var receivers = receiver.join(',');
-                            if (receivers) {								
+                            if (receivers) {
                             	//	選課結果寄出時間
                             	var n = new Date();
                             	var y = n.getFullYear();
@@ -1036,107 +1069,119 @@ jQuery(function () {
                             	var mail_subject = '';
                             	//	信件內容
                             	var mail_content = '';
-								//	階段別
+                            	//	階段別
                             	var period = '';
-                                if (self.currentData.Item() === '1') {
-                                	mail_subject = self.configuration['email_content1_template_subject']();
-                                	mail_content = self.configuration['email_content1_template']();
-                                	period = '第一階段';
-                                } else if (self.currentData.Item() === '2') {
-                                	mail_subject = self.configuration['email_content2_template_subject']();
-                                	mail_content = self.configuration['email_content2_template']();
-                                	period = '第二階段';
-                                }
+                            	if (self.currentData.Item() === '1') {
+                            		mail_subject = self.configuration['email_content1_template_subject']();
+                            		mail_content = self.configuration['email_content1_template']();
+                            		period = '第一階段';
+                            	} else if (self.currentData.Item() === '2') {
+                            		mail_subject = self.configuration['email_content2_template_subject']();
+                            		mail_content = self.configuration['email_content2_template']();
+                            		period = '第二階段';
+                            	}
 
                             	//	加選課程清單
-                                //course_add_html
+                            	//course_add_html
 
-								//	退選課程清單
-                                //course_quit_html
+                            	//	退選課程清單
+                            	//course_quit_html
                             	//	加退選狀態
-                                var status = '';
-                                var _add = self.get_add_list();
-                                if (self.get_add_list().length > 0)
-                                	status += '加';
-								if (self.get_quit_list().length > 0)
-									status += '退';
-								status += '選';
+                            	var status = '';
+                            	if (add_list_backup.length > 0)
+                            		status += '加';
+                            	if (quit_list_backup.length > 0)
+                            		status += '退';
+                            	status += '選';
 
-                                mail_subject = mail_subject.replace(/\[\[學年度\]\]/g, self.currentData.SchoolYear());
-                                mail_subject = mail_subject.replace(/\[\[學期\]\]/g, self.currentData.FullSemester());
-                                mail_subject = mail_subject.replace(/\[\[階段別\]\]/g, period);
-                                mail_subject = mail_subject.replace(/\[\[選課結果寄出時間\]\]/g, mail_sending_time);
-                                mail_subject = mail_subject.replace(/\[\[加退選狀態\]\]/g, status);
-                                mail_subject = mail_subject.replace(/\[\[加選堂數\]\]/g, self.get_add_list().length);
-                                mail_subject = mail_subject.replace(/\[\[退選堂數\]\]/g, self.get_quit_list().length);
-                                mail_subject = mail_subject.replace(/\[\[加選課程\]\]/g, (self.get_add_list().length > 0) ? '<p>加選課程：</p>' + course_add_html : '');
-                                mail_subject = mail_subject.replace(/\[\[退選課程\]\]/g, (self.get_quit_list().length > 0) ? '<p>退選課程：</p>' + course_quit_html : '');
-                                mail_subject = mail_subject.replace(/\[\[選課結果\]\]/g, '<p>選課結果：</p>' + get_course_html(self.curr_attend()));
+                            	mail_subject = mail_subject.replace(/\[\[學年度\]\]/g, self.currentData.SchoolYear());
+                            	mail_subject = mail_subject.replace(/\[\[學期\]\]/g, self.currentData.FullSemester());
+                            	mail_subject = mail_subject.replace(/\[\[階段別\]\]/g, period);
+                            	mail_subject = mail_subject.replace(/\[\[選課結果寄出時間\]\]/g, mail_sending_time);
+                            	mail_subject = mail_subject.replace(/\[\[加退選狀態\]\]/g, status);
+                            	mail_subject = mail_subject.replace(/\[\[加選堂數\]\]/g, add_list_backup.length);
+                            	mail_subject = mail_subject.replace(/\[\[退選堂數\]\]/g, quit_list_backup.length);
+                            	mail_subject = mail_subject.replace(/\[\[加選課程\]\]/g, (add_list_backup.length > 0) ? '<p>加選課程：</p>' + course_add_html_backup : '');
+                            	mail_subject = mail_subject.replace(/\[\[退選課程\]\]/g, (quit_list_backup.length > 0) ? '<p>退選課程：</p>' + course_quit_html_backup : '');
+                            	mail_subject = mail_subject.replace(/\[\[選課結果\]\]/g, '<p>選課結果：</p>' + get_course_html(self.curr_attend()));
 
-                                mail_content = mail_content.replace(/\[\[學年度\]\]/g, self.currentData.SchoolYear());
-                                mail_content = mail_content.replace(/\[\[學期\]\]/g, self.currentData.FullSemester());
-                                mail_content = mail_content.replace(/\[\[階段別\]\]/g, period);
-                                mail_content = mail_content.replace(/\[\[選課結果寄出時間\]\]/g, mail_sending_time);
-                                mail_content = mail_content.replace(/\[\[加退選狀態\]\]/g, status);
-                                mail_content = mail_content.replace(/\[\[加選堂數\]\]/g, self.get_add_list().length);
-                                mail_content = mail_content.replace(/\[\[退選堂數\]\]/g, self.get_quit_list().length);
-                                mail_content = mail_content.replace(/\[\[加選課程\]\]/g, (self.get_add_list().length > 0) ? '<p>加選課程：</p>' + course_add_html : '');
-                                mail_content = mail_content.replace(/\[\[退選課程\]\]/g, (self.get_quit_list().length > 0) ? '<p>退選課程：</p>' + course_quit_html : '');
-                                mail_content = mail_content.replace(/\[\[選課結果\]\]/g, '<p>選課結果：</p>' + get_course_html(self.curr_attend()));
+                            	mail_content = mail_content.replace(/\[\[學年度\]\]/g, self.currentData.SchoolYear());
+                            	mail_content = mail_content.replace(/\[\[學期\]\]/g, self.currentData.FullSemester());
+                            	mail_content = mail_content.replace(/\[\[階段別\]\]/g, period);
+                            	mail_content = mail_content.replace(/\[\[選課結果寄出時間\]\]/g, mail_sending_time);
+                            	mail_content = mail_content.replace(/\[\[加退選狀態\]\]/g, status);
+                            	mail_content = mail_content.replace(/\[\[加選堂數\]\]/g, add_list_backup.length);
+                            	mail_content = mail_content.replace(/\[\[退選堂數\]\]/g, quit_list_backup.length);
+                            	mail_content = mail_content.replace(/\[\[加選課程\]\]/g, (add_list_backup.length > 0) ? '<p>加選課程：</p>' + course_add_html_backup : '');
+                            	mail_content = mail_content.replace(/\[\[退選課程\]\]/g, (quit_list_backup.length > 0) ? '<p>退選課程：</p>' + course_quit_html_backup : '');
+                            	mail_content = mail_content.replace(/\[\[選課結果\]\]/g, '<p>選課結果：</p>' + get_course_html(self.curr_attend()));
 
-                                _gg.connection.send({
-                                    service: "_.GetMandrillApiKey",
-                                    body: '',
-                                    result: function(response, error, http) {
-                                    	if (error !== null) {
-                                    		$(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + '發送「選課結果」郵件失敗！' + "</div>");
-                                        } else {
-                                            if (response.Response) {
-
-                                                $.ajax({
-                                                  type: 'POST',
-                                                  url: 'https://mandrillapp.com/api/1.0/messages/send.json',
-                                                  data: {
-                                                    'key': response.Response.apikey,
-                                                    'message': {
-                                                      'from_email': 'embacourse@emba.ntu.edu.tw',
-                                                      'to': receiver,
-                                                      'autotext': 'true',
-                                                      'subject': mail_subject,
-                                                      'html': mail_content
-                                                    }
-                                                  }
-                                                }).done(function (response) {
-                                                    $('#mainMsg').html("<div class='alert alert-success'>\n  發送選課結果通知成功！\n</div>");
-                                                    setTimeout("$('#mainMsg').html('')", 1500);
-                                                 });
-                                            }
-                                    	}
-                                    	self.CallbackQueue.JobFinished();
-                                    }
-                                });
+                            	_gg.connection.send({
+                            		service: "_.GetMandrillApiKey",
+                            		body: '',
+                            		result: function (response, error, http) {
+                            			if (error !== null) {
+                            				$(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + '發送「選課結果」郵件失敗！' + "</div>");
+                            			} else {
+                            				if (response.Response) {
+                            					$.ajax({
+                            						type: 'POST',
+                            						url: 'https://mandrillapp.com/api/1.0/messages/send.json',
+                            						data: {
+                            							'key': response.Response.apikey,
+                            							'message': {
+                            								'from_email': 'embacourse@emba.ntu.edu.tw',
+                            								'to': receiver,
+                            								'autotext': 'true',
+                            								'subject': mail_subject,
+                            								'html': mail_content
+                            							}
+                            						}
+                            					}).done(function (response) {
+                            						$('#mainMsg').html("<div class='alert alert-success'>\n  發送選課結果通知成功！\n</div>");
+                            						setTimeout("$('#mainMsg').html('')", 1500);
+                            					});
+                            				}
+                            			}
+                            			self.CallbackQueue.JobFinished();
+                            		}
+                            	});
+                            } else {
+                            	self.CallbackQueue.JobFinished();
                             }
                     	};
 
+						//	以下4行是原來的程式
                     	//self.curr_attend.removeAll();
                     	//self.can_choose_course.removeAll();
                     	//self.get_attend(send_Mail);
                     	//self.get_can_choose_course();
 
-                    	self.CallbackQueue.Push(send_Mail);
+						//	以下程式是為了重構寄信而新寫的
+                		//	1、備份加選課程及退選課程
+                    	var add_list_backup = self.get_add_list() || [];
+                    	var quit_list_backup = self.get_quit_list() || [];
+                    	var course_add_html_backup = get_course_html(add_list_backup) || '';
+                    	var course_quit_html_backup = get_course_html(quit_list_backup) || '';
+
+                		//	2、清空curr_attend及can_choose_course
+                    	self.curr_attend.removeAll();
+                    	self.can_choose_course.removeAll();
+
+                		//	3、get_attend
+                    	self.CallbackQueue.Push(self.get_attend_no_callback);
+
+                		//	4、send_Mail
                     	self.CallbackQueue.Push(function () {
-                    		self.curr_attend.removeAll();
-                    		self.can_choose_course.removeAll();
-                    		self.CallbackQueue.JobFinished();
+                    		send_Mail(add_list_backup, quit_list_backup, course_add_html_backup, course_quit_html_backup);
                     	});
-                    	self.CallbackQueue.Push(function () {
-                    		self.get_attend();
-                    		self.CallbackQueue.JobFinished();
-                    	});
+
+                		//	5、get_can_choose_course
                     	self.CallbackQueue.Push(function () {
                     		self.get_can_choose_course();
                     		self.CallbackQueue.JobFinished();
                     	});
+						//	6、Let's go！
                     	self.CallbackQueue.Start();                       
                     }
                 };
