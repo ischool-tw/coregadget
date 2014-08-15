@@ -219,17 +219,17 @@
                                     Search：
                                     <div class="form-group">
                                         <label class="sr-only" for="exampleInputEmail2">Email address</label>
-                                        <input type="date" class="form-control" id="exampleInputEmail2" placeholder="2012/01/01">
+                                        <input type="date" class="form-control" id="exampleInputEmail2" placeholder="2012/01/01" ng-model="startDate">
                                     </div>
                                     ~
                                     <div class="form-group">
                                         <label class="sr-only" for="exampleInputPassword2">Password</label>
-                                        <input type="date" class="form-control" id="exampleInputPassword2" placeholder="2012/01/01">
+                                        <input type="date" class="form-control" id="exampleInputPassword2" placeholder="2012/01/01" ng-model="endDate">
                                     </div>
-                                    <a class="btn btn-default" type="button">
+                                    <a class="btn btn-default" type="button" ng-click="QueryByDate()">
                                         <i class="fa fa-search"></i> Go!
                                     </a>
-                                    <a class="btn btn-info pull-right" data-toggle="modal" href="#talk">
+                                    <a class="btn btn-info pull-right" data-toggle="modal" href="#talk" ng-click="CreateNewIR()">
                                         <i class="fa fa-pencil"></i> Create Interview Record
                                     </a>
                                 </form>
@@ -247,19 +247,20 @@
                                     <tbody>
                                         <tr ng-repeat="item in IR">
                                             <td class="text-center">
-                                                <i class="fa fa-lock"></i>
+                                                <i class="fa fa-lock" ng-if="item.IsPublic === false"></i>
+                                                <i class="fa fa-unlock" ng-if="item.IsPublic === true"></i>
                                             </td>
                                             <td>{{item.SerialNo}}</td>
                                             <td>{{item.InterviewDate}}</td>
                                             <td>{{item.InterviewTime}}</td>
                                             <td>
-                                                <a href="#viewtalk" data-toggle="modal" class="my-view">{{item.Issue}}</a>
+                                                <a href="#viewtalk" data-toggle="modal" class="my-view" ng-click="SelectIR(item)">{{item.Issue}}</a>
                                             </td>
                                             <td class="text-center">
-                                                <a href="#edittalk" data-toggle="modal" class="btn btn-primary">
+                                                <a href="#edittalk" data-toggle="modal" class="btn btn-primary" ng-click="EditIR(item)">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
-                                                <a href="#" class="btn btn-danger">
+                                                <a href="#" class="btn btn-danger" ng-click="DeleteInterviewRecord(item,$index)">
                                                     <i class="fa fa-trash-o"></i>
                                                 </a>
                                             </td>
@@ -669,32 +670,32 @@
                         <div class="form-group">
                             <label for="inputNo" class="col-sm-2 control-label">Serial No.</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputNo" placeholder="Serios No.">
+                                <input type="text" class="form-control" id="inputNo" placeholder="Serios No." ng-model="newIR.SerialNo">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputDate" class="col-sm-2 control-label">Date</label>
                             <div class="col-sm-10">
-                                <input type="date" class="form-control" id="inputDate" placeholder="Ex:2014/01/01">
+                                <input type="date" class="form-control" id="inputDate" placeholder="Ex:2014/01/01" ng-model="newIR.formatDate">>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputTime" class="col-sm-2 control-label">Time</label>
                             <div class="col-sm-10">
 
-                                <input type="text" class="form-control" pattern="([01]?[0-9]{1}|2[0-3]{1}):[0-5]{1}[0-9]{1}" id="inputTime" placeholder="Ex:13:59" />
+                                <input type="text" class="form-control" pattern="([01]?[0-9]{1}|2[0-3]{1}):[0-5]{1}[0-9]{1}" id="inputTime" placeholder="Ex:13:59" ng-model="newIR.InterviewTime"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputVenue" class="col-sm-2 control-label">Venue</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputVenue" placeholder="Venue">
+                                <input type="text" class="form-control" id="inputVenue" placeholder="Venue" ng-model="newIR.Venue">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputMeans" class="col-sm-2 control-label">Means</label>
                             <div class="col-sm-10">
-                                <select class="form-control">
+                                <select class="form-control" ng-model="newIR.Means">
                                     <option>Face to Face</option>
                                     <option>Email</option>
                                     <option>Phone</option>
@@ -706,46 +707,46 @@
                             <label for="inputTime" class="col-sm-2 control-label">Attendees</label>
                             <div class="col-sm-10">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox1" value="option1">Student
+                                    <input type="checkbox" id="inlineCheckbox1" value="option1" ng-model="newIR.Student">Student
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox2" value="option2">Parents
+                                    <input type="checkbox" id="inlineCheckbox2" value="option2" ng-model="newIR.Parents">Parents
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox3" value="option3">Homeroom Teacher
+                                    <input type="checkbox" id="inlineCheckbox3" value="option3" ng-model="newIR.HRT">Homeroom Teacher
                                 </label>
                                 <label class="checkbox-inline" style="margin-left:0;">
-                                    <input type="checkbox" id="inlineCheckbox4" value="option4">
-                                    <input type="text" class="form-control" id="inputother" placeholder="Others">
+                                    <input type="checkbox" id="inlineCheckbox4" value="option4" ng-model="newIR.Other">
+                                    <input type="text" class="form-control" id="inputother" placeholder="Others" ng-model="newIR.OtherName">
                                 </label>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputIssue" class="col-sm-2 control-label">Issue</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputIssue" placeholder="Issue">
+                                <input type="text" class="form-control" id="inputIssue" placeholder="Issue" ng-model="newIR.Issue">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputTitle" class="col-sm-2 control-label">Content</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" rows="3"></textarea>
+                                <textarea class="form-control" rows="3" ng-model="newIR.Content"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputTaken" class="col-sm-2 control-label">Record Taken</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputTaken" placeholder="Record Taken">
+                                <input type="text" class="form-control" id="inputTaken" placeholder="Record Taken" ng-model="newIR.RecordTaken">
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <label class="checkbox-inline pull-left">
-                        <input type="checkbox" id="inlineCheckbox1" value="option1">Public
+                        <input type="checkbox" id="inlineCheckbox1" value="option1" ng-model="newIR.IsPublic">Public
                     </label>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" ng-click="InsertInterviewRecord()">Save</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="InsertInterviewRecord()">Save</button>
                 </div>
             </div>
         </div>
@@ -764,31 +765,31 @@
                         <div class="form-group">
                             <label for="inputNo" class="col-sm-2 control-label">Serial No.</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputNo" placeholder="Serios No.">
+                                <input type="text" class="form-control" id="inputNo" placeholder="Serios No." ng-model="editIR.SerialNo">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputDate" class="col-sm-2 control-label">Date</label>
                             <div class="col-sm-10">
-                                <input type="date" class="form-control" id="inputDate" placeholder="Ex:2014/01/01">
+                                <input type="date" class="form-control" id="inputDate" placeholder="yyyy-MM-dd" ng-model="editIR.formatDate">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputTime" class="col-sm-2 control-label">Time</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" pattern="([01]?[0-9]{1}|2[0-3]{1}):[0-5]{1}[0-9]{1}" id="inputTime" placeholder="Ex:13:59" />
+                                <input type="text" class="form-control" pattern="([01]?[0-9]{1}|2[0-3]{1}):[0-5]{1}[0-9]{1}" id="inputTime" placeholder="Ex:13:59" ng-model="editIR.InterviewTime"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputVenue" class="col-sm-2 control-label">Venue</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputVenue" placeholder="Venue">
+                                <input type="text" class="form-control" id="inputVenue" placeholder="Venue" ng-model="editIR.Venue">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputMeans" class="col-sm-2 control-label">Means</label>
                             <div class="col-sm-10">
-                                <select class="form-control">
+                                <select class="form-control" ng-model="editIR.Means">
                                     <option>Face to Face</option>
                                     <option>Email</option>
                                     <option>Phone</option>
@@ -800,46 +801,46 @@
                             <label for="inputTime" class="col-sm-2 control-label">Attendees</label>
                             <div class="col-sm-10">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox1" value="option1">Student
+                                    <input type="checkbox" id="inlineCheckbox1" ng-model="editIR.Student">Student
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox2" value="option2">Parents
+                                    <input type="checkbox" id="inlineCheckbox2" ng-model="editIR.Parents">Parents
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox3" value="option3">Homeroom Teacher
+                                    <input type="checkbox" id="inlineCheckbox3" ng-model="editIR.HRT">Homeroom Teacher
                                 </label>
                                 <label class="checkbox-inline" style="margin-left:0;">
-                                    <input type="checkbox" id="inlineCheckbox4" value="option4">
-                                    <input type="text" class="form-control" id="inputother" placeholder="Others">
+                                    <input type="checkbox" id="inlineCheckbox4" ng-model="editIR.Other">
+                                    <input type="text" class="form-control" id="inputother" placeholder="Others" ng-model="editIR.OtherName">
                                 </label>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputIssue" class="col-sm-2 control-label">Issue</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputIssue" placeholder="Issue">
+                                <input type="text" class="form-control" id="inputIssue" placeholder="Issue" ng-model="editIR.Issue">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputTitle" class="col-sm-2 control-label">Content</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" rows="3"></textarea>
+                                <textarea class="form-control" rows="3" ng-model="editIR.Content"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputTaken" class="col-sm-2 control-label">Record Taken</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputTaken" placeholder="Record Taken">
+                                <input type="text" class="form-control" id="inputTaken" placeholder="Record Taken" ng-model="editIR.RecordTaken">
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <label class="checkbox-inline pull-left">
-                        <input type="checkbox" id="inlineCheckbox1" value="option1">Public
+                        <input type="checkbox" id="inlineCheckbox1" value="option1" ng-model="editIR.IsPublic">Public
                     </label>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="UpdateInterviewRecord()">Save Changes</button>
                 </div>
             </div>
         </div>
@@ -856,23 +857,23 @@
                 <div class="modal-body">
                     <dl class="dl-horizontal my-interview">
                         <dt>Serial No.</dt>
-                        <dd>123456</dd>
+                        <dd>{{currentIR.SerialNo}}&nbsp;</dd>
                         <dt>Date</dt>
-                        <dd>2014/01/01</dd>
+                        <dd>{{currentIR.InterviewDate}}&nbsp;</dd>
                         <dt>Time</dt>
-                        <dd>13:59</dd>
+                        <dd>{{currentIR.InterviewTime}}&nbsp;</dd>
                         <dt>Venue
-                            <dd>
-                                <dt>Means</dt>
-                                <dd>Face to Face</dd>
-                                <dt>Attendees</dt>
-                                <dd>Student</dd>
-                                <dt>Issue</dt>
-                                <dd>Good school</dd>
-                                <dt>Content</dt>
-                                <dd>Bootstrap includes a responsive, mobile first fluid grid system that appropriately scales up to 12 columns as the device or viewport size increases. It includes predefined classes for easy layout options, as well as powerful mixins for generating more semantic layouts.</dd>
-                                <dt>Record Taken</dt>
-                                <dd>Jassica</dd>
+                        <dd>{{currentIR.Venue}}&nbsp;</dd>
+                        <dt>Means</dt>
+                        <dd>{{currentIR.Means}}&nbsp;</dd>
+                        <dt>Attendees</dt>
+                        <dd>{{currentIR.AttendeesStr}}&nbsp;</dd>
+                        <dt>Issue</dt>
+                        <dd>{{currentIR.Issue}}&nbsp;</dd>
+                        <dt>Content</dt>
+                        <dd>{{currentIR.Content}}&nbsp;</dd>
+                        <dt>Record Taken</dt>
+                        <dd>{{currentIR.RecordTaken}}&nbsp;</dd>
                     </dl>
                 </div>
                 <div class="modal-footer">
