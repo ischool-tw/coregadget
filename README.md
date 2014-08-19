@@ -1,4 +1,4 @@
-線上測試
+﻿線上測試
 http://ischool-tw.github.com/coregadget/
 
 Core Gadget
@@ -55,6 +55,7 @@ Core Gadget
 * 95FAC33B-93A2-4231-A507-1477A07AB386 幹部記錄查詢(學生)
 * 2a17a4b5-c7cf-4fce-96d9-6a011a7d0914 體適能查詢(學生)
 * d716c384-b483-43ca-95fd-65aa2a92b152 體適能查詢(家長)
+* 0db67a14-b958-4ebe-a97c-adc920a8ab9b 體適能輸入(老師)
 
 
 客製化

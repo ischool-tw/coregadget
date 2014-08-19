@@ -1,0 +1,24 @@
+    select student.name as student_name,student.seat_no,fit.* from student
+join class on class.id = '@@ClassID' and class.ref_teacher_id = '@@TeacherID' and student.ref_class_id = class.id and student.status = 1 
+left  join $ischool_student_fitness as fit on cast(fit.ref_student_id AS integer) = student.id and fit.school_year = '@@SchoolYear'
+order by student.seat_no
+
+
+	<Field AllowNull="true" DataType="BigInt" Default="" Indexed="false" Name="uid"/>
+	<Field AllowNull="true" DataType="Datetime" Default="" Indexed="false" Name="last_update"/>
+	<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="cardiorespiratory"/>
+	<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="cardiorespiratory_degree"/>
+	<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="height"/>
+	<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="height_degree"/>
+	<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="ref_student_id"/>
+	<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="school_category"/>
+	<Field AllowNull="true" DataType="Number" Default="" Indexed="false" Name="school_year"/>
+	<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="sit_and_reach"/>
+	<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="sit_and_reach_degree"/>
+	<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="sit_up"/>
+	<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="sit_up_degree"/>
+	<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="standing_long_jump"/>
+	<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="standing_long_jump_degree"/>
+	<Field AllowNull="true" DataType="Datetime" Default="" Indexed="false" Name="test_date"/>
+	<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="weight"/>
+	<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="weight_degree"/>
