@@ -189,13 +189,13 @@ var app = angular
                                 msg.push(response.data.detail[i].name);
                         };
                         if (msg.length > 0 )
-                            alert('下列學生儲存發生錯誤，請確認是否在資料輸入區間或稍後再試一次：\n'+msg.join(","));
+                            set_error_message("#mainMsg", "儲存發生錯誤", {loginError:{},message:'下列學生儲存發生錯誤，請確認是否在資料輸入區間或稍後再試一次：<br>'+msg.join(",")});
                         for (var i = 0; i < $scope.list.length; i++) {
                             $scope.list[i][response.data.column] = tmp[$scope.list[i].uid];
                         }
                     } else {
                         $scope.icon_css = "icon-warning-sign";
-                        set_error_message("#mainMsg", "SetItem", error);
+                        set_error_message("#mainMsg", "SetFitness1Col", error);
                     }
                     $scope.$apply();
                 }
@@ -237,7 +237,7 @@ var set_error_message = function(select_str, serviceName, error) {
                 tmp_msg = error.message;
             }
         }
-        $(select_str).html("<div class=\"alert alert-error\"><button class=\"close\" data-dismiss=\"alert\">×</button>" + tmp_msg + "</div>");
+        $(select_str).html("<div class=\"alert alert-danger\"><button class=\"close\" data-dismiss=\"alert\">×</button>" + tmp_msg + "</div>");
         return $(".my-err-info").click(function() {
             return alert("請拍下此圖，並與客服人員連絡，謝謝您。\n" + JSON.stringify(error, null, 2));
         });
