@@ -24,7 +24,7 @@
                     體適能測驗資料輸入
                 </h1>
                 <div id="mainMsg"></div>
-                <div class="alert alert-info" role="alert" ng-show="current.id">
+                <div class="alert alert-info" ng-class="{'alert-danger':current.inPeriod}" role="alert" ng-show="current.id">
                     {{current.school_year}}學年度 體適能測驗資料輸入區間：{{current.start_time}} - {{current.end_time}}
                 </div>
                 <div class="btn-group">

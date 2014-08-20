@@ -42,9 +42,9 @@ var app = angular
             restrict: 'A',
             link: function(scope, elem, attrs) {
                 elem.bind('focus', function(e) {
-                    $timeout(function(){
+                    $timeout(function() {
                         elem.select();
-                    },1);
+                    }, 1);
                 });
             }
         };
@@ -62,7 +62,7 @@ var app = angular
                         }
                     }
                     // down arrow
-                    else if (e.keyCode == 40 || e.keyCode == 13 ) {
+                    else if (e.keyCode == 40 || e.keyCode == 13) {
                         if (!scope.$last) {
                             angular.element(elem[0]).parent().parent().next().find('input').focus();
                             //elem[0].nextElementSibling.focus();
@@ -94,7 +94,7 @@ var app = angular
             }, 0);
         }
     })
-    .controller("Ctrl", function($scope, $modal,$filter) {
+    .controller("Ctrl", function($scope, $modal, $filter) {
         $scope.ngObjFixHack = function(ngObj) {
             var output;
 
@@ -118,7 +118,7 @@ var app = angular
             $event.stopPropagation();
 
             $scope.opened = true;
-          };
+        };
         $scope.contract = gadget.getContract("ischool.fitness.input.peteacher");
         $scope.menu = [];
         $scope.init = function() {
@@ -138,9 +138,7 @@ var app = angular
                         $scope.icon_css = "icon-warning-sign";
                         set_error_message("#mainMsg", "GetMenu", error);
                     }
-                    $scope.current =
-                        $scope.safeApply();
-                    $scope
+                    $scope.safeApply();
                     CurrentChanged();
                 }
             });
@@ -150,6 +148,7 @@ var app = angular
             CurrentChanged();
         }
         $scope.getList = function($course_id) {
+            $scope.list = [];
             $scope.contract.send({
                 service: "GetList",
                 body: {
@@ -175,16 +174,13 @@ var app = angular
         $scope.showEditForm = function(column, defaultValue) {
             if (!$scope.current || !$scope.current.id)
                 return;
-            if ( $scope.current.start_time && $scope.current.end_time 
-                && (
-                     (new Date($scope.current.start_time)).getTime() >= (new Date()).getTime() 
-                     || 
-                     (new Date($scope.current.end_time)).getTime() <= (new Date()).getTime() 
-                   )
-                )
+            if ($scope.current.start_time && $scope.current.end_time && (
+                (new Date($scope.current.start_time)).getTime() >= (new Date()).getTime() ||
+                (new Date($scope.current.end_time)).getTime() <= (new Date()).getTime()
+            ))
                 return;
-            if ( Object.prototype.toString.call(defaultValue) === '[object Date]')
-                defaultValue = $filter('date')(defaultValue,'yyyy/M/d');
+            if (Object.prototype.toString.call(defaultValue) === '[object Date]')
+                defaultValue = $filter('date')(defaultValue, 'yyyy/M/d');
             var tmplist = [];
             for (var i = 0; i < $scope.list.length; i++) {
                 tmplist.push({
@@ -268,7 +264,10 @@ var app = angular
         }
         var CurrentChanged = function(argument) {
             if ($scope.current == null && $scope.menu[0])
+            {
                 $scope.current = $scope.menu[0];
+                $scope.current.inPeriod = (new Date($scope.current.start_time)).getTime() >= (new Date()).getTime() || (new Date($scope.current.end_time)).getTime() <= (new Date()).getTime();
+            }
             if ($scope.menu[0]) {
                 $scope.getList($scope.current.id);
             } else {
