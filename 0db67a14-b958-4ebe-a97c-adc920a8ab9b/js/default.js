@@ -1,7 +1,7 @@
 ﻿$(document).ready(function() {
     $(window).resize(function() {
         $("#container-nav, #container-main").height($(window).height() - 50);
-        console.log($(window).height() - 50);
+        //console.log($(window).height() - 50);
     });
 });
 
@@ -32,7 +32,7 @@ var app = angular
     .filter('myDateFormat', function($filter) {
         return function(text, format) {
             var tempdate = new Date(text.replace(/-/g, "/"));
-            // console.log(tempdate);
+            // //console.log(tempdate);
             if (tempdate && tempdate != 'Invalid Date' && !isNaN(tempdate))
                 return $filter('date')(tempdate, format);
         };
@@ -90,7 +90,7 @@ var app = angular
 
             timer = setTimeout(function() {
                 elm.focus();
-                console.log('focus', elm);
+                //console.log('focus', elm);
             }, 0);
         }
     })
@@ -129,8 +129,8 @@ var app = angular
                 service: "GetMenu",
                 body: {},
                 result: function(response, error, http) {
-                    console.log(response.data);
-                    console.log(response.error);
+                    //console.log(response.data);
+                    //console.log(response.error);
                     if (!error) {
                         if (response.data)
                             $scope.menu = [].concat(response.data);
@@ -156,8 +156,8 @@ var app = angular
                     course_id: $course_id
                 },
                 result: function(response, error, http) {
-                    console.log(response);
-                    console.log(error);
+                    //console.log(response);
+                    //console.log(error);
                     if (!error) {
                         if (response.data)
                             $scope.list = [].concat(response.data);
@@ -173,7 +173,15 @@ var app = angular
             $scope.init();
         }
         $scope.showEditForm = function(column, defaultValue) {
-            if (!$scope.current.id)
+            if (!$scope.current || !$scope.current.id)
+                return;
+            if ( $scope.current.start_time && $scope.current.end_time 
+                && (
+                     (new Date($scope.current.start_time)).getTime() >= (new Date()).getTime() 
+                     || 
+                     (new Date($scope.current.end_time)).getTime() <= (new Date()).getTime() 
+                   )
+                )
                 return;
             if ( Object.prototype.toString.call(defaultValue) === '[object Date]')
                 defaultValue = $filter('date')(defaultValue,'yyyy/M/d');
@@ -226,13 +234,13 @@ var app = angular
             //     detail: [{seat_no:int,value:string},{seat_no:int,value:string},...]
             // };
             data = $scope.ngObjFixHack(data);
-            console.log(data);
+            //console.log(data);
             $scope.contract.send({
                 service: "SetFitness1Col",
                 body: data,
                 result: function(response, error, http) {
-                    console.log(response);
-                    console.log(error);
+                    //console.log(response);
+                    //console.log(error);
                     if (!error) {
                         response.data.detail = [].concat(response.data.detail);
                         var tmp = [];
