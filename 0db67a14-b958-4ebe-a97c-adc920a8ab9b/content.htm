@@ -91,12 +91,10 @@
     </div>
  <script type="text/ng-template" id="myModalContent.html">
                 <div class="modal-header">
-                    <button type="button" class="close" ng-click="cancel()">
-                        <span aria-hidden="true">&nbsp;&times;</span>
-                        <span class="sr-only">Close</span>
-                    </button>
-                    <button type="button" class="close btn btn-primary" ng-click="ok()">儲存&nbsp;</button>
+                    <button style="margin-left:10px;float:right" type="button" class="btn btn-primary" ng-click="ok()">儲存</button>
+                    <button style="float:right" type="button" class="btn btn-default" ng-click="cancel()">取消</button>
                     <h4 class="modal-title" id="myModalLabel">{{column_text}}</h4>
+                    
                 </div>
                 <div class="modal-body">
                     <table class="table table-striped">
