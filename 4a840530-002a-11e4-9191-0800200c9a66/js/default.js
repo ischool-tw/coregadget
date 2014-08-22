@@ -8,7 +8,7 @@ var app = angular
   .filter('myDateFormat',function($filter){
   return function(text,format){
     var tempdate= new Date(text.replace(/-/g,"/"));
-    // console.log(tempdate);
+    // //console.log(tempdate);
     if (tempdate && tempdate!= 'Invalid Date' && !isNaN(tempdate))
       return $filter('date')(tempdate, format);
   };
@@ -45,8 +45,8 @@ var app = angular
         service: "GetList",
         body: {},
         result: function(response, error, http) {
-          console.log(response.data);
-          console.log(response.error);
+          //console.log(response.data);
+          //console.log(response.error);
           if (!error) {
             if (response.data)
               $scope.list = [].concat(response.data);
@@ -72,8 +72,8 @@ var app = angular
           service: "SetItem",
           body: data,
           result: function(response, error, http) {
-            console.log(response);
-            console.log(error);
+            //console.log(response);
+            //console.log(error);
             if (!error) {
               if (response.msg == 'success' || response.msg == 'not changed' ) {
                 if ( item.want_participate )

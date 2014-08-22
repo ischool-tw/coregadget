@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="線上服務學習" description="學生-線上服務學習"  iconfamily="css/images/nav13.png">
-    <Title lang="zh-TW">線上服務學習</Title>
+  <ModulePrefs title="體適能輸入" description="體育老師-體適能輸入">
+    <Title lang="zh-TW">體適能輸入</Title>
     <Icon>icon.png</Icon>
     <Mobile />
     <Title lang="zh-CN">

@@ -1,0 +1,49 @@
+<script type="text/javascript">
+var _request = getRequest();
+var sqltype;
+var rs;
+//validate 
+//teacher_id,school_year
+//request will be
+//{ column : 'test_date',
+//  course_id : 1,
+//  detail(students): [{seat_no:int,value:string},{seat_no:int,value:string},...]
+//}
+var ALLOW_FIELD = ['test_date', 'cardiorespiratory', 'height', 'sit_and_reach', 'sit_up', 'standing_long_jump', 'weight'];
+if (is_numeric(_request.course_id) && ALLOW_FIELD.indexOf(_request.column) != -1 ) {
+    throw {
+        code: '101',
+        msg: 'slcir_uid ,slcipr_uid must be numeric,and want_participate must be boolean.'
+    };
+}
+//check data is exist or not
+var isDataExists = [];
+rs = executeSql(
+    getResource('checkAllSQL')
+    .replace(/\@@StudentId/g, getContextProperty('TeacherID'))
+    .replace(/\@@SLCIR_UID/g, _request.course_id)
+);
+while (rs.next()) {
+    isDataExists[rs.get('seat_no')] = rs.get('count');
+}
+
+//foreach detail(students)
+response.detail = [];
+var _sql;
+for (detail in toArray(_request.detail)) {
+    if (isDataExists[detail.seat_no]) {
+        sqltype = 'updateSQL';
+    } else {
+        sqltype = 'insertSQL';
+    }
+    _sql = getResource(sqltype)
+        .replace(/\@@REFSTUDENTID/g, detail)
+        .replace(/\@@SCHOOLYEAR/g, )
+        .replace(/\@@UID/g, )
+        .replace(/\@@COLUMN/g, )
+        .replace(/\@@VALUE/g, detail.value);
+    tmp_rs = executeSql(_sql);
+    detail.status = tmp_rs ? 'success' : 'failed';
+}
+_request.update_at = new Date().format("yyyy-MM-dd HH:mm:ss");
+</script>

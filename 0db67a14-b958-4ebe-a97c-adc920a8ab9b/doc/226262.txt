@@ -1,0 +1,24 @@
+		/*if ( _request.column == 'test_date' ){
+		detail.value = detail.value.replace("/","-");
+		if ( !isValidDate2(detail.value) ) {
+		detail.value = (new Date()).format("yyyy-MM-dd");
+		}
+		}*/
+
+		<![CDATA[
+		// Expect input as y/m/d
+		//http://stackoverflow.com/questions/5812220/how-to-validate-a-date
+		function isValidDate2(s) {
+  var bits = s.split('-');
+  var y = bits[0], m  = bits[1], d = bits[2];
+  // Assume not leap year by default (note zero index for Jan)
+  var daysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31];
+
+  // If evenly divisible by 4 and not evenly divisible by 100,
+  // or is evenly divisible by 400, then a leap year
+  if ( (!(y % 4) && y % 100) || !(y % 400)) {
+    daysInMonth[1] = 29;
+  }
+  return d <= daysInMonth[--m]
+}
+]]>
