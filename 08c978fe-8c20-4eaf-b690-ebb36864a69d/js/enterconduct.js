@@ -13,7 +13,7 @@ angular.module('enterconduct', [])
                     if (error !== null) {
                         // $scope.set_error_message('#mainMsg', 'GetConfig', error);
                     } else {
-                        console.log(response);
+                        // console.log(response);
                         $scope.$apply(function() {
                             if (response !== null) {
                                 $scope.config = response;
@@ -31,8 +31,8 @@ angular.module('enterconduct', [])
                                         Key: 'N',
                                         Value: 'Not yet within expectations'
                                     }, {
-                                        Key: 'X',
-                                        Value: 'not applicable ; not covered in class as yet'
+                                        Key: 'N/A',
+                                        Value: 'not available'
                                     }]
                                 }
                             }
@@ -41,7 +41,7 @@ angular.module('enterconduct', [])
                     }
                 }
             });
-        }
+        };
 
         $scope.teacherType = '';
 
@@ -53,7 +53,7 @@ angular.module('enterconduct', [])
                     if (error !== null) {
                         // $scope.set_error_message('#mainMsg', 'GetExamScore', error);
                     } else {
-                        console.log(response);
+                        // console.log(response);
                         $scope.$apply(function() {
                             if (response !== null && response.Result) {
                                 $scope.current.HomeroomTeacher = response.Result.HomeroomTeacher;
@@ -66,12 +66,13 @@ angular.module('enterconduct', [])
                                 else
                                     $scope.teacherType = '';
 
-                                var _ClassList = [], _CourseList = [];
+                                var _ClassList = [],
+                                    _CourseList = [];
                                 $scope.courseList = [];
                                 if (response.Result.Class)
                                     _ClassList = _ClassList.concat(response.Result.Class);
 
-                                angular.forEach(_ClassList,function(item){
+                                angular.forEach(_ClassList, function(item) {
                                     item.ID = item.ClassID;
                                     item.Title = item.ClassName;
                                     item.Type = 'homeroom';
@@ -80,17 +81,17 @@ angular.module('enterconduct', [])
 
                                 if (response.Result.Course)
                                     _CourseList = _CourseList.concat(response.Result.Course);
-                                
-                                angular.forEach(_CourseList,function(item){
+
+                                angular.forEach(_CourseList, function(item) {
                                     item.ID = item.CourseID;
-                                    item.Title = item.CourseName+' '+item.SubjectEnglishName;
+                                    item.Title = item.CourseName + ' ' + item.SubjectEnglishName;
                                     item.Type = 'subject';
                                     item.Show = false;
                                 });
 
                                 $scope.courseList = [].concat(_ClassList).concat(_CourseList);
 
-                                if ($scope.courseList.length) { 
+                                if ($scope.courseList.length) {
                                     $scope.selectCourse($scope.courseList[0]);
                                 }
                             }
@@ -98,23 +99,22 @@ angular.module('enterconduct', [])
                     }
                 }
             });
-        }
+        };
 
         $scope.switchTeacherType = function(type) {
             $scope.teacherType = type;
 
             var flag = -1;
-            angular.forEach($scope.courseList,function(item,index){
+            angular.forEach($scope.courseList, function(item, index) {
                 if (item.Type === type) {
                     item.Show = true;
                     if (flag === -1) flag = index;
-                }
-                else
+                } else
                     item.Show = false;
             });
             if (flag !== -1)
                 $scope.selectCourse($scope.courseList[flag]);
-        }
+        };
 
         $scope.selectCourse = function(item) {
             $scope.currentCourse = item;
@@ -136,8 +136,8 @@ angular.module('enterconduct', [])
 
             var flag = false;
 
-            angular.forEach($scope.config.Config,function(item){
-                if (($scope.currentCourse.GradeYear*1) <= (item.Grade*1) && !flag) {
+            angular.forEach($scope.config.Config, function(item) {
+                if (($scope.currentCourse.GradeYear * 1) <= (item.Grade * 1) && !flag) {
                     $scope.current.MiddleOpeningC = item.MiddleOpeningC;
                     $scope.current.MiddleBeginC = item.MiddleBeginC;
                     $scope.current.MiddleEndC = item.MiddleEndC;
@@ -145,13 +145,13 @@ angular.module('enterconduct', [])
                     $scope.current.FinalBeginC = item.FinalBeginC;
                     $scope.current.FinalEndC = item.FinalEndC;
                     $scope.current.ConductList = [].concat(item.Conduct.Conducts.Conduct);
-                    angular.forEach($scope.current.ConductList,function(conduct){
+                    angular.forEach($scope.current.ConductList, function(conduct) {
                         conduct.Item = [].concat(conduct.Item);
                     });
                     flag = true;
-                }  
+                }
             });
-        }
+        };
 
         $scope.getStudentList = function() {
             delete $scope.studentList;
@@ -160,9 +160,13 @@ angular.module('enterconduct', [])
             var _body = '';
 
             if ($scope.currentCourse.Type === 'homeroom')
-                _body = {ClassID:$scope.currentCourse.ID};
+                _body = {
+                    ClassID: $scope.currentCourse.ID
+                };
             else
-                _body = {CourseID:$scope.currentCourse.ID};
+                _body = {
+                    CourseID: $scope.currentCourse.ID
+                };
 
             $scope.connection.send({
                 service: "_.GetConductScore",
@@ -171,83 +175,84 @@ angular.module('enterconduct', [])
                     if (error !== null) {
                         // $scope.set_error_message('#mainMsg', 'GetExamScore', error);
                     } else {
-                        console.log(response);
+                        // console.log("student list:");
+                        // console.log(response);
                         $scope.$apply(function() {
                             if (response !== null) {
                                 $scope.studentList = [];
                                 if ($scope.currentCourse.Type === 'homeroom') {
                                     if (response.Class && response.Class.Student) {
                                         $scope.studentList = [].concat(response.Class.Student);
-                                        angular.forEach($scope.studentList,function(item,index){
+                                        angular.forEach($scope.studentList, function(item, index) {
                                             item.order = index;
                                         });
                                     }
                                 } else {
                                     if (response.Course && response.Course.Student) {
                                         $scope.studentList = [].concat(response.Course.Student);
-                                        angular.forEach($scope.studentList,function(item,index){
+                                        angular.forEach($scope.studentList, function(item, index) {
                                             item.order = index;
                                         });
                                     }
                                 }
 
-                                angular.forEach($scope.studentList,function(stu){
+                                angular.forEach($scope.studentList, function(stu) {
                                     stu.EditConduct = {
-                                        Conducts:{
-                                            Conduct:[]
+                                        Conducts: {
+                                            Conduct: []
                                         }
                                     }
                                     if (stu.Conduct !== '' && stu.Conduct.Conducts && stu.Conduct.Conducts.Conduct) {
                                         stu.Conduct.Conducts.Conduct = [].concat(stu.Conduct.Conducts.Conduct);
-                                        angular.forEach(stu.Conduct.Conducts.Conduct,function(conduct){
+                                        angular.forEach(stu.Conduct.Conducts.Conduct, function(conduct) {
                                             conduct.Item = [].concat(conduct.Item);
                                         });
                                     }
                                     if (stu.MidtermConduct !== '' && stu.MidtermConduct.Conducts && stu.MidtermConduct.Conducts.Conduct) {
                                         stu.MidtermConduct.Conducts.Conduct = [].concat(stu.MidtermConduct.Conducts.Conduct);
-                                        angular.forEach(stu.MidtermConduct.Conducts.Conduct,function(conduct){
+                                        angular.forEach(stu.MidtermConduct.Conducts.Conduct, function(conduct) {
                                             conduct.Item = [].concat(conduct.Item);
                                         });
                                     }
                                     if (stu.FinalConduct !== '' && stu.FinalConduct.Conducts && stu.FinalConduct.Conducts.Conduct) {
                                         stu.FinalConduct.Conducts.Conduct = [].concat(stu.FinalConduct.Conducts.Conduct);
-                                        angular.forEach(stu.FinalConduct.Conducts.Conduct,function(conduct){
+                                        angular.forEach(stu.FinalConduct.Conducts.Conduct, function(conduct) {
                                             conduct.Item = [].concat(conduct.Item);
                                         });
                                     }
 
-                                    angular.forEach($scope.current.ConductList,function(conduct){
+                                    angular.forEach($scope.current.ConductList, function(conduct) {
                                         if ($scope.teacherType === 'homeroom') {
                                             if (!conduct.Subject || conduct.Subject === '') {
                                                 var _conduct = {
-                                                    Group:conduct.Group,
-                                                    Item:[]
+                                                    Group: conduct.Group,
+                                                    Item: []
                                                 };
-                                                angular.forEach(conduct.Item,function(item){
+                                                angular.forEach(conduct.Item, function(item) {
                                                     _conduct.Item.push({
-                                                        Title:item.Title || '',
-                                                        MidtermGrade:'',
-                                                        FinalGrade:'',
-                                                        Grade:'',
-                                                        Group:conduct.Group
+                                                        Title: item.Title || '',
+                                                        MidtermGrade: '',
+                                                        FinalGrade: '',
+                                                        Grade: '',
+                                                        Group: conduct.Group
                                                     });
                                                 });
 
                                                 stu.EditConduct.Conducts.Conduct.push(_conduct);
                                             }
                                         } else {
-                                            if (conduct.Common == 'True'|| ($scope.teacherType == 'subject' && $scope.currentCourse.SubjectChineseName == conduct.Subject)) {
+                                            if (conduct.Common == 'True' || ($scope.teacherType == 'subject' && $scope.currentCourse.SubjectChineseName == conduct.Subject)) {
                                                 var _conduct = {
-                                                    Group:conduct.Group,
-                                                    Item:[]
+                                                    Group: conduct.Group,
+                                                    Item: []
                                                 };
-                                                angular.forEach(conduct.Item,function(item){
+                                                angular.forEach(conduct.Item, function(item) {
                                                     _conduct.Item.push({
-                                                        Title:item.Title || '',
-                                                        MidtermGrade:'',
-                                                        FinalGrade:'',
-                                                        Grade:'',
-                                                        Group:conduct.Group
+                                                        Title: item.Title || '',
+                                                        MidtermGrade: '',
+                                                        FinalGrade: '',
+                                                        Grade: '',
+                                                        Group: conduct.Group
                                                     });
                                                 });
 
@@ -255,14 +260,14 @@ angular.module('enterconduct', [])
                                             }
                                         }
                                     });
-                                    angular.forEach(stu.EditConduct.Conducts.Conduct,function(ec){
+                                    angular.forEach(stu.EditConduct.Conducts.Conduct, function(ec) {
                                         ec.Item = [].concat(ec.Item);
 
                                         if (stu.Conduct !== '' && stu.Conduct.Conducts && stu.Conduct.Conducts.Conduct) {
-                                            angular.forEach(stu.Conduct.Conducts.Conduct,function(c){
+                                            angular.forEach(stu.Conduct.Conducts.Conduct, function(c) {
                                                 if (ec.Group === c.Group) {
-                                                    angular.forEach(ec.Item,function(ei){
-                                                        angular.forEach(c.Item,function(ci){
+                                                    angular.forEach(ec.Item, function(ei) {
+                                                        angular.forEach(c.Item, function(ci) {
                                                             if (ei.Title === ci.Title) {
                                                                 ei.Grade = ci.Grade;
                                                             }
@@ -272,10 +277,10 @@ angular.module('enterconduct', [])
                                             });
                                         }
                                         if (stu.MidtermConduct !== '' && stu.MidtermConduct.Conducts && stu.MidtermConduct.Conducts.Conduct) {
-                                            angular.forEach(stu.MidtermConduct.Conducts.Conduct,function(c){
+                                            angular.forEach(stu.MidtermConduct.Conducts.Conduct, function(c) {
                                                 if (ec.Group === c.Group) {
-                                                    angular.forEach(ec.Item,function(ei){
-                                                        angular.forEach(c.Item,function(ci){
+                                                    angular.forEach(ec.Item, function(ei) {
+                                                        angular.forEach(c.Item, function(ci) {
                                                             if (ei.Title === ci.Title) {
                                                                 ei.MidtermGrade = ci.Grade;
                                                             }
@@ -285,10 +290,10 @@ angular.module('enterconduct', [])
                                             });
                                         }
                                         if (stu.FinalConduct !== '' && stu.FinalConduct.Conducts && stu.FinalConduct.Conducts.Conduct) {
-                                            angular.forEach(stu.FinalConduct.Conducts.Conduct,function(c){
+                                            angular.forEach(stu.FinalConduct.Conducts.Conduct, function(c) {
                                                 if (ec.Group === c.Group) {
-                                                    angular.forEach(ec.Item,function(ei){
-                                                        angular.forEach(c.Item,function(ci){
+                                                    angular.forEach(ec.Item, function(ei) {
+                                                        angular.forEach(c.Item, function(ci) {
                                                             if (ei.Title === ci.Title) {
                                                                 ei.FinalGrade = ci.Grade;
                                                             }
@@ -299,10 +304,10 @@ angular.module('enterconduct', [])
                                         }
                                     });
                                 });
-                                
-                                console.log($scope.studentList);
 
-                                if ($scope.studentList.length) { 
+                                //console.log($scope.studentList);
+
+                                if ($scope.studentList.length) {
                                     $scope.selectStudent($scope.studentList[0]);
                                 }
                             }
@@ -310,7 +315,7 @@ angular.module('enterconduct', [])
                     }
                 }
             });
-        }
+        };
 
         $scope.selectStudent = function(item) {
             if (!item) return;
@@ -326,17 +331,17 @@ angular.module('enterconduct', [])
             if ($scope.currentStudent.EditConduct.Conducts.Conduct.length > 0 && $scope.currentStudent.EditConduct.Conducts.Conduct[0].Item.length > 0) {
                 if ($scope.currentCourse.GradeYear < 3) {
                     if ($scope.current.MiddleOpeningC === 'true') {
-                        $scope.selectConduct($scope.currentStudent.EditConduct.Conducts.Conduct[0].Item[0],1);
+                        $scope.selectConduct($scope.currentStudent.EditConduct.Conducts.Conduct[0].Item[0], 1);
                     } else if ($scope.current.FinalOpeningC === 'true') {
-                        $scope.selectConduct($scope.currentStudent.EditConduct.Conducts.Conduct[0].Item[0],2);
+                        $scope.selectConduct($scope.currentStudent.EditConduct.Conducts.Conduct[0].Item[0], 2);
                     }
                 } else {
                     if ($scope.current.FinalOpeningC === 'true') {
-                        $scope.selectConduct($scope.currentStudent.EditConduct.Conducts.Conduct[0].Item[0],3);
+                        $scope.selectConduct($scope.currentStudent.EditConduct.Conducts.Conduct[0].Item[0], 3);
                     }
                 }
             }
-        }
+        };
 
         $scope.selectStudentID = function(event) { //輸入座號跳到該座號
             if (event.keyCode !== 13) return; // 13是enter按鈕的代碼，return是跳出
@@ -351,9 +356,9 @@ angular.module('enterconduct', [])
             });
 
             $scope.selectStudent(nextStudent);
-        }
+        };
 
-        $scope.selectConduct = function(item,period) {
+        $scope.selectConduct = function(item, period) {
             if (!item) {
                 $scope.currentConduct.selected = false;
 
@@ -407,46 +412,51 @@ angular.module('enterconduct', [])
                     item.canInputGrade = true;
                     item.canInputMComment = true;
                     item.canInputFComment = false;
-                }
-                else {
+                } else {
                     item.canInputGrade = false;
                     item.canInputMComment = false;
                     item.canInputFComment = false;
                 }
-            }
-            else if (period === 2) {
+            } else if (period === 2) {
                 $scope.currentConduct.tempGrade = item.FinalGrade;
-                if ($scope.current.FinalOpeningC === 'true'){
+                if ($scope.current.FinalOpeningC === 'true') {
                     item.canInputGrade = true;
                     item.canInputMComment = false;
                     item.canInputFComment = true;
-                }
-                else {
+                } else {
                     item.canInputGrade = false;
                     item.canInputMComment = false;
                     item.canInputFComment = false;
                 }
-            }
-            else {
+            } else {
                 $scope.currentConduct.tempGrade = item.Grade;
-                if ($scope.current.FinalOpeningC === 'true'){
+                if ($scope.current.FinalOpeningC === 'true') {
                     item.canInputGrade = true;
-                }
-                else {
+                } else {
                     item.canInputGrade = false;
                 }
             }
 
             $('#grade-textbox').focus().select();
 
-        }
+        };
 
         $scope.enterGrade = function(event) {
             if (event.keyCode !== 13) return;
 
             if (!$scope.currentConduct) return;
 
+            var num = parseInt($scope.currentConduct.tempGrade, 10);
+            if (num === 3)
+                $scope.currentConduct.tempGrade = 'M';
+            if (num === 2)
+                $scope.currentConduct.tempGrade = 'S';
+            if (num === 1)
+                $scope.currentConduct.tempGrade = 'N';
+            if (num === 0)
+                $scope.currentConduct.tempGrade = 'N/A';
             var grade = $scope.currentConduct.tempGrade.toUpperCase();
+
             var flag = false;
             angular.forEach($scope.current.Code, function(item) {
                 if (item.Key.toUpperCase() === grade) {
@@ -457,15 +467,40 @@ angular.module('enterconduct', [])
 
             if (flag)
                 $scope.saveGrade('conduct');
-        }
+        };
 
         $scope.enterComment = function(event) {
             if (event.keyCode !== 13 || event.shiftKey) return;
 
             $scope.saveGrade('comment');
-        } 
+        };
+
+        $scope.SetDefaultValue = function() {
+
+            angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function(conduct) {
+                angular.forEach(conduct.Item, function(item) {
+                    if($scope.currentConduct.Period === 1 && $scope.current.MiddleOpeningC === 'true'){
+                        item.MidtermGrade = 'M';
+                        item.tempGrade = 'M';
+                    }
+
+                    if($scope.currentConduct.Period === 2 && $scope.current.FinalOpeningC === 'true'){
+                        item.FinalGrade = 'M';
+                        item.tempGrade = 'M';
+                    }
+
+                    if($scope.currentConduct.Period === 3 && $scope.current.FinalOpeningC === 'true'){
+                        item.Grade = 'M';
+                        item.tempGrade = 'M';
+                    }
+                });
+            });
+
+            $scope.saveGrade('conduct');
+        };
 
         $scope.saveGrade = function(type) {
+
             var _body = {
                 StudentID: $scope.currentStudent.StudentID,
                 Period: $scope.currentConduct.Period === 3 ? '' : $scope.currentConduct.Period,
@@ -483,31 +518,31 @@ angular.module('enterconduct', [])
 
             var conductList = [];
 
-            angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct,function(conduct){
+            angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function(conduct) {
                 var items = [];
-                angular.forEach(conduct.Item,function(item){
+                angular.forEach(conduct.Item, function(item) {
                     if (item.Title !== $scope.currentConduct.Title) {
                         items.push({
-                            '@Grade':($scope.currentConduct.Period === 1 ? item.MidtermGrade : ($scope.currentConduct.Period === 2 ? item.FinalGrade : item.Grade)) || '',
-                            '@Title':item.Title || ''
+                            '@Grade': ($scope.currentConduct.Period === 1 ? item.MidtermGrade : ($scope.currentConduct.Period === 2 ? item.FinalGrade : item.Grade)) || '',
+                            '@Title': item.Title || ''
                         });
                     } else {
                         items.push({
-                            '@Grade':item.tempGrade || '',
-                            '@Title':item.Title || ''
+                            '@Grade': item.tempGrade || '',
+                            '@Title': item.Title || ''
                         });
                     }
                 });
-                
+
                 conductList.push({
-                    '@Group':conduct.Group,
-                    Item:items
+                    '@Group': conduct.Group,
+                    Item: items
                 });
             });
 
             _body.Conduct.Conducts.Conduct = conductList;
 
-            console.log(_body);
+            //console.log(_body);
 
             $scope.connection.send({
                 service: "_.UpdateConductScore",
@@ -516,7 +551,7 @@ angular.module('enterconduct', [])
                     if (error !== null) {
                         // $scope.set_error_message('#mainMsg', 'GetConfig', error);
                     } else {
-                        console.log(response);
+                        //console.log(response);
                         $scope.$apply(function() {
                             if (type === 'conduct') {
                                 if ($scope.currentConduct.Period === 1)
@@ -526,23 +561,24 @@ angular.module('enterconduct', [])
                                 else
                                     $scope.currentConduct.Grade = $scope.currentConduct.tempGrade;
 
-                                var nextConduct = null, period = $scope.currentConduct.Period;
+                                var nextConduct = null,
+                                    period = $scope.currentConduct.Period;
 
-                                angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function(conduct,i) {
-                                    angular.forEach(conduct.Item, function(item,j) {
+                                angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function(conduct, i) {
+                                    angular.forEach(conduct.Item, function(item, j) {
                                         if ($scope.currentConduct.Title === item.Title && $scope.currentConduct.Group === conduct.Group)
-                                            nextConduct = conduct.Item[j+1];
+                                            nextConduct = conduct.Item[j + 1];
                                     });
 
                                     if (!nextConduct && i < $scope.currentStudent.EditConduct.Conducts.Conduct.length - 1) {
-                                        if ($scope.currentStudent.EditConduct.Conducts.Conduct[i+1].Item.length > 0)
+                                        if ($scope.currentStudent.EditConduct.Conducts.Conduct[i + 1].Item.length > 0)
                                             nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[i + 1].Item[0];
                                     }
                                 });
 
-                                $scope.selectConduct(nextConduct,period);
+                                $scope.selectConduct(nextConduct, period);
                             } else {
-                                var nextStudent = $scope.studentList[$scope.currentStudent.order+1];
+                                var nextStudent = $scope.studentList[$scope.currentStudent.order + 1];
                                 if (!nextStudent)
                                     nextStudent = $scope.studentList[0];
 
@@ -552,13 +588,13 @@ angular.module('enterconduct', [])
                                 $timeout(function() {
                                     $('#seatno-textbox').focus().select();
                                     delete $scope.currentConduct;
-                                },100);
+                                }, 100);
                             }
                         });
                     }
                 }
             });
-        }
+        };
 
         $scope.getNow();
 

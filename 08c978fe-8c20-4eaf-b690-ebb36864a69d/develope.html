@@ -5,15 +5,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
-     <script>
-        init({
-            application: "test.b.nehs.hc.edu.tw",
-            paramValues: {},
-            oAuth: {
-                clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
-                clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311'
-            }
-        });
+    <script>
+    init({
+        application: "test.b.nehs.hc.edu.tw",
+        paramValues: {},
+        oAuth: {
+            clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+            clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311'
+        }
+    });
     </script>
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/base.css" rel="stylesheet" />
@@ -25,7 +25,7 @@
 
 <body ng-controller="MainCtrl">
     <div id="gadget" class="my-page">
-        <h1>{{current.SchoolYear}} {{current.Semester == '1' ? '1st' : (current.Semester == '2' ? '2nd' :'')}} Semester  Grade Conduct</h1>
+        <h1>{{current.SchoolYear}} {{current.Semester == '1' ? '1st' : (current.Semester == '2' ? '2nd' :'')}} Semester Grade Conduct</h1>
         <div class="alert alert-info" ng-if="current.MiddleOpeningC == 'true' || current.FinalOpeningC == 'true'">
             <p ng-if="current.MiddleOpeningC == 'true'">Midterm: {{current.MiddleBeginC}} ~ {{current.MiddleEndC}} {{current.Message}}</p>
             <p ng-if="current.FinalOpeningC == 'true'">Final: {{current.FinalBeginC}} ~ {{current.FinalEndC}}</p>
@@ -148,6 +148,9 @@
                         </table>
 
                         <div style="margin-top:10px;">
+                            <a class="btn btn-default" type="button" ng-click="SetDefaultValue()">
+                                <i class="fa fa-search">Click to set default value</i>
+                            </a>
                             <p ng-repeat="item in current.Code">
                                 {{item.Key}} = {{item.Value}}
                             </p>
