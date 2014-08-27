@@ -993,7 +993,7 @@ angular.module('allsearch', [])
                             });
 
                             //四捨五入
-                            $scope.GS.avggpa = Math.round($scope.GS.avggpa * 100) / 100;
+                            //$scope.GS.avggpa = Math.round($scope.GS.avggpa * 100) / 100;
 
                             var sy = parseInt($scope.GS.schoolYear,10) + 1911;
 

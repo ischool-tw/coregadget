@@ -446,17 +446,18 @@ angular.module('enterconduct', [])
 
             if (!$scope.currentConduct) return;
 
-            var num = parseInt($scope.currentConduct.tempGrade, 10);
-            if (num === 3)
-                $scope.currentConduct.tempGrade = 'M';
-            if (num === 2)
-                $scope.currentConduct.tempGrade = 'S';
-            if (num === 1)
-                $scope.currentConduct.tempGrade = 'N';
-            if (num === 0)
-                $scope.currentConduct.tempGrade = 'N/A';
             var grade = $scope.currentConduct.tempGrade.toUpperCase();
+            if (grade === '3')
+                grade = 'M';
+            if (grade === '2')
+                grade = 'S';
+            if (grade === '1')
+                grade = 'N';
+            if (grade === '0')
+                grade = 'N/A';
 
+            $scope.currentConduct.tempGrade = grade;
+            
             var flag = false;
             angular.forEach($scope.current.Code, function(item) {
                 if (item.Key.toUpperCase() === grade) {
@@ -477,21 +478,38 @@ angular.module('enterconduct', [])
 
         $scope.SetDefaultValue = function() {
 
+            var grade = $scope.currentConduct.tempGrade.toUpperCase();
+            if (grade === '3')
+                grade = 'M';
+            if (grade === '2')
+                grade = 'S';
+            if (grade === '1')
+                grade = 'N';
+            if (grade === '0')
+                grade = 'N/A';
+
+            $scope.currentConduct.tempGrade = grade;
+
+            //var grade = $scope.currentConduct.tempGrade.toUpperCase();
+
+            if(grade !== 'M' && grade !== 'S' && grade !== 'N' && grade !== 'N/A' )
+                return;
+
             angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function(conduct) {
                 angular.forEach(conduct.Item, function(item) {
                     if($scope.currentConduct.Period === 1 && $scope.current.MiddleOpeningC === 'true'){
-                        item.MidtermGrade = 'M';
-                        item.tempGrade = 'M';
+                        item.MidtermGrade = grade;
+                        item.tempGrade = grade;
                     }
 
                     if($scope.currentConduct.Period === 2 && $scope.current.FinalOpeningC === 'true'){
-                        item.FinalGrade = 'M';
-                        item.tempGrade = 'M';
+                        item.FinalGrade = grade;
+                        item.tempGrade = grade;
                     }
 
                     if($scope.currentConduct.Period === 3 && $scope.current.FinalOpeningC === 'true'){
-                        item.Grade = 'M';
-                        item.tempGrade = 'M';
+                        item.Grade = grade;
+                        item.tempGrade = grade;
                     }
                 });
             });
