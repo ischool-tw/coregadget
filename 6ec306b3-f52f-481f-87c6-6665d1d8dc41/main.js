@@ -26,9 +26,16 @@
     });
   });
 
+gadget.getContract("ischool.course_selection.public").send({
+      service: "default.GetSelectionSemester",
+      result: function(response, error, xhr) {
+        return $("#message").html("開放選課時間：" + response.Response.StartTime + " ~ " + response.Response.EndTime);
+      }
+    });
+
   getCurrentSemester = function() {
-    return gadget.getContract("ischool.course_selection.student").send({
-      service: "default.GetMyGradeYear",
+    return gadget.getContract("ischool.course_selection.public").send({
+      service: "default.GetSelectionSemester",
       result: function(response, error, xhr) {
         global.schoolYear = parseInt(response.Response.SelectionSchoolYear, 10);
         global.semester = parseInt(response.Response.SelectionSemester, 10);
