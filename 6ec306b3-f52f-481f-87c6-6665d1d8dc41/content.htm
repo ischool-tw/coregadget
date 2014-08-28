@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content='text/html;charset=utf-8' />
+    <script type='text/javascript'>
+        var gadget = window.parent.getGadgetProxy((function () {
+            var vars = [], hash;
+            var p = window.location.href.slice(window.location.href.indexOf('?') + 1);
+            if (p.indexOf("#") >= 0)
+                p = p.substring(0, p.indexOf("#"));
+            var hashes = p.split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = decodeURI(hashes[i]);
+                var key = hash.substring(0, hash.indexOf("="));
+                vars.push(key);
+                vars[key] = hash.substring(hash.indexOf("=") + 1);
+            }
+            return vars;
+        } ()).id);
+        try { window.parent = null; } catch (exc) { }
+    </script>
+</head>
+<body leftmargin='0' topmargin='0' marginwidth='0' bgcolor='#FFFFFF' style='margin: 0; border: 0 none;'>
+<link rel="stylesheet" href="bootstrap.css"/>
+<link rel="stylesheet" href="bootstrap-responsive.css"/>
+<link rel="stylesheet" href="default.css"/>
+
+<script src="jquery.min.js"></script>
+<script src="bootstrap.min.js"></script>
+<script src="main.js"></script>	
+
+<div id="widget" class="container">
+	<div class="row-fluid">
+		<div class="span6">
+			<div class="btn-toolbar">
+				<div class="btn-group">
+					<button id="class-title" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+						班級 <span class="caret"></span>
+					</button>
+					<ul id="class-list" class="dropdown-menu"></ul>
+				</div>
+				<span class="btn btn-info disabled pull-right">
+					<input type="checkbox" id="upgrade">已升級
+				</span>
+			</div>
+			<div id="student-list">
+				<table class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>學生狀態</th>
+							<th>學號</th>
+							<th>座號</th>
+							<th>姓名</th>
+							<th>性別</th>
+							<th>選課內容</th>
+							<th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
+		</div>
+		<div class="span6">
+			<div id="student-info"></div>
+			<div id="subject-list"></div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

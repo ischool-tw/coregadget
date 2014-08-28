@@ -1,0 +1,10 @@
+#widget {
+  margin-top: 10px;
+}
+#student-list {
+  height: 600px;
+  overflow: hidden;
+}
+#student-list:hover {
+  overflow: auto;
+}
