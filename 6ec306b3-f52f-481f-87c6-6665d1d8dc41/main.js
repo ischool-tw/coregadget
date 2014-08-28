@@ -48,7 +48,7 @@
         global.students = $(response.Response.Student);
         items = "";
         $(response.Response.Student).each(function(index, student) {
-          return items += "<tr index='" + index + "'>\n	<td>" + student.StudentNumber + "</td>\n	<td>" + student.SeatNo + "</td>\n	<td>" + student.Name + "</td>\n	<td>" + student.Gender + "</td>\n	<td>" + (student.SubjectName.replace(/\"/gm, '').replace(/{/gm, '').replace(/}/gm, '').replace(/NULL/gm, '').replace(/,/gm, '<br/>')) + "</td>\n	<td><a href='#' index='" + index + "'>詳細</a></td>\n</tr>";
+          return items += "<tr index='" + index + "'>\n	<td>" + student.status + "</td>\n<td>" + student.StudentNumber + "</td>\n	<td>" + student.SeatNo + "</td>\n	<td>" + student.Name + "</td>\n	<td>" + student.Gender + "</td>\n	<td>" + (student.SubjectName.replace(/\"/gm, '').replace(/{/gm, '').replace(/}/gm, '').replace(/NULL/gm, '').replace(/,/gm, '<br/>')) + "</td>\n	<td><a href='#' index='" + index + "'>詳細</a></td>\n</tr>";
         });
         $("#student-list tbody").html(items);
         return $("#student-list tbody tr a").click(function(e) {
