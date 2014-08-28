@@ -30,9 +30,8 @@
     return gadget.getContract("ischool.course_selection.public").send({
       service: "default.GetSelectionSemester",
       result: function(response, error, xhr) {
-        global.schoolYear = parseInt(response.Response.SelectionSchoolYear, 10);
-        global.semester = parseInt(response.Response.SelectionSemester, 10);
-        global.gradeYear = parseInt(response.Response.SelectionSchoolYear, 10) - parseInt(response.Response.CurrentSchoolYear, 10) + parseInt(response.Response.GradeYear, 10);
+        global.schoolYear = parseInt(response.Response.SchoolYear, 10);
+        global.semester = parseInt(response.Response.Semester, 10);
         return getClassStudents();
       }
     });
