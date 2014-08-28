@@ -20,18 +20,30 @@
           e.preventDefault();
           $("#class-title").html("" + ($(this).html()) + " <span class='caret'></span>");
           global.class_id = $(this).attr("class-id");
-          return getClassStudents();
+          return getCurrentSemester();
         });
       }
     });
   });
+
+  getCurrentSemester = function() {
+    return gadget.getContract("ischool.course_selection.student").send({
+      service: "default.GetMyGradeYear",
+      result: function(response, error, xhr) {
+        global.schoolYear = parseInt(response.Response.SelectionSchoolYear, 10);
+        global.semester = parseInt(response.Response.SelectionSemester, 10);
+        global.gradeYear = parseInt(response.Response.SelectionSchoolYear, 10) - parseInt(response.Response.CurrentSchoolYear, 10) + parseInt(response.Response.GradeYear, 10);
+        return getClassStudents();
+      }
+    });
+  }
 
   getClassStudents = function() {
     $("#student-info").html("");
     $("#subject-list").html("");
     return gadget.getContract("ischool.course_selection.teacher").send({
       service: "default.GetClassStudents",
-      body: "<Request><ClassID>" + global.class_id + "</ClassID></Request>",
+      body: "<Request><ClassID>" + global.class_id + "</ClassID><SchoolYear>" + global.schoolYear + "</SchoolYear><Semester>" + global.semester + "</Semester></Request>",
       result: function(response, error, xhr) {
         var items;
         global.students = $(response.Response.Student);
