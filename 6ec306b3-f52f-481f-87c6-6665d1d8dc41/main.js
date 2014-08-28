@@ -36,7 +36,7 @@
         return getClassStudents();
       }
     });
-  }
+  };
 
   getClassStudents = function() {
     $("#student-info").html("");
