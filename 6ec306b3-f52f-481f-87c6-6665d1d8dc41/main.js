@@ -26,13 +26,6 @@
     });
   });
 
-gadget.getContract("ischool.course_selection.public").send({
-      service: "default.GetSelectionSemester",
-      result: function(response, error, xhr) {
-        return $("#message").html("開放選課時間：" + response.Response.StartTime + " ~ " + response.Response.EndTime);
-      }
-    });
-
   getCurrentSemester = function() {
     return gadget.getContract("ischool.course_selection.public").send({
       service: "default.GetSelectionSemester",
