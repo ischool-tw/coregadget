@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs title="Conduct輸入" description="實驗中學雙語部Conduct輸入">
+    <Title lang="zh-TW">Conduct輸入</Title>
+    <Icon>img/icon.png</Icon>
+    <Mobile />
+    <Title lang="zh-CN">
+    </Title>
+    <Title lang="en-US">
+    </Title>
+  </ModulePrefs>
+</Module>
