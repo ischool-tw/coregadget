@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+    <script type="text/javascript">
+        init({
+        	application: "http://test.iteacher.tw/cs4/test_sh_d",
+            paramValues: {}
+        });
+    </script>
+    
+    <link rel="stylesheet" href="bootstrap.css"/>
+    <link rel="stylesheet" href="bootstrap-responsive.css"/>
+    <link rel="stylesheet" href="default.css"/>
+    
+    <script src="jquery.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+	<script src="main.js"></script>	
+</head>
+<body>
+<div id="widget" class="container">
+	<div class="row-fluid">
+		<div class="span6">
+			<div class="btn-toolbar">
+				<div class="btn-group">
+					<button id="class-title" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+						班級 <span class="caret"></span>
+					</button>
+					<ul id="class-list" class="dropdown-menu"></ul>
+				</div>
+				<span class="btn btn-info disabled pull-right">
+					<input type="checkbox" id="upgrade">已升級
+				</span>
+			</div>
+			<div id="student-list">
+				<table class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>學生狀態</th>
+							<th>學號</th>
+							<th>座號</th>
+							<th>姓名</th>
+							<th>性別</th>
+							<th>選課內容</th>
+							<th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
+		</div>
+		<div class="span6">
+			<div id="student-info"></div>
+			<div id="subject-list"></div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
