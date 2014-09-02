@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html ng-app="app">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+  <script>
+    init({
+      application: "dev.sh_d", //"h.trialschool.tw", //"http://test.iteacher.tw/cs4/test_sh_d_chhs", //"dev.jh_kh",
+      paramValues: {}
+    });
+  </script>
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/font-awesome.css" rel="stylesheet" type="text/css">
+    <link href="css/base.css" rel="stylesheet" />
+    <link href="css/defalut.css" rel="stylesheet" />
+    <script src="js/jquery-1.8.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+<body ng-controller="Ctrl" data-ng-init="init()">
+    <div id="gadget" class="my-page">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>
+                    學生獎懲資料輸入
+                </h1>
+                <div id="mainMsg"></div>
+                <div class="alert alert-info" role="alert" ng-show="current.id">
+                    {{conf.DefaultSchoolYearSemester.DefaultSchoolYear}}學年度 學生獎懲資料輸入區間：{{conf.InputStartTime}} - {{conf.InputEndTime}}
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        {{current.class_name}}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li ng-repeat="m in menu">
+                            <a href="#" ng-click="setCurrent(m)">{{m.class_name}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+                    <thead>
+                        <tr>
+                            <th>座號</th>
+                            <th>學號</th>
+                            <th>姓名</th>
+                            <th>性別</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="l in list">
+                            <td>{{l.seat_no}}</td>
+                            <td>{{l.student_number}}</td>
+                            <td>{{l.name}}</td>
+                            <td>{{l.gender}}</td>
+                            <td class="text-right">
+                                <a class="btn btn-success btn-sm" ng-show="conf.AllowMeritA == '1'|| conf.AllowMeritB =='1'|| conf.AllowMeritC =='1'" ng-click="showEditForm(l.id,'1')"><i class="fa fa-trophy"></i> 登錄獎勵</a>
+                                <a class="btn btn-danger btn-sm" ng-show="conf.AllowDemeritA == '1'|| conf.AllowDemeritB =='1'|| conf.AllowDemeritC =='1'" ng-click="showEditForm(l.id,'0')"><i class="fa fa-thumbs-down"></i> 登錄懲戒</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+ <script type="text/ng-template" id="myModalContent.html">
+                <div class="modal-header">
+                    <button type="button" class="close" ng-click="cancel()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+
+                    <!-- 獎勵顯示 -->
+                    <h4 ng-show="merit_flag == '1'" class="modal-title" id="myModalLabel"><i class="fa fa-trophy"></i> 登錄獎勵</h4>
+
+                    <!-- 懲戒顯示 -->
+                    <h4 ng-show="merit_flag == '0'"class="modal-title" id="myModalLabel"><i class="fa fa-thumbs-down"></i> 登錄懲戒</h4>
+                    
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group" ng-class="{'bg-danger':error.occur_date}">
+                            <label for="input01" class="col-sm-2 control-label">獎勵日期</label>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <input type="text" disabled class="form-control" datepicker-popup="yyyy/MM/dd" ng-model="form1.occur_date" is-open="$parent.opened" show-button-bar="false" datepicker-options="{
+                                        formatYear: 'yy',
+                                        startingDay: 1
+                                      }" close-text="Close" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="!comfirm && datePickerOpen($event)"><i class="fa fa-calendar"></i> 
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{'bg-danger':error.reason}">
+                            <label for="input02" class="col-sm-2 control-label">事由</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-readonly="comfirm" class="form-control" id="input02" placeholder="請輸入事由" ng-model="form1.reason">
+                            </div>
+                        </div>
+                        <div ng-show="(merit_flag == '0' && conf.AllowDemeritA =='1')|| (merit_flag == '1' && conf.AllowMeritA == '1')" class="form-group" ng-class="{'bg-danger':error.detaila}">
+                            <label ng-show="merit_flag =='1'" for="input03" class="col-sm-2 control-label">大功</label>
+                            <label ng-show="merit_flag =='0'" for="input03" class="col-sm-2 control-label">大過</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-readonly="comfirm"  class="form-control" id="input03" placeholder="請輸入數字" ng-model="form1.detail.A">
+                            </div>
+                        </div>
+                        <div ng-show="(merit_flag == '0' && conf.AllowDemeritB =='1')|| (merit_flag == '1' && conf.AllowMeritB == '1')" class="form-group" ng-class="{'bg-danger':error.detailb}">
+                            <label ng-show="merit_flag =='1'" for="input04" class="col-sm-2 control-label">小功</label>
+                            <label ng-show="merit_flag =='0'" for="input04" class="col-sm-2 control-label">小過</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-readonly="comfirm"  class="form-control" id="input04" placeholder="請輸入數字" ng-model="form1.detail.B">
+                            </div>
+                        </div>
+                        <div ng-show="(merit_flag == '0' && conf.AllowDemeritC =='1')|| (merit_flag == '1' && conf.AllowMeritC == '1')" class="form-group" ng-class="{'bg-danger':error.detailc}">
+                            <label ng-show="merit_flag =='1'" for="input05" class="col-sm-2 control-label">嘉獎</label>
+                            <label ng-show="merit_flag =='0'" for="input05" class="col-sm-2 control-label">警告</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-readonly="comfirm" class="form-control" id="input05" placeholder="請輸入數字" ng-model="form1.detail.C">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 一開始出現此 DIV ，下方 DIV 隱藏 -->
+                <div ng-show="!comfirm" class="modal-footer">
+                    <button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+                    <button type="button" class="btn btn-primary" ng-click="beforeok()">儲存</button>
+                </div>
+
+                <!-- 當在上面 DIV 按下儲存後，隱藏上面 DIV 顯示此 DIV ， INPUT欄位加上 readonly 變為無法輸入狀態 -->
+                <div ng-show="comfirm" class="modal-footer">
+                    <div class="alert alert-info">
+                        <strong><i class="fa fa-info-circle"></i> 確認送出資料？</strong>（送出資料後，如需修改請洽學務處相關人員）
+                        <button type="button" class="btn btn-default" ng-click="cancelcomfirm()">取消</button>
+                        <button type="button" class="btn btn-primary" ng-click="ok()">確定</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js"></script>
+<script src="js/default.js"></script>
+</body>
+
+</html>

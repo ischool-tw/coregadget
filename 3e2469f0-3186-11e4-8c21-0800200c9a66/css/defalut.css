@@ -1,0 +1,45 @@
+a:hover {
+	text-decoration:none;
+}
+
+.my-media {
+	border: 1px solid #eee;
+	padding: 8px 8px 0 8px;
+	border-radius: 3px;
+}
+
+a > .my-media {
+	color:#333;
+}
+
+.my-media img {
+	width:107px;
+	height:auto;
+	border-radius: 3px;
+}
+
+.my-media p {
+	border-bottom:1px dashed #eee;
+}
+
+.my-media p:last-child {
+	height:43px;
+}
+
+.col-md-6 {
+	margin-top: 5px;
+}
+
+.my-em em {
+	font-style:normal;
+	text-align:right;
+	width: 25%;
+	display:inline-block;
+	border-right:1px solid #eee;
+	padding-right:10px;
+	margin-right:10px;
+}
+
+.table>tbody>tr>td {
+	border:none;
+}
