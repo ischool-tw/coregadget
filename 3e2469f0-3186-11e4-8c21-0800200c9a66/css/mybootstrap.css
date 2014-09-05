@@ -1,0 +1,18 @@
+/* CSS Document */
+* {
+  font-family: "微軟正黑體","Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+html, body {
+	height: 100%;
+}
+
+.navbar {
+	border: 1px dashed transparent;
+}
+
+@media (min-width: 768px) {
+	.navbar {
+		border-radius: 0;
+	}
+}
