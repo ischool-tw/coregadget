@@ -731,8 +731,10 @@ Exam = do ->
       "Level70"
     else if score >= 80 and score < 90
       "Level80"
-    else if score >= 90 and score <= 100
+    else if score >= 90 and score <= 99
       "Level90"
+    else if score >= 100
+      "Level100"
     else
       ""
 
@@ -795,7 +797,6 @@ Exam = do ->
           if exam.Avg isnt '未開放'
             # 有成績且可顯示時資料處理
             my_level = switchLevel(Number(exam.Avg)) if exam.Avg
-
             for key of levelList
               if levelList[key] == my_level
                 tbody1.push """<td class="my-fail">#{exam.Interval[levelList[key]]}</td>"""
