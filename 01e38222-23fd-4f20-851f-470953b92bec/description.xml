@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs title="（雙語部）成績輸入" description="老師-服務學習">
+    <Title lang="zh-TW">Gradebook</Title>
+    <Icon>icon.png</Icon>
+    <Mobile />
+    <Title lang="zh-CN">
+    </Title>
+    <Title lang="en-US">Grading</Title>
+  </ModulePrefs>
+</Module>

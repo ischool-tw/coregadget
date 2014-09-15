@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs title="（雙語部）Conduct輸入" description="老師-Conduct輸入">
+    <Title lang="zh-TW">Student Conduct</Title>
+    <Icon>icon.png</Icon>
+    <Mobile />
+    <Title lang="zh-CN">
+    </Title>
+    <Title lang="en-US">Conduct</Title>
+  </ModulePrefs>
+</Module>
