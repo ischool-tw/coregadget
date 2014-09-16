@@ -212,7 +212,7 @@ angular.module('entergrade', [])
                     if (error !== null) {
                         // $scope.set_error_message('#mainMsg', 'GetExamScore', error);
                     } else {
-                        // console.log(response);
+                        //console.log(response);
                         $scope.$apply(function () {
                             if (response !== null && response.Course && response.Course.Student) {
                                 $scope.studentList = [].concat(response.Course.Student);
