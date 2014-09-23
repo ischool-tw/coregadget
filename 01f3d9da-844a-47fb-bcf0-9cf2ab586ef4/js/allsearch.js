@@ -43,6 +43,7 @@ angular.module('allsearch', [])
 
                         $scope.studentList = [];
                         if (response && response.Student) {
+                            response.Student = [].concat(response.Student)
                             angular.forEach(response.Student, function(value) {
                                 if (value.StudentStatus === '1' || value.StudentStatus === '2')
                                     $scope.studentList.push(value);
