@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/font-awesome.css" rel="stylesheet" type="text/css">
+    <link href="css/base.css" rel="stylesheet" />
+    <link href="css/defalut.css" rel="stylesheet" />
+    <script src="js/jquery-1.8.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/default.js"></script>
+</head>
+
+<body>
+    <div id="gadget" class="my-page">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>
+                    學生獎懲資料輸入
+                </h1>
+                <div class="alert alert-info" role="alert">101學年度 學生獎懲資料輸入區間：2014/08/08 00:00:00 - 2014/09/05 00:00:00</div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        資一忠
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">資一忠</a>
+                        </li>
+                        <li><a href="#">資一孝</a>
+                        </li>
+                    </ul>
+                </div>
+                <table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
+                    <thead>
+                        <tr>
+                            <th>座號</th>
+                            <th>學號</th>
+                            <th>姓名</th>
+                            <th>性別</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>80102</td>
+                            <td>周小智</td>
+                            <td>男</td>
+                            <td class="text-right">
+                                <a class="btn btn-success btn-sm" data-toggle="modal" data-target="#myInput"><i class="fa fa-trophy"></i> 登錄獎勵</a>
+                                <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myInput"><i class="fa fa-thumbs-down"></i> 登錄懲戒</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myInput" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+
+                    <!-- 獎勵顯示 -->
+                    <h4 class="modal-title" id="myModalLabel"><i class="fa fa-trophy"></i> 登錄獎勵</h4>
+
+                    <!-- 懲戒顯示 -->
+                    <h4 class="modal-title" id="myModalLabel"><i class="fa fa-thumbs-down"></i> 登錄懲戒</h4>
+                    
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="input01" class="col-sm-2 control-label">獎勵日期</label>
+                            <div class="col-sm-10">
+                                <input type="date" class="form-control" id="input01" placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input02" class="col-sm-2 control-label">事由</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="input02" placeholder="請輸入事由">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input03" class="col-sm-2 control-label">大功</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="input03" placeholder="請輸入數字">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input04" class="col-sm-2 control-label">小功</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="input04" placeholder="請輸入數字">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input05" class="col-sm-2 control-label">嘉獎</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="input05" placeholder="請輸入數字">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 一開始出現此 DIV ，下方 DIV 隱藏 -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary">儲存</button>
+                </div>
+
+                <!-- 當在上面 DIV 按下儲存後，隱藏上面 DIV 顯示此 DIV ， INPUT欄位加上 readonly 變為無法輸入狀態 -->
+                <div class="modal-footer">
+                    <div class="alert alert-info">
+                        <strong><i class="fa fa-info-circle"></i> 確認送出資料？</strong>（送出資料後，如需修改請洽學務處相關人員）
+                        <button type="button" class="btn btn-default">取消</button>
+                        <button type="button" class="btn btn-primary">確定</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
