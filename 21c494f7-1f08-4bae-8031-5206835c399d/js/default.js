@@ -1,7 +1,6 @@
 ﻿$(document).ready(function () {
     $(window).resize(function () {
         $("#container-nav, #container-main").height($(window).height() - 50);
-        console.log($(window).height() - 50);
     });
 });
 
@@ -30,7 +29,6 @@ var app = angular
     .filter('myDateFormat', function($filter) {
         return function(text, format) {
             var tempdate = new Date(text.replace(/-/g, "/"));
-            // console.log(tempdate);
             if (tempdate && tempdate != 'Invalid Date' && !isNaN(tempdate))
                 return $filter('date')(tempdate, format);
         };
@@ -42,7 +40,6 @@ var app = angular
             
             timer = setTimeout(function() {
                 elm.focus();
-                console.log('focus', elm);
             }, 0);
         }})
     .controller("Ctrl0", function($scope) {
@@ -111,9 +108,6 @@ var app = angular
                 body: {},
                 result: function(response, error, http) {
                     if (!error) {
-                    	console.log(response.data);
-                    	console.log(response.conf);
-                    	console.log(response.error);
                     	if (response.conf)
                             $scope.conf = response.conf;
                         if (response.data)
@@ -137,8 +131,6 @@ var app = angular
                 service: "GetList",
                 body: {class_id:$class_id},
                 result: function(response, error, http) {
-                    console.log(response);
-                    console.log(error);
                     if (!error) {
                         if (response.data)
                             $scope.list = [].concat(response.data);
@@ -213,17 +205,13 @@ var app = angular
             //     course_id : $scope.current.id,
             //     detail: [{seat_no:int,value:string},{seat_no:int,value:string},...]
             // };
-            console.log(form1);
             var deferred = $q.defer();
             //return;
             data = $scope.ngObjFixHack(form1);
-            //console.log(data);
             $scope.contract.send({
                 service: "SetDisciplineRequest",
                 body: data,
                 result: function(response, error, http) {
-                    console.log(response);
-                    console.log(error);
                     if (!error) {
                         deferred.resolve(response.data);//checkRuningComplete();
                     } else {
@@ -290,8 +278,6 @@ var app = angular
                 service: "GetDisciplineRequest",
                 body: {class_id:$class_id},
                 result: function(response, error, http) {
-                    console.log(response);
-                    console.log(error);
                     if (!error) {
                         if (response.data)
                         {
