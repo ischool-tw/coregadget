@@ -394,8 +394,8 @@ var CreateTeacher = function() {
                 } else {
                     if (response.Result) {
                         _SubjectScoreLock = response.Result.IsLocked;
-                        _CallbackQueue.JobFinished();
                     }
+                    _CallbackQueue.JobFinished();
                 }
             }
         });
@@ -506,8 +506,8 @@ var CreateTeacher = function() {
                 } else {
                     if (response.Result != null) {
                         _TeacherCourses[vCourseID].Confirmed = 'true';
-                        _CallbackQueue.JobFinished();
                     }
+                    _CallbackQueue.JobFinished();
                 }
             }
         });
