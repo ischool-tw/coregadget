@@ -26,9 +26,7 @@
 <div id="gadget" class="my-page">
     <div class="row">
         <div class="col-md-12">
-            <h1>
-                {{'TITLE'|translate}}
-            </h1>
+            <h1 translate="TITLE"></h1>
             <div id="mainMsg"></div>
             <div ng-show="system_position == 'parent'" style="padding-bottom: 10px">
                 <button type="button" class="btn" ng-class="{true:'btn-primary',false:'btn-default'}[current_child.id==c.id]" ng-click="childChanged(c)" ng-repeat="c in childs">{{c.name}}</button>
@@ -36,10 +34,10 @@
             <div>
                 <ul class="nav nav-tabs">
                     <li ng-class="{true:'active'}[usingPage==1]">
-                        <a ng-click="usingPage=1" >{{'INPUT'|translate}}</a>
+                        <a ng-click="usingPage=1">{{"INPUT"|translate}}</a>
                     </li>
                     <li ng-class="{true:'active'}[usingPage==2]">
-                        <a ng-click="reloadPage2()" >{{'HISTORY'|translate}}</a>
+                        <a ng-click="reloadPage2()">{{"HISTORY"|translate}}</a>
                     </li>
                 </ul>
             </div>
@@ -49,7 +47,7 @@
                     <div>
                         <table class="table my-table2">
                 <tbody><tr>
-                    <th>開始日期</th>
+                    <th>{{"STARTDATE"|translate}}</th>
                     <td class="col-md-2">
                         <div class="input-group">
                             <input type="text" disabled class="form-control" datepicker-popup="yyyy/MM/dd" ng-model="filter.start_date" is-open="opened1" show-button-bar="false" datepicker-options="{
@@ -62,7 +60,7 @@
                             </span>
                          </div>
                      </td>
-                    <th>結束日期</th>
+                    <th>{{"ENDDATE"|translate}}</th>
                     <td class="col-md-2">
                         <div class="input-group">
                             <input type="text" disabled class="form-control" datepicker-popup="yyyy/MM/dd" ng-model="filter.end_date" is-open="opened2" show-button-bar="false" datepicker-options="{
@@ -76,7 +74,7 @@
                          </div>
                      </td>
                     <td class="text-right">
-                        <a class="btn btn-default" ng-click="getAttendanceRecords({ref_student_id:current_child.id,start_date:filter.start_date,end_date:filter.end_date})"><i class="fa fa-search"></i> 查詢</a>
+                        <a translate="SEARCH" class="btn btn-default" ng-click="getAttendanceRecords({ref_student_id:current_child.id,start_date:filter.start_date,end_date:filter.end_date})"><i class="fa fa-search"></i></a>
                     </td>
                 </tr>
             </tbody></table>
@@ -84,7 +82,7 @@
                     <table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
                         <thead>
                             <tr>
-                                <th>日期</th>
+                                <th>{{"DATE"|translate}}</th>
                                 <th ng-repeat="p in conf.periods">{{p.name}}</th>
                                 <th></th>
                             </tr>
@@ -94,13 +92,13 @@
                                 <td>{{d}}</td>
                                 <td ng-repeat="p in conf.periods">{{absencedata[p.name+'--'+d]}}</td>
                                 <td class="text-right">
-                                    <a class="btn btn-sm btn-default" ng-click="showEditForm(d)"><i class="fa fa-trophy"></i> 請假</a>
+                                    <a class="btn btn-sm btn-default" ng-click="showEditForm(d)"><i class="fa fa-trophy"></i> {{"PROCESSING"|translate}}</a>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     <div class="pull-right">
-                        <a class="btn btn-default" ng-click="showEditForm('')"><i class="fa fa-trophy"></i> 請假</a>
+                        <a class="btn btn-default" ng-click="showEditForm('')"><i class="fa fa-trophy"></i> {{"PROCESSING"|translate}}</a>
                     </div>
                 </div>
                 <!-- 歷程 -->
@@ -108,13 +106,13 @@
                     <table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
                         <thead>
                             <tr>
-                                <th>日期</th>
-                                <th>節次</th>
-                                <th>假別</th>
-                                <th>事由</th>
-                                <th>stage</th>
-                                <th>狀態</th>
-                                <th>審查回覆</th>
+                                <th>{{"DATE"|translate}}</th>
+                                <th>{{"SECTION"|translate}}</th>
+                                <th>{{"TYPE"|translate}}</th>
+                                <th>{{"REASON"|translate}}</th>
+                                <th>Stage</th>
+                                <th>{{"STATUS"|translate}}</th>
+                                <th>{{"REMARK"|translate}}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -124,7 +122,7 @@
                                 <td>{{l.att_absence_type}}</td>
                                 <td>{{l.att_reason}}</td>
                                 <td>{{l.current_stage_no}}</td>
-                                <td>{{l.current_status}}</td>
+                                <td>{{l.current_status|translate}}</td>
                                 <td>{{l.last_message}}</td>
                             </tr>
                         </tbody>
@@ -140,13 +138,13 @@
             <span aria-hidden="true">&times;</span>
             <span class="sr-only">Close</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-trophy"></i>線上請假</h4>
+        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-trophy"></i>{{"TITLE"|translate}}</h4>
         
     </div>
     <div class="modal-body">
         <form class="form-horizontal" role="form">
             <div class="form-group" ng-class="{'bg-danger':error.occur_date}">
-                <label for="input01" class="col-sm-2 control-label">日期</label>
+                <label for="input01" class="col-sm-2 control-label">{{"DATE"|translate}}</label>
                 <div class="col-sm-10">
                     <div class="input-group">
                         <input type="text" disabled class="form-control" datepicker-popup="yyyy/MM/dd" ng-model="form1.occur_date" is-open="$parent.opened" show-button-bar="false" datepicker-options="{
@@ -161,16 +159,16 @@
                 </div>
             </div>
             <div class="form-group" ng-class="{'bg-danger':error.absencetype}">
-                <label for="input03" class="col-sm-2 control-label">假別</label>
+                <label for="input03" class="col-sm-2 control-label">{{"TYPE"|translate}}</label>
                 <div class="col-sm-10">
                     <select ng-model="form1.absencetype" ng-options="a.name for a in conf.absencelist">
-                      <option value="">請選擇</option>
+                      <option value="">{{"SELECT"|translate}}</option>
                     </select>
                 </div>
             </div>
             <div class="form-group" ng-class="{'bg-danger':error.period}">
-                <label for="input03" class="col-sm-2 control-label">節次
-                    <br><br><br>全選
+                <label for="input03" class="col-sm-2 control-label">{{"SECTION"|translate}}
+                    <br><br><br>{{"ALL"|translate}}
                     <br><input type="checkbox" ng-model="$parent.periodBool" ng-change="periodSelectAll()" />
                 </label>
                 <div class="col-sm-10">
@@ -191,9 +189,9 @@
                 </div>
             </div>
             <div class="form-group" ng-class="{'bg-danger':error.reason}">
-                <label for="input02" class="col-sm-2 control-label">事由</label>
+                <label for="input02" class="col-sm-2 control-label">{{"REASON"|translate}}</label>
                 <div class="col-sm-10">
-                    <input type="text" ng-readonly="comfirm" class="form-control" id="input02" placeholder="請輸入事由" ng-model="form1.reason">
+                    <input type="text" ng-readonly="comfirm" class="form-control" id="input02" placeholder="{{'PLEASEENTERTHEREASON'|translate}}" ng-model="form1.reason">
                 </div>
             </div>
         </form>
@@ -201,16 +199,16 @@
 
     <!-- 一開始出現此 DIV ，下方 DIV 隱藏 -->
     <div ng-show="!comfirm" class="modal-footer">
-        <button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
-        <button type="button" class="btn btn-primary" ng-click="beforeok()">儲存</button>
+        <button type="button" class="btn btn-default" ng-click="cancel()">{{"CANCEL"|translate}}</button>
+        <button type="button" class="btn btn-primary" ng-click="beforeok()">{{"SAVE"|translate}}</button>
     </div>
 
     <!-- 當在上面 DIV 按下儲存後，隱藏上面 DIV 顯示此 DIV ， INPUT欄位加上 readonly 變為無法輸入狀態 -->
     <div ng-show="comfirm" class="modal-footer">
         <div class="alert alert-info">
-            <strong><i class="fa fa-info-circle"></i> 確認送出資料？</strong>
-            <button type="button" class="btn btn-default" ng-click="cancelcomfirm()">取消</button>
-            <button type="button" class="btn btn-primary" ng-click="ok()">確定</button>
+            <strong><i class="fa fa-info-circle"></i> {{"SENDREQUEST?"|translate}}</strong>
+            <button type="button" class="btn btn-default" ng-click="cancelcomfirm()">{{"CANCEL"|translate}}</button>
+            <button type="button" class="btn btn-primary" ng-click="ok()">{{"COMFIRM"|translate}}</button>
         </div>
     </div>
 </script>

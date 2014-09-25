@@ -25,7 +25,7 @@ function isValidDate2(s) {
   return d <= daysInMonth[--m]
 }
 var app = angular
-    .module("app", ['ui.bootstrap'])
+    .module("app", ['ui.bootstrap','pascalprecht.translate'])
     .filter('myDateFormat', function($filter) {
         return function(text, format) {
             var tempdate = new Date(text.replace(/-/g, "/"));
@@ -33,7 +33,74 @@ var app = angular
                 return $filter('date')(tempdate, format);
         };
     })
-    .run(function($rootScope){
+    .config(['$translateProvider',function($translateProvider) {
+        $translateProvider.translations('en_US', {
+            "TITLE"     : "Leave Approve",
+            "DATE" : "Date",
+            "STARTDATE":"Start Date",
+            "ENDDATE":"End Date",
+            "SEARCH":"Search",
+            "PROCESSING":"Processing",
+            "TYPE":"Type",
+            "ALL":"All",
+            "REASON":"Reason",
+            "PLEASEENTERTHEREASON":"Please enter the reason",
+            "SELECT":"Select",
+            "SECTION":"Section",
+            "STATUS":"Status",
+            "SAVE":"Save",
+            "CANCEL":"Cancel",
+            "COMFIRM":"Comfirm",
+            "SENDRESULT?":"Send result?",
+            "CLASS":"Class",
+            "SEATNO":"Seat No",
+            "STUDENTNUMBER":"Student No",
+            "NAME":"Name",
+            "COMMENT":"Comment",
+             "PLEASEENTERCOMMENT":"Please enter comment",
+             "REMARKMSG":" ",
+             "APPROVE":"Approve",
+             "REJECT":"Reject",
+             "RESULT":"Result",
+             "NONE":"None",
+             "FORMERTYPE":"Former type",
+             "REMARKBYLASTSTAGE":"Remark by laststage",
+          });
+        $translateProvider.translations('zh_TW', {
+            "TITLE"     : "線上請假簽核",
+            "DATE" : "日期",
+            "STARTDATE":"開始日期",
+            "ENDDATE":"結束日期",
+            "SEARCH":"查詢",
+            "PROCESSING":"簽核",
+            "TYPE":"假別",
+            "ALL":"全選",
+            "REASON":"事由",
+            "PLEASEENTERTHEREASON":"請輸入事由",
+            "SELECT":"請選擇",
+            "SECTION":"節次",
+            "STATUS":"狀態",
+             "SAVE":"儲存",
+            "CANCEL":"取消",
+            "COMFIRM":"確認",
+            "SENDRESULT?":"確認送出資料？",
+            "CLASS":"班級",
+            "SEATNO":"座號",
+            "STUDENTNUMBER":"學號",
+            "NAME":"姓名",
+            "COMMENT":"回覆",
+             "PLEASEENTERCOMMENT":"請輸入回覆",
+             "REMARKMSG":"(回覆之內容,請假流程相關人員與家長均可檢視)",
+             "APPROVE":"可",
+             "REJECT":"不可",
+             "RESULT":"簽核",
+             "NONE":"無",
+             "FORMERTYPE":"當天請假狀況",
+             "REMARKBYLASTSTAGE":"上一簽核者回覆",
+          });
+        $translateProvider.preferredLanguage('zh_TW');
+    }])
+    .run(function($rootScope,$translate){
         $rootScope.safeApply = function(fn) {
             var phase = this.$root.$$phase;
             if (phase == '$apply' || phase == '$digest') {
@@ -53,6 +120,7 @@ var app = angular
             return output;
         };
         $rootScope.contract = gadget.getContract("ischool.behavior.attendanceInput.teacher");
+        $translate.use(gadget.params.i18n);
     })
     .controller("Ctrl1", function($scope, $modal,$q) {
         $scope.list = [];
@@ -99,7 +167,7 @@ var app = angular
                 result: function(response, error, http) {
                     if (!error) {
                         if ( response.data == 'success')
-                            alert('儲存成功之類');
+                            ;//alert('儲存成功之類');
                         $scope.getPendingRequests();
                     } else {
                         $scope.icon_css = "icon-warning-sign";

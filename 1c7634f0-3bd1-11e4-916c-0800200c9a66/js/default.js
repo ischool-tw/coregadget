@@ -49,20 +49,56 @@ var app = angular
     })
     .config(['$translateProvider',function($translateProvider) {
         $translateProvider.translations('en_US', {
-            "TITLE"     : "Leave Request",
+            "TITLE"     : "Ask for Leave",
             "INPUT"    : "Input",
             "HISTORY" : "History",
-            "HTML_KEYS" : "If you don't like an empty elements, you can write a key for the translation as an inner HTML of the directive.",
-            "SERVICE"        : "Of course, you can translate your strings directly in the js code by using a $translate service.",
-            "SERVICE_PARAMS" : "And you are still able to pass params to the texts. Static = {{staticValue}}, random = {{randomValue}}."
+            "DATE" : "Date",
+            "STARTDATE":"Start Date",
+            "ENDDATE":"End Date",
+            "SEARCH":"Search",
+            "PROCESSING":"Processing",
+            "TYPE":"Type",
+            "ALL":"All",
+            "REASON":"Reason",
+            "PLEASEENTERTHEREASON":"Please enter the reason",
+            "SELECT":"Select",
+            "SECTION":"Section",
+            "STATUS":"Status",
+            "SAVE":"Save",
+            "CANCEL":"Cancel",
+            "COMFIRM":"Comfirm",
+            "SENDREQUEST?":"Send request?",
+            "REMARK":"Remark",
+            "notStarted":"Unchecked",
+            "pending":"Pending",
+            "rejected":"Rejected",
+            "completed":"Completed",
           });
         $translateProvider.translations('zh_TW', {
             "TITLE"     : "線上請假",
             "INPUT"    : "輸入",
             "HISTORY" : "歷程",
-            "HTML_KEYS" : "If you don't like an empty elements, you can write a key for the translation as an inner HTML of the directive.",
-            "SERVICE"        : "Of course, you can translate your strings directly in the js code by using a $translate service.",
-            "SERVICE_PARAMS" : "And you are still able to pass params to the texts. Static = {{staticValue}}, random = {{randomValue}}."
+            "DATE" : "日期",
+            "STARTDATE":"開始日期",
+            "ENDDATE":"結束日期",
+            "SEARCH":"查詢",
+            "PROCESSING":"請假",
+            "TYPE":"假別",
+            "ALL":"全選",
+            "REASON":"事由",
+            "PLEASEENTERTHEREASON":"請輸入事由",
+            "SELECT":"請選擇",
+            "SECTION":"節次",
+            "STATUS":"狀態",
+             "SAVE":"儲存",
+            "CANCEL":"取消",
+            "COMFIRM":"確認",
+            "SENDREQUEST?":"確認送出資料？",
+            "REMARK":"審查回覆",
+            "notStarted":"待審查",
+            "pending":"待簽核",
+            "rejected":"退回",
+            "completed":"完成",
           });
         $translateProvider.preferredLanguage('zh_TW');
     }])
@@ -271,7 +307,7 @@ var app = angular
                 body: data,
                 result: function(response, error, http) {
                     if (!error) {
-                        alert('請假成功之類');
+                        //alert('請假成功之類');
                     } else {
                         $scope.icon_css = "icon-warning-sign";
                         set_error_message("#mainMsg", "SetFitness1Col", error);
