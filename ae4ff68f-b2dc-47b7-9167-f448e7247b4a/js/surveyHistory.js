@@ -138,7 +138,7 @@ var GetReplyHistory = function() {
                     $(response.Response.ReplyHistory).each(function(index, item) {
                         //  學年期更換，加學年期標題
                         if (item.SchoolYear != _school_year || item.Semester != _semester) {
-                            var ret = "<p><h4><span></span>" + item.SchoolYear + '學年度' + (item.Semester === '0' ? '夏季學期' : '第' + item.Semester + '學期') + "</h4></p>" +                             
+                        	var ret = "<p><h4 align='center'>" + item.SchoolYear + '學年度' + (item.Semester === '0' ? '夏季學期' : '第' + item.Semester + '學期') + "</h4></p>" +
                                      "<table id='" + item.SchoolYear + "-" + item.Semester + "' class='table table-bordered table-striped table-list survey-history-table'>" +
                                      "<thead><tr><th>課程名稱</th><th>問卷數</th><th>問卷完成數</th><th>符合填答課程條件</th></tr></thead><tbody>" + 
                                      "<tr><td>合計</td><td></td><td></td><td rowspan='2'></td></tr>" + 
@@ -208,6 +208,8 @@ var GetReplyHistory = function() {
                         _school_year = item.SchoolYear;
                         _semester = item.Semester;
                     });
+                } else {
+                	$('#survey-history').html('<h4>無歷史填答記錄</h4>');
                 }
 
                 CallbackQueue.JobFinished();
