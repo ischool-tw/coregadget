@@ -57,7 +57,7 @@ angular.module('allsearch', [])
                         if ($scope.studentList.length > 0)
                             $scope.selectStudent($scope.studentList[0]);
                         else
-                            alert("查無任何小孩資料");
+                            alert("Can not find any child data");
 
                         //console.log($scope.studentList);
                     }
