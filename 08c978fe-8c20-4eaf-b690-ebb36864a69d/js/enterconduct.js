@@ -59,9 +59,9 @@ angular.module('enterconduct', [])
                                 $scope.current.HomeroomTeacher = response.Result.HomeroomTeacher;
                                 $scope.current.SubjectTeacher = response.Result.SubjectTeacher;
 
-                                if ($scope.current.HomeroomTeacher)
+                                if ($scope.current.HomeroomTeacher === "true")
                                     $scope.teacherType = 'homeroom';
-                                else if ($scope.current.SubjectTeacher)
+                                else if ($scope.current.SubjectTeacher === "true")
                                     $scope.teacherType = 'subject';
                                 else
                                     $scope.teacherType = '';
@@ -241,7 +241,7 @@ angular.module('enterconduct', [])
                                                 stu.EditConduct.Conducts.Conduct.push(_conduct);
                                             }
                                         } else {
-                                            if (conduct.Common == 'True' || ($scope.teacherType == 'subject' && $scope.currentCourse.SubjectChineseName == conduct.Subject)) {
+                                            if (conduct.Common === 'True' || ($scope.teacherType === 'subject' && $scope.currentCourse.SubjectChineseName === conduct.Subject)) {
                                                 var _conduct = {
                                                     Group: conduct.Group,
                                                     Item: []
@@ -457,7 +457,7 @@ angular.module('enterconduct', [])
                 grade = 'N/A';
 
             $scope.currentConduct.tempGrade = grade;
-            
+
             var flag = false;
             angular.forEach($scope.current.Code, function(item) {
                 if (item.Key.toUpperCase() === grade) {
@@ -466,8 +466,10 @@ angular.module('enterconduct', [])
                 }
             });
 
-            if (flag)
+            if (flag) {
                 $scope.saveGrade('conduct');
+            }
+
         };
 
         $scope.enterComment = function(event) {
@@ -492,22 +494,22 @@ angular.module('enterconduct', [])
 
             //var grade = $scope.currentConduct.tempGrade.toUpperCase();
 
-            if(grade !== 'M' && grade !== 'S' && grade !== 'N' && grade !== 'N/A' )
+            if (grade !== 'M' && grade !== 'S' && grade !== 'N' && grade !== 'N/A')
                 return;
 
             angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function(conduct) {
                 angular.forEach(conduct.Item, function(item) {
-                    if($scope.currentConduct.Period === 1 && $scope.current.MiddleOpeningC === 'true'){
+                    if ($scope.currentConduct.Period === 1 && $scope.current.MiddleOpeningC === 'true') {
                         item.MidtermGrade = grade;
                         item.tempGrade = grade;
                     }
 
-                    if($scope.currentConduct.Period === 2 && $scope.current.FinalOpeningC === 'true'){
+                    if ($scope.currentConduct.Period === 2 && $scope.current.FinalOpeningC === 'true') {
                         item.FinalGrade = grade;
                         item.tempGrade = grade;
                     }
 
-                    if($scope.currentConduct.Period === 3 && $scope.current.FinalOpeningC === 'true'){
+                    if ($scope.currentConduct.Period === 3 && $scope.current.FinalOpeningC === 'true') {
                         item.Grade = grade;
                         item.tempGrade = grade;
                     }
@@ -539,6 +541,7 @@ angular.module('enterconduct', [])
             angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function(conduct) {
                 var items = [];
                 angular.forEach(conduct.Item, function(item) {
+
                     if (item.Title !== $scope.currentConduct.Title) {
                         items.push({
                             '@Grade': ($scope.currentConduct.Period === 1 ? item.MidtermGrade : ($scope.currentConduct.Period === 2 ? item.FinalGrade : item.Grade)) || '',

@@ -71,7 +71,7 @@ angular.module('allsearch', [])
                 body: '',
                 result: function(response, error, http) {
                     if (error !== null) {
-                        alert("查詢過程發生錯誤:登入帳號無老師權限");
+                        alert("An error occurred while trying to send the request, please make sure this is a teacher's account");
                     } else {
                         //console.log(response);
                         $scope.$apply(function() {
@@ -83,7 +83,7 @@ angular.module('allsearch', [])
                                 $scope.IsCareersCounselor = response.IsCareersCounselor === 'true' ? true : false;
 
                                 if(!$scope.IsHomeroom && !$scope.IsCareersCounselor)
-                                    alert("登入帳號非班導師或升學輔導老師身分");
+                                    alert("This gadget is for homeroom teacher and counselor, your account is not allowed to get student info.");
 
                                 $scope.classlist = [].concat(response.Class);
 
