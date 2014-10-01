@@ -2,6 +2,16 @@ var _gg = _gg || {};
 _gg.connection = gadget.getContract("campuslite.directory.parent");
 
 jQuery(function () {
+    gadget.onLanguageChanged(function(lang){
+        if(lang=="zh-CN"){
+            $("body").attr("lang","zh-CN");
+        } else if (lang=="en-US"){
+            $("body").attr("lang","en-US");
+        } else{
+            $("body").attr("lang","zh-TW");
+        }
+    });
+    
     var vm = new MyViewModel();
     ko.applyBindings(vm);
 
@@ -50,7 +60,7 @@ var MyViewModel = function() {
                     } else {
                         self.getChildren();
                         $("#save-data").button("reset");
-                        $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
+                        $('#mainMsg').html("<div class='alert alert-success' multi-lang-text='儲存成功！'>\n  儲存成功！\n</div>");
                         setTimeout("$('#mainMsg').html('')", 1500);
                         $('#myModal').modal('hide');
                     }

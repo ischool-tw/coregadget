@@ -1,0 +1,124 @@
+/*通用*/
+[lang=en-US] [multi-lang-text=建立個人資料]:before
+{
+	content: "Edit profile";
+}
+[lang=en-US] [multi-lang-text=個人相片]:before
+{
+	content: "My photo";
+}
+[lang=en-US] [multi-lang-text=變更相片]:hover:before
+{
+	content: "Change photo";
+}
+[lang=en-US] [multi-lang-text=姓名]:before
+{
+	content: "*Name";
+}
+[lang=en-US] [multi-lang-text=性別]:before
+{
+	content: "Gender";
+}
+[lang=en-US] [multi-lang-text=男]:before
+{
+	content: "Man";
+}
+[lang=en-US] [multi-lang-text=女]:before
+{
+	content: "Woman";
+}
+[lang=en-US] [multi-lang-text=個性簽名]:before
+{
+	content: "Signature ";
+}
+[lang=en-US] [multi-lang-text=生日]:before
+{
+	content: "Birthday";
+}
+[lang=en-US] [multi-lang-text=電子郵件]:before
+{
+	content: "Email";
+}
+[lang=en-US] [multi-lang-text=地址]:before
+{
+	content: "Address";
+}
+[lang=en-US] [multi-lang-text=行動電話]:before
+{
+	content: "Mobile";
+}
+[lang=en-US] [multi-lang-text=其它電話]:before
+{
+	content: "others";
+}
+[lang=en-US] [multi-lang-text=關於我]:before
+{
+	content: "About Me";
+}
+[lang=en-US] [multi-lang-text=儲存變更]:before
+{
+	content: "Save";
+}
+[lang=en-US] [multi-lang-text=儲存變更中]:before
+{
+	content: "Saving...";
+}
+[lang=en-US] [multi-lang-text=取消]:before
+{
+	content: "Cancel";
+}
+/*輸入代碼*/
+
+
+[lang=en-US] [multi-lang-text=身份驗證]:before
+{
+	content: "Identity confirmation";
+}
+[lang=en-US] [multi-lang-text=教師代碼]:before
+{
+	content: "Teacher PIN code";
+}
+[lang=en-US] [multi-lang-text=取得代碼Q]:before
+{
+	content: "How to get your PIN code？";
+}
+[lang=en-US] [multi-lang-text=取得代碼A]:before
+{
+	content: "Please contact us to obtain Teacher PIN Code by email (support@ischool.com.tw).";
+}
+[lang=en-US] [multi-lang-text=送出]:before
+{
+	content: "Send";
+}
+[lang=en-US] [multi-lang-text=送出中]:before
+{
+	content: "Sending...";
+}
+[lang=en-US] [multi-lang-text=請輸入代碼]:before
+{
+	content: "Please enter PIN code！";
+}
+[lang=en-US] [multi-lang-text=資料驗證失敗]:before
+{
+	content: "Identity confirmation is not verified, Please check again! ";
+}
+[lang=en-US] [multi-lang-text=圖片格式錯誤]:before
+{
+	content: "Please use the file types like .jpg or .png ！";
+}
+[lang=en-US] [multi-lang-text=姓名為必填值]:before
+{
+	content: "姓名為必填值！ Please fill in the name fields.";
+}
+[lang=en-US] [multi-lang-text=呼叫服務失敗]:before
+{
+	content: "呼叫服務失敗或網路異常，請稍候重試! Called Server Error or the Internet Failed,Please try again ";
+}
+[lang=en-US] [multi-lang-text=圖片過大]:before
+{
+	content: "您所選擇的檔案大小為/ The file size is ";
+}
+[lang=en-US] [multi-lang-text=圖片過大]:after
+{
+	content: " KB，已超過上傳上限，不允許上傳！The photo has failed to upload. This file exceeds the maximum upload size for this site";
+}

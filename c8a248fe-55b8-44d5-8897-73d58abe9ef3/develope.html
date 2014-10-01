@@ -8,6 +8,9 @@
       paramValues: {}
     });
   </script>
+  <link href="css/lang.zh-TW.css" rel="stylesheet" />
+  <link href="css/lang.zh-CN.css" rel="stylesheet" />
+  <link href="css/lang.en-US.css" rel="stylesheet" />  
   <link href="css/bootstrap.min.css" rel="stylesheet" />
   <link href="css/bootstrap-responsive.min.css" rel="stylesheet" />
   <link href="css/mybootstrap.css" rel="stylesheet" />
@@ -18,24 +21,24 @@
   <script src="js/bootstrap.js"></script>
   <script src="js/parent.js"></script>
 </head>
-<body>
+<body lang="zh-TW">
   <div id="gadget" class="my-page">
       <div id="mainMsg"></div>
       <div class="row-fluid">
         <div class="span12">
           <div class="tabbable">
-            <h1>我的子女
-              <a href="#myModal" id="add_relationship" class="btn btn-mini pull-right" data-toggle="modal"><i class="icon-plus"></i> 新增</a>
+            <h1 multi-lang-text="我的子女">
+              <a href="#myModal" id="add_relationship" class="btn btn-mini pull-right" data-toggle="modal" multi-lang-text="新增"><i class="icon-plus"></i> </a>
             </h1>
             <div class="tab-content">
               <div id="student1" data-bind="visible: children">
                   <table class="table my-table2 table-striped">
                     <thead>
                       <tr>
-                        <th>姓名</th>
-                        <th>班級</th>
-                        <th>座號</th>
-                        <th>稱謂</th>
+                        <th multi-lang-text="姓名"></th>
+                        <th multi-lang-text="班級"></th>
+                        <th multi-lang-text="座號"></th>
+                        <th multi-lang-text="稱謂"></th>
                       </tr>
                     </thead>
                     <tbody data-bind="foreach: children">
@@ -58,19 +61,19 @@
     <div id="myModal" class="modal hide">
         <div class="modal-header">
             <button class="close" data-dismiss="modal" type="button">×</button>
-            <h3 id="myModalLabel">身份驗證</h3>
+            <h3 id="myModalLabel" multi-lang-text="身份驗證"></h3>
             <div id="errorMessage"></div>
         </div>
         <div class="modal-body">
-            <label>家長代碼</label>
-            <input type="text" class="input-xlarge" id="inputCode" placeholder="代碼...">
-            <label>稱謂</label>
-            <input type="text" class="input-xlarge" id="relationship" placeholder="稱謂...">
-            <p><i class="icon-info-sign"></i> 如何取得家長代碼？</p><p>請詢問孩子或聯絡導師。</p>
+            <label  multi-lang-text="家長代碼"></label>
+            <input type="text" class="input-xlarge" id="inputCode" placeholder="Parent Code">
+            <label  multi-lang-text="稱謂"></label>
+            <input type="text" class="input-xlarge" id="relationship" placeholder="Relationship to you">
+            <p multi-lang-text="如何取得家長代碼？"><i class="icon-info-sign"></i > </p><p  multi-lang-text="請詢問孩子或聯絡導師。"></p>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-success" type="button" id="save-data" autocomplete="off" data-loading-text="儲存中...">送出</button>
-          <a class="btn" data-dismiss="modal" href="#">取消</a>
+          <button class="btn btn-success" type="button" id="save-data" autocomplete="off" data-loading-text="Saving..."  multi-lang-text="送出"></button>
+          <a class="btn" data-dismiss="modal" href="#"  multi-lang-text="取消"></a>
         </div>
     </div>
 

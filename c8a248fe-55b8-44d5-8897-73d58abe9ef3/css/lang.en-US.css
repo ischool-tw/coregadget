@@ -1,0 +1,52 @@
+[lang=en-US] [multi-lang-text=我的子女]:before
+{
+	content: "My Children";
+}
+[lang=en-US] [multi-lang-text=新增]:after
+{
+	content: "Add";
+}
+[lang=en-US] [multi-lang-text=姓名]:before
+{
+	content: "Name";
+}
+[lang=en-US] [multi-lang-text=班級]:before
+{
+	content: "Class";
+}
+[lang=en-US] [multi-lang-text=座號]:before
+{
+	content: "Seat No.";
+}
+[lang=en-US] [multi-lang-text=稱謂]:before
+{
+	content: "Relationship";
+}
+[lang=en-US] [multi-lang-text=身份驗證]:before
+{
+	content: "Identify Confirmation";
+}
+[lang=en-US] [multi-lang-text=家長代碼]:before
+{
+	content: "Parent PIN Codes";
+}
+[lang=en-US] [multi-lang-text=如何取得家長代碼？]:after
+{
+	content: "How to get your PIN code？";
+}
+[lang=en-US] [multi-lang-text=請詢問孩子或聯絡導師。]:before
+{
+	content: "Please contact school office to obtain Parent PIN Codes.";
+}
+[lang=en-US] [multi-lang-text=送出]:before
+{
+	content: "Save";
+}
+[lang=en-US] [multi-lang-text=取消]:before
+{
+	content: "Cancel";
+}
+[lang=en-US] [multi-lang-text=儲存成功！]:before
+{
+	content: "Saved";
+}

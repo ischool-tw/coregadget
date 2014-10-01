@@ -1,0 +1,123 @@
+/*通用*/
+[lang=zh-TW] [multi-lang-text=建立個人資料]:before
+{
+	content: "建立個人資料";
+}
+[lang=zh-TW] [multi-lang-text=個人相片]:before
+{
+	content: "個人相片";
+}
+[lang=zh-TW] [multi-lang-text=變更相片]:hover:before
+{
+	content: "變更相片";
+}
+[lang=zh-TW] [multi-lang-text=姓名]:before
+{
+	content: "*姓名";
+}
+[lang=zh-TW] [multi-lang-text=性別]:before
+{
+	content: "性別";
+}
+[lang=zh-TW] [multi-lang-text=男]:before
+{
+	content: "男";
+}
+[lang=zh-TW] [multi-lang-text=女]:before
+{
+	content: "女";
+}
+[lang=zh-TW] [multi-lang-text=個性簽名]:before
+{
+	content: "個性簽名";
+}
+[lang=zh-TW] [multi-lang-text=生日]:before
+{
+	content: "生日";
+}
+[lang=zh-TW] [multi-lang-text=電子郵件]:before
+{
+	content: "電子郵件";
+}
+[lang=zh-TW] [multi-lang-text=地址]:before
+{
+	content: "地址";
+}
+[lang=zh-TW] [multi-lang-text=行動電話]:before
+{
+	content: "行動電話";
+}
+[lang=zh-TW] [multi-lang-text=其它電話]:before
+{
+	content: "其它電話";
+}
+[lang=zh-TW] [multi-lang-text=關於我]:before
+{
+	content: "關於我";
+}
+[lang=zh-TW] [multi-lang-text=儲存變更]:before
+{
+	content: "儲存變更";
+}
+[lang=zh-TW] [multi-lang-text=儲存變更中]:before
+{
+	content: "儲存中...";
+}
+[lang=zh-TW] [multi-lang-text=取消]:before
+{
+	content: "取消";
+}
+/*輸入代碼*/
+
+[lang=zh-TW] [multi-lang-text=身份驗證]:before
+{
+	content: "Identify Confirmation";
+}
+[lang=zh-TW] [multi-lang-text=學生代碼]:before
+{
+	content: "學生代碼";
+}
+[lang=zh-TW] [multi-lang-text=取得代碼Q]:before
+{
+	content: "如何取得代碼？";
+}
+[lang=zh-TW] [multi-lang-text=取得代碼A]:before
+{
+	content: "請聯絡導師。";
+}
+[lang=zh-TW] [multi-lang-text=送出]:before
+{
+	content: "送出";
+}
+[lang=zh-TW] [multi-lang-text=送出中]:before
+{
+	content: "儲存中...";
+}
+[lang=zh-TW] [multi-lang-text=請輸入代碼]:before
+{
+	content: "請輸入代碼！";
+}
+[lang=zh-TW] [multi-lang-text=資料驗證失敗]:before
+{
+	content: "資料驗證失敗，請重新檢查！";
+}
+[lang=zh-TW] [multi-lang-text=圖片格式錯誤]:before
+{
+	content: "請使用 .jpg 或 .png 格式！";
+}
+[lang=zh-TW] [multi-lang-text=姓名為必填值]:before
+{
+	content: "姓名為必填值！";
+}
+[lang=zh-TW] [multi-lang-text=呼叫服務失敗]:before
+{
+	content: "呼叫服務失敗或網路異常，請稍候重試!";
+}
+[lang=zh-TW] [multi-lang-text=圖片過大]:before
+{
+	content: "您所選擇的檔案大小為 ";
+}
+[lang=zh-TW] [multi-lang-text=圖片過大]:after
+{
+	content: " KB，已超過上傳上限，不允許上傳！";
+}

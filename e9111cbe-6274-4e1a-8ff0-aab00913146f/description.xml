@@ -6,7 +6,6 @@
     <Mobile />
     <Title lang="zh-CN">我是老师
     </Title>
-    <Title lang="en-US">
-    </Title>
+    <Title lang="en-US">Teacher</Title>
   </ModulePrefs>
 </Module>

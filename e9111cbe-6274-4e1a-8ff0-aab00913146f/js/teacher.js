@@ -2,8 +2,9 @@ jQuery(function () {
 	gadget.onLanguageChanged(function(lang){
 		if(lang=="zh-CN"){
 			$("body").attr("lang","zh-CN");
-		}
-		else{
+		} else if (lang=="en-US"){
+			$("body").attr("lang","en-US");
+		} else{
 			$("body").attr("lang","zh-TW");
 		}
 	});
