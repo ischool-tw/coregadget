@@ -56,6 +56,7 @@ Core Gadget
 * 2a17a4b5-c7cf-4fce-96d9-6a011a7d0914 體適能查詢(學生)
 * d716c384-b483-43ca-95fd-65aa2a92b152 體適能查詢(家長)
 * 0db67a14-b958-4ebe-a97c-adc920a8ab9b 體適能輸入(老師)
+* b3271aa2-f9d7-43b5-bcae-a36e058fda07 學生電子報表
 
 
 客製化
