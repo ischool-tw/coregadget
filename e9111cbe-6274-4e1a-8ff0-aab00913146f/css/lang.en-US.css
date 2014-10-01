@@ -72,27 +72,27 @@
 
 [lang=en-US] [multi-lang-text=身份驗證]:before
 {
-	content: "Identity confirmation";
+	content: "Identity Confirmation";
 }
 [lang=en-US] [multi-lang-text=教師代碼]:before
 {
 	content: "Teacher PIN code";
 }
-[lang=en-US] [multi-lang-text=取得代碼Q]:before
+[lang=en-US] [multi-lang-text=取得代碼Q]:after
 {
 	content: "How to get your PIN code？";
 }
 [lang=en-US] [multi-lang-text=取得代碼A]:before
 {
-	content: "Please contact us to obtain Teacher PIN Code by email (support@ischool.com.tw).";
+	content: "Please contact school office to obtain Teacher PIN Codes.";
 }
 [lang=en-US] [multi-lang-text=送出]:before
 {
-	content: "Send";
+	content: "Save";
 }
 [lang=en-US] [multi-lang-text=送出中]:before
 {
-	content: "Sending...";
+	content: "Saving...";
 }
 [lang=en-US] [multi-lang-text=請輸入代碼]:before
 {

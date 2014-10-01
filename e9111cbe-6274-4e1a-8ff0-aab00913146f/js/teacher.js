@@ -5,7 +5,7 @@ jQuery(function () {
 		} else if (lang=="en-US"){
 			$("body").attr("lang","en-US");
 		} else{
-			$("body").attr("lang","zh-TW");
+			$("body").attr("lang","en-US");
 		}
 	});
 
