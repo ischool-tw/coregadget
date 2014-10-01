@@ -54,3 +54,11 @@
 {
 	content: "儲存成功！";
 }
+[lang=zh-TW] [multi-lang-text=請輸入代碼！]:before
+{
+	content: "請輸入代碼！";
+}
+[lang=zh-TW] [multi-lang-text=請輸入稱謂！]:before
+{
+	content: "請輸入稱謂！";
+}

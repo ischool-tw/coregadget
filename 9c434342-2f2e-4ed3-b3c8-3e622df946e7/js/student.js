@@ -9,7 +9,6 @@ jQuery(function () {
         }
     });
 
-
     $('[js="myModal"]').each(function(index, target){
         target = $(target);
 
@@ -26,6 +25,21 @@ jQuery(function () {
                                     break;
                                 default:
                                     tmp_msg = '<strong>' + error.dsaError.message + '</strong>';
+
+                                // 2014/10/1 實驗中學英文語系(黃耀明)。
+                                if($("body").attr("lang")=="en-US"){
+                                    var errMsg = error.dsaError.message;
+
+                                    if(errMsg == '教師代碼不正確或是已經被使用過了。'){
+                                        tmp_msg = "<strong>Invalid code or the code has been taken.</strong>";
+                                    } else if (errMsg == '此代碼已經設定過了。'){
+                                        tmp_msg = "<strong>The email has been added on the student account.</strong>";
+                                    } else if (errMsg.indexOf('學生代碼不正確或是已經被使用過了。' )>= 0){
+                                        tmp_msg = "<strong>Invalid code or the code has been taken.</strong>";
+                                    } else if (errMsg.indexOf('您的帳號已經聯結到「' )>= 0){
+                                        tmp_msg = "<strong>The email has been taken.</strong>";
+                                    }
+                                }
                             }
                         } else if (error.dsaError.message) {
                             tmp_msg = error.dsaError.message;
@@ -85,7 +99,7 @@ jQuery(function () {
                 setAccount();
             } else {
                 target.find('[js="inputCode"]').focus().addClass('error');
-                set_error_message(target.find('[js="errorMessage"]'), '', '請輸入代碼');
+                set_error_message(target.find('[js="errorMessage"]'), '', 'Please enter the code.');
             }
         });
 
