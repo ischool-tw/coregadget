@@ -28,7 +28,7 @@
 }
 [lang=en-US] [multi-lang-text=家長代碼]:before
 {
-	content: "Parent PIN Codes";
+	content: "Parent PIN code";
 }
 [lang=en-US] [multi-lang-text=如何取得家長代碼？]:after
 {
@@ -36,7 +36,7 @@
 }
 [lang=en-US] [multi-lang-text=請詢問孩子或聯絡導師。]:before
 {
-	content: "Please contact school office to obtain Parent PIN Codes.";
+	content: "Please contact school office to obtain Parent PIN code.";
 }
 [lang=en-US] [multi-lang-text=送出]:before
 {
@@ -49,4 +49,12 @@
 [lang=en-US] [multi-lang-text=儲存成功！]:before
 {
 	content: "Saved";
+}
+[lang=en-US] [multi-lang-text=請輸入代碼！]:after
+{
+	content: "Please enter the code.";
+}
+[lang=en-US] [multi-lang-text=請輸入稱謂！]:after
+{
+	content: "Please enter the Relationship.";
 }

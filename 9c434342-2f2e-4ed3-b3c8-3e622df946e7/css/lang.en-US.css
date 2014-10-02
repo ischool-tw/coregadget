@@ -75,7 +75,7 @@
 }
 [lang=en-US] [multi-lang-text=學生代碼]:before
 {
-	content: "Student PIN Codes";
+	content: "Student PIN code";
 }
 [lang=en-US] [multi-lang-text=取得代碼Q]:before
 {
@@ -83,7 +83,7 @@
 }
 [lang=en-US] [multi-lang-text=取得代碼A]:before
 {
-	content: "Please contact school office to obtain Student PIN Codes.";
+	content: "Please contact school office to obtain Student PIN code.";
 }
 [lang=en-US] [multi-lang-text=送出]:before
 {
@@ -91,7 +91,7 @@
 }
 [lang=en-US] [multi-lang-text=送出中]:before
 {
-	content: "儲存中...";
+	content: "Saving...";
 }
 [lang=en-US] [multi-lang-text=請輸入代碼]:before
 {

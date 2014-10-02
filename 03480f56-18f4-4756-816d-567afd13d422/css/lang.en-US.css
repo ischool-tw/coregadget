@@ -76,7 +76,7 @@
 }
 [lang=en-US] [multi-lang-text=家長代碼]:before
 {
-	content: "Parent PIN Codes";
+	content: "Parent PIN code";
 }
 [lang=en-US] [multi-lang-text=取得代碼Q]:before
 {
@@ -84,7 +84,7 @@
 }
 [lang=en-US] [multi-lang-text=取得代碼A]:before
 {
-	content: "Please contact school office to obtain Parent PIN Codes.";
+	content: "Please contact school office to obtain Parent PIN code.";
 }
 [lang=en-US] [multi-lang-text=送出]:before
 {
@@ -92,7 +92,7 @@
 }
 [lang=en-US] [multi-lang-text=送出中]:before
 {
-	content: "儲存中...";
+	content: "Saving...";
 }
 [lang=en-US] [multi-lang-text=請輸入代碼]:before
 {
