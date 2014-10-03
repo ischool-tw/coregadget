@@ -90,7 +90,7 @@
                         <tbody>
                             <tr ng-repeat="d in date">
                                 <td>{{d}}</td>
-                                <td ng-repeat="p in conf.periods">{{absencedata[p.name+'--'+d]}}</td>
+                                <td ng-repeat="p in conf.periods">{{absencedata['p'+p.name+'--'+d]}}</td>
                                 <td class="text-right">
                                     <a class="btn btn-sm btn-default" ng-click="showEditForm(d)"><i class="fa fa-trophy"></i> {{"PROCESSING"|translate}}</a>
                                 </td>
