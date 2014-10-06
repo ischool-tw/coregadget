@@ -42,7 +42,7 @@
                 <table class="table table-bordered table-striped table-hover text-center">
                     <thead>
                         <tr>
-                            <th class="col-md-2 text-center">ID</th>
+                            <th class="col-md-2 text-center">ClassName</th>
                             <th class="col-md-1 text-center">No.</th>
                             <th class="col-md-5 text-center">Name</th>
                             <th ng-repeat="exam in examList" class="col-md-2 text-center">{{exam.Name}}</th>
@@ -52,7 +52,7 @@
                         <tr ng-repeat="item in studentList"
                             _ng-class="{'success':(current.SelectMode=='ID'&&item.StudentID==current.SelectStudentID)||(current.SelectMode=='No.'&&item.SeatNo==current.SelectSeatNo),'warning':item.selected}"
                             ng-class="{'warning':item.selected}">
-                            <td>{{item.StudentNumber}}</td>
+                            <td>{{item.ClassName}}</td>
                             <td>{{item.SeatNo}}</td>
                             <td class="text-left">
                                 {{item.StudentChineseName}} {{item.StudentEnglishName ? '('+item.StudentEnglishName+')' : ''}}
@@ -72,7 +72,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <!-- <tr>
                             <td>
                                 <div class="btn-group btn-block">
                                     <a href="" class="btn btn-link btn-block dropdown-toggle" data-toggle="dropdown" style="padding:0; color:#333; text-align:left;">{{current.SelectMode}} <span class="caret"></span> </a>
@@ -124,7 +124,7 @@
                                     >>
                                 </button>
                             </td>
-                        </tr>
+                        </tr> -->
                         <tr>
                             <td>Name</td>
                             <td>
