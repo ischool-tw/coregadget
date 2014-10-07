@@ -517,7 +517,7 @@ var CreateTeacher = function() {
     };
 
     //  寫入上傳成績 Log
-    var _AddLog = function(vCourseID, vCourseName, vUserName) {    
+    var _AddLog = function(vCourseID, vCourseName, vUserName, vActionType) {    
         var log = "" + vCourseName + "\n";  
         var pCourseStudents = _CourseStudents[vCourseID];  
         for(var student_number in pCourseStudents) {
@@ -527,7 +527,7 @@ var CreateTeacher = function() {
 
         gadget.getContract(Contract.Teacher).send({
             service: Service.AddLog,
-            body: "<Request>\n  <Log>\n     <TargetID>123</TargetID><Actor>" + vUserName + "</Actor>\n        <ActionType>確認並上傳成績</ActionType>\n       <Action>確認並上傳成績</Action>\n     <TargetCategory>student</TargetCategory>\n      <ClientInfo><ClientInfo></ClientInfo></ClientInfo>\n        <ActionBy>ischool web 成績輸入小工具</ActionBy>\n      <Description>" + log + "</Description>\n    </Log>\n</Request>",
+            body: "<Request>\n  <Log>\n     <TargetID>123</TargetID><Actor>" + vUserName + "</Actor>\n        <ActionType>" + vActionType + "</ActionType>\n       <Action>" + vActionType + "</Action>\n     <TargetCategory>student</TargetCategory>\n      <ClientInfo><ClientInfo></ClientInfo></ClientInfo>\n        <ActionBy>ischool web 成績輸入小工具</ActionBy>\n      <Description>" + log + "</Description>\n    </Log>\n</Request>",
             result: function(response, error, http) {
                 if (error !== null) {
                 	//_InternalError.push('呼叫服務(' + Service.AddLog + ')失敗或網路異常，請稍候重試！');
@@ -633,7 +633,7 @@ var CreateTeacher = function() {
             return isValidate;
         },
 
-        SaveSubjectSemesterScore: function(vCourseID) {
+        SaveSubjectSemesterScore: function (vCourseID, vCourseName) {
             var pCourseStudents = _CourseStudents[vCourseID];    
             var pCourse = _TeacherCourses[vCourseID];
             var pass_score = ["A+", "A", "A-", "B+", "B", "B-"];
@@ -680,9 +680,9 @@ var CreateTeacher = function() {
                     //}
                 }
                 this.ClearInternalError();
-
+                var user_info = _UserInfo.UserName;	//_UserInfo.Property[5] + _UserInfo.Property[7] + '(' + _UserInfo.Property[10] + ')';
                 _CallbackQueue.Push(_GetCourseStudentPreUpload);
-                _CallbackQueue.Push([function() {_UpdateSubjectSemesterScore(update_content)}, function() {_AddSubjectSemesterScore(add_content)}]);
+                _CallbackQueue.Push([function () { _UpdateSubjectSemesterScore(update_content) }, function () { _AddSubjectSemesterScore(add_content) }, function () { _AddLog(vCourseID, vCourseName, user_info, "暫存成績") }]);
                 var o = {
                     InternalError: _InternalError,
                     WarningMessage: '',
@@ -746,7 +746,7 @@ var CreateTeacher = function() {
 
                 var user_info = _UserInfo.UserName;	//_UserInfo.Property[5] + _UserInfo.Property[7] + '(' + _UserInfo.Property[10] + ')';
                 _CallbackQueue.Push(_GetCourseStudentPreUpload);
-                _CallbackQueue.Push([function () { _UpdateSubjectSemesterScore(update_content) }, function () { _AddSubjectSemesterScore(add_content) }, function () { _UpdateCourseExt(vCourseID) }, function () { _AddLog(vCourseID, vCourseName, user_info) }]);
+                _CallbackQueue.Push([function () { _UpdateSubjectSemesterScore(update_content) }, function () { _AddSubjectSemesterScore(add_content) }, function () { _UpdateCourseExt(vCourseID) }, function () { _AddLog(vCourseID, vCourseName, user_info, "確認並上傳成績") }]);
 
                 var oo = {
                     InternalError: _InternalError,
@@ -1313,9 +1313,9 @@ var CreateEvent = function() {
             });
         },
 
-        SaveSubjectSemesterScore: function(vCourseID) {
+        SaveSubjectSemesterScore: function (vCourseID, vCourseName) {
             Event.DisableSaveButtion();
-            Teacher.SaveSubjectSemesterScore(vCourseID);
+            Teacher.SaveSubjectSemesterScore(vCourseID, vCourseName);
         },
 
         UpdateCourseExt: function(vCourseID, vCourseName) {
@@ -1481,7 +1481,7 @@ $(document).ready(function() {
     //  「儲存(暫存)成績」
     $("#btnSave").on('click', function() {
         $('#mainMsg').html('');
-        Event.SaveSubjectSemesterScore($("#cboTeacherCourses").val());
+        Event.SaveSubjectSemesterScore($("#cboTeacherCourses").val(), $("#cboTeacherCourses").find("option:selected").text());
     });
 
     //  確認並上傳成績
