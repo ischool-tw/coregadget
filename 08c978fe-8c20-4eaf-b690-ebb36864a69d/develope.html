@@ -47,18 +47,18 @@
                 </ul>
             </div>
             <div class="btn-group">
-                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> {{currentCourse.ID}} , {{currentCourse.Title}} <span class="caret"></span> </a>
+                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{currentCourse.Title}}<span class="caret"></span> </a>
                 <ul class="dropdown-menu">
                     <li ng-repeat="item in courseList" ng-class="{active:item.selected}" ng-if="item.Show">
-                        <a href="javascript:;" ng-click="selectCourse(item)">{{item.ID}} , {{item.Title}}</a>
+                        <a href="javascript:;" ng-click="selectCourse(item)">{{item.Title}}</a>
                     </li>
                 </ul>
             </div>
             <div class="btn-group">
-                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> {{currentStudent.StudentID}} , {{currentStudent.StudentChineseName}} ({{currentStudent.StudentEnglishName}}) <span class="caret"></span> </a>
+                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> {{currentStudent.ClassName}}, {{currentStudent.SeatNo}}, {{currentStudent.StudentChineseName}} ({{currentStudent.StudentEnglishName}}) <span class="caret"></span> </a>
                 <ul class="dropdown-menu">
                     <li ng-repeat="item in studentList" ng-class="{active:item.selected}">
-                        <a href="javascript:;" ng-click="selectStudent(item)">{{item.StudentID}} , {{item.StudentChineseName}} ({{item.StudentEnglishName}})</a>
+                        <a href="javascript:;" ng-click="selectStudent(item)">{{item.ClassName}}, {{item.SeatNo}}, {{item.StudentChineseName}} ({{item.StudentEnglishName}})</a>
                     </li>
                 </ul>
             </div>
@@ -117,12 +117,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <!-- <tr>
                                     <td>ID</td>
                                     <td>
                                         <input id="seatno-textbox" type="text" class="form-control" ng-model="currentStudent.tempStudentID" ng-keydown="selectStudentID($event)">
                                     </td>
-                                </tr>
+                                </tr> -->
                                 <tr>
                                     <td>Name</td>
                                     <td>{{currentStudent.StudentChineseName}} {{currentStudent.StudentEnglishName}}</td>

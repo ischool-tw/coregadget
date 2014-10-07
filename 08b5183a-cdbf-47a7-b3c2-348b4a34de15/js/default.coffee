@@ -378,10 +378,6 @@ getAttendance = () ->
               item = {}
               item['OccurDate'] = @OccurDate
               $(@Detail.Attendance.Period).each () ->
-                if not absences_t[@['AbsenceType']]?
-                  absences_t[@['AbsenceType']] = {total : 0}
-                absences_t[@['AbsenceType']].total += 1
-
                 item[@["@text"]] = @.AbsenceType
 
               absences_d.push item
@@ -398,16 +394,20 @@ getAttendance = () ->
           thead = "<tr>" + thead + "</tr>"
           tbody = ""
           $(absences_d).each (i, item) ->
-            tr = "<td>" + item.OccurDate + "</td>"
+            isLeave = false
+            td = ''
             $(_periods).each (j, period) ->
               if _absence[item[period.Name]]
-                tr += "<td>" + (_absence[item[period.Name]] || '') + "</td>"
+                isLeave = true
+                td += "<td>" + (_absence[item[period.Name]] || '') + "</td>"
+                absences_t[item[period.Name]] = {total : 0} unless absences_t[item[period.Name]]
+                absences_t[item[period.Name]].total += 1
                 absences_t[item[period.Name]][period.Type] = 0  unless absences_t[item[period.Name]][period.Type]
                 absences_t[item[period.Name]][period.Type] += 1
               else
-                tr += "<td></td>"
+                td += "<td></td>"
 
-            tbody += "<tr>" + tr + "</tr>"
+            if isLeave then tbody += "<tr><td>" + item.OccurDate + "</td>" + td + "</tr>"
 
           # 非明細
           have_none = false

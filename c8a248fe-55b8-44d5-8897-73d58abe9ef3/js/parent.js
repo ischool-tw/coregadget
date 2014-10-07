@@ -2,6 +2,16 @@ var _gg = _gg || {};
 _gg.connection = gadget.getContract("campuslite.directory.parent");
 
 jQuery(function () {
+    gadget.onLanguageChanged(function(lang){
+        if(lang=="zh-CN"){
+            $("body").attr("lang","zh-CN");
+        } else if (lang=="en-US"){
+            $("body").attr("lang","en-US");
+        } else{
+            $("body").attr("lang","zh-TW");
+        }
+    });
+    
     var vm = new MyViewModel();
     ko.applyBindings(vm);
 
@@ -10,7 +20,6 @@ jQuery(function () {
         $('#myModal input:text').val('');
     });
 
-
     // TODO: 預設輸入代碼為focus
     $('#inputCode').focus();
 
@@ -18,14 +27,14 @@ jQuery(function () {
     $('#save-data').bind('click', function() {
         $('#errorMessage').html('');
         if ($('#inputCode').val() && $('#relationship').val()) {
-            $(this).button("loading");
+            //$(this).button("loading");
             vm.setAccount();
         } else {
             $('#inputCode').focus().addClass('error');
             if (!($('#inputCode').val())) {
-                $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請輸入代碼！\n</div>");
+                $('#errorMessage').html("<div class='alert alert-error' multi-lang-text='請輸入代碼！'>\n  <button class='close' data-dismiss='alert'>×</button>\n  </div>");
             } else {
-                $('#errorMessage').html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  請輸入稱謂！\n</div>");
+                $('#errorMessage').html("<div class='alert alert-error' multi-lang-text='請輸入稱謂！'>\n  <button class='close' data-dismiss='alert'>×</button>\n  </div>");
             }
         }
     });
@@ -50,7 +59,7 @@ var MyViewModel = function() {
                     } else {
                         self.getChildren();
                         $("#save-data").button("reset");
-                        $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
+                        $('#mainMsg').html("<div class='alert alert-success' multi-lang-text='儲存成功！'>\n  \n</div>");
                         setTimeout("$('#mainMsg').html('')", 1500);
                         $('#myModal').modal('hide');
                     }
@@ -92,6 +101,19 @@ _gg.set_error_message = function(select_str, serviceName, error) {
             if (error.dsaError.status === "504") {
                 if (error.dsaError.message) {
                     tmp_msg = '<strong>' + error.dsaError.message + '</strong>';
+
+                    // 2014/10/1 實驗中學英文語系(黃耀明)。
+                    if($("body").attr("lang")=="en-US"){
+                        var errMsg = error.dsaError.message;
+
+                        if(errMsg == '教師代碼不正確或是已經被使用過了。'){
+                            tmp_msg = "<strong>Invalid code or the code has been taken.</strong>"
+                        } else if (errMsg == '此代碼已經設定過了。'){
+                            tmp_msg = "<strong>The email address has been connected with this student.</strong>"
+                        } else if (errMsg == '家長代碼不正確。'){
+                            tmp_msg = "<strong>The Parent code is invalid.</strong>"
+                        }
+                    }
                 }
             }
         }

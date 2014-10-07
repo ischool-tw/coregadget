@@ -8,6 +8,8 @@ angular.module('allsearch', [])
 
         //console.log($filter('date')('2012/12/21','yyyy-MM-dd'))
 
+        $scope.currentGrade;
+
         $scope.system_position = gadget.params.system_position || "teacher";
 
         if ($scope.system_position === "teacher") {
@@ -38,7 +40,7 @@ angular.module('allsearch', [])
                 body: '',
                 result: function(response, error, http) {
                     if (error !== null) {
-                        // $scope.set_error_message('#mainMsg', 'GetExamScore', error);
+                        //alert("查詢過程發生錯誤");
                     } else {
 
                         $scope.studentList = [];
@@ -54,6 +56,8 @@ angular.module('allsearch', [])
 
                         if ($scope.studentList.length > 0)
                             $scope.selectStudent($scope.studentList[0]);
+                        else
+                            alert("Can not find any child data");
 
                         //console.log($scope.studentList);
                     }
@@ -67,7 +71,7 @@ angular.module('allsearch', [])
                 body: '',
                 result: function(response, error, http) {
                     if (error !== null) {
-                        // $scope.set_error_message('#mainMsg', 'GetExamScore', error);
+                        alert("An error occurred while trying to send the request, please make sure this is a teacher's account");
                     } else {
                         //console.log(response);
                         $scope.$apply(function() {
@@ -75,12 +79,16 @@ angular.module('allsearch', [])
 
                                 $scope.TeacherID = response.TeacherID;
 
+                                $scope.IsHomeroom = response.IsHomeroom === 'true' ? true : false;
                                 $scope.IsCareersCounselor = response.IsCareersCounselor === 'true' ? true : false;
+
+                                if(!$scope.IsHomeroom && !$scope.IsCareersCounselor)
+                                    alert("This gadget is for homeroom teacher and counselor, your account is not allowed to get student info.");
+
                                 $scope.classlist = [].concat(response.Class);
 
-                                if ($scope.classlist.length > 0) {
+                                if ($scope.classlist.length > 0)
                                     $scope.selectClass($scope.classlist[0]);
-                                }
                             }
                         });
                     }
@@ -108,7 +116,7 @@ angular.module('allsearch', [])
                 },
                 result: function(response, error, http) {
                     if (error !== null) {
-                        //$scope.set_error_message('#mainMsg', 'GetStudentInfo', error);
+                        //alert("查詢過程發生錯誤");
                     } else {
                         //console.log(response);
                         $scope.$apply(function() {
@@ -164,6 +172,9 @@ angular.module('allsearch', [])
             $scope.getExam();
             $scope.getInterviewRecord();
             $scope.getAD();
+
+            if ($scope.defaultGrade)
+                $scope.GetGradeScore($scope.defaultGrade)
         };
 
         $scope.getConduct = function() {
@@ -173,7 +184,7 @@ angular.module('allsearch', [])
                 body: $scope.GetBody(),
                 result: function(response, error, http) {
                     if (error !== null) {
-                        // $scope.set_error_message('#mainMsg', 'GetExamScore', error);
+                        //alert("查詢過程發生錯誤");
                     } else {
                         //console.log(response);
                         $scope.$apply(function() {
@@ -314,7 +325,7 @@ angular.module('allsearch', [])
                 body: $scope.GetBody(),
                 result: function(response, error, http) {
                     if (error !== null) {
-                        // $scope.set_error_message('#mainMsg', 'GetExamScore', error);
+                        //alert("查詢過程發生錯誤");
                     } else {
                         //console.log(response);
                         $scope.$apply(function() {
@@ -353,7 +364,7 @@ angular.module('allsearch', [])
                 body: '',
                 result: function(response, error, http) {
                     if (error !== null) {
-                        // $scope.set_error_message('#mainMsg', 'GetExamScore', error);
+                        //alert("查詢過程發生錯誤");
                     } else {
 
                         $scope.AbsenceList = [].concat(response.AbsenceList);
@@ -378,7 +389,7 @@ angular.module('allsearch', [])
                 body: $scope.GetBody(),
                 result: function(response, error, http) {
                     if (error !== null) {
-                        // $scope.set_error_message('#mainMsg', 'GetExamScore', error);
+                        //alert("查詢過程發生錯誤");
                     } else {
 
                         var tmp_sysm = [];
@@ -473,7 +484,7 @@ angular.module('allsearch', [])
                 },
                 result: function(response, error, http) {
                     if (error !== null) {
-                        // $scope.set_error_message('#mainMsg', 'GetExamScore', error);
+                        //alert("查詢過程發生錯誤");
                     } else {
 
                         $scope.IR = [];
@@ -549,7 +560,7 @@ angular.module('allsearch', [])
                 body: body,
                 result: function(response, error, http) {
                     if (error !== null) {
-                        // $scope.set_error_message('#mainMsg', 'GetExamScore', error);
+                        //alert("查詢過程發生錯誤");
                     } else {
                         $scope.getInterviewRecord();
                         //console.log(response);
@@ -600,7 +611,7 @@ angular.module('allsearch', [])
                 body: body,
                 result: function(response, error, http) {
                     if (error !== null) {
-                        // $scope.set_error_message('#mainMsg', 'GetExamScore', error);
+                        //alert("查詢過程發生錯誤");
                     } else {
                         $scope.getInterviewRecord();
                         //console.log(response);
@@ -963,6 +974,8 @@ angular.module('allsearch', [])
         };
 
         $scope.GetGradeScore = function(grade) {
+
+            $scope.defaultGrade = grade;
             $scope.currentGrade = 'Gr.' + grade;
 
             var body = $scope.GetBody();
@@ -980,7 +993,7 @@ angular.module('allsearch', [])
                 result: function(response, error, http) {
                     $scope.GS = null;
                     if (error !== null) {
-                        // $scope.set_error_message('#mainMsg', 'GetExamScore', error);
+                        //alert("查詢過程發生錯誤");
                     } else {
 
                         if (response.data) {
@@ -996,13 +1009,13 @@ angular.module('allsearch', [])
                             //四捨五入
                             //$scope.GS.avggpa = Math.round($scope.GS.avggpa * 100) / 100;
 
-                            var sy = parseInt($scope.GS.schoolYear,10) + 1911;
+                            var sy = parseInt($scope.GS.schoolYear, 10) + 1911;
 
-                            $scope.GS.rang =  sy + '~' + (sy+1);
+                            $scope.GS.rang = sy + '~' + (sy + 1);
 
                             //console.log($scope.GS);
 
-                            
+
                         }
                     }
                     $scope.$apply();

@@ -1,0 +1,64 @@
+[lang=zh-TW] [multi-lang-text=我的子女]:before
+{
+	content: "我的子女";
+}
+[lang=zh-TW] [multi-lang-text=新增]:after
+{
+	content: "新增";
+}
+[lang=zh-TW] [multi-lang-text=姓名]:before
+{
+	content: "姓名";
+}
+[lang=zh-TW] [multi-lang-text=班級]:before
+{
+	content: "班級";
+}
+[lang=zh-TW] [multi-lang-text=座號]:before
+{
+	content: "座號";
+}
+[lang=zh-TW] [multi-lang-text=稱謂]:before
+{
+	content: "稱謂";
+}
+[lang=zh-TW] [multi-lang-text=身份驗證]:before
+{
+	content: "身份驗證";
+}
+[lang=zh-TW] [multi-lang-text=家長代碼]:before
+{
+	content: "家長代碼";
+}
+[lang=zh-TW] [multi-lang-text=稱謂]:before
+{
+	content: "稱謂";
+}
+[lang=zh-TW] [multi-lang-text=如何取得家長代碼？]:after
+{
+	content: "如何取得家長代碼？";
+}
+[lang=zh-TW] [multi-lang-text=請詢問孩子或聯絡導師。]:before
+{
+	content: "請詢問孩子或聯絡導師。";
+}
+[lang=zh-TW] [multi-lang-text=送出]:before
+{
+	content: "送出";
+}
+[lang=zh-TW] [multi-lang-text=取消]:before
+{
+	content: "取消";
+}
+[lang=zh-TW] [multi-lang-text=儲存成功！]:before
+{
+	content: "儲存成功！";
+}
+[lang=zh-TW] [multi-lang-text=請輸入代碼！]:before
+{
+	content: "請輸入代碼！";
+}
+[lang=zh-TW] [multi-lang-text=請輸入稱謂！]:before
+{
+	content: "請輸入稱謂！";
+}

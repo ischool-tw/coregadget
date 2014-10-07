@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
   <ModulePrefs title="（雙語部）學生資料查詢" description="老師-學生基本資料">
-    <Title lang="zh-TW">Student Information</Title>
+    <Title lang="zh-TW">Student Info.</Title>
     <Icon>icon.png</Icon>
     <Mobile />
     <Title lang="zh-CN">
     </Title>
-    <Title lang="en-US">Student Information</Title>
+    <Title lang="en-US">Student Info.</Title>
   </ModulePrefs>
 </Module>

@@ -1,12 +1,14 @@
 jQuery(function () {
-	gadget.onLanguageChanged(function(lang){
-		if(lang=="zh-CN"){
-			$("body").attr("lang","zh-CN");
-		}
-		else{
-			$("body").attr("lang","zh-TW");
-		}
-	});
+
+    gadget.onLanguageChanged(function(lang){
+     if(lang=="zh-CN"){
+      $("body").attr("lang","zh-CN");
+  } else if (lang=="en-US"){
+      $("body").attr("lang","en-US");
+  } else{
+      $("body").attr("lang","zh-TW");
+  }
+});
 
     $('[js="myModal"]').each(function(index, target){
         target = $(target);
@@ -20,10 +22,21 @@ jQuery(function () {
                         if (error.dsaError.status === "504") {
                             switch (error.dsaError.message) {
                                 case '501':
-                                    tmp_msg = '<strong>很抱歉，您無讀取資料權限！</strong>';
-                                    break;
+                                tmp_msg = '<strong>很抱歉，您無讀取資料權限！</strong>';
+                                break;
                                 default:
-                                    tmp_msg = '<strong>' + error.dsaError.message + '</strong>';
+                                tmp_msg = '<strong>' + error.dsaError.message + '</strong>';
+
+                                // 2014/10/1 實驗中學英文語系(黃耀明)。
+                                if($("body").attr("lang")=="en-US"){
+                                    var errMsg = error.dsaError.message;
+
+                                    if(errMsg == '教師代碼不正確或是已經被使用過了。'){
+                                        tmp_msg = "<strong>Invalid code or the code has been taken.</strong>"
+                                    } else if (errMsg == '此代碼已經設定過了。'){
+                                        tmp_msg = "<strong>The email address has been connected with this student.</strong>"
+                                    }
+                                }
                             }
                         } else if (error.dsaError.message) {
                             tmp_msg = error.dsaError.message;
@@ -83,7 +96,8 @@ jQuery(function () {
                 setAccount();
             } else {
                 target.find('[js="inputCode"]').focus().addClass('error');
-                set_error_message(target.find('[js="errorMessage"]'), '','請輸入代碼');
+                //set_error_message(target.find('[js="errorMessage"]'), '','請輸入代碼');
+                set_error_message(target.find('[js="errorMessage"]'), '','Please enter the code.');
             }
         });
     });

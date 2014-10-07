@@ -286,12 +286,6 @@
                 item = {};
                 item['OccurDate'] = this.OccurDate;
                 $(this.Detail.Attendance.Period).each(function() {
-                  if (absences_t[this['AbsenceType']] == null) {
-                    absences_t[this['AbsenceType']] = {
-                      total: 0
-                    };
-                  }
-                  absences_t[this['AbsenceType']].total += 1;
                   return item[this["@text"]] = this.AbsenceType;
                 });
                 return absences_d.push(item);
@@ -308,20 +302,30 @@
             thead = "<tr>" + thead + "</tr>";
             tbody = "";
             $(absences_d).each(function(i, item) {
-              var tr;
-              tr = "<td>" + item.OccurDate + "</td>";
+              var isLeave, td;
+              isLeave = false;
+              td = '';
               $(_periods).each(function(j, period) {
                 if (_absence[item[period.Name]]) {
-                  tr += "<td>" + (_absence[item[period.Name]] || '') + "</td>";
+                  isLeave = true;
+                  td += "<td>" + (_absence[item[period.Name]] || '') + "</td>";
+                  if (!absences_t[item[period.Name]]) {
+                    absences_t[item[period.Name]] = {
+                      total: 0
+                    };
+                  }
+                  absences_t[item[period.Name]].total += 1;
                   if (!absences_t[item[period.Name]][period.Type]) {
                     absences_t[item[period.Name]][period.Type] = 0;
                   }
                   return absences_t[item[period.Name]][period.Type] += 1;
                 } else {
-                  return tr += "<td></td>";
+                  return td += "<td></td>";
                 }
               });
-              return tbody += "<tr>" + tr + "</tr>";
+              if (isLeave) {
+                return tbody += "<tr><td>" + item.OccurDate + "</td>" + td + "</tr>";
+              }
             });
             $.each(absences_t, function(name, item) {
               items.push("<div class='thumbnail my-thumbnail-white'>\n  <div class='caption my-subthumbnail-bottom'>\n    <h5><span class='badge badge-warning'>" + (name || '') + " " + (item.total || '') + "</span></h5>\n  </div>\n</div>");

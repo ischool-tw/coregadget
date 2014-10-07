@@ -91,7 +91,7 @@
                                 <i class="fa fa-angle-right pull-right"></i>
                                 <div>
                                     <div>{{item.StudentChineseName || item.StudentName}}</div>
-                                    <div>{{item.StudentEnglishName}}</div>
+                                    <div>{{item.StudentNickname || item.StudentEnglishName}}</div>
                                 </div>
                             </a>
                         </div>
@@ -287,7 +287,7 @@
                                 </div>
 
                                 <div class="panel panel-default">
-                                    <div class="panel-heading"><i class="fa fa-briefcase"></i> Attendance <a class="btn btn-info btn-xs pull-right" data-toggle="modal">Total：{{ADTotal}}</a>
+                                    <div class="panel-heading"><i class="fa fa-briefcase"></i> Attendance <p class="btn-info btn-xs pull-right" data-toggle="modal">Total：{{ADTotal}}</p>
                                     </div>
                                     <div class="panel-body">
                                         <div class="row">
@@ -377,14 +377,20 @@
 
                             <!-- Semester -->
                             <div class="tab-pane" id="tab3">
-                                <div class="btn-group">
+                                <!-- <div class="btn-group">
                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                         {{currentGrade}}
                                         <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
+                                    </button> -->
+                                    <!-- <div class="col-md-9"> -->
+                                    <ul class="nav nav-pills nav-justified" style="margin-bottom:10px;">
                                         <li ng-repeat="grade in [3,4,5,6,7,8,9,10,11,12]"><a href="#" ng-click="GetGradeScore(grade)">{{'Gr.' + grade}}</a>
                                         </li>
+                                    </ul>
+                                    <!-- </div> -->
+                                    <!-- <ul class="dropdown-menu" role="menu">
+                                        <li ng-repeat="grade in [3,4,5,6,7,8,9,10,11,12]"><a href="#" ng-click="GetGradeScore(grade)">{{'Gr.' + grade}}</a>
+                                        </li> -->
                                         <!-- <li><a href="#">Gr.4</a>
                                         </li>
                                         <li><a href="#">Gr.5</a>
@@ -403,8 +409,8 @@
                                         </li>
                                         <li><a href="#">Gr.12</a>
                                         </li> -->
-                                    </ul>
-                                </div>
+                                    <!-- </ul> -->
+                                <!-- </div> -->
 
                                 <table class="table table-bordered my-grade" style="margin-top:10px;">
                                     <thead>
@@ -731,7 +737,7 @@
                             <!-- Conduct -->
                             <div class="tab-pane" id="tab5">
                                 <div class="btn-group my-dropdown" ng-if="conductList">
-                                    <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-if="currentConduct.SchoolYear !=='' && currentConduct.Semester !== ''">
                                         {{currentConduct.SchoolYear + ' ' + (currentConduct.Semester == '1' ? '1st' : '2nd') + ' Semester'}}
                                         <span class="caret"></span>
                                     </a>
@@ -743,8 +749,7 @@
                                 </div>
 
                                 <div class="tab-pane" style="font-style:italic;font-weight:bold">
-                                    <br/>
-                                    M=Meets expectations S=Meets needs with Support N=Not yet within expectations N/A=Not Available
+                                    <br/>M=Meets expectations S=Meets needs with Support N=Not yet within expectations N/A=Not Available
                                 </div>
 
                                 <div class="panel panel-info" style="margin-top:10px;" ng-repeat="conduct in currentConduct.Conduct">
