@@ -200,6 +200,9 @@ var CreateTeacher = function() {
     //  成績上傳提醒樣版
     var _ReminderTemplate;
 
+	//	登入者資訊
+    var _UserInfo;
+
     //  取得成績輸入學年期
     var _GetScoreInputSemester = function() {
         gadget.getContract(Contract.Teacher).send({
@@ -514,7 +517,7 @@ var CreateTeacher = function() {
     };
 
     //  寫入上傳成績 Log
-    var _AddLog = function(vCourseID, vCourseName) {    
+    var _AddLog = function(vCourseID, vCourseName, vUserName) {    
         var log = "" + vCourseName + "\n";  
         var pCourseStudents = _CourseStudents[vCourseID];  
         for(var student_number in pCourseStudents) {
@@ -522,17 +525,24 @@ var CreateTeacher = function() {
             log += "\n" + student.Department + "_" + student.StudentNumber + "_" + student.Name + "： " + student.Score + ($.trim(student.Remark) !== '' ? ", " + student.Remark : "");
         }
 
-        gadget.getContract(Contract.Student).send({
+        gadget.getContract(Contract.Teacher).send({
             service: Service.AddLog,
-            body: "<Request>\n  <Log>\n     <Actor>" + (gadget.getContract(Contract.Teacher).getUserInfo().UserName) + "</Actor>\n        <ActionType>更新</ActionType>\n       <Action>更新成績</Action>\n     <TargetCategory>ischool.emba.subject_semester_score</TargetCategory>\n      <ClientInfo><ClientInfo></ClientInfo></ClientInfo>\n        <ActionBy>ischool web 成績輸入小工具</ActionBy>\n      <Description>" + log + "</Description>\n    </Log>\n</Request>",
+            body: "<Request>\n  <Log>\n     <TargetID>123</TargetID><Actor>" + vUserName + "</Actor>\n        <ActionType>確認並上傳成績</ActionType>\n       <Action>確認並上傳成績</Action>\n     <TargetCategory>student</TargetCategory>\n      <ClientInfo><ClientInfo></ClientInfo></ClientInfo>\n        <ActionBy>ischool web 成績輸入小工具</ActionBy>\n      <Description>" + log + "</Description>\n    </Log>\n</Request>",
             result: function(response, error, http) {
                 if (error !== null) {
-                    //_InternalError.push('呼叫服務(' + Service.AddLog + ')失敗或網路異常，請稍候重試！');                    
+                	//_InternalError.push('呼叫服務(' + Service.AddLog + ')失敗或網路異常，請稍候重試！');
+                	//_ThrowError();
                 } 
                 _CallbackQueue.JobFinished();
             }
         });
-    }; 
+    };
+
+	//	取得登入者資訊
+    var _GetUserInfo = function (vContract) {
+    	_UserInfo = gadget.getContract(vContract).getUserInfo();
+    	_CallbackQueue.JobFinished();
+    };
 
     //  對外發佈訊息
     var _RaiseEvent = function(type, o) {
@@ -564,7 +574,7 @@ var CreateTeacher = function() {
             this.ClearInternalError();
 
             _CallbackQueue.Push(_GetScoreInputSemester);
-            _CallbackQueue.Push([_GetSubjectScoreLock, _GetTeacherCourses, _GetCourseStudents, _GetCourseTeachers, function() {_GetTextTemplate('teacher_score_input_explanation_template')}, function() {_GetTextTemplate('teacher_score_upload_reminder_template')}]);
+            _CallbackQueue.Push([function () { _GetUserInfo(Contract.Teacher) }, _GetSubjectScoreLock, _GetTeacherCourses, _GetCourseStudents, _GetCourseTeachers, function () { _GetTextTemplate('teacher_score_input_explanation_template') }, function () { _GetTextTemplate('teacher_score_upload_reminder_template') }]);
             _CallbackQueue.Push(function() {_RaiseEvent('teacher_course_loaded', _TeacherCourses)});   
             _CallbackQueue.Push(function() {_RaiseEvent('explanation_template_loaded', _TextTemplate)});                                  
             _CallbackQueue.Start();
@@ -734,8 +744,9 @@ var CreateTeacher = function() {
                 }
                 this.ClearInternalError();
 
+                var user_info = _UserInfo.UserName;	//_UserInfo.Property[5] + _UserInfo.Property[7] + '(' + _UserInfo.Property[10] + ')';
                 _CallbackQueue.Push(_GetCourseStudentPreUpload);
-                _CallbackQueue.Push([function() {_UpdateSubjectSemesterScore(update_content)}, function() {_AddSubjectSemesterScore(add_content)}, function() {_UpdateCourseExt(vCourseID)}, function() {_AddLog(vCourseID, vCourseName)}]);
+                _CallbackQueue.Push([function () { _UpdateSubjectSemesterScore(update_content) }, function () { _AddSubjectSemesterScore(add_content) }, function () { _UpdateCourseExt(vCourseID) }, function () { _AddLog(vCourseID, vCourseName, user_info) }]);
 
                 var oo = {
                     InternalError: _InternalError,
