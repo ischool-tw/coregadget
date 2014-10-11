@@ -36,7 +36,7 @@
               
             <li class="active"><a href="#tab1" data-toggle="tab" id="tabName">問卷調查</a></li>
             <li><a href="#tab2" data-toggle="tab">歷史填答記錄</a></li>
-              
+		  	<li><a href="#tab3" data-toggle="tab">問卷填答注意事項</a></li>		  	
           </ul>
         </h1>
         <div class="tab-content">
@@ -113,12 +113,12 @@
 		  			</table>
 		  			<form id="form1">
 		  				<table class="table table-bordered table-striped">
-		  					<thead>
-		  						<tr>
-		  							<th>題項<span class="text-error">（*為必填欄位）</span></th>
-		  							<th>選項</th>
-		  						</tr>
-		  					</thead>
+					  		<thead data-type="questions-title">
+					  			<tr id="no-option">
+					  				<th>題項<span class="text-error">（*為必填欄位）</span></th>
+					  				<th>選項</th>
+					  			</tr>
+					  		</thead>
 		  					<tbody data-type="questions"></tbody>
 		  				</table>
 		  			</form>
@@ -136,6 +136,10 @@
           <div class="tab-pane" id="tab2">
               <div id="survey-history"></div>
           </div>
+		  <div class="tab-pane" id="tab3">
+	  		<div class="tab-pane" id="sa05">
+	  		</div>
+		  </div>
         </div>
           <div class="footer-space"></div>
           <div class="footer">
