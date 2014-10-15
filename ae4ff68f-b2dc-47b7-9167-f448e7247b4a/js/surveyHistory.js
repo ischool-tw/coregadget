@@ -4,27 +4,27 @@ var oAchievingRate = {};
 var oConfiguration = {};
 var oSurveyHistoryTemplateDescriptionSubfix = 'survey-history-description';
 
-var CallbackQueue = CallbackQueue || {
+var CallbackQueue_History = {
     Queues: [],
     Index: 0,
     Queue: function(object){
-        CallbackQueue.Queues.push(object);
+    	CallbackQueue_History.Queues.push(object);
     },
     JobFinished: function(object){
-        if (CallbackQueue.Queues.length === 0)
+    	if (CallbackQueue_History.Queues.length === 0)
             return;
 
-        CallbackQueue.Index += 1;
-        if (CallbackQueue.Index > CallbackQueue.Queues.length){
+    	CallbackQueue_History.Index += 1;
+    	if (CallbackQueue_History.Index > CallbackQueue_History.Queues.length) {
             return;
         }
-        CallbackQueue.Queues[CallbackQueue.Index - 1]();
+    	CallbackQueue_History.Queues[CallbackQueue_History.Index - 1]();
     },
     ResetIndex: function(){
-        CallbackQueue.Index = 0;
+    	CallbackQueue_History.Index = 0;
     },
     DeQueue: function(index){
-        CallbackQueue.Queues[index]();
+    	CallbackQueue_History.Queues[index]();
     }
 };
 
@@ -42,8 +42,8 @@ var SurveyChanged_Handler = SurveyChanged_Handler || {
 };
 
 var SurveyAfterChanged = function(){
-    CallbackQueue.ResetIndex();
-    CallbackQueue.DeQueue(0);
+	CallbackQueue_History.ResetIndex();
+	CallbackQueue_History.DeQueue(0);
 };
 
 var GetAchievingRate = function() {
@@ -69,8 +69,8 @@ var GetAchievingRate = function() {
                     oAchievingRate = response.Response.AchievingRate;
                     console.log(JSON.stringify(oAchievingRate));
                 }
-                CallbackQueue.JobFinished();
             }
+            CallbackQueue_History.JobFinished();
         }
     });
 };
@@ -97,8 +97,8 @@ var GetTextTemplate = function() {
                     oConfiguration = response.Response.Configuration;
                     console.log(JSON.stringify(oConfiguration));
                 }
-                CallbackQueue.JobFinished();
             }
+            CallbackQueue_History.JobFinished();
         }
     });
 };
@@ -211,25 +211,24 @@ var GetReplyHistory = function() {
                 } else {
                 	$('#survey-history').html('<h4>無歷史填答記錄</h4>');
                 }
-
-                CallbackQueue.JobFinished();
             }
+            CallbackQueue_History.JobFinished();
         }
     });
 };
 
 var ClearHTML = function(){
     $('#survey-history').html('');
-    CallbackQueue.JobFinished();
+    CallbackQueue_History.JobFinished();
 };
 
 $(document).ready(function() {
     SurveyChanged_Handler.Subscribe(SurveyAfterChanged);
 
-    CallbackQueue.Queue(ClearHTML);
-    CallbackQueue.Queue(GetTextTemplate);
-    CallbackQueue.Queue(GetAchievingRate);
-    CallbackQueue.Queue(GetReplyHistory);
-    CallbackQueue.DeQueue(0);
+    CallbackQueue_History.Queue(ClearHTML);
+    CallbackQueue_History.Queue(GetTextTemplate);
+    CallbackQueue_History.Queue(GetAchievingRate);
+    CallbackQueue_History.Queue(GetReplyHistory);
+    CallbackQueue_History.DeQueue(0);
 });
 
