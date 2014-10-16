@@ -42,8 +42,8 @@
                 <table class="table table-bordered table-striped table-hover text-center">
                     <thead>
                         <tr>
-                            <th class="col-md-2 text-center">ClassName</th>
                             <th class="col-md-1 text-center">No.</th>
+                            <th class="col-md-2 text-center">ClassName</th>
                             <th class="col-md-5 text-center">Name</th>
                             <th ng-repeat="exam in examList" class="col-md-2 text-center">{{exam.Name}}</th>
                         </tr>
@@ -52,8 +52,8 @@
                         <tr ng-repeat="item in studentList"
                             _ng-class="{'success':(current.SelectMode=='ID'&&item.StudentID==current.SelectStudentID)||(current.SelectMode=='No.'&&item.SeatNo==current.SelectSeatNo),'warning':item.selected}"
                             ng-class="{'warning':item.selected}">
+                            <td>{{item.No}}</td>
                             <td>{{item.ClassName}}</td>
-                            <td>{{item.SeatNo}}</td>
                             <td class="text-left">
                                 {{item.StudentChineseName}} {{item.StudentEnglishName ? '('+item.StudentEnglishName+')' : ''}}
                             </td>

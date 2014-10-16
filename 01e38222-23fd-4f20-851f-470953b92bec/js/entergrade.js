@@ -220,6 +220,7 @@ angular.module('entergrade', [])
                                     item.index = index;
                                     item.Final = item.FinalGrade;
                                     item.Midterm = item.MidtermGrade;
+                                    item.No = index + 1;
                                     delete item.FinalGrade;
                                     delete item.MidtermGrade;
                                 });
