@@ -12,19 +12,19 @@
       paramValues: {}
     });
   </script>
-  <link href="css/bootstrap.css" rel="stylesheet" />
-  <link href="css/bootstrap-responsive.css" rel="stylesheet" />
-  <link href="css/mybootstrap.css" rel="stylesheet" />
-  <link href="css/default.css" rel="stylesheet" />
-  <link href="css/base.css" rel="stylesheet" />
-  <script src="js/jquery.min.js"></script>
-  <script src="js/bootstrap.js"></script>
-  <script src="js/jquery.validate.min.js"></script>
-  <script src="js/jquery.metadata.js"></script>
-  <script src="js/messages_tw.js"></script>
-  <script src="js/CallbackQueue.js"></script>
-  <script src="js/survey.js"></script>
-  <script src="js/surveyHistory.js"></script>  
+	<link href="css/bootstrap.css?20141015" rel="stylesheet" />
+	<link href="css/bootstrap-responsive.css?20141015" rel="stylesheet" />
+	<link href="css/mybootstrap.css?20141015" rel="stylesheet" />
+	<link href="css/default.css?20141015" rel="stylesheet" />
+	<link href="css/base.css?20141015" rel="stylesheet" />
+	<script src="js/jquery.min.js?20141015"></script>
+	<script src="js/bootstrap.js?20141015"></script>
+	<script src="js/jquery.validate.min.js?20141015"></script>
+	<script src="js/jquery.metadata.js?20141015"></script>
+	<script src="js/messages_tw.js?20141015"></script>
+	<script src="js/CallbackQueue.js?20141015"></script>
+	<script src="js/survey.js?20141015"></script>
+	<script src="js/surveyHistory.js?20141015"></script> 
 </head>
 <body>
   <div id="gadget" class="my-page">
@@ -36,7 +36,7 @@
               
             <li class="active"><a href="#tab1" data-toggle="tab" id="tabName">問卷調查</a></li>
             <li><a href="#tab2" data-toggle="tab">歷史填答記錄</a></li>
-              
+		  	<li><a href="#tab3" data-toggle="tab">問卷填答注意事項</a></li>		  	
           </ul>
         </h1>
         <div class="tab-content">
@@ -113,12 +113,12 @@
 		  			</table>
 		  			<form id="form1">
 		  				<table class="table table-bordered table-striped">
-		  					<thead>
-		  						<tr>
-		  							<th>題項<span class="text-error">（*為必填欄位）</span></th>
-		  							<th>選項</th>
-		  						</tr>
-		  					</thead>
+					  		<thead data-type="questions-title">
+					  			<tr id="no-option">
+					  				<th>題項<span class="text-error">（*為必填欄位）</span></th>
+					  				<th>選項</th>
+					  			</tr>
+					  		</thead>
 		  					<tbody data-type="questions"></tbody>
 		  				</table>
 		  			</form>
@@ -136,6 +136,10 @@
           <div class="tab-pane" id="tab2">
               <div id="survey-history"></div>
           </div>
+		  <div class="tab-pane" id="tab3">
+	  		<div class="tab-pane" id="sa05">
+	  		</div>
+		  </div>
         </div>
           <div class="footer-space"></div>
           <div class="footer">

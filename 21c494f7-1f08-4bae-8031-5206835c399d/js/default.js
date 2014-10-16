@@ -384,10 +384,10 @@ var ModalInstanceCtrl = function($scope, merit_flag, conf) {
         $scope.error.detaila = !$.isNumeric($scope.form1.detail.A) ;
         $scope.error.detailb = !$.isNumeric($scope.form1.detail.B) ;
         $scope.error.detailc = !$.isNumeric($scope.form1.detail.C) ;
-        $scope.error.detail = ( $scope.form1.detail.A + $scope.form1.detail.B + $scope.form1.detail.C ) <= 0 ;
+        $scope.error.detail = (( $scope.form1.detail.A + $scope.form1.detail.B + $scope.form1.detail.C ) <= 0 ) || ( ( $scope.form1.detail.A + $scope.form1.detail.B + $scope.form1.detail.C ) % 1 !== 0 );
         var pass = true ;
         if ( $scope.error.detail )
-            alert('請輸入功過次數');
+            alert('請輸入功過次數(需為數字)');
         for(e in $scope.error)
         {
             if ( $scope.error[e] )

@@ -6,7 +6,9 @@ jQuery(function () {
     $('#tab_survey_list').on('click', 'a[data-index]', function() {
     	var index = $(this).attr('data-index');
     	var survey_category = $(this).attr('data-survey-category');
-    	SurveyManger.load_form(index, survey_category);
+    	var survey_school_year = $(this).attr('data-survey-school_year');
+    	var survey_semester = $(this).attr('data-survey-semester');
+    	SurveyManger.load_form(index, survey_category, survey_school_year, survey_semester);
 
         $('#tab_survey_list').hide();
         $('#tab_form').show();
@@ -47,31 +49,63 @@ jQuery(function () {
                 'Question': []
             }
         };
-        $('#tab_form td[data-qid]').each(function(index, val) {
+        $('#tab_form [data-qid]').each(function(index, val) {
             var tmp;
             var that_qid = $(this).attr('data-qid') || '';
+            //var school_year = $(this).attr('data-school_year') || '';
+            //var semester = $(this).attr('data-semester') || '';
             var has_qid = $.inArray(that_qid, all_qid);
-            if (has_qid === -1) {
-                reply.Answers.Question.push({
-                    '@'          : ['QuestionID'],
-                    'QuestionID' : that_qid,
-                    'Answer'     : []
-                });
-                all_qid.push(that_qid);
-                tmp = reply.Answers.Question[reply.Answers.Question.length - 1];
+            if ($('#tab_form [data-qid]').length === 1) {
+            	reply.Answers.Question.push({
+            		'@': ['QuestionID'],
+            		'QuestionID': that_qid,
+            		//'SchoolYear': school_year,
+            		//'Semester': semester,
+            		'Answer': []
+            	});
+            	tmp = reply.Answers.Question[0];
+            	tmp.Answer.push({
+            		'@text': $(this).attr('data-title') || '',
+            		'@': ['CaseID', 'Score'],
+            		'CaseID': $(this).attr('data-caseid') || '',
+            		'Score': $(this).val() || ''
+            	});
             } else {
-                tmp = reply.Answers.Question[has_qid];
+            	if (has_qid === -1) {
+            		reply.Answers.Question.push({
+            			'@': ['QuestionID'],
+            			'QuestionID': that_qid,
+            			//'SchoolYear': school_year,
+            			//'Semester': semester,
+            			'Answer': []
+            		});
+            		all_qid.push(that_qid);
+            		tmp = reply.Answers.Question[reply.Answers.Question.length - 1];
+            	} else {
+            		tmp = reply.Answers.Question[has_qid];
+            	}
+            	$(this).each(function (index, val) {
+            		if ($(val).find('input[data-caseid]:checked, textarea').length > 0) {
+            			$(val).find('input[data-caseid]:checked, textarea').each(function (index, item) {
+            				tmp.Answer.push({
+            					'@text': $(item).attr('data-title') || '',
+            					'@': ['CaseID', 'Score'],
+            					'CaseID': $(item).attr('data-caseid') || '',
+            					'Score': $(item).val() || ''
+            				});
+            			});
+            		} else {
+            			if ($(val).get(0).nodeName === "TEXTAREA") {
+            				tmp.Answer.push({
+            					'@text': $(val).attr('data-title') || '',
+            					'@': ['CaseID', 'Score'],
+            					'CaseID': $(val).attr('data-caseid') || '',
+            					'Score': $(val).val() || ''
+            				});
+            			}
+            		}
+            	});
             }
-            $(this).each(function(index, val) {
-                $(val).find('input[data-caseid]:checked, textarea').each(function(index, item) {
-                    tmp.Answer.push({
-                        '@text'  : $(item).attr('data-title') || '',
-                        '@'      : ['CaseID','Score'],
-                        'CaseID' : $(item).attr('data-caseid') || '',
-                        'Score'  : $(item).val() || ''
-                    });
-                });
-            });
         });
         return reply;
     };
@@ -97,7 +131,7 @@ jQuery(function () {
                 }
             }).end()
             .find('textarea').hide().each(function(){
-                $(this).after('<span data-type="preview">' + $('<div/>').text($(this).val()).html().replace(/\n/g, '<br />') + '</span>');
+            	$(this).after('<span style="word-break: break-all;" data-type="preview">' + $('<div/>').text($(this).val()).html().replace(/\n/g, '<br />') + '</span>');
             });
     };
     //#endregion
@@ -252,13 +286,13 @@ var SurveyManger = function() {
     var getStatus = function(item, index) {
     	switch (item.ReplyStatus) {
             case '0':
-                return '<td><a href="javascript: void(0);" class="btn btn-warning" data-index="' + index + '" data-survey-id="' + item.SurveyID + '" data-survey-category="' + item.Category + '">暫存</a></td>';
+                return '<td><a href="javascript: void(0);" class="btn btn-warning" data-index="' + index + '" data-survey-id="' + item.SurveyID + '" data-survey-category="' + item.Category + '" data-survey-school_year="' + item.SchoolYear + '" data-survey-semester="' + item.Semester + '">暫存</a></td>';
                 break;
             case '1':
                 return '<td><span class="btn disabled">已完成</span></td>';
                 break;
             default:
-            	return '<td><a href="javascript: void(0);" class="btn btn-danger" data-index="' + index + '" data-survey-id="' + item.SurveyID + '" data-survey-category="' + item.Category + '">開始填寫</a></td>';
+            	return '<td><a href="javascript: void(0);" class="btn btn-danger" data-index="' + index + '" data-survey-id="' + item.SurveyID + '" data-survey-category="' + item.Category + '" data-survey-school_year="' + item.SchoolYear + '" data-survey-semester="' + item.Semester + '">開始填寫</a></td>';
         }
     };
 	//#endregion
@@ -269,10 +303,11 @@ var SurveyManger = function() {
     		service: "_.GetSurveyCategory",
     		body: {
     			Request: {
-    				Condition: {
-    					SchoolYear: schoolyear || '',
-    					Semester: semester || ''
-    				}
+    				Condition: ''
+    				//Condition: {
+    				//	SchoolYear: schoolyear || '',
+    				//	Semester: semester || ''
+    				//}
     			}
     		},
     		result: function (response, error, http) {
@@ -310,10 +345,10 @@ var SurveyManger = function() {
                 } else {
                 	if (response.Response && response.Response.Survey) {
                 		$(response.Response.Survey).each(function (index, item) {
-                			if (!_survey_category[item.Category]) {
-                				_survey_category[item.Category] = [];
+                			if (!_survey_category[item.Category + '-' + item.SchoolYear + '-' + item.Semester]) {
+                				_survey_category[item.Category + '-' + item.SchoolYear + '-' + item.Semester] = [];
                 			}
-                			_survey_category[item.Category].push(item);
+                			_survey_category[item.Category + '-' + item.SchoolYear + '-' + item.Semester].push(item);
                 		});
                         //_surveylist = myHandleArray(response.Response.Survey);
                     } else {
@@ -401,8 +436,8 @@ var SurveyManger = function() {
 
                         switch (item.Type) {
                         	case '單選題':
-                        		tmp_html.push('<td data-qid="' + (item.QuestionID || '') + '">');
-                                if (item.Options && item.Options.Option) {
+                        		if (item.Options && item.Options.Option) {
+                        			tmp_html.push('<td data-qid="' + (item.QuestionID || '') + '">');
                                     $(item.Options.Option).each(function(order, value) {
                                         tmp_html.push(
                                             '<label class="radio">' +
@@ -413,19 +448,19 @@ var SurveyManger = function() {
                                             '</label>'
                                         );
                                     });
+                                    tmp_html.push('</td>');
                                 }
-                                tmp_html.push('</td>');
                                 break;
                             case '問答題':
-                                tmp_html.push('<textarea name="' + unique + '" rows="5" class=" {extMaxLength: ' + _textarea_maxLength + '} ' + validate_css + ' input-block-level"' +
+                            	tmp_html.push('<P/><P/><div><textarea data-qid="' + (item.QuestionID || '') + '" name="' + unique + '" rows="5" class=" {extMaxLength: ' + _textarea_maxLength + '} ' + validate_css + ' input-block-level"' +
                                     ' data-caseid="' + caseid + '"' +
                                     ' data-maxLength="' + _textarea_maxLength + '"' +
-                                    '></textarea>' +
+                                    '></textarea></div>' +
                                     '<div class="my-note-text my-preview-remove">(請勿超過' + _textarea_maxLength + '字元)</div>');
                                 break;
                         	case '複選題':
-                        		tmp_html.push('<td data-qid="' + (item.QuestionID || '') + '">');
-                                if (item.Options && item.Options.Option) {
+                        		if (item.Options && item.Options.Option) {
+                        			tmp_html.push('<td data-qid="' + (item.QuestionID || '') + '">');
                                     $(item.Options.Option).each(function(order, value) {
                                         tmp_html.push(
                                             '<label class="checkbox">' +
@@ -436,8 +471,8 @@ var SurveyManger = function() {
                                             '</label>'
                                         );
                                     });
+                                    tmp_html.push('</td>');
                                 }
-                                tmp_html.push('</td>');
                                 break;
                         }
 
@@ -446,6 +481,11 @@ var SurveyManger = function() {
                     //#endregion
 
                     if (that_questions.Hierarchy) {
+                    	if ($(that_questions.Hierarchy.Question).length === 1 && that_questions.Hierarchy.Question.Type === '問答題') {
+                    		$('#no-option').html('<th colspan="2" style="background-color:#bbe6e2;background:#bbe6e2">題項<span class="text-error">（*為必填欄位）</span></th>');
+                    	} else {
+                    		$('#no-option').html('<th>題項<span class="text-error">（*為必填欄位）</span></th><th>選項</th>');
+                    	}
                     	if ($(that_questions.Hierarchy).length > 0) {
                             $(that_questions.Hierarchy).each(function(index, hierarchy) {
                                 var question_html = '';
@@ -786,13 +826,14 @@ var SurveyManger = function() {
         },
         on_init: function () {
         	CallbackQueue.Clear();
-        	CallbackQueue.Push([getCurrentSemester, getCurrentDateTime]);
-        	CallbackQueue.Push([this.showTitle, getMyInfo]);
-        	CallbackQueue.Push(
-				function () {
-					getSurveyCategory(_school_year, _semester);
-				}
-			);
+        	CallbackQueue.Push([getCurrentDateTime]);	//getCurrentSemester, 
+        	CallbackQueue.Push([getMyInfo, this.showFaq, getSurveyCategory]);	//this.showTitle, 
+        	
+        	//CallbackQueue.Push(
+			//	function () {
+			//		getSurveyCategory(_school_year, _semester);
+			//	}
+			//);
         	CallbackQueue.Push(this.showCategory);   
         	
         	CallbackQueue.Push(
@@ -800,7 +841,7 @@ var SurveyManger = function() {
         			$(_category).each(function (index, item) {
         				CallbackQueue.UnShift(
 							function () {
-								getSurveyList(_school_year, _semester, item.Name);
+								getSurveyList(item.SchoolYear, item.Semester, item.Name);
 							});
         			});
         			CallbackQueue.UnShift(function () {
@@ -834,27 +875,64 @@ var SurveyManger = function() {
         	}
         	CallbackQueue.JobFinished();
         },
+        showFaq: function () {
+        	_connection.send({
+        		service: "_.GetCSFaq",
+        		body: '',
+        		result: function (response, error, http) {
+        			if (error !== null) {
+        				set_error_message('#mainMsg', 'GetCSFaq', error);
+        			} else {
+        				var items = [];
+        				if (response.Response && response.Response.Faq) {
+        					items.push('<div class="accordion" id="accordion3">');
+        					$(response.Response.Faq).each(function (index, item) {
+        						var ret = '<div class="accordion-group">' + 
+											'<div class="accordion-heading">' +
+												'<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseB' + index + '">' + item.Title + '</a>' + 
+											'</div>' + 
+											'<div class="accordion-body collapse" id="collapseB' + index + '" style="height: 0px;">' + 
+												'<div class="accordion-inner" >' + item.Content.replace(/\n/g, '<br />') + "</div>" + 
+											'</div>' + 
+										  '</div>';
+        						items.push(ret);
+        					});
+        					items.push('</div>');
+        				} else {
+        					items.push('<div>目前無資料</div>');
+        				}
+        				$('#sa05').html(items.join(''));
+        			}
+        			CallbackQueue.JobFinished();
+        		}
+        	});
+        },
+
         showCategory: function () {        	
         	var items = [];
-        	$('#tab1').find('#tab_survey_list').html('<h4>' + _school_year + '學年度' + (_semester === '0' ? '夏季學期' : '第' + _semester + '學期') + '尚未設定問卷調查' + '</h4>');
-        	$(_category).each(function (index, item) {
-        		var title = '(' + _school_year + '學年度' + (_semester === '0' ? '夏季學期' : '第' + _semester + '學期') + ')';
-        		var ret = "<div class='panel-group' id='SurveyCategory-" + item.Name + "'>" +
-							"<div class='panel panel-default'>" +
-								"<div class='panel-heading'>" +
-									"<h4 class='panel-title'>" +
-									"<a data-toggle='collapse' data-parent='#accordion' href='#collapse-" + item.Name + "'>" + item.Name + title + "</a>" +
-									"</h4>" +
-								"</div>" +
-								"<div id='collapse-" + item.Name + "' class='panel-collapse collapse'>" +
-									"<div class='panel-body'>" + item.Description +
-									"</div>" +
-								"</div>" +
-							"</div>" +
-						"</div>";
-        		items.push(ret);
-        		//$('#tab1').find('#tab_survey_list').append(ret);
-        	});
+        	//$('#tab1').find('#tab_survey_list').html('<h4>' + _school_year + '學年度' + (_semester === '0' ? '夏季學期' : '第' + _semester + '學期') + '尚未設定問卷調查' + '</h4>');
+        	if ($(_category).length === 0) {
+        		$('#tab1').find('#tab_survey_list').html('<h4>尚未設定問卷調查</h4>');
+        	} else {
+        		$(_category).each(function (index, item) {
+        			var title = '(' + item.SchoolYear + '學年度' + (item.Semester === '0' ? '夏季學期' : '第' + item.Semester + '學期') + ')';
+        			var ret = "<div class='panel-group' id='SurveyCategory-" + item.Name + "-" + item.SchoolYear + "-" + item.Semester + "'><h4>" + item.Name + title + "</h4></div>";
+        			//	"<div class='panel panel-default'>" +
+        			//		"<div class='panel-heading'>" +
+        			//			"<h4 class='panel-title'>" +
+        			//			"<a data-toggle='collapse' data-parent='#accordion' href='#collapse-" + item.Name + "'>" + item.Name + title + "</a>" +
+        			//			"</h4>" +
+        			//		"</div>" +
+        			//		"<div id='collapse-" + item.Name + "' class='panel-collapse collapse'>" +
+        			//			"<div class='panel-body'>" + item.Description +
+        			//			"</div>" +
+        			//		"</div>" +
+        			//	"</div>" +
+        			//"</div>";
+        			items.push(ret);
+        			//$('#tab1').find('#tab_survey_list').append(ret);
+        		});
+        	}
         	if (items.length > 0) {
         		$('#tab1').find('#tab_survey_list').html(items.join(''));
         	}
@@ -875,9 +953,9 @@ var SurveyManger = function() {
 								"<tbody></tbody>" +
 							  "</table>" +
 						"</div>";
-        	$('#SurveyCategory-' + category.Name).append(ret);
-        	if (_survey_category && _survey_category[category.Name]) {
-        		$(_survey_category[category.Name]).each(function (index, item) {
+        	$('#SurveyCategory-' + category.Name + "-" + category.SchoolYear + "-" + category.Semester).append(ret);
+        	if (_survey_category && _survey_category[category.Name + "-" + category.SchoolYear + "-" + category.Semester]) {
+        		$(_survey_category[category.Name + "-" + category.SchoolYear + "-" + category.Semester]).each(function (index, item) {
         			// 填寫評鑑鈕
         			var items = [];
         			var status_html;
@@ -908,22 +986,22 @@ var SurveyManger = function() {
 					);
 
         			if (items.length > 0) {
-        				$('#SurveyCategory-' + category.Name + ' div:last table tbody').append(items.join(''));
+        				$('#SurveyCategory-' + category.Name + "-" + category.SchoolYear + "-" + category.Semester + ' div:last table tbody').append(items.join(''));
         				//$('#tab_survey_list tbody').html(items.join(''));
         				//$('#SurveyCategory-' + category + " div:last table tbody").append(items.join(''));
         			} else {
         				//$('#tab_survey_list tbody').html('<tr><td colspan="4">目前無資料</td></tr>');
-        				$('#SurveyCategory-' + category.Name + " div:last table tbody").html('<tr><td colspan="4">目前無資料</td></tr>');
+        				$('#SurveyCategory-' + category.Name + "-" + category.SchoolYear + "-" + category.Semester + " div:last table tbody").html('<tr><td colspan="4">目前無資料</td></tr>');
         			}
         		});
         	} else {
-        		$('#SurveyCategory-' + category.Name + " div:last table tbody").html('<tr><td colspan="4">目前無資料</td></tr>');
+        		$('#SurveyCategory-' + category.Name + "-" + category.SchoolYear + "-" + category.Semester + " div:last table tbody").html('<tr><td colspan="4">目前無資料</td></tr>');
         	}
         },
-        load_form: function (index, category) {
+        load_form: function (index, category, survey_school_year, survey_semester) {
             $('#tab_form').find('[data-type=form], [data-type=preview]').hide()
             var course_id;
-            _curr_survey = _survey_category[category][index];
+            _curr_survey = _survey_category[category + "-" + survey_school_year + "-" + survey_semester][index];
             if (_curr_survey) {
                 _curr_survey.idx = index;
                 course_id = _curr_survey.CourseID;
@@ -977,7 +1055,7 @@ var SurveyManger = function() {
                             log_add_content.push(
                                 '學生「' + (_student_name || '') + '」' +
                                 status_name +
-                                '「' + _school_year + '學年度' + (_semester === '0' ? '夏季學期' : '第' + _semester + '學期') + '」' +
+                                '「' + _curr_survey.SchoolYear + '學年度' + (_curr_survey.Semester === '0' ? '夏季學期' : '第' + _curr_survey.Semester + '學期') + '」' +
                                 ' 課程「' + (_curr_survey.CourseName || '') + '」' +
                                 ' 老師「' + (_curr_survey.TeacherName || '') + '」' +
                                 '的教學評鑑'
