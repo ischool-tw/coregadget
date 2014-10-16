@@ -124,21 +124,36 @@ _gg.SetStudentCreditData = function () {
                             // TODO: 採計方式以學生個人修習為主
                             var tmp_use_data = tmp_semsSubjScore;
                             // TODO: 學分數轉數字
-                            var tmp_credit = parseInt(tmp_use_data.Credit, 10) || 0;
+                            var tmp_credit = parseFloat(tmp_use_data.Credit, 10) || 0;
 
                             if (tmp_use_data.NotIncludedInCredit === "False") {
                                 // TODO: 單一學期
-                                tmp_SemsCredit.S_Total_Credit += tmp_credit;
+                                //tmp_SemsCredit.S_Total_Credit += tmp_credit;
+                                tmp_SemsCredit.S_Total_Credit = _gg.FloatMath(tmp_SemsCredit.S_Total_Credit, "+", tmp_credit);
 
                                 if (this.是否取得學分 === "是") {
-                                    tmp_SemsCredit.S_True_Credit += tmp_credit;
-                                    tmp_SemsCredit.S_Required += (tmp_use_data.Required === "必修") ? tmp_credit : 0;
-                                    tmp_SemsCredit.S_Choose += (tmp_use_data.Required === "選修") ? tmp_credit : 0;
-                                    tmp_SemsCredit.S_Required_By_Edu += (tmp_use_data.Required === "必修" && tmp_use_data.RequiredBy === "部訂") ? tmp_credit : 0;
-                                    tmp_SemsCredit.S_Required_By_School += (tmp_use_data.Required === "必修" && tmp_use_data.RequiredBy === "校訂") ? tmp_credit : 0;
-                                    tmp_SemsCredit.S_Choose_By_Edu += (tmp_use_data.Required === "選修" && tmp_use_data.RequiredBy === "部訂") ? tmp_credit : 0;
-                                    tmp_SemsCredit.S_Choose_By_School += (tmp_use_data.Required === "選修" && tmp_use_data.RequiredBy === "校訂") ? tmp_credit : 0;
-                                    tmp_SemsCredit.S_Internships += (tmp_use_data.Entry === "實習科目") ? tmp_credit : 0;
+                                    //tmp_SemsCredit.S_True_Credit += tmp_credit;
+                                    tmp_SemsCredit.S_True_Credit = _gg.FloatMath(tmp_SemsCredit.S_True_Credit, "+", tmp_credit);
+
+                                    //tmp_SemsCredit.S_Required += (tmp_use_data.Required === "必修") ? tmp_credit : 0;
+                                    tmp_SemsCredit.S_Required = _gg.FloatMath(tmp_SemsCredit.S_Required, "+", (tmp_use_data.Required === "必修") ? tmp_credit : 0);
+
+                                    //tmp_SemsCredit.S_Choose += (tmp_use_data.Required === "選修") ? tmp_credit : 0;
+                                    tmp_SemsCredit.S_Choose = _gg.FloatMath(tmp_SemsCredit.S_Choose , "+", (tmp_use_data.Required === "選修") ? tmp_credit : 0);
+
+                                    //tmp_SemsCredit.S_Required_By_Edu += (tmp_use_data.Required === "必修" && tmp_use_data.RequiredBy === "部訂") ? tmp_credit : 0;
+                                    tmp_SemsCredit.S_Required_By_Edu = _gg.FloatMath(tmp_SemsCredit.S_Required_By_Edu , "+", (tmp_use_data.Required === "必修" && tmp_use_data.RequiredBy === "部訂") ? tmp_credit : 0);
+
+                                    tmp_SemsCredit.S_Required_By_School = _gg.FloatMath(tmp_SemsCredit.S_Required_By_School , "+", (tmp_use_data.Required === "必修" && tmp_use_data.RequiredBy === "校訂") ? tmp_credit : 0);
+
+                                    //tmp_SemsCredit.S_Choose_By_Edu += (tmp_use_data.Required === "選修" && tmp_use_data.RequiredBy === "部訂") ? tmp_credit : 0;
+                                    tmp_SemsCredit.S_Choose_By_Edu = _gg.FloatMath(tmp_SemsCredit.S_Choose_By_Edu , "+", (tmp_use_data.Required === "選修" && tmp_use_data.RequiredBy === "部訂") ? tmp_credit : 0);
+
+                                    //tmp_SemsCredit.S_Choose_By_School += (tmp_use_data.Required === "選修" && tmp_use_data.RequiredBy === "校訂") ? tmp_credit : 0;
+                                    tmp_SemsCredit.S_Choose_By_School = _gg.FloatMath(tmp_SemsCredit.S_Choose_By_School , "+", (tmp_use_data.Required === "選修" && tmp_use_data.RequiredBy === "校訂") ? tmp_credit : 0);
+
+                                    //tmp_SemsCredit.S_Internships += (tmp_use_data.Entry === "實習科目") ? tmp_credit : 0;
+                                    tmp_SemsCredit.S_Internships = _gg.FloatMath(tmp_SemsCredit.S_Internships , "+", (tmp_use_data.Entry === "實習科目") ? tmp_credit : 0);
                                 }
                             }
                 });
@@ -424,4 +439,40 @@ _gg.ResetData = function () {
 
     // TODO: 本學期科目成績
     $("#SubjectScore tbody").html("");
+};
+
+// 浮點運算
+_gg.FloatMath = function(x, operators, y) {
+  var arg1, arg2, e, m, r1, r2;
+
+  x = Number(x);
+  y = Number(y);
+  arg1 = x + '';
+  arg2 = y + '';
+  try {
+    r1 = arg1.split(".")[1].length;
+} catch (_error) {
+    e = _error;
+    r1 = 0;
+}
+try {
+    r2 = arg2.split(".")[1].length;
+} catch (_error) {
+    e = _error;
+    r2 = 0;
+}
+m = Math.max(r1, r2);
+switch (operators) {
+    case "+":
+    return (_gg.FloatMath(x, '*', Math.pow(10, m)) + _gg.FloatMath(y, '*', Math.pow(10, m))) / Math.pow(10, m);
+    case "-":
+    return (_gg.FloatMath(x, '*', Math.pow(10, m)) - _gg.FloatMath(y, '*', Math.pow(10, m))) / Math.pow(10, m);
+    case "*":
+    m = r1 + r2;
+    return (Number(arg1.replace(".", "")) * Number(arg2.replace(".", ""))) / Math.pow(10, m);
+    case "/":
+    return _gg.FloatMath(x, '*', Math.pow(10, m)) / _gg.FloatMath(y, '*', Math.pow(10, m));
+    default:
+    return '';
+}
 };
