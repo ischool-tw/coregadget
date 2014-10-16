@@ -882,7 +882,7 @@ angular.module('allsearch', [])
 
             angular.forEach($scope.currentAttendance, function(value) {
 
-                var arr = value.Detail.Attendance.Period;
+                var arr = [].concat(value.Detail.Attendance.Period);
                 var date = value.OccurDate;
 
                 var detail = {};
