@@ -289,6 +289,7 @@
         thead_html = "";
         tbody1 = [];
         tbody_html = "";
+
         if (exam_data) {
           $(exam_data).each(function(index, course) {
             var pre_score;
@@ -322,8 +323,9 @@
                     avg_score = "";
                     td_score = "缺";
                   } else {
-                    avg_score = parseInt(ext_score, 10);
-                    td_score = ext_score ? Number(avg_score).toFixed(_places) : "";
+                    avg_score = parseFloat(ext_score, 10);
+                    //td_score = ext_score ?  Number(avg_score).toFixed(_places) : "";
+                    td_score = ext_score? FloatMath(Number(avg_score), _math_type, _places): "";
                   }
                   if (avg_score && avg_score < 60) {
                     tbody1.push("<td class=\"my-fail\" my-data=\"" + exam.ExamID + "\">" + td_score + "</td>");
@@ -539,19 +541,20 @@
       } catch (_error) {}
       return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
     };
-    FloatMath = function(arg1, type, places) {
-      places = places || 0;
-      switch (type) {
-        case "ceil":
-          return (Math.ceil(arg1 * Math.pow(10, places))) / Math.pow(10, places);
-        case "floor":
-          return (Math.floor(arg1 * Math.pow(10, places))) / Math.pow(10, places);
-        case "round":
-          return (Math.round(arg1 * Math.pow(10, places))) / Math.pow(10, places);
-        default:
-          return arg1;
-      }
-    };
+	var FloatMath = function(arg1, type, places) {
+      		places = places || 0;
+      		switch (type) {
+	        case "ceil":
+          		return (Math.ceil(arg1 * Math.pow(10, places))) / Math.pow(10, places);
+	        case "floor":
+          		return (Math.floor(arg1 * Math.pow(10, places))) / Math.pow(10, places);
+        	case "round":
+          		return (Math.round(arg1 * Math.pow(10, places))) / Math.pow(10, places);
+        	default:
+          	return arg1;
+      		}
+    	};
+
     Comparer = function(s1, s2) {
       var ComparerWithKeys;
       ComparerWithKeys = null;
