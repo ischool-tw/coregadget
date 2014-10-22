@@ -175,7 +175,8 @@
           }
         }
       };
-      if (_exam_score[schoolYear + semester]) {
+      //if (_exam_score[schoolYear + semester]) {
+     if (false) { //不用快取，因為會讀取到同一個小孩的。
         return showScore(_exam_score[schoolYear + semester], isCurrSemester);
       } else {
         request = {
