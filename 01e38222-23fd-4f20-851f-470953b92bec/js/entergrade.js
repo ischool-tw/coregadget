@@ -216,6 +216,7 @@ angular.module('entergrade', [])
                         $scope.$apply(function () {
                             if (response !== null && response.Course && response.Course.Student) {
                                 $scope.studentList = [].concat(response.Course.Student);
+                                $scope.studentList.sort($scope.studentSort);
                                 angular.forEach($scope.studentList, function (item, index) {
                                     item.index = index;
                                     item.Final = item.FinalGrade;
@@ -388,6 +389,27 @@ angular.module('entergrade', [])
                 }
             });
         }
+
+        $scope.padLeft = function(str, length) {
+            if (str.length >= length) return str
+            else return $scope.padLeft("0" + str, length);
+        };
+
+        $scope.studentSort = function(x, y) {
+            var xx = $scope.padLeft(x.ClassName, 20);
+            xx += $scope.padLeft(x.SeatNo, 3);
+
+            var yy = $scope.padLeft(y.ClassName, 20);
+            yy += $scope.padLeft(y.SeatNo, 3);
+
+            if (xx == yy)
+                return 0;
+
+            if (xx < yy)
+                return -1;
+            else
+                return 1;
+        };
         $scope.init();
     }
 ]).directive('selectOnClick', function () {
