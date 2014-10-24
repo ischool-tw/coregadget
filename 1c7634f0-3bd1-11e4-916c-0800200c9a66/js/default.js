@@ -56,7 +56,7 @@ var app = angular
             "STARTDATE":"Start Date",
             "ENDDATE":"End Date",
             "SEARCH":"Search",
-            "PROCESSING":"Processing",
+            "PROCESSING":"Request",
             "TYPE":"Type",
             "ALL":"All",
             "REASON":"Reason",
@@ -73,6 +73,7 @@ var app = angular
             "pending":"Pending",
             "rejected":"Rejected",
             "completed":"Completed",
+            "LEAVERULE":"Procedure to report a leave",
           });
         $translateProvider.translations('zh_TW', {
             "TITLE"     : "線上請假",
@@ -99,6 +100,7 @@ var app = angular
             "pending":"待簽核",
             "rejected":"退回",
             "completed":"完成",
+            "LEAVERULE":"請假規則",
           });
         $translateProvider.preferredLanguage('zh_TW');
     }])
@@ -142,7 +144,7 @@ var app = angular
 
         $translate.use(gadget.params.i18n);
     })
-    .controller("Ctrl0", function($scope) {
+    .controller("Ctrl0", function($scope,$modal) {
         $scope.usingPage = '1' ;
         $scope.init = function() {
             $scope.getConf();
@@ -218,6 +220,21 @@ var app = angular
             $scope.current_child = child;
             $scope.$broadcast('childChanged');
         };
+        $scope.showLeaveRule = function() {
+            var modalInstance = $modal.open({
+                templateUrl: 'myModalLeaveRule.html',
+                controller: ModalLeaveRuleCtrl,
+                resolve: {
+                    conf: function() {
+                        return $scope.conf;
+                    },
+                }
+            });
+            modalInstance.result.then(function() {
+            }, function() {
+                //$log.info('Modal dismissed at: ' + new Date());
+            });
+        }
     })
     .controller("Ctrl1", function($scope, $modal,$q) {
         $scope.$on('childChanged', function(event) {
@@ -378,6 +395,13 @@ var set_error_message = function(select_str, serviceName, error) {
         });
     }
 };
+var ModalLeaveRuleCtrl = function($scope,conf)
+{
+    $scope.conf = conf;
+    $scope.cancel = function() {
+        $scope.$dismiss('cancel');
+    };
+}
 var ModalInstanceCtrl = function($scope, date,conf,absencedata) {
     $scope.form1 = {period:{}};
     if ( isValidDate2(date) )
