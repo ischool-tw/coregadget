@@ -23,16 +23,16 @@ angular.module('enterconduct', [])
                                     Period: '1',
                                     Code: [{
                                         Key: 'M',
-                                        Value: 'Meets expectations (Hotkey=3)'
+                                        Value: '3 = Meets expectations'
                                     }, {
                                         Key: 'S',
-                                        Value: 'Meets needs with Support (Hotkey=2)'
+                                        Value: '2 = Meets needs with Support'
                                     }, {
                                         Key: 'N',
-                                        Value: 'Not yet within expectations (Hotkey=1)'
+                                        Value: '1 = Not yet within expectations'
                                     }, {
                                         Key: 'N/A',
-                                        Value: 'not available (Hotkey=0)'
+                                        Value: '0 = Not available'
                                     }]
                                 }
                             }
@@ -315,6 +315,7 @@ angular.module('enterconduct', [])
                                 //console.log($scope.studentList);
 
                                 if ($scope.studentList.length) {
+                                    $scope.studentList.sort($scope.studentSort);
                                     $scope.selectStudent($scope.studentList[0]);
                                 }
                             }
@@ -628,6 +629,27 @@ angular.module('enterconduct', [])
                     }
                 }
             });
+        };
+
+        $scope.padLeft = function(str, length) {
+            if (str.length >= length) return str
+            else return $scope.padLeft("0" + str, length);
+        };
+
+        $scope.studentSort = function(x, y) {
+            var xx = $scope.padLeft(x.ClassName, 20);
+            xx += $scope.padLeft(x.SeatNo, 3);
+
+            var yy = $scope.padLeft(y.ClassName, 20);
+            yy += $scope.padLeft(y.SeatNo, 3);
+
+            if (xx == yy)
+                return 0;
+
+            if (xx < yy)
+                return -1;
+            else
+                return 1;
         };
 
         $scope.getNow();
