@@ -311,12 +311,12 @@ var ModalInstanceCtrl = function($scope, column, tmplist) {
     $scope.column = column;
     $scope.column_text = {
         test_date: "測驗日期 EX:2014/08/07",
-        height: "身高",
-        weight: "體重",
-        sit_and_reach: "坐姿體前彎",
-        standing_long_jump: "立定跳遠",
-        sit_up: "仰臥起坐",
-        cardiorespiratory: "心肺適能"
+        height: "身高(cm)",
+        weight: "體重(kg)",
+        sit_and_reach: "坐姿體前彎(cm)",
+        standing_long_jump: "立定跳遠(cm)",
+        sit_up: "仰臥起坐(次)",
+        cardiorespiratory: "心肺適能(秒)"
     }[column];
     $scope.tmplist = tmplist;
     $scope.ok = function() {
