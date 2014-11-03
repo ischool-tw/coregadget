@@ -396,7 +396,6 @@ angular.module('entergrade', [])
         };
 
         $scope.studentSort = function(x, y) {
-            //
             var xx = $scope.padLeft(x.ClassName, 20);
             xx += $scope.padLeft(x.SeatNo, 3);
             xx += $scope.padLeft(x.StudentNumber,20);
