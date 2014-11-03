@@ -398,9 +398,11 @@ angular.module('entergrade', [])
         $scope.studentSort = function(x, y) {
             var xx = $scope.padLeft(x.ClassName, 20);
             xx += $scope.padLeft(x.SeatNo, 3);
+            xx += $scope.padLeft(x.StudentNumber,20);
 
             var yy = $scope.padLeft(y.ClassName, 20);
             yy += $scope.padLeft(y.SeatNo, 3);
+            yy += $scope.padLeft(y.StudentNumber,20);
 
             if (xx == yy)
                 return 0;

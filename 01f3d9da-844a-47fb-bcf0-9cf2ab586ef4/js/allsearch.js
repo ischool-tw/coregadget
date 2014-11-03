@@ -82,10 +82,11 @@ angular.module('allsearch', [])
                                 $scope.IsHomeroom = response.IsHomeroom === 'true' ? true : false;
                                 $scope.IsCareersCounselor = response.IsCareersCounselor === 'true' ? true : false;
 
-                                if(!$scope.IsHomeroom && !$scope.IsCareersCounselor)
+                                if (!$scope.IsHomeroom && !$scope.IsCareersCounselor)
                                     alert("This gadget is for homeroom teacher and counselor, your account is not allowed to get student info.");
 
                                 $scope.classlist = [].concat(response.Class);
+                                $scope.classlist.sort($scope.classSort);
 
                                 if ($scope.classlist.length > 0)
                                     $scope.selectClass($scope.classlist[0]);
@@ -739,6 +740,28 @@ angular.module('allsearch', [])
                 return 1;
         };
 
+        $scope.classSort = function(x, y) {
+            var xx = $scope.padLeft(x.GradeYear, 3);
+            var yy = $scope.padLeft(y.GradeYear, 3);
+
+            if (xx == yy) {
+                var xx = $scope.padLeft(x.ClassName, 10);
+                var yy = $scope.padLeft(y.ClassName, 10);
+
+                if (xx == yy)
+                    return 0;
+
+                else if (xx < yy)
+                    return -1;
+                else
+                    return 1;
+
+            } else if (xx < yy)
+                return 1;
+            else
+                return -1;
+        };
+
         $scope.padLeft = function(str, length) {
             if (str.length >= length) return str
             else return $scope.padLeft("0" + str, length);
@@ -824,7 +847,7 @@ angular.module('allsearch', [])
                         if (!$scope.abCount[obj.AbsenceType])
                             $scope.abCount[obj.AbsenceType] = 0;
 
-                        $scope.abCount[obj.AbsenceType]++;
+                        $scope.abCount[obj.AbsenceType] ++;
                     });
                 }
             });
