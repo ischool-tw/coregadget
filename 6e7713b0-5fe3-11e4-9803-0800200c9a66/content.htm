@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+    <script>
+    init({
+        application: "dev.sh_d",
+        paramValues: {}
+    });
+    </script>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/base.css" rel="stylesheet" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/default.js"></script>
+</head>
+
+<body>
+    <div ng-app="entergrade" id="gadget" class="my-page" ng-controller="MainCtrl" ng-init="getCourses()">
+        <h1>協同教學成績輸入</h1>
+        <div class="alert alert-info">
+            <span ng-repeat="item in examList">
+                <p style="margin:0;">123{{item.Name}}: {{item.Begin}} ~ {{item.End}} {{item.Message}}</p>
+            </span>
+        </div>
+        <div class="btn-group">
+            <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{currentCourse.course_name}} <span class="caret"></span> </a>
+            <ul class="dropdown-menu">
+                <li ng-repeat="item in courses" ng-class="{active:item.selected}">
+                    <a href="javascript:;" ng-click="setCurrentCourse(item)">{{item.course_name}}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row" style="margin-top:10px;">
+            <div class="col-sm-9 hidden-xs">
+                <style type="text/css">
+                .cursorpointer {
+                    cursor: pointer;
+                }
+                </style>
+                <table class="table table-bordered table-striped table-hover text-center">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" class="text-center">班級</th>
+                            <th rowspan="2" class="text-center">座號</th>
+                            <th rowspan="2" class="text-center">學號</th>
+                            <th rowspan="2" class="text-center">姓名</th>
+                            <th colspan="2" ng-repeat="exam in currentCourse.exams" class="text-center">{{exam.exam_name}}</th>
+                        </tr>
+                        <tr>
+                            <th ng-repeat-start="exam in currentCourse.exams" class="text-center">{{exam.score1_teacher}}</th>
+                            <th ng-repeat-end class="text-center">{{exam.score2_teacher}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in currentCourse.students" ng-class="{'warning':item.selected}">
+                            <td>{{item.class_name}}</td>
+                            <td>{{item.seat_no}}</td>
+                            <td>{{item.student_number}}</td>
+                            <td class="text-left">
+                                {{item.name}}
+                            </td>
+                            <td ng-repeat="exam in item.exams" ng-class="{'cursorpointer':currentCourse.sequence == exam.seq}" ng-click="setCurrentStudent(item,$index)">
+                                <span ng-class="{'text-danger':exam.score < 60}">{{exam.score}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-3">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th colspan="2">學生資訊</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>姓名</td>
+                            <td>
+                                {{currentStudent.name}}
+                            </td>
+                        </tr>
+                    </tbody>
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <div class="btn-group btn-block">
+                                    <a href="" class="btn btn-link btn-block dropdown-toggle" data-toggle="dropdown" style="padding:0; color:#333; text-align:left;">{{currentStudentExam.name}} <span class="caret"></span> </a>
+                                    <ul class="dropdown-menu" style="width:100%;">
+                                        <li ng-repeat="exam in currentStudent.exams | filterSeq : currentCourse.sequence">
+                                            <!--|filter:{score:'!*'}|filter:{score:'! '}-->
+                                            <a href="javascript:;" ng-click="setCurrentStudentExam(exam)">{{exam.name}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="2">
+                                <input ng-model="currentStudentExam.tmp_score" ng-keydown="enterGrade($event)" id="grade-textbox" type="text" class="form-control" select-on-click />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

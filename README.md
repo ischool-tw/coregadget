@@ -107,6 +107,9 @@ Core Gadget
 * 08c978fe-8c20-4eaf-b690-ebb36864a69d （雙語部）Conduct輸入(老師)
 * 01f3d9da-844a-47fb-bcf0-9cf2ab586ef4 （雙語部）學生資料查詢
 
+協同教學
+
+* 6e7713b0-5fe3-11e4-9803-0800200c9a66 協同教學成績輸入
 
 Campus Lite
 -----------
