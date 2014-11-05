@@ -147,7 +147,16 @@ angular.module('entergrade', [])
                     } else {
                         // console.log(response);
                         if (response !== null && response.Result && response.Result.Course) {
-                            respCourse = [].concat(response.Result.Course);
+                            
+                            var tmp = [].concat(response.Result.Course);
+                            respCourse = [];
+
+                            angular.forEach(tmp,function (value,index){
+                                var grade = parseInt(value.GradeYear,10)
+                                if (grade && grade > 2){
+                                    respCourse.push(value);
+                                }
+                            });
                         }
                         next();
                     }
