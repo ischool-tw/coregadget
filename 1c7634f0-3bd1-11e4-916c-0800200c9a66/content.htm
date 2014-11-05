@@ -48,6 +48,9 @@
             <div class="tab-content">
                 <!-- 輸入 -->
                 <div class="tab-pane" ng-class="{true:'active'}[usingPage==1]" ng-controller="Ctrl1" data-ng-init="init()">
+                    <div class="pull-right" style="padding-bottom: 3px;">
+                        <a class="btn btn-warning" ng-click="showEditForm('')"><i class="fa fa-trophy"></i> {{"BIGPROCESSING"|translate}}</a>
+                    </div>
                     <div>
                         <table class="table my-table2">
                 <tbody><tr>
@@ -83,6 +86,7 @@
                 </tr>
             </tbody></table>
                     </div>
+                    
                     <table class="table table-striped table-bordered table-hover" style="margin-top:10px;">
                         <thead>
                             <tr>
@@ -102,7 +106,7 @@
                         </tbody>
                     </table>
                     <div class="pull-right">
-                        <a class="btn btn-default" ng-click="showEditForm('')"><i class="fa fa-trophy"></i> {{"PROCESSING"|translate}}</a>
+                        <a class="btn btn-warning" ng-click="showEditForm('')"><i class="fa fa-trophy"></i> {{"BIGPROCESSING"|translate}}</a>
                     </div>
                 </div>
                 <!-- 歷程 -->
