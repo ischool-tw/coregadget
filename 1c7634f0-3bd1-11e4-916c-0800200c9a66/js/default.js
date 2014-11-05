@@ -56,7 +56,7 @@ var app = angular
             "STARTDATE":"Start Date",
             "ENDDATE":"End Date",
             "SEARCH":"Search",
-            "PROCESSING":"Mark-up",
+            "PROCESSING":"Make-up",
             "BIGPROCESSING":"Ask for Leave",
             "TYPE":"Type",
             "ALL":"All",
