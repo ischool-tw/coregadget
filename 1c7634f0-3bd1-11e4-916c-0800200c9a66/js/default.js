@@ -411,6 +411,7 @@ var ModalInstanceCtrl = function($scope, date,conf,absencedata) {
     $scope.conf = conf ;
     $scope.absencedata = absencedata ;
     for (var i = 0; i < conf.periods.length; i++) {
+        //
         $scope.form1.period[conf.periods[i].name] = (absencedata['p'+conf.periods[i].name+'--'+date.replace(/\//g, '-')])?true:false;
     };
     $scope.periodBool = false;
