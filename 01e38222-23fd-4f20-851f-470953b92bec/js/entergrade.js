@@ -430,8 +430,8 @@ angular.module('entergrade', [])
             printPage.document.write("<PRE>");
             printPage.document.write("<a>" + $scope.current.Course.CourseName + "</a>");
             printPage.document.write(value);
-            printPage.document.write("</br>");
-            printPage.document.write("</br>");
+            printPage.document.write("<br>");
+            printPage.document.write("<br>");
             printPage.document.write("Signature:______________________");
             printPage.document.write("</PRE>");
             printPage.document.close("</BODY></HTML>");
