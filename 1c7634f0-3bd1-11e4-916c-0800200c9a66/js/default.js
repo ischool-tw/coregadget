@@ -50,13 +50,14 @@ var app = angular
     .config(['$translateProvider',function($translateProvider) {
         $translateProvider.translations('en_US', {
             "TITLE"     : "Ask for Leave",
-            "INPUT"    : "Input",
-            "HISTORY" : "History",
+            "INPUT"    : "Official Record",
+            "HISTORY" : "My History",
             "DATE" : "Date",
             "STARTDATE":"Start Date",
             "ENDDATE":"End Date",
             "SEARCH":"Search",
-            "PROCESSING":"Request",
+            "PROCESSING":"Make-up",
+            "BIGPROCESSING":"Ask for Leave",
             "TYPE":"Type",
             "ALL":"All",
             "REASON":"Reason",
@@ -84,6 +85,7 @@ var app = angular
             "ENDDATE":"結束日期",
             "SEARCH":"查詢",
             "PROCESSING":"請假",
+            "BIGPROCESSING":"請假",
             "TYPE":"假別",
             "ALL":"全選",
             "REASON":"事由",
@@ -409,7 +411,8 @@ var ModalInstanceCtrl = function($scope, date,conf,absencedata) {
     $scope.conf = conf ;
     $scope.absencedata = absencedata ;
     for (var i = 0; i < conf.periods.length; i++) {
-        $scope.form1.period[conf.periods[i].name] = (absencedata[conf.periods[i].name+'--'+date.replace(/\//g, '-')])?true:false;
+        //
+        $scope.form1.period[conf.periods[i].name] = (absencedata['p'+conf.periods[i].name+'--'+date.replace(/\//g, '-')])?true:false;
     };
     $scope.periodBool = false;
     $scope.opened = false ;
