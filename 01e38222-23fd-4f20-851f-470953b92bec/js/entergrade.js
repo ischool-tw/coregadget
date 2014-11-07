@@ -421,6 +421,22 @@ angular.module('entergrade', [])
             else
                 return 1;
         };
+
+        $scope.PrintPage = function(){
+            var value = $('#printlist').html();
+            var printPage = window.open("", "printPage", "");
+            printPage.document.open();
+            printPage.document.write("<HTML><head></head><BODY onload='window.print();window.close()'>");
+            printPage.document.write("<PRE>");
+            printPage.document.write("<a>" + $scope.current.Course.CourseName + "</a>");
+            printPage.document.write(value);
+            printPage.document.write("</br>");
+            printPage.document.write("</br>");
+            printPage.document.write("Signature:______________________");
+            printPage.document.write("</PRE>");
+            printPage.document.close("</BODY></HTML>");
+        };
+
         $scope.init();
     }
 ]).directive('selectOnClick', function () {

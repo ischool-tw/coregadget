@@ -1,18 +1,19 @@
 ﻿<!DOCTYPE html>
 <html ng-app="entergrade">
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
-     <script>
-        init({
-            application: "test.b.nehs.hc.edu.tw",
-            paramValues: {},
-            oAuth: {
-                clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
-                clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311'
-            }
-        });
+    <script>
+    init({
+        application: "test.b.nehs.hc.edu.tw",
+        paramValues: {},
+        oAuth: {
+            clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+            clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311'
+        }
+    });
     </script>
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/base.css" rel="stylesheet" />
@@ -21,6 +22,7 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/entergrade.js"></script>
 </head>
+
 <body ng-controller="MainCtrl">
     <div id="gadget" class="my-page" ng-if="config && courseList">
         <h1>{{current.SchoolYear}} {{current.Semester == '1' ? '1st' : (current.Semester == '2' ? '2nd' :'')}} Semester Gradebook</h1>
@@ -29,6 +31,7 @@
                 <p ng-if="item.Opening" style="margin:0;">{{item.Name}}: {{item.Begin}} ~ {{item.End}} {{item.Message}}</p>
             </span>
         </div>
+
         <div class="btn-group">
             <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{current.Course.CourseName}} <span class="caret"></span> </a>
             <ul class="dropdown-menu">
@@ -37,8 +40,13 @@
                 </li>
             </ul>
         </div>
+        <div class="btn-group">
+            <a class="btn btn-default" type="button" ng-click="PrintPage()">
+                <i class="fa fa-search">Print</i>
+            </a>
+        </div>
         <div ng-if="studentList" class="row" style="margin-top:10px;">
-            <div class="col-sm-9 hidden-xs">
+            <div id="printlist" class="col-sm-9 hidden-xs">
                 <table class="table table-bordered table-striped table-hover text-center">
                     <thead>
                         <tr>
@@ -49,9 +57,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="item in studentList"
-                            _ng-class="{'success':(current.SelectMode=='ID'&&item.StudentID==current.SelectStudentID)||(current.SelectMode=='No.'&&item.SeatNo==current.SelectSeatNo),'warning':item.selected}"
-                            ng-class="{'warning':item.selected}">
+                        <tr ng-repeat="item in studentList" _ng-class="{'success':(current.SelectMode=='ID'&&item.StudentID==current.SelectStudentID)||(current.SelectMode=='No.'&&item.SeatNo==current.SelectSeatNo),'warning':item.selected}" ng-class="{'warning':item.selected}">
                             <td>{{item.No}}</td>
                             <td>{{item.ClassName}}</td>
                             <td class="text-left">
@@ -151,16 +157,8 @@
                     <tbody>
                         <tr>
                             <td colspan="2">
-                                <div ng-if="!current.Exam.Opening && current.Student"
-                                     ng-class="{'text-danger':current.Student[current.Exam.Name] < 60}"
-                                     class="text-center">{{current.Student[current.Exam.Name]||'&nbsp;'}}</div>
-                                <input ng-if="current.Exam.Opening && current.Student"
-                                       ng-model="current.Score"
-                                       ng-keydown="enterGrade($event)"
-                                       id="grade-textbox"
-                                       type="text"
-                                       class="form-control"
-                                       select-on-click />
+                                <div ng-if="!current.Exam.Opening && current.Student" ng-class="{'text-danger':current.Student[current.Exam.Name] < 60}" class="text-center">{{current.Student[current.Exam.Name]||'&nbsp;'}}</div>
+                                <input ng-if="current.Exam.Opening && current.Student" ng-model="current.Score" ng-keydown="enterGrade($event)" id="grade-textbox" type="text" class="form-control" select-on-click />
                             </td>
                         </tr>
                     </tbody>
@@ -170,4 +168,5 @@
     </div>
     <div ng-if="!(config && courseList)" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
 </body>
+
 </html>
