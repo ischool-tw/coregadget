@@ -15,6 +15,7 @@
     <link href="css/base.css" rel="stylesheet" />
     <script src="js/jquery.min.js"></script>
     <script src="js/angular.min.js"></script>
+    <script src="js/moment.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/default.js"></script>
 </head>
@@ -23,8 +24,8 @@
     <div ng-app="entergrade" id="gadget" class="my-page" ng-controller="MainCtrl" ng-init="getCourses()">
         <h1>協同教學成績輸入</h1>
         <div class="alert alert-info">
-            <span ng-repeat="item in examList">
-                <p style="margin:0;">123{{item.Name}}: {{item.Begin}} ~ {{item.End}} {{item.Message}}</p>
+            <span ng-repeat="item in currentCourse.exams">
+                <p style="margin:0;">{{item.exam_name}}: {{item.start_time}} ~ {{item.end_time}}</p>
             </span>
         </div>
         <div class="btn-group">
@@ -41,8 +42,14 @@
                 .cursorpointer {
                     cursor: pointer;
                 }
+                .currentcell {
+                    background-color: light-blue;
+                }
+                .notinput {
+                    background-color: rgb(238, 238, 238);
+                }
                 </style>
-                <table class="table table-bordered table-striped table-hover text-center">
+                <table class="table table-bordered table-hover text-center">
                     <thead>
                         <tr>
                             <th rowspan="2" class="text-center">班級</th>
@@ -64,7 +71,7 @@
                             <td class="text-left">
                                 {{item.name}}
                             </td>
-                            <td ng-repeat="exam in item.exams" ng-class="{'cursorpointer':currentCourse.sequence == exam.seq}" ng-click="setCurrentStudent(item,$index)">
+                            <td ng-repeat="exam in item.exams" ng-class="{'cursorpointer':(currentCourse.sequence == exam.seq && !exam.disabled),'info': (exam == currentStudentExam && !exam.disabled), 'notinput': exam.disabled}" ng-click="setCurrentStudent(item,$index)">
                                 <span ng-class="{'text-danger':exam.score < 60}">{{exam.score}}</span>
                             </td>
                         </tr>

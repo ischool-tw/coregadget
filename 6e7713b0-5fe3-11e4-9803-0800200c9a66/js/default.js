@@ -1,4 +1,9 @@
-﻿$(document).ready(function() {
+﻿/*
+黃文奇 2014/10/31
+黃耀明 2014/11/07
+*/
+
+$(document).ready(function() {
     $(window).resize(function() {
         $("#container-nav, #container-main").height($(window).height() - 50);
         console.log($(window).height() - 50);
@@ -19,7 +24,7 @@ angular.module('entergrade', [])
     })
     .controller('MainCtrl', ['$scope', '$q',
         function($scope, $q) {
-            $scope.connection = gadget.getContract("ischool.CooperationExam.Input.teacher");
+            $scope.connection = gadget.getContract("OneAdmin.CooperationExam.Teacher");
             $scope.courses = [];
             $scope.currentCourse = {};
             $scope.currentStudent = {};
@@ -30,7 +35,11 @@ angular.module('entergrade', [])
                 $scope.connection.send({
                     service: "GetCourseInfo",
                     body: {
-                        course_id: course.id
+                        Request: {
+                            //SchoolYear: "103",
+                            //Semester: "1",
+                            CourseID: course.id
+                        }
                     },
                     result: function(response, error, http) {
                         if (error !== null) {
@@ -47,6 +56,12 @@ angular.module('entergrade', [])
                                 if (!score) {
                                     continue;
                                 }
+
+                                if ($scope.currentCourse.sequence == '1')
+                                    score.score2 = (score.score2 ? '*' : '');
+                                else
+                                    score.score1 = (score.score1 ? '*' : '');
+
                                 score_map[score.ref_student_id + '#' + score.ref_exam_id] = score;
                             };
 
@@ -62,6 +77,15 @@ angular.module('entergrade', [])
                                     if (!exam) {
                                         continue;
                                     }
+
+                                    //exam.start_time
+                                    //exam.end_time
+                                    //moment() > moment('2014/11/7 17:27:03','YYYY/MM/DD HH:mm:SS')
+
+                                    var startTime = moment(exam.start_time, 'YYYY/MM/DD HH:mm:SS');
+                                    var endTime = moment(exam.end_time, 'YYYY/MM/DD HH:mm:SS');
+                                    exam.disabled = (moment() > endTime || moment() < startTime);
+
                                     var key = student.id + "#" + exam.id;
                                     exams.push({
                                         idx: 0 + j * 2,
@@ -69,6 +93,7 @@ angular.module('entergrade', [])
                                         name: exam.exam_name,
                                         seq: 1,
                                         score: (score_map[key] ? score_map[key].score1 : null),
+                                        disabled: exam.disabled
                                     });
                                     exams.push({
                                         idx: 1 + j * 2,
@@ -76,6 +101,7 @@ angular.module('entergrade', [])
                                         name: exam.exam_name,
                                         seq: 2,
                                         score: (score_map[key] ? score_map[key].score2 : null),
+                                        disabled: exam.disabled
                                     });
                                 };
                                 student.exams = exams;
@@ -119,6 +145,10 @@ angular.module('entergrade', [])
                 if (student.exams[examIndex].seq != $scope.currentCourse.sequence) {
                     return;
                 }
+
+                if (student.exams[examIndex].disabled)
+                    return;
+
                 $scope.currentStudent = student;
                 student.exams[examIndex].tmp_score = student.exams[examIndex].score;
                 $scope.currentStudentExam = student.exams[examIndex];
@@ -132,46 +162,72 @@ angular.module('entergrade', [])
                 if (!$scope.currentStudent) return;
                 if (!$scope.currentStudentExam) return;
                 var currentStudentExam = $scope.currentStudentExam;
-                var temp = Math.ceil(currentStudentExam.tmp_score);
-                if (temp >= 0 && temp <= 100) {
-                    $scope.saveGrade( /*student.id, course.id, exam.id, seq, temp*/ )
+
+                var temp = $scope.currentStudentExam.tmp_score;
+                if (temp) {
+                    temp = $scope.FloatMath(temp, 'round', 0);
+                    $scope.currentStudentExam.tmp_score = temp;
+                }
+
+                if (temp >= 0 && temp <= 100 || temp == '') {
+                    $scope.saveGrade({
+                            studentID: $scope.currentStudent.id,
+                            courseID: $scope.currentCourse.id,
+                            examID: $scope.currentStudentExam.id,
+                            score: temp
+                        })
                         .then(function() {
                             //alert('Success');
-                            currentStudentExam.score = currentStudentExam.tmp_score ;
+                            currentStudentExam.score = currentStudentExam.tmp_score;
                             if ($scope.currentStudent.idx + 1 < $scope.currentCourse.students.length)
-                                $scope.setCurrentStudent($scope.currentCourse.students[$scope.currentStudent.idx + 1],currentStudentExam.idx);
-                            $('#seatno-textbox').focus();
-                        }, function() {
-                            alert('Failed');
+                                $scope.setCurrentStudent($scope.currentCourse.students[$scope.currentStudent.idx + 1], currentStudentExam.idx);
+                            //$('#grade-textbox').focus();
+                            //$('#grade-textbox').select();
+                        }, function(info) {
+                            if (info && info.dsaError)
+                                alert(info.dsaError.message);
+                            else
+                                alert('儲存發生不明原因錯誤。');
                         });
 
                 }
             }
-            $scope.saveGrade = function() {
+            $scope.saveGrade = function(req) {
                 var deferred = $q.defer();
-                setTimeout(function() {
-                            deferred.resolve('Hello, ' + name + '!');
-                            //deferred.reject('Greeting ' + name + ' is not allowed.');
-                    }, 500);
-                return deferred.promise;
-                
-                    // $scope.connection.send({
-                    //     service: "SetSeqScore",
-                    //     body: {
-                    //         CourseID: $scope.currentCourse.CourseID,
-                    //         Period: $scope.current.Period,
-                    //         StudentID: $scope.currentStudent.StudentID,
-                    //         Score: $scope.currentStudent.tempGrade
-                    //     },
-                    //     result: function(response, error, http) {
-                    //         if (error !== null) {
-                    //             reject('Greeting is not allowed.');
-                    //         } else {
-                    //             resolve('Hello,!');
 
-                    //         }
-                    //     },
-                    // });
+                $scope.connection.send({
+                    service: "SetSeqScore",
+                    body: {
+                        Request: {
+                            CourseID: req.courseID,
+                            ExamID: req.examID,
+                            StudentID: req.studentID,
+                            Score: req.score
+                        }
+                    },
+                    result: function(response, error, http) {
+                        if (error !== null) {
+                            deferred.reject(error);
+                        } else {
+                            deferred.resolve('Hello, ' + name + '!');
+                        }
+                    },
+                });
+                return deferred.promise;
             }
+
+            $scope.FloatMath = function(arg1, type, places) {
+                places = places || 0;
+                switch (type) {
+                    case "ceil":
+                        return (Math.ceil(arg1 * Math.pow(10, places))) / Math.pow(10, places);
+                    case "floor":
+                        return (Math.floor(arg1 * Math.pow(10, places))) / Math.pow(10, places);
+                    case "round":
+                        return (Math.round(arg1 * Math.pow(10, places))) / Math.pow(10, places);
+                    default:
+                        return arg1;
+                }
+            };
         }
     ]);
