@@ -5,7 +5,9 @@
   <script>
     init({
       application: "dev.sh_d", //"dev.jh_kh", //"http://test.iteacher.tw/cs4/test_gadget",
-      paramValues: {}
+      paramValues: {
+        flex_params: '<Params><DefaultRound>0</DefaultRound><Round Name=\'期末考\'>1</Round><Semester>1</Semester></Params>'
+      }
     });
   </script>
 </head>
@@ -32,7 +34,7 @@ _connection.send({
 				"<SessionID>" + response.SessionID + "</SessionID>" +
 			"</SecurityToken>";
 
-        var url = _swf + "?accessPoint=" + accessPoint + "&securityToken=" + securityToken
+        var url = _swf + "?accessPoint=" + accessPoint + "&securityToken=" + securityToken + "&params=" + gadget.params.flex_params
 
         _flashObj = flashembed("widget", url);
     }
