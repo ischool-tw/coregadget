@@ -15,7 +15,7 @@ angular.module('learning', [])
                     } else {
                         //console.log(response);
                         $scope.$apply(function() {
-                            $scope.studentsinfo = response.Result.Student;
+                        $scope.studentsinfo = [].concat(response.Result.Student);
 
                             if ($scope.studentsinfo.length > 0) { //長度要大於０，至少要有一筆記錄
                                 $scope.currentStudent = $scope.studentsinfo[0]; //預設選取第一筆記錄

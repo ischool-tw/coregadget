@@ -61,6 +61,7 @@
                             <th>服務內容</th>
                             <th>時數</th>
                             <th>主辦單位</th>
+                            <th>校內/校外</th>
                             <th>備註</th>
                         </tr>
                     </thead>
@@ -70,13 +71,14 @@
                             <td>{{item.Reason}}</td>
                             <td>{{item.Hours}}</td>
                             <td>{{item.Organizers}}</td>
+                            <td>{{item.InternalOrExternal}}</td>
                             <td>{{item.Remark}}</td>
                         </tr>
                         <!--ng-repeat的item與js的item無關，item改成abc的話，td的item也要改成abc-->
                     </tbody>
                     <tbody ng-if="!records">
                         <tr>
-                            <td colspan="5">目前無資料</td>
+                            <td colspan="6">目前無資料</td>
                         </tr>
                     </tbody>
                 </table>
