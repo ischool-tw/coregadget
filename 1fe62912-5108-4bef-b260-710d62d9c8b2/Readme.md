@@ -15,3 +15,12 @@
     });
 ```
 - Gadget Xml 範例：
+```
+		<Gadget Description="定期評量成績登" deployPath="1fe62912-5108-4bef-b260-710d62d9c8b2">
+			<Params>
+				<Param name="flex_params"><![CDATA[<Params><DefaultRound>0</DefaultRound><Round Name=\'期末考\'>1</Round><Semester>0</Semester></Params>]]></Param>
+			</Params>
+		</Gadget>
+```
+- 說明
+= abc
