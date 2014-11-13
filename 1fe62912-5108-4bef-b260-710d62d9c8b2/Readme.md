@@ -3,7 +3,7 @@
 - JavaScript 範例：
 ```
     init({
-      application: "dev.sh_d", //"dev.jh_kh", //"http://test.iteacher.tw/cs4/test_gadget",
+      application: "dev.sh_d",
       paramValues: {
         flex_params: '<Params><DefaultRound>0</DefaultRound><Round Name=\'期末考\'>1</Round><Semester>0</Semester></Params>'
       }
