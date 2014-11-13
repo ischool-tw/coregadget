@@ -1,6 +1,6 @@
-**** 提供各成績的自動進位設定。
+#### 提供各成績的自動進位設定。
 
-## JavaScript 範例：
+-- JavaScript 範例：
 
     init({
       application: "dev.sh_d", //"dev.jh_kh", //"http://test.iteacher.tw/cs4/test_gadget",
@@ -9,7 +9,7 @@
       }
     });
     
-## Gadget Xml 範例：
+-- Gadget Xml 範例：
 
 #### 提供過慮「協同教學」之課程。
 
