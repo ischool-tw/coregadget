@@ -652,6 +652,64 @@ angular.module('enterconduct', [])
                 return 1;
         };
 
+        $scope.PrintPage = function(){
+
+            var html = "";
+            var M = false;
+            var F = false;
+            var ClassOrCourseName = "";
+
+            if($scope.currentCourse.Type === "homeroom")
+                ClassOrCourseName = "Class : " + $scope.currentCourse.Title;
+            else
+                ClassOrCourseName = "Course : " + $scope.currentCourse.Title;
+
+            // StudentChineseName: "好將將"
+            // StudentEnglishName: "JIANG, YAO-MING"
+            // StudentNickname: "goodGG"
+            // StudentNumber: "814201"
+
+            angular.forEach($scope.studentList,function(value){
+                    $scope.selectStudent(value);
+
+                    var studentName = "ChineseName: " + value.StudentChineseName + "  EnglishName: " + value.StudentEnglishName + "  NickName: " +  value.StudentNickname + "  StudentNo: " + value.StudentNumber;
+
+                    if($scope.currentConduct.canInputMComment){
+                        $scope.currentConduct.canInputMComment = false;
+                        M = true;
+                    }
+
+                    if($scope.currentConduct.canInputFComment){
+                        $scope.currentConduct.canInputFComment = false;
+                        F = true;
+                    }
+
+                    $scope.$apply();
+                    html += "<p>===============================================================================</p>"
+                    html += "<p>" + studentName + "</p>";
+                    html += $('#printlist').html();
+            });
+
+            if(M)
+                $scope.currentConduct.canInputMComment = true;
+            if(F)
+                $scope.currentConduct.canInputFComment = true;
+
+            $scope.$apply();
+
+            var printPage = window.open("", "printPage", "");
+                printPage.document.open();
+                printPage.document.write("<HTML><head></head><BODY onload='window.print();window.close()'>");
+                printPage.document.write("<PRE>");
+                printPage.document.write("<p>" + ClassOrCourseName + "</p>");
+                printPage.document.write(html);
+                printPage.document.write("<br>");
+                printPage.document.write("<br>");
+                printPage.document.write("Signature:______________________");
+                printPage.document.write("</PRE>");
+                printPage.document.close("</BODY></HTML>");
+        };
+
         $scope.getNow();
 
     }
