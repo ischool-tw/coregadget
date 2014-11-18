@@ -121,6 +121,7 @@ var app = angular
         };
         $scope.contract = gadget.getContract("ischool.fitness.input.peteacher");
         $scope.menu = [];
+        $scope.checkListBool = false;
         $scope.init = function() {
             $scope.getMenu();
         }
@@ -160,6 +161,7 @@ var app = angular
                     if (!error) {
                         if (response.data)
                             $scope.list = [].concat(response.data);
+                        listCheck();
                     } else {
                         $scope.icon_css = "icon-warning-sign";
                         set_error_message("#mainMsg", "GetList", error);
@@ -171,6 +173,16 @@ var app = angular
         $scope.refresh = function() {
             $scope.init();
         }
+        function listCheck() {
+            for (var i = 0; i < $scope.list.length; i++) {
+                if ( !$scope.list[i].test_date ) {
+                    $scope.checkListBool = false;
+                    return false;
+                }
+            };
+            $scope.checkListBool = true;
+            return true ;
+        }
         $scope.showEditForm = function(column, defaultValue) {
             if (!$scope.current || !$scope.current.id)
                 return;
@@ -178,6 +190,8 @@ var app = angular
                 (new Date($scope.current.start_time)).getTime() >= (new Date()).getTime() ||
                 (new Date($scope.current.end_time)).getTime() <= (new Date()).getTime()
             ))
+                return;
+            if (column != "test_date" && !listCheck())
                 return;
             if (Object.prototype.toString.call(defaultValue) === '[object Date]')
                 defaultValue = $filter('date')(defaultValue, 'yyyy/M/d');
@@ -242,7 +256,7 @@ var app = angular
                         var tmp = [];
                         var msg = [];
                         for (var i = 0; i < response.data.detail.length; i++) {
-                            tmp[response.data.detail[i].uid] = response.data.detail[i].value;
+                            tmp[response.data.detail[i].student_id] = response.data.detail[i].value;
                             if (response.data.detail[i].status != "success")
                                 msg.push(response.data.detail[i].name);
                         };
@@ -252,8 +266,9 @@ var app = angular
                                 message: '下列學生儲存發生錯誤，請確認是否在資料輸入區間或稍後再試一次：<br>' + msg.join(",")
                             });
                         for (var i = 0; i < $scope.list.length; i++) {
-                            $scope.list[i][response.data.column] = tmp[$scope.list[i].uid];
+                            $scope.list[i][response.data.column] = tmp[$scope.list[i].student_id];
                         }
+                        listCheck();
                     } else {
                         $scope.icon_css = "icon-warning-sign";
                         set_error_message("#mainMsg", "SetFitness1Col", error);
