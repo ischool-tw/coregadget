@@ -900,9 +900,9 @@ var SurveyManger = function() {
                 getCurrentDateTime,
                 getMyInfo,
                 showFaq,
-                getSurveyCategory,
-                showCategory
+                getSurveyCategory
             ]);
+            CallbackQueue.Push(showCategory);
 
         	CallbackQueue.Push(
         		function () {
