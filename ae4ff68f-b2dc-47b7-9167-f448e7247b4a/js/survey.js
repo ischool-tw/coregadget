@@ -883,18 +883,18 @@ var SurveyManger = function() {
     };
 
     //#region 回傳值
-    var result {
+    return {
         load: function () {
         	CallbackQueue.Clear();
-   //      	CallbackQueue.Push([getCurrentDateTime]);	//getCurrentSemester,
-   //      	CallbackQueue.Push([getMyInfo, showFaq, getSurveyCategory]);	//this.showTitle,
+        	//CallbackQueue.Push([getCurrentDateTime]);	//getCurrentSemester,
+        	//CallbackQueue.Push([getMyInfo, showFaq, getSurveyCategory]);	//this.showTitle,
 
-   //      	//CallbackQueue.Push(
-			// //	function () {
-			// //		getSurveyCategory(_school_year, _semester);
-			// //	}
-			// //);
-   //      	CallbackQueue.Push(showCategory);
+        	////CallbackQueue.Push(
+			////	function () {
+			////		getSurveyCategory(_school_year, _semester);
+			////	}
+			////);
+        	//CallbackQueue.Push(showCategory);
 
             CallbackQueue.Push([
                 getCurrentDateTime,
