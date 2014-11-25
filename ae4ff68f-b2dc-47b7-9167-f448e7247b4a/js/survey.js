@@ -852,12 +852,13 @@ var SurveyManger = function() {
         		}
 			);
 
-        	var self = this;
+        	// self = this;
         	CallbackQueue.Push(
 				function () {
 					$(_category).each(function (index, item) {
 						//$('#SurveyCategory-' + item.Name).html('');
-						self.showSurveyList(item);
+						// self.showSurveyList(item);
+                        showSurveyList(item);
 					});
 				}
 			);
