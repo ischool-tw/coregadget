@@ -826,18 +826,18 @@ var SurveyManger = function() {
         },
         on_init: function () {
         	CallbackQueue.Clear();
-        	CallbackQueue.Push([getCurrentDateTime]);	//getCurrentSemester, 
-        	CallbackQueue.Push([getMyInfo, this.showFaq, getSurveyCategory]);	//this.showTitle, 
-        	
+        	CallbackQueue.Push([getCurrentDateTime]);	//getCurrentSemester,
+        	CallbackQueue.Push([getMyInfo, this.showFaq, getSurveyCategory]);	//this.showTitle,
+
         	//CallbackQueue.Push(
 			//	function () {
 			//		getSurveyCategory(_school_year, _semester);
 			//	}
 			//);
-        	CallbackQueue.Push(this.showCategory);   
-        	
+        	CallbackQueue.Push(this.showCategory);
+
         	CallbackQueue.Push(
-        		function () {        			
+        		function () {
         			$(_category).each(function (index, item) {
         				CallbackQueue.UnShift(
 							function () {
@@ -851,8 +851,8 @@ var SurveyManger = function() {
         			CallbackQueue.JobFinished();
         		}
 			);
-			
-        	self = this;
+
+        	var self = this;
         	CallbackQueue.Push(
 				function () {
 					$(_category).each(function (index, item) {
@@ -861,13 +861,13 @@ var SurveyManger = function() {
 					});
 				}
 			);
-			
+
         	CallbackQueue.Start();
             //getPrecautions();
             //getCurrentSemester();
             //getMyInfo();
             //initialize();
-        },	
+        },
 
         showTitle: function() {
         	if (_school_year && _semester) {
@@ -887,13 +887,13 @@ var SurveyManger = function() {
         				if (response.Response && response.Response.Faq) {
         					items.push('<div class="accordion" id="accordion3">');
         					$(response.Response.Faq).each(function (index, item) {
-        						var ret = '<div class="accordion-group">' + 
+        						var ret = '<div class="accordion-group">' +
 											'<div class="accordion-heading">' +
-												'<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseB' + index + '">' + item.Title + '</a>' + 
-											'</div>' + 
-											'<div class="accordion-body collapse" id="collapseB' + index + '" style="height: 0px;">' + 
-												'<div class="accordion-inner" >' + item.Content.replace(/\n/g, '<br />') + "</div>" + 
-											'</div>' + 
+												'<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseB' + index + '">' + item.Title + '</a>' +
+											'</div>' +
+											'<div class="accordion-body collapse" id="collapseB' + index + '" style="height: 0px;">' +
+												'<div class="accordion-inner" >' + item.Content.replace(/\n/g, '<br />') + "</div>" +
+											'</div>' +
 										  '</div>';
         						items.push(ret);
         					});
@@ -908,7 +908,7 @@ var SurveyManger = function() {
         	});
         },
 
-        showCategory: function () {        	
+        showCategory: function () {
         	var items = [];
         	//$('#tab1').find('#tab_survey_list').html('<h4>' + _school_year + '學年度' + (_semester === '0' ? '夏季學期' : '第' + _semester + '學期') + '尚未設定問卷調查' + '</h4>');
         	if ($(_category).length === 0) {
