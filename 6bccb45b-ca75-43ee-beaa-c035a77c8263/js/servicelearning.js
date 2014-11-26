@@ -15,7 +15,7 @@ angular.module('learning', ['ngAnimate'])
                     //console.log(response);
                     $scope.$apply(function(){
                         if (response !== null && response.Response !== null && response.Response !== '') {
-                            $scope.classeslist = response.Response.Class;
+                            $scope.classeslist = [].concat(response.Response.Class);
 
                             if ($scope.classeslist.length > 0){
                                 $scope.currentClassList = $scope.classeslist[0]; //預設選取第一筆記錄
