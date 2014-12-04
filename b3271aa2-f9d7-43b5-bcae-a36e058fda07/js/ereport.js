@@ -1,20 +1,21 @@
 gadget.autofit(document.getElementById("widget"));
 				
-var _connection = gadget.getContract("sa");
-var _session_id;
+var _connection = gadget.getContract("OneAdmin.eReport.Student");
+var _dl_conn = gadget.getContract("OneAdmin.eReport.Public");
+// var _session_id;
 
 $(function() {
-	_connection.send({
-		service: "DS.Base.Connect",
-		body: { RequestSessionID : "" },
-		result: function(response, error, http) {
-			_session_id = response.SessionID;
-		}
-	});
+	// _connection.send({
+	// 	service: "DS.Base.Connect",
+	// 	body: { RequestSessionID : "" },
+	// 	result: function(response, error, http) {
+	// 		_session_id = response.SessionID;
+	// 	}
+	// });
 
 	// 下載個人電子報表
 	_connection.send({
-		service: "StudentAccess.GetElectronicPaperPersonal",
+		service: "GetReportList",
 		body: {
 			Content : { ID: "", Name: "", Format: "", Timestamp: "" }
 		},
@@ -22,7 +23,7 @@ $(function() {
 		
 			var thead =
 				"<tr>" +
-					"<td class='ereport-header'>編號</td>" +
+					//"<td class='ereport-header'>編號</td>" +
 					"<td class='ereport-header'>日期</td>" +
 					"<td class='ereport-header'>名稱</td>" +
 					"<td class='ereport-header'>格式</td>" +
@@ -30,10 +31,10 @@ $(function() {
 				"</tr>", tbody = "";
 			var items = [];
 			
-			if (response.Papers != null) {
-				$(response.Papers.Paper).each(function() {
+			if (response.Reports != null) {
+				$(response.Reports.Report).each(function() {
 					var tr = "";
-					tr += "<td class='ereport-item'>" + this.ID + "</td>";
+					//tr += "<td class='ereport-item'>" + this.ID + "</td>";
 					tr += "<td class='ereport-item'>" + this.Timestamp.substr(0, 16) + "</td>";
 					tr += "<td class='ereport-item'>" + (this.Name == "" ? "&nbsp;" : this.Name) + "</td>";
 					tr += "<td class='ereport-item'>" + (this.Format == "" ? "&nbsp;" : this.Format) + "</td>";
@@ -53,11 +54,8 @@ $(function() {
 function downloadPaper(paper_id) {
 
 	var url =
-		_connection.getAccessPoint() +
-		"/StudentAccess.DownloadElectronicPaper" +
-		"?stt=session" +
-		"&sessionid=" + _session_id +
-		"&rsptype=binarycontent" +
+		_dl_conn.getAccessPoint() +
+		"/Download?" +
 		"&content=<ID>" + paper_id + "</ID>";
 		
 	window.open(url, "_blank");
