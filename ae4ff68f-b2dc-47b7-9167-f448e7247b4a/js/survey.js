@@ -2,6 +2,40 @@ jQuery(function () {
 
 	SurveyManger.load();
 
+    //#region 錯誤訊息
+    var set_error_message = function(select_str, serviceName, error) {
+        if (serviceName) {
+            var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
+            if (error !== null) {
+                if (error.dsaError) {
+                    if (error.dsaError.status === "504") {
+                        switch (error.dsaError.message) {
+                            case '501':
+                                tmp_msg = '<strong>很抱歉，您無存取資料權限！</strong>';
+                                break;
+                            case '502':
+                                tmp_msg = '<strong>很抱歉，目前未開放！</strong>';
+                                break;
+                            default:
+                                tmp_msg = '<strong>' + error.dsaError.message + '</strong>';
+                        }
+                    } else if (error.dsaError.message) {
+                        tmp_msg = error.dsaError.message;
+                    }
+                } else if (error.loginError.message) {
+                    tmp_msg = error.loginError.message;
+                } else if (error.message) {
+                    tmp_msg = error.message;
+                }
+                $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
+                $('.my-err-info').click(function(){alert('請拍下此圖，並與客服人員連絡，謝謝您。\n' + JSON.stringify(error, null, 2))});
+            }
+        } else {
+            $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + error + "\n</div>");
+        }
+    };
+    //#endregion
+
     // 點選課程評鑑
     $('#tab_survey_list').on('click', 'a[data-index]', function() {
     	var index = $(this).attr('data-index');
@@ -31,7 +65,8 @@ jQuery(function () {
                 set_error_message('#mainMsg', '', '資料驗證失敗，請重新檢查！');
             }
         })
-        .on('click', 'button[data-action=temp]', function() {
+        .on('click', '#save-temp', function() {
+            $(this).button('loading'); // 按鈕設為處理中
             $('#mainMsg').html('');
             SurveyManger.saveReply('0', getReply2Obj());
         });
@@ -208,56 +243,56 @@ var SurveyManger = function() {
 		_currentDateTime,
 		CallbackQueue = CreateCallbackQueue();
 
-    //#region 取得學年度學期
-    var getCurrentSemester = function() {
-        _connection.send({
-            service: "_.GetCurrentSemester",
-            body: '',
-            result: function (response, error, http) {
-                if (error !== null) {
-                    set_error_message('#mainMsg', 'GetCurrentSemester', error);
-                } else {
-                    if (response.Current) {
-                        $(response.Current).each(function(index, item) {
-                            _school_year = item.SchoolYear;
-                            _semester = item.Semester;
-                        });
-                    }
-                    //initialize();
-                }
-                CallbackQueue.JobFinished();
-            }
-        });
-    };
+    //#region 取得學年度學期 2014/12/4 elvira marker
+    // var getCurrentSemester = function() {
+    //     _connection.send({
+    //         service: "_.GetCurrentSemester",
+    //         body: '',
+    //         result: function (response, error, http) {
+    //             if (error !== null) {
+    //                 set_error_message('#mainMsg', 'GetCurrentSemester', error);
+    //             } else {
+    //                 if (response.Current) {
+    //                     $(response.Current).each(function(index, item) {
+    //                         _school_year = item.SchoolYear;
+    //                         _semester = item.Semester;
+    //                     });
+    //                 }
+    //                 //initialize();
+    //             }
+    //             CallbackQueue.JobFinished();
+    //         }
+    //     });
+    // };
     //#endregion
 
-    //#region 取得評鑑注意事項
-    var getPrecautions = function() {
-        _connection.send({
-            service: "_.GetCSConfiguration",
-            body: '<Request><Condition><ConfName>teaching_evaluation_precautions</ConfName></Condition></Request>',
-            result: function (response, error, http) {
-                if (error !== null) {
-                    set_error_message('#mainMsg', 'GetCSConfiguration', error);
-                } else {
-                    // <Response>
-                    //     <Configuration>
-                    //         <ConfName>teaching_evaluation_precautions</ConfName>
-                    //         <ConfContent>
-                    //             <![CDATA['由desktop提供之樣版內容']]></ConfContent>
-                    //     </Configuration>
-                    // </Response>
+    //#region 取得評鑑注意事項 2014/12/4 elvira marker
+    // var getPrecautions = function() {
+    //     _connection.send({
+    //         service: "_.GetCSConfiguration",
+    //         body: '<Request><Condition><ConfName>teaching_evaluation_precautions</ConfName></Condition></Request>',
+    //         result: function (response, error, http) {
+    //             if (error !== null) {
+    //                 set_error_message('#mainMsg', 'GetCSConfiguration', error);
+    //             } else {
+    //                 // <Response>
+    //                 //     <Configuration>
+    //                 //         <ConfName>teaching_evaluation_precautions</ConfName>
+    //                 //         <ConfContent>
+    //                 //             <![CDATA['由desktop提供之樣版內容']]></ConfContent>
+    //                 //     </Configuration>
+    //                 // </Response>
 
-                    if (response.Response && response.Response.Configuration) {
-                        $(response.Response.Configuration).each(function(index, item) {
-                            _teaching_evaluation_precautions = item.ConfContent;
-                            $('#teaching_evaluation_precautions').html(_teaching_evaluation_precautions);
-                        });
-                    }
-                }
-            }
-        });
-    };
+    //                 if (response.Response && response.Response.Configuration) {
+    //                     $(response.Response.Configuration).each(function(index, item) {
+    //                         _teaching_evaluation_precautions = item.ConfContent;
+    //                         $('#teaching_evaluation_precautions').html(_teaching_evaluation_precautions);
+    //                     });
+    //                 }
+    //             }
+    //         }
+    //     });
+    // };
 
     //#endregion
 
@@ -663,40 +698,6 @@ var SurveyManger = function() {
     };
     //#endregion
 
-    //#region 錯誤訊息
-    var set_error_message = function(select_str, serviceName, error) {
-        if (serviceName) {
-            var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
-            if (error !== null) {
-                if (error.dsaError) {
-                    if (error.dsaError.status === "504") {
-                        switch (error.dsaError.message) {
-                            case '501':
-                                tmp_msg = '<strong>很抱歉，您無存取資料權限！</strong>';
-                                break;
-                            case '502':
-                                tmp_msg = '<strong>很抱歉，目前未開放！</strong>';
-                                break;
-                            default:
-                                tmp_msg = '<strong>' + error.dsaError.message + '</strong>';
-                        }
-                    } else if (error.dsaError.message) {
-                        tmp_msg = error.dsaError.message;
-                    }
-                } else if (error.loginError.message) {
-                    tmp_msg = error.loginError.message;
-                } else if (error.message) {
-                    tmp_msg = error.message;
-                }
-                $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
-                $('.my-err-info').click(function(){alert('請拍下此圖，並與客服人員連絡，謝謝您。\n' + JSON.stringify(error, null, 2))});
-            }
-        } else {
-            $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + error + "\n</div>");
-        }
-    };
-    //#endregion
-
     //#region 顯示填寫畫面的課程資訊
     var show_FormCurseInfo = function(course) {
         var teacher_name, description, items = [];
@@ -806,6 +807,7 @@ var SurveyManger = function() {
     var conver2Chinese = new intToChineseNumberString(true);
     //#endregion
 
+    //#region 驗證字串的長度最大值
     $.validator.addMethod('extMaxLength', function (value, element) {
         var maxlen = parseInt($(element).attr('data-maxLength'));
         if (maxlen > 0) {
@@ -817,6 +819,7 @@ var SurveyManger = function() {
 
         return true;
     });
+    //#endregion
 
     var showFaq = function () {
         _connection.send({
@@ -995,7 +998,7 @@ var SurveyManger = function() {
         },
 
         load_form: function (index, category, survey_school_year, survey_semester) {
-            $('#tab_form').find('[data-type=form], [data-type=preview]').hide()
+            $('#tab_form').find('[data-type=form], [data-type=preview]').hide();
             var course_id;
             _curr_survey = _survey_category[category + "-" + survey_school_year + "-" + survey_semester][index];
             if (_curr_survey) {
@@ -1008,6 +1011,21 @@ var SurveyManger = function() {
         //#region 儲存評鑑結果
         ,saveReply: function(status, answer) {
             if (_curr_survey) {
+                var valid_status = false;
+                if (status === '1') {
+                    if ($('#form1').valid()) {
+                        valid_status = true;
+                    } else {
+                        $('tr.error:first').find('textarea, input').first().focus();
+                        $('body').scrollTop(0);
+                        $("#save-data").button("reset");
+                        if ($('tr.error span.my-star').length > 0) { alert('您還有【必填】題目未填寫，請填答完整後再送出'); }
+                        set_error_message('#mainMsg', '', '資料驗證失敗，請重新檢查！');
+                        previewCancel();
+                    }
+                } else {
+                    valid_status = true;
+                }
                 _connection.send({
                     service: "_.SetReply",
                     body: {
@@ -1029,7 +1047,11 @@ var SurveyManger = function() {
                         if (error !== null) {
                             $('body').scrollTop(0);
                             set_error_message('#mainMsg', 'SetReply', error);
-                            $("#save-data").button("reset");
+                            if (status === '1') {
+                                $("#save-data").button("reset");
+                            } else {
+                                $("#save-temp").button("reset");
+                            }
                         } else {
                             //  問卷填寫內容異動，通知「歷史填答記錄」更新頁面
                             SurveyChanged_Handler.SurveyChanged();
@@ -1038,12 +1060,16 @@ var SurveyManger = function() {
                             _curr_survey.ReplyAnswer = answer;
                             _curr_survey.ReplyStatus = status;
                             $('#tab_survey_list td').has('a[data-index=' + _curr_survey.idx + ']').after(getStatus(status, _curr_survey.idx)).remove();
-                            $("#save-data").button("reset");
-                            $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
-                            setTimeout("$('#mainMsg').html('')", 1500);
+                            if (status === '1') {
+                                $("#save-data").button("reset");
+                            } else {
+                                $("#save-temp").button("reset");
+                            }
                             SurveyManger.load();
                             $('#tab_form').hide();
                             $('#tab_survey_list').show();
+                            $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
+                            setTimeout("$('#mainMsg').html('')", 3000);
 
                             //#region 儲存log
                             var status_name = (status === '1') ? '儲存' : '暫存';
