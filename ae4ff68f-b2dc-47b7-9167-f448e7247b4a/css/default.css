@@ -94,7 +94,7 @@ margin-bottom: 0;
 border-bottom: none;
 }
 /*歷史填答記錄*/
-.survey-history-table tbody tr:nth-child(1) td,
+/*.survey-history-table tbody tr:nth-child(1) td,
 .survey-history-table tbody tr:nth-child(2) td {
   font-weight: 900;
   background-color:rgb(217, 237, 246);
@@ -113,7 +113,21 @@ border-bottom: none;
 .survey-history-table td:first-child,
 .survey-history-table th:first-child {
   width: inherit;
+}*/
+.survey-history-table {
+  width: 100%;
 }
+.survey-history-table td,
+.survey-history-table th {
+  vertical-align: middle;
+  width: 180px;
+}
+.survey-history-table td.my-totle-style {
+  font-weight: 900;
+  background-color:rgb(217, 237, 246);
+  text-align: center;
+}
+
 .footer {
   border-top: 1px solid #ccc;
   padding-top: 4px;
@@ -124,15 +138,15 @@ border-bottom: none;
   bottom: 0px;
   background: #fff;
   color: #999999;
-  font-size: 14px; 
+  font-size: 14px;
   line-height: 20px;
 }
 /*
 .survey-history-table tbody tr:nth-last-child(2) td {
-  border-top:2px solid #000000; 
+  border-top:2px solid #000000;
 }
 .survey-history-table tbody tr:last-child td {
-  border-bottom:2px solid #000000; 
+  border-bottom:2px solid #000000;
 }
 .survey-history-table tfoot tr td {
   background-color:rgb(255, 255, 255);
@@ -140,10 +154,10 @@ border-bottom: none;
 }
 .survey-history-table tr:nth-last-child(2) td:first-child,
 .survey-history-table tr:last-child td:first-child {
-  border-left:2px solid #000000; 
+  border-left:2px solid #000000;
 }
 .survey-history-table tr:nth-last-child(2) td:last-child {
-  border-right:2px solid #000000; 
+  border-right:2px solid #000000;
 }
 .survey-history-table thead th {
   font-weight: 900;

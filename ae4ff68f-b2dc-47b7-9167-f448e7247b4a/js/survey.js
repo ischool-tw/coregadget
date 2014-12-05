@@ -2,7 +2,7 @@ jQuery(function () {
     //#region 錯誤訊息
     var set_error_message = function(select_str, serviceName, error) {
         if (serviceName) {
-            var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
+            var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗</strong>(' + serviceName + ')';
             if (error !== null) {
                 if (error.dsaError) {
                     if (error.dsaError.status === "504") {
@@ -12,6 +12,9 @@ jQuery(function () {
                                 break;
                             case '502':
                                 tmp_msg = '<strong>很抱歉，目前未開放！</strong>';
+                                break;
+                            case '503':
+                                tmp_msg = '<strong>很抱歉，您的資料結構不正確！</strong>';
                                 break;
                             default:
                                 tmp_msg = '<strong>' + error.dsaError.message + '</strong>';
