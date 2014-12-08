@@ -6,15 +6,28 @@ jQuery(function () {
             if (error !== null) {
                 if (error.dsaError) {
                     if (error.dsaError.status === "504") {
-                        switch (error.dsaError.message) {
+                        var error_code = '';
+                        if (error.dsaError.header &&
+                            error.dsaError.header.DSFault &&
+                            error.dsaError.header.DSFault.Fault &&
+                            error.dsaError.header.DSFault.Fault.Code) {
+                            error_code = error.dsaError.header.DSFault.Fault.Code;
+                        }
+                        switch (error_code) {
                             case '501':
-                                tmp_msg = '<strong>很抱歉，您無存取資料權限！</strong>';
+                                tmp_msg = '<strong>很抱歉，您已完成評鑑！</strong>';
                                 break;
                             case '502':
                                 tmp_msg = '<strong>很抱歉，目前未開放！</strong>';
                                 break;
                             case '503':
-                                tmp_msg = '<strong>很抱歉，您的資料結構不正確！</strong>';
+                                tmp_msg = '<strong>很抱歉，您已停修此課程！</strong>';
+                                break;
+                            case '504':
+                                tmp_msg = '<strong>很抱歉，送出的資料不足！</strong>';
+                                break;
+                            case '505':
+                                tmp_msg = '<strong>很抱歉，資料結構不正確！</strong>';
                                 break;
                             default:
                                 tmp_msg = '<strong>' + error.dsaError.message + '</strong>';
@@ -1032,6 +1045,7 @@ jQuery(function () {
             }
             //#region 儲存評鑑結果
             ,saveReply: function(status, answer) {
+console.log(answer);
                 if (_curr_survey) {
                     var valid_status = false;
                     if (status === '1') {
@@ -1049,21 +1063,29 @@ jQuery(function () {
                         valid_status = true;
                     }
                     _connection.send({
-                        service: "_.SetReply",
+                        // service: "_.SetReply",
+                        // body: {
+                        //     'Request':{
+                        //         'Reply':{
+                        //             'Field':{
+                        //                 'Answer': answer || '',
+                        //                 'Status': status || ''
+                        //             },
+                        //             'Condition':{
+                        //                 'CourseID'  : _curr_survey.CourseID || '',
+                        //                 'SurveyID'  : _curr_survey.SurveyID || '',
+                        //                 'TeacherID' : _curr_survey.TeacherID || ''
+                        //             }
+                        //         }
+                        //     }
+                        // },
+                        service: "_.SetReply2",
                         body: {
-                            'Request':{
-                                'Reply':{
-                                    'Field':{
-                                        'Answer': answer || '',
-                                        'Status': status || ''
-                                    },
-                                    'Condition':{
-                                        'CourseID'  : _curr_survey.CourseID || '',
-                                        'SurveyID'  : _curr_survey.SurveyID || '',
-                                        'TeacherID' : _curr_survey.TeacherID || ''
-                                    }
-                                }
-                            }
+                            'CourseID'  : _curr_survey.CourseID || '',
+                            'SurveyID'  : _curr_survey.SurveyID || '',
+                            'TeacherID' : _curr_survey.TeacherID || '',
+                            'Status': status || '',
+                            'Answer': answer || ''
                         },
                         result: function (response, error, http) {
                             if (error !== null) {
