@@ -58,6 +58,7 @@ jQuery(function () {
     	SurveyManger.load_form(index, survey_category, survey_school_year, survey_semester);
 
         $('#tab_survey_list').hide();
+        $('#tab_form').find('[data-type=form], [data-type=preview]').hide();
         $('#tab_form').show();
     });
 
@@ -121,7 +122,7 @@ jQuery(function () {
                         '@text': $(item).attr('data-title') || '',
                         '@': ['CaseID', 'Score'],
                         'CaseID': $(item).attr('data-caseid') || '',
-                        'Score': $(item).val() || ''
+                        'Score': $(item).val().replace(/>/g, "＞").replace(/</g, "＜") || ''
                     });
                 });
             });
@@ -871,7 +872,6 @@ jQuery(function () {
         //#region 回傳值
         return {
             load: function () {
-                $('#tab_form [data-type=form]').hide();
             	CallbackQueue.Clear();
             	//CallbackQueue.Push([getCurrentDateTime]);	//getCurrentSemester,
             	//CallbackQueue.Push([getMyInfo, showFaq, getSurveyCategory]);	//this.showTitle,
@@ -971,8 +971,6 @@ jQuery(function () {
                                 $('#SurveyCategory-' + category.Name + "-" + category.SchoolYear + "-" + category.Semester + " div:last table tbody").html('<tr><td colspan="4">目前無資料</td></tr>');
                             }
     					});
-
-                        $('#tab_form [data-type=form]').show();
     				}
     			);
 
@@ -984,7 +982,7 @@ jQuery(function () {
             },
 
             load_form: function (index, category, survey_school_year, survey_semester) {
-                $('#tab_form').find('[data-type=form], [data-type=preview]').hide();
+                // $('#tab_form').find('[data-type=form], [data-type=preview]').hide();
                 var course_id;
                 _curr_survey = _survey_category[category + "-" + survey_school_year + "-" + survey_semester][index];
                 if (_curr_survey) {
