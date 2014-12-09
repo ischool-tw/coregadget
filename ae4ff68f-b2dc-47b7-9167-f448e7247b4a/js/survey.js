@@ -1022,6 +1022,8 @@ jQuery(function () {
                                 $('#SurveyCategory-' + category.Name + "-" + category.SchoolYear + "-" + category.Semester + " div:last table tbody").html('<tr><td colspan="4">目前無資料</td></tr>');
                             }
     					});
+
+                        $('#tab_form [data-type=form]').show();
     				}
     			);
 
@@ -1042,9 +1044,9 @@ jQuery(function () {
                     getCourseInfo(course_id);
                     show_question();
                 }
-            }
+            },
             //#region 儲存評鑑結果
-            ,saveReply: function(status, answer) {
+            saveReply: function(status, answer) {
                 if (_curr_survey) {
                     var valid_status = false;
                     if (status === '1') {
