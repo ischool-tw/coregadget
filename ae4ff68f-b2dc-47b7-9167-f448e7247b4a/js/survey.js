@@ -125,59 +125,6 @@ jQuery(function () {
                     });
                 });
             });
-
-
-            // if ($('#tab_form [data-qid]').length === 1) {
-            // 	reply.Answers.Question.push({
-            // 		'@': ['QuestionID'],
-            // 		'QuestionID': that_qid,
-            // 		//'SchoolYear': school_year,
-            // 		//'Semester': semester,
-            // 		'Answer': []
-            // 	});
-            // 	tmp = reply.Answers.Question[0];
-            // 	tmp.Answer.push({
-            // 		'@text': $(this).attr('data-title') || '',
-            // 		'@': ['CaseID', 'Score'],
-            // 		'CaseID': $(this).attr('data-caseid') || '',
-            // 		'Score': $(this).val() || ''
-            // 	});
-            // } else {
-            // 	if (has_qid === -1) {
-            // 		reply.Answers.Question.push({
-            // 			'@': ['QuestionID'],
-            // 			'QuestionID': that_qid,
-            // 			//'SchoolYear': school_year,
-            // 			//'Semester': semester,
-            // 			'Answer': []
-            // 		});
-            // 		all_qid.push(that_qid);
-            // 		tmp = reply.Answers.Question[reply.Answers.Question.length - 1];
-            // 	} else {
-            // 		tmp = reply.Answers.Question[has_qid];
-            // 	}
-            // 	$(this).each(function (index, val) {
-            // 		if ($(val).find('input[data-caseid]:checked, textarea').length > 0) {
-            // 			$(val).find('input[data-caseid]:checked, textarea').each(function (index, item) {
-            // 				tmp.Answer.push({
-            // 					'@text': $(item).attr('data-title') || '',
-            // 					'@': ['CaseID', 'Score'],
-            // 					'CaseID': $(item).attr('data-caseid') || '',
-            // 					'Score': $(item).val() || ''
-            // 				});
-            // 			});
-            // 		} else {
-            // 			if ($(val).get(0).nodeName === "TEXTAREA") {
-            // 				tmp.Answer.push({
-            // 					'@text': $(val).attr('data-title') || '',
-            // 					'@': ['CaseID', 'Score'],
-            // 					'CaseID': $(val).attr('data-caseid') || '',
-            // 					'Score': $(val).val() || ''
-            // 				});
-            // 			}
-            // 		}
-            // 	});
-            // }
         });
         return reply;
     };
@@ -229,6 +176,7 @@ jQuery(function () {
 
     //#region 返回評鑑列表
     var formCancel = function () {
+        $('#tab_survey_list').html('');
     	SurveyManger.load();
         $('#mainMsg').html('');
         $('#tab_form').hide();
@@ -923,6 +871,7 @@ jQuery(function () {
         //#region 回傳值
         return {
             load: function () {
+                $('#tab_form [data-type=form]').hide();
             	CallbackQueue.Clear();
             	//CallbackQueue.Push([getCurrentDateTime]);	//getCurrentSemester,
             	//CallbackQueue.Push([getMyInfo, showFaq, getSurveyCategory]);	//this.showTitle,
@@ -1104,15 +1053,12 @@ jQuery(function () {
                                 $('body').scrollTop(0);
                                 _curr_survey.ReplyAnswer = answer;
                                 _curr_survey.ReplyStatus = status;
-                                $('#tab_survey_list td').has('a[data-index=' + _curr_survey.idx + ']').after(getStatus(status, _curr_survey.idx)).remove();
                                 if (status === '1') {
                                     $("#save-data").button("reset");
                                 } else {
                                     $("#save-temp").button("reset");
                                 }
-                                SurveyManger.load();
-                                $('#tab_form').hide();
-                                $('#tab_survey_list').show();
+                                formCancel();
                                 $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
                                 setTimeout("$('#mainMsg').html('')", 3000);
 
