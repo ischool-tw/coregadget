@@ -1045,7 +1045,6 @@ jQuery(function () {
             }
             //#region 儲存評鑑結果
             ,saveReply: function(status, answer) {
-console.log(answer);
                 if (_curr_survey) {
                     var valid_status = false;
                     if (status === '1') {
