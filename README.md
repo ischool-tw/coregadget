@@ -58,7 +58,7 @@ Core Gadget
 * 0db67a14-b958-4ebe-a97c-adc920a8ab9b 體適能輸入(老師)
 * b3271aa2-f9d7-43b5-bcae-a36e058fda07 電子報表(學生)
 * 7a29929b-6978-4ebc-be04-5eb4b8aa1fa7 電子報表(老師)
-
+* 2DCFE7E6-BA4E-4FDB-AD72-98E08762C863 電子報表(家長)
 
 客製化
 

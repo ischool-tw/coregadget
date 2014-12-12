@@ -24,7 +24,7 @@
 	<script src="js/messages_tw.js?20141015"></script>
 	<script src="js/CallbackQueue.js?20141015"></script>
 	<script src="js/survey.js?20141015"></script>
-	<script src="js/surveyHistory.js?20141015"></script> 
+	<script src="js/surveyHistory.js?20141015"></script>
 </head>
 <body>
   <div id="gadget" class="my-page">
@@ -33,10 +33,10 @@
       <div class="span12">
         <h1>
           <ul id="myTab" class="nav nav-tabs my-navtabs">
-              
+
             <li class="active"><a href="#tab1" data-toggle="tab" id="tabName">問卷調查</a></li>
             <li><a href="#tab2" data-toggle="tab">歷史填答記錄</a></li>
-		  	<li><a href="#tab3" data-toggle="tab">問卷填答注意事項</a></li>		  	
+		  	<li><a href="#tab3" data-toggle="tab">問卷填答注意事項</a></li>
           </ul>
         </h1>
         <div class="tab-content">
@@ -46,14 +46,14 @@
             <div class="tab-pane active" id="sa06">
               <div class="alert alert-info">
                 <div id="teaching_evaluation_precautions" style="color:black; background-color:white;">
-                </div>              
+                </div>
               </div>
             </div>
 			-->
 			<!--
             <h4 style='font-size: 22px;font-size: 1.2rem;'><span id="tabName"></span> 課程問卷調查</h4>
 			-->
-		  	
+
 			  <!--
 		  	<div id="SurveyCategory-2">
 		  		<div class="panel-group" id="accordion-2">
@@ -72,7 +72,7 @@
 		  		</div>
 		  	</div>
 			-->
-			  
+
 		  		<div id="tab_survey_list">
 					<!--
 		  			<table class="table table-bordered table-striped table-list">
@@ -88,7 +88,7 @@
 		  			</table>
 						-->
 		  		</div>
-			  
+
 		  		<div id="tab_form">
 		  			<table id="course_info" class="table table-bordered">
 		  				<thead>
@@ -122,12 +122,12 @@
 		  					<tbody data-type="questions"></tbody>
 		  				</table>
 		  			</form>
-		  			<div class="my-sure" data-type="form">
-		  				<button class="btn btn-info" data-loading-text="儲存中..." data-action="temp">暫存不送出</button>
+		  			<div class="my-sure" data-type="form" style="display: none;">
+		  				<button class="btn btn-info" data-loading-text="儲存中..." data-action="temp" id="save-temp">暫存不送出</button>
 		  				<button class="btn btn-success" data-action="preview">預覽並送出</button>
 		  				<button class="btn" data-action="form_cancel">取消</button>
 		  			</div>
-		  			<div class="my-sure" data-type="preview">
+		  			<div class="my-sure" data-type="preview" style="display: none;">
 		  				<button class="btn btn-success" data-loading-text="儲存中..." id="save-data">送出</button>
 		  				<button class="btn" data-action="preview_cancel">取消</button>
 		  			</div>
@@ -150,8 +150,8 @@
                   TEL:886-2-33661010 FAX:886-2-23636073<br>
                   Copyright © National Taiwan University All Rights Reserved
               </p>
-          </div> 
-    </div>   
+          </div>
+    </div>
   </div>
 </body>
 </html>
