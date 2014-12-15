@@ -61,27 +61,36 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 
         for (index = 0; index <= data.length - 1; index++) {
 
+        	data[index].PersonalDays = parseInt(data[index].PersonalDays, 10);
+	        data[index].SickDays = parseInt(data[index].SickDays, 10);
+
+	        if(isNaN(data[index].PersonalDays))
+	        	data[index].PersonalDays = "";
+
+	        if(isNaN(data[index].SickDays))
+	        	data[index].SickDays = "";
+
             if (data[index].UID) {
 
-                if (data[index].PersonalDays !== "" || data[index].SickDays !== "") {
+                if (data[index].PersonalDays === "" && data[index].SickDays === "") {
+                    //delete
+                    del += "<UID>" + data[index].UID + "</UID>";
+                } else {
                     //update
                     update += "<Student>";
                     update += "<UID>" + data[index].UID + "</UID>";
 
-                    if (data[index].PersonalDays !== "")
+                    if (data[index].PersonalDays === "")
+                    	update += "<Personal>null</Personal>";
+                    else
                         update += "<Personal>" + data[index].PersonalDays + "</Personal>";
-                    else
-                        update += "<Personal>null</Personal>";
 
-                    if (data[index].SickDays !== "")
-                        update += "<Sick>" + data[index].SickDays + "</Sick>";
+                    if (data[index].SickDays === "")
+                    	update += "<Sick>null</Sick>";
                     else
-                        update += "<Sick>null</Sick>";
+                        update += "<Sick>" + data[index].SickDays + "</Sick>";
 
                     update += "</Student>";
-                } else {
-                    //delete
-                    del += "<UID>" + data[index].UID + "</UID>";
                 }
 
             } else if (data[index].PersonalDays !== "" || data[index].SickDays !== "") {
@@ -89,16 +98,16 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
                 insert += "<Student>";
                 insert += "<ID>" + data[index].StudentID + "</ID>";
 
-                if (data[index].PersonalDays !== "")
+                if (data[index].PersonalDays === "")
+                	insert += "<Personal>null</Personal>";
+                else
                     insert += "<Personal>" + data[index].PersonalDays + "</Personal>";
-                else
-                    insert += "<Personal>null</Personal>";
 
-                if (data[index].SickDays !== "")
-                    insert += "<Sick>" + data[index].SickDays + "</Sick>";
-                else
+                if (data[index].SickDays === "")
                     insert += "<Sick>null</Sick>";
-
+                else
+                    insert += "<Sick>" + data[index].SickDays + "</Sick>";
+                
                 insert += "</Student>";
             }
         };
