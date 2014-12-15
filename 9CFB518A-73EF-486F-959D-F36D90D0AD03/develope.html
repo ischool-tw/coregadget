@@ -1,0 +1,46 @@
+﻿<!doctype html>
+<html ng-app="app">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/ui-grid-stable.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-touch.min.js"></script>
+    <script src="js/angular-animate.min.js"></script>
+    <script src="js/ui-grid-stable.min.js"></script>
+    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+    init({
+        application: "test.b.nehs.hc.edu.tw",
+        paramValues: {},
+        oAuth: {
+            clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+            clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311'
+        }
+    });
+    </script>
+
+    <style type="text/css">
+	.grid {
+	 height: 500px;
+	}
+	</style>
+
+</head>
+
+<body ng-controller="MainCtrl">
+    <div class="my-page">
+        <h1>{{DisplaySchoolYear}} {{DisplaySemester}} Semester Absence Input<button type="button" class="btn btn-primary pull-right" ng-class="btnStyle" ng-click="SaveData()">Save</button> </h1>
+        <div class="alert" ng-class="alertStyle">
+             開放時間(Opening period): {{startDate}}  ~ {{endDate}}
+        </div>
+        <div ui-grid="gridOptions" ui-grid-edit ui-grid-cellnav class="grid"></div>
+    </div>
+</body>
+
+</html>
