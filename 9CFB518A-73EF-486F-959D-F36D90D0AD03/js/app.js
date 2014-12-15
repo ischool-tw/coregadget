@@ -63,17 +63,17 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 
             if (data[index].UID) {
 
-                if (data[index].PersonalDays || data[index].SickDays) {
+                if (data[index].PersonalDays !== "" || data[index].SickDays !== "") {
                     //update
                     update += "<Student>";
                     update += "<UID>" + data[index].UID + "</UID>";
 
-                    if (data[index].PersonalDays)
+                    if (data[index].PersonalDays !== "")
                         update += "<Personal>" + data[index].PersonalDays + "</Personal>";
                     else
                         update += "<Personal>null</Personal>";
 
-                    if (data[index].SickDays)
+                    if (data[index].SickDays !== "")
                         update += "<Sick>" + data[index].SickDays + "</Sick>";
                     else
                         update += "<Sick>null</Sick>";
@@ -84,17 +84,17 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
                     del += "<UID>" + data[index].UID + "</UID>";
                 }
 
-            } else if (data[index].PersonalDays || data[index].SickDays) {
+            } else if (data[index].PersonalDays !== "" || data[index].SickDays !== "") {
                 //insert
                 insert += "<Student>";
                 insert += "<ID>" + data[index].StudentID + "</ID>";
 
-                if (data[index].PersonalDays)
+                if (data[index].PersonalDays !== "")
                     insert += "<Personal>" + data[index].PersonalDays + "</Personal>";
                 else
                     insert += "<Personal>null</Personal>";
 
-                if (data[index].SickDays)
+                if (data[index].SickDays !== "")
                     insert += "<Sick>" + data[index].SickDays + "</Sick>";
                 else
                     insert += "<Sick>null</Sick>";
