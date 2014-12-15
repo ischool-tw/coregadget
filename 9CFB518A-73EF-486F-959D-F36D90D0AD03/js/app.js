@@ -199,8 +199,14 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
                             data = [].concat(response.Student);
 
                             for (index = 0; index <= data.length - 1; index++) {
-                                data[index].PersonalDays = parseInt(data[index].PersonalDays, 10) || '';
-                                data[index].SickDays = parseInt(data[index].SickDays, 10) || '';
+                                data[index].PersonalDays = parseInt(data[index].PersonalDays, 10);
+                                data[index].SickDays = parseInt(data[index].SickDays, 10);
+
+                                if(isNaN(data[index].PersonalDays))
+                                	data[index].PersonalDays = "";
+
+                                if(isNaN(data[index].SickDays))
+                                	data[index].SickDays = "";
                             };
 
                             $scope.gridOptions.data = data;
