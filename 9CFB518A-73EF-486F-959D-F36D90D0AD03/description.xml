@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="請假天數輸入" description="實驗小學專用">
-    <Title lang="zh-TW">請假天數輸入</Title>
+  <ModulePrefs title="1~6年級請假登錄" description="小學請假登錄">
+    <Title lang="zh-TW">1~6年級請假登錄</Title>
     <Icon>icon.png</Icon>
     <Mobile />
     <Title lang="zh-CN">
     </Title>
-    <Title lang="en-US">AbsenceInput</Title>
+    <Title lang="en-US">ElementaryAbsenceInput</Title>
   </ModulePrefs>
 </Module>

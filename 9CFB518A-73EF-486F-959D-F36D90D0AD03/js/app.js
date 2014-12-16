@@ -15,6 +15,7 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
         width: '8%'
     }, {
         name: 'SeatNo',
+        displayName:'SeatNo.',
         enableCellEdit: false,
         enableSorting: false,
         width: '6%'
