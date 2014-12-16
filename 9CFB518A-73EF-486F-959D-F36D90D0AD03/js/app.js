@@ -12,22 +12,22 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
         name: 'ClassName',
         enableCellEdit: false,
         enableSorting: false,
-        width: '10%'
+        width: '8%'
     }, {
         name: 'SeatNo',
         enableCellEdit: false,
         enableSorting: false,
-        width: '10%'
+        width: '6%'
     }, {
         name: 'Name',
         enableCellEdit: false,
         enableSorting: false,
-        width: '15%'
+        width: '16%'
     }, {
         name: 'EnglishName',
         enableCellEdit: false,
         enableSorting: false,
-        width: '25%'
+        width: '20%'
     }, {
         name: 'NickName',
         enableCellEdit: false,
@@ -35,16 +35,16 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
         width: '10%'
     }, {
         name: 'PersonalDays',
-        displayName:'Personal leave(days)',
+        displayName:'Personal Leave(days)',
         enableSorting: false,
         type: 'number',
-        width: '15%'
+        width: '20%'
     }, {
         name: 'SickDays',
-        displayName:'Sick leave(days)',
+        displayName:'Sick Leave(days)',
         enableSorting: false,
         type: 'number',
-        width: '15%'
+        width: '20%'
     }];
 
     $scope.gridOptions.data = data;
