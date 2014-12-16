@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ngTouch', 'ui.grid', 'ui.grid.edit', 'ui.grid.cellNav']);
+var app = angular.module('app', ['ngTouch', 'ui.grid', 'ui.grid.edit', 'ui.grid.cellNav', 'ui.grid.autoResize']);
 
 app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 
@@ -7,12 +7,12 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
     var data = [];
     $scope.gridOptions = {};
     $scope.gridOptions.enableCellEditOnFocus = true;
-
+    
     $scope.gridOptions.columnDefs = [{
         name: 'ClassName',
         enableCellEdit: false,
         enableSorting: false,
-        width: '15%'
+        width: '10%'
     }, {
         name: 'SeatNo',
         enableCellEdit: false,
@@ -22,24 +22,26 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
         name: 'Name',
         enableCellEdit: false,
         enableSorting: false,
-        width: '10%'
+        width: '15%'
     }, {
         name: 'EnglishName',
         enableCellEdit: false,
         enableSorting: false,
-        width: '20%'
+        width: '25%'
     }, {
         name: 'NickName',
         enableCellEdit: false,
         enableSorting: false,
-        width: '15%'
+        width: '10%'
     }, {
         name: 'PersonalDays',
+        displayName:'Personal leave(days)',
         enableSorting: false,
         type: 'number',
         width: '15%'
     }, {
         name: 'SickDays',
+        displayName:'Sick leave(days)',
         enableSorting: false,
         type: 'number',
         width: '15%'
@@ -169,6 +171,13 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 
     $scope.gridOptions.onRegisterApi = function(gridApi) {
         $scope.gridApi = gridApi;
+    };
+
+    $scope.CellColor = function(readOnly){
+    	if(readOnly)
+    		return "blue"
+    	else
+    		return "green"
     };
 
     $scope.GetData = function() {

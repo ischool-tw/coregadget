@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/ui-grid-stable.min.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/angular.min.js"></script>
@@ -27,20 +28,23 @@
 
     <style type="text/css">
 	.grid {
-	 height: 500px;
+  		height: 67vh;
+	}
+	.ui-grid-col0,.ui-grid-col1,.ui-grid-col2,.ui-grid-col3,.ui-grid-col4{
+		color: gray;
 	}
 	</style>
 
 </head>
 
 <body ng-controller="MainCtrl">
-    <div class="my-page">
-        <h1>{{DisplaySchoolYear}} {{DisplaySemester}} Semester Absence Input<button type="button" class="btn btn-primary pull-right" ng-class="btnStyle" ng-click="SaveData()">Save</button> </h1>
-        <div class="alert" ng-class="alertStyle">
+  		<div class="my-page">
+        	<h1>{{DisplaySchoolYear}} {{DisplaySemester}} Semester Absence Input<button type="button" class="btn btn-primary pull-right" ng-class="btnStyle" ng-click="SaveData()">Save</button> </h1>
+        	<div class="alert" ng-class="alertStyle">
              開放時間(Opening period): {{startDate}}  ~ {{endDate}}
-        </div>
-        <div ui-grid="gridOptions" ui-grid-edit ui-grid-cellnav class="grid"></div>
-    </div>
+        	</div>
+    		<div ui-grid="gridOptions" ui-grid-edit ui-grid-cellnav ui-grid-auto-resize class="grid"></div>
+		</div>
 </body>
 
 </html>
