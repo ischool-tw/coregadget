@@ -27,12 +27,15 @@
     </script>
 
     <style type="text/css">
+    .ui-grid-cell.ng-scope.ui-grid-col0,
+    .ui-grid-cell.ng-scope.ui-grid-col1,
+    .ui-grid-cell.ng-scope.ui-grid-col2,
+    .ui-grid-cell.ng-scope.ui-grid-col3,
+    .ui-grid-cell.ng-scope.ui-grid-col4 {
+    	background-color: lightgoldenrodyellow;
+    }
     .grid {
         height: 100%;
-    }
-    .ui-grid-col5,
-    .ui-grid-col6 {
-        color: blue;
     }
     </style>
 
@@ -51,6 +54,7 @@
 
         <session ui-grid="gridOptions" ui-grid-edit ui-grid-cellnav class="grid"></session>
     </div>
+
 </body>
 
 </html>
