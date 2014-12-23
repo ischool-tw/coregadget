@@ -27,3 +27,25 @@
 1. DefaultRound：預設的進位方式。
 2. Round：指定評量名稱進位方式。
 3. 學期成績試算進位方式。
+
+### 提供課程成績複制功能
+
+- JavaScript 範例：
+```
+    init({
+      application: "dev.sh_d",
+      paramValues: {
+        flex_params: '<Params><CopyCourseScore>true</CopyCourseScore></Params>'
+      }
+    });
+```
+- Gadget Xml 範例：
+```
+		<Gadget Description="定期評量成績登" deployPath="1fe62912-5108-4bef-b260-710d62d9c8b2">
+			<Params>
+				<Param name="flex_params"><![CDATA[<Params><CopyCourseScore>true</CopyCourseScore></Params>]]></Param>
+			</Params>
+		</Gadget>
+```
+
+1. 必需是「true」才會出現功能，大小寫要符合。
