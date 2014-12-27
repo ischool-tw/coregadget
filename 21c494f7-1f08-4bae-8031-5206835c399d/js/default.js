@@ -44,6 +44,10 @@ var app = angular
         }})
     .controller("Ctrl0", function($scope) {
         $scope.usingPage = '1' ;
+        $scope.changePage = function(page){
+            $scope.usingPage = page ;
+            $scope.$broadcast('pageChanged',page);
+        };
         $scope.contract = gadget.getContract("ischool.behavior.disciplineInput.teacher");
         $scope.safeApply = function(fn) {
             var phase = this.$root.$$phase;
@@ -243,6 +247,10 @@ var app = angular
         $scope.init = function() {
             $scope.getMenu();
         }
+         $scope.$on('pageChanged',function(e,d){
+            if ( d == 2 )
+                $scope.refresh();
+        });
         $scope.getMenu = function() {
             $scope.contract.send({
                 service: "GetMenu",
