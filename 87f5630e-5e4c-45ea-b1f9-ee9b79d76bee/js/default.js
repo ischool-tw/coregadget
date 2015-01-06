@@ -271,12 +271,12 @@ var CreditsManager = function() {
             return result;
         };
 
-        $('#balanced').val(toFormatNumber('00', $('#balanced').val()));
+        //$('#balanced').val(toFormatNumber('00', $('#balanced').val()));
         $('#competition').val(toFormatNumber('00.00', $('#competition').val()));
-        $('#fitness').val(toFormatNumber('00', $('#fitness').val()));
+        //$('#fitness').val(toFormatNumber('00', $('#fitness').val()));
         $('#merit').val(toFormatNumber('00.0', $('#merit').val()));
-        $('#services').val(toFormatNumber('00.0', $('#services').val()));
-        $('#term').val(toFormatNumber('00', $('#term').val()));
+        //$('#services').val(toFormatNumber('00.0', $('#services').val()));
+        //$('#term').val(toFormatNumber('00', $('#term').val()));
         $('#verification').val(toFormatNumber('00', $('#verification').val()));
         $('#condition').val(toFormatNumber('00', $('#condition').val()));
 
@@ -285,12 +285,12 @@ var CreditsManager = function() {
             body: {
                 Request: {
                     Credits: {
-                        Balanced: ($('#balanced').val() || ''),
+                        //Balanced: ($('#balanced').val() || ''),
                         Competition: ($('#competition').val() || ''),
-                        Fitness: ($('#fitness').val() || ''),
+                        //Fitness: ($('#fitness').val() || ''),
                         Merit: ($('#merit').val() || ''),
-                        Services: ($('#services').val() || ''),
-                        Term: ($('#term').val() || ''),
+                        //Services: ($('#services').val() || ''),
+                        //Term: ($('#term').val() || ''),
                         Verification: ($('#verification').val() || ''),
                         Condition: ($('#condition').val() || '')
                     }
