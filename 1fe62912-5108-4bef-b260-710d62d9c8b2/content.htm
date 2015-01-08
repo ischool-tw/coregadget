@@ -1,0 +1,65 @@
+<html>
+<head>
+    <meta content='text/html;charset=utf-8' />
+    <script type='text/javascript'>
+        var gadget = window.parent.getGadgetProxy((function () {
+            var vars = [], hash;
+            var p = window.location.href.slice(window.location.href.indexOf('?') + 1);
+            if (p.indexOf("#") >= 0)
+                p = p.substring(0, p.indexOf("#"));
+            var hashes = p.split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = decodeURIComponent(hashes[i]);
+                var key = hash.substring(0, hash.indexOf("="));
+                vars.push(key);
+                vars[key] = hash.substring(hash.indexOf("=") + 1);
+            }
+            return vars;
+        }()).id);
+        try { window.parent = null; } catch (exc) { }
+    </script>
+</head>
+<body leftmargin='0' topmargin='0' marginwidth='0' bgcolor='#FFFFFF' style='margin: 0;'>
+<script type="text/javascript" charset="utf-8" src="js/jquery.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.tools.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+
+gadget.autofit(document.getElementById("widget"));
+
+var _flashObj;
+
+var _swf = "src/widget.swf";
+var _connection = gadget.getContract("ta");
+
+_connection.send({
+    service: "DS.Base.Connect",
+    body: { RequestSessionID: "" },
+    result: function (response, error, http) {
+
+        var accessPoint = _connection.getAccessPoint();
+        var securityToken =
+			"<SecurityToken Type='Session'>" +
+				"<SessionID>" + response.SessionID + "</SessionID>" +
+			"</SecurityToken>";
+
+        var url = _swf + "?accessPoint=" + accessPoint + "&securityToken=" + securityToken + "&params=" + gadget.params.flex_params
+
+        _flashObj = flashembed("widget", url);
+    }
+});
+
+gadget.onLeave(function(){
+	if (_flashObj.getApi().leaveStatus() == "false") {
+		gadget.setExterior({hint: "成績尚未儲存!"});
+		return "成績尚未儲存!";
+	}
+	else {
+		gadget.setExterior({hint: ""});
+		return "";
+	}
+});
+</script>
+
+<div id="widget">
+</body>
+</html>
