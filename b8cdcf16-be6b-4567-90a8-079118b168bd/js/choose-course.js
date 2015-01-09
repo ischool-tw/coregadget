@@ -665,8 +665,9 @@ jQuery(function () {
                                         });
 
                                         $('#myModal').modal('hide');
+                                        $('body').scrollTop(0);
                                         $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
-                                        setTimeout("$('#mainMsg').html('')", 3000);
+                                        setTimeout("$('#mainMsg').html('')", 5000);
                                     }
                                 }
                             }
@@ -1037,8 +1038,9 @@ jQuery(function () {
                 var complete_process = function() {
                 	if (add_complete && quit_complete) {
                 		$('#myModal').modal('hide');
+                        $('body').scrollTop(0);
                 		$('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
-                		setTimeout("$('#mainMsg').html('')", 1500);
+                		setTimeout("$('#mainMsg').html('')", 5000);
                         // 送出Email
                 		var send_Mail = function (add_list_backup, quit_list_backup, course_add_html_backup, course_quit_html_backup) {
 							//	收件人
@@ -1121,7 +1123,26 @@ jQuery(function () {
                             		body: '',
                             		result: function (response, error, http) {
                             			if (error !== null) {
-                            				$(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + '發送「選課結果」郵件失敗！' + "</div>");
+                                            conn_log.ready(function(){
+                                                gadget.getContract("emba.student").send({
+                                                    service: "public.AddLog",
+                                                    body: {
+                                                        Request: {
+                                                            Log: {
+                                                                Actor: conn_log.getUserInfo().UserName,
+                                                                ActionType: "選課結果通知",
+                                                                Action: "取得Api",
+                                                                TargetCategory: "student",
+                                                                ClientInfo: {
+                                                                    ClientInfo: {}
+                                                                },
+                                                                ActionBy: "ischool web 選課小工具",
+                                                                Description: '學生「' + self.student.StudentName() + '」欲發送選課結果通知，取得Api失敗'
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                            });
                             			} else {
                             				if (response.Response) {
                             					$.ajax({
@@ -1137,16 +1158,75 @@ jQuery(function () {
                             								'html': mail_content
                             							}
                             						}
-                            					}).done(function (response) {
-                            						$('#mainMsg').html("<div class='alert alert-success'>\n  發送選課結果通知成功！\n</div>");
-                            						setTimeout("$('#mainMsg').html('')", 1500);
-                            					});
+                            					}).done(function (data, textStatus, jqXHR) {
+                                                    conn_log.ready(function(){
+                                                        gadget.getContract("emba.student").send({
+                                                            service: "public.AddLog",
+                                                            body: {
+                                                                Request: {
+                                                                    Log: {
+                                                                        Actor: conn_log.getUserInfo().UserName,
+                                                                        ActionType: "選課結果通知",
+                                                                        Action: "發送選課結果通知成功",
+                                                                        TargetCategory: "student",
+                                                                        ClientInfo: {
+                                                                            ClientInfo: {}
+                                                                        },
+                                                                        ActionBy: "ischool web 選課小工具",
+                                                                        Description: '學生「' + self.student.StudentName() + '」發送選課結果通知成功：' + jqXHR.responseText
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                            					}).fail(function(jqXHR, textStatus, errorThrown) {
+                                                    conn_log.ready(function(){
+                                                        gadget.getContract("emba.student").send({
+                                                            service: "public.AddLog",
+                                                            body: {
+                                                                Request: {
+                                                                    Log: {
+                                                                        Actor: conn_log.getUserInfo().UserName,
+                                                                        ActionType: "選課結果通知",
+                                                                        Action: "發送選課結果通知失敗",
+                                                                        TargetCategory: "student",
+                                                                        ClientInfo: {
+                                                                            ClientInfo: {}
+                                                                        },
+                                                                        ActionBy: "ischool web 選課小工具",
+                                                                        Description: '學生「' + self.student.StudentName() + '」發送選課結果通知失敗：' + jqXHR.responseText
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                });
                             				}
                             			}
                             			self.CallbackQueue.JobFinished();
                             		}
                             	});
                             } else {
+                                conn_log.ready(function(){
+                                    gadget.getContract("emba.student").send({
+                                        service: "public.AddLog",
+                                        body: {
+                                            Request: {
+                                                Log: {
+                                                    Actor: conn_log.getUserInfo().UserName,
+                                                    ActionType: "選課結果通知",
+                                                    Action: "發送選課結果通知失敗",
+                                                    TargetCategory: "student",
+                                                    ClientInfo: {
+                                                        ClientInfo: {}
+                                                    },
+                                                    ActionBy: "ischool web 選課小工具",
+                                                    Description: '學生「' + self.student.StudentName() + '」未設定Email'
+                                                }
+                                            }
+                                        }
+                                    });
+                                });
                             	self.CallbackQueue.JobFinished();
                             }
                     	};
@@ -1346,135 +1426,124 @@ jQuery(function () {
 
             // 依學生狀態決定顯示內容
             checkNowStatus : function() {
-                _gg.connection.send({
-                    service: "_.GetNow",
-                    body: '',
-                    result: function (response, error, http) {
-                        if (error !== null) {
-                            _gg.set_error_message('#errorMessage', 'GetNow', error);
-                        } else {
-                            var today = new Date(response.DateTime);
-                            var self = MyViewModel;
-                            var Startdate, Enddate;
-                            var Status;
-                            var basicDate;
-                            var addDays;
+                var self = MyViewModel;
+                var today = new Date();
+                var Startdate, Enddate;
+                var Status;
+                var basicDate;
+                var addDays;
 
-                            if (self.currentData.Item()) {
-                                // 在階段內
-                                if (MyViewModel.currentData.Item() === '1') {
-                                    $("#cs_content_template").html(self.configuration.cs_content1_template());
-                                };
-                                if (MyViewModel.currentData.Item() === '2') {
-                                    $("#cs_content_template").html(self.configuration.cs_content2_template());
-                                };
+                if (self.currentData.Item()) {
+                    // 在階段內
+                    if (MyViewModel.currentData.Item() === '1') {
+                        $("#cs_content_template").html(self.configuration.cs_content1_template());
+                    };
+                    if (MyViewModel.currentData.Item() === '2') {
+                        $("#cs_content_template").html(self.configuration.cs_content2_template());
+                    };
 
-                                $('#sa01 button[ac-type=save1]').tooltip({
-                                    trigger : "manual"
-                                });
-                            } else {
-                                // 1. 第一階段選課前，可選課程=目前尚未開放選課,課程總表 + 衝堂課程=無資料
-                                // 2. 第一第二階段選課中間~可選課程=目前尚未開放第二階段選課
-                                // 3. 第二階段後加退選前~選課最終確認=尚未公告選課最終結果
-                                // 4. 加退選期間結束後~選課最終確認,課程總表 + 衝堂課程=本學期選課已結束，目前尚未開放下一學期選課
-                                // 5. 第一階段選課前五天，可選課程=目前尚未開放選課,課程總表+衝堂課程=正常顯示
+                    $('#sa01 button[ac-type=save1]').tooltip({
+                        trigger : "manual"
+                    });
+                } else {
+                    // 1. 第一階段選課前，可選課程=目前尚未開放選課,課程總表 + 衝堂課程=無資料
+                    // 2. 第一第二階段選課中間~可選課程=目前尚未開放第二階段選課
+                    // 3. 第二階段後加退選前~選課最終確認=尚未公告選課最終結果
+                    // 4. 加退選期間結束後~選課最終確認,課程總表 + 衝堂課程=本學期選課已結束，目前尚未開放下一學期選課
+                    // 5. 第一階段選課前五天，可選課程=目前尚未開放選課,課程總表+衝堂課程=正常顯示
 
-                                if (_all_opening_data['Level0_EndTime']) {
-                                    Enddate = new Date(_all_opening_data['Level0_EndTime']);
-                                    if (Enddate < today) {
-                                        Status = 4;
-                                    }
-                                }
-
-                                if (_all_opening_data['Level2_EndTime']) {
-                                    if (_all_opening_data['Level0_BeginTime']) {
-                                        Startdate = new Date(_all_opening_data['Level2_EndTime']);
-                                        Enddate = new Date(_all_opening_data['Level0_BeginTime']);
-                                        if (Startdate < today && Enddate > today) {
-                                            Status = 3;
-                                        }
-                                    } else {
-                                        Status = 3;
-                                    }
-                                }
-
-                                if (_all_opening_data['Level1_EndTime']) {
-                                    Startdate = new Date(_all_opening_data['Level1_EndTime']);
-                                    if (_all_opening_data['Level2_BeginTime']) {
-                                        Enddate = new Date(_all_opening_data['Level2_BeginTime']);
-                                        if (Startdate < today && Enddate > today) {
-                                            Status = 2;
-                                        }
-                                    } else if (Startdate < today) {
-                                        Status = 2;
-                                    }
-                                }
-
-                                if (_all_opening_data['Level1_BeginTime']) {
-                                    Startdate = new Date(_all_opening_data['Level1_BeginTime']);
-                                    var five_days_later = today.getTime() + (24*3600*1000*5);
-                                    // addDays = new Date(Startdate.getFullYear(),Startdate.getMonth(),Startdate.getDate()-5);
-                                    if (Startdate > today) {
-                                        if (Startdate.getTime() <= five_days_later) {
-                                            Status = 5;
-                                        } else {
-                                            Status = 1;
-                                        }
-                                    }
-                                }
-
-                                switch (Status) {
-                                    case 5:
-                                        $('#sa01 .memb-list, #sa06 .memb-list').remove();
-                                        $('#sa01').html('<p>目前尚未開放選課</p>');
-                                        MyViewModel.currentData.Item('s5');
-                                        break;
-                                    case 1:
-                                        $('#sa01 .memb-list, #sa06 .memb-list').remove();
-                                        $('#sa01').html('<p>目前尚未開放選課</p>');
-                                        $('#sa02, #sa03').html('<p>目前無資料</p>');
-                                        MyViewModel.currentData.Item('s1');
-                                        break;
-                                    case 2:
-                                        $('#sa01 .memb-list, #sa06 .memb-list').remove();
-                                        $('#sa01').html('<p>目前尚未開放第二階段選課</p>');
-                                        MyViewModel.currentData.Item('s2');
-                                        break;
-                                    case 3:
-                                        $('#sa01 .memb-list, #sa06 .memb-list').remove();
-                                        $('#sa06').html('<p>尚未公告選課最終結果</p>');
-                                        MyViewModel.currentData.Item('s3');
-                                        break;
-                                    case 4:
-                                        $('#sa01 .memb-list, button[ac-type="save0"], button[ac-type="printCourse"]').remove();
-                                        $('#sa02, #sa03').html('<p>本學期選課已結束，目前尚未開放下一學期選課</p>');
-                                        // 收到加退選單資訊，呈現到加退選結束時間+10日
-                                        if (_all_opening_data['Level0_EndTime']) {
-                                            basicDate = new Date(_all_opening_data['Level0_EndTime']);
-                                            addDays = new Date(basicDate.getFullYear(),basicDate.getMonth(),basicDate.getDate()+11);
-                                            if (today > addDays) {
-                                                $('#sa06 .memb-list').remove();
-                                            }
-                                        } else {
-                                            $('#sa06 .memb-list').remove();
-                                        }
-
-                                        MyViewModel.currentData.Item('s4');
-                                        break;
-                                    default:
-                                        $('#sa01 .memb-list, #sa06 .memb-list').remove();
-                                        $('h1').html('選課');
-                                        $('#myTabContent').html('<p>目前尚未開放選課</p>');
-                                }
-                            }
-
-                            if (self.currentData.SchoolYear() && self.currentData.Semester()) {
-                                self.get_all_course();
-                            }
-                            $('#myTab li > a:first').trigger('click');
+                    if (_all_opening_data['Level0_EndTime']) {
+                        Enddate = new Date(_all_opening_data['Level0_EndTime']);
+                        if (Enddate < today) {
+                            Status = 4;
                         }
                     }
-                });
+
+                    if (_all_opening_data['Level2_EndTime']) {
+                        if (_all_opening_data['Level0_BeginTime']) {
+                            Startdate = new Date(_all_opening_data['Level2_EndTime']);
+                            Enddate = new Date(_all_opening_data['Level0_BeginTime']);
+                            if (Startdate < today && Enddate > today) {
+                                Status = 3;
+                            }
+                        } else {
+                            Status = 3;
+                        }
+                    }
+
+                    if (_all_opening_data['Level1_EndTime']) {
+                        Startdate = new Date(_all_opening_data['Level1_EndTime']);
+                        if (_all_opening_data['Level2_BeginTime']) {
+                            Enddate = new Date(_all_opening_data['Level2_BeginTime']);
+                            if (Startdate < today && Enddate > today) {
+                                Status = 2;
+                            }
+                        } else if (Startdate < today) {
+                            Status = 2;
+                        }
+                    }
+
+                    if (_all_opening_data['Level1_BeginTime']) {
+                        Startdate = new Date(_all_opening_data['Level1_BeginTime']);
+                        addDays = new Date(Startdate.getFullYear(),Startdate.getMonth(),Startdate.getDate()-6);
+                        if (Startdate > today) {
+                            if (today >= addDays) {
+                                Status = 5;
+                            } else {
+                                Status = 1;
+                            }
+                        }
+                    }
+
+                    switch (Status) {
+                        case 5:
+                            $('#sa01 .memb-list, #sa06 .memb-list').remove();
+                            $('#sa01').html('<p>目前尚未開放選課</p>');
+                            MyViewModel.currentData.Item('s5');
+                            break;
+                        case 1:
+                            $('#sa01 .memb-list, #sa06 .memb-list').remove();
+                            $('#sa01').html('<p>目前尚未開放選課</p>');
+                            $('#sa02, #sa03').html('<p>目前無資料</p>');
+                            MyViewModel.currentData.Item('s1');
+                            break;
+                        case 2:
+                            $('#sa01 .memb-list, #sa06 .memb-list').remove();
+                            $('#sa01').html('<p>目前尚未開放第二階段選課</p>');
+                            MyViewModel.currentData.Item('s2');
+                            break;
+                        case 3:
+                            $('#sa01 .memb-list, #sa06 .memb-list').remove();
+                            $('#sa06').html('<p>尚未公告選課最終結果</p>');
+                            MyViewModel.currentData.Item('s3');
+                            break;
+                        case 4:
+                            $('#sa01 .memb-list, button[ac-type="save0"], button[ac-type="printCourse"]').remove();
+                            $('#sa02, #sa03').html('<p>本學期選課已結束，目前尚未開放下一學期選課</p>');
+                            // 收到加退選單資訊，呈現到加退選結束時間+10日
+                            if (_all_opening_data['Level0_EndTime']) {
+                                basicDate = new Date(_all_opening_data['Level0_EndTime']);
+                                addDays = new Date(basicDate.getFullYear(),basicDate.getMonth(),basicDate.getDate()+11);
+                                if (today > addDays) {
+                                    $('#sa06 .memb-list').remove();
+                                }
+                            } else {
+                                $('#sa06 .memb-list').remove();
+                            }
+
+                            MyViewModel.currentData.Item('s4');
+                            break;
+                        default:
+                            $('#sa01 .memb-list, #sa06 .memb-list').remove();
+                            $('h1').html('選課');
+                            $('#myTabContent').html('<p>目前尚未開放選課</p>');
+                    }
+                }
+
+                if (self.currentData.SchoolYear() && self.currentData.Semester()) {
+                    self.get_all_course();
+                }
+                $('#myTab li > a:first').trigger('click');
             },
 
             // 依學生狀態決定顯示內容
@@ -1546,7 +1615,7 @@ ko.bindingHandlers.conflict_list = {
 // 錯誤訊息
 _gg.set_error_message = function(select_str, serviceName, error) {
     if (serviceName) {
-        var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
+        var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗，請稍候重試!</strong>(' + serviceName + ')';
         if (error !== null) {
             if (error.dsaError) {
                 if (error.dsaError.status === "504") {
