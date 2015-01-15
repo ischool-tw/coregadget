@@ -578,7 +578,7 @@ angular.module('enterconduct', [])
                 body: _body,
                 result: function(response, error, http) {
                     if (error !== null) {
-                        // $scope.set_error_message('#mainMsg', 'GetConfig', error);
+                        alert("Error occurred while saving data." + (error.dsaError.status || '') + (error.dsaError.message || ''));
                     } else {
                         //console.log(response);
                         $scope.$apply(function() {
