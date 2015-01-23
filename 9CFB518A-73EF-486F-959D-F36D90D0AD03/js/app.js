@@ -52,6 +52,7 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 
     $scope.SaveData = function() {
 
+		$scope.btnStyle = "disabled";
         //console.log(data);
 
         var del = "";
@@ -190,6 +191,7 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
                 //console.log(response);
 
                 if (error) {
+                	$scope.btnStyle = "disabled";
                     console.log(error);
 
                     if (error.dsaError && error.dsaError.message)
@@ -229,7 +231,7 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
                             };
 
                             $scope.gridOptions.data = data;
-
+                            $scope.btnStyle = "enabled";
                             //console.log(data);
                         } else {
                             $scope.alertStyle = "alert-warning";
