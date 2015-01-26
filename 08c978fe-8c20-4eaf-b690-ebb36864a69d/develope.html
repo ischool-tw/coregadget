@@ -101,15 +101,15 @@
                             <tr>
                                 <td ng-if="currentCourse.GradeYear < 3">
                                     <textarea id="mcomment-textbox" class="form-control" rows="3" ng-keydown="enterComment($event)" ng-model="currentStudent.MidtermComment" ng-if="currentConduct.canInputMComment"></textarea>
-                                    <span ng-if="!currentConduct.canInputMComment">{{currentStudent.MidtermComment}}</span>
+                                    <span ng-if="!currentConduct.canInputMComment" style="word-break: break-all">{{currentStudent.MidtermComment}}</span>
                                 </td>
                                 <td ng-if="currentCourse.GradeYear < 3">
                                     <textarea id="fcomment-textbox" class="form-control" rows="3" ng-keydown="enterComment($event)" ng-model="currentStudent.FinalComment" ng-if="currentConduct.canInputFComment"></textarea>
-                                    <span ng-if="!currentConduct.canInputFComment">{{currentStudent.FinalComment}}</span>
+                                    <span ng-if="!currentConduct.canInputFComment" style="word-break: break-all">{{currentStudent.FinalComment}}</span>
                                 </td>
                                 <td ng-if="currentCourse.GradeYear >= 3">
                                     <textarea id="comment-textbox" class="form-control" rows="3" ng-keydown="enterComment($event)" ng-model="currentStudent.Comment" ng-if="currentConduct.canInputGrade"></textarea>
-                                    <span ng-if="!currentConduct.canInputGrade">{{currentStudent.Comment}}</span>
+                                    <span ng-if="!currentConduct.canInputGrade" style="word-break: break-all">{{currentStudent.Comment}}</span>
                                 </td>
                             </tr>
                         </tbody>
