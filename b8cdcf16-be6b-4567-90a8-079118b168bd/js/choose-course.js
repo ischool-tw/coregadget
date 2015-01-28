@@ -1047,12 +1047,13 @@ jQuery(function () {
                             var receiver = [], mail_tmpl_name = '', course_html = '';
                             for (var ii=1; ii<=5; ii+=1) {
                                 if (self.student['Email' + ii]()) {
-                                    receiver.push(
-                                    {
-                                        'email': self.student['Email' + ii](),
-                                        'name': self.student.StudentName() || '',
-                                        'type': 'to'
-                                    });
+                                    // receiver.push(
+                                    // {
+                                    //     'email': self.student['Email' + ii](),
+                                    //     'name': self.student.StudentName() || '',
+                                    //     'type': 'to'
+                                    // });
+                                    receiver.push((self.student.StudentName() || '') + '<' + self.student['Email' + ii]() + '>');
                                 }
                             }
                             var receivers = receiver.join(',');
@@ -1118,11 +1119,17 @@ jQuery(function () {
                             	mail_content = mail_content.replace(/\[\[退選課程\]\]/g, (quit_list_backup.length > 0) ? '<p>退選課程：</p>' + course_quit_html_backup : '');
                             	mail_content = mail_content.replace(/\[\[選課結果\]\]/g, '<p>選課結果：</p>' + get_course_html(self.curr_attend()));
 
-                            	_gg.connection.send({
-                            		service: "_.GetMandrillApiKey",
-                            		body: '',
-                            		result: function (response, error, http) {
-                            			if (error !== null) {
+                                _gg.connection.send({
+                                    service: "_.SendMail",
+                                    body: {
+                                        Request: {
+                                            Receiver: receivers,
+                                            Subject: mail_subject,
+                                            HtmlContent: mail_content
+                                        }
+                                    },
+                                    result: function (response, error, http) {
+                                        if (error) {
                                             conn_log.ready(function(){
                                                 gadget.getContract("emba.student").send({
                                                     service: "public.AddLog",
@@ -1131,81 +1138,42 @@ jQuery(function () {
                                                             Log: {
                                                                 Actor: conn_log.getUserInfo().UserName,
                                                                 ActionType: "選課結果通知",
-                                                                Action: "取得Api",
+                                                                Action: "發送選課結果通知失敗",
                                                                 TargetCategory: "student",
                                                                 ClientInfo: {
                                                                     ClientInfo: {}
                                                                 },
                                                                 ActionBy: "ischool web 選課小工具",
-                                                                Description: '學生「' + self.student.StudentName() + '」欲發送選課結果通知，取得Api失敗'
+                                                                Description: '學生「' + self.student.StudentName() + '」發送選課結果通知失敗：' +  JSON.stringify(error)
                                                             }
                                                         }
                                                     }
                                                 });
                                             });
-                            			} else {
-                            				if (response.Response) {
-                            					$.ajax({
-                            						type: 'POST',
-                            						url: 'https://mandrillapp.com/api/1.0/messages/send.json',
-                            						data: {
-                            							'key': response.Response.apikey,
-                            							'message': {
-                            								'from_email': 'embacourse@emba.ntu.edu.tw',
-                            								'to': receiver,
-                            								'autotext': 'true',
-                            								'subject': mail_subject,
-                            								'html': mail_content
-                            							}
-                            						}
-                            					}).done(function (data, textStatus, jqXHR) {
-                                                    conn_log.ready(function(){
-                                                        gadget.getContract("emba.student").send({
-                                                            service: "public.AddLog",
-                                                            body: {
-                                                                Request: {
-                                                                    Log: {
-                                                                        Actor: conn_log.getUserInfo().UserName,
-                                                                        ActionType: "選課結果通知",
-                                                                        Action: "發送選課結果通知成功",
-                                                                        TargetCategory: "student",
-                                                                        ClientInfo: {
-                                                                            ClientInfo: {}
-                                                                        },
-                                                                        ActionBy: "ischool web 選課小工具",
-                                                                        Description: '學生「' + self.student.StudentName() + '」發送選課結果通知成功：' + jqXHR.responseText
-                                                                    }
-                                                                }
+                                        } else {
+                                            conn_log.ready(function(){
+                                                gadget.getContract("emba.student").send({
+                                                    service: "public.AddLog",
+                                                    body: {
+                                                        Request: {
+                                                            Log: {
+                                                                Actor: conn_log.getUserInfo().UserName,
+                                                                ActionType: "選課結果通知",
+                                                                Action: "發送選課結果通知成功",
+                                                                TargetCategory: "student",
+                                                                ClientInfo: {
+                                                                    ClientInfo: {}
+                                                                },
+                                                                ActionBy: "ischool web 選課小工具",
+                                                                Description: '學生「' + self.student.StudentName() + '」發送選課結果通知成功'
                                                             }
-                                                        });
-                                                    });
-                            					}).fail(function(jqXHR, textStatus, errorThrown) {
-                                                    conn_log.ready(function(){
-                                                        gadget.getContract("emba.student").send({
-                                                            service: "public.AddLog",
-                                                            body: {
-                                                                Request: {
-                                                                    Log: {
-                                                                        Actor: conn_log.getUserInfo().UserName,
-                                                                        ActionType: "選課結果通知",
-                                                                        Action: "發送選課結果通知失敗",
-                                                                        TargetCategory: "student",
-                                                                        ClientInfo: {
-                                                                            ClientInfo: {}
-                                                                        },
-                                                                        ActionBy: "ischool web 選課小工具",
-                                                                        Description: '學生「' + self.student.StudentName() + '」發送選課結果通知失敗：' + jqXHR.responseText
-                                                                    }
-                                                                }
-                                                            }
-                                                        });
-                                                    });
+                                                        }
+                                                    }
                                                 });
-                            				}
-                            			}
-                            			self.CallbackQueue.JobFinished();
-                            		}
-                            	});
+                                            });
+                                        }
+                                    }
+                                });
                             } else {
                                 conn_log.ready(function(){
                                     gadget.getContract("emba.student").send({
@@ -1227,8 +1195,8 @@ jQuery(function () {
                                         }
                                     });
                                 });
-                            	self.CallbackQueue.JobFinished();
                             }
+                            self.CallbackQueue.JobFinished();
                     	};
 
 						//	以下4行是原來的程式
