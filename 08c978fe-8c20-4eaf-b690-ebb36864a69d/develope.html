@@ -92,24 +92,24 @@
                     <table class="table table-bordered table-striped table-hover" ng-if="teacherType == 'homeroom'">
                         <thead>
                             <tr>
-                                <th ng-if="currentCourse.GradeYear < 3">Midterm Comment (Shift+Enter)</th>
-                                <th ng-if="currentCourse.GradeYear < 3">Final Comment (Shift+Enter)</th>
-                                <th ng-if="currentCourse.GradeYear >= 3">Final Comment (Shift+Enter)</th>
+                                <th ng-if="currentCourse.GradeYear < 3" style="width:50%">Midterm Comment (Enter to Save the Page; Shift+ Enter to Add a New Line)</th>
+                                <th ng-if="currentCourse.GradeYear < 3" style="width:50%">Final Comment (Enter to Save the Page; Shift+ Enter to Add a New Line)</th>
+                                <th ng-if="currentCourse.GradeYear >= 3" style="width:50%">Final Comment (Enter to Save the Page; Shift+ Enter to Add a New Line)</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td ng-if="currentCourse.GradeYear < 3">
-                                    <textarea id="mcomment-textbox" class="form-control" rows="3" ng-keydown="enterComment($event)" ng-model="currentStudent.MidtermComment" ng-if="currentConduct.canInputMComment"></textarea>
-                                    <span ng-if="!currentConduct.canInputMComment">{{currentStudent.MidtermComment}}</span>
+                                    <textarea id="mcomment-textbox" class="form-control" rows="3" ng-keydown="enterComment($event)" ng-model="currentStudent.MidtermComment" ng-if="currentConduct.canInputMComment" style="height:100%"></textarea>
+                                    <span ng-if="!currentConduct.canInputMComment" style="word-break: break-all">{{currentStudent.MidtermComment}}</span>
                                 </td>
                                 <td ng-if="currentCourse.GradeYear < 3">
-                                    <textarea id="fcomment-textbox" class="form-control" rows="3" ng-keydown="enterComment($event)" ng-model="currentStudent.FinalComment" ng-if="currentConduct.canInputFComment"></textarea>
-                                    <span ng-if="!currentConduct.canInputFComment">{{currentStudent.FinalComment}}</span>
+                                    <textarea id="fcomment-textbox" class="form-control" rows="3" ng-keydown="enterComment($event)" ng-model="currentStudent.FinalComment" ng-if="currentConduct.canInputFComment" style="height:100%"></textarea>
+                                    <span ng-if="!currentConduct.canInputFComment" style="word-break: break-all">{{currentStudent.FinalComment}}</span>
                                 </td>
                                 <td ng-if="currentCourse.GradeYear >= 3">
-                                    <textarea id="comment-textbox" class="form-control" rows="3" ng-keydown="enterComment($event)" ng-model="currentStudent.Comment" ng-if="currentConduct.canInputGrade"></textarea>
-                                    <span ng-if="!currentConduct.canInputGrade">{{currentStudent.Comment}}</span>
+                                    <textarea id="comment-textbox" class="form-control" rows="3" ng-keydown="enterComment($event)" ng-model="currentStudent.Comment" ng-if="currentConduct.canInputGrade" style="height:100%"></textarea>
+                                    <span ng-if="!currentConduct.canInputGrade" style="word-break: break-all">{{currentStudent.Comment}}</span>
                                 </td>
                             </tr>
                         </tbody>

@@ -279,6 +279,10 @@ _gg.SetScoreData = function () {
                 });
 
                 items.push('<td>' + tmp_score + '</td>');
+
+                var originScore= (this.是否取得學分 === "是" ? this.原始成績 : '<span class="my-lost-credit">' + this.原始成績 + '</span>');
+                items.push('<td>' + originScore + '</td>');
+
                 items.push('<td>' + tmp_credit + '</td>');
                 items.push('</tr>');
 
