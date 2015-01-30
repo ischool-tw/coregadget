@@ -67,7 +67,7 @@ _gg.SetStudentCreditData = function () {
         student.MyScoreRule = (_gg.ScoreRules[student.ScoreCalcRuleID] || '');            // TODO: 設定全域學生畢業條件
         student.MyGraduationPlan =(_gg.GraduationPlans[student.GraduationPlanID] || '');  // TODO: 設定全域學生課規表
         student.CreditCount = {
-            Credits            : []   //各學期學分數
+            Credits: []   //各學期學分數
         };
 
         var SemsSubjScore = student.MySemsSubjScore;
@@ -105,7 +105,7 @@ _gg.SetStudentCreditData = function () {
                             var tmp_use_data = tmp_semsSubjScore;
                             // TODO: 學分數轉數字
                             var tmp_credit = parseFloat(tmp_use_data.Credit, 10) || 0;
-                            
+
                             if (tmp_use_data.NotIncludedInCredit === "False") {
                                 // TODO: 單一學期
                                 //2014/10/16 改為支援小數點。
@@ -164,7 +164,11 @@ _gg.SetScoreData = function () {
 
     var student = _gg.Student;
     var ScoreRule = student.MyScoreRule.Content.ScoreCalcRule;
-    var GraduationPlan = student.MyGraduationPlan.Content.GraduationPlan.Subject;
+    var GraduationPlan = (student.MyGraduationPlan
+        && student.MyGraduationPlan.Content
+        && student.MyGraduationPlan.Content.GraduationPlan
+        && student.MyGraduationPlan.Content.GraduationPlan.Subject
+    ) ? student.MyGraduationPlan.Content.GraduationPlan.Subject : '';
     var SemsSubjScore = student.MySemsSubjScore;
     var SemsEntryScore = student.MySemsEntryScore;
 
@@ -191,7 +195,7 @@ _gg.SetScoreData = function () {
     var fun_SubjectScore_tooltip = function (mainData, compareData) {
         if (compareData) {
             if (mainData !== compareData) {
-                return '<td rel="tooltip" data-original-title="課程規劃表「' + student.MyGraduationPlan.Name + '」<br/>設定為' + compareData + '">' + mainData + '</td>';
+                return '<td rel="tooltip" data-original-title="課程規劃表「' + (student.MyGraduationPlan.Name || '') + '」<br/>設定為' + compareData + '">' + mainData + '</td>';
             } else {
                 return '<td>' + mainData + '</td>';
             }
@@ -352,22 +356,27 @@ _gg.GetScoreRule = function (id) {
 
 // TODO: 取得課規
 _gg.GetGraduationPlan = function (id) {
-    _gg.connection.send({
-        service: "_.GetGraduationPlan",
-        body: "<Request><Condition><Id>" +id+ "</Id></Condition></Request>",
-        result: function (response, error, http) {
-            if (error !== null) {
-                return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetGraduationPlan)\n</div>");
-            } else {
-                $(response.GraduationPlan).each(function (index, item) {
-                    if (!_gg.GraduationPlans[item.Id]) {
-                        _gg.GraduationPlans[item.Id] = item;
-                    }
-                });
-                _gg.SetStudentCreditData();
+    // 學生、班級都可以不設定課規
+    if (id) {
+        _gg.connection.send({
+            service: "_.GetGraduationPlan",
+            body: "<Request><Condition><Id>" +id+ "</Id></Condition></Request>",
+            result: function (response, error, http) {
+                if (error !== null) {
+                    return $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetGraduationPlan)\n</div>");
+                } else {
+                    $(response.GraduationPlan).each(function (index, item) {
+                        if (!_gg.GraduationPlans[item.Id]) {
+                            _gg.GraduationPlans[item.Id] = item;
+                        }
+                    });
+                    _gg.SetStudentCreditData();
+                }
             }
-        }
-    });
+        });
+    } else {
+        _gg.GraduationPlans[id] = {};
+    }
 };
 
 // TODO: 取得學期成績
