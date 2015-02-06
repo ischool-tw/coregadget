@@ -1,0 +1,67 @@
+@import url(http://fonts.googleapis.com/css?family=RobotoDraft:500);
+* {
+    font-family: 'RobotoDraft', sans-serif;
+    font-size: 15px;
+}
+b {
+    font-style: normal;
+    display: block;
+    position: absolute;
+    top: -45px;
+    left: -40px;
+    width: 35px;
+    font-size: 0.9em;
+}
+em {
+    font-style: normal;
+    display: block;
+    position: absolute;
+    top: -25px;
+    left: -125px;
+    font-size: 0.9em;
+}
+td {
+    text-align: center;
+}
+
+.table-score>tr>th {
+    width: 14.3%;
+    text-align: center;
+    font-weight: bolder;
+    font-size: 1.1em;
+
+}
+
+.table-discipline>tr>th {
+    width: 14.3%;
+    text-align: center;
+    font-weight: bolder;
+    font-size: 1.1em;
+}
+
+.table-discipline>tr>td {
+    width: 14.3%;
+}
+.text-red {
+    color: #D84F4F;
+}
+.text-green {
+    color: #229D36;
+}
+.out {
+    border-top: 55px #D8D8DC solid;
+    /*上邊框寬度等於表格第一行行高*/
+    
+    border-left: 136px #FFF solid;
+    /*左邊框寬度等於表格第一行第一格寬度*/
+    
+    position: relative;
+    /*讓裡面的兩個子容器絕對定位*/
+}
+#content-left {
+    text-align: left;
+    border-right: 2px solid #C5C5C5;
+}
+#table-line>th{
+  border-bottom:2px solid #C5C5C5;
+}

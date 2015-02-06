@@ -1,0 +1,185 @@
+﻿<!doctype html>
+<html ng-app="app">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="css/base.css" rel="stylesheet" />
+    <link href="css/default.css" rel="stylesheet">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="js/app.js"></script>
+    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+
+    <script>
+    init({
+        application: "dev.jh_hs",
+        paramValues: {},
+        oAuth: {
+            clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+            clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311'
+        }
+    });
+    </script>
+
+    <style type="text/css">
+    .underSixty {
+        background-color: lightgoldenrodyellow;
+    }
+    </style>
+
+</head>
+
+<body ng-controller="MainCtrl">
+    <div id="gadget" class="my-page">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Information</h1>
+                <div ng-if="system_position == 'teacher'" class="btn-group" style="margin-left: 15px;margin-bottom:10px;">
+                    <a href="" class="btn btn-default dropdown-toggle ng-binding" data-toggle="dropdown">{{currentClass.Name}}<span class="caret"></span> </a>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="(key, value) in Class">
+                            <a ng-click="SelectClass(value)" href="#">{{value.Name}}</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div ng-if="system_position == 'teacher' || system_position == 'parent'"class="btn-group" style="margin-left: 15px;margin-bottom:10px;">
+                    <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{currentStudent.Name}}<span class="caret"></span> </a>
+                    <ul class="dropdown-menu">
+                        <!-- ngRepeat: item in studentList -->
+                        <li ng-repeat="(key, value) in Students">
+                            <a ng-click="SelectStudent(value)" href="#">{{value.Name}}</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style=" width: 950px; margin-left: 15px;">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne" style="text-decoration:none;">
+                                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>&nbsp;&nbsp;
+                                    <span ng-class="{'text-muted': isDisabled}" class="ng-binding">領域成績說明</span>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+                                <div ng-repeat="(key, value) in Rules.Domains" style="font-size:15px;color:green">{{value}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 成績表格 -->
+                <div class="row" style="margin: 0px auto;">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <tbody class="table-score">
+                                <tr id="table-line">
+                                    <th style="width:14.3%;padding:0;">
+                                        <div class="out">
+                                            <b>學期</b>
+                                            <em>領域/獎懲</em>
+                                        </div>
+                                    </th>
+                                    <th>{{Semester1.Title}}</th>
+                                    <th>{{Semester2.Title}}</th>
+                                    <th>{{Semester3.Title}}</th>
+                                    <th>{{Semester4.Title}}</th>
+                                    <th>{{Semester5.Title}}</th>
+                                    <th>{{Semester6.Title}}</th>
+                                </tr>
+                                <tr ng-repeat="(key, domain) in DomainList">
+                                    <td id="content-left">{{domain}}</td>
+                                    <td ng-class="ScoreColor(Semester1.Domains[domain])">{{Semester1.Domains[domain] || ""}}</td>
+                                    <td ng-class="ScoreColor(Semester2.Domains[domain])">{{Semester2.Domains[domain] || ""}}</td>
+                                    <td ng-class="ScoreColor(Semester3.Domains[domain])">{{Semester3.Domains[domain] || ""}}</td>
+                                    <td ng-class="ScoreColor(Semester4.Domains[domain])">{{Semester4.Domains[domain] || ""}}</td>
+                                    <td ng-class="ScoreColor(Semester5.Domains[domain])">{{Semester5.Domains[domain] || ""}}</td>
+                                    <td ng-class="ScoreColor(Semester6.Domains[domain])">{{Semester6.Domains[domain] || ""}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="panel-group" id="accordion2" role="tablist" aria-multiselectable="true" style=" width: 950px; margin-left: 15px;">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading" role="tab" id="headingTwo">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="text-decoration:none;">
+                                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>&nbsp;&nbsp;
+                                    <span ng-class="{'text-muted': isDisabled}" class="ng-binding">懲戒標準說明</span>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                            <div class="panel-body">
+                                <div ng-repeat="(key, value) in Rules.Disciplines" style="font-size:15px;color:green">{{value}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 獎懲表格 -->
+                <div class="row" style="margin: 0px auto;">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <tbody class="table-discipline">
+                                <tr id="table-line">
+                                    <th style="width:14.3%;padding:0;">
+                                        <div class="out">
+                                            <b>學期</b>
+                                            <em>條件</em>
+                                        </div>
+                                    </th>
+                                    <th>{{Semester1.Title}}</th>
+                                    <th>{{Semester2.Title}}</th>
+                                    <th>{{Semester3.Title}}</th>
+                                    <th>{{Semester4.Title}}</th>
+                                    <th>{{Semester5.Title}}</th>
+                                    <th>{{Semester6.Title}}</th>
+                                </tr>
+                                <tr>
+                                    <td id="content-left">每個學期</td>
+                                    <td>{{Semester1.Discipline.DisplayA}}
+                                    </td>
+                                    <td>{{Semester2.Discipline.DisplayA}}
+                                    </td>
+                                    <td>{{Semester3.Discipline.DisplayA}}
+                                    </td>
+                                    <td>{{Semester4.Discipline.DisplayA}}
+                                    </td>
+                                    <td>{{Semester5.Discipline.DisplayA}}
+                                    </td>
+                                    <td>{{Semester6.Discipline.DisplayA}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="content-left">第六學期</td>
+                                    <td colspan="5"></td>
+                                    <td>{{Semester6.Discipline.DisplayB}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="content-left">所有學期</td>
+                                    <td colspan="6">{{SemesterAll.Discipline.DisplayC}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
