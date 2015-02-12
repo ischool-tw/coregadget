@@ -86,9 +86,8 @@ $(document).ready ->
         Name: keyword
 
   # 左方班級選單的開閤
-  $("#class").on "click", "li.nav-header", ->
+  $("#class, #teacher").on "click", "li.nav-header", ->
 
-    # $('#class li').not('.nav-header').hide();
     if $(this).find("i.icon-chevron-down").size()
       $(this).nextUntil("li.nav-header").hide()
     else
@@ -145,7 +144,7 @@ TimeTable = do ->
                   ID: item.TeacherID
                   Name: item.TeacherName
 
-  # 取得所有老師、所有班級、所有場地
+  # 取得所有老師類別、所有班級、所有場地
   getAllSearchItem = ->
     checkResult = ->
       _alloptions = _teachers.concat(_classes, _classrooms)  if _teachers and _classes and _classrooms
@@ -160,6 +159,7 @@ TimeTable = do ->
           else
             items = []
             teacher_list = []
+            dept_name = null
             if response.Response?.Teacher?
               $(response.Response.Teacher).each (index, item) ->
                 items.push
@@ -167,12 +167,15 @@ TimeTable = do ->
                   ID: item.ID
                   Name: item.TeacherName
 
+                if item.Dept isnt dept_name
+                  dept_name = item.Dept
+                  teacher_list.push """<li class="nav-header"><a href="#"><i class="icon-chevron-down"></i> #{dept_name || '未分類教師'}</a></li>"""
+
                 teacher_list.push """<li><a href="#" kind="teacher" kid="#{item.ID or ""}">#{item.TeacherName}</a></li>"""
 
             _teachers = items
             checkResult()
             $("#teacher ul").html teacher_list.join("")
-
 
     getClasses = ->
       _connection.send
