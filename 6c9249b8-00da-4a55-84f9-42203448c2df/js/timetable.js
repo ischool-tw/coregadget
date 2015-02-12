@@ -193,9 +193,9 @@
                   });
                   if (item.Dept !== dept_name) {
                     dept_name = item.Dept;
-                    teacher_list.push("<li class=\"nav-header\"><a href=\"#\"><i class=\"icon-chevron-down\"></i> " + (dept_name || '未分類教師') + "</a></li>");
+                    teacher_list.push("<li class=\"nav-header\"><a href=\"#\"><i class=\"icon-chevron-up\"></i> " + (dept_name || '未分類教師') + "</a></li>");
                   }
-                  return teacher_list.push("<li><a href=\"#\" kind=\"teacher\" kid=\"" + (item.ID || "") + "\">" + item.TeacherName + "</a></li>");
+                  return teacher_list.push("<li style=\"display: none;\"><a href=\"#\" kind=\"teacher\" kid=\"" + (item.ID || "") + "\">" + item.TeacherName + "</a></li>");
                 });
               }
               _teachers = items;
@@ -231,10 +231,10 @@
                     } else {
                       grader_name = item.GraderYear + "年級";
                     }
-                    class_list.push("<li class=\"nav-header\"><a href=\"#\"><i class=\"icon-chevron-down\"></i> " + grader_name + "</a></li>");
+                    class_list.push("<li class=\"nav-header\"><a href=\"#\"><i class=\"icon-chevron-up\"></i> " + grader_name + "</a></li>");
                     grader_year = item.GraderYear;
                   }
-                  return class_list.push("<li><a href=\"#\" kind=\"class\" kid=\"" + (item.ID || "") + "\">" + (item.ClassName || "") + "</a></li>");
+                  return class_list.push("<li style=\"display: none;\"><a href=\"#\" kind=\"class\" kid=\"" + (item.ID || "") + "\">" + (item.ClassName || "") + "</a></li>");
                 });
               }
               _classes = items;

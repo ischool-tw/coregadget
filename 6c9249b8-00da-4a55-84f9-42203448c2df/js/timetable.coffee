@@ -85,7 +85,7 @@ $(document).ready ->
         ID: kid
         Name: keyword
 
-  # 左方班級選單的開閤
+  # 左方班級、老師選單的開閤
   $("#class, #teacher").on "click", "li.nav-header", ->
 
     if $(this).find("i.icon-chevron-down").size()
@@ -169,9 +169,9 @@ TimeTable = do ->
 
                 if item.Dept isnt dept_name
                   dept_name = item.Dept
-                  teacher_list.push """<li class="nav-header"><a href="#"><i class="icon-chevron-down"></i> #{dept_name || '未分類教師'}</a></li>"""
+                  teacher_list.push """<li class="nav-header"><a href="#"><i class="icon-chevron-up"></i> #{dept_name || '未分類教師'}</a></li>"""
 
-                teacher_list.push """<li><a href="#" kind="teacher" kid="#{item.ID or ""}">#{item.TeacherName}</a></li>"""
+                teacher_list.push """<li style="display: none;"><a href="#" kind="teacher" kid="#{item.ID or ""}">#{item.TeacherName}</a></li>"""
 
             _teachers = items
             checkResult()
@@ -201,9 +201,9 @@ TimeTable = do ->
                     grader_name = "未分年級"
                   else
                     grader_name = item.GraderYear + "年級"
-                  class_list.push """<li class="nav-header"><a href="#"><i class="icon-chevron-down"></i> #{grader_name}</a></li>"""
+                  class_list.push """<li class="nav-header"><a href="#"><i class="icon-chevron-up"></i> #{grader_name}</a></li>"""
                   grader_year = item.GraderYear
-                class_list.push """<li><a href="#" kind="class" kid="#{item.ID or ""}">#{item.ClassName or ""}</a></li>"""
+                class_list.push """<li style="display: none;"><a href="#" kind="class" kid="#{item.ID or ""}">#{item.ClassName or ""}</a></li>"""
 
             _classes = items
             checkResult()
