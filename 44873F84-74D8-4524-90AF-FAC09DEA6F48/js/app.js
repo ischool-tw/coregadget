@@ -332,6 +332,36 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
             return x.length - y.length
         });
 
+        //計算領域平均
+        $scope.DomainAvg = [];
+        for (j = 0; j <= domainList.length; j++) {
+
+            var domain = domainList[j];
+
+            var count = 0;
+            var sum = 0;
+
+            for (i = 1; i <= 6; i++) {
+
+                var key = "Semester" + i;
+
+                var score = parseFloat($scope[key].Domains[domain], 10);
+
+                if (!isNaN(score)) {
+                    count++;
+
+                    //先抓到第三位做加總
+                    score = Math.floor(score * 1000);
+                    sum += score;
+                }
+            };
+
+            //記得除回來
+            sum = sum / 1000;
+            //若變NaN就不會出現
+            $scope.DomainAvg[domain] = Math.round((sum / count) * 100) / 100;
+        };
+
         $scope.DomainList = domainList;
 
         //console.log(domainList);
@@ -493,18 +523,16 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
         }
     };
 
-    if ($scope.system_position === "teacher"){
+    if ($scope.system_position === "teacher") {
         $scope.connection = gadget.getContract("ischool.GraduateAlarm.teacher");
         $scope.GetClass();
-    }
-    else if ($scope.system_position === "parent"){
+    } else if ($scope.system_position === "parent") {
         $scope.connection = gadget.getContract("ischool.GraduateAlarm.parent");
         $scope.GetStudents();
-    }
-    else {
+    } else {
         $scope.connection = gadget.getContract("ischool.GraduateAlarm.student");
         $scope.GetData();
     }
-        
+
 
 }]);

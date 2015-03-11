@@ -95,6 +95,7 @@
                                     <th>{{Semester4.Title}}</th>
                                     <th>{{Semester5.Title}}</th>
                                     <th>{{Semester6.Title}}</th>
+                                    <th>Avg</th>
                                 </tr>
                                 <tr ng-repeat="(key, domain) in DomainList">
                                     <td id="content-left">{{domain}}</td>
@@ -104,6 +105,7 @@
                                     <td ng-class="ScoreColor(Semester4.Domains[domain])">{{Semester4.Domains[domain] || ""}}</td>
                                     <td ng-class="ScoreColor(Semester5.Domains[domain])">{{Semester5.Domains[domain] || ""}}</td>
                                     <td ng-class="ScoreColor(Semester6.Domains[domain])">{{Semester6.Domains[domain] || ""}}</td>
+                                    <td ng-class="ScoreColor(DomainAvg[domain])">{{DomainAvg[domain] || ""}}</td>
                                 </tr>
                             </tbody>
                         </table>
