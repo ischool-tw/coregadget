@@ -331,11 +331,11 @@ var set_error_message = function(select_str, serviceName, error) {
 var ModalInstanceCtrl = function($scope, column, tmplist) {
     var columnObj = {
         test_date: { header:"測驗日期",errorMsg :"資料格式不正確，請填入EX:2014/08/07"},
-        height: { header:"身高(cm)",errorMsg:"資料格式不正確，請輸入數字或免測"},
-        weight: { header:"體重(kg)",errorMsg:"資料格式不正確，請輸入數字或免測"},
-        sit_and_reach: { header:"坐姿體前彎(cm)",errorMsg:"資料格式不正確，請輸入數字或免測"},
-        standing_long_jump: { header:"立定跳遠(cm)",errorMsg:"資料格式不正確，請輸入數字或免測"},
-        sit_up: { header:"仰臥起坐(次)",errorMsg:"資料格式不正確，請輸入數字或免測"},
+        height: { header:"身高(cm)",errorMsg:"資料格式不正確，請輸入整數或免測"},
+        weight: { header:"體重(kg)",errorMsg:"資料格式不正確，請輸入整數或免測"},
+        sit_and_reach: { header:"坐姿體前彎(cm)",errorMsg:"資料格式不正確，請輸入整數或免測"},
+        standing_long_jump: { header:"立定跳遠(cm)",errorMsg:"資料格式不正確，請輸入整數或免測"},
+        sit_up: { header:"仰臥起坐(次)",errorMsg:"資料格式不正確，請輸入整數或免測"},
         cardiorespiratory: { header:"心肺適能(秒)",errorMsg:"資料格式不正確，200秒可輸入200或3.20或3'20\"或3'20或3'20' <擇一輸入>或免測"},
     };
     $scope.column_text = columnObj[column].header;

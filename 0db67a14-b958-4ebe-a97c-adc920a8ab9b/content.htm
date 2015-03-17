@@ -23,8 +23,8 @@
                 <h1>
                     體適能測驗資料輸入
                     <div class="pull-right">
-                    <a class="btn btn-default" ng-click="showRule()">說明</a>
-                </div>
+                        <a class="btn btn-info" ng-click="showRule()">說明</a>
+                    </div>
                 </h1>
                 <div id="mainMsg"></div>
                 <div class="alert alert-info" ng-class="{'alert-danger':current.inPeriod}" role="alert" ng-show="current.id">
@@ -107,9 +107,9 @@
     </div>
     <div class="modal-body">
         <ul>
-            <li>仰臥起坐 (次)，例如：45</li>
-            <li>坐姿體前彎 (公分) ，例如：50</li>
-            <li>立定跳遠 (公分) ，例如：170</li>
+            <li>仰臥起坐 (次)，例如：45 (整數)</li>
+            <li>坐姿體前彎 (公分) ，例如：50 (整數)</li>
+            <li>立定跳遠 (公分) ，例如：170 (整數)</li>
             <li>心肺適能 (秒)，例如：200秒可輸入200或3.20或3'20"或3'20或3'20' <擇一輸入></li>
             <li>身心障礙等特殊原因學生經主管機關認定無法施測者，統一輸入"免測"</li>
         </ul>
@@ -123,7 +123,7 @@
                     <button style="margin-left:10px;float:right" type="button" class="btn btn-primary" ng-click="ok()">儲存</button>
                     <button style="float:right" type="button" class="btn btn-default" ng-click="cancel()">取消</button>
                     <h4 class="modal-title" id="myModalLabel">{{column_text}}</h4>
-                    
+
                 </div>
                 <div class="modal-body">
                     <table class="table table-striped">
