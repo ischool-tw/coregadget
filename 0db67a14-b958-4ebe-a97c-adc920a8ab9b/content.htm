@@ -22,6 +22,9 @@
             <div class="col-md-12">
                 <h1>
                     體適能測驗資料輸入
+                    <div class="pull-right">
+                    <a class="btn btn-default" ng-click="showRule()">說明</a>
+                </div>
                 </h1>
                 <div id="mainMsg"></div>
                 <div class="alert alert-info" ng-class="{'alert-danger':current.inPeriod}" role="alert" ng-show="current.id">
@@ -94,6 +97,27 @@
             </div>
         </div>
     </div>
+<script type="text/ng-template" id="myModalRule.html">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel"> 說明</h4>
+    </div>
+    <div class="modal-body">
+        <ul>
+            <li>仰臥起坐 (次)，例如：45</li>
+            <li>坐姿體前彎 (公分) ，例如：50</li>
+            <li>立定跳遠 (公分) ，例如：170</li>
+            <li>心肺適能 (秒)，例如：200秒可輸入200或3.20或3'20"或3'20或3'20' <擇一輸入></li>
+            <li>身心障礙等特殊原因學生經主管機關認定無法施測者，統一輸入"免測"</li>
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="cancel()">關閉</button>
+    </div>
+</script>
  <script type="text/ng-template" id="myModalContent.html">
                 <div class="modal-header">
                     <button style="margin-left:10px;float:right" type="button" class="btn btn-primary" ng-click="ok()">儲存</button>

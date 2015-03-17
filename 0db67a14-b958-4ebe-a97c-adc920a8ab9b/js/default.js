@@ -1,4 +1,4 @@
-﻿$(document).ready(function() {
+$(document).ready(function() {
     $(window).resize(function() {
         $("#container-nav, #container-main").height($(window).height() - 50);
         //console.log($(window).height() - 50);
@@ -74,7 +74,7 @@ var app = angular
         // $('input').on('keydown', function(e) {
         //         var current_td_index = $(this).closest('td').index();
         //         if (e.which === 13 || e.which === 40) {
-        //             $(this).closest('td').closest('tr').next().find('td:nth-child(' + (current_td_index + 1) + ')>input').focus();                    
+        //             $(this).closest('td').closest('tr').next().find('td:nth-child(' + (current_td_index + 1) + ')>input').focus();
         //             e.preventDefault();
         //         }
         //         if (e.which === 38) {
@@ -95,6 +95,12 @@ var app = angular
         }
     })
     .controller("Ctrl", function($scope, $modal, $filter) {
+        $scope.showRule = function() {
+            var modalInstance = $modal.open({
+                templateUrl: 'myModalRule.html',
+                controller: ModalRuleCtrl,
+            });
+        }
         $scope.ngObjFixHack = function(ngObj) {
             var output;
 
@@ -323,37 +329,53 @@ var set_error_message = function(select_str, serviceName, error) {
     }
 };
 var ModalInstanceCtrl = function($scope, column, tmplist) {
-    $scope.column = column;
-    $scope.column_text = {
-        test_date: "測驗日期 EX:2014/08/07",
-        height: "身高(cm)",
-        weight: "體重(kg)",
-        sit_and_reach: "坐姿體前彎(cm)",
-        standing_long_jump: "立定跳遠(cm)",
-        sit_up: "仰臥起坐(次)",
-        cardiorespiratory: "心肺適能(秒)"
-    }[column];
+    var columnObj = {
+        test_date: { header:"測驗日期",errorMsg :"資料格式不正確，請填入EX:2014/08/07"},
+        height: { header:"身高(cm)",errorMsg:"資料格式不正確，請輸入數字或免測"},
+        weight: { header:"體重(kg)",errorMsg:"資料格式不正確，請輸入數字或免測"},
+        sit_and_reach: { header:"坐姿體前彎(cm)",errorMsg:"資料格式不正確，請輸入數字或免測"},
+        standing_long_jump: { header:"立定跳遠(cm)",errorMsg:"資料格式不正確，請輸入數字或免測"},
+        sit_up: { header:"仰臥起坐(次)",errorMsg:"資料格式不正確，請輸入數字或免測"},
+        cardiorespiratory: { header:"心肺適能(秒)",errorMsg:"資料格式不正確，200秒可輸入200或3.20或3'20\"或3'20或3'20' <擇一輸入>或免測"},
+    };
+    $scope.column_text = columnObj[column].header;
     $scope.tmplist = tmplist;
     $scope.ok = function() {
         var tag = true;
-        if (column == "test_date") {
-            for (var i = 0; i < $scope.tmplist.length; i++) {
-                if (!isValidDate2($scope.tmplist[i].value)) {
-                    if (tag == true)
-                        $scope.tmplist[i].focus = true;
-                    tag = false;
-                    $scope.tmplist[i].unvalidated = true;
-                } else
-                    $scope.tmplist[i].unvalidated = false;
-            };
-        }
+        var tmp = null;
+        var match ;
+        for (var i = 0; i < $scope.tmplist.length; i++) {
+            tmp = $scope.tmplist[i];
+            tmp.value = tmp.value.trim();
+            if ( column === "test_date" ) {
+                tmp.unvalidated = !isValidDate2(tmp.value);
+            } else if ( column === "cardiorespiratory" ) {
+                //200 3.20 3'20" 3'20 3'20' 免測
+                match = tmp.value.match(/^[1-9]\d*$|^[1-9]\d*\.[0-5]\d$|^[1-9]\d*\'[0-5]\d['"]{0,1}$|^免測$|^$/);
+                tmp.unvalidated = !match ;
+            } else {
+                //200 免測
+                match = tmp.value.match(/^[1-9]\d*$|^免測$|^$/);
+                tmp.unvalidated = !match ;
+            }
+            if ( tag && tmp.unvalidated ) {
+                tmp.focus = true;
+                tag = false;
+            }
+        };
         if (tag) {
             $scope.$close($scope.tmplist);
         } else {
-            alert('資料格式不正確，請填入EX:2014/08/07');
+            alert(columnObj[column].errorMsg);
         }
     };
     $scope.cancel = function() {
         $scope.$dismiss('cancel');
     };
 };
+var ModalRuleCtrl = function($scope)
+{
+    $scope.cancel = function() {
+        $scope.$dismiss('cancel');
+    };
+}
