@@ -94,6 +94,11 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
             return "underSixty";
     };
 
+    $scope.DisciplineColor = function(obj) {
+        if (obj && obj.changeColor)
+            return "underSixty";
+    };
+
     var GetDataRequest = function() {
         if ($scope.currentStudent)
             return "<StudentID>" + $scope.currentStudent.ID + "</StudentID>";
@@ -484,7 +489,11 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
         d = d / dbs;
         d = (d * dct) + discipline.Demerit.C;
 
-        var display = "";
+        //var display = "";
+        var display = {
+            changeColor: false,
+            text: ""
+        };
 
         //有功過相抵
         if (rule.Balance === "true") {
@@ -495,16 +504,20 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
                 sum *= -1;
                 var count = Math.floor((sum / dct) / dbt);
 
+                display.text = "☆累計大過 " + count;
+
                 if (count >= limit)
-                    display = "☆累計大過 " + count;
+                    display.changeColor = true;
             }
         } else {
             //僅懲戒累計
             var sum = d;
             var count = Math.floor((sum / dct) / dbt);
 
+            display.text = "累計大過 " + count;
+
             if (count >= limit)
-                display = "累計大過 " + count;
+                display.changeColor = true;
         }
 
         switch (text) {

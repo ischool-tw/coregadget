@@ -151,28 +151,28 @@
                                 </tr>
                                 <tr>
                                     <td id="content-left">每個學期</td>
-                                    <td>{{Semester1.Discipline.DisplayA}}
+                                    <td ng-class="DisciplineColor(Semester1.Discipline.DisplayA)">{{Semester1.Discipline.DisplayA.text || "N/A"}}
                                     </td>
-                                    <td>{{Semester2.Discipline.DisplayA}}
+                                    <td ng-class="DisciplineColor(Semester2.Discipline.DisplayA)">{{Semester2.Discipline.DisplayA.text || "N/A"}}
                                     </td>
-                                    <td>{{Semester3.Discipline.DisplayA}}
+                                    <td ng-class="DisciplineColor(Semester3.Discipline.DisplayA)">{{Semester3.Discipline.DisplayA.text || "N/A"}}
                                     </td>
-                                    <td>{{Semester4.Discipline.DisplayA}}
+                                    <td ng-class="DisciplineColor(Semester4.Discipline.DisplayA)">{{Semester4.Discipline.DisplayA.text || "N/A"}}
                                     </td>
-                                    <td>{{Semester5.Discipline.DisplayA}}
+                                    <td ng-class="DisciplineColor(Semester5.Discipline.DisplayA)">{{Semester5.Discipline.DisplayA.text || "N/A"}}
                                     </td>
-                                    <td>{{Semester6.Discipline.DisplayA}}
+                                    <td ng-class="DisciplineColor(Semester6.Discipline.DisplayA)">{{Semester6.Discipline.DisplayA.text || "N/A"}}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="content-left">第六學期</td>
                                     <td colspan="5"></td>
-                                    <td>{{Semester6.Discipline.DisplayB}}
+                                    <td ng-class="DisciplineColor(Semester6.Discipline.DisplayB)">{{Semester6.Discipline.DisplayB.text || "N/A"}}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="content-left">所有學期</td>
-                                    <td colspan="6">{{SemesterAll.Discipline.DisplayC}}
+                                    <td colspan="6" ng-class="DisciplineColor(SemesterAll.Discipline.DisplayC)">{{SemesterAll.Discipline.DisplayC.text || "N/A"}}
                                     </td>
                                 </tr>
                             </tbody>
