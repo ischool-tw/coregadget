@@ -67,9 +67,10 @@ jQuery(function () {
                         accordionHTML += "      </ul>\n    </div>\n  </div>\n</div>";
                         items.splice(0);
                     }
+
                     accordionHTML += '<div class="accordion-group">' +
                         '  <div class="accordion-heading">' +
-                        '    <a class="accordion-toggle" data-toggle="collapse" data-parent="#student-list" href="#collapse' + index + '"><i class="icon-user"></i>' + (this.ClassName || '') + '</a>' +
+                        '    <a class="accordion-toggle" data-toggle="collapse" data-parent="#student-list" href="#collapse' + index + '"><i class="icon-user"></i>' + (this.Kind === '認輔學生' ? '認輔學生' : (className || '')) + '</a>' +
                         '  </div>' +
                         '  <div id="collapse' + index + '" class="accordion-body collapse ' + (firstClassName === '' ? 'in' : '') + '">' +
                         '    <div class="accordion-inner">' +
@@ -194,6 +195,8 @@ jQuery(function () {
                                     _gg.loadCounselData();
                                 }
                             });
+
+                            _gg.students = $(_gg.students);
                             items.push('</ul></div></div></div>');
                             accordionHTML = items.join("");
                             $("#student-list").append(accordionHTML);
