@@ -53,15 +53,17 @@ jQuery(function () {
 
     // 學生關鍵字搜尋
     _gg.resetStudentList = function() {
-        var accordionHTML, className, firstClassName, items;
+        var accordionHTML, className, firstClassName, items, classKind;
         className = "";
         items = [];
         accordionHTML = "";
         firstClassName = "";
+        classKind = "";
         _gg.students.each(function(index, student) {
             if (this.StudentName.indexOf($("#filter-keyword").val()) !== -1) {
-                if (this.ClassName !== className) {
+                if (this.ClassName !== className && classKind !== '認輔學生') {
                     className = this.ClassName;
+                    classKind = this.Kind;
                     if (accordionHTML != null) {
                         accordionHTML += items.join("");
                         accordionHTML += "      </ul>\n    </div>\n  </div>\n</div>";
