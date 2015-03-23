@@ -21,6 +21,8 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 
                     if ($scope.Class.length > 0)
                         $scope.SelectClass($scope.Class[0]);
+                    else
+                        $scope.$apply();
                 }
             }
 
@@ -43,6 +45,10 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 
                     if ($scope.Students.length > 0)
                         $scope.SelectStudent($scope.Students[0]);
+                    else{
+                        $scope.currentStudent = null
+                        $scope.$apply();
+                    }
                 }
             }
         });
