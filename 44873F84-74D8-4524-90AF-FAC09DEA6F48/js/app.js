@@ -45,7 +45,7 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 
                     if ($scope.Students.length > 0)
                         $scope.SelectStudent($scope.Students[0]);
-                    else{
+                    else {
                         $scope.currentStudent = null
                         $scope.$apply();
                     }
@@ -215,25 +215,34 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
     //學期歷程處理
     var SetSemsHistory = function(response) {
 
+        // var gradeMapping = {
+        //     '1#1': {},
+        //     '1#2': {},
+        //     '2#1': {},
+        //     '2#2': {},
+        //     '3#1': {},
+        //     '3#2': {},
+        //     '7#1': {},
+        //     '7#2': {},
+        //     '8#1': {},
+        //     '8#2': {},
+        //     '9#1': {},
+        //     '9#2': {}
+        // };
         var gradeMapping = {
             '1#1': {},
             '1#2': {},
             '2#1': {},
             '2#2': {},
             '3#1': {},
-            '3#2': {},
-            '7#1': {},
-            '7#2': {},
-            '8#1': {},
-            '8#2': {},
-            '9#1': {},
-            '9#2': {}
+            '3#2': {}
         };
 
         //初始化...
         angular.forEach(gradeMapping, function(value, key) {
             var initObj = {};
             initObj.Domains = {};
+            initObj.DomainBase = [];
             initObj.Discipline = {
                 Merit: {
                     'A': 0,
@@ -251,17 +260,24 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
         });
 
         //7年級判斷
-        var sevenStart = false;
+        //var sevenStart = false;
 
         var data = [].concat(response.response.SemsHistory || []);
         angular.forEach(data, function(sh) {
 
             //遇到有7年級的歷程就從7開始呈現
             var grade = parseInt(sh.Grade, 10) || 0;
-            if (grade >= 7)
-                sevenStart = true;
+            // if (grade >= 7)
+            //     sevenStart = true;
+            if(grade === 7)
+            	grade = 1;
+            else if(grade === 8)
+            	grade = 2;
+            else if(grade === 9)
+            	grade = 3;
 
-            var key = sh.Grade + "#" + sh.Semester;
+            //var key = sh.Grade + "#" + sh.Semester;
+            var key = grade + "#" + sh.Semester;
             var nsy = parseInt(sh.SchoolYear, 10) || 0;
 
             if (key in gradeMapping) {
@@ -281,21 +297,28 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
         });
 
         //建構六個學期
-        if (sevenStart === true) {
-            $scope.Semester1 = gradeMapping["7#1"];
-            $scope.Semester2 = gradeMapping["7#2"];
-            $scope.Semester3 = gradeMapping["8#1"];
-            $scope.Semester4 = gradeMapping["8#2"];
-            $scope.Semester5 = gradeMapping["9#1"];
-            $scope.Semester6 = gradeMapping["9#2"];
-        } else {
-            $scope.Semester1 = gradeMapping["1#1"];
-            $scope.Semester2 = gradeMapping["1#2"];
-            $scope.Semester3 = gradeMapping["2#1"];
-            $scope.Semester4 = gradeMapping["2#2"];
-            $scope.Semester5 = gradeMapping["3#1"];
-            $scope.Semester6 = gradeMapping["3#2"];
-        }
+        // if (sevenStart === true) {
+        //     $scope.Semester1 = gradeMapping["7#1"];
+        //     $scope.Semester2 = gradeMapping["7#2"];
+        //     $scope.Semester3 = gradeMapping["8#1"];
+        //     $scope.Semester4 = gradeMapping["8#2"];
+        //     $scope.Semester5 = gradeMapping["9#1"];
+        //     $scope.Semester6 = gradeMapping["9#2"];
+        // } else {
+        //     $scope.Semester1 = gradeMapping["1#1"];
+        //     $scope.Semester2 = gradeMapping["1#2"];
+        //     $scope.Semester3 = gradeMapping["2#1"];
+        //     $scope.Semester4 = gradeMapping["2#2"];
+        //     $scope.Semester5 = gradeMapping["3#1"];
+        //     $scope.Semester6 = gradeMapping["3#2"];
+        // }
+
+        $scope.Semester1 = gradeMapping["1#1"];
+        $scope.Semester2 = gradeMapping["1#2"];
+        $scope.Semester3 = gradeMapping["2#1"];
+        $scope.Semester4 = gradeMapping["2#2"];
+        $scope.Semester5 = gradeMapping["3#1"];
+        $scope.Semester6 = gradeMapping["3#2"];
 
         //全學期(懲戒要用的)
         $scope.SemesterAll = {};
@@ -321,22 +344,64 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 
         angular.forEach(data, function(ds) {
 
-            //領域聯集清單
-            if (domainList.indexOf(ds.Domain) === -1)
-                domainList.push(ds.Domain);
-
-            //遍歷Semester1~6
+            //遍歷Semester1~6,先收集到DomainBase
             for (i = 1; i <= 6; i++) {
 
                 var key = "Semester" + i;
 
-                //將領域成績填入到對應學期
+                //尋找對應的學期
                 if ($scope[key] && $scope[key].SchoolYear === ds.SchoolYear && $scope[key].Semester === ds.Semester) {
-                    $scope[key].Domains[ds.Domain] = ds.Score;
+                    //先將對的資料收集起來
+                    $scope[key].DomainBase.push(ds);
                 }
             };
-
         });
+
+        //遍歷Semester1~6,整理後結算到Domains
+        for (i = 1; i <= 6; i++) {
+
+            var key = "Semester" + i;
+
+            if ($scope[key]) {
+
+            	var sumScore = 0;
+            	var sumCredit = 0;
+            	var hasLanguage = false;
+
+                for (j = 0; j < $scope[key].DomainBase.length; j++) {
+
+                    var ds = $scope[key].DomainBase[j];
+                    var domainName = ds.Domain;
+
+                    //屬於語文領域的特別處理
+                    if (ds.Domain === "國語文" || ds.Domain === "英語" || ds.Domain === "語文") {
+                    	hasLanguage = true;
+                    	domainName = "語文";
+                    	var score = parseFloat(ds.Score,10);
+                    	var credit = parseFloat(ds.Credit,10);
+
+                    	if(!isNaN(score) && !isNaN(credit) && credit > 0){
+                    		//先抓到第三位做加總
+                    		sumScore += (score * credit * 1000);
+                    		sumCredit += credit;
+                    	}
+                    } else {
+                    	//不屬於語文領域的直接寫入
+                    	$scope[key].Domains[ds.Domain] = ds.Score;
+                    }
+
+		            //領域聯集清單
+		            if (domainList.indexOf(domainName) === -1)
+		                domainList.push(domainName);
+                }
+
+                if(hasLanguage){
+                	//記得除回來
+                	sumScore = sumScore / 1000;
+                	$scope[key].Domains["語文"] = (Math.round((sumScore / sumCredit) * 100) / 100) + "";
+                }
+            }
+        };
 
         //簡單排序字串長度
         domainList = domainList.sort(function(x, y) {
@@ -345,7 +410,7 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 
         //計算領域平均
         $scope.DomainAvg = [];
-        for (j = 0; j <= domainList.length; j++) {
+        for (j = 0; j < domainList.length; j++) {
 
             var domain = domainList[j];
 
@@ -370,7 +435,7 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
             //記得除回來
             sum = sum / 1000;
             //若變NaN就不會出現
-            $scope.DomainAvg[domain] = Math.round((sum / count) * 100) / 100;
+            $scope.DomainAvg[domain] = (Math.round((sum / count) * 100) / 100) + "";
         };
 
         $scope.DomainList = domainList;
