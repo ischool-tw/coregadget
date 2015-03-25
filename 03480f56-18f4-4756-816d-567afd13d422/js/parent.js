@@ -62,7 +62,6 @@ jQuery(function () {
             var relationship = target.find('[js="relationship"]').val();
             if (code && relationship) {
                 var public_connection = public_connection || gadget.getContract("auth.guest");
-                var parent_connection = gadget.getContract("cloud.parent");
                 public_connection.send({
                     service: "Join.AsParent",
                     body: {
@@ -78,6 +77,7 @@ jQuery(function () {
                         } else {
                             var data = gadget.getUserInfo();
                             if (data && (data.lastName || data.firstName)) {
+                                var parent_connection = gadget.getContract("cloud.parent");
                                 parent_connection.send({
                                     service: "beta.UpdateMyInfo",
                                     body: {
@@ -97,7 +97,7 @@ jQuery(function () {
                                 set_error_message(target.find('[js="errorMessage"]'), '', '<strong multi-lang-text="設定帳戶"></strong>');
                                 target.find('[js="save-data"]').attr("multi-lang-text", "送出").removeClass("disabled");
                             }
-                                    
+
                         }
                     }
                 });
