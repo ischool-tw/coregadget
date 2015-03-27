@@ -141,7 +141,7 @@ var app = angular
         $rootScope.system_position = gadget.params.system_position || "student";
         if ($rootScope.system_position == "parent")
             $rootScope.contract = gadget.getContract("ischool.behavior.attendanceInput.parent");
-        else 
+        else
             $rootScope.contract = gadget.getContract("ischool.behavior.attendanceInput.student");
 
         $translate.use(gadget.params.i18n);
@@ -193,7 +193,7 @@ var app = angular
                 }
             });
         }
-        else 
+        else
         $scope.getChilds = function() {
             $scope.contract.send({
                 service: "GetSelf",
@@ -238,7 +238,7 @@ var app = angular
             });
         }
     })
-    .controller("Ctrl1", function($scope, $modal,$q) {
+    .controller("Ctrl1", function($scope, $modal,$q,$filter) {
         $scope.$on('childChanged', function(event) {
             $scope.date = [];
             $scope.absencedata = {};
@@ -312,6 +312,7 @@ var app = angular
             });
             modalInstance.result.then(function(form1) {
                 form1.ref_student_id = $scope.current_child.id;
+                form1.occur_date = $filter('date')(form1.occur_date, 'yyyy/M/d');
                 $scope.save(form1);
             }, function() {
                 //$log.info('Modal dismissed at: ' + new Date());
@@ -346,7 +347,7 @@ var app = angular
             if($scope.current_child)
                 $scope.getRequests($scope.current_child.id);
         });
-        
+
         $scope.list = [];
         $scope.init = function() {
         }
