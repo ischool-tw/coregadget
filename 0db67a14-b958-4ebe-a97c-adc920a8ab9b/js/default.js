@@ -190,6 +190,8 @@ var app = angular
             return true ;
         }
         $scope.showEditForm = function(column, defaultValue) {
+            if ( $scope.saving )
+                return;
             if (!$scope.current || !$scope.current.id)
                 return;
             if ($scope.current.start_time && $scope.current.end_time && (
@@ -249,12 +251,14 @@ var app = angular
             //     course_id : $scope.current.id,
             //     detail: [{seat_no:int,value:string},{seat_no:int,value:string},...]
             // };
+            $scope.saving = true ;
             data = $scope.ngObjFixHack(data);
             //console.log(data);
             $scope.contract.send({
                 service: "SetFitness1Col",
                 body: data,
                 result: function(response, error, http) {
+                    $scope.saving = false ;
                     //console.log(response);
                     //console.log(error);
                     if (!error) {
