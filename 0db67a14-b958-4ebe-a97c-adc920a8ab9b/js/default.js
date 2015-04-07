@@ -334,14 +334,43 @@ var set_error_message = function(select_str, serviceName, error) {
 };
 var ModalInstanceCtrl = function($scope, column, tmplist) {
     var columnObj = {
-        test_date: { header:"測驗日期",errorMsg :"資料格式不正確，請填入EX:2014/08/07"},
-        height: { header:"身高(cm)",errorMsg:"資料格式不正確，請輸入整數或免測"},
-        weight: { header:"體重(kg)",errorMsg:"資料格式不正確，請輸入整數或免測"},
-        sit_and_reach: { header:"坐姿體前彎(cm)",errorMsg:"資料格式不正確，請輸入整數或免測"},
-        standing_long_jump: { header:"立定跳遠(cm)",errorMsg:"資料格式不正確，請輸入整數或免測"},
-        sit_up: { header:"仰臥起坐(次)",errorMsg:"資料格式不正確，請輸入整數或免測"},
-        cardiorespiratory: { header:"心肺適能(秒)",errorMsg:"資料格式不正確，200秒可輸入200或3.20或3'20\"或3'20或3'20' <擇一輸入>或免測"},
+        test_date: {
+            header: "測驗日期",
+            validate: isValidDate2,
+            errorMsg: "資料格式不正確，請填入EX:2014/08/07"
+        },
+        height: {
+            header: "身高(cm)",
+            validate: /^[1-9]\d*$|^[1-9]\d*\.\d*$|^免測$|^$/,
+            errorMsg: "資料格式不正確，請輸入數字或免測"
+        },
+        weight: {
+            header: "體重(kg)",
+            validate: /^[1-9]\d*$|^[1-9]\d*\.\d*$|^免測$|^$/,
+            errorMsg: "資料格式不正確，請輸入數字或免測"
+        },
+        sit_and_reach: {
+            header: "坐姿體前彎(cm)",
+            validate: /^[1-9]\d*$|^免測$|^$/,
+            errorMsg: "資料格式不正確，請輸入整數或免測"
+        },
+        standing_long_jump: {
+            header: "立定跳遠(cm)",
+            validate: /^[1-9]\d*$|^免測$|^$/,
+            errorMsg: "資料格式不正確，請輸入整數或免測"
+        },
+        sit_up: {
+            header: "仰臥起坐(次)",
+            validate: /^[1-9]\d*$|^免測$|^$/,
+            errorMsg: "資料格式不正確，請輸入整數或免測"
+        },
+        cardiorespiratory: {
+            header: "心肺適能(秒)",
+            validate: /^[1-9]\d*$|^[1-9]\d*\.[0-5]\d$|^[1-9]\d*\'[0-5]\d['"]{0,1}$|^免測$|^$/,
+            errorMsg: "資料格式不正確，200秒可輸入200或3.20或3'20\"或3'20或3'20' <擇一輸入>或免測"
+        },
     };
+
     $scope.column_text = columnObj[column].header;
     $scope.tmplist = tmplist;
     $scope.ok = function() {
@@ -351,15 +380,10 @@ var ModalInstanceCtrl = function($scope, column, tmplist) {
         for (var i = 0; i < $scope.tmplist.length; i++) {
             tmp = $scope.tmplist[i];
             tmp.value = tmp.value.trim();
-            if ( column === "test_date" ) {
-                tmp.unvalidated = !isValidDate2(tmp.value);
-            } else if ( column === "cardiorespiratory" ) {
-                //200 3.20 3'20" 3'20 3'20' 免測
-                match = tmp.value.match(/^[1-9]\d*$|^[1-9]\d*\.[0-5]\d$|^[1-9]\d*\'[0-5]\d['"]{0,1}$|^免測$|^$/);
-                tmp.unvalidated = !match ;
+            if ( angular.isFunction(columnObj[column].validate) ) {
+                tmp.unvalidated = !columnObj[column].validate(tmp.value);
             } else {
-                //200 免測
-                match = tmp.value.match(/^[1-9]\d*$|^免測$|^$/);
+                match = tmp.value.match(columnObj[column].validate);
                 tmp.unvalidated = !match ;
             }
             if ( tag && tmp.unvalidated ) {
