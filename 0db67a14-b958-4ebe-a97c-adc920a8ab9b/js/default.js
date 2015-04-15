@@ -366,8 +366,8 @@ var ModalInstanceCtrl = function($scope, column, tmplist) {
         },
         cardiorespiratory: {
             header: "心肺適能(秒)",
-            validate: /^[1-9]\d*$|^[1-9]\d*\.[0-5]\d$|^[1-9]\d*\'[0-5]\d['"]{0,1}$|^免測$|^$/,
-            errorMsg: "資料格式不正確，200秒可輸入200或3.20或3'20\"或3'20或3'20' <擇一輸入>或免測"
+            validate: /^[1-9]\d*$|^[1-9]\d*\.[0-5]\d$|^免測$|^$/,
+            errorMsg: "資料格式不正確，200秒可輸入200或3.20 <擇一輸入>或免測"
         },
     };
 
