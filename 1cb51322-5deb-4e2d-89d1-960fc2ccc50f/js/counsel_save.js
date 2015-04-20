@@ -26,13 +26,16 @@ _gg.SetSaveData = function (data_scope) {
                         contents.find('[data-type=' + qkey + ']:checked').each(function () {
                             tmp_value.Data   = $(this).val() || '';
                             tmp_value.Remark = contents.find('[data-index=' + $(this).attr('data-index') + '][data-type=' + qkey + '_remark]').val() || '';
+                            tmp_value.Remark = $.replaceChar(tmp_value.Remark);
 
                             if(qkey === "本人概況_原住民血統" && tmp_value.Data === "有"){
                                 tmp_value.Remark = contents.find('[data-index=' + $(this).attr('data-index') + '][data-type=' + qkey + '_親屬]').val() || '';
+                                tmp_value.Remark = $.replaceChar(tmp_value.Remark);
                                 tmp_value.Remark += "_";
                                 tmp_value.Remark += contents.find('[data-index=' + $(this).attr('data-index') + '][data-type=' + qkey + '_族別]').val() || '';
+                                tmp_value.Remark = $.replaceChar(tmp_value.Remark);
                             }
-                            
+
                         });
                         ret_value.push(tmp_value);
                         break;
@@ -42,6 +45,7 @@ _gg.SetSaveData = function (data_scope) {
                             tmp_value.Data   = $(this).val() || '';
                             tmp_value.Remark = contents.find('[data-index=' + $(this).attr('data-index') + '][data-type=' + qkey + '_remark]').val() || '';
                             tmp_value.Remark = tmp_value.Remark;
+                            tmp_value.Remark = $.replaceChar(tmp_value.Remark);
                             ret_value.push(tmp_value);
                         });
                         break;
@@ -50,21 +54,22 @@ _gg.SetSaveData = function (data_scope) {
                             tmp_value = {};
                             tmp_value.Data   = $(this).val() || '';
                             tmp_value.Remark = contents.find('[data-type=' + qkey + '_remark]').val() || '';
+                            tmp_value.Remark = $.replaceChar(tmp_value.Remark);
                             ret_value.push(tmp_value);
                         });
                         break;
                     case 'textarea':
-                        tmp_value.Data   = contents.find('[data-type=' + qkey + ']').html() || '';
+                        tmp_value.Data   = $.replaceChar(contents.find('[data-type=' + qkey + ']').html() || '');
                         tmp_value.Remark = '';
                         ret_value.push(tmp_value);
                         break;
                     default:
-                        tmp_value.Data   = contents.find('[data-type=' + qkey + ']').val() || '';
+                        tmp_value.Data   = $.replaceChar(contents.find('[data-type=' + qkey + ']').val() || '');
                         tmp_value.Remark = '';
                         ret_value.push(tmp_value);
                 }
             } else {
-                tmp_value.Data   = contents.find('[data-type=' + qkey + ']').val() || '';
+                tmp_value.Data   = $.replaceChar(contents.find('[data-type=' + qkey + ']').val() || '');
                 tmp_value.Remark = '';
                 ret_value.push(tmp_value);
             }

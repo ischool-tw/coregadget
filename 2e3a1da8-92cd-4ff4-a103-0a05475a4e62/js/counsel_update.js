@@ -565,10 +565,9 @@ _gg.SetModifyData = function () {
                         tmp_items.push(tmp_html);
                     }
                 }
-                $('#' + data_scope + ' fieldset').html(tmp_items.join(""));
             }
         });
-
+        $('#' + data_scope + ' fieldset').html(tmp_items.join(""));
     };
 
     // 畢業後規劃
@@ -598,7 +597,7 @@ _gg.SetModifyData = function () {
                 if (value.Name !=='填寫日期') {
                     tmp_items.push(
                         '<div class="control-group">' +
-                        '  <label class="control-label">' + (value.Title || value.Alias || '') + '</label>' +
+                        '  <label class="control-label" style="width: 320px;">' + (value.Title || value.Alias || '') + '</label>' +
                         '    <div class="controls">' +
                         set_form(value) +
                         '    </div>' +

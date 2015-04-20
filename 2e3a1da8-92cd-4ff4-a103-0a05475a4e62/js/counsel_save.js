@@ -29,11 +29,14 @@ _gg.SetSaveData = function (data_scope) {
                         contents.find('[data-type=' + qkey + ']:checked').each(function () {
                             tmp_value.Data   = $(this).val() || '';
                             tmp_value.Remark = contents.find('[data-index=' + $(this).attr('data-index') + '][data-type=' + qkey + '_remark]').val() || '';
-                            
+                            tmp_value.Remark = $.replaceChar(tmp_value.Remark);
+
                             if(qkey === "本人概況_原住民血統" && tmp_value.Data === "有"){
                                 tmp_value.Remark = contents.find('[data-index=' + $(this).attr('data-index') + '][data-type=' + qkey + '_親屬]').val() || '';
+                                tmp_value.Remark = $.replaceChar(tmp_value.Remark);
                                 tmp_value.Remark += "_";
                                 tmp_value.Remark += contents.find('[data-index=' + $(this).attr('data-index') + '][data-type=' + qkey + '_族別]').val() || '';
+                                tmp_value.Remark = $.replaceChar(tmp_value.Remark);
                             }
 
                         });
@@ -44,7 +47,7 @@ _gg.SetSaveData = function (data_scope) {
                             tmp_value = {};
                             tmp_value.Data   = $(this).val() || '';
                             tmp_value.Remark = contents.find('[data-index=' + $(this).attr('data-index') + '][data-type=' + qkey + '_remark]').val() || '';
-                            tmp_value.Remark = tmp_value.Remark;
+                            tmp_value.Remark = $.replaceChar(tmp_value.Remark);
                             ret_value.push(tmp_value);
                         });
                         break;
@@ -53,21 +56,22 @@ _gg.SetSaveData = function (data_scope) {
                             tmp_value = {};
                             tmp_value.Data   = $(this).val() || '';
                             tmp_value.Remark = contents.find('[data-type=' + qkey + '_remark]').val() || '';
+                            tmp_value.Remark = $.replaceChar(tmp_value.Remark);
                             ret_value.push(tmp_value);
                         });
                         break;
                     case 'textarea':
-                        tmp_value.Data   = contents.find('[data-type=' + qkey + ']').html() || '';
+                        tmp_value.Data   = $.replaceChar(contents.find('[data-type=' + qkey + ']').html() || '');
                         tmp_value.Remark = '';
                         ret_value.push(tmp_value);
                         break;
                     default:
-                        tmp_value.Data   = contents.find('[data-type=' + qkey + ']').val() || '';
+                        tmp_value.Data   = $.replaceChar(contents.find('[data-type=' + qkey + ']').val() || '');
                         tmp_value.Remark = '';
                         ret_value.push(tmp_value);
                 }
             } else {
-                tmp_value.Data   = contents.find('[data-type=' + qkey + ']').val() || '';
+                tmp_value.Data   = $.replaceChar(contents.find('[data-type=' + qkey + ']').val() || '');
                 tmp_value.Remark = '';
                 ret_value.push(tmp_value);
             }
@@ -393,9 +397,11 @@ _gg.SetSaveData = function (data_scope) {
     // 生活感想
     var set_life = function (questions) {
         var tmp_grade = (_gg.grade || "1");
+        var haveQuesion = false;
         $(questions).each(function (key, value) {
             if (value.CanTeacherEdit === "是") {
                 if (value.Name.slice(-1) === tmp_grade) { // ex.內容1_1
+                    haveQuesion = true;
                     if (value.Name.indexOf("填寫日期") === -1) {
                         get_request(value);
                     } else {
@@ -414,6 +420,7 @@ _gg.SetSaveData = function (data_scope) {
                 }
             }
         });
+        if (!haveQuesion) $(".modal").modal("hide");
     };
 
     // 畢業後規劃
@@ -612,10 +619,7 @@ _gg.SetSaveData = function (data_scope) {
                             if (error !== null) {
                                 set_error_message("GetRelative", error);
                             } else {
-                                _gg.relative = [];
-                                $(response.Response.Relative).each(function (index, item) {
-                                    _gg.relative.push(item);
-                                });
+                                _gg.relative = [].concat(response.Response.Relative || []);
                                 _gg.SetData(tmp_colID);
                                 $(".modal").modal("hide");
                             }
@@ -639,10 +643,7 @@ _gg.SetSaveData = function (data_scope) {
                             if (error !== null) {
                                 set_error_message("GetSibling", error);
                             } else {
-                                _gg.sibling = [];
-                                $(response.Response.Sibling).each(function (index, item) {
-                                    _gg.sibling.push(item);
-                                });
+                                _gg.sibling = [].concat(response.Response.Sibling || []);
                                 _gg.SetData(tmp_colID);
                                 $(".modal").modal("hide");
                             }
@@ -657,13 +658,10 @@ _gg.SetSaveData = function (data_scope) {
                             if (error !== null) {
                                 set_error_message("GetInterviewRecord", error);
                             } else {
-                                _gg.interviewRecord = [];
-                                $(response.Result.Record).each(function (index, item) {
-                                    _gg.interviewRecord.push(item);
-                                });
+                                _gg.interviewRecord = [].concat(response.Result.Record || []);
                                 _gg.SetData(tmp_colID);
                                 $(".modal").modal("hide");
-                                $('#E1Page a:eq(' + (pagerState['E1Page'] || 1) + ')').triggerHandler('click');
+                                if ($("#E1").attr("data-filter") == "false") $('#E1Page a:eq(' + (pagerState['E1Page'] || 1) + ')').triggerHandler('click');
                             }
                         }
                     });

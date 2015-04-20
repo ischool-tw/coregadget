@@ -284,7 +284,7 @@ jQuery(function () {
     });
 
     // 晤談紀錄編輯、刪除鈕
-    $("#E1").on("click", "a[data-toggle=modal]", function(e) {
+    $("#E2").on("click", "a[data-toggle=modal]", function(e) {
         _gg.editInterview = _gg.interviewRecord[$(this).attr("interview-index")];
     });
 
@@ -300,6 +300,8 @@ jQuery(function () {
         var endD = $('#filter-interview-end').val();
         var start_date = startD + " 00:00:00";
         var end_date = endD + " 00:00:00";
+        $('#E1').show();
+        $('#E2').html('');
 
         if (startD || endD) {
             $(_gg.interviewRecord).each(function() {
@@ -327,11 +329,12 @@ jQuery(function () {
                     }
                 }
             });
+            $("#E1").attr("data-filter", "true");
 
             // 搜尋結果不分頁
             $("#E1Page").hide();
         } else {
-            $('#E1 div.my-baseinfo-item').show();
+            $("#E1").attr("data-filter", "false");
             $('#E1Page a:eq(1)').triggerHandler('click');
             $("#E1Page").show();
         }
@@ -686,7 +689,7 @@ jQuery(function () {
             $('#C1 tbody').html(tmp_items.join(""));
         };
 
-        // TDOO: 自傳
+        // 自傳
         var input_D1_value = function() {
             var questions = _gg.col_Question.D1;
             var tmp_key, tmp_data;
@@ -717,116 +720,137 @@ jQuery(function () {
                 return ret_str;
             }
 
-            $('#E1').html('');
-            $("#tab5 .pagination").html('');
+            $("#tab5").find("#E1, #E2, .pagination").html('').end()
+                .find("#E1, .pagination").show();
 
             var questions = _gg.interviewRecord;
             if (questions.length === 0) {
                 $('#E1').html('目前尚無資料');
             } else {
-                var tmp_items = [];
                 var student = _gg.student;
+                var tmp_list = [];
+                var tmp_items = {};
+                tmp_list.push('<table class="table my-lineheight">' +
+                    '<tr>' +
+                      '<th width="20%">晤談對象</th>' +
+                      '<th width="10%">晤談日期</th>' +
+                      '<th>內容要點</th>' +
+                      '<th width="10%">瀏覽</th>' +
+                    '</tr>'
+                );
                 $.each(questions, function (index, item) {
                     var date1 = (item.InterviewDate) ? $.formatDate(new Date(item.InterviewDate), "yyyyMMdd") : '';
+                    tmp_list.push(
+                        '<tr class="my-interview-item" id="interview-' + item.UID + '">' +
+                          '<td>' + (item.IntervieweeType || '') + '</td>' +
+                          '<td>' + date1 + '</td>' +
+                          '<td><div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; width:420px;">' + (item.ContentDigest || '') + '</div></td>' +
+                          '<td><a javscript:; class="btn" data-interview-id="' + item.UID + '">瀏覽</a></td>' +
+                        '</tr>'
+                    );
 
-                    tmp_items.push('<div class="my-baseinfo-item well" id="interview-' + item.UID + '">' +
-                      '<div class="my-label-title">' +
-                        '<a class="btn btn-success" data-toggle="modal" href="#talk" interview-index="' + index + '">' +
-                          '<i class="icon-edit icon-white"></i>編號：' + (item.InterviewNo || '') + '</a>' +
-                        '<a class="btn pull-right" data-toggle="modal" href="#deltalk" interview-index="' + index + '">' +
-                          '<i class="icon-trash"></i> 刪除</a>' +
-                      '</div>' +
-                      '<div class="row-fluid">' +
-                        '<div class="span4">' +
-                          '<table class="table my-lineheight">' +
-                            '<tr>' +
-                              '<th width="40%">年級</th>' +
-                              '<td width="60%">' + (student.GradeYear || '') + '</td>' +
-                            '</tr>' +
-                            '<tr>' +
-                              '<th>班級</th>' +
-                              '<td>' + (student.ClassName || '') + '</td>' +
-                            '</tr>' +
-                            '<tr>' +
-                              '<th>姓名</th>' +
-                              '<td>' + (student.StudentName || '') + '</td>' +
-                            '</tr>' +
-                          '</table>' +
+                    tmp_items['interview_' + item.UID] = '<div style="text-align: right;"><a class="btn" id="interview_back">返回</a></div>' +
+                      '<div class="my-baseinfo-item well">' +
+                        '<div class="my-label-title">' +
+                          '<a class="btn btn-success" data-toggle="modal" href="#talk" interview-index="' + index + '">' +
+                            '<i class="icon-edit icon-white"></i>編號：' + (item.InterviewNo || '') + '</a>' +
+                          '<a class="btn pull-right" data-toggle="modal" href="#deltalk" interview-index="' + index + '">' +
+                            '<i class="icon-trash"></i> 刪除</a>' +
                         '</div>' +
-                        '<div class="span4">' +
-                          '<table class="table my-lineheight">' +
-                            '<tr>' +
-                              '<th width="40%">晤談老師</th>' +
-                              '<td width="60%">' + (item.TeacherName || '') + '</td>' +
-                            '</tr>' +
-                            '<tr>' +
-                              '<th>晤談對象</th>' +
-                              '<td>' + (item.IntervieweeType || '') + '</td>' +
-                            '</tr>' +
-                            '<tr>' +
-                              '<th>晤談方式</th>' +
-                              '<td>' + (item.InterviewType|| '') + '</td>' +
-                            '</tr>' +
-                          '</table>' +
-                        '</div>' +
-                        '<div class="span4">' +
-                          '<table class="table my-lineheight">' +
-                            '<tr>' +
-                              '<th width="40%">日期</th>' +
-                              '<td width="60%" class="my-Date">' + date1 + '</td>' +
-                            '</tr>' +
-                            '<tr>' +
-                              '<th>時間</th>' +
-                              '<td>' + (item.InterviewTime || '') + '</td>' +
-                            '</tr>' +
-                            '<tr>' +
-                              '<th>地點</th>' +
-                              '<td>' + (item.Place || '') + '</td>' +
-                            '</tr>' +
-                          '</table>' +
-                        '</div>' +
-                      '</div>' +
-                      '<table class="table my-lineheight">' +
-                        '<tr>' +
-                          '<th nowrap="nowrap" width="13%">晤談事由</th>' +
-                          '<td width="87%">' + (item.Cause || '') + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                          '<th nowrap="nowrap">參與人員</th>' +
-                          '<td>' + obj2str(item.Attendees) + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                          '<th nowrap="nowrap">輔導方式</th>' +
-                          '<td>' + obj2str(item.CounselType) + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                          '<th nowrap="nowrap">輔導歸類</th>' +
-                          '<td>' + obj2str(item.CounselTypeKind) + '</td>' +
-                        '</tr>' +
-                      '</table>' +
-                      '<div class="accordion" id="accordionE1' + item.UID + '">' +
-                        '<div class="accordion-group">' +
-                          '<div class="accordion-heading">' +
-                            '<a class="accordion-toggle" data-parent="#accordionE1' + item.UID + '" data-toggle="collapse" href="#collapse' + item.UID + '">' +
-                              '<i class="icon-chevron-down pull-right"></i>' +
-                              '內容要點' +
-                            '</a>' +
+                        '<div class="row-fluid">' +
+                          '<div class="span4">' +
+                            '<table class="table my-lineheight">' +
+                              '<tr>' +
+                                '<th width="40%">年級</th>' +
+                                '<td width="60%">' + (student.GradeYear || '') + '</td>' +
+                              '</tr>' +
+                              '<tr>' +
+                                '<th>班級</th>' +
+                                '<td>' + (student.ClassName || '') + '</td>' +
+                              '</tr>' +
+                              '<tr>' +
+                                '<th>姓名</th>' +
+                                '<td>' + (student.StudentName || '') + '</td>' +
+                              '</tr>' +
+                            '</table>' +
                           '</div>' +
-                          '<div class="accordion-body collapse" id="collapse' + item.UID + '">' +
-                            '<div class="accordion-inner">' +
-                              (item.ContentDigest || '') +
-                            '</div>' +
+                          '<div class="span4">' +
+                            '<table class="table my-lineheight">' +
+                              '<tr>' +
+                                '<th width="40%">晤談老師</th>' +
+                                '<td width="60%">' + (item.TeacherName || '') + '</td>' +
+                              '</tr>' +
+                              '<tr>' +
+                                '<th>晤談對象</th>' +
+                                '<td>' + (item.IntervieweeType || '') + '</td>' +
+                              '</tr>' +
+                              '<tr>' +
+                                '<th>晤談方式</th>' +
+                                '<td>' + (item.InterviewType|| '') + '</td>' +
+                              '</tr>' +
+                            '</table>' +
+                          '</div>' +
+                          '<div class="span4">' +
+                            '<table class="table my-lineheight">' +
+                              '<tr>' +
+                                '<th width="40%">日期</th>' +
+                                '<td width="60%" class="my-Date">' + date1 + '</td>' +
+                              '</tr>' +
+                              '<tr>' +
+                                '<th>時間</th>' +
+                                '<td>' + (item.InterviewTime || '') + '</td>' +
+                              '</tr>' +
+                              '<tr>' +
+                                '<th>地點</th>' +
+                                '<td>' + (item.Place || '') + '</td>' +
+                              '</tr>' +
+                            '</table>' +
                           '</div>' +
                         '</div>' +
-                      '</div>' +
-                      '<hr/>' +
-                      '<p class="pull-right">紀錄者：' + (item.AuthorName || '') + '</p>' +
-                    '</div>');
+                        '<table class="table my-lineheight">' +
+                          '<tr>' +
+                            '<th nowrap="nowrap" width="13%">晤談事由</th>' +
+                            '<td width="87%">' + (item.Cause || '') + '</td>' +
+                          '</tr>' +
+                          '<tr>' +
+                            '<th nowrap="nowrap">參與人員</th>' +
+                            '<td>' + obj2str(item.Attendees) + '</td>' +
+                          '</tr>' +
+                          '<tr>' +
+                            '<th nowrap="nowrap">輔導方式</th>' +
+                            '<td>' + obj2str(item.CounselType) + '</td>' +
+                          '</tr>' +
+                          '<tr>' +
+                            '<th nowrap="nowrap">輔導歸類</th>' +
+                            '<td>' + obj2str(item.CounselTypeKind) + '</td>' +
+                          '</tr>' +
+                          '<tr>' +
+                            '<th nowrap="nowrap" colspan="2">內容要點</th>' +
+                          '</tr>' +
+                          '<tr>' +
+                            '<td colspan="2" style="border-top: 0;">' + (item.ContentDigest || '') + '</td>' +
+                          '</tr>' +
+                        '</table>' +
+                        '<hr/>' +
+                        '<p class="pull-right">紀錄者：' + (item.AuthorName || '') + '</p>' +
+                      '</div>';
                 });
-                $('#E1').html(tmp_items.join(""));
+                tmp_list.push('</table>');
+                $('#E1').html(tmp_list.join(""));
+                $("#E1").pager('tr.my-interview-item', {navId: 'E1Page'});
+                if ($("#E1").attr("data-filter") == "true") $("#search-interview").triggerHandler("click");
 
-                // 分頁
-                $("#E1").pager('div.my-baseinfo-item', {navId: 'E1Page'});
+                $("#E1").find('[data-interview-id]').click(function(){
+                    $("#tab5")
+                        .find("#E1, .pagination").hide().end()
+                        .find("#E2").html(tmp_items['interview_' + $(this).attr('data-interview-id')])
+                        .find('#interview_back').click(function(){
+                            $("#tab5")
+                                .find("#E2").html('').end()
+                                .find("#E1").show();
+                            if ($("#E1").attr("data-filter") == "false") $("#tab5 .pagination").show();
+                        });
+                });
             }
         };
 

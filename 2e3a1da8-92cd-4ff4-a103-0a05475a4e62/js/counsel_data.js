@@ -421,10 +421,7 @@ _gg.loadCounselData = function () {
             if (error !== null) {
                 _gg.set_error_message('#mainMsg', 'GetRelative', error);
             } else {
-                if (!_gg.relative) { _gg.relative = []; }
-                $(response.Response.Relative).each(function (index, item) {
-                    _gg.relative.push(item);
-                });
+                _gg.relative = [].concat(response.Response.Relative || []);
                 funQuestion();
             }
         }
@@ -438,10 +435,7 @@ _gg.loadCounselData = function () {
             if (error !== null) {
                 _gg.set_error_message('#mainMsg', 'GetSibling', error);
             } else {
-                if (!_gg.sibling) { _gg.sibling = []; }
-                $(response.Response.Sibling).each(function (index, item) {
-                    _gg.sibling.push(item);
-                });
+                _gg.sibling = [].concat(response.Response.Sibling || []);
                 funQuestion();
             }
         }
@@ -475,10 +469,7 @@ _gg.loadCounselData = function () {
             if (error !== null) {
                 _gg.set_error_message('#mainMsg', 'GetInterviewRecord', error);
             } else {
-                if (!_gg.interviewRecord) { _gg.interviewRecord = []; }
-                $(response.Result.Record).each(function (index, item) {
-                    _gg.interviewRecord.push(item);
-                });
+                _gg.interviewRecord = [].concat(response.Result.Record || []);
                 funQuestion();
             }
         }
@@ -492,10 +483,7 @@ _gg.loadCounselData = function () {
             if (error !== null) {
                 _gg.set_error_message('#mainMsg', 'GetStudentQuizData', error);
             } else {
-                if (!_gg.quizData) { _gg.quizData = []; }
-                $(response.Response.StudentQuizData).each(function (index, item) {
-                    _gg.quizData.push(item);
-                });
+                _gg.quizData = [].concat(response.Response.StudentQuizData || []);
                 funQuestion();
             }
         }

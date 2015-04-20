@@ -11,7 +11,7 @@ $.fn.pager = function(clas, options) {
         linkText: null,
         linkWrap: null,
         height: null,
-        pagesize: 2
+        pagesize: 10
     }
     if(options) $.extend(settings, options);
 
