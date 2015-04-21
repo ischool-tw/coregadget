@@ -464,12 +464,12 @@ _gg.SetSaveData = function (data_scope) {
             tmp_interviewRecord.push('<StudentID>' + _gg.student.StudentID + '</StudentID>');
         }
 
-        tmp_interviewRecord.push('<Cause>' + $("#Cause").val() + '</Cause>');
-        tmp_interviewRecord.push('<ContentDigest>' + $("#ContentDigest").val() + '</ContentDigest>');
+        tmp_interviewRecord.push('<Cause>' + $.replaceChar($("#Cause").val()) + '</Cause>');
+        tmp_interviewRecord.push('<ContentDigest>' + $.replaceChar($("#ContentDigest").val()) + '</ContentDigest>');
         tmp_interviewRecord.push('<InterviewDate>' + $("#InterviewDate").val() + '</InterviewDate>');
         tmp_interviewRecord.push('<InterviewTime>' + $("#InterviewTime").val() + '</InterviewTime>');
-        tmp_interviewRecord.push('<InterviewNo>' + $("#InterviewNo").val() + '</InterviewNo>');
-        tmp_interviewRecord.push('<Place>' + $("#Place").val() + '</Place>');
+        tmp_interviewRecord.push('<InterviewNo>' + $.replaceChar($("#InterviewNo").val()) + '</InterviewNo>');
+        tmp_interviewRecord.push('<Place>' + $.replaceChar($("#Place").val()) + '</Place>');
         tmp_interviewRecord.push('<InterviewType>' + $('#InterviewType').val() + '</InterviewType>');
         tmp_interviewRecord.push('<IntervieweeType>' + $('#IntervieweeType').val() + '</IntervieweeType>');
         //tmp_interviewRecord.push('<IsPublic></IsPublic>');
@@ -479,7 +479,7 @@ _gg.SetSaveData = function (data_scope) {
             var tmp_attr = "";
             tmp_attr=' name="' + this.value + '"';
             if (this.value === '其他') {
-                tmp_attr += ' remark="' + $("#AttendeesOtherRemark").val() + '"';
+                tmp_attr += ' remark="' + $.replaceChar($("#AttendeesOtherRemark").val()) + '"';
 
             }
 
@@ -495,13 +495,13 @@ _gg.SetSaveData = function (data_scope) {
 
             switch (this.value) {
                 case '轉介':
-                    tmp_attr += ' remark="' + $("#CounselType1Remark").val() + '"';
+                    tmp_attr += ' remark="' + $.replaceChar($("#CounselType1Remark").val()) + '"';
                     break;
                 case '就醫':
-                    tmp_attr += ' remark="' + $("#CounselType2Remark").val() + '"';
+                    tmp_attr += ' remark="' + $.replaceChar($("#CounselType2Remark").val()) + '"';
                     break;
                 case '其他':
-                    tmp_attr += ' remark="' + $("#CounselTypeOtherRemark").val() + '"';
+                    tmp_attr += ' remark="' + $.replaceChar($("#CounselTypeOtherRemark").val()) + '"';
                     break;
             }
 
@@ -515,12 +515,14 @@ _gg.SetSaveData = function (data_scope) {
             var tmp_attr = "";
             tmp_attr=' name="' + this.value + '"';
             if (this.value === '其他') {
-                tmp_attr += ' remark="' + $("#CounselTypeKindOtherRemark").val() + '"';
+                tmp_attr += ' remark="' + $.replaceChar($("#CounselTypeKindOtherRemark").val()) + '"';
             }
 
             tmp_interviewRecord.push('<Item' + tmp_attr + '></Item>');
         });
         tmp_interviewRecord.push('</CounselTypeKind>');
+
+        console.log(tmp_interviewRecord.join(''));
     };
 
 
