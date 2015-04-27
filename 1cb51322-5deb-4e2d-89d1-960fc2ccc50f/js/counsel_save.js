@@ -337,17 +337,17 @@ _gg.SetSaveData = function (data_scope) {
                 tmp_semesterData.push('<Key>' + tmp_key + '</Key>');
                 var tmp_x = {};
 
-                for (var i=1; i<=3 ; i+=1) {
+                for (var i=1; i<=6 ; i+=1) {
                     if ((i + '') === _gg.grade) {
-                            tmp_semesterData.push('<S' + i + 'a>' + ($('#' + data_scope + ' [data-type=' + tmp_key + 'a]').val() || '') + '</S' + i + 'a>');
-                            tmp_semesterData.push('<S' + i + 'b>' + ($('#' + data_scope + ' [data-type=' + tmp_key + 'b]').val() || '') + '</S' + i + 'b>');
-                            tmp_x['S' + i + 'a'] = $('#' + data_scope + ' [data-type=' + tmp_key + 'a]').val() || '';
-                            tmp_x['S' + i + 'b'] = $('#' + data_scope + ' [data-type=' + tmp_key + 'b]').val() || '';
+                            tmp_semesterData.push('<S' + i + 'a>' + $.replaceChar($('#' + data_scope + ' [data-type=' + tmp_key + 'a]').val() || '') + '</S' + i + 'a>');
+                            tmp_semesterData.push('<S' + i + 'b>' + $.replaceChar($('#' + data_scope + ' [data-type=' + tmp_key + 'b]').val() || '') + '</S' + i + 'b>');
+                            tmp_x['S' + i + 'a'] = $.replaceChar($('#' + data_scope + ' [data-type=' + tmp_key + 'a]').val() || '');
+                            tmp_x['S' + i + 'b'] = $.replaceChar($('#' + data_scope + ' [data-type=' + tmp_key + 'b]').val() || '');
                     } else {
-                        tmp_semesterData.push('<S' + i + 'a>' + (value.SelectValue['S' + i + 'a'] || '') + '</S' + i + 'a>');
-                        tmp_semesterData.push('<S' + i + 'b>' + (value.SelectValue['S' + i + 'b'] || '') + '</S' + i + 'b>');
-                        tmp_x['S' + i + 'a'] = value.SelectValue['S' + i + 'a'] || '';
-                        tmp_x['S' + i + 'b'] = value.SelectValue['S' + i + 'b'] || '';
+                        tmp_semesterData.push('<S' + i + 'a>' + $.replaceChar(value.SelectValue['S' + i + 'a'] || '') + '</S' + i + 'a>');
+                        tmp_semesterData.push('<S' + i + 'b>' + $.replaceChar(value.SelectValue['S' + i + 'b'] || '') + '</S' + i + 'b>');
+                        tmp_x['S' + i + 'a'] = $.replaceChar(value.SelectValue['S' + i + 'a'] || '');
+                        tmp_x['S' + i + 'b'] = $.replaceChar(value.SelectValue['S' + i + 'b'] || '');
                     }
                 }
 

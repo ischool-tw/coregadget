@@ -162,6 +162,7 @@ _gg.loadCounselData = function () {
         if (bGetData && bGradeOpening) {
             _gg.init = true;
             _gg.SetData("All");
+            $(".my-schoolyear-semester-widget button:last").trigger('click');
         }
     }
 
@@ -404,7 +405,7 @@ _gg.loadCounselData = function () {
                                 if (contrast.TrueGradeYear === item.GradeYear) {
                                     var schoolYear = (parseInt(item.SchoolYear, 10) || 0);
                                     if (contrast.SchoolYear < schoolYear) {
-                                        contrast.SchoolYear = item.GradeYear;
+                                        contrast.SchoolYear = item.SchoolYear;
                                     }
                                 }
                             });
@@ -416,14 +417,6 @@ _gg.loadCounselData = function () {
                     });
 
                     $(".my-schoolyear-semester-widget").html(items.join(''));
-                    $(".my-schoolyear-semester-widget button:last").trigger('click');
-                }
-
-                // 關閉三年級的生活感想
-                if (_gg.grade === (_gg.contrastGrade.length-1).toString()) {
-                    $('#B5').hide();
-                } else {
-                    $('#B5').show();
                 }
 
                 if (callback && $.isFunction(callback)) {

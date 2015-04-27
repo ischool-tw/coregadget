@@ -145,21 +145,18 @@
 	 * 將xml、json轉換中不支援的字元取代為全型
 	*/
 	$.replaceChar = function (input) {
+		// &lt;的方式 DSA 儲存的sql會轉錯
         var chars = [
-        	{key:'/', value:'／'}, // &#47;
-            {key:'\\\\', value:'＼'}, // &#92;
-            {key:',', value:'，'}, // &#44;
-            {key:'<', value:'＜'}, // &lt;
-            {key:'>', value:'＞'} // &gt;
+        	{key:'/', value:'／'},
+            {key:'\\\\', value:'＼'},
+            {key:',', value:'，'},
+            {key:'<', value:'＜'},
+            {key:'>', value:'＞'},
+            {key:'\'', value:'＇'},
+            {key:'"', value:'＂'},
+            {key:':', value:'：'}
         ];
-        // 下列方式 DSA 儲存的sql會轉錯
-        // var chars = [
-        // 	{key:'/', value:'&#47;'}, // &#47;
-        //     {key:'\\\\', value:'&#92;'}, // &#92;
-        //     {key:',', value:'&#44;'}, // &#44;
-        //     {key:'<', value:'&lt;'}, // &lt;
-        //     {key:'>', value:'&gt;'} // &gt;
-        // ];
+
 
         chars.forEach(function(c){
           var re = new RegExp(c.key, "g");
