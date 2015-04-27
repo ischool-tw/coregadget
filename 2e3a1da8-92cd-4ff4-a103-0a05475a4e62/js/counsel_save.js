@@ -522,7 +522,7 @@ _gg.SetSaveData = function (data_scope) {
         });
         tmp_interviewRecord.push('</CounselTypeKind>');
 
-        console.log(tmp_interviewRecord.join(''));
+        // console.log(tmp_interviewRecord.join(''));
     };
 
 
