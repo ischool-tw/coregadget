@@ -411,7 +411,7 @@
                                         </li> -->
                                     <!-- </ul> -->
                                 <!-- </div> -->
-
+                                <input type="checkbox" ng-model="originalScoreMode">Show original score<br>
                                 <table class="table table-bordered my-grade" style="margin-top:10px;">
                                     <thead>
                                         <tr>
@@ -429,8 +429,8 @@
                                         <tr ng-repeat="item in GS.domains">
                                             <td rowspan="1">{{item.domain + ' (' + item.period + ')'}}</td>
                                             <td rowspan="1">{{item.subject}}</td>
-                                            <td colspan="1" class="text-center">{{item.score[0]}}</td>
-                                            <td colspan="1" class="text-center">{{item.score[1]}}</td>
+                                            <td colspan="1" class="text-center">{{TransferScore(item.score[0])}}</td>
+                                            <td colspan="1" class="text-center">{{TransferScore(item.score[1])}}</td>
                                         </tr>
                                         <!-- <tr>
                                             <td rowspan="1">Englist (5)</td>
@@ -617,6 +617,7 @@
                                         </li>
                                     </ul>
                                 </div>
+                            <input type="checkbox" ng-model="originalScoreMode">Show original score<br>
                                 <table class="table table-bordered table-striped text-center" style="margin-top:10px;" ng-if="exam">
                                     <thead>
                                         <!-- <tr>
@@ -639,10 +640,10 @@
                                     <tbody>
                                         <tr ng-repeat="item in currentExam.Exam">
                                             <td class="text-left">{{item.SubjectChineseName + ' ' + item.SubjectEnglishName}}</td>
-                                            <td ng-class="{'text-danger':item.Midterm < 60}">{{item.Midterm}}</td>
+                                            <td ng-class="{'text-danger':item.Midterm < 60}">{{TransferScore(item.Midterm)}}</td>
                                             <td class="hidden"></td>
                                             <td class="hidden"></td>
-                                            <td ng-class="{'text-danger':item.Final < 60}">{{item.Final}}</td>
+                                            <td ng-class="{'text-danger':item.Final < 60}">{{TransferScore(item.Final)}}</td>
                                             <td class="hidden"></td>
                                             <td class="hidden"></td>
                                         </tr>

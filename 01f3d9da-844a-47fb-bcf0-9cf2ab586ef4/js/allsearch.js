@@ -3,6 +3,8 @@ angular.module('allsearch', [])
 .controller('MainCtrl', ['$scope', '$filter',
     function($scope, $filter) {
 
+    	$scope.originalScoreMode = false;
+
         //$scope.gradescore = {name:'cloudwu'};
         //$scope.newIR;
 
@@ -1045,6 +1047,46 @@ angular.module('allsearch', [])
                 }
             });
         };
+
+        $scope.TransferScore = function(score){
+
+        	if ($scope.originalScoreMode || score === "未開放")
+        		return score;
+
+        	score = parseInt(score, 10);
+
+        	//四捨五入
+        	score =  Math.round(score);
+
+        	if (!isNaN(score)){
+        		if (score >= 97)
+        			return "A+";
+        		else if (score >= 93)
+        			return "A";
+        		else if (score >= 90)
+        			return "A-";
+        		else if (score >= 87)
+        			return "B+";
+        		else if (score >= 83)
+        			return "B";
+        		else if (score >= 80)
+        			return "B-";
+        		else if (score >= 77)
+        			return "C+";
+        		else if (score >= 73)
+        			return "C";
+        		else if (score >= 70)
+        			return "C-";
+        		else if (score >= 67)
+        			return "D+";
+        		else if (score >= 63)
+        			return "D";
+        		else if (score >= 60)
+        			return "D-";
+        		else
+        			return "F";
+        	}
+        }
 
         $scope.GetADConfig();
 
