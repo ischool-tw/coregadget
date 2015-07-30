@@ -300,7 +300,8 @@ jQuery(function () {
                 cs_content1_template			    : ko.observable(),
                 cs_content2_template				: ko.observable(),
                 email_content1_template_subject		: ko.observable(),
-                email_content2_template_subject		: ko.observable()
+                email_content2_template_subject		: ko.observable(),
+                retreat_notices_word                : ko.observable()
             },
             get_configuration : function() {
                 var self = MyViewModel;
@@ -319,7 +320,8 @@ jQuery(function () {
                                     'cs_content1_template',
                                     'cs_content2_template',
 									'email_content1_template_subject',
-									'email_content2_template_subject'
+									'email_content2_template_subject',
+                                    'retreat_notices_word'
                                 ]
                             }
                         }
@@ -920,7 +922,8 @@ jQuery(function () {
                 }
 
                 var tmp = $(content);
-                $(tmp).find('#printEndTime').append(self.currentData.EndTime() || '');
+                // $(tmp).find('#printEndTime').append(self.currentData.EndTime() || '');
+                $(tmp).filter('#noteInfo').append(self.configuration['retreat_notices_word']() || '');
                 content = $('<div>').append(tmp).html();
 
                 content = "<!DOCTYPE html>\n" +
