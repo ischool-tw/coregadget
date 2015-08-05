@@ -102,7 +102,7 @@ jQuery(function () {
 
     // 計算字數
     $('body').on('keyup', '.my-answer-input', function (event) {
-        $(this).closest("tr").find(".my-message-word").html($(this).val().length);
+        $(this).closest("tr").find(".my-message-word").html($(this).val().replace(/(\r\n|\n|\r)/gm, '').length);
     });
 
     //#region 將結果轉成物件
