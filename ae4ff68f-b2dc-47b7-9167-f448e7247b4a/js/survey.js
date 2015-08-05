@@ -75,7 +75,17 @@ jQuery(function () {
             } else {
                 $('tr.error:first').find('textarea, input').first().focus();
                 $('body').scrollTop(0);
-                if ($('tr.error span.my-star').length > 0) { alert('您還有【必填】題目未填寫，請填答完整後再送出'); }
+                var err01 = $('tr.error').has('span.my-star').length;
+                var err02 = $('tr.error').has('span.my-star').has('.my-answer-input').length;
+                if ((err01 - err02) > 0 && err02 >0) {
+                    alert('您還有【必填】題目未填寫，或有欄位超過500字元，請修正後再送出');
+                }
+                else if (err02 > 0) {
+                    alert('您還有欄位超過500字元，請修正後再送出');
+                }
+                else if (err01 > 0) {
+                    alert('您還有【必填】題目未填寫，請修正後再送出');
+                }
                 set_error_message('#mainMsg', '', '資料驗證失敗，請重新檢查！');
             }
         })
@@ -88,6 +98,11 @@ jQuery(function () {
     $('#save-data').click(function() {
         $("#save-data").button('loading'); // 按鈕設為處理中
         SurveyManger.saveReply('1', getReply2Obj());
+    });
+
+    // 計算字數
+    $('body').on('keyup', '.my-answer-input', function (event) {
+        $(this).closest("tr").find(".my-message-word").html($(this).val().length);
     });
 
     //#region 將結果轉成物件
@@ -471,11 +486,15 @@ jQuery(function () {
                                     }
                                     break;
                                 case '問答題':
-                                	tmp_html.push('<P/><P/><div data-qid="' + (item.QuestionID || '') + '"><textarea name="' + unique + '" rows="5" class=" {extMaxLength: ' + _textarea_maxLength + '} ' + validate_css + ' input-block-level"' +
+                                	tmp_html.push('<P/><P/><div data-qid="' + (item.QuestionID || '') + '"><textarea name="' + unique + '" rows="5" class=" my-answer-input {extMaxLength: ' + _textarea_maxLength + '} ' + validate_css + ' input-block-level"' +
                                         ' data-caseid="' + caseid + '"' +
                                         ' data-maxLength="' + _textarea_maxLength + '"' +
                                         '></textarea></div>' +
-                                        '<div class="my-note-text my-preview-remove">(請勿超過' + _textarea_maxLength + '字元)</div>');
+                                        '<div class="my-note-text my-preview-remove">' +
+                                        '字數統計：<span class="my-message-word"></span>字元' +
+                                        '&nbsp;&nbsp;(請勿超過' + _textarea_maxLength + '字元)' +
+                                        '</div>'
+                                        );
                                     break;
                             	case '複選題':
                             		if (item.Options && item.Options.Option) {
@@ -601,6 +620,8 @@ jQuery(function () {
                             $('#tab_form tbody[data-type=questions]').html('<tr><td colspan="2">目前無題目</td></tr>');
                         }
                     }
+                    $('#form1 .my-answer-input').trigger('keyup');
+                    $('#form1').validate({ onkeyup: function(element) {$(element).valid()} });
                     $('#tab_form').find('[data-type=form]').show();
                 };
                 //#endregion
@@ -1003,7 +1024,18 @@ jQuery(function () {
                             $('tr.error:first').find('textarea, input').first().focus();
                             $('body').scrollTop(0);
                             $("#save-data").button("reset");
-                            if ($('tr.error span.my-star').length > 0) { alert('您還有【必填】題目未填寫，請填答完整後再送出'); }
+                            var err01 = $('tr.error').has('span.my-star').length;
+                            var err02 = $('tr.error').has('span.my-star').has('.my-answer-input').length;
+                            if ((err01 - err02) > 0 && err02 >0) {
+                                alert('您還有【必填】題目未填寫，或有欄位超過500字元，請修正後再送出');
+                            }
+                            else if (err02 > 0) {
+                                alert('您還有欄位超過500字元，請修正後再送出');
+                            }
+                            else if (err01 > 0) {
+                                alert('您還有【必填】題目未填寫，請修正後再送出');
+                            }
+
                             set_error_message('#mainMsg', '', '資料驗證失敗，請重新檢查！');
                             previewCancel();
                         }
