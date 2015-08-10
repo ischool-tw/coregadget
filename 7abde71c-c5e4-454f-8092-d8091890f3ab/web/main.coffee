@@ -6,7 +6,6 @@ $(document).ready () ->
 		result: (response, error, xhr) ->
 			$("#message").html """
 				<p>開放選課時間：#{response.Response.StartTime} ~ #{response.Response.EndTime}</p>
-				<p>選課時間結束後，若單一課程人數低於30人，教務處(科主任)得彈性調整選課名單</p>
 			"""
 	}
 
