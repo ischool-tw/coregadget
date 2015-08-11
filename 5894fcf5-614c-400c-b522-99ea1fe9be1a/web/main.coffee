@@ -11,9 +11,9 @@ $(document).ready () ->
 				service: "default.GetMyInfo",
 				result: (response, error, xhr) ->
 				if response.Response.ClassName isnt ""
-						getClassSelectionResult()
-					else
-						alert "您並非為'班導師'無法查詢學生選課結果!"
+					getClassSelectionResult()
+				else
+					alert "您並非為'班導師'無法查詢學生選課結果!"
 			}
 	}
 
