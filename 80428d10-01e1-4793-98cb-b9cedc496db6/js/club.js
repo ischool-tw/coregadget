@@ -260,7 +260,7 @@ var _gg = function () {
                                                             }
                                                         });
 
-                                                        // TODO: 目前學年度學期社團資料(已過濾性別、總人數=0、科別條件)
+                                                        // TODO: 目前學年度學期社團資料(已過濾性別、總人數=0、科別條件，未過濾年級人數)
                                                         connection.send({
                                                             service: "_.GetAllClubs",
                                                             body: '<Request><SchoolYear>' + SchoolYear + '</SchoolYear><Semester>' + Semester + '</Semester></Request>',
@@ -272,40 +272,44 @@ var _gg = function () {
                                                                     var sortlist = [];
                                                                     resetData();
 
-                                                                    if ($(response.Response.ClubRecord).size() === 0) {
+                                                                    $(response.Response.ClubRecord).each(function (index, item) {
+                                                                        tmp_show = "false";
+                                                                        if (student.Lock === '是') {
+                                                                            if (student.ClubID === item.ClubID) {
+                                                                                tmp_show = "true";
+                                                                            }
+                                                                        } else {
+                                                                            if (item['Grade' + Student.GradeYear + 'Limit']) {
+                                                                                tmp_show = (parseInt(item['Grade' + Student.GradeYear + 'Limit'], 10) == 0) ? "false" : "true";
+                                                                            } else {
+                                                                                tmp_show = "true";
+                                                                            }
+                                                                        }
+
+                                                                        if (tmp_show === "true") {
+                                                                            if (!Clubs[index]) {
+                                                                                Clubs[index] = item;
+                                                                                item.getInfo = "false";
+                                                                            }
+                                                                        }
+
+                                                                        if ($.inArray(item.ClubID, _chooseClub) !== -1) {
+                                                                            sortlist[$.inArray(item.ClubID, _chooseClub)] = '' +
+                                                                                '<li id="' + item.ClubID + '">' +
+                                                                                '<a href="javascript:$(\'#club-list li[club-id=' + item.ClubID + '] a\').click();">' +
+                                                                                (item.ClubName || '') +
+                                                                                '</a>';
+
+                                                                            sortlist[$.inArray(item.ClubID, _chooseClub)] += (Opening === 'yes') ? '<i class="icon-resize-vertical pull-right"></i></li>' : '';
+                                                                        }
+
+                                                                    });
+                                                                    if (Clubs.length === 0) {
                                                                         $("#filter-keyword").addClass("disabled").attr("disabled", "disabled");
                                                                         $("#club-list .tabbable").html("目前無社團");
                                                                         $("div[data-type] tbody").html("目前無社團");
                                                                         $("div[data-type=summary] .my-widget-content").html("目前無社團");
                                                                     } else {
-                                                                        $(response.Response.ClubRecord).each(function (index, item) {
-                                                                            tmp_show = "false";
-                                                                            if (student.Lock === '是') {
-                                                                                if (student.ClubID === item.ClubID) {
-                                                                                    tmp_show = "true";
-                                                                                }
-                                                                            } else {
-                                                                                tmp_show = "true";
-                                                                            }
-
-                                                                            if (tmp_show === "true") {
-                                                                                if (!Clubs[index]) {
-                                                                                    Clubs[index] = item;
-                                                                                    item.getInfo = "false";
-                                                                                }
-                                                                            }
-
-                                                                            if ($.inArray(item.ClubID, _chooseClub) !== -1) {
-                                                                                sortlist[$.inArray(item.ClubID, _chooseClub)] = '' +
-                                                                                    '<li id="' + item.ClubID + '">' +
-                                                                                    '<a href="javascript:$(\'#club-list li[club-id=' + item.ClubID + '] a\').click();">' +
-                                                                                    (item.ClubName || '') +
-                                                                                    '</a>';
-
-                                                                                sortlist[$.inArray(item.ClubID, _chooseClub)] += (Opening === 'yes') ? '<i class="icon-resize-vertical pull-right"></i></li>' : '';
-                                                                            }
-
-                                                                        });
                                                                         $('#sortable').append(sortlist.join(''));
                                                                         resetClubList();
                                                                         SetClubRecord();
@@ -381,13 +385,13 @@ var _gg = function () {
 
             var showInfo = function () {
                 var items_info, items_condition, items_summary, tmp_photo1, tmp_photo2;
-                var tmp_grade1Limit, tmp_grade2Limit, tmp_limit, tmp_genderRestrict, tmp_deptRestrict;
+                var tmp_limit, tmp_genderRestrict, tmp_deptRestrict;
 
                 items_info = [];
                 items_condition = [];
                 items_summary = [];
                 tmp_photo1, tmp_photo2;
-                tmp_grade1Limit = '不限', tmp_grade2Limit = '不限', tmp_limit = '不限', tmp_genderRestrict = '不限', tmp_deptRestrict = '不限';
+                tmp_limit = '不限', tmp_genderRestrict = '不限', tmp_deptRestrict = '不限';
 
                 // TODO: 社團基本資料
                 items_info.push('<tr><th nowrap="nowrap" width="29%">學年 </th><td>' + club.SchoolYear + '</td></tr>');
@@ -412,9 +416,6 @@ var _gg = function () {
                     });
                 }
 
-                // items_condition.push('<tr><th width="29%" nowrap="nowrap">年級 </th><td width="71%"></td></tr>');
-                // items_condition.push('<tr><th width="29%" nowrap="nowrap">年級 </th><td width="71%">一年級 ' + tmp_grade1Limit + '</td></tr>');
-                // items_condition.push('<tr><th nowrap="nowrap">&nbsp;</th><td>二年級 ' + tmp_grade2Limit + '</td></tr>');
                 items_condition.push('<tr><th width="29%" nowrap="nowrap">名額 </th><td>' + tmp_limit + ' </td></tr>');
                 items_condition.push('<tr><th width="29%" nowrap="nowrap">性別 </th><td>' + tmp_genderRestrict + '</td></tr>');
                 items_condition.push('<tr><th width="29%" nowrap="nowrap">科別 </th><td>' + tmp_deptRestrict + '</td></tr>');
