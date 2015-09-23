@@ -59,6 +59,7 @@ Core Gadget
 * b3271aa2-f9d7-43b5-bcae-a36e058fda07 電子報表(學生)
 * 7a29929b-6978-4ebc-be04-5eb4b8aa1fa7 電子報表(老師)
 * 2DCFE7E6-BA4E-4FDB-AD72-98E08762C863 電子報表(家長)
+* 11c45293-adcf-4c66-9c1f-85ca3e107a2d 導師APP(老師)
 
 客製化
 
