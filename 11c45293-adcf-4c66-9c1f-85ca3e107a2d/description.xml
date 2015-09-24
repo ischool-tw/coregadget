@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="導師APP" description="老師-導師APP">
-    <Title lang="zh-TW">導師APP</Title>
+  <ModulePrefs title="教師APP" description="老師-教師APP">
+    <Title lang="zh-TW">教師APP</Title>
     <Icon>icon.gif</Icon>
     <Mobile />
     <Title lang="zh-CN">
