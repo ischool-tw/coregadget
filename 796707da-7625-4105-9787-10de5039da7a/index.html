@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="css/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/defalut.css" rel="stylesheet" />
+</head>
+<body ng-app="app" ng-controller="Cntl" data-ng-init="init()">
+  <div class="my-page" ng-show="curr_status == 'limit'">
+    您無此權限
+  </div>
+  <div class="my-page" ng-show="curr_status != 'limit'">
+    <div class="row">
+      <div class="col-md-12">
+        <h1>學校統計資訊</h1>
+      </div>
+      <div class="col-md-4">
+        <div class="list-group">
+          <a href="javascript:;" class="list-group-item" ng-repeat="s in schools" ng-click="changeDSA(s)">
+            {{s.schoolname}}
+          </a>
+        </div>
+      </div>
+      <div class="col-md-8" ng-hide="curr_school">
+        請選擇學校
+      </div>
+      <div class="col-md-8" ng-show="curr_school">
+        <p ng-show="curr_status == 'loading'">讀取中...</p>
+        <p ng-show="curr_status == 'error'">讀取失敗</p>
+        <div class="row" ng-show="curr_status == 'success'">
+          <div class="col-md-6">
+            <div class="panel panel-success">
+              <div class="panel-heading">
+                <h3 class="panel-title">容量</h3>
+              </div>
+              <div class="panel-body">
+                <p><h4><span class="label label-success">已使用</span> <span>{{current.use_size || 0}}</span></h4></p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="panel panel-info">
+              <div class="panel-heading">
+                <h3 class="panel-title">老師</h3>
+              </div>
+              <div class="panel-body">
+                <p><h4><span class="label label-info">一般</span> <span>{{current.teacher_st1 || 0}}</span></h4></p>
+                <p><h4><span class="label label-info">刪除</span> <span>{{current.teacher_st256 || 0}}</span></h4></p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="panel panel-warning">
+              <div class="panel-heading">
+                <h3 class="panel-title">學生</h3>
+              </div>
+              <div class="panel-body">
+                <p><h4><span class="label label-warning">一般</span> <span>{{current.student_st1 || 0}}</span></h4></p>
+                <p><h4><span class="label label-warning">延修</span> <span>{{current.student_st2 || 0}}</span></h4></p>
+                <p><h4><span class="label label-warning">休學</span> <span>{{current.student_st4 || 0}}</span></h4></p>
+                <p><h4><span class="label label-warning">輟學</span> <span>{{current.student_st8 || 0}}</span></h4></p>
+                <p><h4><span class="label label-warning">畢業或離校</span> <span>{{current.student_st16 || 0}}</span></h4></p>
+                <p><h4><span class="label label-warning">刪除</span> <span>{{current.student_st256 || 0}}</span></h4></p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">使用的服務</h3>
+              </div>
+              <div class="panel-body">
+                <ol>
+                  <li ng-repeat="service in current.services">{{service.servicename}}</li>
+                </ol>
+                <p ng-show="current.services.length == 0">未安裝任何服務</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="js/jquery-1.8.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/angular.min.js"></script>
+<script src="js/xmlWriter.js"></script>
+<script src="js/parseXml.js"></script>
+<script src="js/xml2json.js"></script>
+<script src="js/default.js"></script>
+</html>
