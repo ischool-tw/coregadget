@@ -64,9 +64,6 @@ angular.module("app", [])
             }
         });
     }
-    $scope.refresh = function () {
-        $scope.init();
-    }
 });
 var set_error_message = function(select_str, serviceName, error) {
     var tmp_msg;
