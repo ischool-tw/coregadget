@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <script src="js/gadget.js"></script>
+  <script>
+  init({
+    application: "elvira:dev.sh_d",
+    paramValues: {},
+    oAuth: {
+      clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+      clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
+      account: 'bubu@debug.ischool.com.tw',
+      password:'1234'
+    }
+  });
+  </script>
+  <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="css/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="css/base.css" rel="stylesheet" />
+  <link href="css/defalut.css" rel="stylesheet" />
+  <script src="js/jquery-1.8.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+</head>
+<body>
+  <div class="my-page" id="gadget" ng-app="app" ng-controller="Cntl" data-ng-init="init()">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>
+        學校統計資訊
+      </h1>
+      <div id="mainMsg" />
+    </div>
+  </h1>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="panel panel-success">
+            <div class="panel-heading">
+              <h3 class="panel-title">容量</h3>
+            </div>
+            <div class="panel-body">
+              <p><h4><span class="label label-success">已使用</span> <span>{{current.use_size}}</span></h4></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">老師</h3>
+            </div>
+            <div class="panel-body">
+              <p><h4><span class="label label-info">一般</span> <span>{{current.teacher_st1}}</span></h4></p>
+              <p><h4><span class="label label-info">刪除</span> <span>{{current.teacher_st256}}</span></h4></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="panel panel-warning">
+            <div class="panel-heading">
+              <h3 class="panel-title">學生</h3>
+            </div>
+            <div class="panel-body">
+              <p><h4><span class="label label-warning">一般</span> <span>{{current.student_st1}}</span></h4></p>
+              <p><h4><span class="label label-warning">延修</span> <span>{{current.student_st2}}</span></h4></p>
+              <p><h4><span class="label label-warning">休學</span> <span>{{current.student_st4}}</span></h4></p>
+              <p><h4><span class="label label-warning">輟學</span> <span>{{current.student_st8}}</span></h4></p>
+              <p><h4><span class="label label-warning">畢業或離校</span> <span>{{current.student_st16}}</span></h4></p>
+              <p><h4><span class="label label-warning">刪除</span> <span>{{current.student_st256}}</span></h4></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">使用的服務</h3>
+            </div>
+            <div class="panel-body">
+              <ol>
+                <li ng-repeat="service in current.services">{{service.servicename}}</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr />
+</body>
+<script src="js/angular.min.js"></script>
+<script src="js/default.js"></script>
+</html>
