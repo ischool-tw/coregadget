@@ -61,7 +61,7 @@ angular.module("app", [])
                                         if (response) {
                                             // console.log(xml2json.parser(response));
                                             var data = xml2json.parser(response);
-                                            item.servicename = (data.APP && data.APP.Title ? data.APP.Title : "");
+                                            item.servicename = (data.App && data.App.Title ? data.App.Title : "");
                                         }
                                     })
                                     .error(function(){
