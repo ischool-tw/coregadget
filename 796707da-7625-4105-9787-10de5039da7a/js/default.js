@@ -3,6 +3,7 @@ angular.module("app", [])
     $scope.init = function() {
         $scope.current = {};
         $scope.curr_school = null;
+        $scope.curr_status = "limit";
 
         if (location.href.lastIndexOf('?') >= 0) {
             var bookmark = location.href.substr(location.href.lastIndexOf('?') + 1);
@@ -23,16 +24,10 @@ angular.module("app", [])
                             { schoolname: '白雲國小', dsa: 'pyps.ntpc.edu.tw' },
                             { schoolname: '澔學國中', dsa: 'demo.ischool.j' }
                         ];
-                    } else {
-                        $scope.curr_status = "limit";
+                        $scope.curr_status = "views";
                     }
                 })
-                .error(function(){
-                    $scope.curr_status = "limit";
-                });
             }
-        } else {
-            $scope.curr_status = "limit";
         }
     };
 
@@ -53,20 +48,24 @@ angular.module("app", [])
                 if (response.Body.Response.services) {
                     response.Body.Response.services = [].concat(response.Body.Response.services || []);
                     response.Body.Response.services.forEach(function(item) {
-                        // console.log(item.app_url);
-                        item.servicename = "讀取中...";
-                        if (item.app_url) {
-                            $http.get(item.app_url.replace(/http:\/\/|https:\/\//i, '\/\/'), {})
-                            .success(function(response, status) {
-                                if (response) {
-                                    // console.log(xml2json.parser(response));
-                                    var data = xml2json.parser(response);
-                                    item.servicename = (data.APP && data.APP.Title ? data.APP.Title : "");
-                                }
-                            })
-                            .error(function(){
-                                item.servicename = "讀取失敗";
-                            });
+                        if (!item.servicename) {
+                            // console.log(item.app_url);
+                            if (item.app_url) {
+                                item.servicename = "讀取中...";
+                                $http.get(item.app_url.replace(/http:\/\/|https:\/\//i, '\/\/'), {})
+                                .success(function(response, status) {
+                                    if (response) {
+                                        // console.log(xml2json.parser(response));
+                                        var data = xml2json.parser(response);
+                                        item.servicename = (data.APP && data.APP.Title ? data.APP.Title : "");
+                                    }
+                                })
+                                .error(function(){
+                                    item.servicename = "讀取失敗";
+                                });
+                            } else {
+                                item.servicename = "無法讀取";
+                            }
                         }
                     });
                     $scope.curr_status = "success";

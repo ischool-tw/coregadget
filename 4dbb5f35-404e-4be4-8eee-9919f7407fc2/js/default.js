@@ -28,6 +28,20 @@ angular.module("app", [])
         //         { servicename: '國中學期表現' }
         //     ]
         // }
+        $scope.current = {
+            use_size: '讀取中...',
+            teacher_st1: '讀取中...',
+            teacher_st256: '讀取中...',
+            student_st1: '讀取中...',
+            student_st2: '讀取中...',
+            student_st4: '讀取中...',
+            student_st8: '讀取中...',
+            student_st16: '讀取中...',
+            student_st256: '讀取中...',
+            services: [
+                { servicename: '讀取中...' },
+            ]
+        }
         $scope.contract.send({
             service: "beta.Analysis",
             body: {},
@@ -38,20 +52,24 @@ angular.module("app", [])
                     if (response.Response.services) {
                         response.Response.services = [].concat(response.Response.services || []);
                         response.Response.services.forEach(function(item) {
-                            // console.log(item.app_url);
-                            item.servicename = "讀取中...";
-                            if (item.app_url) {
-                                $http.get(item.app_url.replace(/http:\/\/|https:\/\//i, '\/\/'), {})
-                                .success(function(response, status) {
-                                    if (response) {
-                                        // console.log(xml2json.parser(response));
-                                        var data = xml2json.parser(response);
-                                        item.servicename = (data.APP && data.APP.Title ? data.APP.Title : "");
-                                    }
-                                })
-                                .error(function(){
-                                    item.servicename = "讀取失敗";
-                                });
+                            if (!item.servicename) {
+                                // console.log(item.app_url);
+                                if (item.app_url) {
+                                    item.servicename = "讀取中...";
+                                    $http.get(item.app_url.replace(/http:\/\/|https:\/\//i, '\/\/'), {})
+                                    .success(function(response, status) {
+                                        if (response) {
+                                            // console.log(xml2json.parser(response));
+                                            var data = xml2json.parser(response);
+                                            item.servicename = (data.APP && data.APP.Title ? data.APP.Title : "");
+                                        }
+                                    })
+                                    .error(function(){
+                                        item.servicename = "讀取失敗";
+                                    });
+                                } else {
+                                    item.servicename = "無法讀取";
+                                }
                             }
                         });
                     }
