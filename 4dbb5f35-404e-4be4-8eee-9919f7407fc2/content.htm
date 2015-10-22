@@ -32,14 +32,13 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <div class="row">
           <div class="col-md-6">
             <div class="panel panel-success">
               <div class="panel-heading">
                 <h3 class="panel-title">容量</h3>
               </div>
               <div class="panel-body">
-                <p><h4><span class="label label-success">已使用</span> <span>{{current.use_size}}</span></h4></p>
+                <p><h4><span class="label label-success">已使用</span> <span>{{current.use_size || 0}}</span></h4></p>
               </div>
             </div>
           </div>
@@ -49,8 +48,8 @@
                 <h3 class="panel-title">老師</h3>
               </div>
               <div class="panel-body">
-                <p><h4><span class="label label-info">一般</span> <span>{{current.teacher_st1}}</span></h4></p>
-                <p><h4><span class="label label-info">刪除</span> <span>{{current.teacher_st256}}</span></h4></p>
+                <p><h4><span class="label label-info">一般</span> <span>{{current.teacher_st1 || 0}}</span></h4></p>
+                <p><h4><span class="label label-info">刪除</span> <span>{{current.teacher_st256 || 0}}</span></h4></p>
               </div>
             </div>
           </div>
@@ -60,12 +59,12 @@
                 <h3 class="panel-title">學生</h3>
               </div>
               <div class="panel-body">
-                <p><h4><span class="label label-warning">一般</span> <span>{{current.student_st1}}</span></h4></p>
-                <p><h4><span class="label label-warning">延修</span> <span>{{current.student_st2}}</span></h4></p>
-                <p><h4><span class="label label-warning">休學</span> <span>{{current.student_st4}}</span></h4></p>
-                <p><h4><span class="label label-warning">輟學</span> <span>{{current.student_st8}}</span></h4></p>
-                <p><h4><span class="label label-warning">畢業或離校</span> <span>{{current.student_st16}}</span></h4></p>
-                <p><h4><span class="label label-warning">刪除</span> <span>{{current.student_st256}}</span></h4></p>
+                <p><h4><span class="label label-warning">一般</span> <span>{{current.student_st1 || 0}}</span></h4></p>
+                <p><h4><span class="label label-warning">延修</span> <span>{{current.student_st2 || 0}}</span></h4></p>
+                <p><h4><span class="label label-warning">休學</span> <span>{{current.student_st4 || 0}}</span></h4></p>
+                <p><h4><span class="label label-warning">輟學</span> <span>{{current.student_st8 || 0}}</span></h4></p>
+                <p><h4><span class="label label-warning">畢業或離校</span> <span>{{current.student_st16 || 0}}</span></h4></p>
+                <p><h4><span class="label label-warning">刪除</span> <span>{{current.student_st256 || 0}}</span></h4></p>
               </div>
             </div>
           </div>
@@ -81,7 +80,6 @@
               </div>
             </div>
           </div>
-        </div>
       </div>
     </div>
   </div>

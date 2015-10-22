@@ -31,6 +31,8 @@ angular.module("app", [])
                     $scope.curr_status = "limit";
                 });
             }
+        } else {
+            $scope.curr_status = "limit";
         }
     };
 
@@ -54,7 +56,7 @@ angular.module("app", [])
                         // console.log(item.app_url);
                         item.servicename = "讀取中...";
                         if (item.app_url) {
-                            $http.get(item.app_url, {})
+                            $http.get(item.app_url.replace(/http:\/\/|https:\/\//i, '\/\/'), {})
                             .success(function(response, status) {
                                 if (response) {
                                     // console.log(xml2json.parser(response));
