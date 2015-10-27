@@ -36,7 +36,7 @@ var getConfirm = function (confirmMessage, callback){
         $('#confirmbox').modal('hide');
         if (callback) {
             callback(false);
-        } 
+        }
     });
     $('#confirmTrue').click(function(){
         $('#confirmbox').modal('hide');
@@ -44,7 +44,7 @@ var getConfirm = function (confirmMessage, callback){
             callback(true);
         }
     });
-};  
+};
 
 var CreateCallbackQueue = function() {
     //  結構為2維陣列的工作排程，第1維表示單執行緒，第2維表示多執行緒
@@ -52,16 +52,16 @@ var CreateCallbackQueue = function() {
 
     //  執行中的工作
     var _Current = [];
-    
+
     //  已做完的工作
-    var _Finished = [];  
+    var _Finished = [];
 
     //  記錄所有錯誤訊息
-    var _InternalError = [];  
+    var _InternalError = [];
 
     //  執行目前工作中的每一個子工作
-    var _Execute = function(object) {   
-        //  _Current 中的工作，全部一起執行(單執行緒與多執行緒皆適用)     
+    var _Execute = function(object) {
+        //  _Current 中的工作，全部一起執行(單執行緒與多執行緒皆適用)
         while (object.length > 0) {
             var o = object.shift();
             if (jQuery.isFunction(o)) {
@@ -69,7 +69,7 @@ var CreateCallbackQueue = function() {
             } else {
                 _InternalError.push("函式：" + arguments.callee + " 無法執行。");
             }
-        }   
+        }
     };
 
     //  執行目前工作
@@ -86,7 +86,7 @@ var CreateCallbackQueue = function() {
             } else {
                 _Queues.push([object]);
             }
-        }, 
+        },
 
         Start: function() {
             if (_Queues.length === 0) {
@@ -94,7 +94,7 @@ var CreateCallbackQueue = function() {
                 return;
             }
             _DoCurrentJob();
-        }, 
+        },
 
         JobFinished: function() {
             _Finished.shift();
@@ -104,15 +104,15 @@ var CreateCallbackQueue = function() {
             }
 
             if (_Finished.length === 0) {
-                _DoCurrentJob();                  
+                _DoCurrentJob();
             }
         },
 
         Clear: function() {
             _Queues = [];
             _Current = [];
-            _Finished = [];  
-            _InternalError = []; 
+            _Finished = [];
+            _InternalError = [];
         }
     }
 };
@@ -186,13 +186,13 @@ var CreateTeacher = function() {
     var _CourseStudents = {};
 
     //    記錄所有錯誤訊息
-    var _InternalError = [];  
+    var _InternalError = [];
 
     //  呼叫 Web2 Service 使用工作排程來處理
     var _CallbackQueue = CreateCallbackQueue();
 
     //  本學期課程是否已鎖定不得成績輸入
-    var _SubjectScoreLock; 
+    var _SubjectScoreLock;
 
     //  成績輸入說明樣版
     var _TextTemplate;
@@ -210,7 +210,7 @@ var CreateTeacher = function() {
             body: {},
             result: function(response, error, http) {
                 if (error !== null) {
-                    _InternalError.push('呼叫服務(' + Service.GetScoreInputSemester + ')失敗或網路異常，請稍候重試！');
+                    _InternalError.push('呼叫服務(' + Service.GetScoreInputSemester + ')失敗，請稍候重試！');
                     _ThrowError();
                 } else {
                     if (response.InputSemester !== null) {
@@ -221,11 +221,11 @@ var CreateTeacher = function() {
                 }
                 // console.log('ScoreInputSemester.SchoolYear：' + ScoreInputSemester.SchoolYear);
                 // console.log('ScoreInputSemester.Semester：' + ScoreInputSemester.Semester);
-                
+
             }
         });
     };
-  
+
     //    取得教師授課清單
     var _GetTeacherCourses = function() {
         gadget.getContract(Contract.Teacher).send({
@@ -238,7 +238,7 @@ var CreateTeacher = function() {
             },
             result: function(response, error, http) {
                 if (error !== null) {
-                    _InternalError.push('呼叫服務(' + Service.GetMyCourses + ')失敗或網路異常，請稍候重試！');
+                    _InternalError.push('呼叫服務(' + Service.GetMyCourses + ')失敗，請稍候重試！');
                     _ThrowError();
                 } else {
                     if (response.Result && response.Result.Course){
@@ -272,7 +272,7 @@ var CreateTeacher = function() {
             }
         });
     };
-  
+
     //    取得選取課程之「俢課學生」及其成績資料。
     var _GetCourseStudents = function() {
         gadget.getContract(Contract.Teacher).send({
@@ -285,7 +285,7 @@ var CreateTeacher = function() {
             },
             result: function(response, error, http) {
                 if (error !== null) {
-                    _InternalError.push('呼叫服務(' + Service.GetStudents + ')失敗或網路異常，請稍候重試！');
+                    _InternalError.push('呼叫服務(' + Service.GetStudents + ')失敗，請稍候重試！');
                     _ThrowError();
                 } else {
                     if (response.Result && response.Result.Student){
@@ -315,7 +315,7 @@ var CreateTeacher = function() {
             }
         });
     };
-  
+
     //    取得選取課程之「俢課學生」及其成績資料，上傳成績前更新「ScoreID, IsCancel」，確保取得學生成績最新資料。
     var _GetCourseStudentPreUpload = function() {
         gadget.getContract(Contract.Teacher).send({
@@ -328,7 +328,7 @@ var CreateTeacher = function() {
             },
             result: function(response, error, http) {
                 if (error !== null) {
-                    _InternalError.push('呼叫服務(' + Service.GetStudents + ')失敗或網路異常，請稍候重試！');
+                    _InternalError.push('呼叫服務(' + Service.GetStudents + ')失敗，請稍候重試！');
                     _ThrowError();
                 } else {
                     if (response.Result && response.Result.Student){
@@ -348,7 +348,7 @@ var CreateTeacher = function() {
             }
         });
     };
-  
+
     //    取得成績輸入學年期之所有課程的授課教師。
     var _GetCourseTeachers = function() {
         gadget.getContract(Contract.Teacher).send({
@@ -361,7 +361,7 @@ var CreateTeacher = function() {
             },
             result: function(response, error, http) {
                 if (error !== null) {
-                    _InternalError.push('呼叫服務(' + Service.GetCourseTeacherList + ')失敗或網路異常，請稍候重試！');
+                    _InternalError.push('呼叫服務(' + Service.GetCourseTeacherList + ')失敗，請稍候重試！');
                     _ThrowError();
                 } else {
                     if (response.Result && response.Result.Teacher){
@@ -378,7 +378,7 @@ var CreateTeacher = function() {
                 }
             }
         });
-    };    
+    };
 
     //  取得鎖定成績輸入資訊
     var _GetSubjectScoreLock = function() {
@@ -392,7 +392,7 @@ var CreateTeacher = function() {
             },
             result: function(response, error, http) {
                 if (error !== null) {
-                    _InternalError.push('呼叫服務(' + Service.GetSubjectScoreLock + ')失敗或網路異常，請稍候重試！');
+                    _InternalError.push('呼叫服務(' + Service.GetSubjectScoreLock + ')失敗，請稍候重試！');
                     _ThrowError();
                 } else {
                     if (response.Result) {
@@ -406,53 +406,69 @@ var CreateTeacher = function() {
 
     //  新增學期成績
     var _AddSubjectSemesterScore = function(scores) {
-        gadget.getContract(Contract.Teacher).send({
-            service: Service.AddSubjectSemesterScore,
-            body: {
-                Request: {
-                  Score: scores
-                }
-            },
-            result: function(response, error, http) {
-                if (error !== null) {
-                    _InternalError.push('呼叫服務(' + Service.AddSubjectSemesterScore + ')失敗或網路異常，請稍候重試！');
-                    _ThrowError();
-                } else {
-                    if (!response.Result) {
-                        _InternalError.push("新增成績失敗！請稍候重試。");
+        if (scores.length > 0) {
+            gadget.getContract(Contract.Teacher).send({
+                service: Service.AddSubjectSemesterScore,
+                body: {
+                    Request: {
+                      Score: scores
+                    }
+                },
+                result: function(response, error, http) {
+                    if (error !== null) {
+                        if (error.dsaError && error.dsaError.message == '501') {
+                            _InternalError.push("[5011]您並非評分教師，無法更動成績，如有任何疑問，請洽EMBA辦公室，謝謝!");
+                        } else {
+                            _InternalError.push('呼叫服務(' + Service.AddSubjectSemesterScore + ')失敗，請稍候重試！');
+                        }
                         _ThrowError();
-                        return;
                     } else {
-                        _CallbackQueue.JobFinished();
+                        if (!response.Result) {
+                            _InternalError.push("新增成績失敗！請稍候重試。");
+                            _ThrowError();
+                            return;
+                        } else {
+                            _CallbackQueue.JobFinished();
+                        }
                     }
                 }
-            }
-        });
+            });
+        } else {
+            _CallbackQueue.JobFinished();
+        }
     };
 
     //  修改學期成績
     var _UpdateSubjectSemesterScore = function(scores) {
-        gadget.getContract(Contract.Teacher).send({
-            service: Service.UpdateSubjectSemesterScore,
-            body: {
-                Request: {
-                  Score: scores
-                }
-            },
-            result: function(response, error, http) {
-                if (error !== null) {
-                    _InternalError.push('呼叫服務(' + Service.UpdateSubjectSemesterScore + ')失敗或網路異常，請稍候重試！');
-                    _ThrowError();
-                } else {
-                    if (!response.Result) {
-                        _InternalError.push("修改成績失敗！請稍候重試。");
+        if (scores.length > 0) {
+            gadget.getContract(Contract.Teacher).send({
+                service: Service.UpdateSubjectSemesterScore,
+                body: {
+                    Request: {
+                      Score: scores
+                    }
+                },
+                result: function(response, error, http) {
+                    if (error !== null) {
+                        if (error.dsaError && error.dsaError.message == '501') {
+                            _InternalError.push("[5012]您並非評分教師，無法更動成績，如有任何疑問，請洽EMBA辦公室，謝謝!");
+                        } else {
+                            _InternalError.push('呼叫服務(' + Service.UpdateSubjectSemesterScore + ')失敗，請稍候重試！');
+                        }
                         _ThrowError();
                     } else {
-                        _CallbackQueue.JobFinished();
+                        if (!response.Result) {
+                            _InternalError.push("修改成績失敗！請稍候重試。");
+                            _ThrowError();
+                        } else {
+                            _CallbackQueue.JobFinished();
+                        }
                     }
                 }
-            }
-        });
+            });
+        } else {
+            _CallbackQueue.JobFinished();
+        }
     };
 
     //  成績輸入說明樣版、成績上傳提醒樣版
@@ -464,7 +480,7 @@ var CreateTeacher = function() {
             body: "<Request><Condition><ConfName>" + confName + "</ConfName></Condition></Request>",
             result: function (response, error, http) {
                 if (error !== null) {
-                    _InternalError.push('呼叫服務(' + Service.GetCSConfiguration + ')失敗或網路異常，請稍候重試！');
+                    _InternalError.push('呼叫服務(' + Service.GetCSConfiguration + ')失敗，請稍候重試！');
                     _ThrowError();
                 } else {
                     /*
@@ -504,7 +520,11 @@ var CreateTeacher = function() {
             },
             result: function(response, error, http) {
                 if (error !== null) {
-                    _InternalError.push('呼叫服務(' + Service.UpdateCourseExt + ')失敗或網路異常，請稍候重試！');
+                    if (error.dsaError && error.dsaError.message == '501') {
+                        _InternalError.push("[5013]您並非評分教師，無法更動成績，如有任何疑問，請洽EMBA辦公室，謝謝!");
+                    } else {
+                        _InternalError.push('呼叫服務(' + Service.UpdateCourseExt + ')失敗，請稍候重試！');
+                    }
                     _ThrowError();
                 } else {
                     if (response.Result != null) {
@@ -517,11 +537,11 @@ var CreateTeacher = function() {
     };
 
     //  寫入上傳成績 Log
-    var _AddLog = function(vCourseID, vCourseName, vUserName, vActionType) {    
-        var log = "" + vCourseName + "\n";  
-        var pCourseStudents = _CourseStudents[vCourseID];  
+    var _AddLog = function(vCourseID, vCourseName, vUserName, vActionType) {
+        var log = "" + vCourseName + "\n";
+        var pCourseStudents = _CourseStudents[vCourseID];
         for(var student_number in pCourseStudents) {
-            var student = pCourseStudents[student_number];          
+            var student = pCourseStudents[student_number];
             log += "\n" + student.Department + "_" + student.StudentNumber + "_" + student.Name + "： " + student.Score + ($.trim(student.Remark) !== '' ? ", " + student.Remark : "");
         }
 
@@ -530,9 +550,9 @@ var CreateTeacher = function() {
             body: "<Request>\n  <Log>\n     <TargetID>123</TargetID><Actor>" + vUserName + "</Actor>\n        <ActionType>" + vActionType + "</ActionType>\n       <Action>" + vActionType + "</Action>\n     <TargetCategory>student</TargetCategory>\n      <ClientInfo><ClientInfo></ClientInfo></ClientInfo>\n        <ActionBy>ischool web 成績輸入小工具</ActionBy>\n      <Description>" + log + "</Description>\n    </Log>\n</Request>",
             result: function(response, error, http) {
                 if (error !== null) {
-                	//_InternalError.push('呼叫服務(' + Service.AddLog + ')失敗或網路異常，請稍候重試！');
+                	//_InternalError.push('呼叫服務(' + Service.AddLog + ')失敗，請稍候重試！');
                 	//_ThrowError();
-                } 
+                }
                 _CallbackQueue.JobFinished();
             }
         });
@@ -546,9 +566,9 @@ var CreateTeacher = function() {
 
     //  對外發佈訊息
     var _RaiseEvent = function(type, o) {
-        _CallbackQueue.JobFinished();        
+        _CallbackQueue.JobFinished();
 
-        Teacher.Publish(o, type);                 
+        Teacher.Publish(o, type);
     };
 
     //  錯誤處理
@@ -561,7 +581,7 @@ var CreateTeacher = function() {
 
         _CallbackQueue.Clear();
         _RaiseEvent('show_internal_error', o);
-    }    
+    }
 
     return {
         ClearInternalError: function() {
@@ -575,8 +595,8 @@ var CreateTeacher = function() {
 
             _CallbackQueue.Push(_GetScoreInputSemester);
             _CallbackQueue.Push([function () { _GetUserInfo(Contract.Teacher) }, _GetSubjectScoreLock, _GetTeacherCourses, _GetCourseStudents, _GetCourseTeachers, function () { _GetTextTemplate('teacher_score_input_explanation_template') }, function () { _GetTextTemplate('teacher_score_upload_reminder_template') }]);
-            _CallbackQueue.Push(function() {_RaiseEvent('teacher_course_loaded', _TeacherCourses)});   
-            _CallbackQueue.Push(function() {_RaiseEvent('explanation_template_loaded', _TextTemplate)});                                  
+            _CallbackQueue.Push(function() {_RaiseEvent('teacher_course_loaded', _TeacherCourses)});
+            _CallbackQueue.Push(function() {_RaiseEvent('explanation_template_loaded', _TextTemplate)});
             _CallbackQueue.Start();
         },
 
@@ -585,37 +605,37 @@ var CreateTeacher = function() {
         },
 
         GetCourseStudents: function(vCourseID) {
-            
+
             return _CourseStudents[vCourseID];
         },
-    
+
         GetCourseTeachers: function(vCourseID) {
-          
+
             return _CourseTeachers[vCourseID].join(',');
-        },   
+        },
 
         GetStudentByStudentNumber: function(vCourseID, vStudentNumber) {
 
             return _CourseStudents[vCourseID][vStudentNumber];
         },
-    
+
         GetSelectedCourse: function(vCourseID) {
 
             return _TeacherCourses[vCourseID];
-        },   
-    
+        },
+
         IsSubjectScoreLock: function() {
 
             return _SubjectScoreLock === 't' ? true : false;
-        },  
+        },
 
         //  驗證是否可上傳成績
         VerifySemesterScore: function(vCourseID) {
-            var pCourseStudents = _CourseStudents[vCourseID];  
+            var pCourseStudents = _CourseStudents[vCourseID];
             var isValidate = true;
 
             var student_count = 0;
-            if (pCourseStudents) {      
+            if (pCourseStudents) {
                 for(var student_number in pCourseStudents) {
                     var student = pCourseStudents[student_number];
                     student_count = student_count + 1;
@@ -634,15 +654,15 @@ var CreateTeacher = function() {
         },
 
         SaveSubjectSemesterScore: function (vCourseID, vCourseName) {
-            var pCourseStudents = _CourseStudents[vCourseID];    
+            var pCourseStudents = _CourseStudents[vCourseID];
             var pCourse = _TeacherCourses[vCourseID];
             var pass_score = ["A+", "A", "A-", "B+", "B", "B-"];
 
             if (pCourse.InputRule === "1")
                 pass_score = ["P"];
 
-            if (pCourseStudents) {                
-                
+            if (pCourseStudents) {
+
                 var add_content = [];
                 var update_content = [];
 
@@ -652,6 +672,7 @@ var CreateTeacher = function() {
                     //if (student.Score) {
                         if (student.ScoreID) {
                             var score = {
+                                RefCourseID: vCourseID,
                                 Score: student.IsCancel === "t" ? "X" : student.Score,
                                 IsPass: $.inArray(student.Score, pass_score) !== -1 ? true : false,
                                 Remark: student.IsCancel === "t" ? "已停修" : student.Remark,
@@ -688,24 +709,24 @@ var CreateTeacher = function() {
                     WarningMessage: '',
                     SuccessMessage: '成績已暫存。'
                 };
-                _CallbackQueue.Push(function() {_RaiseEvent('save_subject_semester_score_complete', o)});   
+                _CallbackQueue.Push(function() {_RaiseEvent('save_subject_semester_score_complete', o)});
                 _CallbackQueue.Push(function() {_GetCourseStudents(vCourseID)});
                 _CallbackQueue.Push(function() {_RaiseEvent('refresh_subject_semester_score', vCourseID)});
 
-                _CallbackQueue.Start();             
+                _CallbackQueue.Start();
             }
         },
-    
+
         UpdateCourseExt: function(vCourseID, vCourseName) {
-            var pCourseStudents = _CourseStudents[vCourseID];    
+            var pCourseStudents = _CourseStudents[vCourseID];
             var pCourse = _TeacherCourses[vCourseID];
             var pass_score = ["A+", "A", "A-", "B+", "B", "B-"];
 
             if (pCourse.InputRule === "1")
                 pass_score = ["P"];
 
-            if (pCourseStudents) {                
-                
+            if (pCourseStudents) {
+
                 var add_content = [];
                 var update_content = [];
 
@@ -715,6 +736,7 @@ var CreateTeacher = function() {
                     if (student.Score) {
                         if (student.ScoreID) {
                             var score = {
+                                RefCourseID: vCourseID,
                                 Score: student.IsCancel === "t" ? "X" : student.Score,
                                 IsPass: $.inArray(student.Score, pass_score) !== -1 ? true : false,
                                 Remark: student.IsCancel === "t" ? "已停修" : student.Remark,
@@ -754,11 +776,11 @@ var CreateTeacher = function() {
                     SuccessMessage: '成績已上傳。'
                 };
 
-                _CallbackQueue.Push(function() {_RaiseEvent('update_course_ext_complete', oo)}); 
+                _CallbackQueue.Push(function() {_RaiseEvent('update_course_ext_complete', oo)});
                 _CallbackQueue.Push(function() {_GetCourseStudents(vCourseID)});
                 _CallbackQueue.Push(function() {_RaiseEvent('refresh_subject_semester_score', vCourseID)});
 
-                _CallbackQueue.Start();    
+                _CallbackQueue.Start();
             }
         },
 
@@ -801,9 +823,9 @@ var CreateTeacher = function() {
             var statisticsAReduceAmount = 0;
             //  A-需減少人數
             var statisticsAMinusReduceAmount = 0;
-            //  B+需增加人數 
+            //  B+需增加人數
             var statisticsBPlusAddAmount = 0;
-            //  B需增加人數  
+            //  B需增加人數
             var statisticsBAddAmount = 0;
             //  A需減少總人數
             var statisticsASumReduceAmount = 0;
@@ -822,19 +844,19 @@ var CreateTeacher = function() {
             //  A登分總人數
             var statisticsASumScoredAmount = 0;
             //  B登分總人數
-            var statisticsBSumScoredAmount = 0;    
+            var statisticsBSumScoredAmount = 0;
 
             //  所有成績
             // var pass_score = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "F"];
 
             //  所有修課學生
-            var pCourseStudents = _CourseStudents[vCourseID];  
-            if (pCourseStudents) {    
+            var pCourseStudents = _CourseStudents[vCourseID];
+            if (pCourseStudents) {
                 for(var student_number in pCourseStudents) {
                     var student = pCourseStudents[student_number];
 
                     if (student.IsCancel !== "t")
-                    {                        
+                    {
                         statisticsAttendAmount += 1;
                         if (student.Score) {
                             statisticsScoredAmount += 1;
@@ -842,42 +864,42 @@ var CreateTeacher = function() {
                             switch (student.Score) {
                                 case "A+":
                                     statisticsAPlusScoredAmount += 1;
-                                    break; 
+                                    break;
                                 case "A":
                                     statisticsAScoredAmount += 1;
-                                    break; 
+                                    break;
                                 case "A-":
                                     statisticsAMinusScoredAmount += 1;
-                                    break; 
+                                    break;
                                 case "B+":
                                     statisticsBPlusScoredAmount += 1;
-                                    break; 
+                                    break;
                                 case "B":
                                     statisticsBScoredAmount += 1;
-                                    break; 
+                                    break;
                                 case "B-":
                                     statisticsBScoredAmount += 1;
-                                    break; 
+                                    break;
                                 case "C+":
                                     statisticsBScoredAmount += 1;
-                                    break; 
+                                    break;
                                 case "C":
                                     statisticsBScoredAmount += 1;
-                                    break; 
+                                    break;
                                 case "C-":
                                     statisticsBScoredAmount += 1;
-                                    break; 
+                                    break;
                                 case "F":
                                     statisticsBScoredAmount += 1;
-                                    break; 
+                                    break;
                                 case "X":
                                     statisticsBScoredAmount += 1;
-                                    break; 
+                                    break;
 
                             }
                         }
                     }
-                }                
+                }
             }
 
             // JavaScript的四捨五入、無條件捨去、無條件進位
@@ -892,7 +914,7 @@ var CreateTeacher = function() {
             var statisticsBScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsBScoredAmount * 1000/statisticsAttendAmount)/10);
             var statisticsASumScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round((statisticsAPlusScoredAmount + statisticsAScoredAmount + statisticsAMinusScoredAmount) * 1000/statisticsAttendAmount)/10);
             var statisticsBSumScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round((statisticsBPlusScoredAmount + statisticsBScoredAmount) * 1000/statisticsAttendAmount)/10);
-                        
+
             statisticsAPlusScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsAPlusScoredAmount * 1000/statisticsAttendAmount)/10) + "%";
             statisticsAScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsAScoredAmount * 1000/statisticsAttendAmount)/10) + "%";
             statisticsAMinusScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsAMinusScoredAmount * 1000/statisticsAttendAmount)/10) + "%";
@@ -902,7 +924,7 @@ var CreateTeacher = function() {
             statisticsBSumScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round((statisticsBPlusScoredAmount + statisticsBScoredAmount) * 1000/statisticsAttendAmount)/10) + "%";
             statisticsASumScoredAmount = statisticsAPlusScoredAmount + statisticsAScoredAmount + statisticsAMinusScoredAmount;
             statisticsBSumScoredAmount = statisticsBPlusScoredAmount + statisticsBScoredAmount;
-            
+
             statisticsAPlusScoredRateAmount = Math.floor(statisticsAttendAmount * 0.25);
             statisticsAScoredRateAmount = Math.floor(statisticsAttendAmount * 0.4);
             statisticsAMinusScoredRateAmount = Math.floor(statisticsAttendAmount * 0.25);
@@ -918,22 +940,22 @@ var CreateTeacher = function() {
             statisticsBAddAmount = ((statisticsBScoredRateAmount - statisticsBScoredAmount) > 0) ? (statisticsBScoredRateAmount - statisticsBScoredAmount) : 0;
             statisticsASumReduceAmount = ((statisticsASumScoredAmount - statisticsASumScoredRateAmount) > 0) ? (statisticsASumScoredAmount - statisticsASumScoredRateAmount) : 0;
             statisticsBSumAddAmount = ((statisticsBSumScoredRateAmount - statisticsBSumScoredAmount) > 0) ? (statisticsBSumScoredRateAmount - statisticsBSumScoredAmount) : 0;
-            
+
             return {
                 'AttendAmount': statisticsAttendAmount,
-                'ScoredAmount': statisticsScoredAmount,        
+                'ScoredAmount': statisticsScoredAmount,
                 'APlusScoredRate': statisticsAPlusScoredRate,
                 'AScoredRate': statisticsAScoredRate,
                 'AMinusScoredRate': statisticsAMinusScoredRate,
                 'BPlusScoredRate': statisticsBPlusScoredRate,
                 'BScoredRate': statisticsBScoredRate,
-                'ASumScoredRate': statisticsASumScoredRate, 
+                'ASumScoredRate': statisticsASumScoredRate,
                 'BSumScoredRate': statisticsBSumScoredRate,
-                'APlusReduceAmount': statisticsAPlusReduceAmount,    
-                'AReduceAmount': statisticsAReduceAmount, 
+                'APlusReduceAmount': statisticsAPlusReduceAmount,
+                'AReduceAmount': statisticsAReduceAmount,
                 'AMinusReduceAmount': statisticsAMinusReduceAmount,
                 'BPlusAddAmount': statisticsBPlusAddAmount,
-                'BAddAmount': statisticsBAddAmount, 
+                'BAddAmount': statisticsBAddAmount,
                 'ASumReduceAmount': statisticsASumReduceAmount,
                 'BSumAddAmount': statisticsBSumAddAmount,
                 'APlusScoredAmount': statisticsAPlusScoredAmount,
@@ -941,7 +963,7 @@ var CreateTeacher = function() {
                 'AMinusScoredAmount': statisticsAMinusScoredAmount,
                 'BPlusScoredAmount': statisticsBPlusScoredAmount,
                 'BScoredAmount': statisticsBScoredAmount,
-                'ASumScoredAmount': statisticsASumScoredAmount,    
+                'ASumScoredAmount': statisticsASumScoredAmount,
                 'BSumScoredAmount': statisticsBSumScoredAmount,
                 'BSumScoredAmount': statisticsBSumScoredAmount,
                 'APlusScoredRateNumber': statisticsAPlusScoredRateNumber,
@@ -956,9 +978,9 @@ var CreateTeacher = function() {
     };
 };
 
-//  **********  從這裡開始是 DataBinding：使用事件驅動模式+jQuery  **********        
+//  **********  從這裡開始是 DataBinding：使用事件驅動模式+jQuery  **********
 var CreateEvent = function() {
-    
+
     var _ShowErrorMessage = function(message) {
         $("#mainMsg").html('');
         if (message) {
@@ -971,21 +993,7 @@ var CreateEvent = function() {
     };
 
     var timeoutID;
-    var _ShowSuccessMessage = function(message) {     
-        if (message) {
-            if (typeof message === 'object' && typeof message.length === 'number' && typeof message.splice === 'function' && !(message.propertyIsEnumerable('length'))) {
-                $('#tab1Msg').html("<div class='alert alert-success'>" + message.join('\n') + "</div>");
-            } else {
-                $('#tab1Msg').html("<div class='alert alert-success'>" + message + "</div>");
-            }
-            clearTimeout(timeoutID);
-            timeoutID = window.setTimeout(function() { 
-               $('#tab1Msg').html('');
-            }, 3000);
-        }
-    };
-
-    var _ShowWarningMessage = function(message) {     
+    var _ShowIsScoredMessage = function(message) {
         if (message) {
             if (typeof message === 'object' && typeof message.length === 'number' && typeof message.splice === 'function' && !(message.propertyIsEnumerable('length'))) {
                 $('#tab1Msg').html("<div class='alert alert-error'>" + message.join('\n') + "</div>");
@@ -993,7 +1001,35 @@ var CreateEvent = function() {
                 $('#tab1Msg').html("<div class='alert alert-error'>" + message + "</div>");
             }
             clearTimeout(timeoutID);
-            timeoutID = window.setTimeout(function() { 
+            timeoutID = window.setTimeout(function() {
+               $('#tab1Msg').html('');
+            }, 5000);
+        }
+    };
+
+    var _ShowSuccessMessage = function(message) {
+        if (message) {
+            if (typeof message === 'object' && typeof message.length === 'number' && typeof message.splice === 'function' && !(message.propertyIsEnumerable('length'))) {
+                $('#tab1Msg').html("<div class='alert alert-success'>" + message.join('\n') + "</div>");
+            } else {
+                $('#tab1Msg').html("<div class='alert alert-success'>" + message + "</div>");
+            }
+            clearTimeout(timeoutID);
+            timeoutID = window.setTimeout(function() {
+               $('#tab1Msg').html('');
+            }, 3000);
+        }
+    };
+
+    var _ShowWarningMessage = function(message) {
+        if (message) {
+            if (typeof message === 'object' && typeof message.length === 'number' && typeof message.splice === 'function' && !(message.propertyIsEnumerable('length'))) {
+                $('#tab1Msg').html("<div class='alert alert-error'>" + message.join('\n') + "</div>");
+            } else {
+                $('#tab1Msg').html("<div class='alert alert-error'>" + message + "</div>");
+            }
+            clearTimeout(timeoutID);
+            timeoutID = window.setTimeout(function() {
                $('#tab1Msg').html('');
             }, 3000);
         }
@@ -1005,7 +1041,7 @@ var CreateEvent = function() {
 
         if (!pSelectedCourse) {
             pSelectedCourse = {};
-        } 
+        }
         pSelectedCourse.Compliant = true;
         // 修課人數：statistics-attend-amount
         $("#statistics-attend-amount").html(statistics.AttendAmount);
@@ -1136,10 +1172,16 @@ var CreateEvent = function() {
 
             //  是否已「確認」？
             var pSelectedCourse = Teacher.GetSelectedCourse(vCourseID);
+
             //  若未鎖定不得成績輸入，則判斷是否已確認。
-            if (!pSubjectScoreLock) {        
+            //  若為評分老師才能暫存
+            if (!pSubjectScoreLock) {
                 if (pSelectedCourse) {
                     if (pSelectedCourse.Confirmed === 'true') {
+                        $("#btnSave").prop("disabled", true);
+                        $("#btnUpload").prop("disabled", true);
+                    } else if (pSelectedCourse.IsScored === 'false') {
+                        _ShowIsScoredMessage("您並非評分教師，無法更動成績，如有任何疑問，請洽EMBA辦公室，謝謝!");
                         $("#btnSave").prop("disabled", true);
                         $("#btnUpload").prop("disabled", true);
                     } else {
@@ -1152,8 +1194,8 @@ var CreateEvent = function() {
                 }
             } else {
                 $("#btnSave").prop("disabled", true);
-                $("#btnUpload").prop("disabled", true);            
-            } 
+                $("#btnUpload").prop("disabled", true);
+            }
         },
 
         Template_Loaded: function(vTemplate) {
@@ -1177,18 +1219,24 @@ var CreateEvent = function() {
             //  授課教師清單(不包含助教)
             $("#lblTeacherList").html('');
             if (vCourseID > 0) {
-                $("#lblTeacherList").html("任課教師：" + (Teacher.GetCourseTeachers(vCourseID)));  
-            } 
+                $("#lblTeacherList").html("任課教師：" + (Teacher.GetCourseTeachers(vCourseID)));
+            }
 
             //  是否已鎖定不得成績輸入？
             var pSubjectScoreLock = Teacher.IsSubjectScoreLock();
 
             //  是否已「確認」？
             var pSelectedCourse = Teacher.GetSelectedCourse(vCourseID);
+
             //  若未鎖定不得成績輸入，則判斷是否已確認。
-            if (!pSubjectScoreLock) {        
+            //  若為評分老師才能暫存
+            if (!pSubjectScoreLock) {
                 if (pSelectedCourse) {
                     if (pSelectedCourse.Confirmed === 'true') {
+                        $("#btnSave").prop("disabled", true);
+                        $("#btnUpload").prop("disabled", true);
+                    } else if (pSelectedCourse.IsScored === 'false') {
+                        _ShowIsScoredMessage("您並非評分教師，無法更動成績，如有任何疑問，請洽EMBA辦公室，謝謝!");
                         $("#btnSave").prop("disabled", true);
                         $("#btnUpload").prop("disabled", true);
                     } else {
@@ -1201,13 +1249,13 @@ var CreateEvent = function() {
                 }
             } else {
                 $("#btnSave").prop("disabled", true);
-                $("#btnUpload").prop("disabled", true);            
-            } 
+                $("#btnUpload").prop("disabled", true);
+            }
 
             //  修課學生
             $("#tblStudentList>tbody").html('');
-            var pCourseStudents = Teacher.GetCourseStudents(vCourseID);   
-            var arrStudent = [];     
+            var pCourseStudents = Teacher.GetCourseStudents(vCourseID);
+            var arrStudent = [];
             if (pCourseStudents) {
                 for(var key in pCourseStudents) {
                     arrStudent.push(pCourseStudents[key]);
@@ -1219,7 +1267,7 @@ var CreateEvent = function() {
                 }).each(function(index, student) {
                     var remark_item, score_item;
                     //  若已鎖定不得成績輸入，則沒有成績輸入方塊，反之則有。
-                    if (pSubjectScoreLock || (pSelectedCourse && pSelectedCourse.Confirmed === 'true')) {  
+                    if (pSubjectScoreLock || (pSelectedCourse && pSelectedCourse.Confirmed === 'true')) {
                         score_item = "<td>" + student.Score + "</td>";
                         remark_item = "<td>" + student.Remark + "</td>";
                     } else {
@@ -1248,22 +1296,22 @@ var CreateEvent = function() {
                 }
             } else {
                 $("#statistics-container").hide();
-            } 
-            
+            }
+
             // 課程名稱：statistics-course-name
             if (pSelectedCourse) {
                 $("#statistics-course-name").html(pSelectedCourse.CourseTitle);
             } else {
                 $("#statistics-course-name").html('');
             }
-            // 列舉成績分佈統計表中的變數  
+            // 列舉成績分佈統計表中的變數
             _ShowScoreStatisticsDetail(vCourseID);
 
             //  成績輸入方塊「上、下、Enter」選取文字效果
             $('input').on('keydown', function(e) {
                 var current_td_index = $(this).closest('td').index();
                 if (e.which === 13 || e.which === 40) {
-                    $(this).closest('td').closest('tr').next().find('td:nth-child(' + (current_td_index + 1) + ')>input').focus();                    
+                    $(this).closest('td').closest('tr').next().find('td:nth-child(' + (current_td_index + 1) + ')>input').focus();
                     e.preventDefault();
                 }
                 if (e.which === 38) {
@@ -1271,19 +1319,19 @@ var CreateEvent = function() {
                     e.preventDefault();
                 }
             });
-            
+
             var timeoutID;
-            $("input[type=text]").focus(function() { 
-                var save_this = $(this);  
+            $("input[type=text]").focus(function() {
+                var save_this = $(this);
                 clearTimeout(timeoutID);
-                timeoutID = window.setTimeout (function(){ 
-                   save_this.select(); 
+                timeoutID = window.setTimeout (function(){
+                   save_this.select();
                 },50);
             });
-            
+
             //  成績變更之驗證
             $('input').on('change', function() {
-                
+
                 var student_number = $(this).closest('td').closest('tr').find('td:nth-child(2)').html();
                 var student = Teacher.GetStudentByStudentNumber(vCourseID, student_number);
 
@@ -1362,7 +1410,7 @@ var CreateEvent = function() {
 
         PrintScore: function(type, vCourseID) {
             var currentCourse = Teacher.GetSelectedCourse(vCourseID);
-            
+
             var content, doc, i, page_count, print_content, print_pages, _i;
 
             if (!currentCourse) {
@@ -1469,10 +1517,10 @@ $(document).ready(function() {
     //  更新學生成績資料(主要是取回新增之成績的 ScoreID, 下次再暫存才會 Update 而不是又新增乙次)
     Teacher.Subscribe(Event.RefreshStudentScore, 'refresh_subject_semester_score');
     //  錯誤處理
-    Teacher.Subscribe(Event.ShowInternalError, 'show_internal_error');    
+    Teacher.Subscribe(Event.ShowInternalError, 'show_internal_error');
     //  Data Model 開始取得資料
     Teacher.Init();
-    
+
     //  課程之下拉式選單的值改變時
     $("#cboTeacherCourses").on('change', function() {
         Event.ComboBox_SelectedIndexChanged($("#cboTeacherCourses").val());
@@ -1491,7 +1539,7 @@ $(document).ready(function() {
         if (!Teacher.VerifySemesterScore($("#cboTeacherCourses").val())) {
             $('#tab1Msg').html("<div class='alert alert-error'>" + "請完成所有成績輸入再繳交！" + "</div>");
             clearTimeout(timeoutID);
-            timeoutID = window.setTimeout(function() { 
+            timeoutID = window.setTimeout(function() {
                $('#tab1Msg').html('');
             }, 3000);
             Event.EnableSaveButtion($("#cboTeacherCourses").val());
@@ -1503,7 +1551,7 @@ $(document).ready(function() {
             if (!currentCourse.Compliant) {
                 $('#tab1Msg').html("<div class='alert alert-error'>" + "成績不符合評分規定，請先修正！" + "</div>");
                 clearTimeout(timeoutID);
-                timeoutID = window.setTimeout(function() { 
+                timeoutID = window.setTimeout(function() {
                    $('#tab1Msg').html('');
                 }, 3000);
                 Event.EnableSaveButtion($("#cboTeacherCourses").val());
@@ -1528,7 +1576,7 @@ $(document).ready(function() {
     $("#btnPrintScoreSheet").on('click', function() {
         Event.PrintScore('score', $("#cboTeacherCourses").val());
     });
-    
+
     //  登分頁籤
     $("#tabScored").on('click', function () {
         var currentCourse = Teacher.GetSelectedCourse($("#cboTeacherCourses").val());
@@ -1548,13 +1596,13 @@ $(document).ready(function() {
     $("#tabDescription").on('click', function () {
         $("#statistics-container").hide();
     })
-});  
+});
 
 
 //  Singleton Patterns：另1種用法
 // function Teacher() {
 
-//     //  cached instance 
+//     //  cached instance
 //     var instance;
 
 //     //  重新定義建構式
@@ -1575,7 +1623,7 @@ $(document).ready(function() {
 // }
 
 
-    // **********  Domain Knowledge  **********    
+    // **********  Domain Knowledge  **********
     // 1、取得「成績輸入學年期」資料。
 
     //      contract：emba.teacher
