@@ -992,21 +992,18 @@ var CreateEvent = function() {
         }
     };
 
-    var timeoutID;
     var _ShowIsScoredMessage = function(message) {
+        $("#mainMsg").html('');
         if (message) {
             if (typeof message === 'object' && typeof message.length === 'number' && typeof message.splice === 'function' && !(message.propertyIsEnumerable('length'))) {
-                $('#tab1Msg').html("<div class='alert alert-error'>" + message.join('\n') + "</div>");
+                $("#mainMsg").html("<div class='alert alert-error'>\n<strong>" + message.join('\n') + "</strong>\n</div>");
             } else {
-                $('#tab1Msg').html("<div class='alert alert-error'>" + message + "</div>");
+                $("#mainMsg").html("<div class='alert alert-error'>\n<strong>" + message + "</strong>\n</div>");
             }
-            clearTimeout(timeoutID);
-            timeoutID = window.setTimeout(function() {
-               $('#tab1Msg').html('');
-            }, 5000);
         }
     };
 
+    var timeoutID;
     var _ShowSuccessMessage = function(message) {
         if (message) {
             if (typeof message === 'object' && typeof message.length === 'number' && typeof message.splice === 'function' && !(message.propertyIsEnumerable('length'))) {
@@ -1216,6 +1213,8 @@ var CreateEvent = function() {
         },
 
         ComboBox_SelectedIndexChanged: function(vCourseID) {
+            $("#mainMsg").html('');
+
             //  授課教師清單(不包含助教)
             $("#lblTeacherList").html('');
             if (vCourseID > 0) {

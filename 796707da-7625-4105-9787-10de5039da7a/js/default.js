@@ -5,8 +5,8 @@ angular.module("app", [])
         $scope.curr_school = null;
         $scope.curr_status = "limit";
 
-        if (location.href.lastIndexOf('?') >= 0) {
-            var bookmark = location.href.substr(location.href.lastIndexOf('?') + 1);
+        if (location.href.lastIndexOf('#') >= 0) {
+            var bookmark = location.href.substr(location.href.lastIndexOf('#') + 1);
 
             var vars = [], hashes = bookmark.split('&');
             for (var i = 0; i < hashes.length; i++) {
@@ -15,11 +15,11 @@ angular.module("app", [])
                 vars.push(key);
                 vars[key] = hash.substring(hash.indexOf("=") + 1);
             }
-            if (vars.token) {
-                $http.get(["https://auth.ischool.com.tw/services/me2.php?access_token=", vars.token].join(""), {})
+            if (vars.access_token) {
+                $http.get(["https://auth.ischool.com.tw/services/me2.php?access_token=", vars.access_token].join(""), {})
                 .success(function(response, status) {
                     if (response && response.userID == "peterwmw@pyps.ntpc.edu.tw") {
-                        $scope.token = vars.token;
+                        $scope.token = vars.access_token;
                         $scope.schools = [
                             { schoolname: '白雲國小', dsa: 'pyps.ntpc.edu.tw' },
                             { schoolname: '澔學國中', dsa: 'demo.ischool.j' }
