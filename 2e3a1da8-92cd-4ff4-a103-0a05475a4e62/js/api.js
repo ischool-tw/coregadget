@@ -147,6 +147,7 @@
 	$.replaceChar = function (input) {
 		// &lt;的方式 DSA 儲存的sql會轉錯
         var chars = [
+        	{key:'&', value:'＆'},
         	{key:'/', value:'／'},
             {key:'\\\\', value:'＼'},
             {key:',', value:'，'},

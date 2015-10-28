@@ -828,7 +828,7 @@ jQuery(function () {
                             '<th nowrap="nowrap" colspan="2">內容要點</th>' +
                           '</tr>' +
                           '<tr>' +
-                            '<td colspan="2" style="border-top: 0;">' + (item.ContentDigest || '') + '</td>' +
+                            '<td colspan="2" style="border-top: 0;white-space: pre-wrap;">' + (item.ContentDigest || '') + '</td>' +
                           '</tr>' +
                         '</table>' +
                         '<hr/>' +
