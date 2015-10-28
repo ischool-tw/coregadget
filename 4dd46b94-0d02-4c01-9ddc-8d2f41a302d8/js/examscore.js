@@ -390,8 +390,10 @@
           return "Level70";
         } else if (score >= 80 && score < 90) {
           return "Level80";
-        } else if (score >= 90 && score <= 100) {
+        } else if (score >= 90 && score < 100) {
           return "Level90";
+        } else if (score >= 100) {
+          return "Level100";
         } else {
           return "";
         }
