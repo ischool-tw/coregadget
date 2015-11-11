@@ -254,7 +254,7 @@ angular.module('enterconduct', [])
                                                     ScoringScale: ''
                                                 };
                                                 if ($scope.currentCourse.GradeYear <= 4) {
-                                                    if (conduct.Group == "Conduct") {
+                                                    if (conduct.Common && conduct.Common === 'True') {
                                                         _conduct.ScoringScale = "2015.Conduct";
                                                         var code = [{
                                                             Key: '3',
@@ -336,7 +336,7 @@ angular.module('enterconduct', [])
                                                     ScoringScale: ''
                                                 };
                                                 if ($scope.currentCourse.GradeYear <= 4) {
-                                                    if (conduct.Group == "Conduct") {
+                                                    if (conduct.Common && conduct.Common === 'True') {
                                                         _conduct.ScoringScale = "2015Conduct";
                                                         var code = [{
                                                             Key: '3',
