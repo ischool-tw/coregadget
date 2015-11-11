@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs title="Đạo đức" description="老師-Conduct輸入">
+    <Title lang="zh-TW">Đạo đức</Title>
+    <Icon>Conduct.png</Icon>
+    <Mobile />
+    <Title lang="zh-CN">
+    </Title>
+    <Title lang="en-US">Conduct</Title>
+  </ModulePrefs>
+</Module>
