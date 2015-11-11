@@ -1,39 +1,57 @@
 angular.module('enterconduct', [])
 
 .controller('MainCtrl', ['$scope', '$timeout',
-    function($scope, $timeout) {
+    function ($scope, $timeout) {
+
 
         $scope.connection = gadget.getContract("ibsh.exam.teacher");
 
-        $scope.getNow = function() {
+        $scope.getNow = function () {
             $scope.connection.send({
                 service: "_.GetConfig",
                 body: '',
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     if (error !== null) {
                         // $scope.set_error_message('#mainMsg', 'GetConfig', error);
                     } else {
                         // console.log(response);
-                        $scope.$apply(function() {
+                        $scope.$apply(function () {
                             if (response !== null) {
                                 $scope.config = response;
                                 $scope.current = {
                                     SchoolYear: response.SchoolYear,
                                     Semester: response.Semester,
-                                    Period: '1',
-                                    Code: [{
-                                        Key: 'M',
-                                        Value: '3 = Meets expectations'
-                                    }, {
-                                        Key: 'S',
-                                        Value: '2 = Meets needs with Support'
-                                    }, {
-                                        Key: 'N',
-                                        Value: '1 = Not yet within expectations'
-                                    }, {
-                                        Key: 'N/A',
-                                        Value: '0 = Not available'
-                                    }]
+                                    Period: '1'//,
+                                    //Code: [{
+                                    //    Key: 'M',
+                                    //    Value: '3 = Meets expectations'
+                                    //}, {
+                                    //    Key: 'S',
+                                    //    Value: '2 = Meets needs with Support'
+                                    //}, {
+                                    //    Key: 'N',
+                                    //    Value: '1 = Not yet within expectations'
+                                    //}, {
+                                    //    Key: 'N/A',
+                                    //    Value: '0 = Not available'
+                                    //}]
+                                    //Code: [{
+                                    //    Key: '3',
+                                    //    Value: 'M',
+                                    //    Hint:'Meets expectations'
+                                    //}, {
+                                    //    Key: '2',
+                                    //    Value: 'S',
+                                    //    Hint: 'Meets needs with Support'
+                                    //}, {
+                                    //    Key: '1',
+                                    //    Value: 'N',
+                                    //    Hint: 'Not yet within expectations'
+                                    //}, {
+                                    //    Key: '0',
+                                    //    Value: 'N/A',
+                                    //    Hint: 'Not available'
+                                    //}]
                                 }
                             }
                             $scope.getCourseList();
@@ -45,16 +63,16 @@ angular.module('enterconduct', [])
 
         $scope.teacherType = '';
 
-        $scope.getCourseList = function(type) {
+        $scope.getCourseList = function (type) {
             $scope.connection.send({
                 service: "_.GetClassCourseList",
                 body: '',
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     if (error !== null) {
                         // $scope.set_error_message('#mainMsg', 'GetExamScore', error);
                     } else {
                         // console.log(response);
-                        $scope.$apply(function() {
+                        $scope.$apply(function () {
                             if (response !== null && response.Result) {
                                 $scope.current.HomeroomTeacher = response.Result.HomeroomTeacher;
                                 $scope.current.SubjectTeacher = response.Result.SubjectTeacher;
@@ -70,9 +88,9 @@ angular.module('enterconduct', [])
                                     _CourseList = [];
                                 $scope.courseList = [];
                                 if (response.Result.Class)
-                                    _ClassList = _ClassList.concat(response.Result.Class);
+                                    _ClassList = _ClassList.concat(response.Result.Class || []);
 
-                                angular.forEach(_ClassList, function(item) {
+                                angular.forEach(_ClassList, function (item) {
                                     item.ID = item.ClassID;
                                     item.Title = item.ClassName;
                                     item.Type = 'homeroom';
@@ -80,25 +98,24 @@ angular.module('enterconduct', [])
                                 });
 
                                 if (response.Result.Course)
-                                    _CourseList = _CourseList.concat(response.Result.Course);
+                                    _CourseList = _CourseList.concat(response.Result.Course || []);
 
-                                angular.forEach(_CourseList, function(item) {
+                                angular.forEach(_CourseList, function (item) {
                                     item.ID = item.CourseID;
                                     item.Title = item.CourseName + ' ' + item.SubjectEnglishName;
                                     item.Type = 'subject';
                                     item.Show = false;
                                 });
 
-                                $scope.courseList = [].concat(_ClassList).concat(_CourseList);
-
+                                $scope.courseList = [].concat(_ClassList || []).concat(_CourseList || []);
                                 // if ($scope.courseList.length) {
                                 //     $scope.selectCourse($scope.courseList[0]);
                                 // }
 
-                                if ($scope.teacherType === 'homeroom'){
+                                if ($scope.teacherType === 'homeroom') {
                                     $scope.switchTeacherType('homeroom');
                                 }
-                                else if ($scope.teacherType === 'subject'){
+                                else if ($scope.teacherType === 'subject') {
                                     $scope.switchTeacherType('subject');
                                 }
                             }
@@ -108,11 +125,11 @@ angular.module('enterconduct', [])
             });
         };
 
-        $scope.switchTeacherType = function(type) {
+        $scope.switchTeacherType = function (type) {
             $scope.teacherType = type;
 
             var flag = -1;
-            angular.forEach($scope.courseList, function(item, index) {
+            angular.forEach($scope.courseList, function (item, index) {
                 if (item.Type === type) {
                     item.Show = true;
                     if (flag === -1) flag = index;
@@ -123,10 +140,10 @@ angular.module('enterconduct', [])
                 $scope.selectCourse($scope.courseList[flag]);
         };
 
-        $scope.selectCourse = function(item) {
+        $scope.selectCourse = function (item) {
             $scope.currentCourse = item;
 
-            angular.forEach($scope.courseList, function(item) {
+            angular.forEach($scope.courseList, function (item) {
                 item.selected = false;
             });
             item.selected = true;
@@ -143,7 +160,7 @@ angular.module('enterconduct', [])
 
             var flag = false;
 
-            angular.forEach($scope.config.Config, function(item) {
+            angular.forEach($scope.config.Config, function (item) {
                 if (($scope.currentCourse.GradeYear * 1) <= (item.Grade * 1) && !flag) {
                     $scope.current.MiddleOpeningC = item.MiddleOpeningC;
                     $scope.current.MiddleBeginC = item.MiddleBeginC;
@@ -151,16 +168,16 @@ angular.module('enterconduct', [])
                     $scope.current.FinalOpeningC = item.FinalOpeningC;
                     $scope.current.FinalBeginC = item.FinalBeginC;
                     $scope.current.FinalEndC = item.FinalEndC;
-                    $scope.current.ConductList = [].concat(item.Conduct.Conducts.Conduct);
-                    angular.forEach($scope.current.ConductList, function(conduct) {
-                        conduct.Item = [].concat(conduct.Item);
+                    $scope.current.ConductList = [].concat(item.Conduct.Conducts.Conduct || []);
+                    angular.forEach($scope.current.ConductList, function (conduct) {
+                        conduct.Item = [].concat(conduct.Item || []);
                     });
                     flag = true;
                 }
             });
         };
 
-        $scope.getStudentList = function() {
+        $scope.getStudentList = function () {
             delete $scope.studentList;
             delete $scope.currentStudent;
 
@@ -178,88 +195,216 @@ angular.module('enterconduct', [])
             $scope.connection.send({
                 service: "_.GetConductScore",
                 body: _body,
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     if (error !== null) {
                         // $scope.set_error_message('#mainMsg', 'GetExamScore', error);
                     } else {
                         // console.log("student list:");
                         // console.log(response);
-                        $scope.$apply(function() {
+                        $scope.$apply(function () {
                             if (response !== null) {
                                 $scope.studentList = [];
                                 if ($scope.currentCourse.Type === 'homeroom') {
                                     if (response.Class && response.Class.Student) {
-                                        $scope.studentList = [].concat(response.Class.Student);
-                                        angular.forEach($scope.studentList, function(item, index) {
+                                        $scope.studentList = [].concat(response.Class.Student || []);
+                                        angular.forEach($scope.studentList, function (item, index) {
                                             item.order = index;
                                         });
                                     }
                                 } else {
                                     if (response.Course && response.Course.Student) {
-                                        $scope.studentList = [].concat(response.Course.Student);
-                                        angular.forEach($scope.studentList, function(item, index) {
+                                        $scope.studentList = [].concat(response.Course.Student || []);
+                                        angular.forEach($scope.studentList, function (item, index) {
                                             item.order = index;
                                         });
                                     }
                                 }
 
-                                angular.forEach($scope.studentList, function(stu) {
+                                angular.forEach($scope.studentList, function (stu) {
                                     stu.EditConduct = {
                                         Conducts: {
                                             Conduct: []
                                         }
                                     }
                                     if (stu.Conduct !== '' && stu.Conduct.Conducts && stu.Conduct.Conducts.Conduct) {
-                                        stu.Conduct.Conducts.Conduct = [].concat(stu.Conduct.Conducts.Conduct);
-                                        angular.forEach(stu.Conduct.Conducts.Conduct, function(conduct) {
-                                            conduct.Item = [].concat(conduct.Item);
+                                        stu.Conduct.Conducts.Conduct = [].concat(stu.Conduct.Conducts.Conduct || []);
+                                        angular.forEach(stu.Conduct.Conducts.Conduct, function (conduct) {
+                                            conduct.Item = [].concat(conduct.Item || []);
                                         });
                                     }
                                     if (stu.MidtermConduct !== '' && stu.MidtermConduct.Conducts && stu.MidtermConduct.Conducts.Conduct) {
-                                        stu.MidtermConduct.Conducts.Conduct = [].concat(stu.MidtermConduct.Conducts.Conduct);
-                                        angular.forEach(stu.MidtermConduct.Conducts.Conduct, function(conduct) {
-                                            conduct.Item = [].concat(conduct.Item);
+                                        stu.MidtermConduct.Conducts.Conduct = [].concat(stu.MidtermConduct.Conducts.Conduct || []);
+                                        angular.forEach(stu.MidtermConduct.Conducts.Conduct, function (conduct) {
+                                            conduct.Item = [].concat(conduct.Item || []);
                                         });
                                     }
                                     if (stu.FinalConduct !== '' && stu.FinalConduct.Conducts && stu.FinalConduct.Conducts.Conduct) {
-                                        stu.FinalConduct.Conducts.Conduct = [].concat(stu.FinalConduct.Conducts.Conduct);
-                                        angular.forEach(stu.FinalConduct.Conducts.Conduct, function(conduct) {
-                                            conduct.Item = [].concat(conduct.Item);
+                                        stu.FinalConduct.Conducts.Conduct = [].concat(stu.FinalConduct.Conducts.Conduct || []);
+                                        angular.forEach(stu.FinalConduct.Conducts.Conduct, function (conduct) {
+                                            conduct.Item = [].concat(conduct.Item || []);
                                         });
                                     }
 
-                                    angular.forEach($scope.current.ConductList, function(conduct) {
+                                    angular.forEach($scope.current.ConductList, function (conduct) {
                                         if ($scope.teacherType === 'homeroom') {
                                             if (!conduct.Subject || conduct.Subject === '') {
                                                 var _conduct = {
                                                     Group: conduct.Group,
-                                                    Item: []
+                                                    Item: [],
+                                                    ScoringScale: ''
                                                 };
-                                                angular.forEach(conduct.Item, function(item) {
+                                                if ($scope.currentCourse.GradeYear <= 4) {
+                                                    if (conduct.Common && conduct.Common === 'True') {
+                                                        _conduct.ScoringScale = "2015.Conduct";
+                                                        var code = [{
+                                                            Key: '3',
+                                                            Value: '3',
+                                                            Hint: 'Consistently'
+                                                        }, {
+                                                            Key: '2',
+                                                            Value: '2',
+                                                            Hint: 'Sometimes/ Progressing'
+                                                        }, {
+                                                            Key: '1',
+                                                            Value: '1',
+                                                            Hint: 'Needs Attention'
+                                                        }];
+                                                    }
+                                                    else {
+                                                        _conduct.ScoringScale = "2015.Class";
+                                                        var code = [{
+                                                            Key: '4',
+                                                            Value: 'D',
+                                                            Hint: 'Distinguished Command'
+                                                        }, {
+                                                            Key: '3',
+                                                            Value: 'S',
+                                                            Hint: 'Strong Command (Secure)'
+                                                        }, {
+                                                            Key: '2',
+                                                            Value: 'M',
+                                                            Hint: 'Moderate Command (Developing/ On-level)'
+                                                        }, {
+                                                            Key: '1',
+                                                            Value: 'P',
+                                                            Hint: 'Partial Command'
+                                                        }, {
+                                                            Key: '0',
+                                                            Value: 'N',
+                                                            Hint: 'Little or No Command'
+                                                        }];
+                                                    }
+                                                }
+                                                else {//5-12
+                                                    _conduct.ScoringScale = "2014";
+                                                    var code = [{
+                                                        Key: '3',
+                                                        Value: 'M',
+                                                        Hint: 'Meets expectations'
+                                                    }, {
+                                                        Key: '2',
+                                                        Value: 'S',
+                                                        Hint: 'Meets needs with Support'
+                                                    }, {
+                                                        Key: '1',
+                                                        Value: 'N',
+                                                        Hint: 'Not yet within expectations'
+                                                    }, {
+                                                        Key: '0',
+                                                        Value: 'N/A',
+                                                        Hint: 'Not available'
+                                                    }];
+                                                }
+                                                angular.forEach(conduct.Item, function (item) {
                                                     _conduct.Item.push({
                                                         Title: item.Title || '',
                                                         MidtermGrade: '',
                                                         FinalGrade: '',
                                                         Grade: '',
-                                                        Group: conduct.Group
+                                                        Group: conduct.Group,
+                                                        Code: code
                                                     });
                                                 });
 
                                                 stu.EditConduct.Conducts.Conduct.push(_conduct);
                                             }
                                         } else {
-                                            if (conduct.Common === 'True' || ($scope.teacherType === 'subject' && $scope.currentCourse.SubjectChineseName === conduct.Subject)) {
+                                            if (conduct.Common && conduct.Common === 'True' || ($scope.teacherType === 'subject' && $scope.currentCourse.SubjectChineseName === conduct.Subject)) {
                                                 var _conduct = {
                                                     Group: conduct.Group,
-                                                    Item: []
+                                                    Item: [],
+                                                    ScoringScale: ''
                                                 };
-                                                angular.forEach(conduct.Item, function(item) {
+                                                if ($scope.currentCourse.GradeYear <= 4) {
+                                                    if (conduct.Common && conduct.Common === 'True') {
+                                                        _conduct.ScoringScale = "2015Conduct";
+                                                        var code = [{
+                                                            Key: '3',
+                                                            Value: '3',
+                                                            Hint: 'Consistently'
+                                                        }, {
+                                                            Key: '2',
+                                                            Value: '2',
+                                                            Hint: 'Sometimes/ Progressing'
+                                                        }, {
+                                                            Key: '1',
+                                                            Value: '1',
+                                                            Hint: 'Needs Attention'
+                                                        }];
+                                                    }
+                                                    else {
+                                                        _conduct.ScoringScale = "2015Class";
+                                                        var code = [{
+                                                            Key: '4',
+                                                            Value: 'D',
+                                                            Hint: 'Distinguished Command'
+                                                        }, {
+                                                            Key: '3',
+                                                            Value: 'S',
+                                                            Hint: 'Strong Command (Secure)'
+                                                        }, {
+                                                            Key: '2',
+                                                            Value: 'M',
+                                                            Hint: 'Moderate Command (Developing/ On-level)'
+                                                        }, {
+                                                            Key: '1',
+                                                            Value: 'P',
+                                                            Hint: 'Partial Command'
+                                                        }, {
+                                                            Key: '0',
+                                                            Value: 'N',
+                                                            Hint: 'Little or No Command'
+                                                        }];
+                                                    }
+                                                }
+                                                else {//5-12
+                                                    _conduct.ScoringScale = "2014";
+                                                    var code = [{
+                                                        Key: '3',
+                                                        Value: 'M',
+                                                        Hint: 'Meets expectations'
+                                                    }, {
+                                                        Key: '2',
+                                                        Value: 'S',
+                                                        Hint: 'Meets needs with Support'
+                                                    }, {
+                                                        Key: '1',
+                                                        Value: 'N',
+                                                        Hint: 'Not yet within expectations'
+                                                    }, {
+                                                        Key: '0',
+                                                        Value: 'N/A',
+                                                        Hint: 'Not available'
+                                                    }];
+                                                }
+                                                angular.forEach(conduct.Item, function (item) {
                                                     _conduct.Item.push({
                                                         Title: item.Title || '',
                                                         MidtermGrade: '',
                                                         FinalGrade: '',
                                                         Grade: '',
-                                                        Group: conduct.Group
+                                                        Group: conduct.Group,
+                                                        Code: code
                                                     });
                                                 });
 
@@ -267,14 +412,14 @@ angular.module('enterconduct', [])
                                             }
                                         }
                                     });
-                                    angular.forEach(stu.EditConduct.Conducts.Conduct, function(ec) {
-                                        ec.Item = [].concat(ec.Item);
+                                    angular.forEach(stu.EditConduct.Conducts.Conduct, function (ec) {
+                                        ec.Item = [].concat(ec.Item || []);
 
                                         if (stu.Conduct !== '' && stu.Conduct.Conducts && stu.Conduct.Conducts.Conduct) {
-                                            angular.forEach(stu.Conduct.Conducts.Conduct, function(c) {
+                                            angular.forEach(stu.Conduct.Conducts.Conduct, function (c) {
                                                 if (ec.Group === c.Group) {
-                                                    angular.forEach(ec.Item, function(ei) {
-                                                        angular.forEach(c.Item, function(ci) {
+                                                    angular.forEach(ec.Item, function (ei) {
+                                                        angular.forEach(c.Item, function (ci) {
                                                             if (ei.Title === ci.Title) {
                                                                 ei.Grade = ci.Grade;
                                                             }
@@ -284,10 +429,10 @@ angular.module('enterconduct', [])
                                             });
                                         }
                                         if (stu.MidtermConduct !== '' && stu.MidtermConduct.Conducts && stu.MidtermConduct.Conducts.Conduct) {
-                                            angular.forEach(stu.MidtermConduct.Conducts.Conduct, function(c) {
+                                            angular.forEach(stu.MidtermConduct.Conducts.Conduct, function (c) {
                                                 if (ec.Group === c.Group) {
-                                                    angular.forEach(ec.Item, function(ei) {
-                                                        angular.forEach(c.Item, function(ci) {
+                                                    angular.forEach(ec.Item, function (ei) {
+                                                        angular.forEach(c.Item, function (ci) {
                                                             if (ei.Title === ci.Title) {
                                                                 ei.MidtermGrade = ci.Grade;
                                                             }
@@ -297,10 +442,10 @@ angular.module('enterconduct', [])
                                             });
                                         }
                                         if (stu.FinalConduct !== '' && stu.FinalConduct.Conducts && stu.FinalConduct.Conducts.Conduct) {
-                                            angular.forEach(stu.FinalConduct.Conducts.Conduct, function(c) {
+                                            angular.forEach(stu.FinalConduct.Conducts.Conduct, function (c) {
                                                 if (ec.Group === c.Group) {
-                                                    angular.forEach(ec.Item, function(ei) {
-                                                        angular.forEach(c.Item, function(ci) {
+                                                    angular.forEach(ec.Item, function (ei) {
+                                                        angular.forEach(c.Item, function (ci) {
                                                             if (ei.Title === ci.Title) {
                                                                 ei.FinalGrade = ci.Grade;
                                                             }
@@ -325,13 +470,13 @@ angular.module('enterconduct', [])
             });
         };
 
-        $scope.selectStudent = function(item) {
+        $scope.selectStudent = function (item) {
             if (!item) return;
 
             $scope.currentStudent = item;
             $scope.currentStudent.tempStudentID = $scope.currentStudent.StudentID;
 
-            angular.forEach($scope.studentList, function(item) {
+            angular.forEach($scope.studentList, function (item) {
                 item.selected = false;
             });
             item.selected = true;
@@ -351,13 +496,13 @@ angular.module('enterconduct', [])
             }
         };
 
-        $scope.selectStudentID = function(event) { //輸入座號跳到該座號
+        $scope.selectStudentID = function (event) { //輸入座號跳到該座號
             if (event.keyCode !== 13) return; // 13是enter按鈕的代碼，return是跳出
 
             if (!$scope.currentStudent) return;
 
             var nextStudent = null;
-            angular.forEach($scope.studentList, function(item) {
+            angular.forEach($scope.studentList, function (item) {
                 if (item.StudentID === $scope.currentStudent.tempStudentID) {
                     nextStudent = item;
                 }
@@ -366,17 +511,17 @@ angular.module('enterconduct', [])
             $scope.selectStudent(nextStudent);
         };
 
-        $scope.selectConduct = function(item, period) {
+        $scope.selectConduct = function (item, period) {
             if (!item) {
                 $scope.currentConduct.selected = false;
 
                 if ($scope.teacherType !== 'homeroom') {
-                    $timeout(function() {
+                    $timeout(function () {
                         $('#seatno-textbox').focus().select();
                     }, 100);
 
                     var tempStudent = null;
-                    angular.forEach($scope.studentList, function(item, index) {
+                    angular.forEach($scope.studentList, function (item, index) {
                         if (item.StudentID === $scope.currentStudent.tempStudentID) {
                             tempStudent = $scope.studentList[index + 1];
                         }
@@ -390,7 +535,7 @@ angular.module('enterconduct', [])
                     }
                     delete $scope.currentConduct;
                 } else {
-                    $timeout(function() {
+                    $timeout(function () {
                         if (period === 1)
                             $('#mcomment-textbox').focus();
                         else if (period === 2)
@@ -406,8 +551,8 @@ angular.module('enterconduct', [])
             $scope.currentConduct = item;
             $scope.currentConduct.Period = period;
 
-            angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function(c) {
-                angular.forEach(c.Item, function(temp, index) {
+            angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function (c) {
+                angular.forEach(c.Item, function (temp, index) {
                     temp.selected = false;
                     temp.index = index + 1;
                 });
@@ -449,26 +594,17 @@ angular.module('enterconduct', [])
 
         };
 
-        $scope.enterGrade = function(event) {
+        $scope.enterGrade = function (event) {
             if (event.keyCode !== 13) return;
 
             if (!$scope.currentConduct) return;
 
             var grade = $scope.currentConduct.tempGrade.toUpperCase();
-            if (grade === '3')
-                grade = 'M';
-            if (grade === '2')
-                grade = 'S';
-            if (grade === '1')
-                grade = 'N';
-            if (grade === '0')
-                grade = 'N/A';
-
-            $scope.currentConduct.tempGrade = grade;
 
             var flag = false;
-            angular.forEach($scope.current.Code, function(item) {
-                if (item.Key.toUpperCase() === grade) {
+            angular.forEach($scope.currentConduct.Code, function (item) {
+                if (item.Key.toUpperCase() === grade || item.Value.toUpperCase() === grade) {
+                    grade = item.Value;
                     flag = true;
                     $scope.currentConduct.tempGrade = grade;
                 }
@@ -480,54 +616,64 @@ angular.module('enterconduct', [])
 
         };
 
-        $scope.enterComment = function(event) {
+        $scope.enterComment = function (event) {
             if (event.keyCode !== 13 || event.shiftKey) return;
 
             $scope.saveGrade('comment');
         };
 
-        $scope.SetDefaultValue = function() {
+        $scope.clickGrade = function (val) {
+            $scope.currentConduct.tempGrade = val;
+            $scope.enterGrade({ keyCode: 13 });
+        }
+
+        $scope.toUpperCase = function (val) {
+            return ("" + val).toUpperCase();
+        }
+
+        $scope.SetDefaultValue = function () {
 
             var grade = $scope.currentConduct.tempGrade.toUpperCase();
-            if (grade === '3')
-                grade = 'M';
-            if (grade === '2')
-                grade = 'S';
-            if (grade === '1')
-                grade = 'N';
-            if (grade === '0')
-                grade = 'N/A';
 
-            $scope.currentConduct.tempGrade = grade;
-
-            //var grade = $scope.currentConduct.tempGrade.toUpperCase();
-
-            if (grade !== 'M' && grade !== 'S' && grade !== 'N' && grade !== 'N/A')
+            var flag = false;
+            angular.forEach($scope.currentConduct.Code, function (item) {
+                if (item.Key.toUpperCase() === grade || item.Value.toUpperCase() === grade) {
+                    grade = item.Value;
+                    flag = true;
+                    $scope.currentConduct.tempGrade = grade;
+                }
+            });
+            if (!flag)
                 return;
 
-            angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function(conduct) {
-                angular.forEach(conduct.Item, function(item) {
-                    if ($scope.currentConduct.Period === 1 && $scope.current.MiddleOpeningC === 'true') {
-                        item.MidtermGrade = grade;
-                        item.tempGrade = grade;
-                    }
+            angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function (conduct) {
+                angular.forEach(conduct.Item, function (item) {
 
-                    if ($scope.currentConduct.Period === 2 && $scope.current.FinalOpeningC === 'true') {
-                        item.FinalGrade = grade;
-                        item.tempGrade = grade;
-                    }
+                    angular.forEach(item.Code, function (c) {
+                        if (c.Value === grade) {
+                            if ($scope.currentConduct.Period === 1 && $scope.current.MiddleOpeningC === 'true') {
+                                item.MidtermGrade = grade;
+                                item.tempGrade = grade;
+                            }
 
-                    if ($scope.currentConduct.Period === 3 && $scope.current.FinalOpeningC === 'true') {
-                        item.Grade = grade;
-                        item.tempGrade = grade;
-                    }
+                            if ($scope.currentConduct.Period === 2 && $scope.current.FinalOpeningC === 'true') {
+                                item.FinalGrade = grade;
+                                item.tempGrade = grade;
+                            }
+
+                            if ($scope.currentConduct.Period === 3 && $scope.current.FinalOpeningC === 'true') {
+                                item.Grade = grade;
+                                item.tempGrade = grade;
+                            }
+                        }
+                    });
                 });
             });
 
             $scope.saveGrade('conduct');
         };
 
-        $scope.saveGrade = function(type) {
+        $scope.saveGrade = function (type) {
 
             var _body = {
                 StudentID: $scope.currentStudent.StudentID,
@@ -546,9 +692,9 @@ angular.module('enterconduct', [])
 
             var conductList = [];
 
-            angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function(conduct) {
+            angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function (conduct) {
                 var items = [];
-                angular.forEach(conduct.Item, function(item) {
+                angular.forEach(conduct.Item, function (item) {
 
                     if (item.Title !== $scope.currentConduct.Title) {
                         items.push({
@@ -565,6 +711,7 @@ angular.module('enterconduct', [])
 
                 conductList.push({
                     '@Group': conduct.Group,
+                    '@ScoringScale': conduct.ScoringScale,
                     Item: items
                 });
             });
@@ -576,12 +723,12 @@ angular.module('enterconduct', [])
             $scope.connection.send({
                 service: "_.UpdateConductScore",
                 body: _body,
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     if (error !== null) {
                         alert("Error occurred while saving data." + (error.dsaError.status || '') + (error.dsaError.message || ''));
                     } else {
                         //console.log(response);
-                        $scope.$apply(function() {
+                        $scope.$apply(function () {
                             if (type === 'conduct') {
                                 if ($scope.currentConduct.Period === 1)
                                     $scope.currentConduct.MidtermGrade = $scope.currentConduct.tempGrade;
@@ -593,8 +740,8 @@ angular.module('enterconduct', [])
                                 var nextConduct = null,
                                     period = $scope.currentConduct.Period;
 
-                                angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function(conduct, i) {
-                                    angular.forEach(conduct.Item, function(item, j) {
+                                angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function (conduct, i) {
+                                    angular.forEach(conduct.Item, function (item, j) {
                                         if ($scope.currentConduct.Title === item.Title && $scope.currentConduct.Group === conduct.Group)
                                             nextConduct = conduct.Item[j + 1];
                                     });
@@ -614,7 +761,7 @@ angular.module('enterconduct', [])
                                 nextStudent.tempStudentID = nextStudent.StudentID;
                                 $scope.currentStudent = nextStudent;
 
-                                $timeout(function() {
+                                $timeout(function () {
                                     //$('#seatno-textbox').focus().select();
 
                                     var period = $scope.currentConduct.Period;
@@ -631,12 +778,12 @@ angular.module('enterconduct', [])
             });
         };
 
-        $scope.padLeft = function(str, length) {
+        $scope.padLeft = function (str, length) {
             if (str.length >= length) return str
             else return $scope.padLeft("0" + str, length);
         };
 
-        $scope.studentSort = function(x, y) {
+        $scope.studentSort = function (x, y) {
             var xx = $scope.padLeft(x.ClassName, 20);
             xx += $scope.padLeft(x.SeatNo, 3);
 
@@ -652,14 +799,14 @@ angular.module('enterconduct', [])
                 return 1;
         };
 
-        $scope.PrintPage = function(){
+        $scope.PrintPage = function () {
 
             var html = "";
             var M = false;
             var F = false;
             var ClassOrCourseName = "";
 
-            if($scope.currentCourse.Type === "homeroom")
+            if ($scope.currentCourse.Type === "homeroom")
                 ClassOrCourseName = "Class : " + $scope.currentCourse.Title;
             else
                 ClassOrCourseName = "Course : " + $scope.currentCourse.Title;
@@ -669,48 +816,61 @@ angular.module('enterconduct', [])
             // StudentNickname: "goodGG"
             // StudentNumber: "814201"
 
-            angular.forEach($scope.studentList,function(value){
-                    $scope.selectStudent(value);
+            angular.forEach($scope.studentList, function (value) {
+                $scope.selectStudent(value);
 
-                    var studentName = "ChineseName: " + value.StudentChineseName + "  EnglishName: " + value.StudentEnglishName + "  NickName: " +  value.StudentNickname + "  StudentNo: " + value.StudentNumber;
+                var studentName = "ChineseName: " + value.StudentChineseName + "  EnglishName: " + value.StudentEnglishName + "  NickName: " + value.StudentNickname + "  StudentNo: " + value.StudentNumber;
 
-                    if($scope.currentConduct.canInputMComment){
-                        $scope.currentConduct.canInputMComment = false;
-                        M = true;
-                    }
+                if ($scope.currentConduct.canInputMComment) {
+                    $scope.currentConduct.canInputMComment = false;
+                    M = true;
+                }
 
-                    if($scope.currentConduct.canInputFComment){
-                        $scope.currentConduct.canInputFComment = false;
-                        F = true;
-                    }
+                if ($scope.currentConduct.canInputFComment) {
+                    $scope.currentConduct.canInputFComment = false;
+                    F = true;
+                }
 
-                    $scope.$apply();
-                    html += "<p>===============================================================================</p>"
-                    html += "<p>" + studentName + "</p>";
-                    html += $('#printlist').html();
+                $scope.$apply();
+                html += "<p>===============================================================================</p>"
+                html += "<p>" + studentName + "</p>";
+                html += $('#printlist').html();
             });
 
-            if(M)
+            if (M)
                 $scope.currentConduct.canInputMComment = true;
-            if(F)
+            if (F)
                 $scope.currentConduct.canInputFComment = true;
 
             $scope.$apply();
 
             var printPage = window.open("", "printPage", "");
-                printPage.document.open();
-                printPage.document.write("<HTML><head></head><BODY onload='window.print();window.close()'>");
-                printPage.document.write("<PRE>");
-                printPage.document.write("<p>" + ClassOrCourseName + "</p>");
-                printPage.document.write(html);
-                printPage.document.write("<br>");
-                printPage.document.write("<br>");
-                printPage.document.write("Signature:______________________");
-                printPage.document.write("</PRE>");
-                printPage.document.close("</BODY></HTML>");
+            printPage.document.open();
+            printPage.document.write("<HTML><head></head><BODY onload='window.print();window.close()'>");
+            printPage.document.write("<PRE>");
+            printPage.document.write("<p>" + ClassOrCourseName + "</p>");
+            printPage.document.write(html);
+            printPage.document.write("<br>");
+            printPage.document.write("<br>");
+            printPage.document.write("Signature:______________________");
+            printPage.document.write("</PRE>");
+            printPage.document.close("</BODY></HTML>");
         };
 
         $scope.getNow();
 
     }
 ])
+.controller('affixCtrl', function ($scope) {
+
+    $(function () {
+        $("#affixPanel").affix({
+            offset: {
+                top: 200,
+                bottom: function () {
+                    return (this.bottom = $('.footer').outerHeight(true))
+                }
+            }
+        })
+    });
+})
