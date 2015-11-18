@@ -273,25 +273,29 @@ angular.module('enterconduct', [])
                                                     else {
                                                         _conduct.ScoringScale = "2015.Class";
                                                         var code = [{
-                                                            Key: '4',
+                                                            Key: '5',
                                                             Value: 'D',
                                                             Hint: 'Distinguished Command'
                                                         }, {
-                                                            Key: '3',
+                                                            Key: '4',
                                                             Value: 'S',
                                                             Hint: 'Strong Command (Secure)'
                                                         }, {
-                                                            Key: '2',
+                                                            Key: '3',
                                                             Value: 'M',
                                                             Hint: 'Moderate Command (Developing/ On-level)'
                                                         }, {
-                                                            Key: '1',
+                                                            Key: '2',
                                                             Value: 'P',
                                                             Hint: 'Partial Command'
                                                         }, {
-                                                            Key: '0',
+                                                            Key: '1',
                                                             Value: 'N',
                                                             Hint: 'Little or No Command'
+                                                        }, {
+                                                            Key: '0',
+                                                            Value: 'N/A',
+                                                            Hint: 'Not available'
                                                         }];
                                                     }
                                                 }
@@ -355,25 +359,29 @@ angular.module('enterconduct', [])
                                                     else {
                                                         _conduct.ScoringScale = "2015Class";
                                                         var code = [{
-                                                            Key: '4',
+                                                            Key: '5',
                                                             Value: 'D',
                                                             Hint: 'Distinguished Command'
                                                         }, {
-                                                            Key: '3',
+                                                            Key: '4',
                                                             Value: 'S',
                                                             Hint: 'Strong Command (Secure)'
                                                         }, {
-                                                            Key: '2',
+                                                            Key: '3',
                                                             Value: 'M',
                                                             Hint: 'Moderate Command (Developing/ On-level)'
                                                         }, {
-                                                            Key: '1',
+                                                            Key: '2',
                                                             Value: 'P',
                                                             Hint: 'Partial Command'
                                                         }, {
-                                                            Key: '0',
+                                                            Key: '1',
                                                             Value: 'N',
                                                             Hint: 'Little or No Command'
+                                                        }, {
+                                                            Key: '0',
+                                                            Value: 'N/A',
+                                                            Hint: 'Not available'
                                                         }];
                                                     }
                                                 }
