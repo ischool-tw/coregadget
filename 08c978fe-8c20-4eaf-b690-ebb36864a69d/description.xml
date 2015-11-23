@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="Đạo đức" description="老師-Conduct輸入">
-    <Title lang="zh-TW">Đạo đức</Title>
-    <Icon>Conduct.png</Icon>
+  <ModulePrefs title="（雙語部）Conduct輸入" description="老師-Conduct輸入">
+    <Title lang="zh-TW">Conduct</Title>
+    <Icon>icon.png</Icon>
     <Mobile />
     <Title lang="zh-CN">
     </Title>
