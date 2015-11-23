@@ -7,7 +7,8 @@
     <script src="js/gadget.js"></script>
     <script>
         init({
-            application: "test2.b.nehs.edu.tw",
+            application: "test.b.nehs.hc.edu.tw",
+            //application: "b.nehs.hc.edu.tw",
             oAuth: {
                 clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
                 clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
@@ -28,7 +29,7 @@
     <script src="js/angular-strap.tpl.min.js"></script>
     <style>
         #affixPanel.affix {
-            top: 30px;
+            top: 15px;
         }
     </style>
 </head>
@@ -40,16 +41,10 @@
             <p ng-if="current.MiddleOpeningC == 'true'">Midterm: {{current.MiddleBeginC}} ~ {{current.MiddleEndC}} {{current.Message}}</p>
             <p ng-if="current.FinalOpeningC == 'true'">Final: {{current.FinalBeginC}} ~ {{current.FinalEndC}}</p>
         </div>
-        <div class="btn-group">
-            <a class="btn btn-default" type="button" ng-click="PrintPage()">
-                <i class="fa fa-search">Print</i>
-            </a>
-        </div>
-        <br>
-        <br>
         <div ng-if="courseList">
             <div class="btn-group">
-                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                   ng-class="{disabled:savingSeril!=0}">
                     <span ng-if="teacherType == 'homeroom'">Homeroom Teacher</span>
                     <span ng-if="teacherType == 'subject'">Subject Teacher</span>
                     <span class="caret"></span>
@@ -64,7 +59,9 @@
                 </ul>
             </div>
             <div class="btn-group">
-                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{currentCourse.Title}}<span class="caret"></span> </a>
+                <a href=""
+                   ng-class="{disabled:savingSeril!=0}"
+                   class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{currentCourse.Title}}<span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li ng-repeat="item in courseList" ng-class="{active:item.selected}" ng-if="item.Show">
                         <a href="javascript:;" ng-click="selectCourse(item)">{{item.Title}}</a>
@@ -72,12 +69,21 @@
                 </ul>
             </div>
             <div class="btn-group">
-                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> {{currentStudent.ClassName}}, {{currentStudent.SeatNo}}, {{currentStudent.StudentChineseName}} ({{currentStudent.StudentEnglishName}}) <span class="caret"></span> </a>
+                <a href=""
+                   ng-class="{disabled:savingSeril!=0}"
+                   class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{currentStudent.ClassName}},{{currentStudent.SeatNo}},{{currentStudent.StudentChineseName}}({{currentStudent.StudentEnglishName}})<span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li ng-repeat="item in studentList" ng-class="{active:item.selected}">
                         <a href="javascript:;" ng-click="selectStudent(item)">{{item.ClassName}}, {{item.SeatNo}}, {{item.StudentChineseName}} ({{item.StudentEnglishName}})</a>
                     </li>
                 </ul>
+            </div>
+
+
+            <div class="btn-group pull-right">
+                <a class="btn btn-default" type="button" ng-click="PrintPage()">
+                    Print
+                </a>
             </div>
 
             <div style="margin-top:10px;position:relative;">
@@ -88,7 +94,23 @@
                         <table class="table table-bordered table-striped" style="margin-bottom:-1px;">
                             <thead>
                                 <tr>
-                                    <th colspan="2">Student Info.</th>
+                                    <th colspan="2">
+                                        Student Info.
+                                        <div class="btn-group pull-right">
+                                            <a class="btn btn-link pull-right"
+                                               style="padding-top: 0px;padding-bottom: 0px;"
+                                               ng-class="{disabled:savingSeril!=0}"
+                                               ng-click="selectNextStudent()">Next</a>
+                                        </div>
+                                        &nbsp;
+                                        <div class="btn-group pull-right">
+                                            <a class="btn btn-link pull-right"
+                                               style="padding-top: 0px;padding-bottom: 0px;"
+                                               ng-class="{disabled:savingSeril!=0}"
+                                               ng-click="selectPrevStudent()">Prev</a>
+                                        </div>
+
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -100,23 +122,41 @@
                                 </tr> -->
                                 <tr>
                                     <td>Name</td>
-                                    <td>{{currentStudent.StudentChineseName}} {{currentStudent.StudentEnglishName}}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href=""
+                                               ng-class="{disabled:savingSeril!=0}" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{currentStudent.StudentChineseName}}{{currentStudent.StudentEnglishName}}<span class="caret"></span></a>
+                                            <ul class="dropdown-menu">
+                                                <li ng-repeat="item in studentList" ng-class="{active:item.selected}">
+                                                    <a href="javascript:;" ng-click="selectStudent(item)">{{item.ClassName}}, {{item.SeatNo}}, {{item.StudentChineseName}} ({{item.StudentEnglishName}})</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                         <table class="table table-bordered" style="margin:0;" ng-if="currentConduct">
                             <thead>
                                 <tr>
-                                    <th class="col-md-9">{{currentConduct.Group}}</th>
+                                    <th class="col-md-9">
+                                        {{currentConduct.Group}}
+                                    </th>
                                     <th class="col-md-3">{{currentConduct.Period == 1 ? 'Midterm' : 'Final'}}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>{{currentConduct.index}}. {{currentConduct.Title}}</td>
                                     <td>
-                                        <input id="grade-textbox" type="text" class="form-control" ng-if="currentConduct.canInputGrade" ng-model="currentConduct.tempGrade" ng-keydown="enterGrade($event)">
-                                        <span ng-if="!currentConduct.canInputGrade">{{currentConduct.tempGrade}}</span>
+                                        <div style="min-height:90px;">{{currentConduct.index}} . {{currentConduct.Title}}</div>
+                                    </td>
+                                    <td style="position:relative">
+                                        <div style="height: 100%;display: inline-block;vertical-align: top;">
+                                            <input id="grade-textbox" type="text" class="form-control" ng-if="currentConduct.canInputGrade" ng-model="currentConduct.tempGrade" ng-keydown="enterGrade($event)">
+                                            <span ng-if="!currentConduct.canInputGrade">{{currentConduct.tempGrade}}</span>
+                                        </div>
+                                        <p style="position:absolute;right:10px;bottom:-35px;z-index:1;" ng-if="savingSeril!=0" class="text-danger">Saving...</p>
                                     </td>
                                 </tr>
                             </tbody>
@@ -127,7 +167,10 @@
                             </p>
                         </div>
                         <a class="btn btn-default" style="margin:10px;" type="button" ng-click="SetDefaultValue()" ng-if="currentConduct">
-                            <i class="fa fa-search">Click to set default value</i>
+                            Click to set default value
+                        </a>
+                        <a class="btn btn-default" style="margin:10px 10px 10px -10px;" type="button" ng-click="submit()" ng-if="currentConduct">
+                            Submit
                         </a>
                     </div>
                 </div>
@@ -139,14 +182,46 @@
                                 <th class="col-md-2" ng-if="currentCourse.GradeYear <= 4">Midterm</th>
                                 <th class="col-md-2" ng-if="currentCourse.GradeYear <= 4">Final</th>
                                 <th class="col-md-2" ng-if="currentCourse.GradeYear > 4">Final</th>
-                                <th ng-class="{'col-md-8':currentCourse.GradeYear <= 4 , 'col-md-10':currentCourse.GradeYear > 4}">{{item.Group}}</th>
+                                <th ng-class="{'col-md-8':currentCourse.GradeYear <= 4 , 'col-md-10':currentCourse.GradeYear > 4}">
+                                    <span>{{item.Group}}</span>
+                                    <div class="btn-group pull-right">
+                                        <a ng-if="currentCourse.GradeYear <= 4"
+                                           style="padding-top: 0px;padding-bottom: 0px;"
+                                           class="btn btn-link dropdown-toggle" data-toggle="dropdown">Overview<span class="caret"></span></a>
+                                        <ul ng-if="currentCourse.GradeYear <= 4"
+                                            class="dropdown-menu">
+                                            <li ng-if="currentCourse.GradeYear <= 4">
+                                                <a href="javascript:;" ng-click="overview(item, 1)">Midterm</a>
+                                            </li>
+                                            <li ng-if="currentCourse.GradeYear <= 4">
+                                                <a href="javascript:;" ng-click="overview(item, 2)">Final</a>
+                                            </li>
+                                        </ul>
+                                        <a ng-if="currentCourse.GradeYear > 4"
+                                           class="btn btn-link"
+                                           style="padding-top: 0px;padding-bottom: 0px;"
+                                           ng-click="overview(item, 3)">Overview</a>
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr ng-repeat="temp in item.Item" ng-class="{'warning':temp.selected}">
-                                <td ng-if="currentCourse.GradeYear <= 4" ng-click="selectConduct(temp,1)" style="cursor:pointer;">{{temp.MidtermGrade}}</td>
-                                <td ng-if="currentCourse.GradeYear <= 4" ng-click="selectConduct(temp,2)" style="cursor:pointer;">{{temp.FinalGrade}}</td>
-                                <td ng-if="currentCourse.GradeYear > 4" ng-click="selectConduct(temp,3)" style="cursor:pointer;">{{temp.Grade}}</td>
+                                <td ng-if="currentCourse.GradeYear <= 4" ng-click="selectConduct(temp,1)" style="cursor:pointer;position: relative;">
+                                    {{temp.MidtermGrade}}
+                                    <div ng-if="!temp.MidtermGrade&&current.MiddleOpeningC==='true'"
+                                         style="border: solid red 2px;width: 1px;height: 1px;position: absolute;left: 5px;top: 5px;z-index: 1;border-radius: 3px;"></div>
+                                </td>
+                                <td ng-if="currentCourse.GradeYear <= 4" ng-click="selectConduct(temp,2)" style="cursor:pointer;position: relative;">
+                                    {{temp.FinalGrade}}
+                                    <div ng-if="!temp.FinalGrade&&current.FinalOpeningC==='true'"
+                                         style="border: solid red 2px;width: 1px;height: 1px;position: absolute;left: 5px;top: 5px;z-index: 1;border-radius: 3px;"></div>
+                                </td>
+                                <td ng-if="currentCourse.GradeYear > 4" ng-click="selectConduct(temp,3)" style="cursor:pointer;position: relative;">
+                                    {{temp.Grade}}
+                                    <div ng-if="!temp.Grade&&current.FinalOpeningC==='true'"
+                                         style="border: solid red 2px;width: 1px;height: 1px;position: absolute;left: 5px;top: 5px;z-index: 1;border-radius: 3px;"></div>
+                                </td>
                                 <td>{{$index+1}}. {{temp.Title}}</td>
                             </tr>
                         </tbody>
@@ -177,9 +252,52 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col-md-5" ng-if="currentStudent">
-                    <div>
-                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">{{modal.conductGroup.Group}} Overview</h4>
+                </div>
+                <div class="modal-body">
+                    <ol>
+                        <li ng-repeat="item in modal.conductGroup.Item">
+                            {{item.Title}}
+                        </li>
+                    </ol>
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th class="text-center"
+                                    style="width:50px;"
+                                    ng-repeat="item in modal.conductGroup.Item">
+                                    {{$index}}.
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="student in studentList">
+                                <td>{{student.StudentChineseName}}{{student.StudentEnglishName}}</td>
+                                <td ng-repeat="item in modal.conductGroup.Item"
+                                    class="text-center"
+                                    style="position:relative;"
+                                    ng-style="getColor(student, modal.conductGroup.Group, item.Title, modal.period)">
+                                    <div ng-if="!getVal(student, modal.conductGroup.Group, item.Title, modal.period)"
+                                         style="border: solid red 2px;width: 1px;height: 1px;position: absolute;left: 5px;top: 5px;z-index: 1;border-radius: 3px;"></div>
+                                    <strong>
+                                        {{getVal(student, modal.conductGroup.Group, item.Title, modal.period)}}
+                                    </strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

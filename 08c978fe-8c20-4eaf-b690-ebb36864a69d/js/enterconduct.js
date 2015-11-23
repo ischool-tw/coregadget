@@ -141,6 +141,10 @@ angular.module('enterconduct', [])
         };
 
         $scope.selectCourse = function (item) {
+            if ($scope.savingSeril != 0) {
+                //alert("saveing");
+                return;
+            }
             $scope.currentCourse = item;
 
             angular.forEach($scope.courseList, function (item) {
@@ -259,15 +263,23 @@ angular.module('enterconduct', [])
                                                         var code = [{
                                                             Key: '3',
                                                             Value: '3',
-                                                            Hint: 'Consistently'
+                                                            Hint: 'Consistently',
+                                                            Color: 'MediumBlue'
                                                         }, {
                                                             Key: '2',
                                                             Value: '2',
-                                                            Hint: 'Sometimes/ Progressing'
+                                                            Hint: 'Sometimes/ Progressing',
+                                                            Color: 'OrangeRed'
                                                         }, {
                                                             Key: '1',
                                                             Value: '1',
-                                                            Hint: 'Needs Attention'
+                                                            Hint: 'Needs Attention',
+                                                            Color: 'SaddleBrown'
+                                                        }, {
+                                                            Key: '0',
+                                                            Value: 'N/A',
+                                                            Hint: 'Not available',
+                                                            Color: 'Gray'
                                                         }];
                                                     }
                                                     else {
@@ -275,27 +287,33 @@ angular.module('enterconduct', [])
                                                         var code = [{
                                                             Key: '5',
                                                             Value: 'D',
-                                                            Hint: 'Distinguished Command'
+                                                            Hint: 'Distinguished Command',
+                                                            Color: 'MediumBlue'
                                                         }, {
                                                             Key: '4',
                                                             Value: 'S',
-                                                            Hint: 'Strong Command (Secure)'
+                                                            Hint: 'Strong Command (Secure)',
+                                                            Color: 'Olive'
                                                         }, {
                                                             Key: '3',
                                                             Value: 'M',
-                                                            Hint: 'Moderate Command (Developing/ On-level)'
+                                                            Hint: 'Moderate Command (Developing/ On-level)',
+                                                            Color: 'DarkGreen'
                                                         }, {
                                                             Key: '2',
                                                             Value: 'P',
-                                                            Hint: 'Partial Command'
+                                                            Hint: 'Partial Command',
+                                                            Color: 'OrangeRed'
                                                         }, {
                                                             Key: '1',
                                                             Value: 'N',
-                                                            Hint: 'Little or No Command'
+                                                            Hint: 'Little or No Command',
+                                                            Color: 'SaddleBrown'
                                                         }, {
                                                             Key: '0',
                                                             Value: 'N/A',
-                                                            Hint: 'Not available'
+                                                            Hint: 'Not available',
+                                                            Color: 'Gray'
                                                         }];
                                                     }
                                                 }
@@ -304,19 +322,23 @@ angular.module('enterconduct', [])
                                                     var code = [{
                                                         Key: '3',
                                                         Value: 'M',
-                                                        Hint: 'Meets expectations'
+                                                        Hint: 'Meets expectations',
+                                                        Color: 'DarkGreen'
                                                     }, {
                                                         Key: '2',
                                                         Value: 'S',
-                                                        Hint: 'Meets needs with Support'
+                                                        Hint: 'Meets needs with Support',
+                                                        Color: 'MediumBlue'
                                                     }, {
                                                         Key: '1',
                                                         Value: 'N',
-                                                        Hint: 'Not yet within expectations'
+                                                        Hint: 'Not yet within expectations',
+                                                        Color: 'SaddleBrown'
                                                     }, {
                                                         Key: '0',
                                                         Value: 'N/A',
-                                                        Hint: 'Not available'
+                                                        Hint: 'Not available',
+                                                        Color: 'Gray'
                                                     }];
                                                 }
                                                 angular.forEach(conduct.Item, function (item) {
@@ -345,15 +367,23 @@ angular.module('enterconduct', [])
                                                         var code = [{
                                                             Key: '3',
                                                             Value: '3',
-                                                            Hint: 'Consistently'
+                                                            Hint: 'Consistently',
+                                                            Color: 'MediumBlue'
                                                         }, {
                                                             Key: '2',
                                                             Value: '2',
-                                                            Hint: 'Sometimes/ Progressing'
+                                                            Hint: 'Sometimes/ Progressing',
+                                                            Color: 'OrangeRed'
                                                         }, {
                                                             Key: '1',
                                                             Value: '1',
-                                                            Hint: 'Needs Attention'
+                                                            Hint: 'Needs Attention',
+                                                            Color: 'SaddleBrown'
+                                                        }, {
+                                                            Key: '0',
+                                                            Value: 'N/A',
+                                                            Hint: 'Not available',
+                                                            Color: 'Gray'
                                                         }];
                                                     }
                                                     else {
@@ -361,27 +391,33 @@ angular.module('enterconduct', [])
                                                         var code = [{
                                                             Key: '5',
                                                             Value: 'D',
-                                                            Hint: 'Distinguished Command'
+                                                            Hint: 'Distinguished Command',
+                                                            Color: 'MediumBlue'
                                                         }, {
                                                             Key: '4',
                                                             Value: 'S',
-                                                            Hint: 'Strong Command (Secure)'
+                                                            Hint: 'Strong Command (Secure)',
+                                                            Color: 'Olive'
                                                         }, {
                                                             Key: '3',
                                                             Value: 'M',
-                                                            Hint: 'Moderate Command (Developing/ On-level)'
+                                                            Hint: 'Moderate Command (Developing/ On-level)',
+                                                            Color: 'DarkGreen'
                                                         }, {
                                                             Key: '2',
                                                             Value: 'P',
-                                                            Hint: 'Partial Command'
+                                                            Hint: 'Partial Command',
+                                                            Color: 'OrangeRed'
                                                         }, {
                                                             Key: '1',
                                                             Value: 'N',
-                                                            Hint: 'Little or No Command'
+                                                            Hint: 'Little or No Command',
+                                                            Color: 'SaddleBrown'
                                                         }, {
                                                             Key: '0',
                                                             Value: 'N/A',
-                                                            Hint: 'Not available'
+                                                            Hint: 'Not available',
+                                                            Color: 'Gray'
                                                         }];
                                                     }
                                                 }
@@ -390,19 +426,23 @@ angular.module('enterconduct', [])
                                                     var code = [{
                                                         Key: '3',
                                                         Value: 'M',
-                                                        Hint: 'Meets expectations'
+                                                        Hint: 'Meets expectations',
+                                                        Color: 'DarkGreen'
                                                     }, {
                                                         Key: '2',
                                                         Value: 'S',
-                                                        Hint: 'Meets needs with Support'
+                                                        Hint: 'Meets needs with Support',
+                                                        Color: 'MediumBlue'
                                                     }, {
                                                         Key: '1',
                                                         Value: 'N',
-                                                        Hint: 'Not yet within expectations'
+                                                        Hint: 'Not yet within expectations',
+                                                        Color: 'SaddleBrown'
                                                     }, {
                                                         Key: '0',
                                                         Value: 'N/A',
-                                                        Hint: 'Not available'
+                                                        Hint: 'Not available',
+                                                        Color: 'Gray'
                                                     }];
                                                 }
                                                 angular.forEach(conduct.Item, function (item) {
@@ -479,6 +519,11 @@ angular.module('enterconduct', [])
         };
 
         $scope.selectStudent = function (item) {
+            if ($scope.savingSeril != 0) {
+                //alert("saveing");
+                return;
+            }
+
             if (!item) return;
 
             $scope.currentStudent = item;
@@ -504,7 +549,38 @@ angular.module('enterconduct', [])
             }
         };
 
+        $scope.selectNextStudent = function () {
+            if ($scope.savingSeril != 0) {
+                //alert("saveing");
+                return;
+            }
+            var currentIndex = $scope.currentStudent.order ? $scope.currentStudent.order : 0;
+            if ($scope.studentList.length - 1 == currentIndex)
+                var nextIndex = 0;
+            else
+                var nextIndex = currentIndex + 1;
+            var nextStudent = $scope.studentList[nextIndex];
+            $scope.selectStudent(nextStudent);
+        }
+        $scope.selectPrevStudent = function () {
+            if ($scope.savingSeril != 0) {
+                //alert("saveing");
+                return;
+            }
+            var currentIndex = $scope.currentStudent.order ? $scope.currentStudent.order : 0;
+            if (currentIndex == 0)
+                var nextIndex = $scope.studentList.length - 1;
+            else
+                var nextIndex = currentIndex - 1;
+            var nextStudent = $scope.studentList[nextIndex];
+            $scope.selectStudent(nextStudent);
+        }
+
         $scope.selectStudentID = function (event) { //輸入座號跳到該座號
+            if ($scope.savingSeril != 0) {
+                //alert("saveing");
+                return;
+            }
             if (event.keyCode !== 13) return; // 13是enter按鈕的代碼，return是跳出
 
             if (!$scope.currentStudent) return;
@@ -597,8 +673,9 @@ angular.module('enterconduct', [])
                     item.canInputGrade = false;
                 }
             }
-
-            $('#grade-textbox').focus().select();
+            $timeout(function () {
+                $('#grade-textbox').focus().select();
+            }, 100);
 
         };
 
@@ -610,19 +687,118 @@ angular.module('enterconduct', [])
             var grade = $scope.currentConduct.tempGrade.toUpperCase();
 
             var flag = false;
-            angular.forEach($scope.currentConduct.Code, function (item) {
-                if (item.Key.toUpperCase() === grade || item.Value.toUpperCase() === grade) {
-                    grade = item.Value;
-                    flag = true;
-                    $scope.currentConduct.tempGrade = grade;
-                }
-            });
-
+            if (grade == "") {
+                //flag = true;
+            } else {
+                angular.forEach($scope.currentConduct.Code, function (item) {
+                    if (item.Key.toUpperCase() === grade || item.Value.toUpperCase() === grade) {
+                        grade = item.Value;
+                        flag = true;
+                        $scope.currentConduct.tempGrade = grade;
+                    }
+                });
+            }
             if (flag) {
                 $scope.saveGrade('conduct');
             }
 
         };
+
+        $scope.overview = function (conductGroup, period) {
+            if (!!!$scope.modal) {
+                $scope.modal = {};
+                $scope.modal.conductGroup = conductGroup;
+                $scope.modal.period = period;
+                $('#modal').modal('show').on('shown.bs.modal', function (e) {
+                    //$('#modal input:visible:first').focus().select();
+                });
+            }
+            else {
+                $scope.modal.conductGroup = conductGroup;
+                $scope.modal.period = period;
+                $('#modal').modal('show');
+            }
+        }
+
+        $scope.getVal = function (student, group, title, period) {
+            var result;
+            angular.forEach(student.EditConduct.Conducts.Conduct, function (cgroup) {
+                if (cgroup.Group == group) {
+                    angular.forEach(cgroup.Item, function (citem) {
+                        if (citem.Title == title) {
+                            if (period == 1)
+                                result = citem.MidtermGrade;
+                            if (period == 2)
+                                result = citem.FinalGrade;
+                            if (period == 3)
+                                result = citem.Grade;
+                        }
+                    });
+                }
+            });
+            return result;
+        }
+
+        $scope.getColor = function (student, group, title, period) {
+            var result;
+            angular.forEach(student.EditConduct.Conducts.Conduct, function (cgroup) {
+                if (cgroup.Group == group) {
+                    angular.forEach(cgroup.Item, function (citem) {
+                        if (citem.Title == title) {
+                            if (period == 1)
+                                result = citem.MidtermGrade;
+                            if (period == 2)
+                                result = citem.FinalGrade;
+                            if (period == 3)
+                                result = citem.Grade;
+
+                            if (result) {
+                                angular.forEach(citem.Code, function (code) {
+                                    if (code.Value == result) {
+                                        result = { color: code.Color };
+                                    }
+                                })
+                            }
+                        }
+                    });
+                }
+            });
+            return result;
+        }
+
+        $scope.submit = function () {
+            var grade = $scope.currentConduct.tempGrade.toUpperCase();
+            var flag = false;
+            if (grade == "") {
+                //flag = true;
+                //if ($scope.currentConduct.Period === 1)
+                //    $scope.currentConduct.MidtermGrade = $scope.currentConduct.tempGrade;
+                //else if ($scope.currentConduct.Period === 2)
+                //    $scope.currentConduct.FinalGrade = $scope.currentConduct.tempGrade;
+                //else
+                //    $scope.currentConduct.Grade = $scope.currentConduct.tempGrade;
+            } else {
+                angular.forEach($scope.currentConduct.Code, function (item) {
+                    if (item.Key.toUpperCase() === grade || item.Value.toUpperCase() === grade) {
+                        grade = item.Value;
+                        flag = true;
+                        $scope.currentConduct.tempGrade = grade;
+                        if ($scope.currentConduct.Period === 1)
+                            $scope.currentConduct.MidtermGrade = $scope.currentConduct.tempGrade;
+                        else if ($scope.currentConduct.Period === 2)
+                            $scope.currentConduct.FinalGrade = $scope.currentConduct.tempGrade;
+                        else
+                            $scope.currentConduct.Grade = $scope.currentConduct.tempGrade;
+                    }
+                });
+            }
+            if (flag) {
+                $scope.saveGrade();
+            }
+            else {
+                alert("\"" + $scope.currentConduct.tempGrade + "\" is invalid.");
+            }
+        }
 
         $scope.enterComment = function (event) {
             if (event.keyCode !== 13 || event.shiftKey) return;
@@ -681,7 +857,34 @@ angular.module('enterconduct', [])
             $scope.saveGrade('conduct');
         };
 
+        $scope.savingSeril = 0;
         $scope.saveGrade = function (type) {
+            var savingSeril = new Date().getTime();
+            if (type === 'conduct') {
+                if ($scope.currentConduct.Period === 1)
+                    $scope.currentConduct.MidtermGrade = $scope.currentConduct.tempGrade;
+                else if ($scope.currentConduct.Period === 2)
+                    $scope.currentConduct.FinalGrade = $scope.currentConduct.tempGrade;
+                else
+                    $scope.currentConduct.Grade = $scope.currentConduct.tempGrade;
+
+                var nextConduct = null,
+                    period = $scope.currentConduct.Period;
+
+                angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function (conduct, i) {
+                    angular.forEach(conduct.Item, function (item, j) {
+                        if ($scope.currentConduct.Title === item.Title && $scope.currentConduct.Group === conduct.Group)
+                            nextConduct = conduct.Item[j + 1];
+                    });
+
+                    if (!nextConduct && i < $scope.currentStudent.EditConduct.Conducts.Conduct.length - 1) {
+                        if ($scope.currentStudent.EditConduct.Conducts.Conduct[i + 1].Item.length > 0)
+                            nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[i + 1].Item[0];
+                    }
+                });
+
+                $scope.selectConduct(nextConduct, period);
+            }
 
             var _body = {
                 StudentID: $scope.currentStudent.StudentID,
@@ -703,18 +906,10 @@ angular.module('enterconduct', [])
             angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function (conduct) {
                 var items = [];
                 angular.forEach(conduct.Item, function (item) {
-
-                    if (item.Title !== $scope.currentConduct.Title) {
-                        items.push({
-                            '@Grade': ($scope.currentConduct.Period === 1 ? item.MidtermGrade : ($scope.currentConduct.Period === 2 ? item.FinalGrade : item.Grade)) || '',
-                            '@Title': item.Title || ''
-                        });
-                    } else {
-                        items.push({
-                            '@Grade': item.tempGrade || '',
-                            '@Title': item.Title || ''
-                        });
-                    }
+                    items.push({
+                        '@Grade': ($scope.currentConduct.Period === 1 ? item.MidtermGrade : ($scope.currentConduct.Period === 2 ? item.FinalGrade : item.Grade)) || '',
+                        '@Title': item.Title || ''
+                    });
                 });
 
                 conductList.push({
@@ -728,62 +923,57 @@ angular.module('enterconduct', [])
 
             //console.log(_body);
 
-            $scope.connection.send({
-                service: "_.UpdateConductScore",
-                body: _body,
-                result: function (response, error, http) {
-                    if (error !== null) {
-                        alert("Error occurred while saving data." + (error.dsaError.status || '') + (error.dsaError.message || ''));
-                    } else {
-                        //console.log(response);
-                        $scope.$apply(function () {
-                            if (type === 'conduct') {
-                                if ($scope.currentConduct.Period === 1)
-                                    $scope.currentConduct.MidtermGrade = $scope.currentConduct.tempGrade;
-                                else if ($scope.currentConduct.Period === 2)
-                                    $scope.currentConduct.FinalGrade = $scope.currentConduct.tempGrade;
-                                else
-                                    $scope.currentConduct.Grade = $scope.currentConduct.tempGrade;
+            if ($scope.savingSeril == 0) {
+                $scope.savingSeril = savingSeril;
+                $scope.connection.send({
+                    service: "_.UpdateConductScore",
+                    body: _body,
+                    result: function (response, error, http) {
+                        if (error !== null) {
+                            alert("Error occurred while saving data." + (error.dsaError.status || '') + (error.dsaError.message || ''));
+                            $scope.savingSeril = 0;
+                        } else {
+                            //console.log(response);
+                            $scope.$apply(function () {
+                                if ($scope.savingSeril == savingSeril) {
+                                    $scope.savingSeril = 0;
+                                    if (type === 'comment') {
+                                        var nextStudent = $scope.studentList[$scope.currentStudent.order + 1];
+                                        if (!nextStudent)
+                                            nextStudent = $scope.studentList[0];
 
-                                var nextConduct = null,
-                                    period = $scope.currentConduct.Period;
+                                        nextStudent.tempStudentID = nextStudent.StudentID;
+                                        $scope.currentStudent = nextStudent;
 
-                                angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function (conduct, i) {
-                                    angular.forEach(conduct.Item, function (item, j) {
-                                        if ($scope.currentConduct.Title === item.Title && $scope.currentConduct.Group === conduct.Group)
-                                            nextConduct = conduct.Item[j + 1];
-                                    });
+                                        $timeout(function () {
+                                            //$('#seatno-textbox').focus().select();
 
-                                    if (!nextConduct && i < $scope.currentStudent.EditConduct.Conducts.Conduct.length - 1) {
-                                        if ($scope.currentStudent.EditConduct.Conducts.Conduct[i + 1].Item.length > 0)
-                                            nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[i + 1].Item[0];
+                                            var period = $scope.currentConduct.Period;
+                                            delete $scope.currentConduct;
+
+                                            if ($scope.currentStudent.EditConduct.Conducts.Conduct.length > 0 && $scope.currentStudent.EditConduct.Conducts.Conduct[0].Item.length > 0)
+                                                $scope.selectConduct($scope.currentStudent.EditConduct.Conducts.Conduct[0].Item[0], period);
+
+                                        }, 100);
                                     }
-                                });
-
-                                $scope.selectConduct(nextConduct, period);
-                            } else {
-                                var nextStudent = $scope.studentList[$scope.currentStudent.order + 1];
-                                if (!nextStudent)
-                                    nextStudent = $scope.studentList[0];
-
-                                nextStudent.tempStudentID = nextStudent.StudentID;
-                                $scope.currentStudent = nextStudent;
-
-                                $timeout(function () {
-                                    //$('#seatno-textbox').focus().select();
-
-                                    var period = $scope.currentConduct.Period;
-                                    delete $scope.currentConduct;
-
-                                    if ($scope.currentStudent.EditConduct.Conducts.Conduct.length > 0 && $scope.currentStudent.EditConduct.Conducts.Conduct[0].Item.length > 0)
-                                        $scope.selectConduct($scope.currentStudent.EditConduct.Conducts.Conduct[0].Item[0], period);
-
-                                }, 100);
-                            }
-                        });
+                                }
+                                else {
+                                    $scope.savingSeril = 0;
+                                    if (type === 'comment') {
+                                        $scope.saveGrade('comment');
+                                    }
+                                    else {
+                                        $scope.saveGrade();
+                                    }
+                                }
+                            });
+                        }
                     }
-                }
-            });
+                });
+            }
+            else {
+                $scope.savingSeril = savingSeril;
+            }
         };
 
         $scope.padLeft = function (str, length) {
