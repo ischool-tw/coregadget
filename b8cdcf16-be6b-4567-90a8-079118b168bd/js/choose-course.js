@@ -923,7 +923,7 @@ jQuery(function () {
 
                 var tmp = $(content);
                 // $(tmp).find('#printEndTime').append(self.currentData.EndTime() || '');
-                $(tmp).filter('#noteInfo').append(self.configuration['retreat_notices_word']() || '');
+                $(tmp).find('#noteInfo').append(self.configuration['retreat_notices_word']() || '');
                 content = $('<div>').append(tmp).html();
 
                 content = "<!DOCTYPE html>\n" +
