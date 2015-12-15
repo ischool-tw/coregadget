@@ -141,10 +141,10 @@ angular.module('enterconduct', [])
         };
 
         $scope.selectCourse = function (item) {
-            if ($scope.savingSeril != 0) {
-                //alert("saveing");
-                return;
-            }
+            //if ($scope.savingSeril != 0) {
+            //    //alert("saveing");
+            //    return;
+            //}
             $scope.currentCourse = item;
 
             angular.forEach($scope.courseList, function (item) {
@@ -160,6 +160,12 @@ angular.module('enterconduct', [])
             //         temp.selected = false;
             //     });
             // });
+            if ($scope.teacherType == 'homeroom') {
+                $scope.jumpMode = "Group";
+            }
+            else {
+                $scope.jumpMode = "All";
+            }
             $scope.getStudentList();
 
             var flag = false;
@@ -184,6 +190,7 @@ angular.module('enterconduct', [])
         $scope.getStudentList = function () {
             delete $scope.studentList;
             delete $scope.currentStudent;
+            delete $scope.currentConduct;
 
             var _body = '';
 
@@ -211,6 +218,7 @@ angular.module('enterconduct', [])
                                 if ($scope.currentCourse.Type === 'homeroom') {
                                     if (response.Class && response.Class.Student) {
                                         $scope.studentList = [].concat(response.Class.Student || []);
+                                        $scope.studentList.sort($scope.studentSort);
                                         angular.forEach($scope.studentList, function (item, index) {
                                             item.order = index;
                                         });
@@ -218,6 +226,7 @@ angular.module('enterconduct', [])
                                 } else {
                                     if (response.Course && response.Course.Student) {
                                         $scope.studentList = [].concat(response.Course.Student || []);
+                                        $scope.studentList.sort($scope.studentSort);
                                         angular.forEach($scope.studentList, function (item, index) {
                                             item.order = index;
                                         });
@@ -255,11 +264,11 @@ angular.module('enterconduct', [])
                                                 var _conduct = {
                                                     Group: conduct.Group,
                                                     Item: [],
-                                                    ScoringScale: ''
+                                                    ScoringScale: '',
+                                                    Code: []
                                                 };
                                                 if ($scope.currentCourse.GradeYear <= 4) {
                                                     if (conduct.Common && conduct.Common === 'True') {
-                                                        _conduct.ScoringScale = "2015.Conduct";
                                                         var code = [{
                                                             Key: '3',
                                                             Value: '3',
@@ -281,9 +290,10 @@ angular.module('enterconduct', [])
                                                             Hint: 'Not available',
                                                             Color: 'Gray'
                                                         }];
+                                                        _conduct.ScoringScale = "2015.Conduct";
+                                                        _conduct.Code = code;
                                                     }
                                                     else {
-                                                        _conduct.ScoringScale = "2015.Class";
                                                         var code = [{
                                                             Key: '5',
                                                             Value: 'D',
@@ -315,10 +325,11 @@ angular.module('enterconduct', [])
                                                             Hint: 'Not available',
                                                             Color: 'Gray'
                                                         }];
+                                                        _conduct.ScoringScale = "2015.Class";
+                                                        _conduct.Code = code;
                                                     }
                                                 }
                                                 else {//5-12
-                                                    _conduct.ScoringScale = "2014";
                                                     var code = [{
                                                         Key: '3',
                                                         Value: 'M',
@@ -340,6 +351,8 @@ angular.module('enterconduct', [])
                                                         Hint: 'Not available',
                                                         Color: 'Gray'
                                                     }];
+                                                    _conduct.ScoringScale = "2014";
+                                                    _conduct.Code = code;
                                                 }
                                                 angular.forEach(conduct.Item, function (item) {
                                                     _conduct.Item.push({
@@ -359,11 +372,11 @@ angular.module('enterconduct', [])
                                                 var _conduct = {
                                                     Group: conduct.Group,
                                                     Item: [],
-                                                    ScoringScale: ''
+                                                    ScoringScale: '',
+                                                    Code: []
                                                 };
                                                 if ($scope.currentCourse.GradeYear <= 4) {
                                                     if (conduct.Common && conduct.Common === 'True') {
-                                                        _conduct.ScoringScale = "2015Conduct";
                                                         var code = [{
                                                             Key: '3',
                                                             Value: '3',
@@ -385,9 +398,10 @@ angular.module('enterconduct', [])
                                                             Hint: 'Not available',
                                                             Color: 'Gray'
                                                         }];
+                                                        _conduct.ScoringScale = "2015Conduct";
+                                                        _conduct.Code = code;
                                                     }
                                                     else {
-                                                        _conduct.ScoringScale = "2015Class";
                                                         var code = [{
                                                             Key: '5',
                                                             Value: 'D',
@@ -419,10 +433,11 @@ angular.module('enterconduct', [])
                                                             Hint: 'Not available',
                                                             Color: 'Gray'
                                                         }];
+                                                        _conduct.ScoringScale = "2015Class";
+                                                        _conduct.Code = code;
                                                     }
                                                 }
                                                 else {//5-12
-                                                    _conduct.ScoringScale = "2014";
                                                     var code = [{
                                                         Key: '3',
                                                         Value: 'M',
@@ -444,6 +459,8 @@ angular.module('enterconduct', [])
                                                         Hint: 'Not available',
                                                         Color: 'Gray'
                                                     }];
+                                                    _conduct.ScoringScale = "2014";
+                                                    _conduct.Code = code;
                                                 }
                                                 angular.forEach(conduct.Item, function (item) {
                                                     _conduct.Item.push({
@@ -508,7 +525,6 @@ angular.module('enterconduct', [])
                                 //console.log($scope.studentList);
 
                                 if ($scope.studentList.length) {
-                                    $scope.studentList.sort($scope.studentSort);
                                     $scope.selectStudent($scope.studentList[0]);
                                 }
                             }
@@ -518,11 +534,11 @@ angular.module('enterconduct', [])
             });
         };
 
-        $scope.selectStudent = function (item) {
-            if ($scope.savingSeril != 0) {
-                //alert("saveing");
-                return;
-            }
+        $scope.selectStudent = function (item, skipAutoSelect) {
+            //if ($scope.savingSeril != 0) {
+            //    //alert("saveing");
+            //    return;
+            //}
 
             if (!item) return;
 
@@ -534,26 +550,76 @@ angular.module('enterconduct', [])
             });
             item.selected = true;
 
-            if ($scope.currentStudent.EditConduct.Conducts.Conduct.length > 0 && $scope.currentStudent.EditConduct.Conducts.Conduct[0].Item.length > 0) {
-                if ($scope.currentCourse.GradeYear < 3) {
-                    if ($scope.current.MiddleOpeningC === 'true') {
-                        $scope.selectConduct($scope.currentStudent.EditConduct.Conducts.Conduct[0].Item[0], 1);
-                    } else if ($scope.current.FinalOpeningC === 'true') {
-                        $scope.selectConduct($scope.currentStudent.EditConduct.Conducts.Conduct[0].Item[0], 2);
+            if (!skipAutoSelect) {
+                if ($scope.currentStudent.EditConduct.Conducts.Conduct.length > 0 && $scope.currentStudent.EditConduct.Conducts.Conduct[0].Item.length > 0) {
+                    var period = 1;
+                    var conduct = null;
+                    if ($scope.currentConduct) {
+                        if ($scope.currentConduct.type != 'Comment') {
+                            period = $scope.currentConduct.Period;
+                            conduct = null;
+                            $scope.currentStudent.EditConduct.Conducts.Conduct.forEach(function (cond) {
+                                if (cond.Group == $scope.currentConduct.Group) {
+                                    cond.Item.forEach(function (item) {
+                                        if (item.Title == $scope.currentConduct.Title) {
+                                            conduct = item;
+                                        }
+                                    });
+                                }
+                            });
+                            if (conduct == null) {
+                                conduct = $scope.currentStudent.EditConduct.Conducts.Conduct[0].Item[0];
+                            }
+                        }
+                        else {
+                            conduct = $scope.currentConduct;
+                            period = $scope.currentConduct.Period;
+                        }
                     }
-                } else {
-                    if ($scope.current.FinalOpeningC === 'true') {
-                        $scope.selectConduct($scope.currentStudent.EditConduct.Conducts.Conduct[0].Item[0], 3);
+                    else {
+                        if ($scope.currentCourse.GradeYear <= 4) {
+                            if ($scope.current.MiddleOpeningC === 'true') {
+                                period = 1;
+                            } else if ($scope.current.FinalOpeningC === 'true') {
+                                period = 2;
+                            }
+                        } else {
+                            if ($scope.current.FinalOpeningC === 'true') {
+                                period = 3;
+                            }
+                        }
+                        conduct = $scope.currentStudent.EditConduct.Conducts.Conduct[0].Item[0];
                     }
+                    $scope.selectConduct(conduct, period);
                 }
             }
+
+
+            $('.sna').addClass('stuName');
+            if (!$scope.wait) {
+                $timeout.cancel($scope.wait)
+            }
+            $scope.wait = $timeout(function () {
+                $('.stuName').removeClass('stuName');
+                delete $scope.wait;
+            }, 1500);
         };
 
+        $scope.selectStudentConduct = function (student, conduct, period) {
+            $('#modalOverview').modal('hide');
+            $scope.selectConduct(conduct, period);
+            $scope.selectStudent(student);
+        }
+
+        $scope.setJumpMode = function (mode) {
+            $scope.jumpMode = mode;
+        }
+
         $scope.selectNextStudent = function () {
-            if ($scope.savingSeril != 0) {
-                //alert("saveing");
-                return;
-            }
+            //if ($scope.savingSeril != 0) {
+            //    //alert("saveing");
+            //    return;
+            //}
             var currentIndex = $scope.currentStudent.order ? $scope.currentStudent.order : 0;
             if ($scope.studentList.length - 1 == currentIndex)
                 var nextIndex = 0;
@@ -562,11 +628,12 @@ angular.module('enterconduct', [])
             var nextStudent = $scope.studentList[nextIndex];
             $scope.selectStudent(nextStudent);
         }
+
         $scope.selectPrevStudent = function () {
-            if ($scope.savingSeril != 0) {
-                //alert("saveing");
-                return;
-            }
+            //if ($scope.savingSeril != 0) {
+            //    //alert("saveing");
+            //    return;
+            //}
             var currentIndex = $scope.currentStudent.order ? $scope.currentStudent.order : 0;
             if (currentIndex == 0)
                 var nextIndex = $scope.studentList.length - 1;
@@ -577,10 +644,10 @@ angular.module('enterconduct', [])
         }
 
         $scope.selectStudentID = function (event) { //輸入座號跳到該座號
-            if ($scope.savingSeril != 0) {
-                //alert("saveing");
-                return;
-            }
+            //if ($scope.savingSeril != 0) {
+            //    //alert("saveing");
+            //    return;
+            //}
             if (event.keyCode !== 13) return; // 13是enter按鈕的代碼，return是跳出
 
             if (!$scope.currentStudent) return;
@@ -595,43 +662,82 @@ angular.module('enterconduct', [])
             $scope.selectStudent(nextStudent);
         };
 
-        $scope.selectConduct = function (item, period) {
-            if (!item) {
-                $scope.currentConduct.selected = false;
+        $scope.calcProgress = function () {
+            //currentConduct.Period
+            var max = 0, progress = 0;
+            angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function (conduct) {
+                angular.forEach(conduct.Item, function (item) {
+                    max++;
+                    if ($scope.currentConduct.Period === 1 && item.MidtermGrade)
+                        progress++
 
-                if ($scope.teacherType !== 'homeroom') {
-                    $timeout(function () {
-                        $('#seatno-textbox').focus().select();
-                    }, 100);
+                    if ($scope.currentConduct.Period === 2 && item.FinalGrade)
+                        progress++
 
-                    var tempStudent = null;
-                    angular.forEach($scope.studentList, function (item, index) {
-                        if (item.StudentID === $scope.currentStudent.tempStudentID) {
-                            tempStudent = $scope.studentList[index + 1];
-                        }
-                    });
-                    if (tempStudent) {
-                        $scope.currentStudent = tempStudent;
-                        $scope.currentStudent.tempStudentID = $scope.currentStudent.StudentID;
-                    } else {
-                        $scope.currentStudent = $scope.studentList[0];
-                        $scope.currentStudent.tempStudentID = $scope.currentStudent.StudentID;
+                    if ($scope.currentConduct.Period === 3 && item.Grade)
+                        progress++
+                });
+            });
+            if ($scope.teacherType == 'homeroom') {
+                if ($scope.currentCourse.GradeYear <= 4 && $scope.currentConduct.Period <= 2) {
+                    max++;
+                    if ($scope.currentConduct.Period === 1 && $scope.currentStudent.MidtermComment) {
+                        progress++;
                     }
-                    delete $scope.currentConduct;
-                } else {
-                    $timeout(function () {
-                        if (period === 1)
-                            $('#mcomment-textbox').focus();
-                        else if (period === 2)
-                            $('#fcomment-textbox').focus();
-                        else
-                            $('#comment-textbox').focus();
-                    }, 100);
+                    if ($scope.currentConduct.Period === 2 && $scope.currentStudent.FinalComment) {
+                        progress++;
+                    }
                 }
-
-                return;
+                if ($scope.currentCourse.GradeYear > 4 && $scope.currentConduct.Period === 3) {
+                    max++;
+                    if ($scope.currentStudent.Comment)
+                        progress++;
+                }
             }
+            var pwidth = "0%";
+            if (max > 0) pwidth = "" + Math.floor(progress * 100 / max) + "%";
+            return {
+                progress: "" + progress + " / " + max,
+                width: pwidth
+            };
+        }
 
+        $scope.selectConduct = function (item, period) {
+            //if (!item) {
+            //    $scope.currentConduct.selected = false;
+
+            //    if ($scope.teacherType !== 'homeroom') {
+            //        $timeout(function () {
+            //            $('#seatno-textbox').focus().select();
+            //        }, 100);
+
+            //        var tempStudent = null;
+            //        angular.forEach($scope.studentList, function (item, index) {
+            //            if (item.StudentID === $scope.currentStudent.tempStudentID) {
+            //                tempStudent = $scope.studentList[index + 1];
+            //            }
+            //        });
+            //        if (tempStudent) {
+            //            $scope.currentStudent = tempStudent;
+            //            $scope.currentStudent.tempStudentID = $scope.currentStudent.StudentID;
+            //        } else {
+            //            $scope.currentStudent = $scope.studentList[0];
+            //            $scope.currentStudent.tempStudentID = $scope.currentStudent.StudentID;
+            //        }
+            //        delete $scope.currentConduct;
+            //    } else {
+            //        $timeout(function () {
+            //            if (period === 1)
+            //                $('#mcomment-textbox').focus();
+            //            else if (period === 2)
+            //                $('#fcomment-textbox').focus();
+            //            else
+            //                $('#comment-textbox').focus();
+            //        }, 100);
+            //    }
+
+            //    return;
+            //}
             $scope.currentConduct = item;
             $scope.currentConduct.Period = period;
 
@@ -641,42 +747,78 @@ angular.module('enterconduct', [])
                     temp.index = index + 1;
                 });
             });
-            item.selected = true;
-
-            if (period === 1) {
-                $scope.currentConduct.tempGrade = item.MidtermGrade;
-                if ($scope.current.MiddleOpeningC === 'true') {
-                    item.canInputGrade = true;
-                    item.canInputMComment = true;
-                    item.canInputFComment = false;
+            if (item.type == 'Comment') {
+                if (period === 1) {
+                    $scope.currentConduct.tempGrade = $scope.currentStudent.MidtermComment;
+                    if ($scope.current.MiddleOpeningC === 'true') {
+                        item.canInputGrade = true;
+                        //item.canInputMComment = true;
+                        //item.canInputFComment = false;
+                    } else {
+                        item.canInputGrade = false;
+                        //item.canInputMComment = false;
+                        //item.canInputFComment = false;
+                    }
+                } else if (period === 2) {
+                    $scope.currentConduct.tempGrade = $scope.currentStudent.FinalComment;
+                    if ($scope.current.FinalOpeningC === 'true') {
+                        item.canInputGrade = true;
+                        //item.canInputMComment = false;
+                        //item.canInputFComment = true;
+                    } else {
+                        item.canInputGrade = false;
+                        //item.canInputMComment = false;
+                        //item.canInputFComment = false;
+                    }
                 } else {
-                    item.canInputGrade = false;
-                    item.canInputMComment = false;
-                    item.canInputFComment = false;
+                    $scope.currentConduct.tempGrade = $scope.currentStudent.Comment;
+                    if ($scope.current.FinalOpeningC === 'true') {
+                        item.canInputGrade = true;
+                    } else {
+                        item.canInputGrade = false;
+                    }
                 }
-            } else if (period === 2) {
-                $scope.currentConduct.tempGrade = item.FinalGrade;
-                if ($scope.current.FinalOpeningC === 'true') {
-                    item.canInputGrade = true;
-                    item.canInputMComment = false;
-                    item.canInputFComment = true;
-                } else {
-                    item.canInputGrade = false;
-                    item.canInputMComment = false;
-                    item.canInputFComment = false;
-                }
-            } else {
-                $scope.currentConduct.tempGrade = item.Grade;
-                if ($scope.current.FinalOpeningC === 'true') {
-                    item.canInputGrade = true;
-                } else {
-                    item.canInputGrade = false;
-                }
+                $timeout(function () {
+                    $('#comment-textarea').focus().select();
+                }, 100);
             }
-            $timeout(function () {
-                $('#grade-textbox').focus().select();
-            }, 100);
+            else {
+                item.selected = true;
 
+                if (period === 1) {
+                    $scope.currentConduct.tempGrade = item.MidtermGrade;
+                    if ($scope.current.MiddleOpeningC === 'true') {
+                        item.canInputGrade = true;
+                        //item.canInputMComment = true;
+                        //item.canInputFComment = false;
+                    } else {
+                        item.canInputGrade = false;
+                        //item.canInputMComment = false;
+                        //item.canInputFComment = false;
+                    }
+                } else if (period === 2) {
+                    $scope.currentConduct.tempGrade = item.FinalGrade;
+                    if ($scope.current.FinalOpeningC === 'true') {
+                        item.canInputGrade = true;
+                        //item.canInputMComment = false;
+                        //item.canInputFComment = true;
+                    } else {
+                        item.canInputGrade = false;
+                        //item.canInputMComment = false;
+                        //item.canInputFComment = false;
+                    }
+                } else {
+                    $scope.currentConduct.tempGrade = item.Grade;
+                    if ($scope.current.FinalOpeningC === 'true') {
+                        item.canInputGrade = true;
+                    } else {
+                        item.canInputGrade = false;
+                    }
+                }
+                $timeout(function () {
+                    $('#grade-textbox').focus().select();
+                }, 100);
+            }
         };
 
         $scope.enterGrade = function (event) {
@@ -699,25 +841,308 @@ angular.module('enterconduct', [])
                 });
             }
             if (flag) {
-                $scope.saveGrade('conduct');
+                if ($scope.currentConduct.Period === 1)
+                    $scope.currentConduct.MidtermGrade = $scope.currentConduct.tempGrade;
+                else if ($scope.currentConduct.Period === 2)
+                    $scope.currentConduct.FinalGrade = $scope.currentConduct.tempGrade;
+                else
+                    $scope.currentConduct.Grade = $scope.currentConduct.tempGrade;
+                $scope.saveGrade($scope.currentStudent, $scope.currentConduct);
+                $('#grade-textbox').blur();//不把focus踢掉會造成捲回TOP
+                $scope.nextItem();
             }
 
         };
+
+        $scope.enterComment = function (event) {
+            if (event.keyCode !== 13 || event.shiftKey) return;
+
+            if (!$scope.currentConduct) return;
+
+            $scope.currentConduct.tmpGrade = $scope.currentConduct.tempGrade.trim();
+
+            if ($scope.currentConduct.Period === 1)
+                $scope.currentStudent.MidtermComment = $scope.currentConduct.tempGrade;
+            else if ($scope.currentConduct.Period === 2)
+                $scope.currentStudent.FinalComment = $scope.currentConduct.tempGrade;
+            else
+                $scope.currentStudent.Comment = $scope.currentConduct.tempGrade;
+            $scope.saveGrade($scope.currentStudent, $scope.currentConduct);
+            $('#comment-textarea').blur();//不把focus踢掉會造成捲回TOP
+            $scope.nextItem();
+        };
+
+        $scope.nextItem = function () {
+            var nextConduct = null,
+                period = $scope.currentConduct.Period,
+                isFirstGroup = false,
+                isFirstItem = false,
+                isLastGroup = false,
+                isLastItem = false,
+                groupIndex = 0,
+                itemIndex = 0,
+                isComment = false;
+
+            if ($scope.currentConduct.type == 'Comment') {
+                isFirstItem = true;
+                isLastItem = true;
+                isLastGroup = true;
+                isComment = true;
+                if ($scope.currentStudent.EditConduct.Conducts.Conduct.length == 0)
+                    isFirstGroup = true;
+            }
+            else {
+                angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function (conduct, i) {
+                    if ($scope.currentConduct.Group === conduct.Group) {
+                        groupIndex = i;
+                        if (i == 0)
+                            isFirstGroup = true;
+                        if (i == $scope.currentStudent.EditConduct.Conducts.Conduct.length - 1
+                            && $scope.teacherType != 'homeroom')
+                            isLastGroup = true;
+
+                        angular.forEach(conduct.Item, function (item, j) {
+                            if ($scope.currentConduct.Title === item.Title) {
+                                itemIndex = j;
+                                if (j == 0)
+                                    isFirstItem = true;
+                                if (j == conduct.Item.length - 1)
+                                    isLastItem = true;
+                            }
+                        });
+                    }
+                });
+            }
+
+            if (isLastItem) {
+                if ($scope.jumpMode == 'All') {
+                    if (isLastGroup) {
+                        if ($scope.currentStudent.order != $scope.studentList.length - 1) {
+                            $scope.selectStudent($scope.studentList[$scope.currentStudent.order + 1], true);
+                        }
+                        else {
+                            $scope.selectStudent($scope.studentList[0], true);
+                        }
+                        nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[0].Item[0];
+                    }
+                    else {
+                        //明明是最後一個卻不是LastGroup表示還有Comment
+                        if ($scope.currentStudent.EditConduct.Conducts.Conduct.length - 1 != groupIndex)
+                            nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[groupIndex + 1].Item[0];
+                        else {
+                            nextConduct = { type: 'Comment' };
+                        }
+                    }
+                }
+                if ($scope.jumpMode == 'Group') {
+                    if ($scope.currentStudent.order != $scope.studentList.length - 1) {
+                        $scope.selectStudent($scope.studentList[$scope.currentStudent.order + 1], true);
+                        if (!isComment)
+                            nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[groupIndex].Item[0];
+                        else
+                            nextConduct = { type: 'Comment' };
+
+                    }
+                    else {
+                        $scope.selectStudent($scope.studentList[0], true);
+                        if (isLastGroup) {
+                            nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[0].Item[0];
+                        }
+                        else {
+                            //明明是最後一個卻不是LastGroup表示還有Comment
+                            if ($scope.currentStudent.EditConduct.Conducts.Conduct.length - 1 != groupIndex)
+                                nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[groupIndex + 1].Item[0];
+                            else {
+                                nextConduct = { type: 'Comment' };
+                            }
+                        }
+                    }
+                }
+                try {
+                    //自動捲動
+
+                    //function scrollTo(to, duration) {
+                    //    if (document.body.scrollTop == to) return;
+                    //    if ($scope.scrollInterval) {
+                    //        clearInterval($scope.scrollInterval);
+                    //        delete $scope.scrollInterval;
+                    //    }
+                    //    var diff = to - document.body.scrollTop;
+                    //    var scrollStep = Math.PI / (duration / 10);
+                    //    var count = 0, currPos;
+                    //    var start = document.body.scrollTop;
+                    //    $scope.scrollInterval = setInterval(function () {
+                    //        if (document.body.scrollTop - to > 10 || document.body.scrollTop - to < -10) {
+                    //            count = count + 1;
+                    //            if (count * scrollStep > Math.PI) {
+                    //                clearInterval($scope.scrollInterval);
+                    //                delete $scope.scrollInterval;
+                    //            }
+                    //            else {
+                    //                currPos = start + diff * (0.5 - 0.5 * Math.cos(count * scrollStep));
+                    //                try {
+                    //                    window.scrollTo(0, currPos);
+                    //                    //document.body.scrollTop = currPos;
+                    //                }
+                    //                catch (exc) {
+                    //                    clearInterval($scope.scrollInterval);
+                    //                    delete $scope.scrollInterval;
+                    //                }
+                    //            }
+                    //        }
+                    //        else {
+                    //            clearInterval($scope.scrollInterval);
+                    //            delete $scope.scrollInterval;
+                    //        }
+                    //    }, 10);
+                    //}
+                    //function getPosition(element) {
+                    //    var xPosition = 0;
+                    //    var yPosition = 0;
+
+                    //    while (element) {
+                    //        xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+                    //        yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
+                    //        element = element.offsetParent;
+                    //    }
+                    //    return { x: xPosition, y: yPosition };
+                    //}
+                    if (nextConduct.type != 'Comment') {
+                        //scrollTo(getPosition($('#scrollAnchor' + $scope.fixGroupName(nextConduct.Group))[0]).y, 500);
+                        $('#scrollAnchor' + $scope.fixGroupName(nextConduct.Group))[0].scrollIntoView({ block: "end", behavior: "smooth" });
+                    }
+                    else {
+                        //scrollTo(getPosition($('#scrollAnchorComment')[0]).y, 500);
+                        $('#scrollAnchorComment')[0].scrollIntoView({ block: "end", behavior: "smooth" });
+                    }
+                }
+                catch (exc) {
+
+                }
+            }
+            else {
+                nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[groupIndex].Item[itemIndex + 1];
+            }
+
+            $scope.selectConduct(nextConduct, period);
+        }
+
+        $scope.fixGroupName = function (name) {
+            return name.replace(/ /g, '_');
+        }
+
+        $scope.prevItem = function () {
+            var nextConduct = null,
+                period = $scope.currentConduct.Period,
+                isFirstGroup = false,
+                isFirstItem = false,
+                isLastGroup = false,
+                isLastItem = false,
+                groupIndex = 0,
+                itemIndex = 0,
+                isComment = false;
+
+            if ($scope.currentConduct.type == 'Comment') {
+                isFirstItem = true;
+                isLastItem = true;
+                isLastGroup = true;
+                isComment = true;
+                groupIndex = $scope.currentStudent.EditConduct.Conducts.Conduct.length;
+                if ($scope.currentStudent.EditConduct.Conducts.Conduct.length == 0)
+                    isFirstGroup = true;
+            }
+            else {
+                angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function (conduct, i) {
+                    if ($scope.currentConduct.Group === conduct.Group) {
+                        groupIndex = i;
+                        if (i == 0)
+                            isFirstGroup = true;
+                        if (i == $scope.currentStudent.EditConduct.Conducts.Conduct.length - 1
+                            && $scope.teacherType != 'homeroom')
+                            isLastGroup = true;
+
+                        angular.forEach(conduct.Item, function (item, j) {
+                            if ($scope.currentConduct.Title === item.Title) {
+                                itemIndex = j;
+                                if (j == 0)
+                                    isFirstItem = true;
+                                if (j == conduct.Item.length - 1)
+                                    isLastItem = true;
+                            }
+                        });
+                    }
+                });
+            }
+
+            if (isFirstItem) {
+                if ($scope.jumpMode == 'All') {
+                    if (isFirstGroup) {
+                        if ($scope.currentStudent.order != 0) {
+                            $scope.selectStudent($scope.studentList[$scope.currentStudent.order - 1], true);
+                        }
+                        else {
+                            $scope.selectStudent($scope.studentList[$scope.studentList.length - 1], true);
+                        }
+                        if ($scope.teacherType != 'homeroom') {
+                            nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[$scope.currentStudent.EditConduct.Conducts.Conduct.length - 1].Item[$scope.currentStudent.EditConduct.Conducts.Conduct[$scope.currentStudent.EditConduct.Conducts.Conduct.length - 1].Item.length - 1];
+                        }
+                        else {
+                            nextConduct = { type: 'Comment' };
+                        }
+                    }
+                    else {
+                        nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[groupIndex - 1].Item[$scope.currentStudent.EditConduct.Conducts.Conduct[groupIndex - 1].Item.length - 1];
+                    }
+                }
+                if ($scope.jumpMode == 'Group') {
+                    if ($scope.currentStudent.order != 0) {
+                        $scope.selectStudent($scope.studentList[$scope.currentStudent.order - 1], true);
+                        if (!isComment)
+                            nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[groupIndex].Item[$scope.currentStudent.EditConduct.Conducts.Conduct[groupIndex].Item.length - 1];
+                        else
+                            nextConduct = { type: 'Comment' };
+                    }
+                    else {
+                        $scope.selectStudent($scope.studentList[$scope.studentList.length - 1], true);
+                        if (isFirstGroup) {
+                            if ($scope.teacherType != 'homeroom') {
+                                nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[$scope.currentStudent.EditConduct.Conducts.Conduct.length - 1].Item[$scope.currentStudent.EditConduct.Conducts.Conduct[$scope.currentStudent.EditConduct.Conducts.Conduct.length - 1].Item.length - 1];
+                            }
+                            else {
+                                nextConduct = { type: 'Comment' };
+                            }
+                        }
+                        else {
+                            nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[groupIndex - 1].Item[$scope.currentStudent.EditConduct.Conducts.Conduct[groupIndex - 1].Item.length - 1];
+                        }
+                    }
+                }
+            }
+            else {
+                nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[groupIndex].Item[itemIndex - 1];
+            }
+
+            $scope.selectConduct(nextConduct, period);
+        }
 
         $scope.overview = function (conductGroup, period) {
             if (!!!$scope.modal) {
                 $scope.modal = {};
                 $scope.modal.conductGroup = conductGroup;
                 $scope.modal.period = period;
-                $('#modal').modal('show').on('shown.bs.modal', function (e) {
+                $('#modalOverview').modal('show').on('shown.bs.modal', function (e) {
                     //$('#modal input:visible:first').focus().select();
                 });
             }
             else {
                 $scope.modal.conductGroup = conductGroup;
                 $scope.modal.period = period;
-                $('#modal').modal('show');
+                $('#modalOverview').modal('show');
             }
+        }
+
+        $scope.configDefaultValue = function () {
+            $('#modalConfigDefaultValue').modal('show');
         }
 
         $scope.getVal = function (student, group, title, period) {
@@ -766,45 +1191,180 @@ angular.module('enterconduct', [])
             return result;
         }
 
+        $scope.setDefault = function (gradeYear, subject, group, title, value) {
+            if (!$scope.default)
+                $scope.default = {};
+            if (!$scope.default["" + gradeYear + " " + subject])
+                $scope.default["" + gradeYear + " " + subject] = {};
+            $scope.default["" + gradeYear + " " + subject]["" + group + " " + title] = value;
+        }
+
+        $scope.setGroupDefault = function (gradeYear, subject, conductGroup, value) {
+            if (!$scope.default)
+                $scope.default = {};
+            if (!$scope.default["" + gradeYear + " " + subject])
+                $scope.default["" + gradeYear + " " + subject] = {};
+            conductGroup.Item.forEach(function (i) {
+                $scope.default["" + gradeYear + " " + subject]["" + conductGroup.Group + " " + i.Title] = value;
+            })
+
+        }
+
+        $scope.getDefault = function (gradeYear, subject, group, title) {
+            if ($scope.default && $scope.default["" + gradeYear + " " + subject] && $scope.default["" + gradeYear + " " + subject]["" + group + " " + title])
+                return $scope.default["" + gradeYear + " " + subject]["" + group + " " + title];
+            else
+                return '';
+        }
+
+        $scope.useDefaultValue = function (student) {
+            angular.forEach(student.EditConduct.Conducts.Conduct, function (conduct) {
+                angular.forEach(conduct.Item, function (item) {
+                    var defVal = $scope.getDefault($scope.currentCourse.GradeYear,
+                                $scope.currentCourse.SubjectChineseName,
+                                conduct.Group,
+                                item.Title);
+                    if ($scope.currentConduct.Period === 1 && $scope.current.MiddleOpeningC === 'true') {
+                        if (!item.MidtermGrade && defVal != 'erase') {
+                            item.MidtermGrade = defVal;
+                        }
+                        else {
+                            if (defVal == 'erase')
+                                item.MidtermGrade = '';
+                        }
+                    }
+
+                    if ($scope.currentConduct.Period === 2 && $scope.current.FinalOpeningC === 'true') {
+                        if (!item.FinalGrade && defVal != 'erase') {
+                            item.FinalGrade = defVal;
+                        }
+                        else {
+                            if (defVal == 'erase')
+                                item.FinalGrade = '';
+                        }
+                    }
+
+                    if ($scope.currentConduct.Period === 3 && $scope.current.FinalOpeningC === 'true') {
+                        if (!item.Grade && defVal != 'erase') {
+                            item.Grade = defVal;
+                        }
+                        else {
+                            if (defVal == 'erase')
+                                item.Grade = '';
+                        }
+                    }
+                });
+            });
+            $scope.saveGrade($scope.currentStudent, $scope.currentConduct);
+        }
+
+        $scope.useDefaultValueForAll = function () {
+            $scope.useDefaultValueForAllProgress = "0%";
+            $scope.showDefaultValueForAllProgress = 'progress-bar-success';
+            var index = 0;
+            function saveNext(response, error, http) {
+                if (error) {
+                    alert('Setting Default Value Failed.Please Try Again.' + error);
+                    $scope.showDefaultValueForAllProgress = 'progress-bar-danger';
+                }
+                else if (index < $scope.studentList.length) {
+                    var student = $scope.studentList[index++];
+                    $scope.useDefaultValueForAllProgress = Math.floor(index * 100 / $scope.studentList.length) + "%";
+                    angular.forEach(student.EditConduct.Conducts.Conduct, function (conduct) {
+                        angular.forEach(conduct.Item, function (item) {
+                            var defVal = $scope.getDefault($scope.currentCourse.GradeYear,
+                                        $scope.currentCourse.SubjectChineseName,
+                                        conduct.Group,
+                                        item.Title);
+                            if ($scope.currentConduct.Period === 1 && $scope.current.MiddleOpeningC === 'true') {
+                                if (!item.MidtermGrade && defVal != 'erase') {
+                                    item.MidtermGrade = defVal;
+                                }
+                                else {
+                                    if (defVal == 'erase')
+                                        item.MidtermGrade = '';
+                                }
+                            }
+
+                            if ($scope.currentConduct.Period === 2 && $scope.current.FinalOpeningC === 'true') {
+                                if (!item.FinalGrade && defVal != 'erase') {
+                                    item.FinalGrade = defVal;
+                                }
+                                else {
+                                    if (defVal == 'erase')
+                                        item.FinalGrade = '';
+                                }
+                            }
+
+                            if ($scope.currentConduct.Period === 3 && $scope.current.FinalOpeningC === 'true') {
+                                if (!item.Grade && defVal != 'erase') {
+                                    item.Grade = defVal;
+                                }
+                                else {
+                                    if (defVal == 'erase')
+                                        item.Grade = '';
+                                }
+                            }
+                        });
+                    });
+
+                    $scope.saveGrade(student, $scope.currentConduct, saveNext);
+                    //setTimeout(function () { $scope.saveGrade(student, $scope.currentConduct, saveNext); }, 1);
+                }
+                else {
+                    $timeout(function () {
+                        $scope.showDefaultValueForAllProgress = '';
+                    }, 2000);
+                    
+                }
+            }
+            saveNext();
+        }
+
         $scope.submit = function () {
-            var grade = $scope.currentConduct.tempGrade.toUpperCase();
-            var flag = false;
-            if (grade == "") {
-                //flag = true;
-                //if ($scope.currentConduct.Period === 1)
-                //    $scope.currentConduct.MidtermGrade = $scope.currentConduct.tempGrade;
-                //else if ($scope.currentConduct.Period === 2)
-                //    $scope.currentConduct.FinalGrade = $scope.currentConduct.tempGrade;
-                //else
-                //    $scope.currentConduct.Grade = $scope.currentConduct.tempGrade;
-            } else {
+            if ($scope.currentConduct.type != 'Comment') {
+                var grade = $scope.currentConduct.tempGrade.toUpperCase();
+
+                var flag = false;
+
                 angular.forEach($scope.currentConduct.Code, function (item) {
                     if (item.Key.toUpperCase() === grade || item.Value.toUpperCase() === grade) {
                         grade = item.Value;
                         flag = true;
                         $scope.currentConduct.tempGrade = grade;
-                        if ($scope.currentConduct.Period === 1)
-                            $scope.currentConduct.MidtermGrade = $scope.currentConduct.tempGrade;
-                        else if ($scope.currentConduct.Period === 2)
-                            $scope.currentConduct.FinalGrade = $scope.currentConduct.tempGrade;
-                        else
-                            $scope.currentConduct.Grade = $scope.currentConduct.tempGrade;
                     }
                 });
-            }
-            if (flag) {
-                $scope.saveGrade();
+
+                if (flag) {
+                    if ($scope.currentConduct.Period === 1)
+                        $scope.currentConduct.MidtermGrade = $scope.currentConduct.tempGrade;
+                    else if ($scope.currentConduct.Period === 2)
+                        $scope.currentConduct.FinalGrade = $scope.currentConduct.tempGrade;
+                    else
+                        $scope.currentConduct.Grade = $scope.currentConduct.tempGrade;
+                }
+                else {
+                    if ($scope.currentConduct.Period === 1)
+                        $scope.currentConduct.tempGrade = $scope.currentConduct.MidtermGrade;
+                    else if ($scope.currentConduct.Period === 2)
+                        $scope.currentConduct.tempGrade = $scope.currentConduct.FinalGrade;
+                    else
+                        $scope.currentConduct.tempGrade = $scope.currentConduct.Grade;
+                }
             }
             else {
-                alert("\"" + $scope.currentConduct.tempGrade + "\" is invalid.");
+                $scope.currentConduct.tmpGrade = $scope.currentConduct.tempGrade.trim();
+
+                if ($scope.currentConduct.Period === 1)
+                    $scope.currentStudent.MidtermComment = $scope.currentConduct.tempGrade;
+                else if ($scope.currentConduct.Period === 2)
+                    $scope.currentStudent.FinalComment = $scope.currentConduct.tempGrade;
+                else
+                    $scope.currentStudent.Comment = $scope.currentConduct.tempGrade;
             }
+
+            $scope.saveGrade($scope.currentStudent, $scope.currentConduct);
         }
-
-        $scope.enterComment = function (event) {
-            if (event.keyCode !== 13 || event.shiftKey) return;
-
-            $scope.saveGrade('comment');
-        };
 
         $scope.clickGrade = function (val) {
             $scope.currentConduct.tempGrade = val;
@@ -853,43 +1413,18 @@ angular.module('enterconduct', [])
                     });
                 });
             });
-
-            $scope.saveGrade('conduct');
+            $scope.saveGrade($scope.currentStudent, $scope.currentConduct);
         };
 
         $scope.savingSeril = 0;
-        $scope.saveGrade = function (type) {
+        $scope.saveGrade = function (currentStudent, currentConduct, callBack) {
             var savingSeril = new Date().getTime();
-            if (type === 'conduct') {
-                if ($scope.currentConduct.Period === 1)
-                    $scope.currentConduct.MidtermGrade = $scope.currentConduct.tempGrade;
-                else if ($scope.currentConduct.Period === 2)
-                    $scope.currentConduct.FinalGrade = $scope.currentConduct.tempGrade;
-                else
-                    $scope.currentConduct.Grade = $scope.currentConduct.tempGrade;
-
-                var nextConduct = null,
-                    period = $scope.currentConduct.Period;
-
-                angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function (conduct, i) {
-                    angular.forEach(conduct.Item, function (item, j) {
-                        if ($scope.currentConduct.Title === item.Title && $scope.currentConduct.Group === conduct.Group)
-                            nextConduct = conduct.Item[j + 1];
-                    });
-
-                    if (!nextConduct && i < $scope.currentStudent.EditConduct.Conducts.Conduct.length - 1) {
-                        if ($scope.currentStudent.EditConduct.Conducts.Conduct[i + 1].Item.length > 0)
-                            nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[i + 1].Item[0];
-                    }
-                });
-
-                $scope.selectConduct(nextConduct, period);
-            }
+            var currentPeriod = currentConduct.Period;
 
             var _body = {
-                StudentID: $scope.currentStudent.StudentID,
-                Period: $scope.currentConduct.Period === 3 ? '' : $scope.currentConduct.Period,
-                Comment: $scope.currentConduct.Period === 1 ? $scope.currentStudent.MidtermComment : ($scope.currentConduct.Period === 2 ? $scope.currentStudent.FinalComment : $scope.currentStudent.Comment),
+                StudentID: currentStudent.StudentID,
+                Period: currentPeriod === 3 ? '' : currentPeriod,
+                Comment: currentPeriod === 1 ? currentStudent.MidtermComment : (currentPeriod === 2 ? currentStudent.FinalComment : currentStudent.Comment),
                 Conduct: {
                     Conducts: {
                         Conduct: []
@@ -903,11 +1438,11 @@ angular.module('enterconduct', [])
 
             var conductList = [];
 
-            angular.forEach($scope.currentStudent.EditConduct.Conducts.Conduct, function (conduct) {
+            angular.forEach(currentStudent.EditConduct.Conducts.Conduct, function (conduct) {
                 var items = [];
                 angular.forEach(conduct.Item, function (item) {
                     items.push({
-                        '@Grade': ($scope.currentConduct.Period === 1 ? item.MidtermGrade : ($scope.currentConduct.Period === 2 ? item.FinalGrade : item.Grade)) || '',
+                        '@Grade': (currentPeriod === 1 ? item.MidtermGrade : (currentPeriod === 2 ? item.FinalGrade : item.Grade)) || '',
                         '@Title': item.Title || ''
                     });
                 });
@@ -931,40 +1466,28 @@ angular.module('enterconduct', [])
                     result: function (response, error, http) {
                         if (error !== null) {
                             alert("Error occurred while saving data." + (error.dsaError.status || '') + (error.dsaError.message || ''));
-                            $scope.savingSeril = 0;
+                            $scope.$apply(function () {
+                                $scope.savingSeril = 0;
+                                if (callBack) {
+                                    callBack(response, error, http);
+                                }
+                                else {
+                                    $scope.selectStudent(currentStudent);
+                                    $scope.selectConduct(currentConduct, currentPeriod);
+                                }
+                            });
                         } else {
                             //console.log(response);
                             $scope.$apply(function () {
                                 if ($scope.savingSeril == savingSeril) {
                                     $scope.savingSeril = 0;
-                                    if (type === 'comment') {
-                                        var nextStudent = $scope.studentList[$scope.currentStudent.order + 1];
-                                        if (!nextStudent)
-                                            nextStudent = $scope.studentList[0];
-
-                                        nextStudent.tempStudentID = nextStudent.StudentID;
-                                        $scope.currentStudent = nextStudent;
-
-                                        $timeout(function () {
-                                            //$('#seatno-textbox').focus().select();
-
-                                            var period = $scope.currentConduct.Period;
-                                            delete $scope.currentConduct;
-
-                                            if ($scope.currentStudent.EditConduct.Conducts.Conduct.length > 0 && $scope.currentStudent.EditConduct.Conducts.Conduct[0].Item.length > 0)
-                                                $scope.selectConduct($scope.currentStudent.EditConduct.Conducts.Conduct[0].Item[0], period);
-
-                                        }, 100);
+                                    if (callBack) {
+                                        callBack(response, error, http);
                                     }
                                 }
                                 else {
                                     $scope.savingSeril = 0;
-                                    if (type === 'comment') {
-                                        $scope.saveGrade('comment');
-                                    }
-                                    else {
-                                        $scope.saveGrade();
-                                    }
+                                    $scope.saveGrade(currentStudent, currentConduct);
                                 }
                             });
                         }
@@ -1064,7 +1587,7 @@ angular.module('enterconduct', [])
     $(function () {
         $("#affixPanel").affix({
             offset: {
-                top: 200,
+                top: 180,
                 bottom: function () {
                     return (this.bottom = $('.footer').outerHeight(true))
                 }
