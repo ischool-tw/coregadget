@@ -3,7 +3,9 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
     <script src="js/gadget.js"></script>
     <script>
         init({
@@ -44,16 +46,11 @@
                 color: lightgray;
             }
         }
-
         /* Standard syntax */
         @keyframes fadein {
             from {
                 color: lightgray;
             }
-        }
-
-        body {
-            scroll-behavior: smooth;
         }
     </style>
 </head>
@@ -114,43 +111,97 @@
             </div>
 
 
-            <div class="btn-group pull-right">
+            <div class="btn-group pull-right"
+                 ng-if="currentCourse">
                 <a class="btn btn-sm btn-default" type="button" ng-click="PrintPage()">
                     Print
                 </a>
             </div>
 
+            <div class="btn-group pull-right"
+                 ng-if="currentStudent"
+                 style="margin-right:4px;">
+                <a class="btn btn-default btn-sm dropdown-toggle"
+                   data-toggle="dropdown">
+                    <i class="glyphicon glyphicon-th-list"></i>
+                    Overview
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu"
+                    style="padding: 0px;">
+                    <li>
+                        <table class="table table-bordered table-striped table-hover"
+                               style="width:300px;margin:0px;">
+                            <tr ng-repeat="item in currentStudent.EditConduct.Conducts.Conduct">
+                                <td>
+                                    <b>
+                                        {{item.Group}}
+                                    </b>
+                                    <div class="pull-right">
+                                        <a ng-if="currentCourse.GradeYear <= 4"
+                                           class="btn btn-xs btn-default"
+                                           ng-click="overview(item, 1)">
+                                            Midterm
+                                        </a>
+                                        <a ng-if="currentCourse.GradeYear <= 4"
+                                           class="btn btn-xs btn-default"
+                                           ng-click=" overview(item, 2)">
+                                            Final
+                                        </a>
+                                        <a ng-if="currentCourse.GradeYear > 4"
+                                           class="btn btn-xs btn-default"
+                                           ng-click=" overview(item, 3)">
+                                            Final
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr ng-if="teacherType == 'homeroom'">
+                                <td>
+                                    <b>
+                                        Comment
+                                    </b>
+                                    <div class="pull-right">
+                                        <a ng-if="currentCourse.GradeYear <= 4"
+                                           class="btn btn-xs btn-default"
+                                           ng-click="overview({type:'Comment'}, 1)">
+                                            Midterm
+                                        </a>
+                                        <a ng-if="currentCourse.GradeYear <= 4"
+                                           class="btn btn-xs btn-default"
+                                           ng-click=" overview({type:'Comment'}, 2)">
+                                            Final
+                                        </a>
+                                        <a ng-if="currentCourse.GradeYear > 4"
+                                           class="btn btn-xs btn-default"
+                                           ng-click=" overview({type:'Comment'}, 3)">
+                                            Final
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </li>
+                </ul>
+            </div>
 
-            <!--<div class="pull-right">
-                <div class="btn-group btn-group-sm"
-                     style="margin: 0px 4px;">
-                    <a href=""
-                       class="btn btn-sm btn-default dropdown-toggle"
-                       data-toggle="dropdown">
-                        <span ng-if="jumpMode=='Group'">Category Mode</span>
-                        <span ng-if="jumpMode=='All'">Student Mode</span>
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        <li ng-class="{'active':jumpMode=='Group'}">
-                            <a href="javascript:;" ng-click="setJumpMode('Group')">
-                                Category Mode
-                                <div ng-click="setJumpMode('Group')"
-                                     style="cursor:pointer;width:250px;margin:5px 10px;word-wrap:break-word;white-space:pre-wrap;"
-                                     class="small">輸入項目自動切換時以類群為核心，逐一填寫各個學生在此群的評鑑項目。<br />可以更專注於單一類群中各學生表現的狀態。</div>
-                            </a>
-                        </li>
-                        <li ng-class="{'active':jumpMode=='All'}">
-                            <a href="javascript:;" ng-click="setJumpMode('All')">
-                                Student Mode
-                                <div ng-click="setJumpMode('All')"
-                                     style="cursor:pointer;width:250px;margin-left:15px;word-wrap:break-word;white-space:pre-wrap;"
-                                     class="small">輸入項目自動切換時以學生為核心，填寫完學生所有的評鑑項目後切換至下一學生。<br />可以一次對單一學生進行完整的評鑑。</div>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>-->
+            <div class="btn-group pull-right"
+                 ng-if="currentCourse"
+                 style="margin-right:4px;">
+                <!--<a class="btn btn-sm btn-default"
+                   ng-class="{disabled:!currentConduct.canInputGrade}"
+                   ng-click="useDefaultValue(currentStudent)"
+                   ng-if="currentConduct">
+                    <i class="glyphicon glyphicon-paste"></i>&nbsp;Use Default Value
+                </a>-->
+                <a class="btn btn-sm btn-default"
+                   ng-class="{disabled:!currentConduct.canInputGrade}"
+                   ng-click="configDefaultValue()"
+                   ng-if="currentConduct">
+                    <i class="glyphicon glyphicon-cog"></i>
+                    Default Values
+                </a>
+            </div>
 
             <div style="margin-top:10px;position:relative;">
                 <div ng-controller="affixCtrl"
@@ -204,8 +255,8 @@
                                     </td>
                                 </tr> -->
                                 <tr>
-                                    <td class="col-md-3" rowspan="2">Name</td>
-                                    <td class="col-md-9 sna">
+                                    <td class="col-xs-3" rowspan="2">Name</td>
+                                    <td class="col-xs-9 sna">
                                         {{currentStudent.ClassName}}, {{currentStudent.SeatNo}}, {{currentStudent.StudentChineseName}}
                                     </td>
                                 </tr>
@@ -250,6 +301,16 @@
                                                     </li>
                                                 </ul>
                                             </div>
+
+                                            <div ng-if="currentConduct.canInputGrade"
+                                                 class="btn-group"
+                                                 style="">
+                                                <a ng-if="currentConduct.canInputGrade"
+                                                   class="btn btn-xs btn-default" ng-click="submit()">
+                                                    <i class="glyphicon glyphicon-floppy-disk"></i>
+                                                    Save
+                                                </a>
+                                            </div>
                                         </div>
                                     </th>
                                 </tr>
@@ -257,36 +318,16 @@
                             <tbody>
                                 <tr>
                                     <td colspan="2">
-                                        <div class="progress" style="height: 25px;margin-bottom: 10px;">
+                                        <div class="progress" style="margin-bottom: 0px">
                                             <div class="progress-bar progress-bar-success progress-bar-striped"
                                                  role="progressbar"
-                                                 style="min-width: 40px;line-height: 25px;"
+                                                 style="min-width: 40px;"
                                                  ng-style="{width:calcProgress().width}"
                                                  ng-class="{'progress-bar-warning':calcProgress().width!='100%'}">
                                                 {{calcProgress().progress}}
                                             </div>
                                         </div>
-                                        <div class="btn-group">
-                                            <a class="btn btn-sm btn-default"
-                                               ng-class="{disabled:!currentConduct.canInputGrade}"
-                                               ng-click="useDefaultValue(currentStudent)"
-                                               ng-if="currentConduct">
-                                                <i class="glyphicon glyphicon-paste"></i>&nbsp;Use Default Value
-                                            </a>
-                                            <a class="btn btn-sm btn-default"
-                                               ng-class="{disabled:!currentConduct.canInputGrade}"
-                                               ng-click="configDefaultValue()"
-                                               ng-if="currentConduct">
-                                                <i class="glyphicon glyphicon-cog"></i>
-                                            </a>
-                                        </div>
 
-                                        <div class="btn-group" style="margin-left:5px;">
-                                            <a ng-if="currentConduct.canInputGrade"
-                                               class="btn btn-sm btn-default" ng-click="submit()">
-                                                <i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;Save
-                                            </a>
-                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -314,30 +355,42 @@
                                     </td>
                                 </tr>
                                 <tr ng-if="currentConduct.type!='Comment'">
-                                    <td class="col-md-9">
+                                    <td class="col-xs-9">
                                         <div style="min-height:90px;">{{currentConduct.index}} . {{currentConduct.Title}}</div>
                                     </td>
-                                    <td class="col-md-3">
+                                    <td class="col-xs-3">
                                         <div style="height: 100%;display: inline-block;vertical-align: top;position:relative">
-                                            <input id="grade-textbox" type="text" class="form-control" ng-if="currentConduct.canInputGrade" ng-model="currentConduct.tempGrade" ng-keydown="enterGrade($event)">
+                                            <input id="grade-textbox"
+                                                   type="text"
+                                                   class="form-control"
+                                                   ng-if="currentConduct.canInputGrade"
+                                                   ng-model="currentConduct.tempGrade"
+                                                   ng-keydown="enterGrade($event)">
+
                                             <span ng-if="!currentConduct.canInputGrade">{{currentConduct.tempGrade}}</span>
                                             <span ng-if="savingSeril!=0"
-                                                  style="z-index:1;position:absolute;right:0px;bottom:0px;"
+                                                  style="z-index:1;position:absolute;right:0px;bottom:-20px;"
                                                   class="text-danger">Saving...</span>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr ng-if="currentConduct.type=='Comment'">
                                     <td colspan="2">
-                                        <textarea id="comment-textarea"
-                                                  class="form-control"
-                                                  rows="3"
-                                                  ng-keydown="enterComment($event)"
-                                                  ng-model="currentConduct.tempGrade"
-                                                  ng-if="currentConduct.canInputGrade"
-                                                  style="height:100%"></textarea>
-                                        <div ng-if="!currentConduct.canInputGrade"
-                                             style="white-space: pre-wrap;word-break: break-all;min-height: 50px;">{{currentConduct.tempGrade}}</div>
+                                        <div style="height: 100%;width:100%;display: inline-block;vertical-align: top;position:relative">
+                                            <textarea id="comment-textarea"
+                                                      class="form-control"
+                                                      rows="3"
+                                                      ng-keydown="enterComment($event)"
+                                                      ng-model="currentConduct.tempGrade"
+                                                      ng-if="currentConduct.canInputGrade"
+                                                      style=""></textarea>
+                                            <span class="small">Enter to Save the Page; Shift+ Enter to Add a New Line</span>
+                                            <div ng-if="!currentConduct.canInputGrade"
+                                                 style="white-space: pre-wrap;word-break: break-all;min-height: 50px;">{{currentConduct.tempGrade}}</div>
+                                            <span ng-if="savingSeril!=0"
+                                                  style="z-index:1;position:absolute;right:0px;bottom:-20px;"
+                                                  class="text-danger">Saving...</span>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
@@ -348,9 +401,6 @@
                                 {{item.Key}} = <a ng-if="currentConduct.canInputGrade" class="btn btn-xs {{toUpperCase(currentConduct.tempGrade)==toUpperCase(item.Value)||toUpperCase(currentConduct.tempGrade)==toUpperCase(item.Key)?'btn-warning':'btn-default'}}" style="min-width:30px;" ng-click="clickGrade(item.Value)">{{item.Value}}</a><span ng-if="!currentConduct.canInputGrade">{{item.Value}}</span> ={{item.Hint}}
                             </p>
                         </div>
-                        <!--<a class="btn btn-default" style="margin:10px;" type="button" ng-click="SetDefaultValue()" ng-if="currentConduct">
-                            Click to set default value
-                        </a>-->
                     </div>
                 </div>
 
@@ -360,40 +410,14 @@
                            style="margin-bottom:-1px;">
                         <thead>
                             <tr>
-                                <th class="col-md-2" ng-if="currentCourse.GradeYear <= 4">Midterm</th>
-                                <th class="col-md-2" ng-if="currentCourse.GradeYear <= 4">Final</th>
-                                <th class="col-md-2" ng-if="currentCourse.GradeYear > 4">Final</th>
-                                <th ng-class="{'col-md-8':currentCourse.GradeYear <= 4 , 'col-md-10':currentCourse.GradeYear > 4}"
+                                <th class="col-xs-2" ng-if="currentCourse.GradeYear <= 4">Midterm</th>
+                                <th class="col-xs-2" ng-if="currentCourse.GradeYear <= 4">Final</th>
+                                <th class="col-xs-2" ng-if="currentCourse.GradeYear > 4">Final</th>
+                                <th ng-class="{'col-xs-8':currentCourse.GradeYear <= 4 , 'col-xs-10':currentCourse.GradeYear > 4}"
                                     style="position:relative;">
                                     <span>{{item.Group}}</span>
-                                    <div class="btn-group pull-right">
-                                        <a ng-if="currentCourse.GradeYear <= 4"
-                                           class="btn btn-default btn-xs dropdown-toggle"
-                                           style="padding-left: 8px;padding-right: 8px;"
-                                           data-toggle="dropdown">
-                                            <i class="glyphicon glyphicon-th-list"></i>
-                                            Overview
-                                            <span class="caret"></span>
-                                        </a>
-                                        <ul ng-if="currentCourse.GradeYear <= 4"
-                                            class="dropdown-menu">
-                                            <li ng-if="currentCourse.GradeYear <= 4">
-                                                <a href="javascript:;" ng-click="overview(item, 1)">Midterm</a>
-                                            </li>
-                                            <li ng-if="currentCourse.GradeYear <= 4">
-                                                <a href="javascript:;" ng-click="overview(item, 2)">Final</a>
-                                            </li>
-                                        </ul>
-                                        <a ng-if="currentCourse.GradeYear > 4"
-                                           class="btn btn-default btn-xs"
-                                           style="padding-left: 8px;padding-right: 8px;"
-                                           ng-click="overview(item, 3)">
-                                            <i class="glyphicon glyphicon-th-list"></i>
-                                            Overview
-                                        </a>
-                                        <div style="position:absolute;top:-25px;"
-                                             id="{{'scrollAnchor'+fixGroupName(item.Group)}}"></div>
-                                    </div>
+                                    <div style="position:absolute;top:-25px;"
+                                         id="{{'scrollAnchor'+fixGroupName(item.Group)}}"></div>
                                 </th>
                             </tr>
                         </thead>
@@ -424,25 +448,9 @@
                             <tr ng-if="currentCourse.GradeYear <= 4">
                                 <th style="width:50%;position:relative;">
                                     Midterm Comment
-                                    <div class="btn-group pull-right">
-                                        <a class="btn btn-default btn-xs"
-                                           style="padding-left: 8px;padding-right: 8px;"
-                                           ng-click="overview({type:'Comment'}, 1)">
-                                            <i class="glyphicon glyphicon-th-list"></i>
-                                            Overview
-                                        </a>
-                                    </div>
                                 </th>
                                 <th style="width:50%;position:relative;">
                                     Final Comment
-                                    <div class="btn-group pull-right">
-                                        <a class="btn btn-default btn-xs"
-                                           style="padding-left: 8px;padding-right: 8px;"
-                                           ng-click="overview({type:'Comment'}, 2)">
-                                            <i class="glyphicon glyphicon-th-list"></i>
-                                            Overview
-                                        </a>
-                                    </div>
                                     <div style="position:absolute;top:-25px;"
                                          id="{{'scrollAnchorComment'}}"></div>
                                 </th>
@@ -450,15 +458,6 @@
                             <tr ng-if="currentCourse.GradeYear > 4">
                                 <th style="width:50%;position:relative;">
                                     Final Comment
-                                    <div class="btn-group pull-right">
-                                        <a ng-if="currentCourse.GradeYear > 4"
-                                           class="btn btn-default btn-xs"
-                                           style="padding-left: 8px;padding-right: 8px;"
-                                           ng-click="overview({type:'Comment'}, 3)">
-                                            <i class="glyphicon glyphicon-th-list"></i>
-                                            Overview
-                                        </a>
-                                    </div>
                                     <div style="position:absolute;top:-25px;"
                                          id="{{'scrollAnchorComment'}}"></div>
                                 </th>
@@ -490,6 +489,7 @@
                                     <div style="white-space: pre-wrap;word-break: break-all;min-height: 50px;">{{currentStudent.Comment}}</div>
                                     <div ng-if="!currentStudent.Comment&&current.FinalOpeningC==='true'"
                                          style="border: solid red 2px;width: 1px;height: 1px;position: absolute;left: 5px;top: 5px;z-index: 1;border-radius: 3px;">
+                                        er
                                     </div>
                                 </td>
                             </tr>
@@ -525,6 +525,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="modalOverview" tabindex="-1" role="dialog">
         <div class=" modal-dialog modal-lg">
             <div class="modal-content"
@@ -535,7 +536,7 @@
                         <span class="sr-only">Close</span>
                     </button>
                     <h4 class="modal-title">
-                        {{modal.conductGroup.Group}} Overview
+                        {{currentCourse.Title}} Class {{modal.conductGroup.Group}} {{modal.period==1?'Midterm':'Final'}} Grade
                     </h4>
                 </div>
                 <div class="modal-body">
@@ -544,10 +545,26 @@
                             {{item.Title}}
                         </li>
                     </ol>
+                    <div class="pull-right"
+                         style="margin-bottom: 5px;">
+                        <span>
+                            Click to Set Value:
+                        </span>
+                        <div class="btn-group">
+                            <a ng-repeat="code in modal.conductGroup.Code"
+                               class="btn btn-xs {{getOverrideVal()==code.Value?'btn-warning':'btn-default'}}"
+                               style="min-width:30px;"
+                               ng-click="setOverrideVal(code.Value)">{{code.Value}}</a>
+                        </div>
+                    </div>
                     <table class="table table-bordered table-striped table-hover">
                         <thead>
                             <tr>
-                                <th>Name</th>
+                                <th>
+                                    Name
+                                    <span ng-if="savingSeril!=0"
+                                          class="text-danger pull-right">Saving...</span>
+                                </th>
                                 <th class="text-center"
                                     style="width:50px;"
                                     ng-repeat="item in modal.conductGroup.Item">
@@ -563,7 +580,7 @@
                                 <td ng-repeat="item in modal.conductGroup.Item"
                                     class="text-center"
                                     style="cursor:pointer;position:relative;"
-                                    ng-click="selectStudentConduct(student,item, modal.period)"
+                                    ng-click="setVal(student, item, modal.period, getOverrideVal())"
                                     ng-style="getColor(student, modal.conductGroup.Group, item.Title, modal.period)">
                                     <div ng-if="!getVal(student, modal.conductGroup.Group, item.Title, modal.period)"
                                          style="border: solid red 2px;width: 1px;height: 1px;position: absolute;left: 5px;top: 5px;z-index: 1;border-radius: 3px;"></div>
@@ -585,12 +602,12 @@
                         <span class="sr-only">Close</span>
                     </button>
                     <h4 class="modal-title"
-                        ng-if="modal.conductGroup=='Comment'&&modal.period==1">
-                        Midterm Comment Overview
+                        ng-if="modal.period==1">
+                        {{currentCourse.Title}} Class Midterm Comment
                     </h4>
                     <h4 class="modal-title"
-                        ng-if="modal.conductGroup=='Comment'&&modal.period!=1">
-                        Final Comment Overview
+                        ng-if="modal.period!=1">
+                        {{currentCourse.Title}} Class Final Comment
                     </h4>
                 </div>
 
@@ -646,7 +663,7 @@
                         <span aria-hidden="true">&times;</span>
                         <span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title">Gr.{{currentCourse.GradeYear}} {{currentCourse.SubjectChineseName|| 'Hormroom'}} Default Values.</h4>
+                    <h4 class="modal-title">{{currentCourse.Title}} Class {{modal.conductGroup.Group}} {{modal.period==1?'Midterm':'Final'}} Grade Default Values.</h4>
                 </div>
                 <div class="modal-body ">
                     <div>

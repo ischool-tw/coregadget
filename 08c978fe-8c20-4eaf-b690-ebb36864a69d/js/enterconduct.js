@@ -1126,6 +1126,7 @@ angular.module('enterconduct', [])
         }
 
         $scope.overview = function (conductGroup, period) {
+            delete $scope.overrideVal;
             if (!!!$scope.modal) {
                 $scope.modal = {};
                 $scope.modal.conductGroup = conductGroup;
@@ -1139,6 +1140,60 @@ angular.module('enterconduct', [])
                 $scope.modal.period = period;
                 $('#modalOverview').modal('show');
             }
+        }
+
+        $scope.getOverrideVal = function () {
+            return $scope.overrideVal || '';
+        }
+
+        $scope.setOverrideVal = function (val) {
+            $scope.overrideVal = val;
+        }
+
+        $scope.setVal = function (student, conduct, period, val) {
+            if ($scope.savingSeril)
+                return;
+            //$scope.selectConduct(conduct, period);
+            //$scope.selectStudent(student);
+            //$scope.clickGrade(val);
+            if (period == 1 && $scope.current.MiddleOpeningC !== 'true') return;
+            if (period == 2 && $scope.current.FinalOpeningC !== 'true') return;
+            if (period == 3 && $scope.current.FinalOpeningC !== 'true') return;
+
+            var match = false;
+            student.EditConduct.Conducts.Conduct.forEach(function (cond) {
+                if (!match&& cond.Group == conduct.Group) {
+                    cond.Item.forEach(function (item) {
+                        if (!match&& item.Title == conduct.Title) {
+                            if (period == 1) {
+                                item.MidtermGrade = val;
+                                if ($scope.currentConduct == item && $scope.currentConduct.Period == period)
+                                    $scope.currentConduct.tempGrade = item.MidtermGrade;
+                            }
+                            if (period == 2) {
+                                item.FinalGrade = val;
+                                if ($scope.currentConduct == item && $scope.currentConduct.Period == period)
+                                    $scope.currentConduct.tempGrade = item.FinalGrade;
+                            }
+                            if (period == 3) {
+                                item.Grade = val;
+                                if ($scope.currentConduct == item && $scope.currentConduct.Period == period)
+                                    $scope.currentConduct.tempGrade = item.Grade;
+                            }
+                            match = true;
+                            item.Period = period;
+                            $scope.saveGrade(student, item, function (resp, err) {
+                                if (err) {
+                                    alert('Save Value Failed.Please Try Again.' + error);
+                                    $scope.selectConduct(conduct, period);
+                                    $scope.selectStudent(student);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
         }
 
         $scope.configDefaultValue = function () {
@@ -1166,6 +1221,8 @@ angular.module('enterconduct', [])
 
         $scope.getColor = function (student, group, title, period) {
             var result;
+            if ($scope.savingSeril)
+                return { color: '#a0a0a0' };
             angular.forEach(student.EditConduct.Conducts.Conduct, function (cgroup) {
                 if (cgroup.Group == group) {
                     angular.forEach(cgroup.Item, function (citem) {
@@ -1315,7 +1372,7 @@ angular.module('enterconduct', [])
                     $timeout(function () {
                         $scope.showDefaultValueForAllProgress = '';
                     }, 2000);
-                    
+
                 }
             }
             saveNext();
