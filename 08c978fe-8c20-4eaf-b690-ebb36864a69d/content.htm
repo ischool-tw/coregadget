@@ -15,7 +15,7 @@
                 clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
                 clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
                 //account: 'Kayao.Sou.IBSH@1campus.net',
-                account: 'Ann.Lu.IBSH@1campus.net',
+                account: 'Peter.Pan.IBSH@1campus.net',
                 password: '4321'
             }
         });
@@ -52,6 +52,21 @@
             from {
                 color: lightgray;
             }
+        }
+
+        .ovItem {
+            position: relative;
+        }
+
+        .ovHint {
+            display: none;
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+        }
+
+        td:hover .ovHint {
+            display: inherit;
         }
     </style>
 </head>
@@ -345,7 +360,7 @@
                                                             Category Mode
                                                             <div ng-click="setJumpMode('Group')"
                                                                  style="cursor:pointer;width:250px;margin:5px 10px;word-wrap:break-word;white-space:pre-wrap;"
-                                                                 class="small">Priority to the completion of a category.</div>
+                                                                 class="small">Priority is to the completion of a category.</div>
                                                         </a>
                                                     </li>
                                                     <li ng-class="{'active':jumpMode=='All'}">
@@ -353,7 +368,7 @@
                                                             Student Mode
                                                             <div ng-click="setJumpMode('All')"
                                                                  style="cursor:pointer;width:250px;margin-left:15px;word-wrap:break-word;white-space:pre-wrap;"
-                                                                 class="small">Priority to the completion of a student's assessment.</div>
+                                                                 class="small">Priority is to the completion of a student's assessment.</div>
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -581,7 +596,6 @@
             </div>
         </div>
     </div>
-    </div>
 
     <div class="modal fade" id="modalOverview" tabindex="-1" role="dialog">
         <div class=" modal-dialog modal-lg">
@@ -626,7 +640,7 @@
                                 <th class="text-center"
                                     style="width:50px;"
                                     ng-repeat="item in modal.conductGroup.Item">
-                                    {{$index+1}}.
+                                    {{$index+1}}
                                 </th>
                             </tr>
                         </thead>
@@ -636,7 +650,7 @@
                                     {{student.ClassName}}, {{student.SeatNo}}, {{student.StudentChineseName}} ( {{student.StudentEnglishName}} )
                                 </td>
                                 <td ng-repeat="item in modal.conductGroup.Item"
-                                    class="text-center"
+                                    class="text-center ovItem"
                                     style="cursor:pointer;position:relative;"
                                     ng-click="setVal(student, item, modal.period, getOverrideVal())"
                                     ng-style="getColor(student, modal.conductGroup.Group, item.Title, modal.period)">
@@ -645,10 +659,40 @@
                                     <strong>
                                         {{getVal(student, modal.conductGroup.Group, item.Title, modal.period)}}
                                     </strong>
+
+                                    <div class="ovHint">
+                                        <b>
+                                            {{$index+1}}. {{item.Title}}
+                                        </b>
+                                    </div>
                                 </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                </td>
+                                <th class="text-center"
+                                    style="width:50px;"
+                                    ng-repeat="item in modal.conductGroup.Item">
+                                    {{$index+1}}
+                                </th>
                             </tr>
                         </tbody>
                     </table>
+                    <div class="clearfix" style="margin-top:-15px;margin-bottom:20px;">
+                        <div class="pull-right"
+                             ng-if="(modal.period==1&&current.MiddleOpeningC=='true')||(modal.period>1&&current.FinalOpeningC=='true')"
+                             style="margin-bottom: 5px;">
+                            <span>
+                                Click to Set Value:
+                            </span>
+                            <div class="btn-group">
+                                <a ng-repeat="code in modal.conductGroup.Code"
+                                   class="btn btn-xs {{getOverrideVal()==code.Value?'btn-warning':'btn-default'}}"
+                                   style="min-width:30px;"
+                                   ng-click="setOverrideVal(code.Value)">{{code.Value}}</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -661,7 +705,7 @@
                     </button>
                     <h4 class="modal-title"
                         ng-if="modal.period==1">
-                        {{currentCourse.Title}} Midterm Comment 
+                        {{currentCourse.Title}} Midterm Comment
                     </h4>
                     <h4 class="modal-title"
                         ng-if="modal.period!=1">
@@ -730,7 +774,7 @@
                                 Set the default for each assessment, and then click "Set To All Student".
                             </li>
                             <li>
-                                If the student's assessment already has rating, it will not be overwritten.
+                                If the student's assessment already has a rating, it will not be overwritten.
                             </li>
                             <li>
                                 Use the "<span>
