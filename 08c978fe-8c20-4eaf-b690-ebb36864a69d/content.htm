@@ -14,8 +14,9 @@
             oAuth: {
                 clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
                 clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
-                account: 'nehs.test@1campus.net',
-                password: '12345'
+                //account: 'Kayao.Sou.IBSH@1campus.net',
+                account: 'Ann.Lu.IBSH@1campus.net',
+                password: '4321'
             }
         });
     </script>
@@ -111,15 +112,15 @@
             </div>
 
 
-            <div class="btn-group pull-right"
+            <!--<div class="btn-group pull-right"
                  ng-if="currentCourse">
                 <a class="btn btn-sm btn-default" type="button" ng-click="PrintPage()">
                     Print
                 </a>
-            </div>
-
+            </div>-->
+            <!-- 1-4 -->
             <div class="btn-group pull-right"
-                 ng-if="currentStudent"
+                 ng-if="currentStudent&&currentCourse.GradeYear <= 4"
                  style="margin-right:4px;">
                 <a class="btn btn-default btn-sm dropdown-toggle"
                    data-toggle="dropdown">
@@ -131,12 +132,9 @@
                     style="padding: 0px;">
                     <li>
                         <table class="table table-bordered table-striped table-hover"
-                               style="width:300px;margin:0px;">
+                               style="width:450px;margin:0px;">
                             <tr ng-repeat="item in currentStudent.EditConduct.Conducts.Conduct">
                                 <td>
-                                    <b>
-                                        {{item.Group}}
-                                    </b>
                                     <div class="pull-right">
                                         <a ng-if="currentCourse.GradeYear <= 4"
                                            class="btn btn-xs btn-default"
@@ -148,12 +146,10 @@
                                            ng-click=" overview(item, 2)">
                                             Final
                                         </a>
-                                        <a ng-if="currentCourse.GradeYear > 4"
-                                           class="btn btn-xs btn-default"
-                                           ng-click=" overview(item, 3)">
-                                            Final
-                                        </a>
                                     </div>
+                                    <b>
+                                        {{item.Group}}
+                                    </b>
                                 </td>
                             </tr>
                             <tr ng-if="teacherType == 'homeroom'">
@@ -184,21 +180,82 @@
                     </li>
                 </ul>
             </div>
-
+            <!-- 5-12 -->
             <div class="btn-group pull-right"
-                 ng-if="currentCourse"
+                 ng-if="currentStudent&&currentCourse.GradeYear > 4"
                  style="margin-right:4px;">
-                <!--<a class="btn btn-sm btn-default"
-                   ng-class="{disabled:!currentConduct.canInputGrade}"
-                   ng-click="useDefaultValue(currentStudent)"
-                   ng-if="currentConduct">
-                    <i class="glyphicon glyphicon-paste"></i>&nbsp;Use Default Value
-                </a>-->
+                <a class="btn btn-default btn-sm dropdown-toggle"
+                   data-toggle="dropdown">
+                    <i class="glyphicon glyphicon-th-list"></i>
+                    Overview
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="item in currentStudent.EditConduct.Conducts.Conduct">
+                        <a href="javascript:;"
+                           ng-click="overview(item, 3)">
+                            {{item.Group}}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- 1-4只開放期中 -->
+            <div class="btn-group pull-right"
+                 ng-if="currentCourse&&current.MiddleOpeningC=='true'&&current.FinalOpeningC!=='true'&&currentCourse.GradeYear <= 4"
+                 style="margin-right:4px;">
                 <a class="btn btn-sm btn-default"
-                   ng-class="{disabled:!currentConduct.canInputGrade}"
-                   ng-click="configDefaultValue()"
+                   ng-click="configDefaultValue(1)"
                    ng-if="currentConduct">
-                    <i class="glyphicon glyphicon-cog"></i>
+                    <i class="glyphicon glyphicon-tasks"></i>
+                    Default Values
+                </a>
+            </div>
+            <!-- 1-4只開放期末 -->
+            <div class="btn-group pull-right"
+                 ng-if="currentCourse&&current.MiddleOpeningC!=='true'&&current.FinalOpeningC=='true'&&currentCourse.GradeYear <= 4"
+                 style="margin-right:4px;">
+                <a class="btn btn-sm btn-default"
+                   ng-click="configDefaultValue(2)"
+                   ng-if="currentConduct">
+                    <i class="glyphicon glyphicon-tasks"></i>
+                    Default Values
+                </a>
+            </div>
+            <!-- 1-4開放其中跟期末 -->
+            <div class="btn-group pull-right"
+                 ng-if="currentCourse&&current.MiddleOpeningC=='true'&&current.FinalOpeningC=='true'&&currentCourse.GradeYear <= 4"
+                 style="margin-right:4px;">
+                <a class="btn btn-default btn-sm dropdown-toggle"
+                   ng-if="currentConduct"
+                   data-toggle="dropdown">
+                    <i class="glyphicon glyphicon-tasks"></i>
+                    Default Values
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="javascript:;"
+                           ng-click="configDefaultValue(1)">
+                            Midterm
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;"
+                           ng-click="configDefaultValue(2)">
+                            Final
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+            <!-- 5-12只開放期末 -->
+            <div class="btn-group pull-right"
+                 ng-if="currentCourse&&current.FinalOpeningC=='true'&&currentCourse.GradeYear > 4"
+                 style="margin-right:4px;">
+                <a class="btn btn-sm btn-default"
+                   ng-click="configDefaultValue(3)"
+                   ng-if="currentConduct">
+                    <i class="glyphicon glyphicon-tasks"></i>
                     Default Values
                 </a>
             </div>
@@ -288,7 +345,7 @@
                                                             Category Mode
                                                             <div ng-click="setJumpMode('Group')"
                                                                  style="cursor:pointer;width:250px;margin:5px 10px;word-wrap:break-word;white-space:pre-wrap;"
-                                                                 class="small">輸入項目自動切換時以類群為核心，逐一填寫各個學生在此群的評鑑項目。<br />可以更專注於單一類群中各學生表現的狀態。</div>
+                                                                 class="small">Priority to the completion of a category.</div>
                                                         </a>
                                                     </li>
                                                     <li ng-class="{'active':jumpMode=='All'}">
@@ -296,7 +353,7 @@
                                                             Student Mode
                                                             <div ng-click="setJumpMode('All')"
                                                                  style="cursor:pointer;width:250px;margin-left:15px;word-wrap:break-word;white-space:pre-wrap;"
-                                                                 class="small">輸入項目自動切換時以學生為核心，填寫完學生所有的評鑑項目後切換至下一學生。<br />可以一次對單一學生進行完整的評鑑。</div>
+                                                                 class="small">Priority to the completion of a student's assessment.</div>
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -489,7 +546,6 @@
                                     <div style="white-space: pre-wrap;word-break: break-all;min-height: 50px;">{{currentStudent.Comment}}</div>
                                     <div ng-if="!currentStudent.Comment&&current.FinalOpeningC==='true'"
                                          style="border: solid red 2px;width: 1px;height: 1px;position: absolute;left: 5px;top: 5px;z-index: 1;border-radius: 3px;">
-                                        er
                                     </div>
                                 </td>
                             </tr>
@@ -525,6 +581,7 @@
             </div>
         </div>
     </div>
+    </div>
 
     <div class="modal fade" id="modalOverview" tabindex="-1" role="dialog">
         <div class=" modal-dialog modal-lg">
@@ -536,7 +593,7 @@
                         <span class="sr-only">Close</span>
                     </button>
                     <h4 class="modal-title">
-                        {{currentCourse.Title}} Class {{modal.conductGroup.Group}} {{modal.period==1?'Midterm':'Final'}} Grade
+                        {{modal.conductGroup.Group}}, {{currentCourse.Title}} {{modal.period==1?'Midterm':'Final'}} Ratings
                     </h4>
                 </div>
                 <div class="modal-body">
@@ -546,6 +603,7 @@
                         </li>
                     </ol>
                     <div class="pull-right"
+                         ng-if="(modal.period==1&&current.MiddleOpeningC=='true')||(modal.period>1&&current.FinalOpeningC=='true')"
                          style="margin-bottom: 5px;">
                         <span>
                             Click to Set Value:
@@ -603,11 +661,11 @@
                     </button>
                     <h4 class="modal-title"
                         ng-if="modal.period==1">
-                        {{currentCourse.Title}} Class Midterm Comment
+                        {{currentCourse.Title}} Midterm Comment 
                     </h4>
                     <h4 class="modal-title"
                         ng-if="modal.period!=1">
-                        {{currentCourse.Title}} Class Final Comment
+                        {{currentCourse.Title}} Final Comment
                     </h4>
                 </div>
 
@@ -663,35 +721,41 @@
                         <span aria-hidden="true">&times;</span>
                         <span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title">{{currentCourse.Title}} Class {{modal.conductGroup.Group}} {{modal.period==1?'Midterm':'Final'}} Grade Default Values.</h4>
+                    <h4 class="modal-title">{{defaultPeriod==1?'Midterm':'Final'}} Grade Default Values for {{currentCourse.Title}}.</h4>
                 </div>
                 <div class="modal-body ">
                     <div>
-                        <div class="btn-group pull-right"
-                             style="margin-bottom:10px;">
-                            <a class="btn btn-default btn-sm"
-                               ng-click="useDefaultValueForAll()">
-                                <i class="glyphicon glyphicon-th-list"></i>
-                                Set To All Student
-                            </a>
-                        </div>
                         <ul>
                             <li>
-                                使用"Set To All Student"將設定好的預設值寫入全班學生成績。
+                                Set the default for each assessment, and then click "Set To All Student".
                             </li>
-                            <li>如果沒有設定預設值，不會影響學生成績。</li>
-                            <li>如果學生已有成績，不會再用預設值覆蓋學生成績。</li>
                             <li>
-                                需要批次修改已給成績時，使用"<span>
+                                If the student's assessment already has rating, it will not be overwritten.
+                            </li>
+                            <li>
+                                Use the "<span>
                                     <i class="glyphicon glyphicon-erase"></i>
                                     erase
-                                </span>"選項可以將學生成績清除，清除後即可再設定預設值填入。
+                                </span>" to clear the existing ratings of students.
                             </li>
                         </ul>
+                        <div class="clearfix">
+                            <div class="pull-right"
+                                 style="margin-bottom: 5px;">
+                                <div class="btn-group"
+                                     style="margin-bottom:10px;">
+                                    <a class="btn btn-default btn-sm"
+                                       ng-click="useDefaultValueForAll()">
+                                        <i class="glyphicon glyphicon-th-list"></i>
+                                        Set To All Student
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div ng-if="showDefaultValueForAllProgress"
                          style="margin-bottom:10px;"
-                         class="progress clearfix">
+                         class="progress">
                         <div class="progress-bar progress-bar-striped {{showDefaultValueForAllProgress}}"
                              role="progressbar"
                              ng-style="{width:useDefaultValueForAllProgress}">

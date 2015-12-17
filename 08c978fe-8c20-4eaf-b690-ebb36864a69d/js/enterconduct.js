@@ -1117,6 +1117,15 @@ angular.module('enterconduct', [])
                         }
                     }
                 }
+
+                if (nextConduct.type != 'Comment') {
+                    //scrollTo(getPosition($('#scrollAnchor' + $scope.fixGroupName(nextConduct.Group))[0]).y, 500);
+                    $('#scrollAnchor' + $scope.fixGroupName(nextConduct.Group))[0].scrollIntoView({ block: "end", behavior: "smooth" });
+                }
+                else {
+                    //scrollTo(getPosition($('#scrollAnchorComment')[0]).y, 500);
+                    $('#scrollAnchorComment')[0].scrollIntoView({ block: "end", behavior: "smooth" });
+                }
             }
             else {
                 nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[groupIndex].Item[itemIndex - 1];
@@ -1196,7 +1205,8 @@ angular.module('enterconduct', [])
 
         }
 
-        $scope.configDefaultValue = function () {
+        $scope.configDefaultValue = function (period) {
+            $scope.defaultPeriod = period;
             $('#modalConfigDefaultValue').modal('show');
         }
 
@@ -1274,6 +1284,7 @@ angular.module('enterconduct', [])
                 return '';
         }
 
+        //不再使用了
         $scope.useDefaultValue = function (student) {
             angular.forEach(student.EditConduct.Conducts.Conduct, function (conduct) {
                 angular.forEach(conduct.Item, function (item) {
@@ -1333,7 +1344,7 @@ angular.module('enterconduct', [])
                                         $scope.currentCourse.SubjectChineseName,
                                         conduct.Group,
                                         item.Title);
-                            if ($scope.currentConduct.Period === 1 && $scope.current.MiddleOpeningC === 'true') {
+                            if ($scope.defaultPeriod === 1 && $scope.current.MiddleOpeningC === 'true') {
                                 if (!item.MidtermGrade && defVal != 'erase') {
                                     item.MidtermGrade = defVal;
                                 }
@@ -1343,7 +1354,7 @@ angular.module('enterconduct', [])
                                 }
                             }
 
-                            if ($scope.currentConduct.Period === 2 && $scope.current.FinalOpeningC === 'true') {
+                            if ($scope.defaultPeriod === 2 && $scope.current.FinalOpeningC === 'true') {
                                 if (!item.FinalGrade && defVal != 'erase') {
                                     item.FinalGrade = defVal;
                                 }
@@ -1353,7 +1364,7 @@ angular.module('enterconduct', [])
                                 }
                             }
 
-                            if ($scope.currentConduct.Period === 3 && $scope.current.FinalOpeningC === 'true') {
+                            if ($scope.defaultPeriod === 3 && $scope.current.FinalOpeningC === 'true') {
                                 if (!item.Grade && defVal != 'erase') {
                                     item.Grade = defVal;
                                 }
@@ -1365,7 +1376,7 @@ angular.module('enterconduct', [])
                         });
                     });
 
-                    $scope.saveGrade(student, $scope.currentConduct, saveNext);
+                    $scope.saveGrade(student, { Period: $scope.defaultPeriod }, saveNext);
                     //setTimeout(function () { $scope.saveGrade(student, $scope.currentConduct, saveNext); }, 1);
                 }
                 else {
