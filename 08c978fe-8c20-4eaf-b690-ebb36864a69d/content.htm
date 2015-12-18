@@ -38,8 +38,13 @@
         .stuName {
             -webkit-animation-duration: 1.5s;
             -moz-animation-duration: 1.5s;
+            animation-duration: 1.5s;
             -webkit-animation-name: fadein;
             -moz-animation-name: fadein;
+            animation-name: fadein;
+            -webkit-animation-delay: 0.01s;
+            -moz-animation-delay: 0.01s;
+            animation-delay: 0.01s;
         }
         /* Code for Chrome, Safari and Opera */
         @-webkit-keyframes fadein {
@@ -54,18 +59,15 @@
             }
         }
 
-        .ovItem {
-            position: relative;
-        }
-
         .ovHint {
             display: none;
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
+            position: absolute;
+            z-index: 1;
+            white-space: nowrap;
+            text-align: right;
         }
 
-        td:hover .ovHint {
+        th:hover .ovHint {
             display: inherit;
         }
     </style>
@@ -319,7 +321,8 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody ng-repeat="stu in studentList"
+                                   ng-if="stu==currentStudent">
                                 <!-- <tr>
                                     <td>ID</td>
                                     <td>
@@ -328,13 +331,13 @@
                                 </tr> -->
                                 <tr>
                                     <td class="col-xs-3" rowspan="2">Name</td>
-                                    <td class="col-xs-9 sna">
-                                        {{currentStudent.ClassName}}, {{currentStudent.SeatNo}}, {{currentStudent.StudentChineseName}}
+                                    <td class="col-xs-9 stuName _sna">
+                                        {{stu.ClassName}}, {{stu.SeatNo}}, {{stu.StudentChineseName}}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="sna">
-                                        {{currentStudent.StudentEnglishName}}
+                                    <td class="stuName _sna">
+                                        {{stu.StudentEnglishName}}
                                     </td>
                                 </tr>
                             </tbody>
@@ -638,9 +641,17 @@
                                           class="text-danger pull-right">Saving...</span>
                                 </th>
                                 <th class="text-center"
-                                    style="width:50px;"
+                                    style="width:50px;cursor:pointer;position:relative;"
                                     ng-repeat="item in modal.conductGroup.Item">
                                     {{$index+1}}
+
+                                    <h4 class="ovHint"
+                                        style="top:-45px;"
+                                        ng-style="{right:(modal.conductGroup.Item.length-$index-1)*-50}">
+                                        <b class="label label-default">
+                                            {{$index+1}}. {{item.Title}}
+                                        </b>
+                                    </h4>
                                 </th>
                             </tr>
                         </thead>
@@ -650,30 +661,30 @@
                                     {{student.ClassName}}, {{student.SeatNo}}, {{student.StudentChineseName}} ( {{student.StudentEnglishName}} )
                                 </td>
                                 <td ng-repeat="item in modal.conductGroup.Item"
-                                    class="text-center ovItem"
+                                    class="text-center"
                                     style="cursor:pointer;position:relative;"
-                                    ng-click="setVal(student, item, modal.period, getOverrideVal())"
-                                    ng-style="getColor(student, modal.conductGroup.Group, item.Title, modal.period)">
+                                    ng-click="setVal(student, item, modal.period, getOverrideVal())">
                                     <div ng-if="!getVal(student, modal.conductGroup.Group, item.Title, modal.period)"
                                          style="border: solid red 2px;width: 1px;height: 1px;position: absolute;left: 5px;top: 5px;z-index: 1;border-radius: 3px;"></div>
-                                    <strong>
+                                    <strong ng-style="getColor(student, modal.conductGroup.Group, item.Title, modal.period)">
                                         {{getVal(student, modal.conductGroup.Group, item.Title, modal.period)}}
                                     </strong>
-
-                                    <div class="ovHint">
-                                        <b>
-                                            {{$index+1}}. {{item.Title}}
-                                        </b>
-                                    </div>
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                </td>
+                                <td></td>
                                 <th class="text-center"
-                                    style="width:50px;"
+                                    style="width:50px;cursor:pointer;position:relative;"
                                     ng-repeat="item in modal.conductGroup.Item">
                                     {{$index+1}}
+
+                                    <h4 class="ovHint"
+                                        style="bottom:-45px;"
+                                        ng-style="{right:(modal.conductGroup.Item.length-$index-1)*-50}">
+                                        <b class="label label-default">
+                                            {{$index+1}}. {{item.Title}}
+                                        </b>
+                                    </h4>
                                 </th>
                             </tr>
                         </tbody>

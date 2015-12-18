@@ -595,14 +595,14 @@ angular.module('enterconduct', [])
             }
 
 
-            $('.sna').addClass('stuName');
-            if (!$scope.wait) {
-                $timeout.cancel($scope.wait)
-            }
-            $scope.wait = $timeout(function () {
-                $('.stuName').removeClass('stuName');
-                delete $scope.wait;
-            }, 1500);
+            //$('.sna').addClass('stuName');
+            //if (!$scope.wait) {
+            //    $timeout.cancel($scope.wait)
+            //}
+            //$scope.wait = $timeout(function () {
+            //    $('.stuName').removeClass('stuName');
+            //    delete $scope.wait;
+            //}, 1500);
         };
 
         $scope.selectStudentConduct = function (student, conduct, period) {
