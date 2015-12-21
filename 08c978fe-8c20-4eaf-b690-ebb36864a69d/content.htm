@@ -15,7 +15,8 @@
                 clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
                 clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
                 //account: 'Kayao.Sou.IBSH@1campus.net',
-                account: 'Peter.Pan.IBSH@1campus.net',
+                //account: 'Peter.Pan.IBSH@1campus.net',
+                account: 'Steve.Nave.IBSH',
                 password: '4321'
             }
         });
@@ -175,19 +176,12 @@
                                         Comment
                                     </b>
                                     <div class="pull-right">
-                                        <a ng-if="currentCourse.GradeYear <= 4"
-                                           class="btn btn-xs btn-default"
+                                        <a class="btn btn-xs btn-default"
                                            ng-click="overview({type:'Comment'}, 1)">
                                             Midterm
                                         </a>
-                                        <a ng-if="currentCourse.GradeYear <= 4"
-                                           class="btn btn-xs btn-default"
+                                        <a class="btn btn-xs btn-default"
                                            ng-click=" overview({type:'Comment'}, 2)">
-                                            Final
-                                        </a>
-                                        <a ng-if="currentCourse.GradeYear > 4"
-                                           class="btn btn-xs btn-default"
-                                           ng-click=" overview({type:'Comment'}, 3)">
                                             Final
                                         </a>
                                     </div>
@@ -212,6 +206,12 @@
                         <a href="javascript:;"
                            ng-click="overview(item, 3)">
                             {{item.Group}}
+                        </a>
+                    </li>
+                    <li ng-if="teacherType == 'homeroom'">
+                        <a href="javascript:;"
+                           ng-click="overview({type:'Comment'}, 3)">
+                            Comment
                         </a>
                     </li>
                 </ul>

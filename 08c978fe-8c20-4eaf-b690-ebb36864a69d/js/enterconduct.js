@@ -1028,6 +1028,7 @@ angular.module('enterconduct', [])
         }
 
         $scope.fixGroupName = function (name) {
+            return escape(name).replace(/%/g, '_');
             return name.replace(/ /g, '_');
         }
 
