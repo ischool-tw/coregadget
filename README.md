@@ -61,6 +61,7 @@ Core Gadget
 * 2DCFE7E6-BA4E-4FDB-AD72-98E08762C863 電子報表(家長)
 * 11c45293-adcf-4c66-9c1f-85ca3e107a2d 教師APP(老師)
 * 5e040722-375a-4bd6-b2b5-76e213404222 家長APP(家長)
+* 608fb524-93ed-4b4a-8115-a46ec8bf34bf PaGamO(老師、學生、家長)
 
 客製化
 
