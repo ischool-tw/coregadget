@@ -78,23 +78,23 @@ _gg.SetScoreData = function () {
         if (_gg.schoolYear === item.SchoolYear && _gg.semester === item.Semester) {
 
             var col_score = {};
-            $(item.ScoreInfo.Domains.Domain).each(function(domainIndex, domainItem) {
+            $(item.ScoreInfo.Domains.Domain).each(function (domainIndex, domainItem) {
                 if (!col_score[domainItem.領域]) {
                     domainItem.subject = [];
                     col_score[domainItem.領域] = domainItem;
                 }
             });
 
-            $(item.ScoreInfo.SemesterSubjectScoreInfo.Subject).each(function(subjectIndex, subjectItem) {
-                var  domainName = subjectItem.領域;
+            $(item.ScoreInfo.SemesterSubjectScoreInfo.Subject).each(function (subjectIndex, subjectItem) {
+                var domainName = subjectItem.領域;
                 if (!domainName) {
                     domainName = '無領域';
                 }
 
                 if (!col_score[domainName]) {
                     col_score[domainName] = {
-                        '領域'    :domainName,
-                        subject : []
+                        '領域': domainName,
+                        subject: []
                     }
                     col_score[domainName].subject = [];
                 }
@@ -102,14 +102,29 @@ _gg.SetScoreData = function () {
                 col_score[domainName].subject.push(subjectItem);
             });
 
+            var getLevel = function (val) {
+                if (val >= 90)
+                    return '優';
+                else if (val >= 80)
+                    return '甲';
+                else if (val >= 70)
+                    return '乙';
+                else if (val >= 60)
+                    return '丙';
+                else if (val >= 0)
+                    return '丁';
+                return '';
+
+            }
+
             // TODO: 領域成績
             $.each(col_score, function (domainIndex, domainItem) {
                 var intDomainScore = parseInt((domainItem.成績 || '0'), 10);
 
-                var domainClassification = '';
-
-                var domainScore, domainPass;
+                var domainScore, domainPass, domainLevel;
                 if (domainItem.成績) {
+                    if (parseInt(domainItem.補考成績 || '0', 10) >= intDomainScore)
+                        domainItem.成績 = "*" + domainItem.成績;
                     if (intDomainScore >= 60) {
                         domainScore = '<td>' + (domainItem.成績 || '') + '</td>';
                         domainPass = '<i class="icon-ok"></i>';
@@ -117,9 +132,11 @@ _gg.SetScoreData = function () {
                         domainScore = '<td class="my-lost-credit">' + (domainItem.成績 || '') + '</td>';
                         domainPass = '<i class="icon-remove"></i>';
                     }
+                    domainLevel = getLevel(intDomainScore);
                 } else {
                     domainScore = '<td></td>';
                     domainPass = '';
+                    domainLevel = '';
                 }
 
                 var domainPeriod = (domainItem.節數 || '');
@@ -142,6 +159,7 @@ _gg.SetScoreData = function () {
                         '        <td>&nbsp;</td>' +
                         '        <td>' + domainPeriod_Weight + '</td>' +
                         domainScore +
+                        '        <td>' + domainLevel + '</td>' +
                         '        <td>' + (domainItem.文字描述 || '') + '</td>' +
                         '        <td>' + domainPass + '</td>' +
                         '    </tr>' +
@@ -157,17 +175,20 @@ _gg.SetScoreData = function () {
 
                     // TODO: 實際學期科目成績內容
                     tmp_semsSubjScore = {
-                        Areas       : (this.領域 || ''),
-                        SubjectName : (this.科目 || ''),
-                        Weight      : (this.權數 || ''),
-                        Period      : (this.節數 || ''),
-                        Score       : (this.成績 || ''),
-                        Description : (this.文字描述 || '')
+                        Areas: (this.領域 || ''),
+                        SubjectName: (this.科目 || ''),
+                        Weight: (this.權數 || ''),
+                        Period: (this.節數 || ''),
+                        Score: (this.成績 || ''),
+                        Description: (this.文字描述 || '')
                     };
 
                     var intScore = parseInt((tmp_semsSubjScore.Score || '0'), 10);
 
-                    var score = '', pass = '';
+                    var score = '', pass = '', level = getLevel(intScore);
+
+                    if (parseInt(this.補考成績 || '0', 10) >= intScore)
+                        tmp_semsSubjScore.Score = "*" + tmp_semsSubjScore.Score;
                     if (intScore >= 60) {
                         score = '<td>' + (tmp_semsSubjScore.Score || '') + '</td>';
                         pass = '<i class="icon-ok"></i>';
@@ -188,6 +209,7 @@ _gg.SetScoreData = function () {
                     tmp_item.push('<td>' + (tmp_semsSubjScore.SubjectName || '') + '</td>');
                     tmp_item.push('<td>' + period_Weight + '</td>');
                     tmp_item.push(score);
+                    tmp_item.push('<td>' + level + '</td>');
                     tmp_item.push('<td>' + (tmp_semsSubjScore.Description || '') + '</td>');
                     tmp_item.push('<td>' + pass + '</td>');
                     tmp_item.push('</tr>');
@@ -232,12 +254,13 @@ _gg.SetScoreData = function () {
         }
     });
 
-    var main_thead ='<thead>' +
+    var main_thead = '<thead>' +
         '  <tr>' +
         '    <th width="20%"><span>領域</span></th>' +
         '    <th width="20%"><span>科目</span></th>' +
         '    <th width="10%"><span>節/權數</span></th>' +
         '    <th width="10%"><span>成績</span></th>' +
+        '    <th width="10%"><span>等第</span></th>' +
         '    <th><span>文字描述</span></th>' +
         '    <th width="7%"><span>及格</span></th>' +
         '  </tr>' +
@@ -269,7 +292,7 @@ _gg.GetSemsSubjScore = function (schoolYear, semester) {
                 student.MySemsSubjScore = [];
                 var _ref;
                 if (((_ref = response.Students) != null ? _ref.SemsSubjScore : void 0) != null) {
-                    $(response.Students.SemsSubjScore).each(function(index, item) {
+                    $(response.Students.SemsSubjScore).each(function (index, item) {
                         student.MySemsSubjScore.push(item);
                     });
                 }
@@ -287,7 +310,7 @@ _gg.ResetData = function () {
 };
 
 // TODO: 錯誤訊息
-_gg.set_error_message = function(select_str, serviceName, error) {
+_gg.set_error_message = function (select_str, serviceName, error) {
     var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
     if (error !== null) {
         if (error.dsaError) {
@@ -300,6 +323,6 @@ _gg.set_error_message = function(select_str, serviceName, error) {
             tmp_msg = error.message;
         }
         $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
-        $('.my-err-info').click(function(){alert('請拍下此圖，並與客服人員連絡，謝謝您。\n' + JSON.stringify(error, null, 2))});
+        $('.my-err-info').click(function () { alert('請拍下此圖，並與客服人員連絡，謝謝您。\n' + JSON.stringify(error, null, 2)) });
     }
 };
