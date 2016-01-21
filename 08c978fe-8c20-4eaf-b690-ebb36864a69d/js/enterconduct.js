@@ -258,225 +258,238 @@ angular.module('enterconduct', [])
                                         });
                                     }
 
-                                    angular.forEach($scope.current.ConductList, function (conduct) {
-                                        if ($scope.teacherType === 'homeroom') {
-                                            if (!conduct.Subject || conduct.Subject === '') {
-                                                var _conduct = {
-                                                    Group: conduct.Group,
-                                                    Item: [],
-                                                    ScoringScale: '',
-                                                    Code: []
-                                                };
-                                                if ($scope.currentCourse.GradeYear <= 4) {
-                                                    if (conduct.Common && conduct.Common === 'True') {
-                                                        var code = [{
-                                                            Key: '3',
-                                                            Value: '3',
-                                                            Hint: 'Consistently',
-                                                            Color: 'MediumBlue'
-                                                        }, {
-                                                            Key: '2',
-                                                            Value: '2',
-                                                            Hint: 'Sometimes/ Progressing',
-                                                            Color: 'OrangeRed'
-                                                        }, {
-                                                            Key: '1',
-                                                            Value: '1',
-                                                            Hint: 'Needs Attention',
-                                                            Color: 'SaddleBrown'
-                                                        }, {
-                                                            Key: '0',
-                                                            Value: 'N/A',
-                                                            Hint: 'Not available',
-                                                            Color: 'Gray'
-                                                        }];
-                                                        _conduct.ScoringScale = "2015.Conduct";
-                                                        _conduct.Code = code;
-                                                    }
-                                                    else {
-                                                        var code = [{
-                                                            Key: '5',
-                                                            Value: 'D',
-                                                            Hint: 'Distinguished Command',
-                                                            Color: 'MediumBlue'
-                                                        }, {
-                                                            Key: '4',
-                                                            Value: 'S',
-                                                            Hint: 'Strong Command (Secure)',
-                                                            Color: 'Olive'
-                                                        }, {
-                                                            Key: '3',
-                                                            Value: 'M',
-                                                            Hint: 'Moderate Command (Developing/ On-level)',
-                                                            Color: 'DarkGreen'
-                                                        }, {
-                                                            Key: '2',
-                                                            Value: 'P',
-                                                            Hint: 'Partial Command',
-                                                            Color: 'OrangeRed'
-                                                        }, {
-                                                            Key: '1',
-                                                            Value: 'N',
-                                                            Hint: 'Little or No Command',
-                                                            Color: 'SaddleBrown'
-                                                        }, {
-                                                            Key: '0',
-                                                            Value: 'N/A',
-                                                            Hint: 'Not available',
-                                                            Color: 'Gray'
-                                                        }];
-                                                        _conduct.ScoringScale = "2015.Class";
-                                                        _conduct.Code = code;
-                                                    }
-                                                }
-                                                else {//5-12
-                                                    var code = [{
-                                                        Key: '3',
-                                                        Value: 'M',
-                                                        Hint: 'Meets expectations',
-                                                        Color: 'DarkGreen'
-                                                    }, {
-                                                        Key: '2',
-                                                        Value: 'S',
-                                                        Hint: 'Meets needs with Support',
-                                                        Color: 'MediumBlue'
-                                                    }, {
-                                                        Key: '1',
-                                                        Value: 'N',
-                                                        Hint: 'Not yet within expectations',
-                                                        Color: 'SaddleBrown'
-                                                    }, {
-                                                        Key: '0',
-                                                        Value: 'N/A',
-                                                        Hint: 'Not available',
-                                                        Color: 'Gray'
-                                                    }];
-                                                    _conduct.ScoringScale = "2014";
-                                                    _conduct.Code = code;
-                                                }
-                                                angular.forEach(conduct.Item, function (item) {
-                                                    _conduct.Item.push({
-                                                        Title: item.Title || '',
-                                                        MidtermGrade: '',
-                                                        FinalGrade: '',
-                                                        Grade: '',
-                                                        Group: conduct.Group,
-                                                        Code: code
-                                                    });
-                                                });
+                                    var flag = false;
+                                    angular.forEach($scope.config.Config, function (item) {
+                                        if ((stu.GradeYear * 1) <= (item.Grade * 1) && !flag) {
+                                            //$scope.current.ConductList = [].concat(item.Conduct.Conducts.Conduct || []);
+                                            //angular.forEach($scope.current.ConductList, function (conduct) {
+                                            //    conduct.Item = [].concat(conduct.Item || []);
+                                            //});
+                                            flag = true;
 
-                                                stu.EditConduct.Conducts.Conduct.push(_conduct);
-                                            }
-                                        } else {
-                                            if (conduct.Common && conduct.Common === 'True' || ($scope.teacherType === 'subject' && $scope.currentCourse.SubjectChineseName === conduct.Subject)) {
-                                                var _conduct = {
-                                                    Group: conduct.Group,
-                                                    Item: [],
-                                                    ScoringScale: '',
-                                                    Code: []
-                                                };
-                                                if ($scope.currentCourse.GradeYear <= 4) {
-                                                    if (conduct.Common && conduct.Common === 'True') {
-                                                        var code = [{
-                                                            Key: '3',
-                                                            Value: '3',
-                                                            Hint: 'Consistently',
-                                                            Color: 'MediumBlue'
-                                                        }, {
-                                                            Key: '2',
-                                                            Value: '2',
-                                                            Hint: 'Sometimes/ Progressing',
-                                                            Color: 'OrangeRed'
-                                                        }, {
-                                                            Key: '1',
-                                                            Value: '1',
-                                                            Hint: 'Needs Attention',
-                                                            Color: 'SaddleBrown'
-                                                        }, {
-                                                            Key: '0',
-                                                            Value: 'N/A',
-                                                            Hint: 'Not available',
-                                                            Color: 'Gray'
-                                                        }];
-                                                        _conduct.ScoringScale = "2015Conduct";
-                                                        _conduct.Code = code;
-                                                    }
-                                                    else {
-                                                        var code = [{
-                                                            Key: '5',
-                                                            Value: 'D',
-                                                            Hint: 'Distinguished Command',
-                                                            Color: 'MediumBlue'
-                                                        }, {
-                                                            Key: '4',
-                                                            Value: 'S',
-                                                            Hint: 'Strong Command (Secure)',
-                                                            Color: 'Olive'
-                                                        }, {
-                                                            Key: '3',
-                                                            Value: 'M',
-                                                            Hint: 'Moderate Command (Developing/ On-level)',
-                                                            Color: 'DarkGreen'
-                                                        }, {
-                                                            Key: '2',
-                                                            Value: 'P',
-                                                            Hint: 'Partial Command',
-                                                            Color: 'OrangeRed'
-                                                        }, {
-                                                            Key: '1',
-                                                            Value: 'N',
-                                                            Hint: 'Little or No Command',
-                                                            Color: 'SaddleBrown'
-                                                        }, {
-                                                            Key: '0',
-                                                            Value: 'N/A',
-                                                            Hint: 'Not available',
-                                                            Color: 'Gray'
-                                                        }];
-                                                        _conduct.ScoringScale = "2015Class";
-                                                        _conduct.Code = code;
-                                                    }
-                                                }
-                                                else {//5-12
-                                                    var code = [{
-                                                        Key: '3',
-                                                        Value: 'M',
-                                                        Hint: 'Meets expectations',
-                                                        Color: 'DarkGreen'
-                                                    }, {
-                                                        Key: '2',
-                                                        Value: 'S',
-                                                        Hint: 'Meets needs with Support',
-                                                        Color: 'MediumBlue'
-                                                    }, {
-                                                        Key: '1',
-                                                        Value: 'N',
-                                                        Hint: 'Not yet within expectations',
-                                                        Color: 'SaddleBrown'
-                                                    }, {
-                                                        Key: '0',
-                                                        Value: 'N/A',
-                                                        Hint: 'Not available',
-                                                        Color: 'Gray'
-                                                    }];
-                                                    _conduct.ScoringScale = "2014";
-                                                    _conduct.Code = code;
-                                                }
-                                                angular.forEach(conduct.Item, function (item) {
-                                                    _conduct.Item.push({
-                                                        Title: item.Title || '',
-                                                        MidtermGrade: '',
-                                                        FinalGrade: '',
-                                                        Grade: '',
-                                                        Group: conduct.Group,
-                                                        Code: code
-                                                    });
-                                                });
+                                            angular.forEach([].concat(item.Conduct.Conducts.Conduct || []), function (conduct) {
+                                                conduct.Item = [].concat(conduct.Item || []);
+                                                if ($scope.teacherType === 'homeroom') {
+                                                    if (!conduct.Subject || conduct.Subject === '') {
+                                                        var _conduct = {
+                                                            Group: conduct.Group,
+                                                            Item: [],
+                                                            ScoringScale: '',
+                                                            Code: []
+                                                        };
+                                                        if (stu.GradeYear <= 4) {
+                                                            if (conduct.Common && conduct.Common === 'True') {
+                                                                var code = [{
+                                                                    Key: '3',
+                                                                    Value: '3',
+                                                                    Hint: 'Consistently',
+                                                                    Color: 'MediumBlue'
+                                                                }, {
+                                                                    Key: '2',
+                                                                    Value: '2',
+                                                                    Hint: 'Sometimes/ Progressing',
+                                                                    Color: 'OrangeRed'
+                                                                }, {
+                                                                    Key: '1',
+                                                                    Value: '1',
+                                                                    Hint: 'Needs Attention',
+                                                                    Color: 'SaddleBrown'
+                                                                }, {
+                                                                    Key: '0',
+                                                                    Value: 'N/A',
+                                                                    Hint: 'Not available',
+                                                                    Color: 'Gray'
+                                                                }];
+                                                                _conduct.ScoringScale = "2015.Conduct";
+                                                                _conduct.Code = code;
+                                                            }
+                                                            else {
+                                                                var code = [{
+                                                                    Key: '5',
+                                                                    Value: 'D',
+                                                                    Hint: 'Distinguished Command',
+                                                                    Color: 'MediumBlue'
+                                                                }, {
+                                                                    Key: '4',
+                                                                    Value: 'S',
+                                                                    Hint: 'Strong Command (Secure)',
+                                                                    Color: 'Olive'
+                                                                }, {
+                                                                    Key: '3',
+                                                                    Value: 'M',
+                                                                    Hint: 'Moderate Command (Developing/ On-level)',
+                                                                    Color: 'DarkGreen'
+                                                                }, {
+                                                                    Key: '2',
+                                                                    Value: 'P',
+                                                                    Hint: 'Partial Command',
+                                                                    Color: 'OrangeRed'
+                                                                }, {
+                                                                    Key: '1',
+                                                                    Value: 'N',
+                                                                    Hint: 'Little or No Command',
+                                                                    Color: 'SaddleBrown'
+                                                                }, {
+                                                                    Key: '0',
+                                                                    Value: 'N/A',
+                                                                    Hint: 'Not available',
+                                                                    Color: 'Gray'
+                                                                }];
+                                                                _conduct.ScoringScale = "2015.Class";
+                                                                _conduct.Code = code;
+                                                            }
+                                                        }
+                                                        else {//5-12
+                                                            var code = [{
+                                                                Key: '3',
+                                                                Value: 'M',
+                                                                Hint: 'Meets expectations',
+                                                                Color: 'DarkGreen'
+                                                            }, {
+                                                                Key: '2',
+                                                                Value: 'S',
+                                                                Hint: 'Meets needs with Support',
+                                                                Color: 'MediumBlue'
+                                                            }, {
+                                                                Key: '1',
+                                                                Value: 'N',
+                                                                Hint: 'Not yet within expectations',
+                                                                Color: 'SaddleBrown'
+                                                            }, {
+                                                                Key: '0',
+                                                                Value: 'N/A',
+                                                                Hint: 'Not available',
+                                                                Color: 'Gray'
+                                                            }];
+                                                            _conduct.ScoringScale = "2014";
+                                                            _conduct.Code = code;
+                                                        }
+                                                        angular.forEach(conduct.Item, function (item) {
+                                                            _conduct.Item.push({
+                                                                Title: item.Title || '',
+                                                                MidtermGrade: '',
+                                                                FinalGrade: '',
+                                                                Grade: '',
+                                                                Group: conduct.Group,
+                                                                Code: code
+                                                            });
+                                                        });
 
-                                                stu.EditConduct.Conducts.Conduct.push(_conduct);
-                                            }
+                                                        stu.EditConduct.Conducts.Conduct.push(_conduct);
+                                                    }
+                                                } else {
+                                                    if (conduct.Common && conduct.Common === 'True' || ($scope.teacherType === 'subject' && $scope.currentCourse.SubjectChineseName === conduct.Subject)) {
+                                                        var _conduct = {
+                                                            Group: conduct.Group,
+                                                            Item: [],
+                                                            ScoringScale: '',
+                                                            Code: []
+                                                        };
+                                                        if (stu.GradeYear <= 4) {
+                                                            if (conduct.Common && conduct.Common === 'True') {
+                                                                var code = [{
+                                                                    Key: '3',
+                                                                    Value: '3',
+                                                                    Hint: 'Consistently',
+                                                                    Color: 'MediumBlue'
+                                                                }, {
+                                                                    Key: '2',
+                                                                    Value: '2',
+                                                                    Hint: 'Sometimes/ Progressing',
+                                                                    Color: 'OrangeRed'
+                                                                }, {
+                                                                    Key: '1',
+                                                                    Value: '1',
+                                                                    Hint: 'Needs Attention',
+                                                                    Color: 'SaddleBrown'
+                                                                }, {
+                                                                    Key: '0',
+                                                                    Value: 'N/A',
+                                                                    Hint: 'Not available',
+                                                                    Color: 'Gray'
+                                                                }];
+                                                                _conduct.ScoringScale = "2015Conduct";
+                                                                _conduct.Code = code;
+                                                            }
+                                                            else {
+                                                                var code = [{
+                                                                    Key: '5',
+                                                                    Value: 'D',
+                                                                    Hint: 'Distinguished Command',
+                                                                    Color: 'MediumBlue'
+                                                                }, {
+                                                                    Key: '4',
+                                                                    Value: 'S',
+                                                                    Hint: 'Strong Command (Secure)',
+                                                                    Color: 'Olive'
+                                                                }, {
+                                                                    Key: '3',
+                                                                    Value: 'M',
+                                                                    Hint: 'Moderate Command (Developing/ On-level)',
+                                                                    Color: 'DarkGreen'
+                                                                }, {
+                                                                    Key: '2',
+                                                                    Value: 'P',
+                                                                    Hint: 'Partial Command',
+                                                                    Color: 'OrangeRed'
+                                                                }, {
+                                                                    Key: '1',
+                                                                    Value: 'N',
+                                                                    Hint: 'Little or No Command',
+                                                                    Color: 'SaddleBrown'
+                                                                }, {
+                                                                    Key: '0',
+                                                                    Value: 'N/A',
+                                                                    Hint: 'Not available',
+                                                                    Color: 'Gray'
+                                                                }];
+                                                                _conduct.ScoringScale = "2015Class";
+                                                                _conduct.Code = code;
+                                                            }
+                                                        }
+                                                        else {//5-12
+                                                            var code = [{
+                                                                Key: '3',
+                                                                Value: 'M',
+                                                                Hint: 'Meets expectations',
+                                                                Color: 'DarkGreen'
+                                                            }, {
+                                                                Key: '2',
+                                                                Value: 'S',
+                                                                Hint: 'Meets needs with Support',
+                                                                Color: 'MediumBlue'
+                                                            }, {
+                                                                Key: '1',
+                                                                Value: 'N',
+                                                                Hint: 'Not yet within expectations',
+                                                                Color: 'SaddleBrown'
+                                                            }, {
+                                                                Key: '0',
+                                                                Value: 'N/A',
+                                                                Hint: 'Not available',
+                                                                Color: 'Gray'
+                                                            }];
+                                                            _conduct.ScoringScale = "2014";
+                                                            _conduct.Code = code;
+                                                        }
+                                                        angular.forEach(conduct.Item, function (item) {
+                                                            _conduct.Item.push({
+                                                                Title: item.Title || '',
+                                                                MidtermGrade: '',
+                                                                FinalGrade: '',
+                                                                Grade: '',
+                                                                Group: conduct.Group,
+                                                                Code: code
+                                                            });
+                                                        });
+
+                                                        stu.EditConduct.Conducts.Conduct.push(_conduct);
+                                                    }
+                                                }
+                                            });
                                         }
                                     });
+
                                     angular.forEach(stu.EditConduct.Conducts.Conduct, function (ec) {
                                         ec.Item = [].concat(ec.Item || []);
 
@@ -577,7 +590,7 @@ angular.module('enterconduct', [])
                         }
                     }
                     else {
-                        if ($scope.currentCourse.GradeYear <= 4) {
+                        if ($scope.currentStudent.GradeYear <= 4) {
                             if ($scope.current.MiddleOpeningC === 'true') {
                                 period = 1;
                             } else if ($scope.current.FinalOpeningC === 'true') {
@@ -679,7 +692,7 @@ angular.module('enterconduct', [])
                 });
             });
             if ($scope.teacherType == 'homeroom') {
-                if ($scope.currentCourse.GradeYear <= 4 && $scope.currentConduct.Period <= 2) {
+                if ($scope.currentStudent.GradeYear <= 4 && $scope.currentConduct.Period <= 2) {
                     max++;
                     if ($scope.currentConduct.Period === 1 && $scope.currentStudent.MidtermComment) {
                         progress++;
@@ -688,7 +701,7 @@ angular.module('enterconduct', [])
                         progress++;
                     }
                 }
-                if ($scope.currentCourse.GradeYear > 4 && $scope.currentConduct.Period === 3) {
+                if ($scope.currentStudent.GradeYear > 4 && $scope.currentConduct.Period === 3) {
                     max++;
                     if ($scope.currentStudent.Comment)
                         progress++;
@@ -881,7 +894,8 @@ angular.module('enterconduct', [])
                 isLastItem = false,
                 groupIndex = 0,
                 itemIndex = 0,
-                isComment = false;
+                isComment = false,
+                studentB = $scope.currentStudent;
 
             if ($scope.currentConduct.type == 'Comment') {
                 isFirstItem = true;
@@ -1023,13 +1037,24 @@ angular.module('enterconduct', [])
             else {
                 nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[groupIndex].Item[itemIndex + 1];
             }
-
+            //#region 檢查年級變換
+            if (studentB.GradeYear != $scope.currentStudent.GradeYear) {
+                if ($scope.currentStudent.GradeYear <= 4 && studentB.GradeYear > 4 || $scope.currentStudent.GradeYear > 4 && studentB.GradeYear <= 4) {
+                    if ($scope.currentStudent.GradeYear <= 4) {
+                        if ($scope.current.MiddleOpeningC === 'true') {
+                            period = 1;
+                        } else if ($scope.current.FinalOpeningC === 'true') {
+                            period = 2;
+                        }
+                    } else {
+                        if ($scope.current.FinalOpeningC === 'true') {
+                            period = 3;
+                        }
+                    }
+                }
+            }
+            //#endregion
             $scope.selectConduct(nextConduct, period);
-        }
-
-        $scope.fixGroupName = function (name) {
-            return escape(name).replace(/%/g, '_');
-            return name.replace(/ /g, '_');
         }
 
         $scope.prevItem = function () {
@@ -1041,7 +1066,8 @@ angular.module('enterconduct', [])
                 isLastItem = false,
                 groupIndex = 0,
                 itemIndex = 0,
-                isComment = false;
+                isComment = false,
+                studentB = $scope.currentStudent;
 
             if ($scope.currentConduct.type == 'Comment') {
                 isFirstItem = true;
@@ -1118,21 +1144,47 @@ angular.module('enterconduct', [])
                         }
                     }
                 }
-
-                if (nextConduct.type != 'Comment') {
-                    //scrollTo(getPosition($('#scrollAnchor' + $scope.fixGroupName(nextConduct.Group))[0]).y, 500);
-                    $('#scrollAnchor' + $scope.fixGroupName(nextConduct.Group))[0].scrollIntoView({ block: "end", behavior: "smooth" });
+                try{
+                    if (nextConduct.type != 'Comment') {
+                        //scrollTo(getPosition($('#scrollAnchor' + $scope.fixGroupName(nextConduct.Group))[0]).y, 500);
+                        $('#scrollAnchor' + $scope.fixGroupName(nextConduct.Group))[0].scrollIntoView({ block: "end", behavior: "smooth" });
+                    }
+                    else {
+                        //scrollTo(getPosition($('#scrollAnchorComment')[0]).y, 500);
+                        $('#scrollAnchorComment')[0].scrollIntoView({ block: "end", behavior: "smooth" });
+                    }
                 }
-                else {
-                    //scrollTo(getPosition($('#scrollAnchorComment')[0]).y, 500);
-                    $('#scrollAnchorComment')[0].scrollIntoView({ block: "end", behavior: "smooth" });
+                catch (exc) {
+
                 }
             }
             else {
                 nextConduct = $scope.currentStudent.EditConduct.Conducts.Conduct[groupIndex].Item[itemIndex - 1];
             }
 
+            //#region 檢查年級變換
+            if (studentB.GradeYear != $scope.currentStudent.GradeYear) {
+                if ($scope.currentStudent.GradeYear <= 4 && studentB.GradeYear > 4 || $scope.currentStudent.GradeYear > 4 && studentB.GradeYear <= 4) {
+                    if ($scope.currentStudent.GradeYear <= 4) {
+                        if ($scope.current.MiddleOpeningC === 'true') {
+                            period = 1;
+                        } else if ($scope.current.FinalOpeningC === 'true') {
+                            period = 2;
+                        }
+                    } else {
+                        if ($scope.current.FinalOpeningC === 'true') {
+                            period = 3;
+                        }
+                    }
+                }
+            }
+            //#endregion
             $scope.selectConduct(nextConduct, period);
+        }
+
+        $scope.fixGroupName = function (name) {
+            return escape(name).replace(/%/g, '_');
+            return name.replace(/ /g, '_');
         }
 
         $scope.overview = function (conductGroup, period) {
@@ -1163,6 +1215,7 @@ angular.module('enterconduct', [])
         $scope.setVal = function (student, conduct, period, val) {
             if ($scope.savingSeril)
                 return;
+            if (!val) return;
             //$scope.selectConduct(conduct, period);
             //$scope.selectStudent(student);
             //$scope.clickGrade(val);
@@ -1170,11 +1223,12 @@ angular.module('enterconduct', [])
             if (period == 2 && $scope.current.FinalOpeningC !== 'true') return;
             if (period == 3 && $scope.current.FinalOpeningC !== 'true') return;
 
+
             var match = false;
             student.EditConduct.Conducts.Conduct.forEach(function (cond) {
-                if (!match&& cond.Group == conduct.Group) {
+                if (!match && cond.Group == conduct.Group) {
                     cond.Item.forEach(function (item) {
-                        if (!match&& item.Title == conduct.Title) {
+                        if (!match && item.Title == conduct.Title) {
                             if (period == 1) {
                                 item.MidtermGrade = val;
                                 if ($scope.currentConduct == item && $scope.currentConduct.Period == period)
@@ -1225,6 +1279,16 @@ angular.module('enterconduct', [])
                                 result = citem.Grade;
                         }
                     });
+                }
+            });
+            return result;
+        }
+
+        $scope.hasGroup = function (student, group) {
+            var result = false;
+            angular.forEach(student.EditConduct.Conducts.Conduct, function (cgroup) {
+                if (cgroup.Group == group) {
+                    result = true;
                 }
             });
             return result;
@@ -1285,48 +1349,6 @@ angular.module('enterconduct', [])
                 return '';
         }
 
-        //不再使用了
-        $scope.useDefaultValue = function (student) {
-            angular.forEach(student.EditConduct.Conducts.Conduct, function (conduct) {
-                angular.forEach(conduct.Item, function (item) {
-                    var defVal = $scope.getDefault($scope.currentCourse.GradeYear,
-                                $scope.currentCourse.SubjectChineseName,
-                                conduct.Group,
-                                item.Title);
-                    if ($scope.currentConduct.Period === 1 && $scope.current.MiddleOpeningC === 'true') {
-                        if (!item.MidtermGrade && defVal != 'erase') {
-                            item.MidtermGrade = defVal;
-                        }
-                        else {
-                            if (defVal == 'erase')
-                                item.MidtermGrade = '';
-                        }
-                    }
-
-                    if ($scope.currentConduct.Period === 2 && $scope.current.FinalOpeningC === 'true') {
-                        if (!item.FinalGrade && defVal != 'erase') {
-                            item.FinalGrade = defVal;
-                        }
-                        else {
-                            if (defVal == 'erase')
-                                item.FinalGrade = '';
-                        }
-                    }
-
-                    if ($scope.currentConduct.Period === 3 && $scope.current.FinalOpeningC === 'true') {
-                        if (!item.Grade && defVal != 'erase') {
-                            item.Grade = defVal;
-                        }
-                        else {
-                            if (defVal == 'erase')
-                                item.Grade = '';
-                        }
-                    }
-                });
-            });
-            $scope.saveGrade($scope.currentStudent, $scope.currentConduct);
-        }
-
         $scope.useDefaultValueForAll = function () {
             $scope.useDefaultValueForAllProgress = "0%";
             $scope.showDefaultValueForAllProgress = 'progress-bar-success';
@@ -1341,7 +1363,7 @@ angular.module('enterconduct', [])
                     $scope.useDefaultValueForAllProgress = Math.floor(index * 100 / $scope.studentList.length) + "%";
                     angular.forEach(student.EditConduct.Conducts.Conduct, function (conduct) {
                         angular.forEach(conduct.Item, function (item) {
-                            var defVal = $scope.getDefault($scope.currentCourse.GradeYear,
+                            var defVal = $scope.getDefault($scope.currentStudent.GradeYear,
                                         $scope.currentCourse.SubjectChineseName,
                                         conduct.Group,
                                         item.Title);
