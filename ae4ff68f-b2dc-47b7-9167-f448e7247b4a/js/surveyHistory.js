@@ -52,7 +52,7 @@ var GetAchievingRate = function() {
         body: '<Request><Order><SchoolYear></SchoolYear><Semester></Semester></Order></Request>',
         result: function (response, error, http) {
             if (error !== null) {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetAchievingRate)\n</div>");
+                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗，請稍候重試!</strong>(GetAchievingRate)\n</div>");
             } else {
 
                 /*
@@ -81,7 +81,7 @@ var GetTextTemplate = function() {
         body: {},
         result: function (response, error, http) {
             if (error !== null) {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetTextTemplate)\n</div>");
+                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗，請稍候重試!</strong>(GetTextTemplate)\n</div>");
             } else {
                 /*
                 <Response>
@@ -109,7 +109,7 @@ var GetReplyHistory = function() {
         body: "<Request><Order><SchoolYear>DESC</SchoolYear><Semester>DESC</Semester><EndTime></EndTime><CourseID></CourseID></Order></Request>",
         result: function (response, error, http){
             if (error !== null) {
-                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(GetReplyHistory)\n</div>");
+                $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗，請稍候重試!</strong>(GetReplyHistory)\n</div>");
             } else {
 
                 /*
@@ -132,7 +132,6 @@ var GetReplyHistory = function() {
                     var _answerCount = 0;
                     var _achievingRate;
                     var _is_qualify = true;
-                    var _qualify_string = '';
                     var _survey_detail_string = '';
 
                     $(response.Response.ReplyHistory).each(function(index, item) {
@@ -140,14 +139,13 @@ var GetReplyHistory = function() {
                         if (item.SchoolYear != _school_year || item.Semester != _semester) {
                         	var ret = "<p><h4 align='center'>" + item.SchoolYear + '學年度' + (item.Semester === '0' ? '夏季學期' : '第' + item.Semester + '學期') + "</h4></p>" +
                                     "<table id='" + item.SchoolYear + "-" + item.Semester + "' class='table table-bordered table-striped table-list survey-history-table'>" +
-                                    "<thead><tr><th>課程名稱</th><th>問卷數</th><th>問卷完成數</th><th>符合填答課程條件</th></tr></thead>" +
+                                    "<thead><tr><th>課程名稱</th><th>問卷數</th><th>問卷完成數</th></tr></thead>" +
                                     "<tbody></tbody>" +
                                     "<tfoot><tr><td class='my-totle-style'>合計</td>" +
                                     "<td class='my-surveyCount my-totle-style'></td>" +
                                     "<td class='my-answerCount my-totle-style'></td>" +
-                                    "<td rowspan='2' class='my-qualify-string my-totle-style'></td></tr>" +
                                     "<tr><td class='my-totle-style'>問卷填答率</td><td colspan='2' class='my-answerRate my-totle-style'></td></tr>" +
-                                    "<tr><td colspan='4' class='my-survey-history-description'></td></tr></tfoot></table><p>&nbsp;</p>";
+                                    "<tr><td colspan='3' class='my-survey-history-description'></td></tr></tfoot></table><p>&nbsp;</p>";
                             // console.log(ret);
                             $('#survey-history').append(ret);
                             //$('tfoot>tr>td').css('text-align', 'center');
@@ -171,7 +169,7 @@ var GetReplyHistory = function() {
                         }
                         _survey_detail_string = "<tr><td>" + item.CourseName + "</td><td>" + item.SurveyCount + "</td>" +
                                                 (item.AnswerCount ? "<td>" + item.AnswerCount + "</td>" : "<td style='color:red'>0</td>") +
-                                                (item.AnswerCount ? "<td>是</td>" : "<td style='color:red'>否</td>") + "</tr>";
+
                         $("#" + item.SchoolYear + "-" + item.Semester + " tbody").append(_survey_detail_string);
 
                         _surveyCount += parseInt(item.SurveyCount);
@@ -179,20 +177,6 @@ var GetReplyHistory = function() {
                         _answerRate = Math.ceil(_answerCount*100/_surveyCount);
                         _is_qualify = ((item.AnswerCount) ? true : false) && _is_qualify;
                         // console.log(item.AnswerCount + "-" + _is_qualify);
-
-                        if (!_is_qualify){
-                            _qualify_string = "<span class='label label-important' style='font-size:14px'>不符合優先選課條件</span>";
-                        }
-                        else{
-                            if (!_achievingRate)
-                                _qualify_string = "<span class='label label-important' style='font-size:14px'>不符合優先選課條件</span>";
-                            else {
-                                if (parseInt(_answerRate) >= parseInt(_achievingRate))
-                                    _qualify_string = "<span class='label label-success' style='font-size:14px'>符合優先選課條件</span>";
-                                else
-                                    _qualify_string = "<span class='label label-important' style='font-size:14px'>不符合優先選課條件</span>";
-                            }
-                        }
 
                         /*
                         JavaScript的四捨五入、無條件捨去、無條件進位
@@ -206,7 +190,6 @@ var GetReplyHistory = function() {
                         // console.log(_surveyCount);
                         $('#' + item.SchoolYear + "-" + item.Semester + ' .my-surveyCount').html(_surveyCount);
                         $('#' + item.SchoolYear + "-" + item.Semester + ' .my-answerCount').html(_answerCount);
-                        $('#' + item.SchoolYear + "-" + item.Semester + ' .my-qualify-string').html(_qualify_string);
                         $('#' + item.SchoolYear + "-" + item.Semester + ' .my-answerRate').html(_answerRate + "%");
 
                         _school_year = item.SchoolYear;
