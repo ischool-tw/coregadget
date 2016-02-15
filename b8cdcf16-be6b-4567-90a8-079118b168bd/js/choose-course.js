@@ -923,7 +923,13 @@ jQuery(function () {
 
                 var tmp = $(content);
                 // $(tmp).find('#printEndTime').append(self.currentData.EndTime() || '');
-                $(tmp).find('#noteInfo').append(self.configuration['retreat_notices_word']() || '');
+                // 要判斷2次是因為jquery會自動變陣列，沒規則
+                if (tmp.find('#noteInfo').length) {
+                    tmp.find('#noteInfo').append(self.configuration['retreat_notices_word']() || '');
+                } else if (tmp.filter('#noteInfo').length) {
+                    tmp.filter('#noteInfo').append(self.configuration['retreat_notices_word']() || '');
+                }
+
                 content = $('<div>').append(tmp).html();
 
                 content = "<!DOCTYPE html>\n" +
