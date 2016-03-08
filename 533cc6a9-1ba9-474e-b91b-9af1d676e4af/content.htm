@@ -74,7 +74,10 @@
                   </thead>
                   <tbody>
                     <tr ng-repeat="item in activitys">
-                      <td ><a href="{{item.Url}}">{{item.ActivityName}}</a></td>
+                      <td>
+                        <a ng-if="item.Url" href="{{item.Url}}" target="_blank">{{item.ActivityName}}</a>
+                        <span ng-if="!item.Url">{{item.ActivityName}}</span>
+                      </td>
                       <td>{{item.ActivityTime | date:'yyyy/MM/dd HH:mm'}}</td>
                       <td>{{item.EndTime | date:'yyyy/MM/dd HH:mm'}}</td>
                       <td>{{item.MaximumNumber || '無限制'}}</td>
