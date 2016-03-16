@@ -210,6 +210,7 @@ angular.module("app", ["checklist-model"])
                         //console.log(response);
                         if (response.Response.ReplyCount) {
                             activity.Count = response.Response.ReplyCount.Count || 0;
+                            $scope.$apply();
                         }
                     }
                     else
@@ -325,19 +326,24 @@ angular.module("app", ["checklist-model"])
     $scope.setSend = function() {
         // 判斷必填
         $('#btnReg').button('loading');
-        var requiredAllRight = true;
+        //1.requiredAllRight = 1
+        //2.requiredIn500 =  
+
+        $scope.requiredAllRight = true;
+        $scope.requiredIn500 = true;
+
         $scope.questions.forEach(function(question){
             // 必填未填
-            if (question.Required == 't' && !question.Answer) {
-                requiredAllRight = false;
+            if (question.Required == 't' && (!question.Answer || question.Answer.length == 0 )) {
+                $scope.requiredAllRight = false;
             }
             if (question.Type=='問答題') {
                 if ((question.Answer || '').replace(/(\r\n|\n|\r)/gm, '').length > 500) {
-                    requiredAllRight = false;
+                    $scope.requiredIn500 = false;
                 }
             }
         });
-        if (!requiredAllRight) {
+        if (!$scope.requiredAllRight || !$scope.requiredIn500) {
             $('#alertRequiredModal').modal('show');
             $('#btnReg').button('reset');
         } else {
@@ -407,7 +413,12 @@ angular.module("app", ["checklist-model"])
                 body: {
                     Request: { RegisterActivity: {
                         RefEventId: $scope.curr.Uid || '',
-                        WhetherPublic: $scope.curr.WhetherPublic || false
+                        WhetherPublic: $scope.curr.WhetherPublic || false,
+                        IsSuccessful: false,
+                        IsCancel: false,
+                        IsPayment: false,
+                        IsSignIn: false,
+                        IsLock: false
                     } }
                 },
                 result: function (response, error, http) {
@@ -447,7 +458,7 @@ angular.module("app", ["checklist-model"])
         $scope.contract.send({
             service: "default.GetReplyMembers",
             body: {
-                RefEventID: $scope.curr.RefEventTemplateId || 0
+                Request:{ RefEventID: $scope.curr.Uid || 0 }
             },
             result: function (response, error, http) {
                 if (!error) {
@@ -476,20 +487,23 @@ angular.module("app", ["checklist-model"])
 
     // 預覽
     $scope.previewClick = function() {
-        var requiredAllRight = true;
+        $scope.requiredAllRight = true;
+        $scope.requiredIn500 = true;
+
         $scope.questions.forEach(function(question){
             // 必填未填
-            if (question.Required == 't' && !question.Answer) {
-                requiredAllRight = false;
+            if (question.Required == 't' && (!question.Answer || question.Answer.length == 0 )) {
+                $scope.requiredAllRight = false;
             }
             if (question.Type=='問答題') {
                 if ((question.Answer || '').replace(/(\r\n|\n|\r)/gm, '').length > 500) {
-                    requiredAllRight = false;
+                    $scope.requiredIn500 = false;
                 }
             }
         });
-        if (!requiredAllRight) {
+        if (!$scope.requiredAllRight || !$scope.requiredIn500) {
             $('#alertRequiredModal').modal('show');
+            $('#btnReg').button('reset');
         } else {
             $scope.viewState = 'preview';
             $('#tab_form')

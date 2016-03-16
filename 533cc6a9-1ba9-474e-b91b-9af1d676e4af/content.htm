@@ -261,7 +261,7 @@
     </tbody>
   </table>
   <label class="checkbox">
-    <input type="checkbox" ng-model="curr.WhetherPublic" value="t">我同意，將我的姓名公開於本活動。 (格式：王*明)</input>
+    <input type="checkbox" ng-model="curr.WhetherPublic" value="t">我同意，將我的<label style="color:red">完整姓名</label>公開於本活動。</input>
   </label>
 </script>
 
@@ -295,7 +295,9 @@
         <h4 class="modal-title">資料驗證失敗</h4>
       </div>
       <div class="modal-body alert-danger">
-        <p>您還有【必填】題目未填寫，請修正後再送出</p>
+        <p ng-show="(!requiredAllRight && requiredIn500)">您還有【必填】題目未填寫，請修正後再送出。</p>
+        <p ng-show="(requiredAllRight && !requiredIn500)">您還有欄位超過500字元，請修正後再送出。</p>
+        <p ng-show="(!requiredAllRight && !requiredIn500)">您還有【必填】題目未填寫，或有欄位超過500字元，請修正後再送出。</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
