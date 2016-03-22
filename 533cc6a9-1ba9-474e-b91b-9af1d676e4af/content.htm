@@ -112,7 +112,7 @@
                       <th>活動名稱</th>
                       <th>活動日期</th>
                       <th>入選狀態</th>
-                      <th>是否繳費</th>
+                      <!--<th>是否繳費</th>-->
                       <th>是否簽到</th>
                     </tr>
                   </thead>
@@ -131,11 +131,11 @@
                           <i class="icon-remove"></i> 未入選
                         </span>
                       </td>
-                      <td>
+                      <!--<td>
                       <span ng-if="item.IsSuccessful== 't' && item.IsPayment=='t'"><i class="icon-ok"></i>已繳費</span>
                       <span ng-if="item.IsSuccessful== 't' && item.IsPayment=='f'"><i class="icon-remove"></i>未繳費</span>
                       <span ng-if="item.IsSuccessful== 'f'">不需繳費</span>
-                      </td>
+                      </td>-->
                       <td>
                       <span ng-if="item.IsSuccessful== 't' && item.ActivityTime <= Date && item.IsSignIn=='t'"><i class="icon-ok"></i>已簽到</span>
                       <span ng-if="item.IsSuccessful== 't' && item.ActivityTime <= Date && item.IsSignIn=='f'"><i class="icon-remove"></i>未簽到</span>
