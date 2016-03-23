@@ -29,8 +29,8 @@
       <div class="span12">
         <h1>
           <ul class="nav nav-tabs my-navtabs">
-            <li role="presentation" class="active"><a href="#activity" aria-controls="activity" role="tab" data-toggle="tab">活動</a></li>
-            <li role="presentation"><a href="#history" aria-controls="history" role="tab" data-toggle="tab">歷程</a></li>
+            <li role="presentation" class="active"><a href="#activity" aria-controls="activity" role="tab" data-toggle="tab">可報名活動</a></li>
+            <li role="presentation"><a href="#history" aria-controls="history" role="tab" data-toggle="tab">狀態與歷程</a></li>
           </ul>
         </h1>
         <div>
@@ -112,7 +112,7 @@
                       <th>活動名稱</th>
                       <th>活動日期</th>
                       <th>入選狀態</th>
-                      <!--<th>是否繳費</th>-->
+                      <th>是否繳費</th>
                       <th>是否簽到</th>
                     </tr>
                   </thead>
@@ -131,16 +131,24 @@
                           <i class="icon-remove"></i> 未入選
                         </span>
                       </td>
-                      <!--<td>
-                      <span ng-if="item.IsSuccessful== 't' && item.IsPayment=='t'"><i class="icon-ok"></i>已繳費</span>
-                      <span ng-if="item.IsSuccessful== 't' && item.IsPayment=='f'"><i class="icon-remove"></i>未繳費</span>
-                      <span ng-if="item.IsSuccessful== 'f'">不需繳費</span>
-                      </td>-->
                       <td>
-                      <span ng-if="item.IsSuccessful== 't' && item.ActivityTime <= Date && item.IsSignIn=='t'"><i class="icon-ok"></i>已簽到</span>
-                      <span ng-if="item.IsSuccessful== 't' && item.ActivityTime <= Date && item.IsSignIn=='f'"><i class="icon-remove"></i>未簽到</span>
-                      <span ng-if="item.IsSuccessful== 't' && item.ActivityTime > Date">活動未開始</span>
-                      <span ng-if="item.IsSuccessful== 'f'">不需簽到</span>
+                        <!-- 當學生未入選時,一律為不需繳費-->
+                        <span ng-if="item.AnnouncementTime <= Date && item.IsSuccessful== 'f'">不需繳費</span>
+                        <span ng-if="item.AnnouncementTime <= Date && item.IsSuccessful== 't' && item.IsNeedToPay== 'f'">免繳費活動</span>
+                        <span ng-if="item.AnnouncementTime <= Date && item.IsSuccessful== 't' && item.IsNeedToPay== 't'  && item.IsPayment=='t'">
+                        <i class="icon-ok"></i>已繳費</span>
+                        <span ng-if="item.AnnouncementTime <= Date && item.IsSuccessful== 't' && item.IsNeedToPay== 't' && item.IsPayment=='f'">
+                        <i class="icon-remove"></i>未繳費</span>
+                      </td>
+                      <td>
+                        <!--條件:活動日期 小於/等於 目前時間 && 未入選-->
+                        <span ng-if="item.ActivityTime <= Date && item.IsSuccessful== 'f'">不需簽到</span>
+                        <!--條件:活動日期 小於/等於 目前時間 && 已入選 && 未簽到-->
+                        <span ng-if="item.ActivityTime <= Date && item.IsSuccessful== 't' && item.IsSignIn=='f'">
+                        <i class="icon-remove"></i>未簽到</span>
+                        <!--條件:入選+活動日期已過+已簽到-->
+                        <span ng-if="item.ActivityTime <= Date && item.IsSuccessful== 't' && item.IsSignIn=='t'">
+                        <i class="icon-ok"></i>已簽到</span>
                       </td>
                     </tr>
                     <tr ng-show="!historys.length">
@@ -207,12 +215,17 @@
     </tbody>
     <thead>
       <tr>
-        <th colspan="3">活動說明</th>
+        <th colspan="2">活動說明</th>
+        <th>是否收費</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td colspan="3">{{curr.Description}}</td>
+        <td colspan="2">{{curr.Description}}</td>
+        <td>
+          <span ng-if="curr.IsNeedToPay=='t'">是</span>
+          <span ng-if="curr.IsNeedToPay=='f'">否</span>
+        </td>
       </tr>
     </tbody>
   </table>
