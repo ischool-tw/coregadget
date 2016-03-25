@@ -4,7 +4,7 @@ $(document).ready(function () {
         // console.log($(window).height() - 50);
     });
 });
-angular.module("app", ["checklist-model"])
+angular.module("app", ["checklist-model", "ngSanitize"])
 .controller("Cntl", function($scope, $http, $filter) {
     $scope.activity_panel = 'list';
     $scope.history_panel = 'list';
@@ -327,7 +327,7 @@ angular.module("app", ["checklist-model"])
         // 判斷必填
         $('#btnReg').button('loading');
         //1.requiredAllRight = 1
-        //2.requiredIn500 =  
+        //2.requiredIn500 =
 
         $scope.requiredAllRight = true;
         $scope.requiredIn500 = true;
@@ -572,7 +572,14 @@ angular.module("app", ["checklist-model"])
         $scope.getActivitys();
         $scope.getHistorys();
     };
-});
+})
+.filter('newlines', function () {
+    return function(text) {
+        if(text)
+            return text.replace(/\n/g, '<br/>');
+        return '';
+    }
+})
 var set_error_message = function(select_str, serviceName, error) {
     var tmp_msg;
 

@@ -221,7 +221,7 @@
     </thead>
     <tbody>
       <tr>
-        <td colspan="2">{{curr.Description}}</td>
+        <td colspan="2" style="width:850px" ng-bind-html="curr.Description | newlines"></td>
         <td>
           <span ng-if="curr.IsNeedToPay=='t'">是</span>
           <span ng-if="curr.IsNeedToPay=='f'">否</span>
@@ -357,4 +357,5 @@
 
 <script src="js/angular.min.js"></script>
 <script src="js/checklist-model.js"></script>
+<script src="js/angular-sanitize.js"></script>
 <script src="js/default.js"></script>
