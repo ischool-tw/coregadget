@@ -182,14 +182,14 @@
   <table class="table table-bordered">
     <thead>
       <tr>
-        <th>活動名稱</th>
+        <th colspan="2">活動名稱</th>
         <th>活動日期</th>
         <th>已報名 / 限制名額</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>{{curr.ActivityName}}</td>
+        <td colspan="2">{{curr.ActivityName}}</td>
         <td>{{curr.ActivityTime | date:'yyyy/MM/dd HH:mm'}}</td>
         <td>
           <a href="javascript:;" style="display:inline;" ng-click="showPublicMember()">{{curr.Count || 0}}</a>
@@ -199,6 +199,7 @@
     <thead>
       <tr>
         <th>報名期間</th>
+        <th>是否收費</th>
         <th>入選公告日</th>
         <th>附件位置</th>
       </tr>
@@ -206,6 +207,10 @@
     <tbody>
       <tr>
         <td>{{curr.OpeningTime | date:'yyyy/MM/dd HH:mm'}} ~ {{curr.EndTime | date:'yyyy/MM/dd HH:mm'}}</td>
+        <td>
+          <span ng-if="curr.IsNeedToPay=='t'">是</span>
+          <span ng-if="curr.IsNeedToPay=='f'">否</span>
+        </td>
         <td>{{curr.AnnouncementTime | date:'yyyy/MM/dd HH:mm'}}</td>
         <td>
           <a ng-if="curr.Url" href="{{curr.Url}}" target="_blank">檢視</a>
@@ -215,17 +220,12 @@
     </tbody>
     <thead>
       <tr>
-        <th colspan="2">活動說明</th>
-        <th>是否收費</th>
+        <th colspan="4">活動說明</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td colspan="2" style="width:850px" ng-bind-html="curr.Description | newlines"></td>
-        <td>
-          <span ng-if="curr.IsNeedToPay=='t'">是</span>
-          <span ng-if="curr.IsNeedToPay=='f'">否</span>
-        </td>
+        <td colspan="4" ng-bind-html="curr.Description | newlines"></td>
       </tr>
     </tbody>
   </table>
