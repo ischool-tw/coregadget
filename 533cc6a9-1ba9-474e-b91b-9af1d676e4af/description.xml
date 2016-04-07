@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="活動" description="學生-活動報名">
-    <Title lang="zh-TW">活動</Title>
+  <ModulePrefs title="報名" description="學生-活動報名">
+    <Title lang="zh-TW">報名</Title>
     <Icon>icon.png</Icon>
     <Mobile />
     <Title lang="zh-CN">
