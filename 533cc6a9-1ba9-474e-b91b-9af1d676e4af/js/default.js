@@ -112,10 +112,10 @@ angular.module("app", ["checklist-model", "ngSanitize"])
                     if (response.Response) {
                         $scope.activitys = [].concat(response.Response.EventRecord || []);
                         $scope.activitys.forEach(function(item) {
-                            if (item.ActivityTime) item.ActivityTime = new Date(item.ActivityTime);
-                            if (item.AnnouncementTime) item.AnnouncementTime = new Date(item.AnnouncementTime);
-                            if (item.EndTime) item.EndTime = new Date(item.EndTime);
-                            if (item.OpeningTime) item.OpeningTime = new Date(item.OpeningTime);
+                            if (item.ActivityTime) item.ActivityTime = new Date(item.ActivityTime.replace(/-/g, '/'));
+                            if (item.AnnouncementTime) item.AnnouncementTime = new Date(item.AnnouncementTime.replace(/-/g, '/'));
+                            if (item.EndTime) item.EndTime = new Date(item.EndTime.replace(/-/g, '/'));
+                            if (item.OpeningTime) item.OpeningTime = new Date(item.OpeningTime.replace(/-/g, '/'));
                         });
                     }
                     $scope.loadState = 'finish';
@@ -237,10 +237,10 @@ angular.module("app", ["checklist-model", "ngSanitize"])
                     if (response.Response) {
                         $scope.historys = [].concat(response.Response.EventRecord || []);
                         $scope.historys.forEach(function(item) {
-                            if (item.ActivityTime) item.ActivityTime = new Date(item.ActivityTime);
-                            if (item.AnnouncementTime) item.AnnouncementTime = new Date(item.AnnouncementTime);
-                            if (item.EndTime) item.EndTime = new Date(item.EndTime);
-                            if (item.OpeningTime) item.OpeningTime = new Date(item.OpeningTime);
+                            if (item.ActivityTime) item.ActivityTime = new Date(item.ActivityTime.replace(/-/g, '/'));
+                            if (item.AnnouncementTime) item.AnnouncementTime = new Date(item.AnnouncementTime.replace(/-/g, '/'));
+                            if (item.EndTime) item.EndTime = new Date(item.EndTime.replace(/-/g, '/'));
+                            if (item.OpeningTime) item.OpeningTime = new Date(item.OpeningTime.replace(/-/g, '/'));
                             if (item.ApplyTime) item.ApplyTime = new Date(item.ApplyTime);
                         });
                         $scope.$apply();
