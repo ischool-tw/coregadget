@@ -163,12 +163,12 @@
       $(".modal[target='experience'] .error").removeClass("error");
       $(".modal[target='experience'] input[target='sharing']").prop("checked", false);
       $(".modal[target='experience'] input[target='companyname']").val("");
-      $(".modal[target='experience'] span[target='industry']").html("產業別");
       $(".modal[target='experience'] input[target='position']").val("");
-      $(".modal[target='experience'] span[target='department']").html("部門");
-      $(".modal[target='experience'] span[target='level']").html("層級別");
-      $(".modal[target='experience'] span[target='place']").html("工作地點");
-      $(".modal[target='experience'] span[target='status']").html("工作狀態");
+      $(".modal[target='experience'] select[target='industry']").val("");
+      $(".modal[target='experience'] select[target='department']").val("");
+      $(".modal[target='experience'] select[target='level']").val("");
+      $(".modal[target='experience'] select[target='place']").val("");
+      $(".modal[target='experience'] select[target='status']").val("");
       $(".modal[target='experience'] input[target='work_begin_date']").val("");
       $(".modal[target='experience'] input[target='work_end_date']").val("");
       $(".modal[target='experience'] input[target='publicist']").val("");
@@ -187,12 +187,12 @@
       if ($(".modal[target='experience'] form").valid()) {
         edit_type = $(this).attr("edit-type");
         companyname = $(".modal[target='experience'] input[target='companyname']").val();
-        industry = $(".modal[target='experience'] span[target='industry']").html() !== "產業別" ? $(".modal[target='experience'] span[target='industry']").html() : "";
         position = $(".modal[target='experience'] input[target='position']").val();
-        department = $(".modal[target='experience'] span[target='department']").html() !== "部門" ? $(".modal[target='experience'] span[target='department']").html() : "";
-        level = $(".modal[target='experience'] span[target='level']").html() !== "層級別" ? $(".modal[target='experience'] span[target='level']").html() : "";
-        place = $(".modal[target='experience'] span[target='place']").html() !== "工作地點" ? $(".modal[target='experience'] span[target='place']").html() : "";
-        status = $(".modal[target='experience'] span[target='status']").html() !== "工作狀態" ? $(".modal[target='experience'] span[target='status']").html() : "";
+        industry = $(".modal[target='experience'] select[target='industry']").val() !== "產業別" ? $(".modal[target='experience'] select[target='industry']").val() : "";
+        department = $(".modal[target='experience'] select[target='department']").val() !== "部門" ? $(".modal[target='experience'] select[target='department']").val() : "";
+        level = $(".modal[target='experience'] select[target='level']").val() !== "層級別" ? $(".modal[target='experience'] select[target='level']").val() : "";
+        place = $(".modal[target='experience'] select[target='place']").val() !== "工作地點" ? $(".modal[target='experience'] select[target='place']").val() : "";
+        status = $(".modal[target='experience'] select[target='status']").val() !== "工作狀態" ? $(".modal[target='experience'] select[target='status']").val() : "";
         sharing = $(".modal[target='experience'] input[target='sharing']").prop("checked");
         work_begin_date = $(".modal[target='experience'] input[target='work_begin_date']").val();
         work_end_date = $(".modal[target='experience'] input[target='work_end_date']").val();
@@ -238,12 +238,12 @@
         log_desc = "";
         if (edit_type === "update") {
           original_companyname = $(".modal[target='experience'] input[target='companyname']").attr("original");
-          original_industry = $(".modal[target='experience'] span[target='industry']").attr("original");
           original_position = $(".modal[target='experience'] input[target='position']").attr("original");
-          original_department = $(".modal[target='experience'] span[target='department']").attr("original");
-          original_level = $(".modal[target='experience'] span[target='level']").attr("original");
-          original_place = $(".modal[target='experience'] span[target='place']").attr("original");
-          original_status = $(".modal[target='experience'] span[target='status']").attr("original");
+          original_industry = $(".modal[target='experience'] select[target='industry']").attr("original");
+          original_department = $(".modal[target='experience'] select[target='department']").attr("original");
+          original_level = $(".modal[target='experience'] select[target='level']").attr("original");
+          original_place = $(".modal[target='experience'] select[target='place']").attr("original");
+          original_status = $(".modal[target='experience'] select[target='status']").attr("original");
           original_sharing = $(".modal[target='experience'] input[target='sharing']").attr("original");
           original_work_begin_date = $(".modal[target='experience'] input[target='work_begin_date']").attr("original");
           original_work_end_date = $(".modal[target='experience'] input[target='work_end_date']").attr("original");
@@ -300,12 +300,12 @@
         result: function(response, error, http) {
           var log_desc, original_company_website, original_companyname, original_department, original_industry, original_level, original_place, original_position, original_public_relations_office_fax, original_public_relations_office_telephone, original_publicist, original_publicist_email, original_sharing, original_status, original_work_begin_date, original_work_end_date;
           original_companyname = $(".modal[target='experience'] input[target='companyname']").attr("original");
-          original_industry = $(".modal[target='experience'] span[target='industry']").attr("original");
           original_position = $(".modal[target='experience'] input[target='position']").attr("original");
-          original_department = $(".modal[target='experience'] span[target='department']").attr("original");
-          original_level = $(".modal[target='experience'] span[target='level']").attr("original");
-          original_place = $(".modal[target='experience'] span[target='place']").attr("original");
-          original_status = $(".modal[target='experience'] span[target='status']").attr("original");
+          original_industry = $(".modal[target='experience'] select[target='industry']").attr("original");
+          original_department = $(".modal[target='experience'] select[target='department']").attr("original");
+          original_level = $(".modal[target='experience'] select[target='level']").attr("original");
+          original_place = $(".modal[target='experience'] select[target='place']").attr("original");
+          original_status = $(".modal[target='experience'] select[target='status']").attr("original");
           original_sharing = $(".modal[target='experience'] input[target='sharing']").attr("original");
           original_work_begin_date = $(".modal[target='experience'] input[target='work_begin_date']").attr("original");
           original_work_end_date = $(".modal[target='experience'] input[target='work_end_date']").attr("original");
@@ -340,31 +340,6 @@
         }
       });
     });
-    $(".modal[target='experience']").on("click", "ul[target='industry-options'] a", function(e) {
-      e.preventDefault();
-      return $(".modal[target='experience'] span[target='industry']").html($(this).html());
-    });
-    $(".modal[target='experience']").on("click", "ul[target='department-options'] a", function(e) {
-      e.preventDefault();
-      return $(".modal[target='experience'] span[target='department']").html($(this).html());
-    });
-    $(".modal[target='experience']").on("click", "ul[target='level-options'] a", function(e) {
-      e.preventDefault();
-      return $(".modal[target='experience'] span[target='level']").html($(this).html());
-    });
-    $(".modal[target='experience']").on("click", "ul[target='place-options'] a", function(e) {
-      e.preventDefault();
-      return $(".modal[target='experience'] span[target='place']").html($(this).html());
-    });
-    $(".modal[target='experience']").on("click", "ul[target='status-options'] a", function(e) {
-      e.preventDefault();
-      return $(".modal[target='experience'] span[target='status']").html($(this).html());
-    });
-    //Dylan 2016/4/20 新增
-    $(".technicaloptions").on("click", "ul[target='technical-options'] a", function(e) {
-      e.preventDefault();
-      return $("span[target='technical']").html($(this).html());
-    });
 
     $(".modal[target='experience']").on("focus", "input.date:not(.hasDatepicker)", function() {
       return $(this).datepicker({
@@ -381,7 +356,7 @@
       });
     });
     $("#baseinfo a[target='save-baseinfo']").click(function(e) {
-      var log_desc1, log_desc2, request1, request2;
+      var log_desc1, log_desc2, request1, request2, request3;
       e.preventDefault();
       if ($("#baseinfo form").valid()) {
         request1 = {
@@ -436,8 +411,8 @@
                 }
               },
               //2016/4/20 - 新增
-              Interest : $("#baseinfo input[target='interest']").val(),
-              TechnicalAbility :$("#baseinfo span[target='technical']").val()
+              Interest: $("#baseinfo input[target='interest']").val(),
+              TechnicalAbility: $("#baseinfo select[target='technical']").val()
             }
           }
         };
@@ -488,25 +463,62 @@
             }
           }
         };
+        request3 = {
+          Request: {
+            Content: {
+              IsSharing: !$("#baseinfo span[target='share-willingness']").hasClass('hide'),
+              IsEntrpreneurialTeam: $("#baseinfo input[target='enterprise']").prop('checked'),
+              IsNonPorfitOrganizations: $("#baseinfo input[target='organizations']").prop('checked'),
+              IsSocialEnterprise: $("#baseinfo input[target='entrpreneurial']").prop('checked')
+            }
+          }
+        };
         gadget.getContract("emba.student").send({
           service: "default.UpdateStudentBrief",
           body: request1,
           result: function(response, error, http) {
             if ((response.Result != null) && response.Result.EffectRows === "1") {
-              return gadget.getContract("emba.student").send({
+              gadget.getContract("emba.student").send({
                 service: "default.UpdateStudentInfo",
                 body: request2,
                 result: function(response, error, http) {
                   if ((response.Result != null) && response.Result.EffectRows === "1") {
-                    bind_myinfo();
-                    return alert("更新完成!");
+                    gadget.getContract("emba.student").send({
+                      service: "default.SetWillingness",
+                      body: request3,
+                      result: function(response, error, http) {
+                        if ((response.Result != null) && response.Result.EffectRows === "1") {
+                          bind_myinfo();
+                          alert("更新完成!");
+                        }
+                      }
+                    });
                   }
                 }
               });
             }
           }
         });
-        log_desc1 = "性別： " + ($("#baseinfo span[target='share-gender']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-gender']").hasClass('hide')) + "\n出生日期： " + ($("#baseinfo span[target='share-birthdate']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-birthdate']").hasClass('hide')) + "\n緊急聯絡人： " + ($("#baseinfo span[target='share-custodian-name']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-custodian-name']").hasClass('hide')) + "\n聯絡人電話： " + ($("#baseinfo span[target='share-custodian-phone']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-custodian-phone']").hasClass('hide')) + "\n公司電話： " + ($("#baseinfo span[target='share-office-phone']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-office-phone']").hasClass('hide')) + "\n秘書電話： " + ($("#baseinfo span[target='share-other-phone']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-other-phone']").hasClass('hide')) + "\n行動電話 1： " + ($("#baseinfo span[target='share-sms-phone1']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-sms-phone1']").hasClass('hide')) + "\n行動電話 2： " + ($("#baseinfo span[target='share-sms-phone2']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-sms-phone2']").hasClass('hide')) + "\nE-MAIL 1： " + ($("#baseinfo span[target='share-email1']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-email1']").hasClass('hide')) + "\nE-MAIL 2： " + ($("#baseinfo span[target='share-email2']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-email2']").hasClass('hide')) + "\nE-MAIL 3： " + ($("#baseinfo span[target='share-email3']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-email3']").hasClass('hide')) + "\nE-MAIL 4： " + ($("#baseinfo span[target='share-email4']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-email4']").hasClass('hide')) + "\nE-MAIL 5： " + ($("#baseinfo span[target='share-email5']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-email5']").hasClass('hide')) + "\n聯絡地址： " + ($("#baseinfo span[target='share-contact-address']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-contact-address']").hasClass('hide')) + "\n公司地址： " + ($("#baseinfo span[target='share-office-address']").attr("original")) + " -> " + (!$("#baseinfo span[target='share-office-address']").hasClass('hide'));
+        log_desc1 = [
+          "性別： ", ($("#baseinfo span[target='share-gender']").attr("original")), " -> ", (!$("#baseinfo span[target='share-gender']").hasClass('hide')),
+          "\n出生日期： ", ($("#baseinfo span[target='share-birthdate']").attr("original")), " -> ", (!$("#baseinfo span[target='share-birthdate']").hasClass('hide')),
+          "\n緊急聯絡人： ", ($("#baseinfo span[target='share-custodian-name']").attr("original")), " -> ", (!$("#baseinfo span[target='share-custodian-name']").hasClass('hide')),
+          "\n聯絡人電話： ", ($("#baseinfo span[target='share-custodian-phone']").attr("original")), " -> ", (!$("#baseinfo span[target='share-custodian-phone']").hasClass('hide')),
+          "\n公司電話： ", ($("#baseinfo span[target='share-office-phone']").attr("original")), " -> ", (!$("#baseinfo span[target='share-office-phone']").hasClass('hide')),
+          "\n秘書電話： ", ($("#baseinfo span[target='share-other-phone']").attr("original")), " -> ", (!$("#baseinfo span[target='share-other-phone']").hasClass('hide')),
+          "\n行動電話 1： ", ($("#baseinfo span[target='share-sms-phone1']").attr("original")), " -> ", (!$("#baseinfo span[target='share-sms-phone1']").hasClass('hide')),
+          "\n行動電話 2： ", ($("#baseinfo span[target='share-sms-phone2']").attr("original")), " -> ", (!$("#baseinfo span[target='share-sms-phone2']").hasClass('hide')),
+          "\nE-MAIL 1： ", ($("#baseinfo span[target='share-email1']").attr("original")), " -> ", (!$("#baseinfo span[target='share-email1']").hasClass('hide')),
+          "\nE-MAIL 2： ", ($("#baseinfo span[target='share-email2']").attr("original")), " -> ", (!$("#baseinfo span[target='share-email2']").hasClass('hide')),
+          "\nE-MAIL 3： ", ($("#baseinfo span[target='share-email3']").attr("original")), " -> ", (!$("#baseinfo span[target='share-email3']").hasClass('hide')),
+          "\nE-MAIL 4： ", ($("#baseinfo span[target='share-email4']").attr("original")), " -> ", (!$("#baseinfo span[target='share-email4']").hasClass('hide')),
+          "\nE-MAIL 5： ", ($("#baseinfo span[target='share-email5']").attr("original")), " -> ", (!$("#baseinfo span[target='share-email5']").hasClass('hide')),
+          "\n聯絡地址： ", ($("#baseinfo span[target='share-contact-address']").attr("original")), " -> ", (!$("#baseinfo span[target='share-contact-address']").hasClass('hide')),
+          "\n公司地址： ", ($("#baseinfo span[target='share-office-address']").attr("original")), " -> ", (!$("#baseinfo span[target='share-office-address']").hasClass('hide')),
+          "\n興趣： ", ($("#baseinfo span[target='share-interest']").attr("original")), " -> ", (!$("#baseinfo span[target='share-interest']").hasClass('hide')),
+          "\n技能： ", ($("#baseinfo span[target='share-technical-ability']").attr("original")), " -> ", (!$("#baseinfo span[target='share-technical-ability']").hasClass('hide')),
+          "\n意願調查： ", ($("#baseinfo span[target='share-willingness']").attr("original")), " -> ", (!$("#baseinfo span[target='share-willingness']").hasClass('hide'))
+        ].join('');
         gadget.getContract("emba.student").send({
           service: "public.AddLog",
           body: {
@@ -525,7 +537,26 @@
             }
           }
         });
-        log_desc2 = "緊急聯絡人： " + ($("#baseinfo input[target='custodian-name']").attr("original")) + " -> " + ($("#baseinfo input[target='custodian-name']").val()) + "\n聯絡人電話： " + ($("#baseinfo input[target='custodian-phone']").attr("original")) + " -> " + ($("#baseinfo input[target='custodian-phone']").val()) + "\n公司電話： " + ($("#baseinfo input[target='office-phone']").attr("original")) + " -> " + ($("#baseinfo input[target='office-phone']").val()) + "\n秘書電話： " + ($("#baseinfo input[target='other-phone']").attr("original")) + " -> " + ($("#baseinfo input[target='other-phone']").val()) + "\n行動電話 1： " + ($("#baseinfo input[target='sms-phone1']").attr("original")) + " -> " + ($("#baseinfo input[target='sms-phone1']").val()) + "\n行動電話 2： " + ($("#baseinfo input[target='sms-phone2']").attr("original")) + " -> " + ($("#baseinfo input[target='sms-phone2']").val()) + "\nE-MAIL 1： " + ($("#baseinfo input[target='email1']").attr("original")) + " -> " + ($("#baseinfo input[target='email1']").val()) + "\nE-MAIL 2： " + ($("#baseinfo input[target='email2']").attr("original")) + " -> " + ($("#baseinfo input[target='email2']").val()) + "\nE-MAIL 3： " + ($("#baseinfo input[target='email3']").attr("original")) + " -> " + ($("#baseinfo input[target='email3']").val()) + "\nE-MAIL 4： " + ($("#baseinfo input[target='email4']").attr("original")) + " -> " + ($("#baseinfo input[target='email4']").val()) + "\nE-MAIL 5： " + ($("#baseinfo input[target='email5']").attr("original")) + " -> " + ($("#baseinfo input[target='email5']").val()) + "\n聯絡地址： " + ($("#baseinfo span[target='contact-address']").attr("original")) + " -> " + ($("#baseinfo span[target='contact-address']").html()) + "\n公司地址： " + ($("#baseinfo span[target='office-address']").attr("original")) + " -> " + ($("#baseinfo span[target='office-address']").val());
+        log_desc2 = [
+          "緊急聯絡人： ", ($("#baseinfo input[target='custodian-name']").attr("original")), " -> ", ($("#baseinfo input[target='custodian-name']").val()),
+          "\n聯絡人電話： ", ($("#baseinfo input[target='custodian-phone']").attr("original")), " -> ", ($("#baseinfo input[target='custodian-phone']").val()),
+          "\n公司電話： ", ($("#baseinfo input[target='office-phone']").attr("original")), " -> ", ($("#baseinfo input[target='office-phone']").val()),
+          "\n秘書電話： ", ($("#baseinfo input[target='other-phone']").attr("original")), " -> ", ($("#baseinfo input[target='other-phone']").val()),
+          "\n行動電話 1： ", ($("#baseinfo input[target='sms-phone1']").attr("original")), " -> ", ($("#baseinfo input[target='sms-phone1']").val()),
+          "\n行動電話 2： ", ($("#baseinfo input[target='sms-phone2']").attr("original")), " -> ", ($("#baseinfo input[target='sms-phone2']").val()),
+          "\nE-MAIL 1： ", ($("#baseinfo input[target='email1']").attr("original")), " -> ", ($("#baseinfo input[target='email1']").val()),
+          "\nE-MAIL 2： ", ($("#baseinfo input[target='email2']").attr("original")), " -> ", ($("#baseinfo input[target='email2']").val()),
+          "\nE-MAIL 3： ", ($("#baseinfo input[target='email3']").attr("original")), " -> ", ($("#baseinfo input[target='email3']").val()),
+          "\nE-MAIL 4： ", ($("#baseinfo input[target='email4']").attr("original")), " -> ", ($("#baseinfo input[target='email4']").val()),
+          "\nE-MAIL 5： ", ($("#baseinfo input[target='email5']").attr("original")), " -> ", ($("#baseinfo input[target='email5']").val()),
+          "\n聯絡地址： ", ($("#baseinfo span[target='contact-address']").attr("original")), " -> ", ($("#baseinfo span[target='contact-address']").html()),
+          "\n公司地址： ", ($("#baseinfo span[target='office-address']").attr("original")), " -> ", ($("#baseinfo span[target='office-address']").val()),
+          "\n興趣： ", ($("#baseinfo span[target='interest']").attr("original")), " -> ", ($("#baseinfo span[target='interest']").val()),
+          "\n技能： ", ($("#baseinfo select[target='technical']").attr("original")), " -> ", ($("#baseinfo select[target='technical']").val()),
+          "\n意願調查-是否參與「社會企業」經驗： ", ($("#baseinfo span[target='enterprise']").attr("original")), " -> ", ($("#baseinfo span[target='enterprise']").prop('checked')),
+          "\n意願調查-是否參與「非營利組織」經驗： ", ($("#baseinfo span[target='organizations']").attr("original")), " -> ", ($("#baseinfo span[target='organizations']").prop('checked')),
+          "\n意願調查-是否擔任業師意願(創業團隊)： ", ($("#baseinfo span[target='entrpreneurial']").attr("original")), " -> ", ($("#baseinfo span[target='entrpreneurial']").prop('checked'))
+        ].join('');
         return gadget.getContract("emba.student").send({
           service: "public.AddLog",
           body: {
@@ -562,70 +593,57 @@
       result: function(response, error, http) {
         if (response.Result != null) {
           myInfo = response.Result;
-          return gadget.getContract("emba.student").send({
-            service: "default.GetStudentBrief",
-            body: "",
-            result: function(response, error, http) {
-              var _ref;
-              if (response.Result != null) {
-                myInfo.EmailList = response.Result.EmailList;
-                if (response.Result.EmailList === "") {
-                  myInfo.EmailList = {
-                    email1: "",
-                    email2: "",
-                    email3: "",
-                    email4: "",
-                    email5: ""
-                  };
-                }
-                if (!(((_ref = response.Result.DataSharing) != null ? _ref.DataSharing : void 0) != null)) {
-                  myInfo.DataSharing = {
-                    Name: 'true',
-                    Gender: 'true',
-                    Birthdate: 'false',
-                    Custodian: 'false',
-                    CustodianPhone: 'false',
-                    PermanentPhone: 'false',
-                    ContactPhone: 'false',
-                    SMSPhone: 'false',
-                    OtherPhoneList: {
-                      PhoneNumber: [
-                        {
-                          "@title": "公司電話",
-                          "@text": 'false'
-                        }, {
-                          "@title": "行動電話2",
-                          "@text": 'false'
-                        }, {
-                          "@title": "秘書電話",
-                          "@text": 'false'
-                        }
-                      ]
-                    },
-                    PermanentAddress: 'false',
-                    ContactAddress: 'false',
-                    OtherAddressList: {
-                      Address: ['false', 'false', 'false']
-                    },
-                    EmailList: {
-                      Email1: 'false',
-                      Email2: 'false',
-                      Email3: 'false',
-                      Email4: 'false',
-                      Email5: 'false'
-                    }
-                  };
-                } else {
-                  myInfo.DataSharing = response.Result.DataSharing.DataSharing;
-                }
-                //2016/4/20 Dylan 新增
-                myInfo.Interest = response.Result.Interest;
-                myInfo.TechnicalAbility = response.Result.TechnicalAbility;
-                bind_baseinfo();
-                return bind_address();
+          if (myInfo.EmailList === "") {
+            myInfo.EmailList = {
+              email1: "",
+              email2: "",
+              email3: "",
+              email4: "",
+              email5: ""
+            };
+          }
+          if (myInfo.DataSharing && myInfo.DataSharing.DataSharing) {
+            myInfo.DataSharing = myInfo.DataSharing.DataSharing;
+          } else {
+            myInfo.DataSharing = {
+              Name: 'true',
+              Gender: 'true',
+              Birthdate: 'false',
+              Custodian: 'false',
+              CustodianPhone: 'false',
+              PermanentPhone: 'false',
+              ContactPhone: 'false',
+              SMSPhone: 'false',
+              OtherPhoneList: {
+                PhoneNumber: [
+                  {
+                    "@title": "公司電話",
+                    "@text": 'false'
+                  }, {
+                    "@title": "行動電話2",
+                    "@text": 'false'
+                  }, {
+                    "@title": "秘書電話",
+                    "@text": 'false'
+                  }
+                ]
+              },
+              PermanentAddress: 'false',
+              ContactAddress: 'false',
+              OtherAddressList: {
+                Address: ['false', 'false', 'false']
+              },
+              EmailList: {
+                Email1: 'false',
+                Email2: 'false',
+                Email3: 'false',
+                Email4: 'false',
+                Email5: 'false'
               }
-            }
-          });
+            };
+          }
+          bind_baseinfo();
+          bind_address();
         }
       }
     });
@@ -804,23 +822,39 @@
       $("#baseinfo span[target='share-office-address']").removeClass("hide");
     }
     $("#baseinfo span[target='share-office-address']").attr("original", myInfo.DataSharing.OtherAddressList.Address[0]);
+
+    $("#baseinfo span[target='photo']").html("<img src='data:image/png;base64," + myInfo.FreshmanPhoto + "' style='width:80px'/>");
+
     //2016/4/20 新增
     //興趣
     if (myInfo.DataSharing.Interest === "true") {
-      $("#baseinfo span[target='share-interest']").removeClass("hide");
+      $("#baseinfo span[target='share-interest']").removeClass("hide").closest('div').removeClass("square");
     }
     $("#baseinfo span[target='share-interest']").attr("original", myInfo.DataSharing.Interest);
     $("#baseinfo input[target='interest']").val(myInfo.Interest);
     $("#baseinfo input[target='interest']").attr("original", myInfo.Interest);
     //技能
     if (myInfo.DataSharing.TechnicalAbility === "true") {
-      $("#baseinfo span[target='share-technical-ability']").removeClass("hide");
+      $("#baseinfo span[target='share-technical-ability']").removeClass("hide").closest('div').removeClass("square");
     }
     $("#baseinfo span[target='share-technical-ability']").attr("original", myInfo.DataSharing.TechnicalAbility);
-    $("#baseinfo span[target='technical']").html(myInfo.TechnicalAbility);
-    $("#baseinfo span[target='technical']").attr("original", myInfo.TechnicalAbility);
+    $("#baseinfo select[target='technical']").val(myInfo.TechnicalAbility);
+    $("#baseinfo select[target='technical']").attr("original", myInfo.TechnicalAbility);
 
-    return $("#baseinfo span[target='photo']").html("<img src='data:image/png;base64," + myInfo.FreshmanPhoto + "' style='width:80px'/>");
+    //意願調查
+    if (myInfo.WillingnessIsSharing === "t") {
+      $("#baseinfo span[target='share-willingness']").removeClass("hide").closest('div').removeClass("square");
+    }
+    $("#baseinfo span[target='share-willingness']").attr("original", myInfo.WillingnessIsSharing);
+    //意願調查-是否參與「社會企業」經驗
+    $("#baseinfo input[target='enterprise']").prop('checked', myInfo.IsEntrpreneurialTeam==='t');
+    $("#baseinfo input[target='enterprise']").attr("original", myInfo.IsEntrpreneurialTeam);
+    //意願調查-是否參與「非營利組織」經驗
+    $("#baseinfo input[target='organizations']").prop('checked', myInfo.IsNonPorfitOrganizations==='t');
+    $("#baseinfo input[target='organizations']").attr("original", myInfo.IsNonPorfitOrganizations);
+    //意願調查-是否擔任業師意願(創業團隊)
+    $("#baseinfo input[target='entrpreneurial']").prop('checked', myInfo.IsSocialEnterprise==='t');
+    $("#baseinfo input[target='entrpreneurial']").attr("original", myInfo.IsSocialEnterprise);
   };
 
   bind_address = function() {
@@ -925,18 +959,18 @@
           $(".modal[target='experience'] input[target='sharing']").attr("original", experiences[index].IsSharing);
           $(".modal[target='experience'] input[target='companyname']").val(experiences[index].CompanyName);
           $(".modal[target='experience'] input[target='companyname']").attr("original", experiences[index].CompanyName);
-          $(".modal[target='experience'] span[target='industry']").html(experiences[index].Industry || "產業別");
-          $(".modal[target='experience'] span[target='industry']").attr("original", experiences[index].Industry);
           $(".modal[target='experience'] input[target='position']").val(experiences[index].Position);
           $(".modal[target='experience'] input[target='position']").attr("original", experiences[index].Position);
-          $(".modal[target='experience'] span[target='department']").html(experiences[index].DepartmentCategory || "部門");
-          $(".modal[target='experience'] span[target='department']").attr("original", experiences[index].DepartmentCategory);
-          $(".modal[target='experience'] span[target='level']").html(experiences[index].PostLevel || "層級別");
-          $(".modal[target='experience'] span[target='level']").attr("original", experiences[index].PostLevel);
-          $(".modal[target='experience'] span[target='place']").html(experiences[index].WorkPlace || "工作地點");
-          $(".modal[target='experience'] span[target='place']").attr("original", experiences[index].WorkPlace);
-          $(".modal[target='experience'] span[target='status']").html(experiences[index].WorkStatus || "工作狀態");
-          $(".modal[target='experience'] span[target='status']").attr("original", experiences[index].WorkStatus);
+          $(".modal[target='experience'] select[target='industry']").val(experiences[index].Industry);
+          $(".modal[target='experience'] select[target='industry']").attr("original", experiences[index].Industry);
+          $(".modal[target='experience'] select[target='department']").val(experiences[index].DepartmentCategory);
+          $(".modal[target='experience'] select[target='department']").attr("original", experiences[index].DepartmentCategory);
+          $(".modal[target='experience'] select[target='level']").val(experiences[index].PostLevel);
+          $(".modal[target='experience'] select[target='level']").attr("original", experiences[index].PostLevel);
+          $(".modal[target='experience'] select[target='place']").val(experiences[index].WorkPlace);
+          $(".modal[target='experience'] select[target='place']").attr("original", experiences[index].WorkPlace);
+          $(".modal[target='experience'] select[target='status']").val(experiences[index].WorkStatus);
+          $(".modal[target='experience'] select[target='status']").attr("original", experiences[index].WorkStatus);
           $(".modal[target='experience'] input[target='work_begin_date']").val(experiences[index].WorkBeginDate);
           $(".modal[target='experience'] input[target='work_begin_date']").attr("original", experiences[index].WorkBeginDate);
           $(".modal[target='experience'] input[target='work_end_date']").val(experiences[index].WorkEndDate);
@@ -980,17 +1014,17 @@
           data_source = $(response.Result.ExperienceDataSource);
           data_source.each(function(index, item) {
             if (!options[item.ItemCategory]) {
-              options[item.ItemCategory] = [];
+              options[item.ItemCategory] = ["<option value=\"\">請選擇...</option>"];
             }
-            return options[item.ItemCategory].push("<li><a href=\"#\">" + (item.Item || '') + "</a></li>");
+            options[item.ItemCategory].push("<option value=\"" + (item.Item || '') + "\">" + (item.Item || '') + "</option>");
           });
-          $(".modal[target='experience'] ul[target='level-options']").html(options['層級別'].join(""));
-          $(".modal[target='experience'] ul[target='industry-options']").html(options['產業別'].join(""));
-          $(".modal[target='experience'] ul[target='department-options']").html(options['部門類別'].join(""));
-          $(".modal[target='experience'] ul[target='place-options']").html(options['工作地點'].join(""));
-          $(".modal[target='experience'] ul[target='status-options']").html(options['工作狀態'].join(""));
+          $(".modal[target='experience'] select[target='level']").html(options['層級別'].join(""));
+          $(".modal[target='experience'] select[target='industry']").html(options['產業別'].join(""));
+          $(".modal[target='experience'] select[target='department']").html(options['部門類別'].join(""));
+          $(".modal[target='experience'] select[target='place']").html(options['工作地點'].join(""));
+          $(".modal[target='experience'] select[target='status']").html(options['工作狀態'].join(""));
           //2016/4/19 - Dylan 新增
-          $("ul[target='technical-options']").html(options['技能'].join(""));
+          $("select[target='technical']").html(options['技能'].join(""));
           return bind_experience();
         }
       }
@@ -998,7 +1032,7 @@
   };
 
   $.validator.setDefaults({
-    debug: false,
+    debug: true,
     errorElement: "span",
     errorClass: "help-inline",
     highlight: function(element) {
@@ -1016,5 +1050,4 @@
       return true;
     }
   }), "現職才能勾選分享");
-
 }).call(this);

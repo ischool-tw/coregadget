@@ -36,3 +36,10 @@ input[type="color"],
   bottom: 0px;
   background: #fff;
 }
+
+
+.my-star {
+  font-family: 'Bevan', cursive;
+  font-weight: 400;
+  color: red;
+}

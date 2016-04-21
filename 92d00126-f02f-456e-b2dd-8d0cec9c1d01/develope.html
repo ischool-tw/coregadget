@@ -101,25 +101,25 @@
                     <div class="control-group">
                         <label class="control-label">學校</label>
                         <div class="controls">
-                            <input type="text" placeholder="學校" target="schoolname">
+                            <input type="text" placeholder="學校" target="schoolname" name="schoolname">
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label">系所</label>
                         <div class="controls">
-                            <input type="text" placeholder="系所" target="department">
+                            <input type="text" placeholder="系所" target="department" name="department">
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label">學位</label>
                         <div class="controls">
-                            <input type="text" placeholder="學位" target="degree">
+                            <input type="text" placeholder="學位" target="degree" name="degree">
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label">最高學歷</label>
                         <div class="controls">
-                            <input type="checkbox" target="top">
+                            <input type="checkbox" target="top" name="top">
                         </div>
                     </div>
                 </form>
@@ -150,93 +150,63 @@
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label">公司</label>
+                        <label class="control-label"><span class="my-star">*</span>公司</label>
                         <div class="controls">
-                            <input type="text" placeholder="公司" target="companyname">
+                            <input type="text" placeholder="公司" target="companyname" name="companyname" class="{required: true}">
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label">職稱</label>
+                        <label class="control-label"><span class="my-star">*</span>職稱</label>
                         <div class="controls">
-                            <input type="text" placeholder="職稱" target="position">
+                            <input type="text" placeholder="職稱" target="position" name="position" class="{required: true}">
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label">層級別</label>
+                        <label class="control-label"><span class="my-star">*</span>層級別</label>
                         <div class="controls">
-                            <div class="btn-group">
-                                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <span target="level">層級別</span>
-                                    <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu" target="level-options"></ul>
-                            </div>
+                            <select class="form-control {required: true}" target="level" name="level"></select>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label">產業別</label>
+                        <label class="control-label"><span class="my-star">*</span>產業別</label>
                         <div class="controls">
-                            <div class="btn-group">
-                                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <span target="industry">產業別</span>
-                                    <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu" target="industry-options"></ul>
-                            </div>
+                            <select class="form-control {required: true}" target="industry" name="industry"></select>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label">部門</label>
+                        <label class="control-label"><span class="my-star">*</span>部門</label>
                         <div class="controls">
-                            <div class="btn-group">
-                                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <span target="department">部門</span>
-                                    <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu" target="department-options"></ul>
-                            </div>
+                            <select class="form-control {required: true}" target="department" name="department"></select>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label">工作地點</label>
+                        <label class="control-label"><span class="my-star">*</span>工作地點</label>
                         <div class="controls">
-                            <div class="btn-group">
-                                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <span target="place">工作地點</span>
-                                    <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu" target="place-options"></ul>
-                            </div>
+                            <select class="form-control {required: true}" target="place" name="place"></select>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label">工作狀態</label>
+                        <label class="control-label"><span class="my-star">*</span>工作狀態</label>
                         <div class="controls">
-                            <div class="btn-group">
-                                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <span target="status">工作狀態</span>
-                                    <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu" target="status-options"></ul>
-                            </div>
+                            <select class="form-control {required: true}" target="status" name="status"></select>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label">公關姓名</label>
                         <div class="controls">
-                            <input type="text" placeholder="公關姓名" target="publicist">
+                            <input type="text" placeholder="公關姓名" target="publicist" name="publicist">
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label">公關室電話</label>
                         <div class="controls">
-                            <input type="text" placeholder="公關室電話" target="public_relations_office_telephone">
+                            <input type="text" placeholder="公關室電話" target="public_relations_office_telephone" name="public_relations_office_telephone">
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label">公關室傳真</label>
                         <div class="controls">
-                            <input type="text" placeholder="公關室傳真" target="public_relations_office_fax">
+                            <input type="text" placeholder="公關室傳真" target="public_relations_office_fax" name="public_relations_office_fax">
                         </div>
                     </div>
                     <div class="control-group">
@@ -248,7 +218,7 @@
                     <div class="control-group">
                         <label class="control-label">公司網址</label>
                         <div class="controls">
-                            <input type="text" placeholder="公司網址" target="company_website">
+                            <input type="text" placeholder="公司網址" target="company_website" name="company_website">
                         </div>
                     </div>
                     <div class="control-group">
@@ -260,7 +230,7 @@
                     <div class="control-group">
                         <label class="control-label">工作迄日</label>
                         <div class="controls">
-                            <input type="text" placeholder="工作迄日" target="work_end_date" target="work_end_date" class="{date: true, dateISO: true} date">
+                            <input type="text" placeholder="工作迄日" target="work_end_date" name="work_end_date" class="{date: true, dateISO: true} date">
                         </div>
                     </div>
                 </form>
@@ -330,7 +300,7 @@
                                                     </td>
                                                     <th>緊急聯絡人</th>
                                                     <td>
-                                                        <input type="text" class="span12" target="custodian-name" />
+                                                        <input type="text" class="span12" target="custodian-name" name="custodian-name"/>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -350,7 +320,7 @@
                                                     </td>
                                                     <th>聯絡人電話</th>
                                                     <td>
-                                                        <input type="text" class="span12" target="custodian-phone">
+                                                        <input type="text" class="span12" target="custodian-phone" name="custodian-phone">
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -427,7 +397,7 @@
                                                     </td>
                                                     <th>公司電話</th>
                                                     <td>
-                                                        <input type="text" class="span12" target="office-phone" />
+                                                        <input type="text" class="span12" target="office-phone" name="office-phone" />
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -453,7 +423,7 @@
                                                     </td>
                                                     <th>秘書電話</th>
                                                     <td>
-                                                        <input type="text" class="span12" target="other-phone" />
+                                                        <input type="text" class="span12" target="other-phone" name="other-phone" />
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -479,7 +449,7 @@
                                                     </td>
                                                     <th>行動電話 1</th>
                                                     <td>
-                                                        <input type="text" class="span12" target="sms-phone1" />
+                                                        <input type="text" class="span12" target="sms-phone1" name="sms-phone1" />
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -505,7 +475,7 @@
                                                     </td>
                                                     <th>行動電話 2</th>
                                                     <td>
-                                                        <input type="text" class="span12" target="sms-phone2" />
+                                                        <input type="text" class="span12" target="sms-phone2" name="sms-phone2" />
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -577,9 +547,7 @@
                                                     <!-- 2016/4/20 Dylan新增-->
                                                     <th>興趣</th>
                                                     <td>
-                                                        <div class="control-group">
-                                                            <input type="text" class="{interest:true} span12" target="interest" name="interest" />
-                                                        </div>
+                                                        <input type="text" class="span12" target="interest" name="interest" />
                                                     </td>
                                                     <td target="data-sharing">
                                                         <div class="square">
@@ -589,14 +557,9 @@
                                                         </div>
                                                     </td>
                                                     <th>技能</th>
-                                                    <td> 
+                                                    <td>
                                                         <div class="controls">
-                                                            <div class="btn-group">
-                                                                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                                                                <span target="technical">技能</span>
-                                                                <span class="caret"></span></a>
-                                                                <ul class="dropdown-menu technicaloptions" target="technical-options"></ul>
-                                                            </div>
+                                                            <select class="form-control" target="technical" name="technical"></select>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -641,48 +604,48 @@
                                 </div>
                             </div>
                             <!-- 2016/4/20 Dylan新增-->
-                                 <div class="row-fluid">
+                            <div class="row-fluid">
                                 <div class="span12" id="willingness">
                                     <table class="table table-bordered table-condensed">
                                         <thead>
-                                                <tr>
-                                                    <th width="10px">分享</th>
-                                                    <th width="30px">意願調查</th>
-                                                    <th width="360px">&nbsp;</th>
-                                                </tr>
+                                            <tr>
+                                                <th width="30px">分享</th>
+                                                <th width="90px">意願調查</th>
+                                                <th>&nbsp;</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                                <tr>
-                                                    <td rowspan="3" target="data-sharing">
-                                                        <div class="square">
-                                                            <span class="label label-info hide" target="share-willingness">
-                                                                <i class="icon-ok icon-white"></i>
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="control-group">
-                                                            <input type="checkbox" target="enterprise" name="enterprise" />
-                                                        </div>
-                                                    </td>
-                                                    <td>是否參與「社會企業」經驗</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="control-group">
-                                                            <input type="checkbox" target="organizations" name="organizations" />
-                                                        </div>
-                                                    </td>
-                                                    <td>是否參與「非營利組織」經驗</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="control-group">
-                                                            <input type="checkbox" target="entrpreneurial" name="entrpreneurial" />
-                                                        </div>
-                                                    </td>
-                                                    <td>是否擔任業師意願(創業團隊)</td>
-                                                </tr>
+                                            <tr>
+                                                <td rowspan="3" target="data-sharing">
+                                                    <div class="square">
+                                                        <span class="label label-info hide" target="share-willingness">
+                                                            <i class="icon-ok icon-white"></i>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="control-group">
+                                                        <input type="checkbox" target="enterprise" name="enterprise" />
+                                                    </div>
+                                                </td>
+                                                <td>是否參與「社會企業」經驗</td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="control-group">
+                                                        <input type="checkbox" target="organizations" name="organizations" />
+                                                    </div>
+                                                </td>
+                                                <td>是否參與「非營利組織」經驗</td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="control-group">
+                                                        <input type="checkbox" target="entrpreneurial" name="entrpreneurial" />
+                                                    </div>
+                                                </td>
+                                                <td>是否擔任業師意願(創業團隊)</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
