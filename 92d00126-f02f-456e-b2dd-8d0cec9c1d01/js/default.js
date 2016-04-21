@@ -360,6 +360,12 @@
       e.preventDefault();
       return $(".modal[target='experience'] span[target='status']").html($(this).html());
     });
+    //Dylan 2016/4/20 新增
+    $(".technicaloptions").on("click", "ul[target='technical-options'] a", function(e) {
+      e.preventDefault();
+      return $("span[target='technical']").html($(this).html());
+    });
+
     $(".modal[target='experience']").on("focus", "input.date:not(.hasDatepicker)", function() {
       return $(this).datepicker({
         dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"],
@@ -423,9 +429,15 @@
                   PermanentAddress: !$("#baseinfo span[target='share-permanent-address']").hasClass('hide'),
                   OtherAddressList: {
                     Address: [!$("#baseinfo span[target='share-office-address']").hasClass('hide'), !$("#baseinfo span[target='share-office-address']").hasClass('hide'), !$("#baseinfo span[target='share-office-address']").hasClass('hide')]
-                  }
+                  },
+                  //2016/4/20 新增 興趣/技能
+                  Interest: !$("#baseinfo span[target='share-interest']").hasClass('hide'),
+                  TechnicalAbility: !$("#baseinfo span[target='share-technical-ability']").hasClass('hide'),
                 }
-              }
+              },
+              //2016/4/20 - 新增
+              Interest : $("#baseinfo input[target='interest']").val(),
+              TechnicalAbility :$("#baseinfo span[target='technical']").val()
             }
           }
         };
@@ -606,6 +618,9 @@
                 } else {
                   myInfo.DataSharing = response.Result.DataSharing.DataSharing;
                 }
+                //2016/4/20 Dylan 新增
+                myInfo.Interest = response.Result.Interest;
+                myInfo.TechnicalAbility = response.Result.TechnicalAbility;
                 bind_baseinfo();
                 return bind_address();
               }
@@ -789,6 +804,22 @@
       $("#baseinfo span[target='share-office-address']").removeClass("hide");
     }
     $("#baseinfo span[target='share-office-address']").attr("original", myInfo.DataSharing.OtherAddressList.Address[0]);
+    //2016/4/20 新增
+    //興趣
+    if (myInfo.DataSharing.Interest === "true") {
+      $("#baseinfo span[target='share-interest']").removeClass("hide");
+    }
+    $("#baseinfo span[target='share-interest']").attr("original", myInfo.DataSharing.Interest);
+    $("#baseinfo input[target='interest']").val(myInfo.Interest);
+    $("#baseinfo input[target='interest']").attr("original", myInfo.Interest);
+    //技能
+    if (myInfo.DataSharing.TechnicalAbility === "true") {
+      $("#baseinfo span[target='share-technical-ability']").removeClass("hide");
+    }
+    $("#baseinfo span[target='share-technical-ability']").attr("original", myInfo.DataSharing.TechnicalAbility);
+    $("#baseinfo span[target='technical']").html(myInfo.TechnicalAbility);
+    $("#baseinfo span[target='technical']").attr("original", myInfo.TechnicalAbility);
+
     return $("#baseinfo span[target='photo']").html("<img src='data:image/png;base64," + myInfo.FreshmanPhoto + "' style='width:80px'/>");
   };
 
@@ -958,6 +989,8 @@
           $(".modal[target='experience'] ul[target='department-options']").html(options['部門類別'].join(""));
           $(".modal[target='experience'] ul[target='place-options']").html(options['工作地點'].join(""));
           $(".modal[target='experience'] ul[target='status-options']").html(options['工作狀態'].join(""));
+          //2016/4/19 - Dylan 新增
+          $("ul[target='technical-options']").html(options['技能'].join(""));
           return bind_experience();
         }
       }
