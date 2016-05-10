@@ -9,7 +9,7 @@ angular.module('learning', []) //ng-app,[外掛模組]
         //-> 取得學年度學期
         $scope.getSemester = function() {
             $scope.connection.send({
-                service: "_.GetSemester",
+                service: "GetSemester",
                 body: '',
                 result: function(response, error, http) {
                     if (error !== null) {
@@ -18,12 +18,27 @@ angular.module('learning', []) //ng-app,[外掛模組]
                         //console.log(response); //檢查元素console用
                         $scope.$apply(function() { //apply用來更新選擇或變動的資料顯示
                             if (response !== null && response.Response !== null && response.Response !== '') {
-                                $scope.semesters = [].concat(response.Response.Semester);
+                                $scope.semesters = [].concat(response.Response.Semester||[]);
 
                                 if ($scope.semesters.length > 0) { //長度要大於０，至少要有一筆記錄
                                     $scope.currentSemester = $scope.semesters[0]; //預設選取第一筆記錄
                                     $scope.selectSemester($scope.semesters[0]); //第一筆記錄詳細資料
                                 }
+                            }
+                        });
+                    }
+                }
+            });
+            $scope.connection.send({
+                service: "GetStudentSummary",
+                body: '',
+                result: function (response, error, http) {
+                    if (error !== null) {
+                    } else {
+                        //console.log(response); //檢查元素console用
+                        $scope.$apply(function () { //apply用來更新選擇或變動的資料顯示
+                            if (response !== null && response.Response !== null && response.Response !== '') {
+                                $scope.Summary = [].concat(response.Response.Summary || []);
                             }
                         });
                     }
@@ -44,7 +59,7 @@ angular.module('learning', []) //ng-app,[外掛模組]
 
             //-> 取得資料
             $scope.connection.send({
-                service: "_.GetStudentDetail",
+                service: "GetStudentDetail",
                 body: {
                     Request: {
                         Condition: {
