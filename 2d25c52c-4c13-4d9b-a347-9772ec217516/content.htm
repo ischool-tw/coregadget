@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html ng-app="learning">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+    <META HTTP-EQUIV="EXPIRES" CONTENT="0">
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+    <script src="js/gadget.js"></script>
+    <script>
+        init({
+            application: "dev.sh_d",
+            oAuth: {
+                clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+                clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
+                account: 'parent@demo',
+                password: '1234'
+            },
+            paramValues: {
+            }
+        });
+    </script>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <link href="css/base.css" rel="stylesheet" />
+    <link href="css/default.css" rel="stylesheet" />
+    <script src="js/jquery-1.8.1.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/servicelearning.js"></script>
+</head>
+
+<body ng-controller="MainCtrl">
+    <div id="gadget" class="my-page">
+        <div id="mainMsg"></div>
+        <div id="children" class="my-child" ng-mouseover="myChildnameHeight='35px'" ng-mouseleave="myChildnameHeight='0px'">
+            <div class="my-childname" ng-style="{height:myChildnameHeight}">
+                <ul>
+                    <li ng-repeat="item in studentsinfo" ng-click="selectStudent(item)">{{item.StudentName}}</li>
+                </ul>
+            </div>
+            <div class="my-childbar">
+                <i class="fa fa-user"></i>
+                <span>{{currentStudent.StudentName}}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div ng-if="Summary">
+                    <h1>服務學習時數總覽</h1>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th class="text-center">學年度</th>
+                                <th class="text-center">上學期時數</th>
+                                <th class="text-center">下學期時數</th>
+                                <th class="text-center">全年時數統計</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="s in Summary">
+                                <td class="text-center">{{s.SchoolYear}}</td>
+                                <td>{{s.S1Hours}}</td>
+                                <td>{{s.S2Hours}}</td>
+                                <td>{{s.TotalHours}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h1>服務學習明細查詢</h1>
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    {{currentSemester.SchoolYear}}學年度第{{currentSemester.Semester}}學期
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li ng-repeat="item in semesters" ng-class="{'active':item.selected}">
+                                        <a href="javascript:;" ng-click="selectSemester(item)">{{item.SchoolYear}}學年度第{{item.Semester}}學期</a>
+                                        <!--angular跟#太熟，避免誤認，所以改用javascript:;-->
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <table class="table table-bordered table-striped my-total" data-type="total" style="margin-bottom:10px;">
+                                <tr>
+                                    <th width="50%">總時數</th>
+                                    <td>{{totalHours}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <table class="table table-bordered table-striped" data-type="detail">
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>服務內容</th>
+                                <th>時數</th>
+                                <th>主辦單位</th>
+                                <th>校內/校外</th>
+                                <th>備註</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-if="records">
+                            <tr ng-repeat="item in records">
+                                <td>{{item.OccurDate}}</td>
+                                <td>{{item.Reason}}</td>
+                                <td>{{item.Hours}}</td>
+                                <td>{{item.Organizers}}</td>
+                                <td>{{item.InternalOrExternal}}</td>
+                                <td>{{item.Remark}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-if="!records">
+                            <tr>
+                                <td colspan="6">目前無資料</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

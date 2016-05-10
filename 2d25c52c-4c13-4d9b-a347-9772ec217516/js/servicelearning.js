@@ -1,144 +1,164 @@
 angular.module('learning', [])
 
-.controller('MainCtrl', ['$scope',function($scope) {
+.controller('MainCtrl', ['$scope', function ($scope) {
 
-        $scope.connection = gadget.getContract("ischool.service_learning.parent");
+    $scope.connection = gadget.getContract("ischool.service_learning.parent");
 
-        //-> 取得學生名單
-        $scope.getStudentInfo = function() {
-            $scope.connection.send({
-                service: "_.GetStudentInfo",
-                body: '',
-                result: function(response, error, http) {
-                    if (error !== null) {
-                        $scope.set_error_message('#mainMsg', 'GetStudentInfo', error);
-                    } else {
-                        //console.log(response);
-                        $scope.$apply(function() {
-                        $scope.studentsinfo = [].concat(response.Result.Student);
+    //-> 取得學生名單
+    $scope.getStudentInfo = function () {
+        $scope.connection.send({
+            service: "GetStudentInfo",
+            body: '',
+            result: function (response, error, http) {
+                if (error !== null) {
+                    $scope.set_error_message('#mainMsg', 'GetStudentInfo', error);
+                } else {
+                    //console.log(response);
+                    $scope.$apply(function () {
+                        $scope.studentsinfo = [].concat(response.Result.Student || []);
 
-                            if ($scope.studentsinfo.length > 0) { //長度要大於０，至少要有一筆記錄
-                                $scope.currentStudent = $scope.studentsinfo[0]; //預設選取第一筆記錄
-                                $scope.selectStudent($scope.studentsinfo[0]); //第一筆記錄詳細資料
-                            }
-                        });
-                    }
-                }
-            });
-        }
-
-        $scope.selectStudent = function(item) {
-            $scope.currentStudent = item;
-
-            $scope.getSemester();
-
-        }
-
-        //-> 取得學年度學期
-        $scope.getSemester = function() {
-            $scope.connection.send({
-                service: "_.GetSemester",
-                body: {
-                    Request: {
-                        Condition: {
-                            MyStudentID: $scope.currentStudent.StudentID
+                        if ($scope.studentsinfo.length > 0) { //長度要大於０，至少要有一筆記錄
+                            $scope.currentStudent = $scope.studentsinfo[0]; //預設選取第一筆記錄
+                            $scope.selectStudent($scope.studentsinfo[0]); //第一筆記錄詳細資料
                         }
-                    }
-                },
-                result: function(response, error, http) {
-                    if (error !== null) {
-                        $scope.set_error_message('#mainMsg', 'GetSemester', error);
-                    } else {
-                        //console.log(response); //檢查元素console用
-                        $scope.$apply(function() { //apply用來更新選擇或變動的資料顯示
-                            if (response !== null && response.Response !== null && response.Response !== '') {
-                                $scope.semesters = [].concat(response.Response.Semester);
-
-                                if ($scope.semesters.length > 0) { //長度要大於０，至少要有一筆記錄
-                                    $scope.currentSemester = $scope.semesters[0]; //預設選取第一筆記錄
-                                    $scope.selectSemester($scope.semesters[0]); //第一筆記錄詳細資料
-                                }
-                            }
-                        });
-                    }
+                    });
                 }
-            });
-        }
-
-        $scope.selectSemester = function(item) { //selectSemester=item
-            $scope.currentSemester = item; //指定選擇的學年度學期＝item
-
-
-            //-> 學年度學期選取下拉變色
-            angular.forEach($scope.semesters, function(item) {
-                item.selected = false; //先設定通通不選取
-            })
-
-            item.selected = true; //設定被選取
-
-            //-> 取得資料
-            $scope.connection.send({
-                service: "_.GetStudentDetail",
-                body: {
-                    Request: {
-                        Condition: {
-                            SchoolYear: item.SchoolYear,
-                            Semester: item.Semester, //最後一行給逗號，ＩＥ會爆炸
-                            MyStudentID: $scope.currentStudent.StudentID
-                        }
-                    }
-                }, //物件的寫法
-                result: function(response, error, http) {
-                    if (error !== null) {
-                        $scope.set_error_message('#mainMsg', 'GetStudentDetail', error);
-                    } else {
-                        //console.log(response); //檢查元素console用
-
-                        //-> 計算總時數
-                        $scope.$apply(function() {
-                            if (response !== null && response.Response !== null && response.Response !== '') {
-                                $scope.records = [].concat(response.Response.Record); //當回傳得項目只有一個時，service會判斷成物件（多個時會是陣列），這裡寫法是將物件轉為陣列
-                                $scope.totalHours = 0; //預設總時數為０
-                                angular.forEach($scope.records, function(item) {
-                                    $scope.totalHours += Math.abs(item.Hours * 100); //字串轉成數字，小數點２位計算，先變整數計算
-                                })
-
-                                $scope.totalHours = $scope.totalHours / 100; //還原為小數
-                            }
-                        });
-                    }
-                }
-            });
-        }
-
-        // TODO: 錯誤訊息
-        $scope.set_error_message = function(select_str, serviceName, error) {
-            var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
-            if (error !== null) {
-                if (error.dsaError) {
-                    if (error.dsaError.status === "504") {
-                        switch (error.dsaError.message) {
-                            case '501':
-                                tmp_msg = '<strong>很抱歉，您無讀取資料權限！</strong>';
-                                break;
-                        }
-                    } else if (error.dsaError.message) {
-                        tmp_msg = error.dsaError.message;
-                    }
-                } else if (error.loginError.message) {
-                    tmp_msg = error.loginError.message;
-                } else if (error.message) {
-                    tmp_msg = error.message;
-                }
-                $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
-                $('.my-err-info').click(function() {
-                    alert('請拍下此圖，並與客服人員連絡，謝謝您。\n' + JSON.stringify(error, null, 2))
-                });
             }
-        };
-
-        $scope.getStudentInfo();
+        });
     }
+
+    $scope.selectStudent = function (item) {
+        $scope.currentStudent = item;
+        $scope.Summary = [];
+        $scope.records = [];
+        $scope.totalHours = 0;
+        $scope.connection.send({
+            service: "GetSemester",
+            body: {
+                Request: {
+                    Condition: {
+                        MyStudentID: $scope.currentStudent.StudentID
+                    }
+                }
+            },
+            result: function (response, error, http) {
+                if (error !== null) {
+                    $scope.set_error_message('#mainMsg', 'GetSemester', error);
+                } else {
+                    //console.log(response); //檢查元素console用
+                    $scope.$apply(function () { //apply用來更新選擇或變動的資料顯示
+                        if (response !== null && response.Response !== null && response.Response !== '') {
+                            $scope.semesters = [].concat(response.Response.Semester || []);
+
+                            if ($scope.semesters.length > 0) { //長度要大於０，至少要有一筆記錄
+                                $scope.currentSemester = $scope.semesters[0]; //預設選取第一筆記錄
+                                $scope.selectSemester($scope.semesters[0]); //第一筆記錄詳細資料
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        $scope.connection.send({
+            service: "GetStudentSummary",
+            body: {
+                Request: {
+                    Condition: {
+                        MyStudentID: $scope.currentStudent.StudentID
+                    }
+                }
+            },
+            result: function (response, error, http) {
+                if (error !== null) {
+
+                } else {
+                    //console.log(response); //檢查元素console用
+                    $scope.$apply(function () { //apply用來更新選擇或變動的資料顯示
+                        if (response !== null && response.Response !== null && response.Response !== '') {
+                            $scope.Summary = [].concat(response.Response.Summary || []);
+                        }
+                    });
+                }
+            }
+        });
+
+    }
+
+    $scope.selectSemester = function (item) { //selectSemester=item
+        $scope.currentSemester = item; //指定選擇的學年度學期＝item
+
+
+        //-> 學年度學期選取下拉變色
+        angular.forEach($scope.semesters, function (item) {
+            item.selected = false; //先設定通通不選取
+        })
+
+        item.selected = true; //設定被選取
+
+        //-> 取得資料
+        $scope.connection.send({
+            service: "GetStudentDetail",
+            body: {
+                Request: {
+                    Condition: {
+                        SchoolYear: item.SchoolYear,
+                        Semester: item.Semester, //最後一行給逗號，ＩＥ會爆炸
+                        MyStudentID: $scope.currentStudent.StudentID
+                    }
+                }
+            }, //物件的寫法
+            result: function (response, error, http) {
+                if (error !== null) {
+                    $scope.set_error_message('#mainMsg', 'GetStudentDetail', error);
+                } else {
+                    //console.log(response); //檢查元素console用
+
+                    //-> 計算總時數
+                    $scope.$apply(function () {
+                        if (response !== null && response.Response !== null && response.Response !== '') {
+                            $scope.records = [].concat(response.Response.Record||[]); //當回傳得項目只有一個時，service會判斷成物件（多個時會是陣列），這裡寫法是將物件轉為陣列
+                            $scope.totalHours = 0; //預設總時數為０
+                            angular.forEach($scope.records, function (item) {
+                                $scope.totalHours += Math.abs(item.Hours * 100); //字串轉成數字，小數點２位計算，先變整數計算
+                            })
+
+                            $scope.totalHours = $scope.totalHours / 100; //還原為小數
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    // TODO: 錯誤訊息
+    $scope.set_error_message = function (select_str, serviceName, error) {
+        var tmp_msg = '<i class="icon-white icon-info-sign my-err-info"></i><strong>呼叫服務失敗或網路異常，請稍候重試!</strong>(' + serviceName + ')';
+        if (error !== null) {
+            if (error.dsaError) {
+                if (error.dsaError.status === "504") {
+                    switch (error.dsaError.message) {
+                        case '501':
+                            tmp_msg = '<strong>很抱歉，您無讀取資料權限！</strong>';
+                            break;
+                    }
+                } else if (error.dsaError.message) {
+                    tmp_msg = error.dsaError.message;
+                }
+            } else if (error.loginError.message) {
+                tmp_msg = error.loginError.message;
+            } else if (error.message) {
+                tmp_msg = error.message;
+            }
+            $(select_str).html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  " + tmp_msg + "\n</div>");
+            $('.my-err-info').click(function () {
+                alert('請拍下此圖，並與客服人員連絡，謝謝您。\n' + JSON.stringify(error, null, 2))
+            });
+        }
+    };
+
+    $scope.getStudentInfo();
+}
 ])
 
 // var _gg = _gg || {};
