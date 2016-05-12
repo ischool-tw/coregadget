@@ -3,9 +3,9 @@
   var bind_address, bind_baseinfo, bind_data_source, bind_education, bind_experience, bind_myinfo, educations, experiences, myInfo;
 
   $(function() {
-    $("td[target='data-sharing']").click(function(e) {
+    $("span[target='data-sharing']").click(function(e) {
       e.preventDefault();
-      return $(this).find("span").toggleClass("hide").closest('div').toggleClass('square');
+      return $(this).find("span").toggleClass("notshare");
     });
     $('.modal').on('shown', function() {
       $('.modal-body', $(this)).scrollTop(0);

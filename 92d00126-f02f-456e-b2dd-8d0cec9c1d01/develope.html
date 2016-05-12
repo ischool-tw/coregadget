@@ -1,247 +1,551 @@
 ﻿<!DOCTYPE html>
-<html>
+<html ng-app="app">
+
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="text/html;charset=utf-8">
-  <script src="js/gadget.js"></script>
-  <script>
+    <script src="js/gadget.js"></script>
+    <script>
     init({
-      application: "test.emba.ntu.edu.tw",
-      oAuth: {
-        clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
-        clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
-        account: 'dylan.huang@ischool.com.tw',
-        password:'0728_poz012'
-      }
+        application: "test.emba.ntu.edu.tw",
+        oAuth: {
+            clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+            clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
+            account: 'bubu@debug.ischool.com.tw',
+            password: '1234'
+        }
     });
-  </script>
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
-	<link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"/>
-    <link href="css/default.css" rel="stylesheet"/>
+    </script>
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
     <link href="css/base.css" rel="stylesheet" />
-    <link href="css/jquery-ui-1.8.7.custom.css" rel="stylesheet" />
+    <link href="css/default.css" rel="stylesheet" />
     <script src="js/jquery.min.js"></script>
-    <script src="js/jquery-ui.min.js"></script>
-    <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="js/jquery.validate.min.js"></script>
-    <script src="js/jquery.metadata.js"></script>
-    <script src="js/messages_tw.js"></script>
-	<script src="js/default.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/checklist-model.js"></script>
 </head>
-<body>
-    <div id="widget" class="my-page">
-        <div class="modal hide fade" target="address">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>地址</h3>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="control-group">
-                        <label class="control-label">郵遞區號</label>
-                        <div class="controls">
-                            <input type="text" placeholder="郵遞區號" target="zipcode">
+
+<body ng-controller="MainCtrl">
+    <div id="gadget" class="my-page">
+        <!--modal 學歷-->
+        <div class="modal fade" id="education" tabindex="-1" role="dialog" aria-labelledby="myeducation">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myeducation">{{educations.current.type=='edit'?'編輯學歷':'新增學歷'}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div ng-show="educations.current.confirm" class="alert alert-danger" target="confirm-message">
+                            是否確定刪除此筆記錄？
+                            <a href="javascript:;" target="confirm-cancel" ng-click="educations.current.confirm=false">取消</a>
+                            <a href="javascript:;" target="confirm-accept" ng-click="educations.del(educations.current.result)">確定</a>
+                        </div>
+                        <div class="switch">
+                            分享：
+                            <label>
+                                否
+                                <input type="checkbox" target="top" name="share" ng-model="educations.current.result.IsSharing">
+                                <span class="lever"></span> 是
+                            </label>
+                        </div>
+                        <div class="switch">
+                            最高學歷：
+                            <label>
+                                否
+                                <input type="checkbox" target="top" name="top" ng-model="educations.current.result.IsTop">
+                                <span class="lever"></span> 是
+                            </label>
+                        </div>
+                        <div class="input-group" ng-class="{'has-error': !educations.current.result.SchoolName}">
+                            <span class="input-group-addon">學校</span>
+                            <input type="text" class="form-control" placeholder="必填" target="schoolname" name="schoolname" ng-model="educations.current.result.SchoolName">
+                        </div>
+                        <div class="input-group" ng-class="{'has-error': !educations.current.result.Department}">
+                            <span class="input-group-addon">系所</span>
+                            <input type="text" class="form-control" placeholder="必填" target="department" name="department" ng-model="educations.current.result.Department">
+                        </div>
+                        <div class="input-group" ng-class="{'has-error': !educations.current.result.Degree}">
+                            <span class="input-group-addon">學位</span>
+                            <input type="text" class="form-control" placeholder="必填" target="degree" name="degree" ng-model="educations.current.result.Degree">
                         </div>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label">縣市</label>
-                        <div class="controls">
-                            <input type="text" placeholder="縣市" target="county">
-                        </div>
+                    <div class="modal-footer">
+                        <a href="javascript:;" class="btn btn-danger pull-left" target="delete" ng-click="educations.current.confirm=true">刪除</a>
+                        <a href="javascript:;" class="btn btn-default" ng-click="educations.reset()">取消</a>
+                        <a href="javascript:;" class="btn btn-primary" target="save" ng-click="educations.save()">儲存</a>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label">鄉鎮市區</label>
-                        <div class="controls">
-                            <input type="text" placeholder="鄉鎮市區" target="town">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">村里</label>
-                        <div class="controls">
-                            <input type="text" placeholder="村里" target="district">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">鄰</label>
-                        <div class="controls">
-                            <input type="text" placeholder="鄰" target="area">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">其它</label>
-                        <div class="controls">
-                            <input type="text" placeholder="其它" target="detail">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <a href="#" class="btn" data-dismiss="modal" aria-hidden="true">取消</a>
-                <a href="#" class="btn btn-primary" target="accept">填入</a>
+                </div>
             </div>
         </div>
-
-        <div class="modal hide fade" target="education">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>新增學歷</h3>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-error hide" target="confirm-message">
-                    是否確定刪除此筆記錄？
-                    <a href="#" target="confirm-cancel">取消</a>
-                    <a href="#" target="confirm-accept">確定</a>
+        <!--modal 經歷-->
+        <div class="modal fade" id="experience" tabindex="-1" role="dialog" aria-labelledby="myexperience">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myexperience">新增經歷</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div ng-show="experiences.current.confirm" class="alert alert-danger" target="confirm-message">
+                            是否確定刪除此筆記錄？
+                            <a href="javascript:;" target="confirm-cancel" ng-click="experiences.current.confirm=false">取消</a>
+                            <a href="javascript:;" target="confirm-accept" ng-click="experiences.del(experiences.current.result)">確定</a>
+                        </div>
+                        <div class="switch">
+                            分享：
+                            <label>
+                                否
+                                <input type="checkbox" target="top" name="share" ng-model="experiences.current.result.IsSharing">
+                                <span class="lever"></span> 是
+                            </label>
+                        </div>
+                        <div class="input-group" ng-class="{'has-error': !experiences.current.result.CompanyName}">
+                            <span class="input-group-addon">公司名稱</span>
+                            <input type="text" class="form-control" placeholder="必填" target="companyname" name="companyname" ng-model="experiences.current.result.CompanyName">
+                        </div>
+                        <div class="input-group" ng-class="{'has-error': !experiences.current.result.Position}">
+                            <span class="input-group-addon">職稱</span>
+                            <input type="text" class="form-control" placeholder="必填" target="position" name="position" ng-model="experiences.current.result.Position">
+                        </div>
+                        <div class="input-group" ng-class="{'has-error': !experiences.current.result.PostLevel.length}">
+                            <span class="input-group-addon">層級別</span>
+                            <input type="text" class="form-control" placeholder="必填" target="" data-toggle="modal" data-target="#level" readonly value="{{experiences.current.result.PostLevel.join(',')}}">
+                            <div ng-show="experiences.current.result.PostLevel.indexOf('其它')!=-1" class="other" ng-class="{'has-error': !experiences.current.result.PostLevel_Other}">
+                                {{experiences.current.result.PostLevel_Other || '必填'}}
+                            </div>
+                        </div>
+                        <div class="dropdown" ng-class="{'has-error': !experiences.current.result.DepartmentCategory}">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="department" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <span target="branch">{{experiences.current.result.DepartmentCategory || '部門'}}</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="department" target="department-options">
+                                <li ng-click="experiences.current.result.DepartmentCategory=''">...請選擇部門...</li>
+                                <li ng-repeat="item in ExperienceDataSource['C_部門類別']" ng-click="experiences.current.result.DepartmentCategory=item">{{item}}</li>
+                                <li ng-click="experiences.current.result.DepartmentCategory='其它'">其它</li>
+                            </ul>
+                            <div ng-show="experiences.current.result.DepartmentCategory=='其它'" class="input-group" ng-class="{'has-error': !experiences.current.result.DepartmentCategory_Other}">
+                                <span class="input-group-addon">請註明</span>
+                                <input type="text" class="form-control" placeholder="必填" target="" name="" ng-model="experiences.current.result.DepartmentCategory_Other">
+                            </div>
+                        </div>
+                        <div class="dropdown" ng-class="{'has-error': !experiences.current.result.Industry}">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="industry" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <span target="branch">{{experiences.current.result.Industry || '產業別'}}</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="industry" target="industry-options">
+                                <li ng-click="experiences.current.result.Industry=''">...請選擇產業別...</li>
+                                <li ng-repeat="item in ExperienceDataSource['C_產業別']" ng-click="experiences.current.result.Industry=item">{{item}}</li>
+                                <li ng-click="experiences.current.result.Industry='其它'">其它</li>
+                            </ul>
+                            <div ng-show="experiences.current.result.Industry=='其它'" class="input-group" ng-class="{'has-error': !experiences.current.result.Industry_Other}">
+                                <span class="input-group-addon">請註明</span>
+                                <input type="text" class="form-control" placeholder="必填" target="" name="" ng-model="experiences.current.result.Industry_Other">
+                            </div>
+                        </div>
+                        <div class="input-group" ng-class="{'has-error': !experiences.current.result.WorkPlace.length}">
+                            <span class="input-group-addon">工作地點</span>
+                            <input type="text" class="form-control" placeholder="必填" target="" data-toggle="modal" data-target="#placeModal" readonly value="{{experiences.current.result.WorkPlace.join(',')}}">
+                            <div ng-show="experiences.current.result.WorkPlace.indexOf('其它')!=-1" class="other" ng-class="{'has-error': !experiences.current.result.WorkPlace_Other}">
+                                {{experiences.current.result.WorkPlace_Other || '必填'}}
+                            </div>
+                        </div>
+                        <div class="dropdown" ng-class="{'has-error': !experiences.current.result.WorkStatus}">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="statusMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <span target="status">{{experiences.current.result.WorkStatus || '工作狀態'}}</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="statusMenu" target="status-options">
+                                <li ng-click="experiences.current.result.WorkStatus=''">...請選擇工作狀態...</li>
+                                <li ng-repeat="item in ExperienceDataSource['C_工作狀態']" ng-click="experiences.current.result.WorkStatus=item">{{item}}</li>
+                                <li ng-click="experiences.current.result.WorkStatus='其它'">其它</li>
+                            </ul>
+                            <div ng-show="experiences.current.result.WorkStatus=='其它'" class="input-group" ng-class="{'has-error': !experiences.current.result.WorkStatus_Other}">
+                                <span class="input-group-addon">請註明</span>
+                                <input type="text" class="form-control" placeholder="必填" target="" name="" ng-model="experiences.current.result.WorkStatus_Other">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:;" class="btn btn-danger pull-left" target="delete" ng-click="experiences.current.confirm=true">刪除</a>
+                        <a href="javascript:;" class="btn btn-default" ng-click="experiences.reset()">取消</a>
+                        <a href="javascript:;" class="btn btn-primary" target="save" ng-click="experiences.save()">儲存</a>
+                    </div>
                 </div>
-                <form class="form-horizontal">
-                    <!--                 <div class="control-group">
-                                        <label class="control-label">分享</label>
-                                        <div class="controls">
-                                            <input type="checkbox" target="sharing">
+            </div>
+        </div>
+        <!--modal 經歷－層級別-->
+        <div class="modal fade" id="level" tabindex="-1" role="dialog" aria-labelledby="mylevel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="mylevel">層級別 <small class="text-danger">(必填)</small></h4>
+                    </div>
+                    <div class="modal-body row">
+                        <div class="col-sm-4" ng-repeat="item in ExperienceDataSource['C_層級別']">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" checklist-model="experiences.current.result.PostLevel" checklist-value="item"> {{item}}
+                            </label>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" checklist-model="experiences.current.result.PostLevel" checklist-value="'其它'"> 其它
+                                    </label>
+                                </div>
+                                <div ng-show="experiences.current.result.PostLevel.indexOf('其它')!=-1" class="col-xs-9" ng-class="{'has-error': (!experiences.current.result.PostLevel_Other)}">
+                                    <input type="text" class="form-control" placeholder="必填" ng-model="experiences.current.result.PostLevel_Other">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <span ng-show="!experiences.current.result.PostLevel.length" class="text-danger">請勾選。</span>
+                        <span ng-show="experiences.current.result.PostLevel.indexOf('其它')!=-1 && !experiences.current.result.PostLevel_Other" class="text-danger">請填入「其它」的內容。</span>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-disabled="(!experiences.current.result.PostLevel.length) || (experiences.current.result.PostLevel.indexOf('其它')!=-1 && !experiences.current.result.PostLevel_Other)">確定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--modal 經歷－工作地點-->
+        <div class="modal fade" id="placeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">工作地點 <small class="text-danger">(必填)</small></h4>
+                    </div>
+                    <div class="modal-body row">
+                        <div class="col-sm-3" ng-repeat="item in ExperienceDataSource['C_工作地點']">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" checklist-model="experiences.current.result.WorkPlace" checklist-value="item"> {{item}}
+                            </label>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" checklist-model="experiences.current.result.WorkPlace" checklist-value="'其它'"> 其它
+                                    </label>
+                                </div>
+                                <div ng-show="experiences.current.result.WorkPlace.indexOf('其它')!=-1" class="col-xs-8" ng-class="{'has-error': (!experiences.current.result.WorkPlace_Other)}">
+                                    <input type="text" class="form-control" placeholder="必填" ng-model="experiences.current.result.WorkPlace_Other">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <span ng-show="!experiences.current.result.WorkPlace.length" class="text-danger">請勾選。</span>
+                        <span ng-show="experiences.current.result.WorkPlace.indexOf('其它')!=-1 && !experiences.current.result.WorkPlace_Other" class="text-danger">請填入「其它」的內容。</span>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-disabled="(!experiences.current.result.WorkPlace.length) || (experiences.current.result.WorkPlace.indexOf('其它')!=-1 && !experiences.current.result.WorkPlace_Other)">確定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--modal 校外團體-->
+        <div class="modal fade check-modal" id="group4" tabindex="-1" role="dialog" aria-labelledby="mygroup4">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="mygroup4">參加校外團體</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" ng-repeat-start="domain in AdditionalSetup['S_ExternalOrganization'].Domain">
+                                <label>
+                                    <input type="checkbox" ng-show="!AdditionalSetup['S_ExternalOrganization']['D_'+domain.Key].Category.length" checklist-model="stu_additionals.result['my_ExternalOrganization']" checklist-value="domain.Value"> {{domain.Key}}
+                                </label>
+                            </div>
+                            <ul class="list-group" ng-repeat-end>
+                                <li class="list-group-item" ng-repeat-start="category in AdditionalSetup['S_ExternalOrganization']['D_'+domain.Key].Category">
+                                    <label>
+                                        <input type="checkbox" ng-show="!AdditionalSetup['S_ExternalOrganization']['D_'+domain.Key]['C_category'].Item" checklist-model="stu_additionals.result['my_ExternalOrganization']" checklist-value="category.Value"> {{category.Key}}
+                                    </label>
+                                </li>
+                                <div class="row" ng-repeat-end>
+                                    <div class="col-sm-3" ng-repeat="item in AdditionalSetup['S_ExternalOrganization']['D_'+domain.Key]['C_'+category.Key].Item">
+                                        <label>
+                                            <input type="checkbox" checklist-model="stu_additionals.result['my_ExternalOrganization']" checklist-value="item.Value"> {{item.Key}}
+                                        </label>
+                                    </div>
+                                </div>
+                            </ul>
+                            <div class="panel-heading">
+                                <label>
+                                    <input type="checkbox"> 其它
+                                </label>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <label>
+                                        <div class="input-group" style="margin: 0"><span class="input-group-addon">請註明</span>
+                                            <input type="text" class="form-control" placeholder="必填">
                                         </div>
-                                    </div> -->
-                    <div class="control-group">
-                        <label class="control-label">學校</label>
-                        <div class="controls">
-                            <input type="text" placeholder="學校" target="schoolname" name="schoolname">
+                                    </label>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label">系所</label>
-                        <div class="controls">
-                            <input type="text" placeholder="系所" target="department" name="department">
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">確定</button>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label">學位</label>
-                        <div class="controls">
-                            <input type="text" placeholder="學位" target="degree" name="degree">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">最高學歷</label>
-                        <div class="controls">
-                            <input type="checkbox" target="top" name="top">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <a href="#" class="btn btn-danger pull-left" target="delete">刪除</a>
-                <a href="#" class="btn" data-dismiss="modal" aria-hidden="true">取消</a>
-                <a href="#" class="btn btn-primary" target="save">儲存</a>
-            </div>
-        </div>
-
-        <div class="modal hide fade" target="experience">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>新增經歷</h3>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-error hide" target="confirm-message">
-                    是否確定刪除此筆記錄？
-                    <a href="#" target="confirm-cancel">取消</a>
-                    <a href="#" target="confirm-accept">確定</a>
                 </div>
-                <form class="form-horizontal">
-                    <div class="control-group">
-                        <label class="control-label">分享</label>
-                        <div class="controls">
-                            <input type="checkbox" target="sharing" name="experience_sharing" class="{ShareIncumbent: true}">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label"><span class="my-star">*</span>公司</label>
-                        <div class="controls">
-                            <input type="text" placeholder="公司" target="companyname" name="companyname" class="{required: true}">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label"><span class="my-star">*</span>職稱</label>
-                        <div class="controls">
-                            <input type="text" placeholder="職稱" target="position" name="position" class="{required: true}">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label"><span class="my-star">*</span>層級別</label>
-                        <div class="controls">
-                            <select class="form-control {required: true}" target="level" name="level"></select>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label"><span class="my-star">*</span>產業別</label>
-                        <div class="controls">
-                            <select class="form-control {required: true}" target="industry" name="industry"></select>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label"><span class="my-star">*</span>部門</label>
-                        <div class="controls">
-                            <select class="form-control {required: true}" target="department" name="department"></select>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label"><span class="my-star">*</span>工作地點</label>
-                        <div class="controls">
-                            <select class="form-control {required: true}" target="place" name="place"></select>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label"><span class="my-star">*</span>工作狀態</label>
-                        <div class="controls">
-                            <select class="form-control {required: true}" target="status" name="status"></select>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">公關姓名</label>
-                        <div class="controls">
-                            <input type="text" placeholder="公關姓名" target="publicist" name="publicist">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">公關室電話</label>
-                        <div class="controls">
-                            <input type="text" placeholder="公關室電話" target="public_relations_office_telephone" name="public_relations_office_telephone">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">公關室傳真</label>
-                        <div class="controls">
-                            <input type="text" placeholder="公關室傳真" target="public_relations_office_fax" name="public_relations_office_fax">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">公關室email</label>
-                        <div class="controls">
-                            <input type="text" placeholder="公關室email" target="publicist_email" name="publicist_email" class="{email: true}">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">公司網址</label>
-                        <div class="controls">
-                            <input type="text" placeholder="公司網址" target="company_website" name="company_website">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">工作起日</label>
-                        <div class="controls">
-                            <input type="text" placeholder="工作起日" target="work_begin_date" name="work_begin_date" class="{date: true, dateISO: true} date">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">工作迄日</label>
-                        <div class="controls">
-                            <input type="text" placeholder="工作迄日" target="work_end_date" name="work_end_date" class="{date: true, dateISO: true} date">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <a href="#" class="btn btn-danger pull-left" target="delete">刪除</a>
-                <a href="#" class="btn" data-dismiss="modal" aria-hidden="true">取消</a>
-                <a href="#" class="btn btn-primary" target="save">儲存</a>
             </div>
         </div>
-
+        <!--modal 興趣-->
+        <div class="modal fade check-modal" id="interest" tabindex="-1" role="dialog" aria-labelledby="myinterest">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myinterest">編輯興趣</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <label>
+                                    <input type="checkbox"> 運動</label>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 射藝</label>
+                                </li>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label>
+                                            <input type="checkbox"> 射箭</label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>
+                                            <input type="checkbox"> 射擊</label>
+                                    </div>
+                                </div>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 跑步</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 球拍類運動</label>
+                                </li>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label>
+                                            <input type="checkbox"> 羽毛球</label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>
+                                            <input type="checkbox"> 壁球</label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>
+                                            <input type="checkbox"> 桌球</label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>
+                                            <input type="checkbox"> 網球</label>
+                                    </div>
+                                </div>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 棒類運動</label>
+                                </li>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label>
+                                            <input type="checkbox"> 棒球</label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>
+                                            <input type="checkbox"> 壘球</label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>
+                                            <input type="checkbox"> 木球</label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>
+                                            <input type="checkbox"> 門球</label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>
+                                            <input type="checkbox"> 高爾夫球</label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>
+                                            <input type="checkbox"> 曲棍球</label>
+                                    </div>
+                                </div>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 球類運動</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 健體</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 武術／搏擊</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 賽艇</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 水上運動</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 攀山遠足</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 鐵人三項</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 馬術</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 飛行</label>
+                                </li>
+                            </ul>
+                            <div class="panel-heading">
+                                <label>
+                                    <input type="checkbox"> 藝術</label>
+                            </div>
+                            <div class="panel-heading">
+                                <label>
+                                    <input type="checkbox"> 音樂</label>
+                            </div>
+                            <div class="panel-heading">
+                                <label>
+                                    <input type="checkbox"> 休閒娛樂</label>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 影劇欣賞</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 閱讀</label>
+                                </li>
+                            </ul>
+                            <div class="panel-heading">
+                                <label>
+                                    <input type="checkbox"> 旅遊</label>
+                            </div>
+                            <div class="panel-heading">
+                                <label>
+                                    <input type="checkbox"> 益智</label>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 棋藝</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 牌藝</label>
+                                </li>
+                            </ul>
+                            <div class="panel-heading">
+                                <label>
+                                    <input type="checkbox"> 其他</label>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <label>
+                                        <div class="input-group" style="margin: 0"><span class="input-group-addon">請註明</span>
+                                            <input type="text" class="form-control" placeholder="必填">
+                                        </div>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true">取消</a>
+                        <a href="#" class="btn btn-primary" target="save">儲存</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--madal EMBA團體-->
+        <div class="modal fade check-modal" id="group1" tabindex="-1" role="dialog" aria-labelledby="mygroup1">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="mygroup1">參加台大EMBA團體</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <label>
+                                    <input type="checkbox"> 組織</label>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 校友會</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 桃園校友會</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 新竹校友會</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 中南部校友會</label>
+                                </li>
+                            </ul>
+                            <div class="panel-heading">
+                                <label>
+                                    <input type="checkbox"> 學會</label>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 會計與管理決策學會</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 財金學會</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 國際企業學會</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label>
+                                        <input type="checkbox"> 資管學會</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">確定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--modal end-->
         <div class="page-container">
             <!--
             <div class="header">
@@ -251,411 +555,546 @@
             </div>
             -->
             <div class="header-space"></div>
-            <div class="content container-fluid">
-                <div class="tabbable">
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="baseinfo">
-                            <div class="row-fluid">
-                                <div class="span12">
-                                    <div class="well well-small">
-                                        <i class="icon-tag"></i> 如您願意分享個人資訊於myEMBA查詢，請於分享框內打勾，學歷、經歷請點選編輯進行分享，如不願意被查詢或分享，則請勿打勾，謝謝。<br />
-                                        <i class="icon-tag"></i> 住家電話及住家地址，不開放修改也不可分享，此為EMBA辦公室聯繫您的方式。如需修改請通知 ntuemba@ntu.edu.tw
+            <div class="content">
+                <div class="well well-sm">
+                    <p><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> 如您願意分享個人資訊於myEMBA查詢，請於分享框內打勾，學歷、經歷請點選編輯進行分享，如不願意被查詢或分享，則請勿打勾，謝謝。</p>
+                    <p><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> 住家電話及住家地址，不開放修改也不可分享，此為EMBA辦公室聯繫您的方式。如需修改請通知 ntuemba@ntu.edu.tw</p>
+                </div>
+                <!--基本資料-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <i class="fa fa-fw fa-user"></i> 基本資料
+                    </div>
+                    <table class="table table-bordered responsive-table">
+                        <thead>
+                            <tr>
+                                <th>姓名</th>
+                                <th>性別</th>
+                                <th>出生日期</th>
+                                <th>緊急聯絡人</th>
+                                <th>聯絡人電話</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control nochange" target="name" name="name" readonly ng-model="myInfo.StudentInfo.Name">
+                                        <span class="input-group-addon" target="need-sharing">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-name"></span>
+                                        </span>
                                     </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control nochange" target="gender" name="gender" readonly ng-model="myInfo.StudentInfo.Gender">
+                                        <span class="input-group-addon" target="need-sharing">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-gender"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control nochange" target="birthdate" name="birthdate" readonly ng-model="myInfo.StudentInfo.Birthdate">
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.Birthdate = myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.Birthdate)">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-birthdate" ng-class="{notshare: myInfo.DataSharing.DataSharing.Birthdate!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" target="custodian-name" name="custodian-name" placeholder="必填" ng-model="myInfo.StudentInfo.CustodianName">
+                                        <span class="input-group-addon" target="cannt-sharing">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true" target="share-custodian-name"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" target="custodian-phone" name="custodian-phone" placeholder="必填" ng-model="myInfo.StudentBrief2.CustodianOtherInfo.CustodianOtherInfo.Phone">
+                                        <span class="input-group-addon" target="cannt-sharing">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true" target="share-custodian-phone"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--電話號碼-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <i class="fa fa-fw fa-phone"></i> 電話號碼
+                    </div>
+                    <table class="table table-bordered responsive-table">
+                        <thead>
+                            <tr>
+                                <th>住家電話</th>
+                                <th>公司電話</th>
+                                <th>秘書電話</th>
+                                <th>行動電話 1</th>
+                                <th>行動電話 2</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" target="permanent-phone" name="permanent-phone" placeholder="必填" ng-model="myInfo.StudentInfo.PermanentPhone">
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.PermanentPhone=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.PermanentPhone)">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-permanent-phone" ng-class="{notshare: myInfo.DataSharing.DataSharing.PermanentPhone!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" target="office-phone" name="office-phone" ng-model="myInfo.StudentBrief2.OtherPhones.PhoneList.PhoneNumber[0]">
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[0]['@text']=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[0]['@text'])">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-office-phone" ng-class="{notshare: myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[0]['@text']!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" target="other-phone" name="other-phone" ng-model="myInfo.StudentBrief2.OtherPhones.PhoneList.PhoneNumber[2]">
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[2]['@text']=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[2]['@text'])">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-other-phone" ng-class="{notshare: myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[2]['@text']!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" target="sms-phone1" name="sms-phone1" placeholder="必填" ng-model="myInfo.StudentBrief2.SMSPhone">
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.SMSPhone=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.SMSPhone)">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-sms-phone1" ng-class="{notshare: myInfo.DataSharing.DataSharing.SMSPhone!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" target="sms-phone2" name="sms-phone2" ng-model="myInfo.StudentBrief2.OtherPhones.PhoneList.PhoneNumber[1]">
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[1]['@text']=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[1]['@text'])">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-sms-phone2" ng-class="{notshare: myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[1]['@text']!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--電子信箱-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <i class="fa fa-fw fa-envelope"></i> 電子信箱
+                    </div>
+                    <table class="table table-bordered responsive-table">
+                        <thead>
+                            <tr>
+                                <th data-field="Email1">Email 1</th>
+                                <th data-field="Email2">Email 2</th>
+                                <th data-field="Email3">Email 3</th>
+                                <th data-field="Email4">Email 4</th>
+                                <th data-field="Email5">Email 5</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="{email:true} form-control" target="email1" name="email1" placeholder="必填" ng-model="myInfo.StudentInfo.EmailList.email1">
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.EmailList.Email1=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.EmailList.Email1)">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-email1" ng-class="{notshare: myInfo.DataSharing.DataSharing.EmailList.Email1!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="{email:true} form-control" target="email2" name="email2" ng-model="myInfo.StudentInfo.EmailList.email2">
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.EmailList.Email2=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.EmailList.Email2)">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-email2" ng-class="{notshare: myInfo.DataSharing.DataSharing.EmailList.Email2!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="{email:true} form-control" target="email3" name="email3" ng-model="myInfo.StudentInfo.EmailList.email3">
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.EmailList.Email3=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.EmailList.Email3)">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-email3" ng-class="{notshare: myInfo.DataSharing.DataSharing.EmailList.Email3!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="{email:true} form-control" target="email4" name="email4" ng-model="myInfo.StudentInfo.EmailList.email4">
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.EmailList.Email4=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.EmailList.Email4)">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-email4" ng-class="{notshare: myInfo.DataSharing.DataSharing.EmailList.Email4!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="{email:true} form-control" target="email5" name="email5" ng-model="myInfo.StudentInfo.EmailList.email5">
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.EmailList.Email5=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.EmailList.Email5)">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-email5" ng-class="{notshare: myInfo.DataSharing.DataSharing.EmailList.Email5!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--地址-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <i class="fa fa-fw fa-map-marker"></i> 地址
+                    </div>
+                    <table class="table table-bordered responsive-table">
+                        <thead>
+                            <tr>
+                                <th>聯絡地址</th>
+                                <th>住家地址</th>
+                                <th>公司地址</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" target="contact-address" name="contact-address" placeholder="必填" ng-model="myInfo.StudentBrief2.MailingAddress.AddressList.Address.DetailAddress" readonly>
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.ContactAddress=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.ContactAddress)">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-contact-address" ng-class="{notshare: myInfo.DataSharing.DataSharing.ContactAddress!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" target="permanent-address" name="permanent-address" placeholder="必填" ng-model="myInfo.StudentBrief2.PermanentAddress.AddressList.Address.DetailAddress" readonly>
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.PermanentAddress=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.PermanentAddress)">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-permanent-address" ng-class="{notshare: myInfo.DataSharing.DataSharing.PermanentAddress!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" target="office-address" name="office-address" ng-model="myInfo.StudentBrief2.OtherAddresses.AddressList.Address.DetailAddress" readonly>
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.OtherAddressList.Address[0]=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.OtherAddressList.Address[0])">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-office-address" ng-class="{notshare: myInfo.DataSharing.DataSharing.OtherAddressList.Address[0]!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--學歷-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <i class="fa fa-fw fa-graduation-cap"></i> 學歷
+                        <button class="btn btn-primary btn-sm btn-add" data-toggle="modal" ng-click="educations.add()">新增</button>
+                    </div>
+                    <table class="table table-bordered rwd-table">
+                        <thead>
+                            <tr>
+                                <th>學校</th>
+                                <th>系所</th>
+                                <th>學位</th>
+                                <th>最高學歷</th>
+                                <th style="min-width: 80px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="edu in educations.result">
+                                <td data-title="學校">{{edu.SchoolName || '&nbsp;'}}</td>
+                                <td data-title="系所">{{edu.Department || '&nbsp;'}}</td>
+                                <td data-title="學位">{{edu.Degree || '&nbsp;'}}</td>
+                                <td data-title="最高學歷">{{(edu.IsTop) ? '是' : '否'}}</td>
+                                <td data-title="">
+                                    <span class="pull-left" target="data-sharing" style="cursor:none">
+                                        <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-contact-address" ng-class="{notshare: !edu.IsSharing}"></span>
+                                    </span>
+                                    <div class="pull-right">
+                                        <button class="btn btn-success btn-sm" data-toggle="modal" ng-click="edu.edit()">編輯</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr ng-show="educations.result.length==0">
+                                <td colspan="5">目前無資料</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--經歷-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <i class="fa fa-fw fa-suitcase"></i> 經歷
+                        <button class="btn btn-primary btn-sm btn-add" data-toggle="modal" ng-click="experiences.add()">新增</button>
+                    </div>
+                    <table class="table table-bordered rwd-table2">
+                        <thead ng-repeat-start="exp in experiences.result">
+                            <tr>
+                                <th>公司名稱</th>
+                                <th>職稱</th>
+                                <th>層級別</th>
+                                <th>部門</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-title="公司名稱">{{exp.CompanyName || '&nbsp;'}}</td>
+                                <td data-title="職稱">{{exp.Position || '&nbsp;'}}</td>
+                                <td data-title="層級別">{{exp.PostLevel.join(',') || '&nbsp;'}} <span ng-show="exp.PostLevel_Other">({{exp.PostLevel_Other}})</span></td>
+                                <td data-title="部門">{{exp.DepartmentCategory || '&nbsp;'}}</td>
+                            </tr>
+                        </tbody>
+                        <thead>
+                            <tr>
+                                <th>產業別</th>
+                                <th>工作地點</th>
+                                <th>工作狀態</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat-end>
+                            <tr>
+                                <td data-title="產業別">{{exp.Industry || '&nbsp;'}}</td>
+                                <td data-title="工作地點">{{exp.WorkPlace.join(',') || '&nbsp;'}} <span ng-show="exp.WorkPlace_Other">({{exp.WorkPlace_Other}})</span></td>
+                                <td data-title="工作狀態">{{exp.WorkStatus || '&nbsp;'}}</td>
+                                <td data-title="" class="text-right">
+                                    <span class="pull-left" target="data-sharing" style="cursor:none">
+                                        <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-contact-address" ng-class="{notshare: !exp.IsSharing}"></span>
+                                    </span>
+                                    <button class="btn btn-success btn-sm" data-toggle="modal" ng-click="exp.edit()">編輯</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tr ng-show="experiences.result.length==0"><td>目前無資料</td></tr>
+                    </table>
+                </div>
+                <!--經驗調查-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <i class="fa fa-fw fa-tasks"></i> 經驗調查
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item switch">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-10">
+                                    你個人或所屬組織，是否參與「社會企業」相關活動？
                                 </div>
+                                <label class="col-xs-12 col-sm-2 text-right">
+                                    否
+                                    <input type="checkbox" checklist-model="myInfo.Willingness.IsSocialEnterprise" checklist-value="true">
+                                    <span class="lever"></span> 是
+                                </label>
                             </div>
-                            <div class="row-fluid">
-                                <div class="span12">
-                                    <form>
-                                        <table class="table table-bordered my-table">
-                                            <thead>
-                                                <tr>
-                                                    <th colspan="7">個人資料</th>
-                                                </tr>
-                                                <tr>
-                                                    <th width="120px">&nbsp;</th>
-                                                    <th width="30px">分享</th>
-                                                    <th width="80px">&nbsp;</th>
-                                                    <th>&nbsp;</th>
-                                                    <th width="30px">分享</th>
-                                                    <th width="80px">&nbsp;</th>
-                                                    <th>&nbsp;</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td rowspan="3"><span target="photo"></span></td>
-                                                    <td>
-                                                        <span class="label label-info hide" target="share-name">
-                                                            <i class="icon-"></li>
-                                                        </span>
-                                                    </td>
-                                                    <th>姓名</th>
-                                                    <td>
-                                                        <span class="span2" target="name"></span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="label label-important" target="share-custodian-name">
-                                                            <i class="icon-"></i>
-                                                        </span>
-                                                    </td>
-                                                    <th>緊急聯絡人</th>
-                                                    <td>
-                                                        <input type="text" class="span12" target="custodian-name" name="custodian-name"/>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <span class="label label-info hide" target="share-gender">
-                                                            <i class="icon-"></li>
-                                                        </span>
-                                                    </td>
-                                                    <th>性別</th>
-                                                    <td>
-                                                        <span class="span2" target="gender"></span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="label label-important" target="share-custodian-phone">
-                                                            <i class="icon-"></i>
-                                                        </span>
-                                                    </td>
-                                                    <th>聯絡人電話</th>
-                                                    <td>
-                                                        <input type="text" class="span12" target="custodian-phone" name="custodian-phone">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <span class="label label-important" target="share-birthdate">
-                                                            <i class="icon-"></i>
-                                                        </span>
-                                                    </td>
-                                                    <th>出生日期</th>
-                                                    <td>
-                                                        <span class="span2" target="birthdate"></span>
-                                                    </td>
-                                                    <td colspan="3"></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <table class="table table-bordered my-table">
-                                            <thead>
-                                                <tr>
-                                                    <th width="30px">分享</th>
-                                                    <th width="80px">&nbsp;</th>
-                                                    <th width="360px">&nbsp;</th>
-                                                    <th width="30px">分享</th>
-                                                    <th width="80px">&nbsp;</th>
-                                                    <th>&nbsp;</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td target="data-sharing">
-                                                        <div class="square">
-                                                            <span class="label label-info hide" target="share-email1">
-                                                                <i class="icon-ok icon-white"></i>
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    <th>E-MAIL 1</th>
-                                                    <td>
-                                                        <div class="control-group">
-                                                            <input type="text" class="{email:true} span12" target="email1" name="email1" />
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <span class="label label-important" target="share-permanent-phone">
-                                                            <i class="icon-"></i>
-                                                        </span>
-                                                    </td>
-                                                    <th>住家電話</th>
-                                                    <td>
-                                                        <span class="span2" target="permanent-phone"></span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td target="data-sharing">
-                                                        <div class="square">
-                                                            <span class="label label-info hide" target="share-email2">
-                                                                <i class="icon-ok icon-white"></i>
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    </td>
-                                                    <th>E-MAIL 2</th>
-                                                    <td>
-                                                        <div class="control-group">
-                                                            <input type="text" class="{email:true} span12" target="email2" name="email2" />
-                                                        </div>
-                                                    </td>
-                                                    <td target="data-sharing">
-                                                        <div class="square">
-                                                            <span class="label label-info hide" target="share-office-phone">
-                                                                <i class="icon-ok icon-white"></i>
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    <th>公司電話</th>
-                                                    <td>
-                                                        <input type="text" class="span12" target="office-phone" name="office-phone" />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td target="data-sharing">
-                                                        <div class="square">
-                                                            <span class="label label-info hide" target="share-email3">
-                                                                <i class="icon-ok icon-white"></i>
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    <th>E-MAIL 3</th>
-                                                    <td>
-                                                        <div class="control-group">
-                                                            <input type="text" class="{email:true} span12" target="email3" name="email3" />
-                                                        </div>
-                                                    </td>
-                                                    <td target="data-sharing">
-                                                        <div class="square">
-                                                            <span class="label label-info hide" target="share-other-phone">
-                                                                <i class="icon-ok icon-white"></i>
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    <th>秘書電話</th>
-                                                    <td>
-                                                        <input type="text" class="span12" target="other-phone" name="other-phone" />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td target="data-sharing">
-                                                        <div class="square">
-                                                            <span class="label label-info hide" target="share-email4">
-                                                                <i class="icon-ok icon-white"></i>
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    <th>E-MAIL 4</th>
-                                                    <td>
-                                                        <div class="control-group">
-                                                            <input type="text" class="{email:true} span12" target="email4" name="email4" />
-                                                        </div>
-                                                    </td>
-                                                    <td target="data-sharing">
-                                                        <div class="square">
-                                                            <span class="label label-info hide" target="share-sms-phone1">
-                                                                <i class="icon-ok icon-white"></i>
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    <th>行動電話 1</th>
-                                                    <td>
-                                                        <input type="text" class="span12" target="sms-phone1" name="sms-phone1" />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td target="data-sharing">
-                                                        <div class="square">
-                                                            <span class="label label-info hide" target="share-email5">
-                                                                <i class="icon-ok icon-white"></i>
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    <th>E-MAIL 5</th>
-                                                    <td>
-                                                        <div class="control-group">
-                                                            <input type="text" class="{email:true} span12" target="email5" name="email5" />
-                                                        </div>
-                                                    </td>
-                                                    <td target="data-sharing">
-                                                        <div class="square">
-                                                            <span class="label label-info hide" target="share-sms-phone2">
-                                                                <i class="icon-ok icon-white"></i>
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    <th>行動電話 2</th>
-                                                    <td>
-                                                        <input type="text" class="span12" target="sms-phone2" name="sms-phone2" />
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <table class="table table-bordered my-table">
-                                            <thead>
-                                                <tr>
-                                                    <th width="30px">分享</th>
-                                                    <th>&nbsp;</th>
-                                                    <th>&nbsp;</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <span class="label label-important" target="share-contact-address">
-                                                            <i class="icon-"></i>
-                                                        </span>
-                                                    </td>
-                                                    <th width="80px">聯絡地址</th>
-                                                    <td target="edit-contact-address">
-                                                        <span class="span6 uneditable-input" style="cursor: pointer;" target="contact-address"></span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <span class="label label-important" target="share-permanent-address">
-                                                            <i class="icon-"></i>
-                                                        </span>
-                                                    </td>
-                                                    <th>住家地址</th>
-                                                    <td>
-                                                        <span class="span6" target="permanent-address"></span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <span class="label label-important" target="share-office-address">
-                                                            <i class="icon-"></i>
-                                                        </span>
-                                                    </td>
-                                                    <th>公司地址</th>
-                                                    <td target="edit-office-address">
-                                                        <span class="span6 uneditable-input" style="cursor: pointer;" target="office-address"></span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <table class="table table-bordered my-table">
-                                            <thead>
-                                                <tr>
-                                                    <th width="30px">分享</th>
-                                                    <th width="80px">&nbsp;</th>
-                                                    <th width="360px">&nbsp;</th>
-                                                    <th width="30px">分享</th>
-                                                    <th width="80px">&nbsp;</th>
-                                                    <th>&nbsp;</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td target="data-sharing">
-                                                        <div class="square">
-                                                            <span class="label label-info hide" target="share-interest">
-                                                                <i class="icon-ok icon-white"></i>
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    <!-- 2016/4/20 Dylan新增-->
-                                                    <th>興趣</th>
-                                                    <td>
-                                                        <input type="text" class="span12" target="interest" name="interest" />
-                                                    </td>
-                                                    <td target="data-sharing">
-                                                        <div class="square">
-                                                            <span class="label label-info hide" target="share-technical-ability">
-                                                                <i class="icon-ok icon-white"></i>
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    <th>技能</th>
-                                                    <td>
-                                                        <div class="controls">
-                                                            <select class="form-control" target="technical" name="technical"></select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <div style="text-align:center; padding-bottom:40px;">
-                                            <a herf="#" target="save-baseinfo" class="btn btn-primary"><i class="icon-edit icon-white"></i> <span>儲存個人資料</span></a>
-                                        </div>
-                                    </form>
+                        </li>
+                        <li class="list-group-item" ng-show="myInfo.Willingness.IsSocialEnterprise">
+                            <div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionEnterprise}">
+                                <span class="input-group-addon">請註明</span>
+                                <input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionEnterprise">
+                                <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingEnterprise=!(myInfo.Willingness.IsSharingEnterprise)">
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingEnterprise}"></span>
+                                </span>
+                            </div>
+                        </li>
+                        <li class="list-group-item switch">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-10">
+                                    你個人或所屬組織，是否參與「非營利組織」相關活動？
                                 </div>
+                                <label class="col-xs-12 col-sm-2 text-right">
+                                    否
+                                    <input type="checkbox" checklist-model="myInfo.Willingness.IsNonProfitOrganizations" checklist-value="true">
+                                    <span class="lever"></span> 是
+                                </label>
                             </div>
-                            <div class="row-fluid">
-                                <div class="span12" id="education">
-                                    <table class="table table-bordered table-condensed">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="6"><span>學歷</span><a herf="#" target="edit-education" class="btn btn-primary btn-mini pull-right"><span>新增</span></a></th>
-                                            </tr>
-                                            <tr>
-                                                <th style="width:30px">分享</th>
-                                                <th>學校</th>
-                                                <th>系所</th>
-                                                <th>學位</th>
-                                                <th>最高學歷</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
+                        </li>
+                        <li class="list-group-item" ng-show="myInfo.Willingness.IsNonProfitOrganizations">
+                            <div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionOrganizations}">
+                                <span class="input-group-addon">請註明</span>
+                                <input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionOrganizations">
+                                <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingOrganizations=!(myInfo.Willingness.IsSharingOrganizations)">
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingOrganizations}"></span>
+                                </span>
+                            </div>
+                        </li>
+                        <li class="list-group-item switch">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-10">
+                                    你個人或所屬組織，是否參與「企業社會責任(CSR)」相關活動？
                                 </div>
+                                <label class="col-xs-12 col-sm-2 text-right">
+                                    否
+                                    <input type="checkbox" checklist-model="myInfo.Willingness.IsCorporateSocialResponsibility" checklist-value="true">
+                                    <span class="lever"></span> 是
+                                </label>
                             </div>
-                            <div class="row-fluid">
-                                <div class="span12" id="experience">
-                                    <table class="table table-bordered table-condensed">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="9"><span>經歷</span><a herf="#" target="edit-experience" class="btn btn-primary btn-mini pull-right"><span>新增</span></a></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
+                        </li>
+                        <li class="list-group-item" ng-show="myInfo.Willingness.IsCorporateSocialResponsibility">
+                            <div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionResponsibility}">
+                                <span class="input-group-addon">請註明</span>
+                                <input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionResponsibility">
+                                <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingResponsibility=!(myInfo.Willingness.IsSharingResponsibility)">
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingResponsibility}"></span>
+                                </span>
+                            </div>
+                        </li>
+                        <li class="list-group-item switch">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-10">
+                                    你個人或所屬組織，是否參與「創業」相關活動？
                                 </div>
+                                <label class="col-xs-12 col-sm-2 text-right">
+                                    否
+                                    <input type="checkbox" checklist-model="myInfo.Willingness.IsVenture" checklist-value="true">
+                                    <span class="lever"></span> 是
+                                </label>
                             </div>
-                            <!-- 2016/4/20 Dylan新增-->
-                            <div class="row-fluid">
-                                <div class="span12" id="willingness">
-                                    <table class="table table-bordered table-condensed">
-                                        <thead>
-                                            <tr>
-                                                <th width="30px">分享</th>
-                                                <th width="90px">意願調查</th>
-                                                <th>&nbsp;</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td rowspan="3" target="data-sharing">
-                                                    <div class="square">
-                                                        <span class="label label-info hide" target="share-willingness">
-                                                            <i class="icon-ok icon-white"></i>
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="control-group">
-                                                        <input type="checkbox" target="enterprise" name="enterprise" />
-                                                    </div>
-                                                </td>
-                                                <td>是否參與「社會企業」經驗</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="control-group">
-                                                        <input type="checkbox" target="organizations" name="organizations" />
-                                                    </div>
-                                                </td>
-                                                <td>是否參與「非營利組織」經驗</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="control-group">
-                                                        <input type="checkbox" target="entrpreneurial" name="entrpreneurial" />
-                                                    </div>
-                                                </td>
-                                                <td>是否擔任業師意願(創業團隊)</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                        </li>
+                        <li class="list-group-item" ng-show="myInfo.Willingness.IsVenture">
+                            <div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionVenture}">
+                                <span class="input-group-addon">請註明</span>
+                                <input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionVenture">
+                                <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingVenture=!(myInfo.Willingness.IsSharingVenture)">
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingVenture}"></span>
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!--意願調查-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <i class="fa fa-fw fa-tasks"></i> 意願調查
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item switch">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-10">
+                                    是否擔任台大管理學院相關課程「業師」意願？
                                 </div>
+                                <label class="col-xs-12 col-sm-2 text-right">
+                                    否
+                                    <input type="checkbox" checklist-model="myInfo.Willingness.IsEntrepreneurialTeam" checklist-value="true">
+                                    <span class="lever"></span> 是
+                                </label>
                             </div>
-                            <div style="text-align:center; padding-bottom:40px;">
-                                 <a herf="#" target="save-baseinfo" class="btn btn-primary"><i class="icon-edit icon-white"></i> <span>儲存個人資料</span></a>
+                        </li>
+                        <li class="list-group-item" ng-show="myInfo.Willingness.IsEntrepreneurialTeam">
+                            <div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionEntrpreneurial}">
+                                <span class="input-group-addon">可提供經驗分享內容為</span>
+                                <input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionEntrpreneurial">
+                                <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingEntrpreneurial=!(myInfo.Willingness.IsSharingEntrpreneurial)">
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingEntrpreneurial}"></span>
+                                </span>
                             </div>
+                        </li>
+                    </ul>
+                </div>
+                <!--參加校外團體-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <i class="fa fa-fw fa-group"></i> 參加校外團體
+                    </div>
+                    <div class="panel-body">
+                        <div class="input-group" ng-class="{'has-error': !stu_additionals.result['my_ExternalOrganization_desc']}">
+                            <input type="text" class="form-control" name="" placeholder="必填" target="" data-toggle="modal" data-target="#group4" readonly value="{{stu_additionals.result['my_ExternalOrganization_desc']}}">
+                            <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingExternalOrganization=!(myInfo.Willingness.IsSharingExternalOrganization)">
+                                <span class="glyphicon glyphicon-ok notshare" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingExternalOrganization}"></span>
+                            </span>
                         </div>
                     </div>
                 </div>
+                <!--興趣-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <i class="fa fa-fw fa-heart"></i> 興趣
+                    </div>
+                    <div class="panel-body">
+                        <div class="input-group" ng-class="{'has-error': !stu_additionals.result['my_Interest_desc']}">
+                            <input type="text" class="form-control" name="" placeholder="必填" target="" data-toggle="modal" data-target="#interest" readonly value="{{stu_additionals.result['my_Interest_desc']}}">
+                            <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingInterest=!(myInfo.Willingness.IsSharingInterest)">
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingInterest}"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!--參加EMBA團體-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <i class="fa fa-fw fa-group"></i> 參加台大EMBA團體
+                    </div>
+                    <div class="panel-body">
+                        <div class="input-group" ng-class="{'has-error': !stu_additionals.result['my_EMBAGroups_desc']}">
+                            <input type="text" class="form-control" name="" placeholder="必填" target="" data-toggle="modal" data-target="#group1" readonly value="{{stu_additionals.result['my_EMBAGroups_desc']}}">
+                            <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingEMBAGroups=!(myInfo.Willingness.IsSharingEMBAGroups)">
+                                <span class="glyphicon glyphicon-ok notshare" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingEMBAGroups}"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!--其他聯絡窗口-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <i class="fa fa-fw fa-coffee"></i> 其他聯絡窗口
+                    </div>
+                    <table class="table table-bordered responsive-table">
+                        <thead>
+                            <tr>
+                                <th>公關姓名</th>
+                                <th>公關室電話</th>
+                                <th>公關室傳真</th>
+                                <th>公關室Eamil</th>
+                                <th>公司網址</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" ng-model="myInfo.Publicist.PublicistName">
+                                        <span class="input-group-addon" target="cannt-sharing">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true" target="share-name"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" ng-model="myInfo.Publicist.PublicRelationsOfficeTelephone">
+                                        <span class="input-group-addon" target="cannt-sharing">
+                                            <span class="glyphicon glyphicon-remove notshare" aria-hidden="true" target="share-gender"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" ng-model="myInfo.Publicist.PublicRelationsOfficeFax">
+                                        <span class="input-group-addon" target="cannt-sharing">
+                                            <span class="glyphicon glyphicon-remove notshare" aria-hidden="true" target="share-birthdate"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" ng-model="myInfo.Publicist.PublicistEmail">
+                                        <span class="input-group-addon" target="cannt-sharing">
+                                            <span class="glyphicon glyphicon-remove notshare" aria-hidden="true" target="share-custodian-name"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" ng-model="myInfo.Publicist.CompanyWebsite">
+                                        <span class="input-group-addon" target="cannt-sharing">
+                                            <span class="glyphicon glyphicon-remove notshare" aria-hidden="true" target="share-custodian-phone"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <a class="btn btn-danger btn-floating btn-large" style="padding-top: 5px"><i class="fa fa-2x fa-floppy-o" aria-hidden="true"></i></a>
             </div>
         </div>
         <div class="footer-space"></div>
@@ -664,13 +1103,13 @@
             <img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/bot_logo.png">
             <p style="text-align: left;">
                 <font color="#999999">
-                    10617台北市大安區羅斯福路四段一號 臺灣大學管理學院一號館六樓 EMBA辦公室<br>
-                    TEL:886-2-33661010 FAX:886-2-23636073<br>
-                    Copyright © National Taiwan University All Rights Reserved
+                    10617台北市大安區羅斯福路四段一號 臺灣大學管理學院一號館六樓 EMBA辦公室
+                    <br> TEL:886-2-33661010 FAX:886-2-23636073
+                    <br> Copyright © National Taiwan University All Rights Reserved
                 </font>
             </p>
         </div>
     </div>
-
 </body>
+
 </html>
