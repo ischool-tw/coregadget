@@ -1,0 +1,399 @@
+var app = angular.module("app", ["checklist-model"]);
+
+app.controller('MainCtrl', ['$scope', function($scope) {
+    $scope.connection = gadget.getContract("emba.student");
+
+    // 取得系所組別
+    $scope.getDept = function(enroll_year) {
+        // enroll_year 入學年度
+        $scope.Department = [];
+        $scope.filter.dept = null;
+
+        var service_name, body_content;
+        if (enroll_year) {
+            service_name = "default.GetEnrollYearDepartmentGroup";
+            body_content = { Request: { Condition: { EnrollYear: enroll_year } } };
+        }
+        else {
+            service_name = "default.GetDepartmentGroup";
+            body_content = '';
+        }
+
+        $scope.connection.send({
+            service: service_name,
+            body: body_content,
+            result: function(response, error, http) {
+                if (!error) {
+                    if (response.Result) $scope.Department = [].concat(response.Result.Department || []);
+                    $scope.$apply();
+                }
+            }
+        });
+    };
+
+    // 取得選項內容
+    // 產業別/部門類別/層級別/工作地點/工作狀態
+    // 興趣/參加台大EMBA團體/參加校外組織
+    $scope.getDataSource = function() {
+        $scope.AdditionalSetup = [];
+        $scope.ExperienceDataSource = [];
+        $scope.connection.send({
+            service: "default.GetUserDataSource",
+            body: "",
+            result: function(response, error, http) {
+                if (!error) {
+                    var additionals = [];
+                    if (response.DataSource && response.DataSource.Additionals) {
+                        response.DataSource.Additionals = [].concat(response.DataSource.Additionals || []);
+                        response.DataSource.Additionals.forEach(function(item, index){
+                            if (!additionals['S_'+item.specie]) {
+                                additionals['S_'+item.specie] = {
+                                    Domain: []
+                                };
+                            }
+                            if (item.domain && !additionals['S_'+item.specie]['D_'+item.domain]) {
+                                additionals['S_'+item.specie].Domain.push(item.domain);
+                                additionals['S_'+item.specie]['D_'+item.domain] = {
+                                    Category: []
+                                };
+                            }
+                            if (item.category && !additionals['S_'+item.specie]['D_'+item.domain]['C_'+item.category]) {
+                                additionals['S_'+item.specie]['D_'+item.domain].Category.push(item.category);
+                                additionals['S_'+item.specie]['D_'+item.domain]['C_'+item.category] = {
+                                    Item: []
+                                };
+                            }
+                            if (item.item) {
+                                additionals['S_'+item.specie]['D_'+item.domain]['C_'+item.category].Item.unshift(item.item);
+                            }
+                        });
+                    }
+                    $scope.AdditionalSetup = additionals;
+                    // console.log($scope.AdditionalSetup);
+
+                    var experiences = [];
+                    if (response.DataSource && response.DataSource.Experiences) {
+                        response.DataSource.Experiences = [].concat(response.DataSource.Experiences || []);
+                        response.DataSource.Experiences.forEach(function(item, index){
+                            if (!experiences['C_'+item.item_category]) {
+                                experiences['C_'+item.item_category] = [];
+                            }
+                            if (item.item) {
+                                experiences['C_'+item.item_category].unshift(item.item);
+                            }
+                        })
+                    }
+                    $scope.ExperienceDataSource = experiences;
+                    // console.log($scope.ExperienceDataSource);
+                    $scope.$apply();
+                }
+            }
+        });
+    };
+
+    $scope.resetFilter = function() {
+        $scope.filter = {
+            enroll_year: null, // 入學年度
+            student_name: null, // 學生姓名
+            dept: null, // 系統組別
+            edu: null, // 學歷
+            additional: {
+                company_name: null, // 公司名稱
+                level: [], // 層級別
+                industry: null, // 產業別
+                department: null, // 部門
+                place: [], // 工作地點
+                status: null, // 工作狀態
+            },
+            experience: {
+                interest: { // 興趣
+                    domain: null, // 領域
+                    category: null, // 類別
+                    item: null // 項目
+                },
+                emba_groups: { // 參加台大EMBA團體
+                    domain: null,
+                    category: null
+                },
+                external_organization: { // 參加校外組織
+                    domain: null,
+                    category: null
+                }
+            },
+            willingness: {
+                is_social_enterprise: false, // 社會企業
+                description_enterprise: null,
+                is_non_porfit_organizations: false, // 非營利組織
+                description_organizations: null,
+                is_corporate_social_responsibility: false, // 企業社會責任
+                description_responsibility: null,
+                is_venture: false, // 創業
+                description_venture: null,
+                is_entrpreneurial_team: false, // 業師意願
+                description_entrpreneurial: null
+            }
+        };
+        $scope.panel = "filter"; // 呈現查詢頁
+    };
+
+    $scope.queryStudent = function() {
+        $scope.students = []
+
+        // 搜尋條件列表
+        var flt = $scope.filter;
+        var cdt = [];
+        var body_obj = {};
+        if (flt.enroll_year) { // 入學年度
+            body_obj.enroll_year = flt.enroll_year;
+            cdt.push(flt.enroll_year);
+        }
+        if (flt.student_name) { // 學生姓名
+            body_obj.student_name = flt.student_name;
+            cdt.push(flt.student_name);
+        }
+        if (flt.dept) { // 系統組別
+            body_obj.dept = flt.dept.Name;
+            cdt.push(flt.dept.Name);
+        }
+        if (flt.edu) { // 學歷
+            body_obj.edu = flt.edu;
+            cdt.push(flt.edu);
+        }
+        if (flt.additional.company_name) { // 公司名稱
+            if (!body_obj.additional) body_obj.additional = {};
+            body_obj.additional.company_sharing = true;
+            body_obj.additional.company_name = flt.additional.company_name;
+            cdt.push(flt.additional.company_name);
+        }
+        if (flt.additional.level.length) { // 層級別
+            if (!body_obj.additional) body_obj.additional = {};
+            body_obj.additional.company_sharing = true;
+            body_obj.additional.level = flt.additional.level;
+            cdt.push(flt.additional.level.join(','));
+        }
+        if (flt.additional.industry) { // 產業別
+            if (!body_obj.additional) body_obj.additional = {};
+            body_obj.additional.company_sharing = true;
+            body_obj.additional.industry = flt.additional.industry;
+            cdt.push(flt.additional.industry);
+        }
+        if (flt.additional.department) { // 部門
+            if (!body_obj.additional) body_obj.additional = {};
+            body_obj.additional.company_sharing = true;
+            body_obj.additional.department = flt.additional.department;
+            cdt.push(flt.additional.department);
+        }
+        if (flt.additional.place.length) { // 工作地點
+            if (!body_obj.additional) body_obj.additional = {};
+            body_obj.additional.company_sharing = true;
+            body_obj.additional.place = flt.additional.place;
+            cdt.push(flt.additional.place.join(','));
+        }
+        if (flt.additional.status) { // 工作狀態
+            if (!body_obj.additional) body_obj.additional = {};
+            body_obj.additional.company_sharing = true;
+            body_obj.additional.status = flt.additional.status;
+            cdt.push(flt.additional.status);
+        }
+        if (flt.experience.interest.domain) { // 興趣領域
+            if (!body_obj.experience) body_obj.experience = {};
+            if (!body_obj.experience.interest) body_obj.experience.interest = {};
+            body_obj.experience.interest.interest_sharing = true;
+            body_obj.experience.interest.specie = "Interest";
+            body_obj.experience.interest.domain = flt.experience.interest.domain;
+            cdt.push(flt.experience.interest.domain);
+        }
+        if (flt.experience.interest.category) { // 興趣類別
+            body_obj.experience.interest.category = flt.experience.interest.category;
+            cdt.push(flt.experience.interest.category);
+        }
+        if (flt.experience.interest.item) { // 興趣項目
+            body_obj.experience.interest.item = flt.experience.interest.item;
+            cdt.push(flt.experience.interest.item);
+        }
+        if (flt.experience.emba_groups.domain) { // 參加台大EMBA團體領域
+            if (!body_obj.experience) body_obj.experience = {};
+            if (!body_obj.experience.emba_groups) body_obj.experience.emba_groups = {};
+            body_obj.experience.emba_groups.emba_groups_sharing = true;
+            body_obj.experience.emba_groups.specie = "EMBAGroups";
+            body_obj.experience.emba_groups.domain = flt.experience.emba_groups.domain;
+            cdt.push(flt.experience.emba_groups.domain);
+        }
+        if (flt.experience.emba_groups.category) { // 參加台大EMBA團體類別
+            body_obj.experience.emba_groups.category = flt.experience.emba_groups.category;
+            cdt.push(flt.experience.emba_groups.category);
+        }
+        if (flt.experience.external_organization.domain) { // 參加校外組織領域
+            if (!body_obj.experience) body_obj.experience = {};
+            if (!body_obj.experience.external_organization) body_obj.experience.external_organization = {};
+            body_obj.experience.external_organization.external_organization_sharing = true;
+            body_obj.experience.external_organization.specie = "ExternalOrganization";
+            body_obj.experience.external_organization.domain = flt.experience.external_organization.domain;
+            cdt.push(flt.experience.external_organization.domain);
+        }
+        if (flt.experience.external_organization.category) { // 參加校外組織類別
+            body_obj.experience.external_organization.category = flt.experience.external_organization.category;
+            cdt.push(flt.experience.external_organization.category);
+        }
+        if (flt.willingness.is_social_enterprise) { // 社會企業
+            if (!body_obj.willingness) body_obj.willingness = {};
+            body_obj.willingness.is_sharing_enterprise = true;
+            body_obj.willingness.is_social_enterprise = flt.willingness.is_social_enterprise;
+            cdt.push("有參與社會企業");
+        }
+        if (flt.willingness.description_enterprise) { // 社會企業關鍵字
+            if (!body_obj.willingness) body_obj.willingness = {};
+            body_obj.willingness.is_sharing_enterprise = true;
+            body_obj.willingness.description_enterprise = flt.willingness.description_enterprise;
+            cdt.push(flt.willingness.description_enterprise);
+        }
+        if (flt.willingness.is_non_porfit_organizations) { // 非營利組織
+            if (!body_obj.willingness) body_obj.willingness = {};
+            body_obj.willingness.is_sharing_organizations = true;
+            body_obj.willingness.is_non_porfit_organizations = flt.willingness.is_non_porfit_organizations;
+            cdt.push("有參與非營利組織");
+        }
+        if (flt.willingness.description_organizations) { // 非營利組織關鍵字
+            if (!body_obj.willingness) body_obj.willingness = {};
+            body_obj.willingness.is_sharing_organizations = true;
+            body_obj.willingness.description_organizations = flt.willingness.description_organizations;
+            cdt.push(flt.willingness.description_organizations);
+        }
+        if (flt.willingness.is_corporate_social_responsibility) { // 企業社會責任
+            if (!body_obj.willingness) body_obj.willingness = {};
+            body_obj.willingness.is_sharing_responsibility = true;
+            body_obj.willingness.is_corporate_social_responsibility = flt.willingness.is_corporate_social_responsibility;
+            cdt.push("有參與企業社會責任");
+        }
+        if (flt.willingness.description_responsibility) { // 企業社會責任關鍵字
+            if (!body_obj.willingness) body_obj.willingness = {};
+            body_obj.willingness.is_sharing_responsibility = true;
+            body_obj.willingness.description_responsibility = flt.willingness.description_responsibility;
+            cdt.push(flt.willingness.description_responsibility);
+        }
+        if (flt.willingness.is_venture) { // 創業
+            if (!body_obj.willingness) body_obj.willingness = {};
+            body_obj.willingness.is_sharing_venture = true;
+            body_obj.willingness.is_venture = flt.willingness.is_venture;
+            cdt.push("有參與創業");
+        }
+        if (flt.willingness.description_venture) { // 創業關鍵字
+            if (!body_obj.willingness) body_obj.willingness = {};
+            body_obj.willingness.is_sharing_venture = true;
+            body_obj.willingness.description_venture = flt.willingness.description_venture;
+            cdt.push(flt.willingness.description_venture);
+        }
+        if (flt.willingness.is_entrpreneurial_team) { // 業師意願
+            if (!body_obj.willingness) body_obj.willingness = {};
+            body_obj.willingness.is_sharing_entrpreneurial = true;
+            body_obj.willingness.is_entrpreneurial_team = flt.willingness.is_entrpreneurial_team;
+            cdt.push("有業師意願");
+        }
+        if (flt.willingness.description_entrpreneurial) { // 業師意願關鍵字
+            if (!body_obj.willingness) body_obj.willingness = {};
+            body_obj.willingness.is_sharing_entrpreneurial = true;
+            body_obj.willingness.description_entrpreneurial = flt.willingness.description_entrpreneurial;
+            cdt.push(flt.willingness.description_entrpreneurial);
+        }
+
+        if (cdt.length) {
+            $scope.conditions = cdt;
+
+            // 至資料庫比對
+            $scope.connection.send({
+                service: "public.QueryStudents",
+                body: { filter: body_obj },
+                result: function(response, error, http) {
+                    if (!error) {
+                        $scope.students = [].concat(response.Result.Student || []);
+                        $scope.$apply();
+                    }
+                }
+            });
+
+            $scope.panel = "result"; // 呈現查詢結果
+        }
+    };
+
+    $scope.previewDetail = function(student) {
+        $scope.currStudent = {};
+        $scope.share_experiences = [];
+
+        var experience = [];
+        var sharing = {
+          "Name": "true",
+          "Gender": "true",
+          "Birthdate": "false",
+          "Custodian": "false",
+          "CustodianPhone": "false",
+          "ContactPhone": "false",
+          "PermanentPhone": "false",
+          "公司電話": "false",
+          "行動電話2": "false",
+          "秘書電話": "false",
+          "SMSPhone": "false",
+          "EmailList": {
+            "Email1": "false",
+            "Email2": "false",
+            "Email3": "false",
+            "Email4": "false",
+            "Email5": "false"
+          },
+          "ContactAddress": "false",
+          "PermanentAddress": "false"
+        };
+
+        // 取得經歷資訊
+        $scope.connection.send({
+            service: "public.QueryStudentExperience",
+            body: { Request: { StudentID: student.StudentID} },
+            result: function(response, error, http) {
+                if (!error) {
+                    if (response.Result.Experience) {
+                        experience = [].concat(response.Result.Experience || []);
+                        $(experience).forEach(function(item) {
+                            if (item.IsSharing === "t") {
+                                $scope.share_experiences.push(item);
+                                $scope.$apply();
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
+        // 取得是否分享的資訊
+        $scope.connection.send({
+            service: "public.QueryStudentBrief",
+            body: { Request: { StudentID: student.StudentID} },
+            result: function(response, error, http) {
+                if (!error) {
+                    if (response.Result.DataSharing && response.Result.DataSharing.DataSharing) {
+                        sharing = response.Result.DataSharing.DataSharing;
+                    }
+                    if (sharing.OtherPhoneList && sharing.OtherPhoneList.PhoneNumber) {
+                        $(sharing.OtherPhoneList.PhoneNumber).each(function(index, item) {
+                            sharing[item.title] = item['@text'];
+                        });
+                    }
+                    student.OfficePhone = sharing['公司電話'] === "true" ? student.OfficePhone : '本人未公開資訊';
+                    student.SMSPhone1 = sharing['SMSPhone'] === "true" ? student.SMSPhone1 : '本人未公開資訊';
+                    student.SMSPhone2 = sharing['行動電話2'] === "true" ? student.SMSPhone2 : '本人未公開資訊';
+                    student.Email1 = sharing.EmailList['Email1'] === "true" ? student.Email1 : '本人未公開資訊';
+                    student.Email2 = sharing.EmailList['Email2'] === "true" ? student.Email2 : '本人未公開資訊';
+                    student.Email3 = sharing.EmailList['Email3'] === "true" ? student.Email3 : '本人未公開資訊';
+                    student.Email4 = sharing.EmailList['Email4'] === "true" ? student.Email4 : '本人未公開資訊';
+                    student.Email5 = sharing.EmailList['Email5'] === "true" ? student.Email5 : '本人未公開資訊';
+                    $scope.currStudent = student;
+                    $scope.$apply();
+                }
+            }
+        });
+
+        $scope.panel = "detail"; // 呈現個人資料
+    };
+
+    $scope.resetFilter();
+    $scope.getDept();
+    $scope.getDataSource();
+}]);
