@@ -501,23 +501,23 @@
                             </tr>
                             <tr>
                                 <th data-field="PostLevel">層級別</th>
-                                <td>{{item.PostLevel == '其他' ? item.PostLevelOther || '&nbsp;' : item.PostLevel || '&nbsp;'}}</td>
+                                <td>{{['其他','其它'].indexOf(item.PostLevel) !== -1 ? item.PostLevelOther || '&nbsp;' : item.PostLevel || '&nbsp;'}}</td>
                             </tr>
                             <tr>
                                 <th data-field="DepartmentCategory">部門</th>
-                                <td>{{item.DepartmentCategory == '其他' ? item.DepartmentCategoryOther || '&nbsp;' : item.DepartmentCategory || '&nbsp;'}}</td>
+                                <td>{{['其他','其它'].indexOf(item.DepartmentCategory) !== -1 ? item.DepartmentCategoryOther || '&nbsp;' : item.DepartmentCategory || '&nbsp;'}}</td>
                             </tr>
                             <tr>
                                 <th data-field="Industry">產業別</th>
-                                <td>{{item.Industry == '其他' ? item.IndustryOther || '&nbsp;' : item.Industry || '&nbsp;'}}</td>
+                                <td>{{['其他','其它'].indexOf(item.Industry) !== -1 ? item.IndustryOther || '&nbsp;' : item.Industry || '&nbsp;'}}</td>
                             </tr>
                             <tr>
                                 <th data-field="WorkPlace">工作地點</th>
-                                <td>{{item.WorkPlace == '其他' ? item.WorkPlaceOther || '&nbsp;' : item.WorkPlace || '&nbsp;'}}</td>
+                                <td>{{['其他','其它'].indexOf(item.WorkPlace) !== -1 ? item.WorkPlaceOther || '&nbsp;' : item.WorkPlace || '&nbsp;'}}</td>
                             </tr>
                             <tr>
                                 <th data-field="WorkStatus">工作狀態</th>
-                                <td>{{item.WorkStatus == '其他' ? item.WorkStatusOther || '&nbsp;' : item.WorkStatus || '&nbsp;'}}</td>
+                                <td>{{['其他','其它'].indexOf(item.WorkStatus) !== -1 ? item.WorkStatusOther || '&nbsp;' : item.WorkStatus || '&nbsp;'}}</td>
                             </tr>
                         </tbody>
                     </table>
