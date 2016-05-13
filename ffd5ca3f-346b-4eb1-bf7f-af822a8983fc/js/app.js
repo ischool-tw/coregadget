@@ -315,6 +315,8 @@ app.controller('MainCtrl', ['$scope', function($scope) {
     };
 
     $scope.previewDetail = function(student) {
+        window.scrollTo(0,0);
+        
         $scope.currStudent = angular.copy(student);
 
         // 取得是否分享的資訊

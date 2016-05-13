@@ -405,7 +405,7 @@
                                 <th data-field="Gender">性別</th>
                                 <td>{{currStudent.Gender || '&nbsp;'}}</td>
                             </tr>
-                            <tr ng-show="currStudent.shareInfo.Birthdate">
+                            <tr ng-show="currStudent.shareInfo.Birthdate=='true'">
                                 <th data-field="Birthdate">出生日期</th>
                                 <td>{{currStudent.Birthdate || '&nbsp;'}}</td>
                             </tr>
@@ -612,7 +612,7 @@
                     <div class="panel-body">
                         <span ng-repeat="item in currStudent.externalOrg">
                             <span ng-show="$index!=0">, </span>
-                            <span>{{item.Domain}}{{ item.Category ? ['／', item.Category].join('') : ''}}{{ item.Description ? ['（', item.Description, '）'].join('') : '' }}</sapn>
+                            <span>【{{item.Domain}}】{{['其他','其它'].indexOf(item.Category) == -1 ? item.Category : item.Description}}</sapn>
                         </span>
                     </div>
                 </div>
@@ -621,8 +621,7 @@
                     <div class="panel-body">
                         <span ng-repeat="item in currStudent.interest">
                             <span ng-show="$index!=0">, </span>
-                            <span ng-show="item.Domain=='其他'">{{item.Domain}}{{ item.Category ? ['／', item.Category].join('') : ''}}{{ item.Item ? ['／', item.Item].join('') : ''}}{{ item.Description ? ['（', item.Description, '）'].join('') : '' }}</span>
-                            <span ng-show="item.Domain!='其他'">{{item.Domain}}{{ item.Item ? ['／', item.Item].join('') : ''}}{{ item.Description ? ['（', item.Description, '）'].join('') : '' }}</span>
+                            <span>{{['其他','其它'].indexOf(item.Domain) == -1 ? ['【', item.Domain, '】', item.Category].join('') : item.Description}}</sapn>
                         </span>
                     </div>
                 </div>
@@ -631,7 +630,7 @@
                     <div class="panel-body">
                         <span ng-repeat="item in currStudent.embaGroups">
                             <span ng-show="$index!=0">, </span>
-                            <span>{{item.Domain}}{{ item.Category ? ['／', item.Category].join('') : ''}}{{ item.Description ? ['（', item.Description, '）'].join('') : '' }}</sapn>
+                            <span>【{{item.Domain}}】{{item.Category}}</sapn>
                         </span>
                     </div>
                 </div>
