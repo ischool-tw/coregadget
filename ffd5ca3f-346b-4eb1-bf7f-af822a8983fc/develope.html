@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="js/gadget.js"></script>
     <script>
-    init({
-        application: "test.emba.ntu.edu.tw",
-        oAuth: {
-            clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
-            clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
-            account: 'bubu@debug.ischool.com.tw',
-            password: '1234'
-        }
-    });
+        init({
+            application: "test.emba.ntu.edu.tw",
+            oAuth: {
+                clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+                clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
+                account: 'bubu@debug.ischool.com.tw',
+                password: '1234'
+            }
+        });
     </script>
     <meta content='text/html;charset=utf-8' />
     <link href="css/bootstrap.css" rel="stylesheet" />
@@ -405,61 +405,61 @@
                                 <th data-field="Gender">性別</th>
                                 <td>{{currStudent.Gender || '&nbsp;'}}</td>
                             </tr>
-                            <tr>
-                                <th data-field="">出生日期</th>
-                                <td>0000-00-00</td>
+                            <tr ng-show="currStudent.shareInfo.Birthdate">
+                                <th data-field="Birthdate">出生日期</th>
+                                <td>{{currStudent.Birthdate || '&nbsp;'}}</td>
                             </tr>
-                            <tr>
-                                <th data-field="">住家電話</th>
-                                <td>本人未公開資訊</td>
+                            <tr ng-show="currStudent.shareInfo.PermanentPhone=='true'">
+                                <th data-field="PermanentPhone">住家電話</th>
+                                <td>{{currStudent.PermanentPhone || '&nbsp;'}}</td>
                             </tr>
-                            <tr>
-                                <th data-field="">公司電話</th>
+                            <tr ng-show="currStudent.shareInfo['公司電話']=='true'">
+                                <th data-field="OfficePhone">公司電話</th>
                                 <td>{{currStudent.OfficePhone || '&nbsp;'}}</td>
                             </tr>
-                            <tr>
-                                <th data-field="">秘書電話</th>
-                                <td>本人未公開資訊</td>
+                            <tr ng-show="currStudent.shareInfo['秘書電話']=='true'">
+                                <th data-field="OtherPhone">秘書電話</th>
+                                <td>{{currStudent.OtherPhone || '&nbsp;'}}</td>
                             </tr>
-                            <tr>
-                                <th data-field="SMSPhone1">行動電話 1</th>
+                            <tr ng-show="currStudent.shareInfo.SMSPhone=='true'">
+                                <th data-field="SMSPhone">行動電話 1</th>
                                 <td>{{currStudent.SMSPhone1 || '&nbsp;'}}</td>
                             </tr>
-                            <tr>
+                            <tr ng-show="currStudent.shareInfo['行動電話2']=='true'">
                                 <th data-field="SMSPhone2">行動電話 2</th>
                                 <td>{{currStudent.SMSPhone2 || '&nbsp;'}}</td>
                             </tr>
-                            <tr>
+                            <tr ng-show="currStudent.shareInfo.EmailList.email1=='true'">
                                 <th data-field="Email1">Email 1</th>
                                 <td>{{currStudent.Email1 || '&nbsp;'}}</td>
                             </tr>
-                            <tr>
+                            <tr ng-show="currStudent.shareInfo.EmailList.email2=='true'">
                                 <th data-field="Email2">Email 2</th>
                                 <td>{{currStudent.Email2 || '&nbsp;'}}</td>
                             </tr>
-                            <tr>
+                            <tr ng-show="currStudent.shareInfo.EmailList.email3=='true'">
                                 <th data-field="Email3">Email 3</th>
                                 <td>{{currStudent.Email3 || '&nbsp;'}}</td>
                             </tr>
-                            <tr>
+                            <tr ng-show="currStudent.shareInfo.EmailList.email4=='true'">
                                 <th data-field="Email4">Email 4</th>
                                 <td>{{currStudent.Email4 || '&nbsp;'}}</td>
                             </tr>
-                            <tr>
+                            <tr ng-show="currStudent.shareInfo.EmailList.email5=='true'">
                                 <th data-field="Email5">Email 5</th>
                                 <td>{{currStudent.Email5 || '&nbsp;'}}</td>
                             </tr>
-                            <tr>
-                                <th data-field="">聯絡地址</th>
-                                <td>本人未公開資訊</td>
+                            <tr ng-show="currStudent.shareInfo.ContactAddress=='true'">
+                                <th data-field="ContactAddress">聯絡地址</th>
+                                <td>{{currStudent.ContactAddress || '&nbsp;'}}</td>
                             </tr>
-                            <tr>
-                                <th data-field="">住家地址</th>
-                                <td>本人未公開資訊</td>
+                            <tr ng-show="currStudent.shareInfo.PermanentAddress=='true'">
+                                <th data-field="PermanentAddress">住家地址</th>
+                                <td>{{currStudent.PermanentAddress || '&nbsp;'}}</td>
                             </tr>
-                            <tr>
-                                <th data-field="">公司地址</th>
-                                <td>本人未公開資訊</td>
+                            <tr ng-show="currStudent.shareInfo.OtherAddressList.Address[0]=='true'">
+                                <th data-field="OtherAddress">公司地址</th>
+                                <td>{{currStudent.OtherAddress || '&nbsp;'}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -467,40 +467,22 @@
                 <div class="panel panel-info">
                     <div class="panel-heading">學歷</div>
                     <table class="table table-bordered">
-                        <tbody>
+                        <tbody ng-repeat="item in currStudent.eduBackground">
                             <tr>
-                                <th data-field="">學校</th>
-                                <td></td>
+                                <th data-field="SchoolName">學校</th>
+                                <td>{{item.SchoolName || '&nbsp;'}}</td>
                             </tr>
                             <tr>
-                                <th data-field="">系所</th>
-                                <td></td>
+                                <th data-field="Department">系所</th>
+                                <td>{{item.Department || '&nbsp;'}}</td>
                             </tr>
                             <tr>
-                                <th data-field="">學位</th>
-                                <td></td>
+                                <th data-field="Degree">學位</th>
+                                <td>{{item.Degree || '&nbsp;'}}</td>
                             </tr>
                             <tr>
-                                <th data-field="">最高學歷</th>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                        <tbody>
-                            <tr>
-                                <th data-field="">學校</th>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th data-field="">系所</th>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th data-field="">學位</th>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th data-field="">最高學歷</th>
-                                <td></td>
+                                <th data-field="IsTop">最高學歷</th>
+                                <td>{{item.IsTop == 't' ? '是' : '否'}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -508,67 +490,34 @@
                 <div class="panel panel-info">
                     <div class="panel-heading">經歷</div>
                     <table class="table table-bordered">
-                        <tbody>
+                        <tbody ng-repeat="item in currStudent.experience">
                             <tr>
-                                <th data-field="">公司名稱</th>
-                                <td>澔學學習股份有限公司</td>
-                            </tr>
-                            <tr>
-                                <th data-field="">職稱</th>
-                                <td>網頁設計師</td>
+                                <th data-field="CompanyName">公司名稱</th>
+                                <td>{{item.CompanyName || '&nbsp;'}}</td>
                             </tr>
                             <tr>
-                                <th data-field="">層級別</th>
-                                <td>專業經理人-初階主管</td>
+                                <th data-field="Position">職稱</th>
+                                <td>{{item.Position || '&nbsp;'}}</td>
                             </tr>
                             <tr>
-                                <th data-field="">部門</th>
-                                <td>資訊部</td>
+                                <th data-field="PostLevel">層級別</th>
+                                <td>{{item.PostLevel == '其他' ? item.PostLevelOther || '&nbsp;' : item.PostLevel || '&nbsp;'}}</td>
                             </tr>
                             <tr>
-                                <th data-field="">產業別</th>
-                                <td>教育服務業</td>
+                                <th data-field="DepartmentCategory">部門</th>
+                                <td>{{item.DepartmentCategory == '其他' ? item.DepartmentCategoryOther || '&nbsp;' : item.DepartmentCategory || '&nbsp;'}}</td>
                             </tr>
                             <tr>
-                                <th data-field="">工作地點</th>
-                                <td>台灣,大陸,亞洲,美洲</td>
+                                <th data-field="Industry">產業別</th>
+                                <td>{{item.Industry == '其他' ? item.IndustryOther || '&nbsp;' : item.Industry || '&nbsp;'}}</td>
                             </tr>
                             <tr>
-                                <th data-field="">工作狀態</th>
-                                <td>現職</td>
-                            </tr>
-                        </tbody>
-                        <tbody>
-                            <tr ng-repeat="experience in share_experiences">
-                                <th data-field="">公司名稱</th>
-                                <td>{{experience.CompanyName || '&nbsp;'}}</td>
+                                <th data-field="WorkPlace">工作地點</th>
+                                <td>{{item.WorkPlace == '其他' ? item.WorkPlaceOther || '&nbsp;' : item.WorkPlace || '&nbsp;'}}</td>
                             </tr>
                             <tr>
-                                <th data-field="">職稱</th>
-                                <td>{{experience.Position || '&nbsp;'}}</td>
-                            </tr>
-                            <tr>
-                                <th data-field="">層級別</th>
-                                <td>專業經理人-初階主管</td>
-                            </tr>
-                            <tr>
-                                <th data-field="">部門</th>
-                                <td>資訊部</td>
-                            </tr>
-                            <tr>
-                                <th data-field="">產業別</th>
-                                <td>醫療／照護</td>
-                            </tr>
-                            <tr>
-                                <th data-field="">工作地點</th>
-                                <td>台灣</td>
-                            </tr>
-                            <tr>
-                                <th data-field="">工作狀態</th>
-                                <td>已離職</td>
-                            </tr>
-                            <tr ng-show="share_experiences.length==0">
-                                <td colsapn="2">本人未公開資訊</td>
+                                <th data-field="WorkStatus">工作狀態</th>
+                                <td>{{item.WorkStatus == '其他' ? item.WorkStatusOther || '&nbsp;' : item.WorkStatus || '&nbsp;'}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -586,7 +535,8 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    是，餓八八餓我餓我餓～～～～～～～～～～～～
+                                    <span>{{currStudent.willingness.IsSocialEnterprise === 't' ? '是' : '否'}}</span>
+                                    <span ng-show="currStudent.willingness.IsSharingEnterprise=='t'">，{{currStudent.willingness.DescriptionEnterprise}}</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -600,7 +550,8 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    是，巴拉八八八～
+                                    <span>{{currStudent.willingness.IsNonPorfitOrganizations === 't' ? '是' : '否'}}</span>
+                                    <span ng-show="currStudent.willingness.IsSharingOrganizations=='t'">，{{currStudent.willingness.DescriptionOrganizations}}</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -614,7 +565,8 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    是，麥當勞都是維尼
+                                    <span>{{currStudent.willingness.IsCorporateSocialResponsibility === 't' ? '是' : '否'}}</span>
+                                    <span ng-show="currStudent.willingness.IsSharingResponsibility=='t'">，{{currStudent.willingness.DescriptionResponsibility}}</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -628,7 +580,8 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    否
+                                    <span>{{currStudent.willingness.IsVenture === 't' ? '是' : '否'}}</span>
+                                    <span ng-show="currStudent.willingness.IsSharingVenture=='t'">，{{currStudent.willingness.DescriptionVenture}}</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -647,7 +600,8 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    是，巴拉巴拉巴拉巴拉巴拉～～～～～～～～～～～～
+                                    <span>{{currStudent.willingness.IsEntrpreneurialTeam === 't' ? '是' : '否'}}</span>
+                                    <span ng-show="currStudent.willingness.IsSharingEntrpreneurial=='t'">，{{currStudent.willingness.DescriptionEntrpreneurial}}</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -655,15 +609,31 @@
                 </div>
                 <div class="panel panel-info">
                     <div class="panel-heading">參加校外團體</div>
-                    <div class="panel-body">社團／獅子會</div>
+                    <div class="panel-body">
+                        <span ng-repeat="item in currStudent.externalOrg">
+                            <span ng-show="$index!=0">, </span>
+                            <span>{{item.Domain}}{{ item.Category ? ['／', item.Category].join('') : ''}}{{ item.Description ? ['（', item.Description, '）'].join('') : '' }}</sapn>
+                        </span>
+                    </div>
                 </div>
                 <div class="panel panel-info">
                     <div class="panel-heading">興趣</div>
-                    <div class="panel-body">羽毛球,游泳,馬術,音樂</div>
+                    <div class="panel-body">
+                        <span ng-repeat="item in currStudent.interest">
+                            <span ng-show="$index!=0">, </span>
+                            <span ng-show="item.Domain=='其他'">{{item.Domain}}{{ item.Category ? ['／', item.Category].join('') : ''}}{{ item.Item ? ['／', item.Item].join('') : ''}}{{ item.Description ? ['（', item.Description, '）'].join('') : '' }}</span>
+                            <span ng-show="item.Domain!='其他'">{{item.Domain}}{{ item.Item ? ['／', item.Item].join('') : ''}}{{ item.Description ? ['（', item.Description, '）'].join('') : '' }}</span>
+                        </span>
+                    </div>
                 </div>
                 <div class="panel panel-info">
                     <div class="panel-heading">參加台大EMBA團體</div>
-                    <div class="panel-body">組織／學生會,學會／會計與管理決策學會</div>
+                    <div class="panel-body">
+                        <span ng-repeat="item in currStudent.embaGroups">
+                            <span ng-show="$index!=0">, </span>
+                            <span>{{item.Domain}}{{ item.Category ? ['／', item.Category].join('') : ''}}{{ item.Description ? ['（', item.Description, '）'].join('') : '' }}</sapn>
+                        </span>
+                    </div>
                 </div>
             </div>
             <div class="footer-space"></div>

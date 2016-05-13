@@ -13,8 +13,7 @@ app.controller('MainCtrl', ['$scope', function($scope) {
         if (enroll_year) {
             service_name = "default.GetEnrollYearDepartmentGroup";
             body_content = { Request: { Condition: { EnrollYear: enroll_year } } };
-        }
-        else {
+        } else {
             service_name = "default.GetDepartmentGroup";
             body_content = '';
         }
@@ -45,26 +44,26 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                     var additionals = [];
                     if (response.DataSource && response.DataSource.Additionals) {
                         response.DataSource.Additionals = [].concat(response.DataSource.Additionals || []);
-                        response.DataSource.Additionals.forEach(function(item, index){
-                            if (!additionals['S_'+item.specie]) {
-                                additionals['S_'+item.specie] = {
+                        response.DataSource.Additionals.forEach(function(item, index) {
+                            if (!additionals['S_' + item.specie]) {
+                                additionals['S_' + item.specie] = {
                                     Domain: []
                                 };
                             }
-                            if (item.domain && !additionals['S_'+item.specie]['D_'+item.domain]) {
-                                additionals['S_'+item.specie].Domain.push(item.domain);
-                                additionals['S_'+item.specie]['D_'+item.domain] = {
+                            if (item.domain && !additionals['S_' + item.specie]['D_' + item.domain]) {
+                                additionals['S_' + item.specie].Domain.push(item.domain);
+                                additionals['S_' + item.specie]['D_' + item.domain] = {
                                     Category: []
                                 };
                             }
-                            if (item.category && !additionals['S_'+item.specie]['D_'+item.domain]['C_'+item.category]) {
-                                additionals['S_'+item.specie]['D_'+item.domain].Category.push(item.category);
-                                additionals['S_'+item.specie]['D_'+item.domain]['C_'+item.category] = {
+                            if (item.category && !additionals['S_' + item.specie]['D_' + item.domain]['C_' + item.category]) {
+                                additionals['S_' + item.specie]['D_' + item.domain].Category.push(item.category);
+                                additionals['S_' + item.specie]['D_' + item.domain]['C_' + item.category] = {
                                     Item: []
                                 };
                             }
                             if (item.item) {
-                                additionals['S_'+item.specie]['D_'+item.domain]['C_'+item.category].Item.unshift(item.item);
+                                additionals['S_' + item.specie]['D_' + item.domain]['C_' + item.category].Item.unshift(item.item);
                             }
                         });
                     }
@@ -74,12 +73,12 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                     var experiences = [];
                     if (response.DataSource && response.DataSource.Experiences) {
                         response.DataSource.Experiences = [].concat(response.DataSource.Experiences || []);
-                        response.DataSource.Experiences.forEach(function(item, index){
-                            if (!experiences['C_'+item.item_category]) {
-                                experiences['C_'+item.item_category] = [];
+                        response.DataSource.Experiences.forEach(function(item, index) {
+                            if (!experiences['C_' + item.item_category]) {
+                                experiences['C_' + item.item_category] = [];
                             }
                             if (item.item) {
-                                experiences['C_'+item.item_category].unshift(item.item);
+                                experiences['C_' + item.item_category].unshift(item.item);
                             }
                         })
                     }
@@ -148,7 +147,7 @@ app.controller('MainCtrl', ['$scope', function($scope) {
             cdt.push(flt.enroll_year);
         }
         if (flt.student_name) { // 學生姓名
-            body_obj.student_name = flt.student_name;
+            body_obj.student_name = ['%', flt.student_name, '%'].join('');
             cdt.push(flt.student_name);
         }
         if (flt.dept) { // 系統組別
@@ -316,76 +315,135 @@ app.controller('MainCtrl', ['$scope', function($scope) {
     };
 
     $scope.previewDetail = function(student) {
-        $scope.currStudent = {};
-        $scope.share_experiences = [];
+        $scope.currStudent = angular.copy(student);
 
-        var experience = [];
-        var sharing = {
-          "Name": "true",
-          "Gender": "true",
-          "Birthdate": "false",
-          "Custodian": "false",
-          "CustodianPhone": "false",
-          "ContactPhone": "false",
-          "PermanentPhone": "false",
-          "公司電話": "false",
-          "行動電話2": "false",
-          "秘書電話": "false",
-          "SMSPhone": "false",
-          "EmailList": {
-            "Email1": "false",
-            "Email2": "false",
-            "Email3": "false",
-            "Email4": "false",
-            "Email5": "false"
-          },
-          "ContactAddress": "false",
-          "PermanentAddress": "false"
+        // 取得是否分享的資訊
+        $scope.currStudent.shareInfo = {
+            "Name": "true",
+            "Gender": "true",
+            "Birthdate": "false",
+            "Custodian": "false",
+            "CustodianPhone": "false",
+            "ContactPhone": "false",
+            "PermanentPhone": "false",
+            "公司電話": "false",
+            "行動電話2": "false",
+            "秘書電話": "false",
+            "SMSPhone": "false",
+            "EmailList": {
+                "email1": "false",
+                "email2": "false",
+                "email3": "false",
+                "email4": "false",
+                "email5": "false"
+            },
+            "ContactAddress": "false",
+            "PermanentAddress": "false",
+            "OtherAddressList": {
+                Address: "true",
+                Address: "true",
+                Address: "true" 
+            }
         };
-
-        // 取得經歷資訊
         $scope.connection.send({
-            service: "public.QueryStudentExperience",
-            body: { Request: { StudentID: student.StudentID} },
+            service: "public.QueryStudentBrief",
+            body: { Request: { StudentID: student.StudentID } },
             result: function(response, error, http) {
                 if (!error) {
-                    if (response.Result.Experience) {
-                        experience = [].concat(response.Result.Experience || []);
-                        $(experience).forEach(function(item) {
-                            if (item.IsSharing === "t") {
-                                $scope.share_experiences.push(item);
-                                $scope.$apply();
-                            }
-                        });
+                    if (response.Result.DataSharing && response.Result.DataSharing.DataSharing) {
+                        $scope.currStudent.shareInfo = response.Result.DataSharing.DataSharing;
+                        $scope.$apply();
                     }
                 }
             }
         });
 
-        // 取得是否分享的資訊
+        // 取得學歷資訊
+        $scope.currStudent.eduBackground = [];
         $scope.connection.send({
-            service: "public.QueryStudentBrief",
-            body: { Request: { StudentID: student.StudentID} },
+            service: "public.QueryStudentEducationBackground",
+            body: { Request: { StudentID: student.StudentID } },
             result: function(response, error, http) {
                 if (!error) {
-                    if (response.Result.DataSharing && response.Result.DataSharing.DataSharing) {
-                        sharing = response.Result.DataSharing.DataSharing;
+                    if (response.Result.EducationBackground) {
+                        $scope.currStudent.eduBackground = [].concat(response.Result.EducationBackground || []);
+                        $scope.$apply();
                     }
-                    if (sharing.OtherPhoneList && sharing.OtherPhoneList.PhoneNumber) {
-                        $(sharing.OtherPhoneList.PhoneNumber).each(function(index, item) {
-                            sharing[item.title] = item['@text'];
-                        });
+                }
+            }
+        });
+
+        // 取得經歷資訊
+        $scope.currStudent.experience = [];
+        $scope.connection.send({
+            service: "public.QueryStudentExperience",
+            body: { Request: { StudentID: student.StudentID } },
+            result: function(response, error, http) {
+                if (!error) {
+                    if (response.Result.Experience) {
+                        $scope.currStudent.experience = [].concat(response.Result.Experience || []);
+                        $scope.$apply();
                     }
-                    student.OfficePhone = sharing['公司電話'] === "true" ? student.OfficePhone : '本人未公開資訊';
-                    student.SMSPhone1 = sharing['SMSPhone'] === "true" ? student.SMSPhone1 : '本人未公開資訊';
-                    student.SMSPhone2 = sharing['行動電話2'] === "true" ? student.SMSPhone2 : '本人未公開資訊';
-                    student.Email1 = sharing.EmailList['Email1'] === "true" ? student.Email1 : '本人未公開資訊';
-                    student.Email2 = sharing.EmailList['Email2'] === "true" ? student.Email2 : '本人未公開資訊';
-                    student.Email3 = sharing.EmailList['Email3'] === "true" ? student.Email3 : '本人未公開資訊';
-                    student.Email4 = sharing.EmailList['Email4'] === "true" ? student.Email4 : '本人未公開資訊';
-                    student.Email5 = sharing.EmailList['Email5'] === "true" ? student.Email5 : '本人未公開資訊';
-                    $scope.currStudent = student;
-                    $scope.$apply();
+                }
+            }
+        });
+
+        // 取得經驗調查&意願調查資訊
+        $scope.currStudent.willingness = {};
+        $scope.connection.send({
+            service: "public.QueryWillingness",
+            body: { Request: { Condition: { StudentID: student.StudentID } } },
+            result: function(response, error, http) {
+                if (!error) {
+                    if (response.Response.Willingness) {
+                        $scope.currStudent.willingness = response.Response.Willingness;
+                        $scope.$apply();
+                    }
+                }
+            }
+        });
+
+        // 取得參加校外團體資訊
+        $scope.currStudent.externalOrg = [];
+        $scope.connection.send({
+            service: "public.QueryExternalOrigination",
+            body: { Request: { Condition: { StudentID: student.StudentID } } },
+            result: function(response, error, http) {
+                if (!error) {
+                    if (response.Response.ExternalOrg) {
+                        $scope.currStudent.externalOrg = [].concat(response.Response.ExternalOrg || []);
+                        $scope.$apply();
+                    }
+                }
+            }
+        });
+
+        // 取得興趣資訊
+        $scope.currStudent.interest = [];
+        $scope.connection.send({
+            service: "public.QueryInterest",
+            body: { Request: { Condition: { StudentID: student.StudentID } } },
+            result: function(response, error, http) {
+                if (!error) {
+                    if (response.Response.Interest) {
+                        $scope.currStudent.interest = [].concat(response.Response.Interest || []);
+                        $scope.$apply();
+                    }
+                }
+            }
+        });
+
+        // 取得參加台大EMBA團體資訊
+        $scope.currStudent.embaGroups = [];
+        $scope.connection.send({
+            service: "public.QueryEMBAGroups",
+            body: { Request: { Condition: { StudentID: student.StudentID } } },
+            result: function(response, error, http) {
+                if (!error) {
+                    if (response.Response.EMBAGroups) {
+                        $scope.currStudent.embaGroups = [].concat(response.Response.EMBAGroups || []);
+                        $scope.$apply();
+                    }
                 }
             }
         });
