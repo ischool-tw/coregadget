@@ -309,7 +309,17 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                     }
                 }
             });
-
+            $scope.connection.send({
+                service: "public.QueryExperienceCount",
+                body: { },
+                result: function(response, error, http) {
+                    if (!error) {
+                        $scope.experienceCount = response.Response;
+                        console.log(response);
+                        
+                    }
+                }
+            });
             $scope.panel = "result"; // 呈現查詢結果
         }
     };
