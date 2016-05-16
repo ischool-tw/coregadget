@@ -17,6 +17,7 @@
     </script>
     <meta content='text/html;charset=utf-8' />
     <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
     <link href="css/base.css" rel="stylesheet" />
     <link href="css/default.css" rel="stylesheet" />
     <script src="js/jquery.min.js"></script>
@@ -40,7 +41,7 @@
             <!-- 查詢 -->
             <div class="content" ng-show="panel=='filter'">
                 <div class="panel panel-info">
-                    <div class="panel-heading">基本查詢</div>
+                    <div class="panel-heading"><i class="fa fa-fw fa-user"></i> 基本查詢</div>
                     <div class="panel-body row">
                         <div class="col-sm-3">
                             <div class="input-group">
@@ -77,7 +78,7 @@
                     </div>
                 </div>
                 <div class="panel panel-info">
-                    <div class="panel-heading">經歷查詢</div>
+                    <div class="panel-heading"><i class="fa fa-fw fa-suitcase"></i> 經歷查詢</div>
                     <div class="panel-body row">
                         <div class="col-sm-3">
                             <div class="input-group">
@@ -190,7 +191,7 @@
                     </div>
                 </div>
                 <div class="panel panel-info">
-                    <div class="panel-heading">興趣查詢</div>
+                    <div class="panel-heading"><i class="fa fa-fw fa-heart"></i> 興趣查詢</div>
                     <div class="panel-body row">
                         <div class="col-sm-3">
                             <div class="dropdown">
@@ -232,7 +233,7 @@
                     </div>
                 </div>
                 <div class="panel panel-info">
-                    <div class="panel-heading">參加台大EMBA團體查詢</div>
+                    <div class="panel-heading"><i class="fa fa-fw fa-group"></i> 參加台大EMBA團體查詢</div>
                     <div class="panel-body row">
                         <div class="col-sm-3">
                             <div class="dropdown">
@@ -262,7 +263,7 @@
                     </div>
                 </div>
                 <div class="panel panel-info">
-                    <div class="panel-heading">參加校外團體查詢</div>
+                    <div class="panel-heading"><i class="fa fa-fw fa-group"></i> 參加校外團體查詢</div>
                     <div class="panel-body row">
                         <div class="col-sm-3">
                             <div class="dropdown">
@@ -292,7 +293,7 @@
                     </div>
                 </div>
                 <div class="panel panel-info">
-                    <div class="panel-heading">參與相關活動經驗查詢</div>
+                    <div class="panel-heading"><i class="fa fa-fw fa-tasks"></i> 參與相關活動經驗查詢</div>
                     <div class="panel-body row">
                         <div class="col-sm-3">
                             <label class="input-group">
@@ -329,7 +330,7 @@
                     </div>
                 </div>
                 <div class="panel panel-info">
-                    <div class="panel-heading">意願查詢</div>
+                    <div class="panel-heading"><i class="fa fa-fw fa-tasks"></i> 意願查詢</div>
                     <div class="panel-body row">
                         <div class="col-sm-3">
                             <label class="checkbox-inline">
@@ -396,7 +397,7 @@
                     </div>
                 </ol>
                 <div class="panel panel-info">
-                    <div class="panel-heading">基本資料</div>
+                    <div class="panel-heading"><i class="fa fa-fw fa-tasks"></i> 基本資料</div>
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
@@ -467,7 +468,7 @@
                     </table>
                 </div>
                 <div class="panel panel-info">
-                    <div class="panel-heading">學歷</div>
+                    <div class="panel-heading"><i class="fa fa-fw fa-graduation-cap"></i> 學歷</div>
                     <table class="table table-bordered">
                         <tbody ng-repeat="item in currStudent.eduBackground">
                             <tr>
@@ -490,7 +491,7 @@
                     </table>
                 </div>
                 <div class="panel panel-info">
-                    <div class="panel-heading">經歷</div>
+                    <div class="panel-heading"><i class="fa fa-fw fa-suitcase"></i> 經歷</div>
                     <table class="table table-bordered">
                         <tbody ng-repeat="item in currStudent.experience">
                             <tr>
@@ -525,7 +526,7 @@
                     </table>
                 </div>
                 <div class="panel panel-info">
-                    <div class="panel-heading">經驗調查</div>
+                    <div class="panel-heading"><i class="fa fa-fw fa-tasks"></i> 經驗調查</div>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -590,7 +591,7 @@
                     </table>
                 </div>
                 <div class="panel panel-info">
-                    <div class="panel-heading">意願調查</div>
+                    <div class="panel-heading"><i class="fa fa-fw fa-tasks"></i> 意願調查</div>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -610,7 +611,7 @@
                     </table>
                 </div>
                 <div class="panel panel-info">
-                    <div class="panel-heading">參加校外團體</div>
+                    <div class="panel-heading"><i class="fa fa-fw fa-group"></i> 參加校外團體</div>
                     <div class="panel-body">
                         <span ng-repeat="item in currStudent.externalOrg">
                             <span ng-show="$index!=0">, </span>
@@ -619,7 +620,7 @@
                     </div>
                 </div>
                 <div class="panel panel-info">
-                    <div class="panel-heading">興趣</div>
+                    <div class="panel-heading"><i class="fa fa-fw fa-heart"></i> 興趣</div>
                     <div class="panel-body">
                         <span ng-repeat="item in currStudent.interest">
                             <span ng-show="$index!=0">, </span>
@@ -628,7 +629,7 @@
                     </div>
                 </div>
                 <div class="panel panel-info">
-                    <div class="panel-heading">參加台大EMBA團體</div>
+                    <div class="panel-heading"><i class="fa fa-fw fa-group"></i> 參加台大EMBA團體</div>
                     <div class="panel-body">
                         <span ng-repeat="item in currStudent.embaGroups">
                             <span ng-show="$index!=0">, </span>
