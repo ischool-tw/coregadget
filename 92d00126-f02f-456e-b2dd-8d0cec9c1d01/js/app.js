@@ -730,8 +730,8 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                         angular.forEach($scope.experiences.result, function(item) {
                             item.IsSharing = (item.IsSharing == 't') ? true : false;
 
-                            item.PostLevel = item.PostLevel.split(',');
-                            item.WorkPlace = item.WorkPlace.split(',');
+                            item.PostLevel = (item.PostLevel ? item.PostLevel.split(',') : []);
+                            item.WorkPlace = (item.WorkPlace ? item.WorkPlace.split(',') : []);
 
                             item.edit = function() {
                                 $scope.experiences.current = {
