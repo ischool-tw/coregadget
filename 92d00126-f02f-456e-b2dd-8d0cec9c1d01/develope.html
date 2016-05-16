@@ -11,7 +11,7 @@
         oAuth: {
             clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
             clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
-            account: 'bubu@debug.ischool.com.tw',
+            account: 'dodo@debug.ischool.com.tw',
             password: '1234'
         }
     });
@@ -29,6 +29,46 @@
 
 <body ng-controller="MainCtrl">
     <div id="gadget" class="my-page">
+        <!--modal 地址-->
+        <div class="modal fade" id="address" tabindex="-1" role="dialog" aria-labelledby="myaddress">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myaddress">編輯地址</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <span class="input-group-addon">郵遞區號</span>
+                            <input type="text" class="form-control" placeholder="郵遞區號" target="zipcode" name="zipcode" ng-model="myInfo.current.address.AddressList.Address.ZipCode">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon">縣市</span>
+                            <input type="text" class="form-control" placeholder="縣市" target="department" name="department" ng-model="myInfo.current.address.AddressList.Address.County">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon">鄉鎮市區</span>
+                            <input type="text" class="form-control" placeholder="鄉鎮市區" target="department" name="department" ng-model="myInfo.current.address.AddressList.Address.Town">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon">村里</span>
+                            <input type="text" class="form-control" placeholder="村里" target="degree" name="degree" ng-model="myInfo.current.address.AddressList.Address.District">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon">鄰</span>
+                            <input type="text" class="form-control" placeholder="鄰" target="degree" name="degree" ng-model="myInfo.current.address.AddressList.Address.Area">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon">其它</span>
+                            <input type="text" class="form-control" placeholder="其它" target="degree" name="degree" ng-model="myInfo.current.address.AddressList.Address.DetailAddress">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:;" class="btn btn-primary" target="save" ng-click="myInfo.set_address()">確定</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!--modal 學歷-->
         <div class="modal fade" id="education" tabindex="-1" role="dialog" aria-labelledby="myeducation">
             <div class="modal-dialog" role="document">
@@ -86,7 +126,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myexperience">新增經歷</h4>
+                        <h4 class="modal-title" id="myexperience">{{experiences.current.type=='edit'?'編輯經歷':'新增經歷'}}</h4>
                     </div>
                     <div class="modal-body">
                         <div ng-show="experiences.current.confirm" class="alert alert-danger" target="confirm-message">
@@ -113,8 +153,8 @@
                         <div class="input-group" ng-class="{'has-error': !experiences.current.result.PostLevel.length}">
                             <span class="input-group-addon">層級別</span>
                             <input type="text" class="form-control" placeholder="必填" target="" data-toggle="modal" data-target="#level" readonly value="{{experiences.current.result.PostLevel.join(',')}}">
-                            <div ng-show="experiences.current.result.PostLevel.indexOf('其它')!=-1" class="other" ng-class="{'has-error': !experiences.current.result.PostLevel_Other}">
-                                {{experiences.current.result.PostLevel_Other || '必填'}}
+                            <div ng-show="experiences.current.result.PostLevel.indexOf('其它')!=-1" class="other" ng-class="{'has-error': !experiences.current.result.PostLevelOther}">
+                                {{experiences.current.result.PostLevelOther || '必填'}}
                             </div>
                         </div>
                         <div class="dropdown" ng-class="{'has-error': !experiences.current.result.DepartmentCategory}">
@@ -127,9 +167,9 @@
                                 <li ng-repeat="item in ExperienceDataSource['C_部門類別']" ng-click="experiences.current.result.DepartmentCategory=item">{{item}}</li>
                                 <li ng-click="experiences.current.result.DepartmentCategory='其它'">其它</li>
                             </ul>
-                            <div ng-show="experiences.current.result.DepartmentCategory=='其它'" class="input-group" ng-class="{'has-error': !experiences.current.result.DepartmentCategory_Other}">
+                            <div ng-show="experiences.current.result.DepartmentCategory=='其它'" class="input-group" ng-class="{'has-error': !experiences.current.result.DepartmentCategoryOther}">
                                 <span class="input-group-addon">請註明</span>
-                                <input type="text" class="form-control" placeholder="必填" target="" name="" ng-model="experiences.current.result.DepartmentCategory_Other">
+                                <input type="text" class="form-control" placeholder="必填" target="" name="" ng-model="experiences.current.result.DepartmentCategoryOther">
                             </div>
                         </div>
                         <div class="dropdown" ng-class="{'has-error': !experiences.current.result.Industry}">
@@ -142,16 +182,16 @@
                                 <li ng-repeat="item in ExperienceDataSource['C_產業別']" ng-click="experiences.current.result.Industry=item">{{item}}</li>
                                 <li ng-click="experiences.current.result.Industry='其它'">其它</li>
                             </ul>
-                            <div ng-show="experiences.current.result.Industry=='其它'" class="input-group" ng-class="{'has-error': !experiences.current.result.Industry_Other}">
+                            <div ng-show="experiences.current.result.Industry=='其它'" class="input-group" ng-class="{'has-error': !experiences.current.result.IndustryOther}">
                                 <span class="input-group-addon">請註明</span>
-                                <input type="text" class="form-control" placeholder="必填" target="" name="" ng-model="experiences.current.result.Industry_Other">
+                                <input type="text" class="form-control" placeholder="必填" target="" name="" ng-model="experiences.current.result.IndustryOther">
                             </div>
                         </div>
                         <div class="input-group" ng-class="{'has-error': !experiences.current.result.WorkPlace.length}">
                             <span class="input-group-addon">工作地點</span>
                             <input type="text" class="form-control" placeholder="必填" target="" data-toggle="modal" data-target="#placeModal" readonly value="{{experiences.current.result.WorkPlace.join(',')}}">
-                            <div ng-show="experiences.current.result.WorkPlace.indexOf('其它')!=-1" class="other" ng-class="{'has-error': !experiences.current.result.WorkPlace_Other}">
-                                {{experiences.current.result.WorkPlace_Other || '必填'}}
+                            <div ng-show="experiences.current.result.WorkPlace.indexOf('其它')!=-1" class="other" ng-class="{'has-error': !experiences.current.result.WorkPlaceOther}">
+                                {{experiences.current.result.WorkPlaceOther || '必填'}}
                             </div>
                         </div>
                         <div class="dropdown" ng-class="{'has-error': !experiences.current.result.WorkStatus}">
@@ -164,9 +204,9 @@
                                 <li ng-repeat="item in ExperienceDataSource['C_工作狀態']" ng-click="experiences.current.result.WorkStatus=item">{{item}}</li>
                                 <li ng-click="experiences.current.result.WorkStatus='其它'">其它</li>
                             </ul>
-                            <div ng-show="experiences.current.result.WorkStatus=='其它'" class="input-group" ng-class="{'has-error': !experiences.current.result.WorkStatus_Other}">
+                            <div ng-show="experiences.current.result.WorkStatus=='其它'" class="input-group" ng-class="{'has-error': !experiences.current.result.WorkStatusOther}">
                                 <span class="input-group-addon">請註明</span>
-                                <input type="text" class="form-control" placeholder="必填" target="" name="" ng-model="experiences.current.result.WorkStatus_Other">
+                                <input type="text" class="form-control" placeholder="必填" target="" name="" ng-model="experiences.current.result.WorkStatusOther">
                             </div>
                         </div>
                     </div>
@@ -199,16 +239,16 @@
                                         <input type="checkbox" checklist-model="experiences.current.result.PostLevel" checklist-value="'其它'"> 其它
                                     </label>
                                 </div>
-                                <div ng-show="experiences.current.result.PostLevel.indexOf('其它')!=-1" class="col-xs-9" ng-class="{'has-error': (!experiences.current.result.PostLevel_Other)}">
-                                    <input type="text" class="form-control" placeholder="必填" ng-model="experiences.current.result.PostLevel_Other">
+                                <div ng-show="experiences.current.result.PostLevel.indexOf('其它')!=-1" class="col-xs-9" ng-class="{'has-error': (!experiences.current.result.PostLevelOther)}">
+                                    <input type="text" class="form-control" placeholder="必填" ng-model="experiences.current.result.PostLevelOther">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <span ng-show="!experiences.current.result.PostLevel.length" class="text-danger">請勾選。</span>
-                        <span ng-show="experiences.current.result.PostLevel.indexOf('其它')!=-1 && !experiences.current.result.PostLevel_Other" class="text-danger">請填入「其它」的內容。</span>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-disabled="(!experiences.current.result.PostLevel.length) || (experiences.current.result.PostLevel.indexOf('其它')!=-1 && !experiences.current.result.PostLevel_Other)">確定</button>
+                        <span ng-show="experiences.current.result.PostLevel.indexOf('其它')!=-1 && !experiences.current.result.PostLevelOther" class="text-danger">請填入「其它」的內容。</span>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-disabled="(!experiences.current.result.PostLevel.length) || (experiences.current.result.PostLevel.indexOf('其它')!=-1 && !experiences.current.result.PostLevelOther)">確定</button>
                     </div>
                 </div>
             </div>
@@ -234,22 +274,22 @@
                                         <input type="checkbox" checklist-model="experiences.current.result.WorkPlace" checklist-value="'其它'"> 其它
                                     </label>
                                 </div>
-                                <div ng-show="experiences.current.result.WorkPlace.indexOf('其它')!=-1" class="col-xs-8" ng-class="{'has-error': (!experiences.current.result.WorkPlace_Other)}">
-                                    <input type="text" class="form-control" placeholder="必填" ng-model="experiences.current.result.WorkPlace_Other">
+                                <div ng-show="experiences.current.result.WorkPlace.indexOf('其它')!=-1" class="col-xs-8" ng-class="{'has-error': (!experiences.current.result.WorkPlaceOther)}">
+                                    <input type="text" class="form-control" placeholder="必填" ng-model="experiences.current.result.WorkPlaceOther">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <span ng-show="!experiences.current.result.WorkPlace.length" class="text-danger">請勾選。</span>
-                        <span ng-show="experiences.current.result.WorkPlace.indexOf('其它')!=-1 && !experiences.current.result.WorkPlace_Other" class="text-danger">請填入「其它」的內容。</span>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-disabled="(!experiences.current.result.WorkPlace.length) || (experiences.current.result.WorkPlace.indexOf('其它')!=-1 && !experiences.current.result.WorkPlace_Other)">確定</button>
+                        <span ng-show="experiences.current.result.WorkPlace.indexOf('其它')!=-1 && !experiences.current.result.WorkPlaceOther" class="text-danger">請填入「其它」的內容。</span>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-disabled="(!experiences.current.result.WorkPlace.length) || (experiences.current.result.WorkPlace.indexOf('其它')!=-1 && !experiences.current.result.WorkPlaceOther)">確定</button>
                     </div>
                 </div>
             </div>
         </div>
         <!--modal 校外團體-->
-        <div class="modal fade check-modal" id="group4" tabindex="-1" role="dialog" aria-labelledby="mygroup4">
+        <div class="modal fade check-modal" id="externalModal" tabindex="-1" role="dialog" aria-labelledby="mygroup4">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -258,49 +298,56 @@
                     </div>
                     <div class="modal-body">
                         <div class="panel panel-default">
-                            <div class="panel-heading" ng-repeat-start="domain in AdditionalSetup['S_ExternalOrganization'].Domain">
+                            <div class="panel-heading" ng-repeat-start="domain in AdditionalSetup.current.addition.Domains">
                                 <label>
-                                    <input type="checkbox" ng-show="!AdditionalSetup['S_ExternalOrganization']['D_'+domain.Key].Category.length" checklist-model="stu_additionals.result['my_ExternalOrganization']" checklist-value="domain.Value"> {{domain.Key}}
+                                    <input type="checkbox" ng-show="!AdditionalSetup.current.addition['D_'+domain].Categorys.length" ng-model="AdditionalSetup.current.addition['D_'+domain].Checked"> {{domain}}
                                 </label>
-                            </div>
-                            <ul class="list-group" ng-repeat-end>
-                                <li class="list-group-item" ng-repeat-start="category in AdditionalSetup['S_ExternalOrganization']['D_'+domain.Key].Category">
+                                <div ng-if="domain=='其它' && AdditionalSetup.current.addition['D_'+domain].Checked">
                                     <label>
-                                        <input type="checkbox" ng-show="!AdditionalSetup['S_ExternalOrganization']['D_'+domain.Key]['C_category'].Item" checklist-model="stu_additionals.result['my_ExternalOrganization']" checklist-value="category.Value"> {{category.Key}}
-                                    </label>
-                                </li>
-                                <div class="row" ng-repeat-end>
-                                    <div class="col-sm-3" ng-repeat="item in AdditionalSetup['S_ExternalOrganization']['D_'+domain.Key]['C_'+category.Key].Item">
-                                        <label>
-                                            <input type="checkbox" checklist-model="stu_additionals.result['my_ExternalOrganization']" checklist-value="item.Value"> {{item.Key}}
-                                        </label>
-                                    </div>
-                                </div>
-                            </ul>
-                            <div class="panel-heading">
-                                <label>
-                                    <input type="checkbox"> 其它
-                                </label>
-                            </div>
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <label>
-                                        <div class="input-group" style="margin: 0"><span class="input-group-addon">請註明</span>
-                                            <input type="text" class="form-control" placeholder="必填">
+                                        <div class="input-group" style="margin: 0" ng-class="{'has-error': AdditionalSetup.current.addition['D_'+domain].Checked && !AdditionalSetup.current.addition['D_'+domain].Description}"><span class="input-group-addon">請註明</span>
+                                            <input type="text" class="form-control" placeholder="必填" ng-model="AdditionalSetup.current.addition['D_'+domain].Description">
                                         </div>
                                     </label>
+                                </div>
+                            </div>
+                            <ul class="list-group" ng-repeat-end>
+                                <li class="list-group-item" ng-repeat-start="category in AdditionalSetup.current.addition['D_'+domain].Categorys">
+                                    <label>
+                                        <input type="checkbox" ng-show="!AdditionalSetup.current.addition['D_'+domain]['C_'+category].Items.length" ng-model="AdditionalSetup.current.addition['D_'+domain]['C_'+category].Checked"> {{category}}
+                                    </label>
+                                    <div ng-if="category=='其它' && AdditionalSetup.current.addition['D_'+domain]['C_'+category].Checked">
+                                        <label>
+                                            <div class="input-group" style="margin: 0" ng-class="{'has-error': AdditionalSetup.current.addition['D_'+domain]['C_'+category].Checked && !AdditionalSetup.current.addition['D_'+domain]['C_'+category].Description}"><span class="input-group-addon">請註明</span>
+                                                <input type="text" class="form-control" placeholder="必填" ng-model="AdditionalSetup.current.addition['D_'+domain]['C_'+category].Description">
+                                            </div>
+                                        </label>
+                                    </div>
                                 </li>
+                                <div class="row" ng-repeat-end>
+                                    <div class="col-sm-12" ng-repeat="item in AdditionalSetup.current.addition['D_'+domain]['C_'+category].Items">
+                                        <label>
+                                            <input type="checkbox" ng-model="AdditionalSetup.current.addition['D_'+domain]['C_'+category]['I_'+item].Checked"> {{item}}
+                                        </label>
+                                        <div ng-if="item=='其它' && AdditionalSetup.current.addition['D_'+domain]['C_'+category]['I_'+item].Checked">
+                                            <label>
+                                                <div class="input-group" style="margin: 0" ng-class="{'has-error': AdditionalSetup.current.addition['D_'+domain]['C_'+category]['I_'+item].Checked && !AdditionalSetup.current.addition['D_'+domain]['C_'+category]['I_'+item].Description}"><span class="input-group-addon">請註明</span>
+                                                    <input type="text" class="form-control" placeholder="必填" ng-model="AdditionalSetup.current.addition['D_'+domain]['C_'+category]['I_'+item].Description">
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
                             </ul>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">確定</button>
+                        <button type="button" class="btn btn-primary" ng-click="stu_additionals.set()">確定</button>
                     </div>
                 </div>
             </div>
         </div>
         <!--modal 興趣-->
-        <div class="modal fade check-modal" id="interest" tabindex="-1" role="dialog" aria-labelledby="myinterest">
+        <div class="modal fade check-modal" id="interestModal" tabindex="-1" role="dialog" aria-labelledby="myinterest">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -309,182 +356,56 @@
                     </div>
                     <div class="modal-body">
                         <div class="panel panel-default">
-                            <div class="panel-heading">
+                            <div class="panel-heading" ng-repeat-start="domain in AdditionalSetup.current.addition.Domains">
                                 <label>
-                                    <input type="checkbox"> 運動</label>
-                            </div>
-                            <ul class="list-group">
-                                <li class="list-group-item">
+                                    <input type="checkbox" ng-show="!AdditionalSetup.current.addition['D_'+domain].Categorys.length" ng-model="AdditionalSetup.current.addition['D_'+domain].Checked"> {{domain}}
+                                </label>
+                                <div ng-if="domain=='其它' && AdditionalSetup.current.addition['D_'+domain].Checked">
                                     <label>
-                                        <input type="checkbox"> 射藝</label>
-                                </li>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <input type="checkbox"> 射箭</label>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <input type="checkbox"> 射擊</label>
-                                    </div>
-                                </div>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 跑步</label>
-                                </li>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 球拍類運動</label>
-                                </li>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <input type="checkbox"> 羽毛球</label>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <input type="checkbox"> 壁球</label>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <input type="checkbox"> 桌球</label>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <input type="checkbox"> 網球</label>
-                                    </div>
-                                </div>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 棒類運動</label>
-                                </li>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <input type="checkbox"> 棒球</label>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <input type="checkbox"> 壘球</label>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <input type="checkbox"> 木球</label>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <input type="checkbox"> 門球</label>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <input type="checkbox"> 高爾夫球</label>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <input type="checkbox"> 曲棍球</label>
-                                    </div>
-                                </div>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 球類運動</label>
-                                </li>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 健體</label>
-                                </li>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 武術／搏擊</label>
-                                </li>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 賽艇</label>
-                                </li>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 水上運動</label>
-                                </li>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 攀山遠足</label>
-                                </li>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 鐵人三項</label>
-                                </li>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 馬術</label>
-                                </li>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 飛行</label>
-                                </li>
-                            </ul>
-                            <div class="panel-heading">
-                                <label>
-                                    <input type="checkbox"> 藝術</label>
-                            </div>
-                            <div class="panel-heading">
-                                <label>
-                                    <input type="checkbox"> 音樂</label>
-                            </div>
-                            <div class="panel-heading">
-                                <label>
-                                    <input type="checkbox"> 休閒娛樂</label>
-                            </div>
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 影劇欣賞</label>
-                                </li>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 閱讀</label>
-                                </li>
-                            </ul>
-                            <div class="panel-heading">
-                                <label>
-                                    <input type="checkbox"> 旅遊</label>
-                            </div>
-                            <div class="panel-heading">
-                                <label>
-                                    <input type="checkbox"> 益智</label>
-                            </div>
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 棋藝</label>
-                                </li>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 牌藝</label>
-                                </li>
-                            </ul>
-                            <div class="panel-heading">
-                                <label>
-                                    <input type="checkbox"> 其他</label>
-                            </div>
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <label>
-                                        <div class="input-group" style="margin: 0"><span class="input-group-addon">請註明</span>
-                                            <input type="text" class="form-control" placeholder="必填">
+                                        <div class="input-group" style="margin: 0" ng-class="{'has-error': AdditionalSetup.current.addition['D_'+domain].Checked && !AdditionalSetup.current.addition['D_'+domain].Description}"><span class="input-group-addon">請註明</span>
+                                            <input type="text" class="form-control" placeholder="必填" ng-model="AdditionalSetup.current.addition['D_'+domain].Description">
                                         </div>
                                     </label>
+                                </div>
+                            </div>
+                            <ul class="list-group" ng-repeat-end>
+                                <li class="list-group-item" ng-repeat-start="category in AdditionalSetup.current.addition['D_'+domain].Categorys">
+                                    <label>
+                                        <input type="checkbox" ng-show="!AdditionalSetup.current.addition['D_'+domain]['C_'+category].Items.length" ng-model="AdditionalSetup.current.addition['D_'+domain]['C_'+category].Checked"> {{category}}
+                                    </label>
+                                    <div ng-if="category=='其它' && AdditionalSetup.current.addition['D_'+domain]['C_'+category].Checked">
+                                        <label>
+                                            <div class="input-group" style="margin: 0" ng-class="{'has-error': AdditionalSetup.current.addition['D_'+domain]['C_'+category].Checked && !AdditionalSetup.current.addition['D_'+domain]['C_'+category].Description}"><span class="input-group-addon">請註明</span>
+                                                <input type="text" class="form-control" placeholder="必填" ng-model="AdditionalSetup.current.addition['D_'+domain]['C_'+category].Description">
+                                            </div>
+                                        </label>
+                                    </div>
                                 </li>
+                                <div class="row" ng-repeat-end>
+                                    <div class="col-sm-12" ng-repeat="item in AdditionalSetup.current.addition['D_'+domain]['C_'+category].Items">
+                                        <label>
+                                            <input type="checkbox" ng-model="AdditionalSetup.current.addition['D_'+domain]['C_'+category]['I_'+item].Checked"> {{item}}
+                                        </label>
+                                        <div ng-if="item=='其它' && AdditionalSetup.current.addition['D_'+domain]['C_'+category]['I_'+item].Checked">
+                                            <label>
+                                                <div class="input-group" style="margin: 0" ng-class="{'has-error': AdditionalSetup.current.addition['D_'+domain]['C_'+category]['I_'+item].Checked && !AdditionalSetup.current.addition['D_'+domain]['C_'+category]['I_'+item].Description}"><span class="input-group-addon">請註明</span>
+                                                    <input type="text" class="form-control" placeholder="必填" ng-model="AdditionalSetup.current.addition['D_'+domain]['C_'+category]['I_'+item].Description">
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
                             </ul>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true">取消</a>
-                        <a href="#" class="btn btn-primary" target="save">儲存</a>
+                        <button type="button" class="btn btn-primary" ng-click="stu_additionals.set()">確定</button>
                     </div>
                 </div>
             </div>
         </div>
         <!--madal EMBA團體-->
-        <div class="modal fade check-modal" id="group1" tabindex="-1" role="dialog" aria-labelledby="mygroup1">
+        <div class="modal fade check-modal" id="EMBAGroupsModel" tabindex="-1" role="dialog" aria-labelledby="mygroup1">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -493,60 +414,57 @@
                     </div>
                     <div class="modal-body">
                         <div class="panel panel-default">
-                            <div class="panel-heading">
+                            <div class="panel-heading" ng-repeat-start="domain in AdditionalSetup.current.addition.Domains">
                                 <label>
-                                    <input type="checkbox"> 組織</label>
+                                    <input type="checkbox" ng-show="!AdditionalSetup.current.addition['D_'+domain].Categorys.length" ng-model="AdditionalSetup.current.addition['D_'+domain].Checked"> {{domain}}
+                                </label>
+                                <div ng-if="domain=='其它' && AdditionalSetup.current.addition['D_'+domain].Checked">
+                                    <label>
+                                        <div class="input-group" style="margin: 0" ng-class="{'has-error': AdditionalSetup.current.addition['D_'+domain].Checked && !AdditionalSetup.current.addition['D_'+domain].Description}"><span class="input-group-addon">請註明</span>
+                                            <input type="text" class="form-control" placeholder="必填" ng-model="AdditionalSetup.current.addition['D_'+domain].Description">
+                                        </div>
+                                    </label>
+                                </div>
                             </div>
-                            <ul class="list-group">
-                                <li class="list-group-item">
+                            <ul class="list-group" ng-repeat-end>
+                                <li class="list-group-item" ng-repeat-start="category in AdditionalSetup.current.addition['D_'+domain].Categorys">
                                     <label>
-                                        <input type="checkbox"> 校友會</label>
+                                        <input type="checkbox" ng-show="!AdditionalSetup.current.addition['D_'+domain]['C_'+category].Items.length" ng-model="AdditionalSetup.current.addition['D_'+domain]['C_'+category].Checked"> {{category}}
+                                    </label>
+                                    <div ng-if="category=='其它' && AdditionalSetup.current.addition['D_'+domain]['C_'+category].Checked">
+                                        <label>
+                                            <div class="input-group" style="margin: 0" ng-class="{'has-error': AdditionalSetup.current.addition['D_'+domain]['C_'+category].Checked && !AdditionalSetup.current.addition['D_'+domain]['C_'+category].Description}"><span class="input-group-addon">請註明</span>
+                                                <input type="text" class="form-control" placeholder="必填" ng-model="AdditionalSetup.current.addition['D_'+domain]['C_'+category].Description">
+                                            </div>
+                                        </label>
+                                    </div>
                                 </li>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 桃園校友會</label>
-                                </li>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 新竹校友會</label>
-                                </li>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 中南部校友會</label>
-                                </li>
-                            </ul>
-                            <div class="panel-heading">
-                                <label>
-                                    <input type="checkbox"> 學會</label>
-                            </div>
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 會計與管理決策學會</label>
-                                </li>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 財金學會</label>
-                                </li>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 國際企業學會</label>
-                                </li>
-                                <li class="list-group-item">
-                                    <label>
-                                        <input type="checkbox"> 資管學會</label>
-                                </li>
+                                <div class="row" ng-repeat-end>
+                                    <div class="col-sm-12" ng-repeat="item in AdditionalSetup.current.addition['D_'+domain]['C_'+category].Items">
+                                        <label>
+                                            <input type="checkbox" ng-model="AdditionalSetup.current.addition['D_'+domain]['C_'+category]['I_'+item].Checked"> {{item}}
+                                        </label>
+                                        <div ng-if="item=='其它' && AdditionalSetup.current.addition['D_'+domain]['C_'+category]['I_'+item].Checked">
+                                            <label>
+                                                <div class="input-group" style="margin: 0" ng-class="{'has-error': AdditionalSetup.current.addition['D_'+domain]['C_'+category]['I_'+item].Checked && !AdditionalSetup.current.addition['D_'+domain]['C_'+category]['I_'+item].Description}"><span class="input-group-addon">請註明</span>
+                                                    <input type="text" class="form-control" placeholder="必填" ng-model="AdditionalSetup.current.addition['D_'+domain]['C_'+category]['I_'+item].Description">
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
                             </ul>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">確定</button>
+                        <button type="button" class="btn btn-primary" ng-click="stu_additionals.set()">確定</button>
                     </div>
                 </div>
             </div>
         </div>
+
         <!--modal end-->
-        <div class="page-container">
+        <div class="page-container" id="main">
             <!--
             <div class="header">
                 <ul class="breadcrumb">
@@ -602,7 +520,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="input-group">
+                                    <div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.CustodianName}">
                                         <input type="text" class="form-control" target="custodian-name" name="custodian-name" placeholder="必填" ng-model="myInfo.StudentInfo.CustodianName">
                                         <span class="input-group-addon" target="cannt-sharing">
                                             <span class="glyphicon glyphicon-remove" aria-hidden="true" target="share-custodian-name"></span>
@@ -610,8 +528,8 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" target="custodian-phone" name="custodian-phone" placeholder="必填" ng-model="myInfo.StudentBrief2.CustodianOtherInfo.CustodianOtherInfo.Phone">
+                                    <div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.CustodianOtherInfo.CustodianOtherInfo.Phone}">
+                                        <input type="text" class="form-control" target="custodian-phone" name="custodian-phone" placeholder="必填" ng-model="myInfo.StudentInfo.CustodianOtherInfo.CustodianOtherInfo.Phone">
                                         <span class="input-group-addon" target="cannt-sharing">
                                             <span class="glyphicon glyphicon-remove" aria-hidden="true" target="share-custodian-phone"></span>
                                         </span>
@@ -639,7 +557,7 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <div class="input-group">
+                                    <div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.PermanentPhone}">
                                         <input type="text" class="form-control" target="permanent-phone" name="permanent-phone" placeholder="必填" ng-model="myInfo.StudentInfo.PermanentPhone">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.PermanentPhone=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.PermanentPhone)">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-permanent-phone" ng-class="{notshare: myInfo.DataSharing.DataSharing.PermanentPhone!='true'}"></span>
@@ -648,7 +566,7 @@
                                 </td>
                                 <td>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" target="office-phone" name="office-phone" ng-model="myInfo.StudentBrief2.OtherPhones.PhoneList.PhoneNumber[0]">
+                                        <input type="text" class="form-control" target="office-phone" name="office-phone" ng-model="myInfo.StudentInfo.OtherPhones.PhoneList.PhoneNumber[0]">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[0]['@text']=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[0]['@text'])">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-office-phone" ng-class="{notshare: myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[0]['@text']!='true'}"></span>
                                         </span>
@@ -656,15 +574,15 @@
                                 </td>
                                 <td>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" target="other-phone" name="other-phone" ng-model="myInfo.StudentBrief2.OtherPhones.PhoneList.PhoneNumber[2]">
+                                        <input type="text" class="form-control" target="other-phone" name="other-phone" ng-model="myInfo.StudentInfo.OtherPhones.PhoneList.PhoneNumber[2]">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[2]['@text']=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[2]['@text'])">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-other-phone" ng-class="{notshare: myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[2]['@text']!='true'}"></span>
                                         </span>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" target="sms-phone1" name="sms-phone1" placeholder="必填" ng-model="myInfo.StudentBrief2.SMSPhone">
+                                    <div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.SMSPhone}">
+                                        <input type="text" class="form-control" target="sms-phone1" name="sms-phone1" placeholder="必填" ng-model="myInfo.StudentInfo.SMSPhone">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.SMSPhone=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.SMSPhone)">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-sms-phone1" ng-class="{notshare: myInfo.DataSharing.DataSharing.SMSPhone!='true'}"></span>
                                         </span>
@@ -672,7 +590,7 @@
                                 </td>
                                 <td>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" target="sms-phone2" name="sms-phone2" ng-model="myInfo.StudentBrief2.OtherPhones.PhoneList.PhoneNumber[1]">
+                                        <input type="text" class="form-control" target="sms-phone2" name="sms-phone2" ng-model="myInfo.StudentInfo.OtherPhones.PhoneList.PhoneNumber[1]">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[1]['@text']=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[1]['@text'])">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-sms-phone2" ng-class="{notshare: myInfo.DataSharing.DataSharing.OtherPhoneList.PhoneNumber[1]['@text']!='true'}"></span>
                                         </span>
@@ -700,40 +618,40 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <div class="input-group">
-                                        <input type="text" class="{email:true} form-control" target="email1" name="email1" placeholder="必填" ng-model="myInfo.StudentInfo.EmailList.email1">
+                                    <div class="input-group" ng-class="{'has-error': !myInfo.StudentBrief2.EmailList.email1 || !myInfo.validEmail(myInfo.StudentBrief2.EmailList.email1)}">
+                                        <input type="text" class="{email:true} form-control" target="email1" name="email1" placeholder="必填" ng-model="myInfo.StudentBrief2.EmailList.email1">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.EmailList.Email1=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.EmailList.Email1)">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-email1" ng-class="{notshare: myInfo.DataSharing.DataSharing.EmailList.Email1!='true'}"></span>
                                         </span>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="input-group">
-                                        <input type="text" class="{email:true} form-control" target="email2" name="email2" ng-model="myInfo.StudentInfo.EmailList.email2">
+                                    <div class="input-group" ng-class="{'has-error': !myInfo.validEmail(myInfo.StudentBrief2.EmailList.email2)}">
+                                        <input type="text" class="{email:true} form-control" target="email2" name="email2" ng-model="myInfo.StudentBrief2.EmailList.email2">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.EmailList.Email2=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.EmailList.Email2)">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-email2" ng-class="{notshare: myInfo.DataSharing.DataSharing.EmailList.Email2!='true'}"></span>
                                         </span>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="input-group">
-                                        <input type="text" class="{email:true} form-control" target="email3" name="email3" ng-model="myInfo.StudentInfo.EmailList.email3">
+                                    <div class="input-group" ng-class="{'has-error': !myInfo.validEmail(myInfo.StudentBrief2.EmailList.email3)}">
+                                        <input type="text" class="{email:true} form-control" target="email3" name="email3" ng-model="myInfo.StudentBrief2.EmailList.email3">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.EmailList.Email3=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.EmailList.Email3)">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-email3" ng-class="{notshare: myInfo.DataSharing.DataSharing.EmailList.Email3!='true'}"></span>
                                         </span>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="input-group">
-                                        <input type="text" class="{email:true} form-control" target="email4" name="email4" ng-model="myInfo.StudentInfo.EmailList.email4">
+                                    <div class="input-group" ng-class="{'has-error': !myInfo.validEmail(myInfo.StudentBrief2.EmailList.email4)}">
+                                        <input type="text" class="{email:true} form-control" target="email4" name="email4" ng-model="myInfo.StudentBrief2.EmailList.email4">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.EmailList.Email4=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.EmailList.Email4)">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-email4" ng-class="{notshare: myInfo.DataSharing.DataSharing.EmailList.Email4!='true'}"></span>
                                         </span>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="input-group">
-                                        <input type="text" class="{email:true} form-control" target="email5" name="email5" ng-model="myInfo.StudentInfo.EmailList.email5">
+                                    <div class="input-group" ng-class="{'has-error': !myInfo.validEmail(myInfo.StudentBrief2.EmailList.email5)}">
+                                        <input type="text" class="{email:true} form-control" target="email5" name="email5" ng-model="myInfo.StudentBrief2.EmailList.email5">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.EmailList.Email5=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.EmailList.Email5)">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-email5" ng-class="{notshare: myInfo.DataSharing.DataSharing.EmailList.Email5!='true'}"></span>
                                         </span>
@@ -759,16 +677,16 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" target="contact-address" name="contact-address" placeholder="必填" ng-model="myInfo.StudentBrief2.MailingAddress.AddressList.Address.DetailAddress" readonly>
+                                    <div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.MailingAddress_desc}">
+                                        <input type="text" class="form-control" target="contact-address" name="contact-address" placeholder="必填" value="{{myInfo.StudentInfo.MailingAddress_desc}}" readonly ng-click="myInfo.edit_address('MailingAddress', myInfo.StudentInfo.MailingAddress)">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.ContactAddress=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.ContactAddress)">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-contact-address" ng-class="{notshare: myInfo.DataSharing.DataSharing.ContactAddress!='true'}"></span>
                                         </span>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" target="permanent-address" name="permanent-address" placeholder="必填" ng-model="myInfo.StudentBrief2.PermanentAddress.AddressList.Address.DetailAddress" readonly>
+                                    <div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.PermanentAddress_desc}">
+                                        <input type="text" class="form-control" target="permanent-address" name="permanent-address" placeholder="必填" value="{{myInfo.StudentInfo.PermanentAddress_desc}}" readonly ng-click="myInfo.edit_address('PermanentAddress', myInfo.StudentInfo.PermanentAddress)">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.PermanentAddress=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.PermanentAddress)">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-permanent-address" ng-class="{notshare: myInfo.DataSharing.DataSharing.PermanentAddress!='true'}"></span>
                                         </span>
@@ -776,7 +694,7 @@
                                 </td>
                                 <td>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" target="office-address" name="office-address" ng-model="myInfo.StudentBrief2.OtherAddresses.AddressList.Address.DetailAddress" readonly>
+                                        <input type="text" class="form-control" target="office-address" name="office-address" value="{{myInfo.StudentInfo.OtherAddresses_desc}}" readonly ng-click="myInfo.edit_address('OtherAddresses', myInfo.StudentInfo.OtherAddresses)">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.OtherAddressList.Address[0]=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.OtherAddressList.Address[0])">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-office-address" ng-class="{notshare: myInfo.DataSharing.DataSharing.OtherAddressList.Address[0]!='true'}"></span>
                                         </span>
@@ -842,8 +760,8 @@
                             <tr>
                                 <td data-title="公司名稱">{{exp.CompanyName || '&nbsp;'}}</td>
                                 <td data-title="職稱">{{exp.Position || '&nbsp;'}}</td>
-                                <td data-title="層級別">{{exp.PostLevel.join(',') || '&nbsp;'}} <span ng-show="exp.PostLevel_Other">({{exp.PostLevel_Other}})</span></td>
-                                <td data-title="部門">{{exp.DepartmentCategory || '&nbsp;'}}</td>
+                                <td data-title="層級別">{{exp.PostLevel.join(',') || '&nbsp;'}} <span ng-show="exp.PostLevelOther">({{exp.PostLevelOther}})</span></td>
+                                <td data-title="部門">{{exp.DepartmentCategory || '&nbsp;'}} <span ng-show="exp.DepartmentCategoryOther">({{exp.DepartmentCategoryOther}})</span</td>
                             </tr>
                         </tbody>
                         <thead>
@@ -856,9 +774,9 @@
                         </thead>
                         <tbody ng-repeat-end>
                             <tr>
-                                <td data-title="產業別">{{exp.Industry || '&nbsp;'}}</td>
-                                <td data-title="工作地點">{{exp.WorkPlace.join(',') || '&nbsp;'}} <span ng-show="exp.WorkPlace_Other">({{exp.WorkPlace_Other}})</span></td>
-                                <td data-title="工作狀態">{{exp.WorkStatus || '&nbsp;'}}</td>
+                                <td data-title="產業別">{{exp.Industry || '&nbsp;'}} <span ng-show="exp.IndustryOther">({{exp.IndustryOther}})</span></td>
+                                <td data-title="工作地點">{{exp.WorkPlace.join(',') || '&nbsp;'}} <span ng-show="exp.WorkPlaceOther">({{exp.WorkPlaceOther}})</span></td>
+                                <td data-title="工作狀態">{{exp.WorkStatus || '&nbsp;'}} <span ng-show="exp.WorkStatusOther">({{exp.WorkStatusOther}})</span></td>
                                 <td data-title="" class="text-right">
                                     <span class="pull-left" target="data-sharing" style="cursor:none">
                                         <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-contact-address" ng-class="{notshare: !exp.IsSharing}"></span>
@@ -883,12 +801,12 @@
                                 </div>
                                 <label class="col-xs-12 col-sm-2 text-right">
                                     否
-                                    <input type="checkbox" checklist-model="myInfo.Willingness.IsSocialEnterprise" checklist-value="true">
+                                    <input type="checkbox" ng-model="myInfo.Willingness.IsSocialEnterprise">
                                     <span class="lever"></span> 是
                                 </label>
                             </div>
                         </li>
-                        <li class="list-group-item" ng-show="myInfo.Willingness.IsSocialEnterprise">
+                        <li class="list-group-item" ng-if="myInfo.Willingness.IsSocialEnterprise">
                             <div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionEnterprise}">
                                 <span class="input-group-addon">請註明</span>
                                 <input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionEnterprise">
@@ -904,12 +822,12 @@
                                 </div>
                                 <label class="col-xs-12 col-sm-2 text-right">
                                     否
-                                    <input type="checkbox" checklist-model="myInfo.Willingness.IsNonProfitOrganizations" checklist-value="true">
+                                    <input type="checkbox" ng-model="myInfo.Willingness.IsNonProfitOrganizations">
                                     <span class="lever"></span> 是
                                 </label>
                             </div>
                         </li>
-                        <li class="list-group-item" ng-show="myInfo.Willingness.IsNonProfitOrganizations">
+                        <li class="list-group-item" ng-if="myInfo.Willingness.IsNonProfitOrganizations">
                             <div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionOrganizations}">
                                 <span class="input-group-addon">請註明</span>
                                 <input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionOrganizations">
@@ -925,12 +843,12 @@
                                 </div>
                                 <label class="col-xs-12 col-sm-2 text-right">
                                     否
-                                    <input type="checkbox" checklist-model="myInfo.Willingness.IsCorporateSocialResponsibility" checklist-value="true">
+                                    <input type="checkbox" ng-model="myInfo.Willingness.IsCorporateSocialResponsibility">
                                     <span class="lever"></span> 是
                                 </label>
                             </div>
                         </li>
-                        <li class="list-group-item" ng-show="myInfo.Willingness.IsCorporateSocialResponsibility">
+                        <li class="list-group-item" ng-if="myInfo.Willingness.IsCorporateSocialResponsibility">
                             <div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionResponsibility}">
                                 <span class="input-group-addon">請註明</span>
                                 <input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionResponsibility">
@@ -946,12 +864,12 @@
                                 </div>
                                 <label class="col-xs-12 col-sm-2 text-right">
                                     否
-                                    <input type="checkbox" checklist-model="myInfo.Willingness.IsVenture" checklist-value="true">
+                                    <input type="checkbox" ng-model="myInfo.Willingness.IsVenture">
                                     <span class="lever"></span> 是
                                 </label>
                             </div>
                         </li>
-                        <li class="list-group-item" ng-show="myInfo.Willingness.IsVenture">
+                        <li class="list-group-item" ng-if="myInfo.Willingness.IsVenture">
                             <div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionVenture}">
                                 <span class="input-group-addon">請註明</span>
                                 <input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionVenture">
@@ -975,12 +893,12 @@
                                 </div>
                                 <label class="col-xs-12 col-sm-2 text-right">
                                     否
-                                    <input type="checkbox" checklist-model="myInfo.Willingness.IsEntrepreneurialTeam" checklist-value="true">
+                                    <input type="checkbox" ng-model="myInfo.Willingness.IsEntrepreneurialTeam">
                                     <span class="lever"></span> 是
                                 </label>
                             </div>
                         </li>
-                        <li class="list-group-item" ng-show="myInfo.Willingness.IsEntrepreneurialTeam">
+                        <li class="list-group-item" ng-if="myInfo.Willingness.IsEntrepreneurialTeam">
                             <div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionEntrpreneurial}">
                                 <span class="input-group-addon">可提供經驗分享內容為</span>
                                 <input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionEntrpreneurial">
@@ -997,8 +915,8 @@
                         <i class="fa fa-fw fa-group"></i> 參加校外團體
                     </div>
                     <div class="panel-body">
-                        <div class="input-group" ng-class="{'has-error': !stu_additionals.result['my_ExternalOrganization_desc']}">
-                            <input type="text" class="form-control" name="" placeholder="必填" target="" data-toggle="modal" data-target="#group4" readonly value="{{stu_additionals.result['my_ExternalOrganization_desc']}}">
+                        <div class="input-group" ng-class="{'has-error': !stu_additionals.result['my_ExternalOrganization_desc'] || !stu_additionals.valid('ExternalOrganization', AdditionalSetup['S_ExternalOrganization'])}">
+                            <input type="text" class="form-control" placeholder="必填" readonly value="{{stu_additionals.result['my_ExternalOrganization_desc']}}" ng-click="stu_additionals.edit('ExternalOrganization', AdditionalSetup['S_ExternalOrganization'])">
                             <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingExternalOrganization=!(myInfo.Willingness.IsSharingExternalOrganization)">
                                 <span class="glyphicon glyphicon-ok notshare" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingExternalOrganization}"></span>
                             </span>
@@ -1011,8 +929,8 @@
                         <i class="fa fa-fw fa-heart"></i> 興趣
                     </div>
                     <div class="panel-body">
-                        <div class="input-group" ng-class="{'has-error': !stu_additionals.result['my_Interest_desc']}">
-                            <input type="text" class="form-control" name="" placeholder="必填" target="" data-toggle="modal" data-target="#interest" readonly value="{{stu_additionals.result['my_Interest_desc']}}">
+                        <div class="input-group" ng-class="{'has-error': !stu_additionals.result['my_Interest_desc'] || !stu_additionals.valid('Interest', AdditionalSetup['S_Interest'])}">
+                            <input type="text" class="form-control" placeholder="必填" readonly value="{{stu_additionals.result['my_Interest_desc']}}" ng-click="stu_additionals.edit('Interest', AdditionalSetup['S_Interest'])">
                             <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingInterest=!(myInfo.Willingness.IsSharingInterest)">
                                 <span class="glyphicon glyphicon-ok" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingInterest}"></span>
                             </span>
@@ -1025,18 +943,18 @@
                         <i class="fa fa-fw fa-group"></i> 參加台大EMBA團體
                     </div>
                     <div class="panel-body">
-                        <div class="input-group" ng-class="{'has-error': !stu_additionals.result['my_EMBAGroups_desc']}">
-                            <input type="text" class="form-control" name="" placeholder="必填" target="" data-toggle="modal" data-target="#group1" readonly value="{{stu_additionals.result['my_EMBAGroups_desc']}}">
+                        <div class="input-group" ng-class="{'has-error': !stu_additionals.result['my_EMBAGroups_desc'] || !stu_additionals.valid('EMBAGroups', AdditionalSetup['S_EMBAGroups'])}">
+                            <input type="text" class="form-control" placeholder="必填" readonly value="{{stu_additionals.result['my_EMBAGroups_desc']}}" ng-click="stu_additionals.edit('EMBAGroups', AdditionalSetup['S_EMBAGroups'])">
                             <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingEMBAGroups=!(myInfo.Willingness.IsSharingEMBAGroups)">
                                 <span class="glyphicon glyphicon-ok notshare" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingEMBAGroups}"></span>
                             </span>
                         </div>
                     </div>
                 </div>
-                <!--其他聯絡窗口-->
+                <!--其它聯絡窗口-->
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        <i class="fa fa-fw fa-coffee"></i> 其他聯絡窗口
+                        <i class="fa fa-fw fa-coffee"></i> 其它聯絡窗口
                     </div>
                     <table class="table table-bordered responsive-table">
                         <thead>
@@ -1044,7 +962,7 @@
                                 <th>公關姓名</th>
                                 <th>公關室電話</th>
                                 <th>公關室傳真</th>
-                                <th>公關室Eamil</th>
+                                <th>公關室Email</th>
                                 <th>公司網址</th>
                             </tr>
                         </thead>
@@ -1075,7 +993,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="input-group">
+                                    <div class="input-group" ng-class="{'has-error': !myInfo.validEmail(myInfo.Publicist.PublicistEmail)}">
                                         <input type="text" class="form-control" ng-model="myInfo.Publicist.PublicistEmail">
                                         <span class="input-group-addon" target="cannt-sharing">
                                             <span class="glyphicon glyphicon-remove notshare" aria-hidden="true" target="share-custodian-name"></span>
@@ -1094,7 +1012,7 @@
                         </tbody>
                     </table>
                 </div>
-                <a class="btn btn-danger btn-floating btn-large" style="padding-top: 5px"><i class="fa fa-2x fa-floppy-o" aria-hidden="true"></i></a>
+                <a href="javascript:;" class="btn btn-danger btn-floating btn-large" style="padding-top: 5px" ng-disabled="myInfo.StudentInfo.saveing" ng-click="myInfo.save()"><i class="fa fa-2x fa-floppy-o" aria-hidden="true"></i></a>
             </div>
         </div>
         <div class="footer-space"></div>
