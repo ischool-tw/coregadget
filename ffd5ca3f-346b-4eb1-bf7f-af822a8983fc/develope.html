@@ -298,7 +298,7 @@
                         <div class="col-sm-3">
                             <label class="input-group">
                                 <span class="input-group-addon">
-                                    <input type="checkbox" checklist-model="filter.willingness.is_social_enterprise" checklist-value="true"> 社會企業
+                                    <input type="checkbox" ng-model="filter.willingness.is_social_enterprise"> 社會企業
                                 </span>
                                 <input type="text" ng-show="filter.willingness.is_social_enterprise" class="form-control" placeholder="關鍵字" ng-model="filter.willingness.description_enterprise">
                             </label>
@@ -306,7 +306,7 @@
                         <div class="col-sm-3">
                             <label class="input-group">
                                 <span class="input-group-addon">
-                                    <input type="checkbox" checklist-model="filter.willingness.is_non_porfit_organizations" checklist-value="true"> 非營利組織
+                                    <input type="checkbox" ng-model="filter.willingness.is_non_porfit_organizations"> 非營利組織
                                 </span>
                                 <input type="text" ng-show="filter.willingness.is_non_porfit_organizations" class="form-control" placeholder="關鍵字" ng-model="filter.willingness.description_organizations">
                             </label>
@@ -314,7 +314,7 @@
                         <div class="col-sm-3">
                             <label class="input-group">
                                 <span class="input-group-addon">
-                                    <input type="checkbox" checklist-model="filter.willingness.is_corporate_social_responsibility" checklist-value="true"> 企業社會責任
+                                    <input type="checkbox" ng-model="filter.willingness.is_corporate_social_responsibility"> 企業社會責任
                                 </span>
                                 <input type="text" ng-show="filter.willingness.is_corporate_social_responsibility" class="form-control" placeholder="關鍵字" ng-model="filter.willingness.description_responsibility">
                             </label>
@@ -322,7 +322,7 @@
                         <div class="col-sm-3">
                             <label class="input-group">
                                 <span class="input-group-addon">
-                                    <input type="checkbox" checklist-model="filter.willingness.is_venture" checklist-value="true"> 創業
+                                    <input type="checkbox" ng-model="filter.willingness.is_venture"> 創業
                                 </span>
                                 <input type="text" ng-show="filter.willingness.is_venture" class="form-control" placeholder="關鍵字" ng-model="filter.willingness.description_venture">
                             </label>
@@ -335,7 +335,7 @@
                         <div class="col-sm-3">
                             <label class="input-group">
                                 <span class="input-group-addon">
-                                    <input type="checkbox" checklist-model="filter.willingness.is_entrpreneurial_team" checklist-value="true"> 擔任業師意願
+                                    <input type="checkbox" ng-model="filter.willingness.is_entrpreneurial_team"> 擔任業師意願
                                 </span>
                                 <input type="text" ng-show="filter.willingness.is_entrpreneurial_team" class="form-control" placeholder="經驗分享" ng-model="filter.willingness.description_entrpreneurial">
                             </label>
