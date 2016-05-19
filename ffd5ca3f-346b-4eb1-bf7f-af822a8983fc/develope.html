@@ -374,8 +374,11 @@
                             <td>{{stu.Gender}}</td>
                             <td>{{stu.DepartmentName}}</td>
                         </tr>
-                        <tr ng-show="students.length==0">
+                        <tr ng-show="(isLoadComplete && students.length==0)">
                             <td colspan="5">無符合的資料</td>
+                        </tr>
+                        <tr ng-show="(isLoading)">
+                            <td colspan="5">讀取資料中</td>
                         </tr>
                     </tbody>
                 </table>

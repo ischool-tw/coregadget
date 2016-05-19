@@ -1018,6 +1018,31 @@
                 <a href="javascript:;" class="btn btn-danger btn-floating btn-large" style="padding-top: 5px" ng-disabled="myInfo.StudentInfo.saveing" ng-click="myInfo.save()"><i class="fa fa-2x fa-floppy-o" aria-hidden="true"></i></a>
             </div>
         </div>
+
+        <div class="modal fade" id="messageBox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">訊息</h4>
+              </div>
+              <div class="modal-body" id="messageContent">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">結束</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+       <!--  <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="messageBox">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content" id="messageContent">
+            </div>
+          </div>
+        </div> -->
+
         <div class="footer-space"></div>
         <div class="footer">
             <img style="margin: 5px 10px 0px 0px; float: left; display: inline; zoom: 1;" border="0" src="src/red_logo.jpg">

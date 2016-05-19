@@ -2,7 +2,8 @@ var app = angular.module("app", ["checklist-model"]);
 
 app.controller('MainCtrl', ['$scope', function($scope) {
     $scope.connection = gadget.getContract("emba.student");
-
+    $scope.isLoadComplete = false;
+    $scope.isLoading = false;
     // 取得系所組別
     $scope.getDept = function(enroll_year) {
         // enroll_year 入學年度
@@ -136,7 +137,9 @@ app.controller('MainCtrl', ['$scope', function($scope) {
     };
 
     $scope.queryStudent = function() {
-        $scope.students = []
+        $scope.isLoadComplete = false;
+        $scope.isLoading = true;
+        $scope.students = [];
 
         // 搜尋條件列表
         var flt = $scope.filter;
@@ -318,7 +321,8 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                     if (!error) {
                         $scope.experienceCount = response.Response;
                         console.log(response);
-                        
+                        $scope.isLoadComplete = true;
+                        $scope.isLoading = false;
                     }
                 }
             });

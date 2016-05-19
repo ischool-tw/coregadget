@@ -367,7 +367,10 @@ app.controller('MainCtrl', ['$scope', function($scope) {
         var finish = function() {
             count--;
             if (saveStu && saveSB && saveWi && saveSA && saveSP) {
-                alert("儲存成功");
+                //alert("儲存成功");
+                $('#messageContent').html("儲存成功");
+                $('#messageBox').modal();
+
                 $scope.myInfo.load();
                 $scope.stu_additionals.load();
                 $scope.myInfo.StudentInfo.saveing = false;
@@ -385,7 +388,9 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                         finish();
                     }
                 } else {
-                    alert("更新失敗. 001");
+                    $('#messageContent').html("學生個人資料.更新失敗. 001");
+                    $('#messageBox').modal();
+                    //alert("更新失敗. 001");
                     $scope.myInfo.StudentInfo.saveing = false;
                 }
             }
@@ -400,7 +405,9 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                         finish();
                     }
                 } else {
-                    alert("更新失敗. 002");
+                    //alert("更新失敗. 002");
+                    $('#messageContent').html("學生延伸資料.更新失敗. 002");
+                    $('#messageBox').modal();
                     $scope.myInfo.StudentInfo.saveing = false;
                 }
             }
@@ -415,7 +422,9 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                         finish();
                     }
                 } else {
-                    alert("更新失敗. 003");
+                    //alert("更新失敗. 003");
+                    $('#messageContent').html("意願調查與經驗調查.更新失敗. 003");
+                    $('#messageBox').modal();
                     $scope.myInfo.StudentInfo.saveing = false;
                 }
             }
@@ -430,7 +439,9 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                         finish();
                     }
                 } else {
-                    alert("更新失敗. 004");
+                    //alert("更新失敗. 004");
+                    $('#messageContent').html("興趣/台大EMBA社團/校外組織.更新失敗. 004");
+                    $('#messageBox').modal();
                     $scope.myInfo.StudentInfo.saveing = false;
                 }
             }
@@ -445,7 +456,9 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                         finish();
                     }
                 } else {
-                    alert("更新失敗. 005");
+                    //alert("更新失敗. 005");
+                    $('#messageContent').html("公關資料.更新失敗. 005");
+                    $('#messageBox').modal();
                     $scope.myInfo.StudentInfo.saveing = false;
                 }
             }
