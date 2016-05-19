@@ -300,7 +300,7 @@
                                 <span class="input-group-addon">
                                     <input type="checkbox" checklist-model="filter.willingness.is_social_enterprise" checklist-value="true"> 社會企業
                                 </span>
-                                <input type="text" class="form-control" placeholder="關鍵字" ng-model="filter.willingness.description_enterprise">
+                                <input type="text" ng-show="filter.willingness.is_social_enterprise" class="form-control" placeholder="關鍵字" ng-model="filter.willingness.description_enterprise">
                             </label>
                         </div>
                         <div class="col-sm-3">
@@ -308,7 +308,7 @@
                                 <span class="input-group-addon">
                                     <input type="checkbox" checklist-model="filter.willingness.is_non_porfit_organizations" checklist-value="true"> 非營利組織
                                 </span>
-                                <input type="text" class="form-control" placeholder="關鍵字" ng-model="filter.willingness.description_organizations">
+                                <input type="text" ng-show="filter.willingness.is_non_porfit_organizations" class="form-control" placeholder="關鍵字" ng-model="filter.willingness.description_organizations">
                             </label>
                         </div>
                         <div class="col-sm-3">
@@ -316,7 +316,7 @@
                                 <span class="input-group-addon">
                                     <input type="checkbox" checklist-model="filter.willingness.is_corporate_social_responsibility" checklist-value="true"> 企業社會責任
                                 </span>
-                                <input type="text" class="form-control" placeholder="關鍵字" ng-model="filter.willingness.description_responsibility">
+                                <input type="text" ng-show="filter.willingness.is_corporate_social_responsibility" class="form-control" placeholder="關鍵字" ng-model="filter.willingness.description_responsibility">
                             </label>
                         </div>
                         <div class="col-sm-3">
@@ -324,24 +324,21 @@
                                 <span class="input-group-addon">
                                     <input type="checkbox" checklist-model="filter.willingness.is_venture" checklist-value="true"> 創業
                                 </span>
-                                <input type="text" class="form-control" placeholder="關鍵字" ng-model="filter.willingness.description_venture">
+                                <input type="text" ng-show="filter.willingness.is_venture" class="form-control" placeholder="關鍵字" ng-model="filter.willingness.description_venture">
                             </label>
                         </div>
                     </div>
                 </div>
                 <div class="panel panel-info">
                     <div class="panel-heading"><i class="fa fa-fw fa-tasks"></i> 意願查詢</div>
-                    <div class="panel-body row">
+                    <div class="panel-body row"> 
                         <div class="col-sm-3">
-                            <label class="checkbox-inline">
-                                <input type="checkbox" checklist-model="filter.willingness.is_entrpreneurial_team" checklist-value="true"> 擔任業師意願
+                            <label class="input-group">
+                                <span class="input-group-addon">
+                                    <input type="checkbox" checklist-model="filter.willingness.is_entrpreneurial_team" checklist-value="true"> 擔任業師意願
+                                </span>
+                                <input type="text" ng-show="filter.willingness.is_entrpreneurial_team" class="form-control" placeholder="經驗分享" ng-model="filter.willingness.description_entrpreneurial">
                             </label>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="input-group">
-                                <span class="input-group-addon">經驗分享</span>
-                                <input type="text" class="form-control" placeholder="關鍵字查詢" ng-model="filter.willingness.description_entrpreneurial">
-                            </div>
                         </div>
                     </div>
                 </div>

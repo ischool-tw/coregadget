@@ -63,7 +63,7 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                                 };
                             }
                             if (item.item) {
-                                additionals['S_' + item.specie]['D_' + item.domain]['C_' + item.category].Item.unshift(item.item);
+                                additionals['S_' + item.specie]['D_' + item.domain]['C_' + item.category].Item.push(item.item);
                             }
                         });
                     }
@@ -78,7 +78,7 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                                 experiences['C_' + item.item_category] = [];
                             }
                             if (item.item) {
-                                experiences['C_' + item.item_category].unshift(item.item);
+                                experiences['C_' + item.item_category].push(item.item);
                             }
                         })
                     }
@@ -155,13 +155,15 @@ app.controller('MainCtrl', ['$scope', function($scope) {
             cdt.push(flt.dept.Name);
         }
         if (flt.edu) { // 學歷
-            body_obj.edu = flt.edu;
+             if (!body_obj.edu_background) body_obj.edu_background = {};
+            body_obj.edu_background.edu_sharing = true;
+            body_obj.edu_background.school_name = ['%', flt.edu, '%'].join('');
             cdt.push(flt.edu);
         }
         if (flt.additional.company_name) { // 公司名稱
             if (!body_obj.additional) body_obj.additional = {};
             body_obj.additional.company_sharing = true;
-            body_obj.additional.company_name = flt.additional.company_name;
+            body_obj.additional.company_name = ['%', flt.additional.company_name, '%'].join('');
             cdt.push(flt.additional.company_name);
         }
         if (flt.additional.level.length) { // 層級別
@@ -243,7 +245,7 @@ app.controller('MainCtrl', ['$scope', function($scope) {
         if (flt.willingness.description_enterprise) { // 社會企業關鍵字
             if (!body_obj.willingness) body_obj.willingness = {};
             body_obj.willingness.is_sharing_enterprise = true;
-            body_obj.willingness.description_enterprise = flt.willingness.description_enterprise;
+            body_obj.willingness.description_enterprise = ['%', flt.willingness.description_enterprise, '%'].join('');
             cdt.push(flt.willingness.description_enterprise);
         }
         if (flt.willingness.is_non_porfit_organizations) { // 非營利組織
@@ -255,7 +257,7 @@ app.controller('MainCtrl', ['$scope', function($scope) {
         if (flt.willingness.description_organizations) { // 非營利組織關鍵字
             if (!body_obj.willingness) body_obj.willingness = {};
             body_obj.willingness.is_sharing_organizations = true;
-            body_obj.willingness.description_organizations = flt.willingness.description_organizations;
+            body_obj.willingness.description_organizations = ['%', flt.willingness.description_organizations, '%'].join('');
             cdt.push(flt.willingness.description_organizations);
         }
         if (flt.willingness.is_corporate_social_responsibility) { // 企業社會責任
@@ -267,7 +269,7 @@ app.controller('MainCtrl', ['$scope', function($scope) {
         if (flt.willingness.description_responsibility) { // 企業社會責任關鍵字
             if (!body_obj.willingness) body_obj.willingness = {};
             body_obj.willingness.is_sharing_responsibility = true;
-            body_obj.willingness.description_responsibility = flt.willingness.description_responsibility;
+            body_obj.willingness.description_responsibility = ['%', flt.willingness.description_responsibility, '%'].join('');
             cdt.push(flt.willingness.description_responsibility);
         }
         if (flt.willingness.is_venture) { // 創業
@@ -279,7 +281,7 @@ app.controller('MainCtrl', ['$scope', function($scope) {
         if (flt.willingness.description_venture) { // 創業關鍵字
             if (!body_obj.willingness) body_obj.willingness = {};
             body_obj.willingness.is_sharing_venture = true;
-            body_obj.willingness.description_venture = flt.willingness.description_venture;
+            body_obj.willingness.description_venture = ['%', flt.willingness.description_venture, '%'].join('');
             cdt.push(flt.willingness.description_venture);
         }
         if (flt.willingness.is_entrpreneurial_team) { // 業師意願
@@ -291,7 +293,7 @@ app.controller('MainCtrl', ['$scope', function($scope) {
         if (flt.willingness.description_entrpreneurial) { // 業師意願關鍵字
             if (!body_obj.willingness) body_obj.willingness = {};
             body_obj.willingness.is_sharing_entrpreneurial = true;
-            body_obj.willingness.description_entrpreneurial = flt.willingness.description_entrpreneurial;
+            body_obj.willingness.description_entrpreneurial = ['%', flt.willingness.description_entrpreneurial, '%'].join('');
             cdt.push(flt.willingness.description_entrpreneurial);
         }
 
