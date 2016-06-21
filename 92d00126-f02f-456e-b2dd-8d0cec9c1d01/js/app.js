@@ -241,10 +241,10 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                         // 合件右物件至左物件，但不新增左物件
                         var mergeObject = function(x, y) {
                             for (var key in  x) {
-                                if (angular.isObject(x[key]) || angular.isArray(x[key])) {
+                                if (y && (angular.isObject(x[key]) || angular.isArray(x[key]))) {
                                     mergeObject(x[key], y[key]);
                                 } else {
-                                    if (y[key]) x[key] = y[key];
+                                    if (y && y[key]) x[key] = y[key];
                                 }
                             }
                         };
