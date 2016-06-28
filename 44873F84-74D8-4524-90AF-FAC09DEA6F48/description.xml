@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="國中畢業預警查詢" description="國中畢業預警查詢">
-    <Title lang="zh-TW">國中畢業預警查詢</Title>
+  <ModulePrefs title="畢業預警查詢" description="畢業預警查詢">
+    <Title lang="zh-TW">畢業預警查詢</Title>
     <Icon>icon.png</Icon>
     <Mobile />
     <Title lang="zh-CN">
