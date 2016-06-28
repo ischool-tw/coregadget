@@ -1,14 +1,14 @@
 var app = angular.module('app', []);
 
-app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
+app.controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
 
     $scope.system_position = gadget.params.system_position || "student";
 
-    $scope.GetClass = function() {
+    $scope.GetClass = function () {
         $scope.connection.send({
             service: "_.GetClass",
             body: '',
-            result: function(response, error, http) {
+            result: function (response, error, http) {
 
                 if (error) {
                     if (error.dsaError && error.dsaError.message)
@@ -21,17 +21,19 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 
                     if ($scope.Class.length > 0)
                         $scope.SelectClass($scope.Class[0]);
+                    else
+                        $scope.$apply();
                 }
             }
 
         });
     };
 
-    $scope.GetStudents = function() {
+    $scope.GetStudents = function () {
         $scope.connection.send({
             service: "_.GetStudents",
             body: GetStudentRequest(),
-            result: function(response, error, http) {
+            result: function (response, error, http) {
 
                 if (error) {
                     if (error.dsaError && error.dsaError.message)
@@ -43,16 +45,20 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 
                     if ($scope.Students.length > 0)
                         $scope.SelectStudent($scope.Students[0]);
+                    else {
+                        $scope.currentStudent = null
+                        $scope.$apply();
+                    }
                 }
             }
         });
     };
 
-    $scope.GetData = function() {
+    $scope.GetData = function () {
         $scope.connection.send({
             service: "_.GetData",
             body: GetDataRequest(),
-            result: function(response, error, http) {
+            result: function (response, error, http) {
 
                 //console.log(response);
 
@@ -75,33 +81,38 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
         });
     };
 
-    $scope.SelectClass = function(cls) {
+    $scope.SelectClass = function (cls) {
         $scope.currentClass = cls;
 
         $scope.GetStudents();
     }
 
-    $scope.SelectStudent = function(student) {
+    $scope.SelectStudent = function (student) {
         $scope.currentStudent = student;
 
         $scope.GetData();
     }
 
-    $scope.ScoreColor = function(str) {
+    $scope.ScoreColor = function (str) {
         var score = parseInt(str, 10);
 
         if (!isNaN(score) && score < 60)
             return "underSixty";
     };
 
-    var GetDataRequest = function() {
+    $scope.DisciplineColor = function (obj) {
+        if (obj && obj.changeColor)
+            return "underSixty";
+    };
+
+    var GetDataRequest = function () {
         if ($scope.currentStudent)
             return "<StudentID>" + $scope.currentStudent.ID + "</StudentID>";
         else
             return "";
     };
 
-    var GetStudentRequest = function() {
+    var GetStudentRequest = function () {
         if ($scope.currentClass)
             return "<ClassID>" + $scope.currentClass.ID + "</ClassID>";
         else
@@ -109,7 +120,7 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
     };
 
     //成績等第
-    var SetMappingData = function(response) {
+    var SetMappingData = function (response) {
 
         $scope.MappingData = [].concat(response.response.Mapping || []);
 
@@ -117,7 +128,7 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
     };
 
     //規則處理
-    var SetRules = function(response) {
+    var SetRules = function (response) {
 
         $scope.Rules = {};
 
@@ -126,7 +137,7 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 
         var data = [].concat(response.response.Rule || []);
 
-        angular.forEach(data, function(rule) {
+        angular.forEach(data, function (rule) {
 
             switch (rule.Type) {
 
@@ -202,27 +213,36 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
     };
 
     //學期歷程處理
-    var SetSemsHistory = function(response) {
+    var SetSemsHistory = function (response) {
 
+        // var gradeMapping = {
+        //     '1#1': {},
+        //     '1#2': {},
+        //     '2#1': {},
+        //     '2#2': {},
+        //     '3#1': {},
+        //     '3#2': {},
+        //     '7#1': {},
+        //     '7#2': {},
+        //     '8#1': {},
+        //     '8#2': {},
+        //     '9#1': {},
+        //     '9#2': {}
+        // };
         var gradeMapping = {
             '1#1': {},
             '1#2': {},
             '2#1': {},
             '2#2': {},
             '3#1': {},
-            '3#2': {},
-            '7#1': {},
-            '7#2': {},
-            '8#1': {},
-            '8#2': {},
-            '9#1': {},
-            '9#2': {}
+            '3#2': {}
         };
 
         //初始化...
-        angular.forEach(gradeMapping, function(value, key) {
+        angular.forEach(gradeMapping, function (value, key) {
             var initObj = {};
             initObj.Domains = {};
+            initObj.DomainBase = [];
             initObj.Discipline = {
                 Merit: {
                     'A': 0,
@@ -240,17 +260,24 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
         });
 
         //7年級判斷
-        var sevenStart = false;
+        //var sevenStart = false;
 
         var data = [].concat(response.response.SemsHistory || []);
-        angular.forEach(data, function(sh) {
+        angular.forEach(data, function (sh) {
 
             //遇到有7年級的歷程就從7開始呈現
             var grade = parseInt(sh.Grade, 10) || 0;
-            if (grade >= 7)
-                sevenStart = true;
+            // if (grade >= 7)
+            //     sevenStart = true;
+            if (grade === 7)
+                grade = 1;
+            else if (grade === 8)
+                grade = 2;
+            else if (grade === 9)
+                grade = 3;
 
-            var key = sh.Grade + "#" + sh.Semester;
+            //var key = sh.Grade + "#" + sh.Semester;
+            var key = grade + "#" + sh.Semester;
             var nsy = parseInt(sh.SchoolYear, 10) || 0;
 
             if (key in gradeMapping) {
@@ -270,21 +297,28 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
         });
 
         //建構六個學期
-        if (sevenStart === true) {
-            $scope.Semester1 = gradeMapping["7#1"];
-            $scope.Semester2 = gradeMapping["7#2"];
-            $scope.Semester3 = gradeMapping["8#1"];
-            $scope.Semester4 = gradeMapping["8#2"];
-            $scope.Semester5 = gradeMapping["9#1"];
-            $scope.Semester6 = gradeMapping["9#2"];
-        } else {
-            $scope.Semester1 = gradeMapping["1#1"];
-            $scope.Semester2 = gradeMapping["1#2"];
-            $scope.Semester3 = gradeMapping["2#1"];
-            $scope.Semester4 = gradeMapping["2#2"];
-            $scope.Semester5 = gradeMapping["3#1"];
-            $scope.Semester6 = gradeMapping["3#2"];
-        }
+        // if (sevenStart === true) {
+        //     $scope.Semester1 = gradeMapping["7#1"];
+        //     $scope.Semester2 = gradeMapping["7#2"];
+        //     $scope.Semester3 = gradeMapping["8#1"];
+        //     $scope.Semester4 = gradeMapping["8#2"];
+        //     $scope.Semester5 = gradeMapping["9#1"];
+        //     $scope.Semester6 = gradeMapping["9#2"];
+        // } else {
+        //     $scope.Semester1 = gradeMapping["1#1"];
+        //     $scope.Semester2 = gradeMapping["1#2"];
+        //     $scope.Semester3 = gradeMapping["2#1"];
+        //     $scope.Semester4 = gradeMapping["2#2"];
+        //     $scope.Semester5 = gradeMapping["3#1"];
+        //     $scope.Semester6 = gradeMapping["3#2"];
+        // }
+
+        $scope.Semester1 = gradeMapping["1#1"];
+        $scope.Semester2 = gradeMapping["1#2"];
+        $scope.Semester3 = gradeMapping["2#1"];
+        $scope.Semester4 = gradeMapping["2#2"];
+        $scope.Semester5 = gradeMapping["3#1"];
+        $scope.Semester6 = gradeMapping["3#2"];
 
         //全學期(懲戒要用的)
         $scope.SemesterAll = {};
@@ -302,39 +336,97 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
     };
 
     //領域成績處理
-    var SetDomainScore = function(response) {
+    var SetDomainScore = function (response) {
 
         var domainList = [];
 
         var data = [].concat(response.response.DomainScore || []);
 
-        angular.forEach(data, function(ds) {
+        angular.forEach(data, function (ds) {
 
-            //領域聯集清單
-            if (domainList.indexOf(ds.Domain) === -1)
-                domainList.push(ds.Domain);
-
-            //遍歷Semester1~6
+            //遍歷Semester1~6,先收集到DomainBase
             for (i = 1; i <= 6; i++) {
 
                 var key = "Semester" + i;
 
-                //將領域成績填入到對應學期
+                //尋找對應的學期
                 if ($scope[key] && $scope[key].SchoolYear === ds.SchoolYear && $scope[key].Semester === ds.Semester) {
-                    $scope[key].Domains[ds.Domain] = ds.Score;
+                    //先將對的資料收集起來
+                    $scope[key].DomainBase.push(ds);
                 }
             };
-
         });
 
+        //遍歷Semester1~6,整理後結算到Domains
+        for (i = 1; i <= 6; i++) {
+
+            var key = "Semester" + i;
+
+            if ($scope[key]) {
+
+                for (j = 0; j < $scope[key].DomainBase.length; j++) {
+                    var ds = $scope[key].DomainBase[j];
+                    var domainName = ds.Domain;
+                    //國語文跟英語跳過其他領域直接產出
+                    if (ds.Domain === "國語文" || ds.Domain === "英語")
+                        continue;
+
+                    //領域聯集清單
+                    if (domainList.indexOf(domainName) === -1)
+                        domainList.push(domainName);
+                    $scope[key].Domains[ds.Domain] = ds.Score;
+                }
+
+
+                //var sumScore = 0;
+                //var sumCredit = 0;
+                //var hasLanguage = false;
+
+                //for (j = 0; j < $scope[key].DomainBase.length; j++) {
+
+                //    var ds = $scope[key].DomainBase[j];
+                //    var domainName = ds.Domain;
+
+                //    //屬於語文領域的特別處理
+                //    if (ds.Domain === "國語文" || ds.Domain === "英語" || ds.Domain === "語文") {
+                //        hasLanguage = true;
+                //        domainName = "語文";
+                //        var score = parseFloat(ds.Score, 10);
+                //        var credit = parseFloat(ds.Credit, 10);
+
+                //        if (!isNaN(score) && !isNaN(credit) && credit > 0) {
+                //            //先抓到第三位做加總
+                //            sumScore += (score * credit * 1000);
+                //            sumCredit += credit;
+                //        }
+                //    } else {
+                //        //不屬於語文領域的直接寫入
+                //        $scope[key].Domains[ds.Domain] = ds.Score;
+                //    }
+
+                //    //領域聯集清單
+                //    if (domainList.indexOf(domainName) === -1)
+                //        domainList.push(domainName);
+                //}
+
+                //if (hasLanguage) {
+                //    //記得除回來
+                //    sumScore = sumScore / 1000;
+                //    $scope[key].Domains["語文"] = (Math.round((sumScore / sumCredit) * 100) / 100);
+                //    if (isNaN($scope[key].Domains["語文"]))
+                //        $scope[key].Domains["語文"] = "";
+                //}
+            }
+        };
+
         //簡單排序字串長度
-        domainList = domainList.sort(function(x, y) {
+        domainList = domainList.sort(function (x, y) {
             return x.length - y.length
         });
 
         //計算領域平均
         $scope.DomainAvg = [];
-        for (j = 0; j <= domainList.length; j++) {
+        for (j = 0; j < domainList.length; j++) {
 
             var domain = domainList[j];
 
@@ -359,7 +451,7 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
             //記得除回來
             sum = sum / 1000;
             //若變NaN就不會出現
-            $scope.DomainAvg[domain] = Math.round((sum / count) * 100) / 100;
+            $scope.DomainAvg[domain] = (Math.round((sum / count) * 100) / 100) || "";
         };
 
         $scope.DomainList = domainList;
@@ -374,11 +466,11 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
     };
 
     //懲戒處理
-    var SetDiscipline = function(response) {
+    var SetDiscipline = function (response) {
 
         var data = [].concat(response.response.Discipline || []);
 
-        angular.forEach(data, function(dp) {
+        angular.forEach(data, function (dp) {
 
             //遍歷Semester1~6
             for (i = 1; i <= 6; i++) {
@@ -433,7 +525,7 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
     };
 
     //取得懲戒描述
-    var GetDisciplineDisplay = function(discipline, text) {
+    var GetDisciplineDisplay = function (discipline, text) {
 
         //取得規則條件
         var rule = $scope.Rules[text];
@@ -484,7 +576,11 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
         d = d / dbs;
         d = (d * dct) + discipline.Demerit.C;
 
-        var display = "";
+        //var display = "";
+        var display = {
+            changeColor: false,
+            text: ""
+        };
 
         //有功過相抵
         if (rule.Balance === "true") {
@@ -493,18 +589,43 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 
             if (sum < 0) {
                 sum *= -1;
-                var count = Math.floor((sum / dct) / dbt);
+                //var count = Math.floor((sum / dct) / dbt);
+                var count小過 = Math.floor(sum / dct);
+                var count警告 = count - dct * count小過;
+                var count大過 = Math.floor(count小過 / dbt);
+                count小過 = count小過 - dbt * count大過;
 
-                if (count >= limit)
-                    display = "☆累計大過 " + count;
+                display.text = "☆累計"
+                    + (count大過 ? (" " + count大過 + "大過") : "")
+                    + (count小過 ? (" " + count小過 + "小過") : "")
+                    + (count警告 ? (" " + count警告 + "警告") : "");
+
+                if (count大過 >= limit)
+                    display.changeColor = true;
             }
         } else {
             //僅懲戒累計
-            var sum = d;
-            var count = Math.floor((sum / dct) / dbt);
+            //var sum = d;
+            //var count = Math.floor((sum / dct) / dbt);
 
-            if (count >= limit)
-                display = "累計大過 " + count;
+            //display.text = "累計大過 " + count;
+
+            //if (count >= limit)
+            //    display.changeColor = true;
+
+            var sum = d;
+            var count小過 = Math.floor(sum / dct);
+            var count警告 = count - dct * count小過;
+            var count大過 = Math.floor(count小過 / dbt);
+            count小過 = count小過 - dbt * count大過;
+
+            display.text = "累計"
+                + (count大過 ? (" " + count大過 + "大過") : "")
+                + (count小過 ? (" " + count小過 + "小過") : "")
+                + (count警告 ? (" " + count警告 + "警告") : "");
+
+            if (count大過 >= limit)
+                display.changeColor = true;
         }
 
         switch (text) {
