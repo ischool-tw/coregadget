@@ -4,6 +4,19 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/gadget.js"></script>
+    <script>
+        init({
+            application: "test.kh.edu.tw",
+            paramValues: {},
+            oAuth: {
+                clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+                clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
+                account: 'stitch@ischool.com.tw',
+                password: '1234'
+            }
+        });
+    </script>
 
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -15,23 +28,11 @@
     <script src="js/bootstrap.min.js"></script>
 
     <script src="js/app.js"></script>
-    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
-
-    <script>
-    init({
-        application: "dev.jh_hs",
-        paramValues: {},
-        oAuth: {
-            clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
-            clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311'
-        }
-    });
-    </script>
 
     <style type="text/css">
-    .underSixty {
-        background-color: lightgoldenrodyellow;
-    }
+        .underSixty {
+            background-color: lightgoldenrodyellow;
+        }
     </style>
 
 </head>
@@ -50,7 +51,7 @@
                     </ul>
                 </div>
 
-                <div ng-if="system_position == 'teacher' || system_position == 'parent'"class="btn-group" style="margin-left: 15px;margin-bottom:10px;">
+                <div ng-if="system_position == 'teacher' || system_position == 'parent'" class="btn-group" style="margin-left: 15px;margin-bottom:10px;">
                     <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{currentStudent.Name}}<span class="caret"></span> </a>
                     <ul class="dropdown-menu">
                         <!-- ngRepeat: item in studentList -->
@@ -151,28 +152,36 @@
                                 </tr>
                                 <tr>
                                     <td id="content-left">每個學期</td>
-                                    <td ng-class="DisciplineColor(Semester1.Discipline.DisplayA)">{{Semester1.Discipline.DisplayA.text || "N/A"}}
+                                    <td ng-class="DisciplineColor(Semester1.Discipline.DisplayA)">
+                                        {{Semester1.Discipline.DisplayA.text || "N/A"}}
                                     </td>
-                                    <td ng-class="DisciplineColor(Semester2.Discipline.DisplayA)">{{Semester2.Discipline.DisplayA.text || "N/A"}}
+                                    <td ng-class="DisciplineColor(Semester2.Discipline.DisplayA)">
+                                        {{Semester2.Discipline.DisplayA.text || "N/A"}}
                                     </td>
-                                    <td ng-class="DisciplineColor(Semester3.Discipline.DisplayA)">{{Semester3.Discipline.DisplayA.text || "N/A"}}
+                                    <td ng-class="DisciplineColor(Semester3.Discipline.DisplayA)">
+                                        {{Semester3.Discipline.DisplayA.text || "N/A"}}
                                     </td>
-                                    <td ng-class="DisciplineColor(Semester4.Discipline.DisplayA)">{{Semester4.Discipline.DisplayA.text || "N/A"}}
+                                    <td ng-class="DisciplineColor(Semester4.Discipline.DisplayA)">
+                                        {{Semester4.Discipline.DisplayA.text || "N/A"}}
                                     </td>
-                                    <td ng-class="DisciplineColor(Semester5.Discipline.DisplayA)">{{Semester5.Discipline.DisplayA.text || "N/A"}}
+                                    <td ng-class="DisciplineColor(Semester5.Discipline.DisplayA)">
+                                        {{Semester5.Discipline.DisplayA.text || "N/A"}}
                                     </td>
-                                    <td ng-class="DisciplineColor(Semester6.Discipline.DisplayA)">{{Semester6.Discipline.DisplayA.text || "N/A"}}
+                                    <td ng-class="DisciplineColor(Semester6.Discipline.DisplayA)">
+                                        {{Semester6.Discipline.DisplayA.text || "N/A"}}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="content-left">第六學期</td>
                                     <td colspan="5"></td>
-                                    <td ng-class="DisciplineColor(Semester6.Discipline.DisplayB)">{{Semester6.Discipline.DisplayB.text || "N/A"}}
+                                    <td ng-class="DisciplineColor(Semester6.Discipline.DisplayB)">
+                                        {{Semester6.Discipline.DisplayB.text || "N/A"}}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="content-left">所有學期</td>
-                                    <td colspan="6" ng-class="DisciplineColor(SemesterAll.Discipline.DisplayC)">{{SemesterAll.Discipline.DisplayC.text || "N/A"}}
+                                    <td colspan="6" ng-class="DisciplineColor(SemesterAll.Discipline.DisplayC)">
+                                        {{SemesterAll.Discipline.DisplayC.text || "N/A"}}
                                     </td>
                                 </tr>
                             </tbody>
