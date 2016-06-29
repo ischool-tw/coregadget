@@ -93,8 +93,10 @@ app.controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
         $scope.GetData();
     }
 
-    $scope.ScoreColor = function (str) {
-        var score = parseInt(str, 10);
+    $scope.ScoreColor = function (score, domain) {
+        if (domain == "國語文" || domain == "英語")
+            return "notImportant";
+        score = parseInt(score, 10);
 
         if (!isNaN(score) && score < 60)
             return "underSixty";
@@ -368,8 +370,8 @@ app.controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
                     var ds = $scope[key].DomainBase[j];
                     var domainName = ds.Domain;
                     //國語文跟英語跳過其他領域直接產出
-                    if (ds.Domain === "國語文" || ds.Domain === "英語")
-                        continue;
+                    //if (ds.Domain === "國語文" || ds.Domain === "英語")
+                    //    continue;
 
                     //領域聯集清單
                     if (domainList.indexOf(domainName) === -1)
@@ -421,7 +423,14 @@ app.controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
 
         //簡單排序字串長度
         domainList = domainList.sort(function (x, y) {
-            return x.length - y.length
+            var preDefinedOrder = ["語文", "國語文", "英語", "數學", "社會", "藝術與人文", "健康與體育", "自然與生活科技", "綜合活動"];
+            var x1 = preDefinedOrder.indexOf(x);
+            var y1 = preDefinedOrder.indexOf(y);
+            if (x1 < 0)
+                x1 = 10000;
+            if (y1 < 0)
+                y1 = 10000;
+            return x1 - y1
         });
 
         //計算領域平均
@@ -508,6 +517,10 @@ app.controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
 
             //每學期的規則條件結算
             GetDisciplineDisplay($scope[key].Discipline, "DemeritAmountEach");
+
+
+            //所有學期的規則條件結算
+            GetDisciplineDisplay($scope[key].Discipline, "DemeritAmountAll");
         };
 
         //第六學期的規則條件結算
@@ -591,14 +604,14 @@ app.controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
                 sum *= -1;
                 //var count = Math.floor((sum / dct) / dbt);
                 var count小過 = Math.floor(sum / dct);
-                var count警告 = count - dct * count小過;
+                var count警告 = sum - dct * count小過;
                 var count大過 = Math.floor(count小過 / dbt);
                 count小過 = count小過 - dbt * count大過;
 
                 display.text = "☆累計"
-                    + (count大過 ? (" " + count大過 + "大過") : "")
-                    + (count小過 ? (" " + count小過 + "小過") : "")
-                    + (count警告 ? (" " + count警告 + "警告") : "");
+                    + (count大過 ? ("" + count大過 + "大過") : "")
+                    + (count小過 ? ("" + count小過 + "小過") : "")
+                    + (count警告 ? ("" + count警告 + "警告") : "");
 
                 if (count大過 >= limit)
                     display.changeColor = true;
@@ -614,18 +627,20 @@ app.controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
             //    display.changeColor = true;
 
             var sum = d;
-            var count小過 = Math.floor(sum / dct);
-            var count警告 = count - dct * count小過;
-            var count大過 = Math.floor(count小過 / dbt);
-            count小過 = count小過 - dbt * count大過;
+            if (sum > 0) {
+                var count小過 = Math.floor(sum / dct);
+                var count警告 = sum - dct * count小過;
+                var count大過 = Math.floor(count小過 / dbt);
+                count小過 = count小過 - dbt * count大過;
 
-            display.text = "累計"
-                + (count大過 ? (" " + count大過 + "大過") : "")
-                + (count小過 ? (" " + count小過 + "小過") : "")
-                + (count警告 ? (" " + count警告 + "警告") : "");
+                display.text = "累計"
+                    + (count大過 ? ("" + count大過 + "大過") : "")
+                    + (count小過 ? ("" + count小過 + "小過") : "")
+                    + (count警告 ? ("" + count警告 + "警告") : "");
 
-            if (count大過 >= limit)
-                display.changeColor = true;
+                if (count大過 >= limit)
+                    display.changeColor = true;
+            }
         }
 
         switch (text) {
