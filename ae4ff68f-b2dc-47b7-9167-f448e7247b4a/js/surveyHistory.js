@@ -168,7 +168,7 @@ var GetReplyHistory = function() {
                             });
                         }
                         _survey_detail_string = "<tr><td>" + item.CourseName + "</td><td>" + item.SurveyCount + "</td>" +
-                                                (item.AnswerCount ? "<td>" + item.AnswerCount + "</td>" : "<td style='color:red'>0</td>") +
+                                                (item.AnswerCount ? "<td>" + item.AnswerCount + "</td>" : "<td style='color:red'>0</td>");
 
                         $("#" + item.SchoolYear + "-" + item.Semester + " tbody").append(_survey_detail_string);
 
