@@ -520,7 +520,7 @@ app.controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
 
 
             //所有學期的規則條件結算
-            GetDisciplineDisplay($scope[key].Discipline, "DemeritAmountAll");
+            GetDisciplineDisplay($scope[key].Discipline, "DemeritAmountAll", true);
         };
 
         //第六學期的規則條件結算
@@ -538,7 +538,7 @@ app.controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
     };
 
     //取得懲戒描述
-    var GetDisciplineDisplay = function (discipline, text) {
+    var GetDisciplineDisplay = function (discipline, text, showMerit) {
 
         //取得規則條件
         var rule = $scope.Rules[text];
@@ -600,6 +600,17 @@ app.controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
 
             var sum = m - d;
 
+            if (sum > 0 && showMerit) {
+                var count小功 = Math.floor(sum / mct);
+                var count嘉獎 = sum - mct * count小功;
+                var count大功 = Math.floor(count小功 / mbt);
+                count小功 = count小功 - mbt * count大功;
+
+                display.text = "☆累計"
+                    + (count大功 ? ("" + count大功 + "大功") : "")
+                    + (count小功 ? ("" + count小功 + "小功") : "")
+                    + (count嘉獎 ? ("" + count嘉獎 + "嘉獎") : "");
+            }
             if (sum < 0) {
                 sum *= -1;
                 //var count = Math.floor((sum / dct) / dbt);
@@ -626,10 +637,9 @@ app.controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
             //if (count >= limit)
             //    display.changeColor = true;
 
-            var sum = d;
-            if (sum > 0) {
-                var count小過 = Math.floor(sum / dct);
-                var count警告 = sum - dct * count小過;
+            if (d > 0) {
+                var count小過 = Math.floor(d / dct);
+                var count警告 = d - dct * count小過;
                 var count大過 = Math.floor(count小過 / dbt);
                 count小過 = count小過 - dbt * count大過;
 
