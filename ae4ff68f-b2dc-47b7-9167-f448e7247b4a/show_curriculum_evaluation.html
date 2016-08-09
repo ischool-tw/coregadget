@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+  <META HTTP-EQUIV="EXPIRES" CONTENT="0">
+  <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+  
+	<link href="css/bootstrap.css?20141015" rel="stylesheet" />
+	<link href="css/bootstrap-responsive.css?20141015" rel="stylesheet" />
+	<link href="css/mybootstrap.css?20141015" rel="stylesheet" />
+	<link href="css/default.css?20141015" rel="stylesheet" />
+	<link href="css/base.css?20141015" rel="stylesheet" />
+	<script src="js/jquery.min.js?20141015"></script>
+	<script src="js/bootstrap.js?20141015"></script>
+	<script src="js/jquery.validate.min.js?20141015"></script>
+	<script src="js/jquery.metadata.js?20141015"></script>
+	<script>
+		var showContent = function(content) {
+			$('#content').html(window.data_content);
+		}
+
+		$(document).ready(function() {
+			showContent();
+		});
+		
+	</script>
+	
+</head>
+<body>
+  <div id="content"></div>
+</body>
+</html>
