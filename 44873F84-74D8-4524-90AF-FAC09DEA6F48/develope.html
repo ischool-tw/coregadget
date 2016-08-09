@@ -4,6 +4,21 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/gadget.js"></script>
+    <script>
+        init({
+            //application: "test.kh.edu.tw",
+            application: "demo.ischool.j",
+            paramValues: {},
+            oAuth: {
+                clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+                clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
+                //account: 'stitch@ischool.com.tw',
+                account:'student03@demo',
+                password: '1234'
+            }
+        });
+    </script>
 
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -15,23 +30,14 @@
     <script src="js/bootstrap.min.js"></script>
 
     <script src="js/app.js"></script>
-    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
-
-    <script>
-    init({
-        application: "dev.jh_hs",
-        paramValues: {},
-        oAuth: {
-            clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
-            clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311'
-        }
-    });
-    </script>
 
     <style type="text/css">
-    .underSixty {
-        background-color: lightgoldenrodyellow;
-    }
+        .underSixty {
+            background-color: lightgoldenrodyellow;
+        }
+        .notImportant {
+            color: darkgray;
+        }
     </style>
 
 </head>
@@ -50,7 +56,7 @@
                     </ul>
                 </div>
 
-                <div ng-if="system_position == 'teacher' || system_position == 'parent'"class="btn-group" style="margin-left: 15px;margin-bottom:10px;">
+                <div ng-if="system_position == 'teacher' || system_position == 'parent'" class="btn-group" style="margin-left: 15px;margin-bottom:10px;">
                     <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{currentStudent.Name}}<span class="caret"></span> </a>
                     <ul class="dropdown-menu">
                         <!-- ngRepeat: item in studentList -->
@@ -98,14 +104,14 @@
                                     <th>Avg</th>
                                 </tr>
                                 <tr ng-repeat="(key, domain) in DomainList">
-                                    <td id="content-left">{{domain}}</td>
-                                    <td ng-class="ScoreColor(Semester1.Domains[domain])">{{Semester1.Domains[domain] || ""}}</td>
-                                    <td ng-class="ScoreColor(Semester2.Domains[domain])">{{Semester2.Domains[domain] || ""}}</td>
-                                    <td ng-class="ScoreColor(Semester3.Domains[domain])">{{Semester3.Domains[domain] || ""}}</td>
-                                    <td ng-class="ScoreColor(Semester4.Domains[domain])">{{Semester4.Domains[domain] || ""}}</td>
-                                    <td ng-class="ScoreColor(Semester5.Domains[domain])">{{Semester5.Domains[domain] || ""}}</td>
-                                    <td ng-class="ScoreColor(Semester6.Domains[domain])">{{Semester6.Domains[domain] || ""}}</td>
-                                    <td ng-class="ScoreColor(DomainAvg[domain])">{{DomainAvg[domain] || ""}}</td>
+                                    <td id="content-left" ng-class="ScoreColor(100, domain)">{{domain}}</td>
+                                    <td ng-class="ScoreColor(Semester1.Domains[domain], domain)">{{Semester1.Domains[domain] || ""}}</td>
+                                    <td ng-class="ScoreColor(Semester2.Domains[domain], domain)">{{Semester2.Domains[domain] || ""}}</td>
+                                    <td ng-class="ScoreColor(Semester3.Domains[domain], domain)">{{Semester3.Domains[domain] || ""}}</td>
+                                    <td ng-class="ScoreColor(Semester4.Domains[domain], domain)">{{Semester4.Domains[domain] || ""}}</td>
+                                    <td ng-class="ScoreColor(Semester5.Domains[domain], domain)">{{Semester5.Domains[domain] || ""}}</td>
+                                    <td ng-class="ScoreColor(Semester6.Domains[domain], domain)">{{Semester6.Domains[domain] || ""}}</td>
+                                    <td ng-class="ScoreColor(DomainAvg[domain], domain)">{{DomainAvg[domain] || ""}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -149,30 +155,78 @@
                                     <th>{{Semester5.Title}}</th>
                                     <th>{{Semester6.Title}}</th>
                                 </tr>
-                                <tr>
-                                    <td id="content-left">每個學期</td>
-                                    <td ng-class="DisciplineColor(Semester1.Discipline.DisplayA)">{{Semester1.Discipline.DisplayA.text || "N/A"}}
+                                <tr ng-if="Rules.DemeritAmountEach">
+                                    <td id="content-left">每學期累計</td>
+                                    <td ng-class="DisciplineColor(Semester1.Discipline.DisplayA)"
+                                        style="padding: 8px 0px;">
+                                        {{Semester1.Discipline.DisplayA.text || "N/A"}}
                                     </td>
-                                    <td ng-class="DisciplineColor(Semester2.Discipline.DisplayA)">{{Semester2.Discipline.DisplayA.text || "N/A"}}
+                                    <td ng-class="DisciplineColor(Semester2.Discipline.DisplayA)"
+                                        style="padding: 8px 0px;">
+                                        {{Semester2.Discipline.DisplayA.text || "N/A"}}
                                     </td>
-                                    <td ng-class="DisciplineColor(Semester3.Discipline.DisplayA)">{{Semester3.Discipline.DisplayA.text || "N/A"}}
+                                    <td ng-class="DisciplineColor(Semester3.Discipline.DisplayA)"
+                                        style="padding: 8px 0px;">
+                                        {{Semester3.Discipline.DisplayA.text || "N/A"}}
                                     </td>
-                                    <td ng-class="DisciplineColor(Semester4.Discipline.DisplayA)">{{Semester4.Discipline.DisplayA.text || "N/A"}}
+                                    <td ng-class="DisciplineColor(Semester4.Discipline.DisplayA)"
+                                        style="padding: 8px 0px;">
+                                        {{Semester4.Discipline.DisplayA.text || "N/A"}}
                                     </td>
-                                    <td ng-class="DisciplineColor(Semester5.Discipline.DisplayA)">{{Semester5.Discipline.DisplayA.text || "N/A"}}
+                                    <td ng-class="DisciplineColor(Semester5.Discipline.DisplayA)"
+                                        style="padding: 8px 0px;">
+                                        {{Semester5.Discipline.DisplayA.text || "N/A"}}
                                     </td>
-                                    <td ng-class="DisciplineColor(Semester6.Discipline.DisplayA)">{{Semester6.Discipline.DisplayA.text || "N/A"}}
+                                    <td ng-class="DisciplineColor(Semester6.Discipline.DisplayA)"
+                                        style="padding: 8px 0px;">
+                                        {{Semester6.Discipline.DisplayA.text || "N/A"}}
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr ng-if="Rules.DemeritAmountLast">
                                     <td id="content-left">第六學期</td>
                                     <td colspan="5"></td>
-                                    <td ng-class="DisciplineColor(Semester6.Discipline.DisplayB)">{{Semester6.Discipline.DisplayB.text || "N/A"}}
+                                    <td ng-class="DisciplineColor(Semester6.Discipline.DisplayB)"
+                                        style="padding: 8px 0px;">
+                                        {{Semester6.Discipline.DisplayB.text || "N/A"}}
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td id="content-left">所有學期</td>
-                                    <td colspan="6" ng-class="DisciplineColor(SemesterAll.Discipline.DisplayC)">{{SemesterAll.Discipline.DisplayC.text || "N/A"}}
+                                <tr ng-if="Rules.DemeritAmountAll">
+                                    <td id="content-left" rowspan="2">所有學期累計</td>
+                                    <td colspan="6" ng-class="DisciplineColor(SemesterAll.Discipline.DisplayC)"
+                                        style="padding: 8px 0px;">
+                                        {{SemesterAll.Discipline.DisplayC.text || "N/A"}}
+                                    </td>
+                                </tr>
+                                <tr ng-if="Rules.DemeritAmountAll">
+                                    <td ng-class="DisciplineColor(SemesterAll.Discipline.DisplayC)"
+                                        class="notImportant"
+                                        style="padding: 8px 0px;">
+                                        {{Semester1.Discipline.DisplayC.text || "N/A"}}
+                                    </td>
+                                    <td ng-class="DisciplineColor(SemesterAll.Discipline.DisplayC)"
+                                        class="notImportant"
+                                        style="padding: 8px 0px;">
+                                        {{Semester2.Discipline.DisplayC.text || "N/A"}}
+                                    </td>
+                                    <td ng-class="DisciplineColor(SemesterAll.Discipline.DisplayC)"
+                                        class="notImportant"
+                                        style="padding: 8px 0px;">
+                                        {{Semester3.Discipline.DisplayC.text || "N/A"}}
+                                    </td>
+                                    <td ng-class="DisciplineColor(SemesterAll.Discipline.DisplayC)"
+                                        class="notImportant"
+                                        style="padding: 8px 0px;">
+                                        {{Semester4.Discipline.DisplayC.text || "N/A"}}
+                                    </td>
+                                    <td ng-class="DisciplineColor(SemesterAll.Discipline.DisplayC)"
+                                        class="notImportant"
+                                        style="padding: 8px 0px;">
+                                        {{Semester5.Discipline.DisplayC.text || "N/A"}}
+                                    </td>
+                                    <td ng-class="DisciplineColor(SemesterAll.Discipline.DisplayC)"
+                                        class="notImportant"
+                                        style="padding: 8px 0px;">
+                                        {{Semester6.Discipline.DisplayC.text || "N/A"}}
                                     </td>
                                 </tr>
                             </tbody>
