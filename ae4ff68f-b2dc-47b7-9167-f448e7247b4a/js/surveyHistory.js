@@ -160,7 +160,7 @@ var GetCanSeeCurriculumEvaluation = function() {
                                 "<div style='color:red;'>",
                                 "( 您的 ", response.targetSchoolYear , "/" , 
                                 response.targetSemester , " 評鑑填答率為 ", 
-                                response.answerRate , "% , 不符合查看選課課程之評鑑值之條件。)" ,
+                                response.answerRate , "% , 不符合查看選課課程評鑑值之條件。)" ,
                                 "</div>"
                             ].join("");
                     msg += ["<div>查看參考依據，是依前2學期之問卷填答率達到：",
