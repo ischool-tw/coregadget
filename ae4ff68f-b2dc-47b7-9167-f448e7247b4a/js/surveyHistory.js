@@ -163,6 +163,9 @@ var GetCanSeeCurriculumEvaluation = function() {
                                 response.answerRate , "% , 不符合查看條件。)" ,
                                 "</div>"
                             ].join("");
+                    msg += ["<div>查看參考依據，是依前2學期之問卷填答率達到：",
+                             response.ansRateStandard ,
+                              "% 才可以查看選課課程之評鑑值</div>"].join("");
                     $('#show_course_evaluation').html(msg).show();
                 }
             }
