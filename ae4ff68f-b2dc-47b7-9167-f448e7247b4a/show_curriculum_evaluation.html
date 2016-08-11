@@ -16,13 +16,16 @@
 	<script src="js/jquery.validate.min.js?20141015"></script>
 	<script src="js/jquery.metadata.js?20141015"></script>
 	<script>
-		var showContent = function(content) {
-			$('#content').html(window.data_content);
+		var myWindow = window;
+
+		var showContent = function() {
+			$(myWindow.document).ready(function() {
+				$('#content').html(myWindow.data_content);
+			});
 		}
 
-		$(document).ready(function() {
-			showContent();
-		});
+		showContent();
+		
 		
 	</script>
 	
