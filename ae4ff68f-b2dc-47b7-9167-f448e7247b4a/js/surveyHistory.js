@@ -178,7 +178,7 @@ var GetCanSeeCurriculumEvaluation = function() {
 var showEvaluation = function(schoolyear, semester) {
     var content = ["<Body><Request><SchoolYear>", schoolyear , "</SchoolYear><Semester>" , semester , "</Semester></Request></Body>"].join("");
     console.log(content);
-    var myWindow = window.open("show_curriculum_evaluation.html", "MsgWindow", "width=600,height=400,location=no,toolbar=no,menubar=no,scrollbars=yes,resizable=yes,top=100,left=100");
+    var myWindow = window.open("show_curriculum_evaluation.html", "MsgWindow"+ (new Date()), "width=600,height=400,location=no,toolbar=no,menubar=no,scrollbars=yes,resizable=yes,top=100,left=100");
     connection.send({
         service: "ext.GetCurriculumEvaluation",
         body: content ,
@@ -189,6 +189,9 @@ var showEvaluation = function(schoolyear, semester) {
                 var content = parseEvaluation(response);
                 var html = ["<!doctype html>",
                             "<head>",
+                            "   <META HTTP-EQUIV='PRAGMA' CONTENT='NO-CACHE'>",
+                            "   <META HTTP-EQUIV='EXPIRES' CONTENT='0'>",
+                            "   <META HTTP-EQUIV='CACHE-CONTROL' CONTENT='NO-CACHE'>",
                             "   <link href='css/bootstrap.css?20141015' rel='stylesheet' />",
                             "   <link href='css/mybootstrap.css?20141015' rel='stylesheet' />",
                             "   <meta charset='utf-8'>",
@@ -199,12 +202,12 @@ var showEvaluation = function(schoolyear, semester) {
                             "</body>",
                             "</html>"
                 ].join("");
-
-                myWindow.data_content = content;
-                if(myWindow.showContent)
-                    myWindow.showContent();
-                //myWindow.document.write(html);
-
+                $(myWindow).ready(function(){
+                    myWindow.data_content = content;
+                    if(!!myWindow.showContent)
+                        myWindow.showContent();
+                    //myWindow.document.write(html);
+                });
             }
 
             
