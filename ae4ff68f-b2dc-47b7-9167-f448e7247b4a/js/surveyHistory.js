@@ -175,6 +175,8 @@ var GetCanSeeCurriculumEvaluation = function() {
     });
 };
 
+var evalContent ;
+
 var showEvaluation = function(schoolyear, semester) {
     var content = ["<Body><Request><SchoolYear>", schoolyear , "</SchoolYear><Semester>" , semester , "</Semester></Request></Body>"].join("");
     console.log(content);
@@ -187,13 +189,16 @@ var showEvaluation = function(schoolyear, semester) {
                 $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗，請稍候重試!</strong>(GetReplyHistory)\n</div>");
             } else {
                 var content = parseEvaluation(response);
+                evalContent = content ;
+
                 var html = ["<!doctype html>",
                             "<head>",
                             "   <META HTTP-EQUIV='PRAGMA' CONTENT='NO-CACHE'>",
                             "   <META HTTP-EQUIV='EXPIRES' CONTENT='0'>",
                             "   <META HTTP-EQUIV='CACHE-CONTROL' CONTENT='NO-CACHE'>",
                             "   <link href='css/bootstrap.css?20141015' rel='stylesheet' />",
-                            "   <link href='css/mybootstrap.css?20141015' rel='stylesheet' />",
+                            "   <link href='css/base.css?20141015' rel='stylesheet />",
+                            "   <script src='js/jquery.min.js?20141015'></script>",
                             "   <meta charset='utf-8'>",
                             "   <title>顯示課程評鑑值</title>",
                             "</head>",
