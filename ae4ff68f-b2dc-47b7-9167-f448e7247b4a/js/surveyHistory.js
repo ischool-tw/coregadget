@@ -178,6 +178,7 @@ var GetCanSeeCurriculumEvaluation = function() {
 var showEvaluation = function(schoolyear, semester) {
     var content = ["<Body><Request><SchoolYear>", schoolyear , "</SchoolYear><Semester>" , semester , "</Semester></Request></Body>"].join("");
     console.log(content);
+    var myWindow = window.open("show_curriculum_evaluation.html", "MsgWindow", "width=600,height=400,location=no,toolbar=no,menubar=no,scrollbars=yes,resizable=yes,top=100,left=100");
     connection.send({
         service: "ext.GetCurriculumEvaluation",
         body: content ,
@@ -199,11 +200,13 @@ var showEvaluation = function(schoolyear, semester) {
                             "</html>"
                 ].join("");
 
+                myWindow.data_content = html;
+                myWindow.showContent();
+                //myWindow.document.write(html);
 
             }
 
-            var myWindow = window.open("show_curriculum_evaluation.html", "MsgWindow", "width=600,height=400,location=no,toolbar=no,menubar=no,scrollbars=yes,resizable=yes,top=100,left=100");
-            myWindow.document.write(html);
+            
             // $(myWindow.document).ready(function() {
             //     myWindow.data_content = html;
             //     // myWindow.showContent(html);
