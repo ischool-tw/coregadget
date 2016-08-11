@@ -201,7 +201,8 @@ var showEvaluation = function(schoolyear, semester) {
                 ].join("");
 
                 myWindow.data_content = html;
-                myWindow.showContent();
+                if(myWindow.showContent)
+                    myWindow.showContent();
                 //myWindow.document.write(html);
 
             }
