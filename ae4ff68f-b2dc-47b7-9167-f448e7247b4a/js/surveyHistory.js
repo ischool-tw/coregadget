@@ -178,7 +178,7 @@ var GetCanSeeCurriculumEvaluation = function() {
 var evalContent ;
 
 var showEvaluation = function(schoolyear, semester) {
-    var content = ["<Body><Request><SchoolYear>", schoolyear , "</SchoolYear><Semester>" , semester , "</Semester></Request></Body>"].join("");
+    var content = ["<Request><SchoolYear>", schoolyear , "</SchoolYear><Semester>" , semester , "</Semester></Request>"].join("");
     console.log(content);
     var myWindow = window.open("show_curriculum_evaluation.html", "MsgWindow"+ (new Date()), "width=600,height=400,location=no,toolbar=no,menubar=no,scrollbars=yes,resizable=yes,top=100,left=100");
     connection.send({
@@ -188,7 +188,7 @@ var showEvaluation = function(schoolyear, semester) {
             if (error !== null) {
                 $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗，請稍候重試!</strong>(GetReplyHistory)\n</div>");
             } else {
-                var content = parseEvaluation(response);
+                var content = parseEvaluation(response, schoolyear, semester);
                 evalContent = content ;
 
                 // $(myWindow).ready(function(){
@@ -206,10 +206,10 @@ var showEvaluation = function(schoolyear, semester) {
         }
     });
 
-    var parseEvaluation = function(response) {
+    var parseEvaluation = function(response, schoolyear, semester) {
         console.log(response);
         var content= "<table class='table'>";
-        content += "<thead><tr><th>課程</th><th>課程代碼</th><th>評鑑值</th></thead><tbody>";
+        content += "<thead><tr><th>課程(" + schoolyear + "/" + semester + ")</th><th>課程代碼</th><th>評鑑值</th></thead><tbody>";
         if (response.Response && response.Response.Evaluation) {
             $(response.Response.Evaluation).each(function(index, item) {
                 content += "<tr>";
