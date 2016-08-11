@@ -201,11 +201,11 @@ var showEvaluation = function(schoolyear, semester) {
             }
 
             var myWindow = window.open("show_curriculum_evaluation.html", "MsgWindow", "width=600,height=400,location=no,toolbar=no,menubar=no,scrollbars=yes,resizable=yes,top=100,left=100");
-            // myWindow.document.write(html);
-            $(myWindow.document).ready(function() {
-                myWindow.data_content = html;
-                // myWindow.showContent(html);
-            });
+            myWindow.document.write(html);
+            // $(myWindow.document).ready(function() {
+            //     myWindow.data_content = html;
+            //     // myWindow.showContent(html);
+            // });
         }
     });
 
