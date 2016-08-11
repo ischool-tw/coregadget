@@ -191,28 +191,11 @@ var showEvaluation = function(schoolyear, semester) {
                 var content = parseEvaluation(response);
                 evalContent = content ;
 
-                var html = ["<!doctype html>",
-                            "<head>",
-                            "   <META HTTP-EQUIV='PRAGMA' CONTENT='NO-CACHE'>",
-                            "   <META HTTP-EQUIV='EXPIRES' CONTENT='0'>",
-                            "   <META HTTP-EQUIV='CACHE-CONTROL' CONTENT='NO-CACHE'>",
-                            "   <link href='css/bootstrap.css?20141015' rel='stylesheet' />",
-                            "   <link href='css/base.css?20141015' rel='stylesheet />",
-                            "   <script src='js/jquery.min.js?20141015'></script>",
-                            "   <meta charset='utf-8'>",
-                            "   <title>顯示課程評鑑值</title>",
-                            "</head>",
-                            "<body>",
-                            content ,
-                            "</body>",
-                            "</html>"
-                ].join("");
-                $(myWindow).ready(function(){
-                    myWindow.data_content = content;
-                    if(!!myWindow.showContent)
-                        myWindow.showContent();
-                    //myWindow.document.write(html);
-                });
+                // $(myWindow).ready(function(){
+                //     if(!!myWindow.showContent)
+                //         myWindow.showContent();
+                //     //myWindow.document.write(html);
+                // });
             }
 
             
