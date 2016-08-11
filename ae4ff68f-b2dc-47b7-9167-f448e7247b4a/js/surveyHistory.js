@@ -188,6 +188,8 @@ var showEvaluation = function(schoolyear, semester) {
                 var content = parseEvaluation(response);
                 var html = ["<!doctype html>",
                             "<head>",
+                            "   <link href='css/bootstrap.css?20141015' rel='stylesheet' />",
+                            "   <link href='css/mybootstrap.css?20141015' rel='stylesheet' />",
                             "   <meta charset='utf-8'>",
                             "   <title>顯示課程評鑑值</title>",
                             "</head>",
