@@ -158,14 +158,15 @@ var GetCanSeeCurriculumEvaluation = function() {
                 else {
                     var msg =  [ 
                                 "<div style='color:red;'>",
-                                "( 您的 ", response.targetSchoolYear , "/" , 
-                                response.targetSemester , " 評鑑填答率為 ", 
-                                response.answerRate , "% , 不符合查看本期選課課程評鑑值之條件。)" ,
+                                "( 您的 ", response.targetSchoolYear , "學年度 第" , 
+                                response.targetSemester , "學期 評鑑填答率為 ", 
+                                response.answerRate , "% , 無法查看本期課程評鑑值。)" ,
                                 "</div>"
                             ].join("");
-                    msg += ["<div>查看參考依據，是依前2學期之問卷填答率達到：",
-                             response.ansRateStandard ,
-                              "% 才可以查看選課課程之評鑑值</div>"].join("");
+                            //2016/8/16 -  依據芝儀說明不需要此行訊息
+                    //msg += ["<div>查看參考依據，是依前2學期之問卷填答率達到：",
+                             //response.ansRateStandard ,
+                              //"% 才可以查看選課課程之評鑑值</div>"].join("");
                     $('#show_course_evaluation').html(msg).show();
                 }
             }
