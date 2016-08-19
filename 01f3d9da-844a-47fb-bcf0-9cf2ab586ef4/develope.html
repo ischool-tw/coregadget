@@ -1,19 +1,22 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html ng-app="allsearch">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
+    <script src="js/gadget.js"></script>
     <script>
-    init({
-        application: "test.b.nehs.hc.edu.tw",
-        paramValues: {},
-        oAuth: {
-            clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
-            clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311'
-        }
-    });
+        init({
+            application: "test.b.nehs.hc.edu.tw",
+            paramValues: { "system_position": "student" },
+            //paramValues: { "system_position": "teacher" },
+            oAuth: {
+                clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+                clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
+                account: 'lelala@ischool.com.tw',
+                password: 'wv@ueha2B'
+            }
+        });
     </script>
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -25,7 +28,14 @@
 </head>
 
 <body ng-controller="MainCtrl">
-    <div id="gadget" class="my-page">
+    <div ng-if="system_position!='teacher' && isBlocked"
+         style="position:absolute;top: 0px;left: 0px;z-index: 100;right: 0px;bottom: 0px;background: white;">
+        <div style="position:absolute;top:40%;left:0px;right:0px;text-align: center;white-space:pre-wrap;">
+            {{blockMemo}}
+        </div>
+    </div>
+    <div id="gadget" class="my-page"
+         ng-if="system_position=='teacher' || !isBlocked">
         <!-- 家長才有的選單 -->
         <!-- <div id="children" class="my-child" ng-mouseover="myChildnameHeight='35px'" ng-mouseleave="myChildnameHeight='0px'" ng-if="system_position=='parent'">
             <div class="my-childname" ng-style="{height:myChildnameHeight}">
@@ -43,7 +53,8 @@
             <div class="col-md-12">
                 <h1>Information</h1>
                 <div class="row">
-                    <div class="col-md-3">
+                    <div ng-if="system_position === 'teacher' || system_position === 'parent'"
+                         class="col-md-3">
                         <!-- 班導師 -->
                         <div class="btn-group btn-block" ng-if="system_position === 'teacher'">
                             <button type="button" class="btn btn-default dropdown-toggle btn-block" data-toggle="dropdown">
@@ -82,7 +93,8 @@
                         </div> -->
 
                         <div class="input-group clearfix hidden" style="margin:10px 0;">
-                            <span class="input-group-addon"><i class="fa fa-search"></i>
+                            <span class="input-group-addon">
+                                <i class="fa fa-search"></i>
                             </span>
                             <input type="text" class="form-control" placeholder="Search">
                         </div>
@@ -98,7 +110,7 @@
                     </div>
 
                     <!-- 非老師時 class="col-md-12" -->
-                    <div class="col-md-9">
+                    <div ng-class="system_position === 'student'?'col-md-12':'col-md-9'">
                         <!-- Teacher Nav tabs -->
                         <ul class="nav nav-pills nav-justified" style="margin-bottom:10px;" ng-if="system_position==='teacher'">
                             <!-- 輔導老師與老師使用 -->
@@ -129,6 +141,9 @@
                                     <li>
                                         <a href="#tab5" data-toggle="tab">Conduct</a>
                                     </li>
+                                    <li>
+                                        <a href="#tab7" data-toggle="tab">Download</a>
+                                    </li>
                                 </ul>
                             </li>
                         </ul>
@@ -146,6 +161,9 @@
                             </li>
                             <li>
                                 <a href="#tab5" data-toggle="tab">Conduct</a>
+                            </li>
+                            <li>
+                                <a href="#tab7" data-toggle="tab">Download</a>
                             </li>
                         </ul>
 
@@ -287,7 +305,8 @@
                                 </div>
 
                                 <div class="panel panel-default">
-                                    <div class="panel-heading"><i class="fa fa-briefcase"></i> Attendance <p class="btn-info btn-xs pull-right" data-toggle="modal">Total：{{ADTotal}}</p>
+                                    <div class="panel-heading">
+                                        <i class="fa fa-briefcase"></i> Attendance <p class="btn-info btn-xs pull-right" data-toggle="modal">Total：{{ADTotal}}</p>
                                     </div>
                                     <div class="panel-body">
                                         <div class="row">
@@ -305,7 +324,8 @@
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
-                                    <div class="panel-heading"><i class="fa fa-trophy"></i> Management
+                                    <div class="panel-heading">
+                                        <i class="fa fa-trophy"></i> Management
                                         <!-- <a class="btn btn-info btn-xs pull-right" data-toggle="modal" href="#viewManagementTotal">Total：17</a> -->
                                     </div>
                                     <div class="panel-body">
@@ -382,40 +402,43 @@
                                         {{currentGrade}}
                                         <span class="caret"></span>
                                     </button> -->
-                                    <!-- <div class="col-md-9"> -->
-                                    <ul class="nav nav-pills nav-justified" style="margin-bottom:10px;">
-                                        <li ng-repeat="grade in [3,4,5,6,7,8,9,10,11,12]"><a href="#" ng-click="GetGradeScore(grade)">{{'Gr.' + grade}}</a>
-                                        </li>
-                                    </ul>
-                                    <!-- </div> -->
-                                    <!-- <ul class="dropdown-menu" role="menu">
-                                        <li ng-repeat="grade in [3,4,5,6,7,8,9,10,11,12]"><a href="#" ng-click="GetGradeScore(grade)">{{'Gr.' + grade}}</a>
-                                        </li> -->
-                                        <!-- <li><a href="#">Gr.4</a>
-                                        </li>
-                                        <li><a href="#">Gr.5</a>
-                                        </li>
-                                        <li><a href="#">Gr.6</a>
-                                        </li>
-                                        <li><a href="#">Gr.7</a>
-                                        </li>
-                                        <li><a href="#">Gr.8</a>
-                                        </li>
-                                        <li><a href="#">Gr.9</a>
-                                        </li>
-                                        <li><a href="#">Gr.10</a>
-                                        </li>
-                                        <li><a href="#">Gr.11</a>
-                                        </li>
-                                        <li><a href="#">Gr.12</a>
-                                        </li> -->
-                                    <!-- </ul> -->
+                                <!-- <div class="col-md-9"> -->
+                                <ul class="nav nav-pills nav-justified" style="margin-bottom:10px;">
+                                    <li ng-repeat="grade in [3,4,5,6,7,8,9,10,11,12]">
+                                        <a href="#" ng-click="GetGradeScore(grade)">{{'Gr.' + grade}}</a>
+                                    </li>
+                                </ul>
+                                <!-- </div> -->
+                                <!-- <ul class="dropdown-menu" role="menu">
+                                    <li ng-repeat="grade in [3,4,5,6,7,8,9,10,11,12]"><a href="#" ng-click="GetGradeScore(grade)">{{'Gr.' + grade}}</a>
+                                    </li> -->
+                                <!-- <li><a href="#">Gr.4</a>
+                                </li>
+                                <li><a href="#">Gr.5</a>
+                                </li>
+                                <li><a href="#">Gr.6</a>
+                                </li>
+                                <li><a href="#">Gr.7</a>
+                                </li>
+                                <li><a href="#">Gr.8</a>
+                                </li>
+                                <li><a href="#">Gr.9</a>
+                                </li>
+                                <li><a href="#">Gr.10</a>
+                                </li>
+                                <li><a href="#">Gr.11</a>
+                                </li>
+                                <li><a href="#">Gr.12</a>
+                                </li> -->
+                                <!-- </ul> -->
                                 <!-- </div> -->
                                 <table class="table table-bordered my-grade" style="margin-top:10px;">
                                     <thead>
                                         <tr>
-                                            <th rowspan="3" class="col-md-4 text-center">Domain
-                                                <br>( Hours / Week )</th>
+                                            <th rowspan="3" class="col-md-4 text-center">
+                                                Domain
+                                                <br>( Hours / Week )
+                                            </th>
                                             <th rowspan="3" class="col-md-4 text-center">Subject</th>
                                             <th colspan="2" class="col-md-4 text-center">{{GS.rang}}</th>
                                         </tr>
@@ -606,7 +629,7 @@
                             <!-- Exam -->
                             <div class="tab-pane" id="tab4">
                                 <div class="btn-group" ng-if="exam">
-                                    <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> 
+                                    <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                         {{currentExam.SchoolYear + ' ' + (currentExam.Semester == '1' ? '1st' : '2nd') + ' Semester'}}
                                         <span class="caret"></span>
                                     </a>
@@ -666,9 +689,11 @@
                                         <span class="caret"></span>
                                     </a>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a href="">Midterm</a>
+                                        <li>
+                                            <a href="">Midterm</a>
                                         </li>
-                                        <li><a href="">Final</a>
+                                        <li>
+                                            <a href="">Final</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -748,7 +773,7 @@
                                 </div>
 
                                 <div class="tab-pane" style="font-style:italic;font-weight:bold">
-                                    <br/>M=Meets expectations S=Meets needs with Support N=Not yet within expectations N/A=Not Available
+                                    <br />M=Meets expectations S=Meets needs with Support N=Not yet within expectations N/A=Not Available
                                 </div>
 
                                 <div class="panel panel-info" style="margin-top:10px;" ng-repeat="conduct in currentConduct.Conduct">
@@ -784,6 +809,26 @@
                                         </tbody>
                                     </table>
                                 </div>
+                            </div>
+
+                            <!-- Download -->
+                            <div class="tab-pane" id="tab7">
+                                <table class="table table-bordered table-striped text-center" style="margin-top:10px;" ng-if="ep">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-md-6">Name</th>
+                                            <th class="col-md-3 text-center">Upload Time</th>
+                                            <th class="col-md-3 text-center"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in ep">
+                                            <th>{{item.Name}}</th>
+                                            <th class="text-center">{{item.Time}}</th>
+                                            <th class="text-center"><a href="javascript:void(0)" ng-click="downloadEP(item.EPID)">Download</a></th>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -998,17 +1043,17 @@
                         <dt>Time</dt>
                         <dd>{{currentIR.InterviewTime}}&nbsp;</dd>
                         <dt>Venue
-                            <dd>{{currentIR.Venue}}&nbsp;</dd>
-                            <dt>Means</dt>
-                            <dd>{{currentIR.Means}}&nbsp;</dd>
-                            <dt>Attendees</dt>
-                            <dd>{{currentIR.AttendeesStr}}&nbsp;</dd>
-                            <dt>Issue</dt>
-                            <dd>{{currentIR.Issue}}&nbsp;</dd>
-                            <dt>Content</dt>
-                            <dd>{{currentIR.Content}}&nbsp;</dd>
-                            <dt>Record Taken</dt>
-                            <dd>{{currentIR.RecordTaken}}&nbsp;</dd>
+                        <dd>{{currentIR.Venue}}&nbsp;</dd>
+                        <dt>Means</dt>
+                        <dd>{{currentIR.Means}}&nbsp;</dd>
+                        <dt>Attendees</dt>
+                        <dd>{{currentIR.AttendeesStr}}&nbsp;</dd>
+                        <dt>Issue</dt>
+                        <dd>{{currentIR.Issue}}&nbsp;</dd>
+                        <dt>Content</dt>
+                        <dd>{{currentIR.Content}}&nbsp;</dd>
+                        <dt>Record Taken</dt>
+                        <dd>{{currentIR.RecordTaken}}&nbsp;</dd>
                     </dl>
                 </div>
                 <div class="modal-footer">
@@ -1021,7 +1066,7 @@
     <!-- View Attendance Total -->
     <!-- <div class="modal fade bs-example-modal-lg" id="viewAttendanceTotal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            
+
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -1076,7 +1121,6 @@
             </div>
         </div>
     </div> -->
-
     <!-- View Attendance -->
     <div class="modal fade bs-example-modal-lg" id="viewAttendance" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -1144,7 +1188,6 @@
             </div>
         </div>
     </div> -->
-
     <!-- View Management -->
     <div class="modal fade bs-example-modal-lg" id="viewManagement" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -1177,7 +1220,7 @@
     </div>
 
     <script>
-    $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tooltip"]').tooltip();
     </script>
 
 </body>

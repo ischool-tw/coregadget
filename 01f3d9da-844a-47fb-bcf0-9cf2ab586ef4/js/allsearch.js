@@ -1,7 +1,7 @@
 angular.module('allsearch', [])
 
 .controller('MainCtrl', ['$scope', '$filter',
-    function($scope, $filter) {
+    function ($scope, $filter) {
 
         $scope.originalScoreMode = false;
 
@@ -21,26 +21,40 @@ angular.module('allsearch', [])
         } else {
             $scope.custom_connection = gadget.getContract("ibsh.custom");
         }
+        $scope.custom_connection.send({
+            service: "_.GetBlockConfig",
+            result: function (response, error, http) {
+                $scope.$apply(function () {
+                    if (response && response.StartTime && response.EndTime && new Date() > new Date(response.StartTime) && new Date() < new Date(response.EndTime)) {
+                        $scope.isBlocked = true;
+                        $scope.blockMemo = response.Memo;
+                    }
+                    else {
+                        $scope.isBlocked = false;
+                    }
+                });
+            }
+        });
 
-        $scope.activeStudent = function() {
+        $scope.activeStudent = function () {
             if ($scope.system_position === "teacher" || $scope.system_position === "counsel_teacher")
                 return 'tab-pane active';
             else
                 return 'tab-pane';
         };
 
-        $scope.activeAttend = function() {
+        $scope.activeAttend = function () {
             if ($scope.system_position !== "teacher" && $scope.system_position !== "counsel_teacher")
                 return 'tab-pane active';
             else
                 return 'tab-pane';
         };
 
-        $scope.GetMyChildren = function() {
+        $scope.GetMyChildren = function () {
             $scope.custom_connection.send({
                 service: "_.GetMyChildren",
                 body: '',
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     if (error !== null) {
                         //alert("查詢過程發生錯誤");
                     } else {
@@ -48,7 +62,7 @@ angular.module('allsearch', [])
                         $scope.studentList = [];
                         if (response && response.Student) {
                             response.Student = [].concat(response.Student)
-                            angular.forEach(response.Student, function(value) {
+                            angular.forEach(response.Student, function (value) {
                                 if (value.StudentStatus === '1' || value.StudentStatus === '2')
                                     $scope.studentList.push(value);
                             });
@@ -67,16 +81,16 @@ angular.module('allsearch', [])
             })
         };
 
-        $scope.getClassList = function() {
+        $scope.getClassList = function () {
             $scope.teacher_connection.send({
                 service: "_.GetClassList",
                 body: '',
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     if (error !== null) {
                         alert("An error occurred while trying to send the request, please make sure this is a teacher's account");
                     } else {
                         //console.log(response);
-                        $scope.$apply(function() {
+                        $scope.$apply(function () {
                             if (response !== null && response !== '') {
 
                                 $scope.TeacherID = response.TeacherID;
@@ -99,10 +113,10 @@ angular.module('allsearch', [])
             });
         };
 
-        $scope.selectClass = function(item) {
+        $scope.selectClass = function (item) {
             $scope.currentClass = item;
 
-            angular.forEach($scope.classlist, function(item) {
+            angular.forEach($scope.classlist, function (item) {
                 item.selected = false;
             });
             item.selected = true;
@@ -110,24 +124,24 @@ angular.module('allsearch', [])
             $scope.getStudentList();
         };
 
-        $scope.getStudentList = function() {
+        $scope.getStudentList = function () {
             $scope.teacher_connection.send({
                 service: "_.GetStudentInfo",
                 body: {
                     ClassID: $scope.currentClass.ClassID,
                     NeedPhoto: true
                 },
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     if (error !== null) {
                         //alert("查詢過程發生錯誤");
                     } else {
                         //console.log(response);
-                        $scope.$apply(function() {
+                        $scope.$apply(function () {
                             if (response !== null && response.Class !== undefined && response.Class !== null && response.Class.Student !== undefined && response.Class.Student !== null && response.Class.Student !== '') {
                                 $scope.studentList = [].concat(response.Class.Student);
 
 
-                                angular.forEach($scope.studentList, function(item) {
+                                angular.forEach($scope.studentList, function (item) {
                                     item.FreshmanPhoto = item.FreshmanPhoto !== '' ? 'data:image/png;base64,' + item.FreshmanPhoto : '';
                                     item.GraduatePhoto = item.GraduatePhoto !== '' ? 'data:image/png;base64,' + item.GraduatePhoto : '';
 
@@ -161,12 +175,12 @@ angular.module('allsearch', [])
             });
         };
 
-        $scope.selectStudent = function(item) {
+        $scope.selectStudent = function (item) {
             $scope.DataReset();
 
             $scope.currentStudent = item;
 
-            angular.forEach($scope.studentList, function(item) {
+            angular.forEach($scope.studentList, function (item) {
                 item.selected = false;
             });
             item.selected = true;
@@ -175,38 +189,85 @@ angular.module('allsearch', [])
             $scope.getExam();
             $scope.getInterviewRecord();
             $scope.getAD();
+            $scope.getEP();
 
             if ($scope.defaultGrade)
                 $scope.GetGradeScore($scope.defaultGrade)
         };
 
-        $scope.getConduct = function() {
+        $scope.getEP = function () {
+            delete $scope.ep;
 
             $scope.custom_connection.send({
-                service: "_.GetConduct",
-                body: $scope.GetBody(),
-                result: function(response, error, http) {
+                service: "_.GetElectronicPaperPersonal",
+                result: function (response, error, http) {
                     if (error !== null) {
                         //alert("查詢過程發生錯誤");
                     } else {
                         //console.log(response);
-                        $scope.$apply(function() {
+                        $scope.$apply(function () {
+                            if (response !== null && response !== '' && response.ElectronicPaper) {
+                                $scope.ep = [].concat(response.ElectronicPaper || []);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        $scope.downloadEP = function (epid) {
+
+            var w = window.open("icon.png", "_blank");
+            $scope.custom_connection.send({
+                service: "DS.Base.Connect",
+                body: { RequestSessionID: "" },
+                result: function (response, error, http) {
+                    if (error !== null) {
+                        //alert("查詢過程發生錯誤");
+                        setTimeout(function () { w.close(); }, 1000);
+                    } else {
+                        //console.log(response);
+                        var url =
+                            $scope.custom_connection.getAccessPoint() +
+                                "/GetElectronicPaperFile" +
+                                "?stt=session" +
+                                "&sessionid=" + response.SessionID +
+                                "&rsptype=binarycontent" +
+                                "&parser=spliter&content=EPID:" + epid + "";
+                        w.location.assign(url);
+                        setTimeout(function () { w.close(); }, 1000);
+                    }
+                }
+            });
+
+        }
+
+        $scope.getConduct = function () {
+
+            $scope.custom_connection.send({
+                service: "_.GetConduct",
+                body: $scope.GetBody(),
+                result: function (response, error, http) {
+                    if (error !== null) {
+                        //alert("查詢過程發生錯誤");
+                    } else {
+                        //console.log(response);
+                        $scope.$apply(function () {
                             //console.log(response);
                             $scope.conductList = [];
                             if (response !== null && response !== '' && response.ConductScore !== null && response.ConductScore !== '') {
                                 $scope.conductList = [].concat(response.ConductScore);
 
-                                angular.forEach($scope.conductList, function(item) {
+                                angular.forEach($scope.conductList, function (item) {
                                     if (item.Conduct !== null && item.Conduct !== '') {
                                         item.Conduct = [].concat(item.Conduct);
 
-                                        angular.forEach(item.Conduct, function(conduct) {
+                                        angular.forEach(item.Conduct, function (conduct) {
                                             if (conduct.MidtermConduct !== undefined && conduct.MidtermConduct !== null && conduct.MidtermConduct !== '' &&
                                                 conduct.MidtermConduct.Conducts !== null && conduct.MidtermConduct.Conducts !== '' &&
                                                 conduct.MidtermConduct.Conducts.Conduct !== null && conduct.MidtermConduct.Conducts.Conduct !== '') {
                                                 conduct.MidtermConduct.Conducts.Conduct = [].concat(conduct.MidtermConduct.Conducts.Conduct);
 
-                                                angular.forEach(conduct.MidtermConduct.Conducts.Conduct, function(x) {
+                                                angular.forEach(conduct.MidtermConduct.Conducts.Conduct, function (x) {
                                                     if (x.Item !== null && x.Item !== '')
                                                         x.Item = [].concat(x.Item);
                                                 });
@@ -223,7 +284,7 @@ angular.module('allsearch', [])
                                                 conduct.FinalConduct.Conducts.Conduct !== null && conduct.FinalConduct.Conducts.Conduct !== '') {
                                                 conduct.FinalConduct.Conducts.Conduct = [].concat(conduct.FinalConduct.Conducts.Conduct);
 
-                                                angular.forEach(conduct.FinalConduct.Conducts.Conduct, function(x) {
+                                                angular.forEach(conduct.FinalConduct.Conducts.Conduct, function (x) {
                                                     if (x.Item !== null && x.Item !== '')
                                                         x.Item = [].concat(x.Item);
                                                 });
@@ -241,10 +302,10 @@ angular.module('allsearch', [])
                                                 }
                                             };
 
-                                            angular.forEach(conduct.MidtermConduct.Conducts.Conduct, function(x) {
+                                            angular.forEach(conduct.MidtermConduct.Conducts.Conduct, function (x) {
                                                 var flag = false;
 
-                                                angular.forEach(conduct.ShowConduct.Conducts.Conduct, function(y) {
+                                                angular.forEach(conduct.ShowConduct.Conducts.Conduct, function (y) {
                                                     if (x.Group === y.Group)
                                                         flag = true;
                                                 });
@@ -255,7 +316,7 @@ angular.module('allsearch', [])
                                                         Item: []
                                                     };
 
-                                                    angular.forEach(x.Item, function(z) {
+                                                    angular.forEach(x.Item, function (z) {
                                                         temp.Item.push({
                                                             Title: z.Title,
                                                             MidtermGrade: z.Grade
@@ -266,14 +327,14 @@ angular.module('allsearch', [])
                                                 }
                                             });
 
-                                            angular.forEach(conduct.FinalConduct.Conducts.Conduct, function(x) {
+                                            angular.forEach(conduct.FinalConduct.Conducts.Conduct, function (x) {
                                                 var flag = null;
 
-                                                angular.forEach(conduct.ShowConduct.Conducts.Conduct, function(y) {
+                                                angular.forEach(conduct.ShowConduct.Conducts.Conduct, function (y) {
                                                     if (x.Group === y.Group) {
                                                         flag = y;
-                                                        angular.forEach(y.Item, function(z) {
-                                                            angular.forEach(x.Item, function(a) {
+                                                        angular.forEach(y.Item, function (z) {
+                                                            angular.forEach(x.Item, function (a) {
                                                                 if (z.Title === a.Title)
                                                                     z.FinalGrade = a.Grade;
                                                             });
@@ -287,7 +348,7 @@ angular.module('allsearch', [])
                                                         Item: []
                                                     };
 
-                                                    angular.forEach(x.Item, function(z) {
+                                                    angular.forEach(x.Item, function (z) {
                                                         temp.Item.push({
                                                             Title: z.Title,
                                                             FinalGrade: z.Grade
@@ -311,31 +372,31 @@ angular.module('allsearch', [])
             });
         };
 
-        $scope.selectConduct = function(item) {
+        $scope.selectConduct = function (item) {
             $scope.currentConduct = item;
 
-            angular.forEach($scope.conductList, function(item) {
+            angular.forEach($scope.conductList, function (item) {
                 item.selected = false;
             });
             item.selected = true;
         };
 
-        $scope.getExam = function() {
+        $scope.getExam = function () {
             delete $scope.exam;
 
             $scope.custom_connection.send({
                 service: "_.GetExamScore",
                 body: $scope.GetBody(),
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     if (error !== null) {
                         //alert("查詢過程發生錯誤");
                     } else {
                         //console.log(response);
-                        $scope.$apply(function() {
+                        $scope.$apply(function () {
                             if (response !== null && response !== '' && response.ExamScore !== null && response.ExamScore !== '') {
                                 $scope.exam = [].concat(response.ExamScore);
 
-                                angular.forEach($scope.exam, function(item) {
+                                angular.forEach($scope.exam, function (item) {
                                     if (item.Exam !== null && item.Exam !== '') {
                                         item.Exam = [].concat(item.Exam);
                                     }
@@ -351,21 +412,21 @@ angular.module('allsearch', [])
             });
         };
 
-        $scope.selectExam = function(item) {
+        $scope.selectExam = function (item) {
             $scope.currentExam = item;
 
-            angular.forEach($scope.exam, function(item) {
+            angular.forEach($scope.exam, function (item) {
                 item.selected = false;
             });
             item.selected = true;
         };
 
         //取得假別及節次
-        $scope.GetADConfig = function() {
+        $scope.GetADConfig = function () {
             $scope.custom_connection.send({
                 service: "_.GetConfigAttendanceDiscipline",
                 body: '',
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     if (error !== null) {
                         //alert("查詢過程發生錯誤");
                     } else {
@@ -374,7 +435,7 @@ angular.module('allsearch', [])
                         $scope.PeriodList = [].concat(response.PeriodList);
                         $scope.PeriodToIndex = {};
 
-                        angular.forEach($scope.PeriodList, function(value, key) {
+                        angular.forEach($scope.PeriodList, function (value, key) {
                             $scope.PeriodToIndex[value.Name] = key;
                         });
 
@@ -386,11 +447,11 @@ angular.module('allsearch', [])
             });
         };
 
-        $scope.getAD = function() {
+        $scope.getAD = function () {
             $scope.custom_connection.send({
                 service: "_.GetAttendanceDiscipline",
                 body: $scope.GetBody(),
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     if (error !== null) {
                         //alert("查詢過程發生錯誤");
                     } else {
@@ -415,7 +476,7 @@ angular.module('allsearch', [])
                             $scope.discipline = [].concat(response.Discipline);
 
                         //非明細缺曠
-                        angular.forEach($scope.AD, function(value) {
+                        angular.forEach($scope.AD, function (value) {
                             //學年度學期聯集
                             var sysm = {};
                             sysm.SchoolYear = value.SchoolYear;
@@ -424,7 +485,7 @@ angular.module('allsearch', [])
                         });
 
                         //明細缺曠
-                        angular.forEach($scope.attendance, function(value) {
+                        angular.forEach($scope.attendance, function (value) {
                             //學年度學期聯集
                             var sysm = {};
                             sysm.SchoolYear = value.SchoolYear;
@@ -433,7 +494,7 @@ angular.module('allsearch', [])
                         });
 
                         //獎懲
-                        angular.forEach($scope.discipline, function(value) {
+                        angular.forEach($scope.discipline, function (value) {
                             //學年度學期聯集
                             var sysm = {};
                             sysm.SchoolYear = value.SchoolYear;
@@ -445,7 +506,7 @@ angular.module('allsearch', [])
                         tmp_sysm.sort($scope.mySort);
                         //合併相同學年度學期
                         var tmp_keys = {};
-                        angular.forEach(tmp_sysm, function(value) {
+                        angular.forEach(tmp_sysm, function (value) {
                             var key = value.SchoolYear + " " + (value.Semester === '1' ? '1st' : '2nd') + " Semester";
                             tmp_keys[key] = {};
                             tmp_keys[key].Name = key;
@@ -455,7 +516,7 @@ angular.module('allsearch', [])
 
                         //將整理好的學年度學期push到$scope.SYSM
                         $scope.SYSM = [];
-                        angular.forEach(tmp_keys, function(value) {
+                        angular.forEach(tmp_keys, function (value) {
                             $scope.SYSM.push(value);
                         });
 
@@ -475,7 +536,7 @@ angular.module('allsearch', [])
             });
         };
 
-        $scope.getInterviewRecord = function() {
+        $scope.getInterviewRecord = function () {
 
             if (!$scope.IsCareersCounselor)
                 return;
@@ -485,7 +546,7 @@ angular.module('allsearch', [])
                 body: {
                     StudentID: $scope.currentStudent.StudentID
                 },
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     if (error !== null) {
                         //alert("查詢過程發生錯誤");
                     } else {
@@ -495,7 +556,7 @@ angular.module('allsearch', [])
 
                             response.InterviewRecord = [].concat(response.InterviewRecord);
 
-                            angular.forEach(response.InterviewRecord, function(value) {
+                            angular.forEach(response.InterviewRecord, function (value) {
 
                                 if (value.Attendees.item)
                                     value.Attendees = [].concat(value.Attendees.item);
@@ -522,7 +583,7 @@ angular.module('allsearch', [])
             });
         };
 
-        $scope.InsertInterviewRecord = function() {
+        $scope.InsertInterviewRecord = function () {
 
             if (!$scope.IsCareersCounselor || !$scope.newIR)
                 return;
@@ -561,7 +622,7 @@ angular.module('allsearch', [])
             $scope.counsel_connection.send({
                 service: "_.UpdateInterviewRecord",
                 body: body,
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     if (error !== null) {
                         //alert("查詢過程發生錯誤");
                     } else {
@@ -577,7 +638,7 @@ angular.module('allsearch', [])
             });
         };
 
-        $scope.UpdateInterviewRecord = function() {
+        $scope.UpdateInterviewRecord = function () {
 
             if (!$scope.IsCareersCounselor || !$scope.editIR)
                 return;
@@ -612,7 +673,7 @@ angular.module('allsearch', [])
             $scope.counsel_connection.send({
                 service: "_.UpdateInterviewRecord",
                 body: body,
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     if (error !== null) {
                         //alert("查詢過程發生錯誤");
                     } else {
@@ -628,7 +689,7 @@ angular.module('allsearch', [])
             });
         };
 
-        $scope.DeleteInterviewRecord = function(item, index) {
+        $scope.DeleteInterviewRecord = function (item, index) {
 
             if (!$scope.IsCareersCounselor)
                 return;
@@ -641,7 +702,7 @@ angular.module('allsearch', [])
                     body: {
                         UID: item.UID
                     },
-                    result: function(response, error, http) {
+                    result: function (response, error, http) {
                         if (error !== null) {
                             // $scope.set_error_message('#mainMsg', 'GetExamScore', error);
                         } else {
@@ -657,18 +718,18 @@ angular.module('allsearch', [])
             }
         };
 
-        $scope.CreateNewIR = function() {
+        $scope.CreateNewIR = function () {
             $scope.newIR = null;
         };
 
-        $scope.SelectIR = function(item) {
+        $scope.SelectIR = function (item) {
 
             $scope.currentIR = item;
             $scope.currentIR.AttendeesStr = '';
 
             var lastIndex = $scope.currentIR.Attendees.length - 1;
 
-            angular.forEach($scope.currentIR.Attendees, function(value, index) {
+            angular.forEach($scope.currentIR.Attendees, function (value, index) {
 
                 $scope.currentIR.AttendeesStr += value;
 
@@ -680,7 +741,7 @@ angular.module('allsearch', [])
             //console.log($scope.currentIR.AttendeesStr);
         };
 
-        $scope.EditIR = function(item) {
+        $scope.EditIR = function (item) {
 
             $scope.SelectIR(item);
             $scope.editIR = angular.copy($scope.currentIR);
@@ -705,18 +766,18 @@ angular.module('allsearch', [])
             //console.log($scope.editIR);
         };
 
-        $scope.GetDate = function(date) {
+        $scope.GetDate = function (date) {
             var dateArr = date.split("/");
             return new Date(dateArr[0], dateArr[1] - 1, dateArr[2]);
         };
 
-        $scope.QueryByDate = function() {
+        $scope.QueryByDate = function () {
 
             if ($scope.startDate && $scope.endDate) {
 
                 $scope.IR = [];
 
-                angular.forEach($scope.backupIR, function(value) {
+                angular.forEach($scope.backupIR, function (value) {
                     if (value.formatDate >= $scope.startDate && value.formatDate <= $scope.endDate)
                         $scope.IR.push(value);
                 });
@@ -726,7 +787,7 @@ angular.module('allsearch', [])
 
         };
 
-        $scope.mySort = function(x, y) {
+        $scope.mySort = function (x, y) {
             var xx = $scope.padLeft(x.SchoolYear, 3);
             xx += $scope.padLeft(x.Semester, 2);
 
@@ -742,7 +803,7 @@ angular.module('allsearch', [])
                 return 1;
         };
 
-        $scope.classSort = function(x, y) {
+        $scope.classSort = function (x, y) {
             var xx = $scope.padLeft(x.GradeYear, 3);
             var yy = $scope.padLeft(y.GradeYear, 3);
 
@@ -764,12 +825,12 @@ angular.module('allsearch', [])
                 return -1;
         };
 
-        $scope.padLeft = function(str, length) {
+        $scope.padLeft = function (str, length) {
             if (str.length >= length) return str
             else return $scope.padLeft("0" + str, length);
         };
 
-        $scope.selectSYSM = function(sysm) {
+        $scope.selectSYSM = function (sysm) {
             $scope.currentSYSM = sysm;
 
             var schoolYear = $scope.currentSYSM.SchoolYear;
@@ -793,7 +854,7 @@ angular.module('allsearch', [])
             $scope.notdetailDs = {};
 
             //非明細
-            angular.forEach($scope.AD, function(value) {
+            angular.forEach($scope.AD, function (value) {
                 if (value.SchoolYear === schoolYear && value.Semester === semester) {
                     $scope.currentAD.push(value);
 
@@ -803,7 +864,7 @@ angular.module('allsearch', [])
                         abArr = [].concat(value.InitialSummary.InitialSummary.AttendanceStatistics.Absence);
 
                     if (abArr) {
-                        angular.forEach(abArr, function(obj) {
+                        angular.forEach(abArr, function (obj) {
 
                             if (!$scope.abCount[obj.Name])
                                 $scope.abCount[obj.Name] = 0;
@@ -839,24 +900,24 @@ angular.module('allsearch', [])
             //console.log($scope.notdetailDs);
 
             //明細缺曠
-            angular.forEach($scope.attendance, function(value) {
+            angular.forEach($scope.attendance, function (value) {
                 if (value.SchoolYear === schoolYear && value.Semester === semester) {
                     $scope.currentAttendance.push(value);
 
                     var arr = [].concat(value.Detail.Attendance.Period);
-                    angular.forEach(arr, function(obj) {
+                    angular.forEach(arr, function (obj) {
 
                         if (!$scope.abCount[obj.AbsenceType])
                             $scope.abCount[obj.AbsenceType] = 0;
 
-                        $scope.abCount[obj.AbsenceType] ++;
+                        $scope.abCount[obj.AbsenceType]++;
                     });
                 }
             });
 
             //獎懲
             //console.log($scope.discipline);
-            angular.forEach($scope.discipline, function(value) {
+            angular.forEach($scope.discipline, function (value) {
                 if (value.SchoolYear === schoolYear && value.Semester === semester) {
 
                     var needPush = false;
@@ -882,7 +943,7 @@ angular.module('allsearch', [])
             });
 
             $scope.ADTotal = 0;
-            angular.forEach($scope.abCount, function(value) {
+            angular.forEach($scope.abCount, function (value) {
                 $scope.ADTotal += value;
             });
 
@@ -893,7 +954,7 @@ angular.module('allsearch', [])
             // console.log($scope.currentDiscipline);
         };
 
-        $scope.viewAttendance = function(name) {
+        $scope.viewAttendance = function (name) {
 
             $scope.viewAttendanceName = name;
             $scope.detailAD = [];
@@ -905,7 +966,7 @@ angular.module('allsearch', [])
             //     }
             // };
 
-            angular.forEach($scope.currentAttendance, function(value) {
+            angular.forEach($scope.currentAttendance, function (value) {
 
                 var arr = [].concat(value.Detail.Attendance.Period);
                 var date = value.OccurDate;
@@ -915,12 +976,12 @@ angular.module('allsearch', [])
                 detail.period = [];
 
                 //各節次先建立空白
-                angular.forEach($scope.PeriodList, function(period) {
+                angular.forEach($scope.PeriodList, function (period) {
                     detail.period.push('');
                 });
 
                 var needAppend = false;
-                angular.forEach(arr, function(value) {
+                angular.forEach(arr, function (value) {
                     var index = $scope.PeriodToIndex[value['@text']];
                     if (value.AbsenceType === name && index !== undefined) {
                         needAppend = true;
@@ -935,7 +996,7 @@ angular.module('allsearch', [])
             //console.log($scope.detailAD);
         };
 
-        $scope.viewManagement = function(name, type1, type2) {
+        $scope.viewManagement = function (name, type1, type2) {
 
             $scope.viewManagementName = name;
             $scope.currentDsType1 = type1;
@@ -944,7 +1005,7 @@ angular.module('allsearch', [])
 
             //console.log($scope.currentDiscipline);
 
-            angular.forEach($scope.currentDiscipline, function(value) {
+            angular.forEach($scope.currentDiscipline, function (value) {
                 if (value.Detail.Discipline[type1]) {
                     var count = parseInt(value.Detail.Discipline[type1][type2], 10) || 0;
                     if (count > 0) {
@@ -960,7 +1021,7 @@ angular.module('allsearch', [])
             //console.log($scope.Ds);
         };
 
-        $scope.DataReset = function() {
+        $scope.DataReset = function () {
             $scope.AD = null;
             $scope.attendance = null;
             $scope.discipline = null;
@@ -987,7 +1048,7 @@ angular.module('allsearch', [])
             $scope.GS = null;
         };
 
-        $scope.GetBody = function() {
+        $scope.GetBody = function () {
 
             var body = {};
             if ($scope.currentStudent && $scope.currentStudent.StudentID)
@@ -998,7 +1059,7 @@ angular.module('allsearch', [])
             return body;
         };
 
-        $scope.GetGradeScore = function(grade) {
+        $scope.GetGradeScore = function (grade) {
 
             $scope.defaultGrade = grade;
             $scope.currentGrade = 'Gr.' + grade;
@@ -1015,7 +1076,7 @@ angular.module('allsearch', [])
             $scope.custom_connection.send({
                 service: "_.GetGradeScore",
                 body: body,
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     $scope.GS = null;
                     if (error !== null) {
                         //alert("查詢過程發生錯誤");
@@ -1026,7 +1087,7 @@ angular.module('allsearch', [])
                             $scope.GS = response.data;
                             $scope.GS.domains = [].concat($scope.GS.domains);
 
-                            angular.forEach($scope.GS.domains, function(value) {
+                            angular.forEach($scope.GS.domains, function (value) {
                                 if (value.domain === 'Chinese')
                                     value.subject = 'Level ' + value.level;
                             });
@@ -1048,7 +1109,7 @@ angular.module('allsearch', [])
             });
         };
 
-        $scope.TransferScore = function(score) {
+        $scope.TransferScore = function (score) {
 
             if ($scope.originalScoreMode || score === "未開放")
                 return score;
@@ -1095,6 +1156,7 @@ angular.module('allsearch', [])
             $scope.getConduct();
             $scope.getExam();
             $scope.getAD();
+            $scope.getEP();
         }
 
         if ($scope.system_position === 'parent')
