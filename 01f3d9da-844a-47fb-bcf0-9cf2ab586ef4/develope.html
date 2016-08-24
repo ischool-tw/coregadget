@@ -13,8 +13,8 @@
             oAuth: {
                 clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
                 clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
-                account: 'lelala@ischool.com.tw',
-                password: 'wv@ueha2B'
+                account: '',
+                password: ''
             }
         });
     </script>
@@ -218,8 +218,14 @@
                                             <td colspan="3">{{currentStudent.MotherName}}</td>
                                         </tr>
                                         <tr>
-                                            <th>Phone(Contact)</th>
+                                            <th>Phone(Father)</th>
+                                            <td>{{currentStudent.FatherPhone}}</td>
+                                            <th>Phone(Home)</th>
                                             <td>{{currentStudent.ContactPhone}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Phone(Mother)</th>
+                                            <td>{{currentStudent.MotherPhone}}</td>
                                             <th>Cellphone</th>
                                             <td>{{currentStudent.SmsPhone}}</td>
                                         </tr>
@@ -813,19 +819,24 @@
 
                             <!-- Download -->
                             <div class="tab-pane" id="tab7">
-                                <table class="table table-bordered table-striped text-center" style="margin-top:10px;" ng-if="ep">
+                                <table class="table table-bordered table-striped text-center" style="margin-top:10px;">
                                     <thead>
                                         <tr>
+                                            <th class="col-md-3 text-center"></th>
                                             <th class="col-md-6">Name</th>
                                             <th class="col-md-3 text-center">Upload Time</th>
-                                            <th class="col-md-3 text-center"></th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody  ng-if="ep">
                                         <tr ng-repeat="item in ep">
-                                            <th>{{item.Name}}</th>
-                                            <th class="text-center">{{item.Time}}</th>
-                                            <th class="text-center"><a href="javascript:void(0)" ng-click="downloadEP(item.EPID)">Download</a></th>
+                                            <td class="text-center"><a href="javascript:void(0)" ng-click="downloadEP(item.EPID)">Download</a></td>
+                                            <td>{{item.Name}}</td>
+                                            <td class="text-center">{{item.Time}}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody ng-if="!ep">
+                                        <tr>
+                                            <td colspan="3" class="text-left">empty.</td>
                                         </tr>
                                     </tbody>
                                 </table>
