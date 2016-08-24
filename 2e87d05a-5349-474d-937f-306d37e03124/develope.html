@@ -102,7 +102,35 @@
 				});		
 			}			
 		}
-		catch (exc) { }
+        catch (exc) { }
+
+        gadget.getContract("emba.bulletin.announcement").send({
+            service: "GetAnnouncementStatus",
+            body: '',
+            result: function (response, error, http) {
+                if (response.Switch == "true") {
+                    parentwindow.$(function () {
+                        var layer = parentwindow.layout.createNewLayer({
+                            zindex: 500,
+                            fullScreen: true
+                        });
+                        var item = parentwindow.$(
+                            '<div class="xxxxxx" style="position:relative;background-color:black;">'
+                                + '<div style="position:absolute;left:10px;right:10px;top:20px;bottom:20px;background-image: url(' + gadget.getApplication().url + '/emba.bulletin.announcement/GetAnnouncementPhoto?rsptype=image);background-size:auto;background-repeat:no-repeat;background-position:50% 50%;" />'
+                                + '<a href="javascript:void(0);" style="position: absolute;background: url(/deployment/2e87d05a-5349-474d-937f-306d37e03124/close.png);width: 32px;height: 32px;background-size: cover;top: 8px;right: 8px;"></a>'
+                            + '</div>');
+
+                        layer.set({ targetEle: item });
+
+                        item.find('a').click(function () {
+                            parentwindow.$('.my-page').show();
+                            layer.set({ visible: false });
+                        });
+                        parentwindow.$('.my-page').hide();
+                    });
+                }
+            }
+        });
 	</script>
     <script src="js/default.js"></script>
 </head>
