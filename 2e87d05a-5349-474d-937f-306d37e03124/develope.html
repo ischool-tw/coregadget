@@ -115,8 +115,8 @@
                             fullScreen: true
                         });
                         var item = parentwindow.$(
-                            '<div class="xxxxxx" style="position:relative;background-color:black;">'
-                                + '<div style="position:absolute;left:10px;right:10px;top:20px;bottom:20px;background-image: url(' + gadget.getApplication().url + '/emba.bulletin.announcement/GetAnnouncementPhoto?rsptype=image);background-size:auto;background-repeat:no-repeat;background-position:50% 50%;" />'
+                            '<div class="xxxxxx" style="position:relative;background-color:rgba(0,0,0,0.7);position:fixed;top:0px;left:0px;right:0px;bottom:0px;">'
+                                + '<div style="position:absolute;left:10px;right:10px;top:20px;bottom:20px;background-image: url(' + gadget.getApplication().url + '/emba.bulletin.announcement/GetAnnouncementPhoto?rsptype=image);background-size:contain;background-repeat:no-repeat;background-position:50% 50%;" />'
                                 + '<a href="javascript:void(0);" style="position: absolute;background: url(/deployment/2e87d05a-5349-474d-937f-306d37e03124/close.png);width: 32px;height: 32px;background-size: cover;top: 8px;right: 8px;"></a>'
                             + '</div>');
 
@@ -126,7 +126,7 @@
                             parentwindow.$('.my-page').show();
                             layer.set({ visible: false });
                         });
-                        parentwindow.$('.my-page').hide();
+                        //parentwindow.$('.my-page').hide();
                     });
                 }
             }
