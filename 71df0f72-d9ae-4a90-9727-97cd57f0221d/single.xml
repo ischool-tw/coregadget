@@ -1,0 +1,1134 @@
+<Response>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>直系血親_行動電話</Name>
+		<QuestionType>Relative</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>本人概況</GroupName>
+		<Name>血型</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="A"/>
+				<item has_remark="False" key="B"/>
+				<item has_remark="False" key="O"/>
+				<item has_remark="False" key="AB"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>本人概況</GroupName>
+		<Name>宗教</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="無"/>
+				<item has_remark="False" key="佛教"/>
+				<item has_remark="False" key="基督教"/>
+				<item has_remark="False" key="天主教"/>
+				<item has_remark="False" key="回教"/>
+				<item has_remark="False" key="道教"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>本人概況</GroupName>
+		<Name>身高</Name>
+		<QuestionType>SEMESTER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>本人概況</GroupName>
+		<Name>體重</Name>
+		<QuestionType>SEMESTER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>本人概況</GroupName>
+		<Name>生理缺陷</Name>
+		<QuestionType>MULTI_ANSWER</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="無"/>
+				<item has_remark="False" key="近視"/>
+				<item has_remark="False" key="其它視覺障礙"/>
+				<item has_remark="False" key="聽覺障礙"/>
+				<item has_remark="False" key="肢體障礙"/>
+				<item has_remark="True" key="其它"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>本人概況</GroupName>
+		<Name>曾患特殊疾病</Name>
+		<QuestionType>MULTI_ANSWER</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="無"/>
+				<item has_remark="False" key="腦炎"/>
+				<item has_remark="False" key="癲癇"/>
+				<item has_remark="False" key="心臟病"/>
+				<item has_remark="False" key="小兒麻痺"/>
+				<item has_remark="False" key="氣喘"/>
+				<item has_remark="False" key="過敏症"/>
+				<item has_remark="False" key="肺結核"/>
+				<item has_remark="True" key="其它"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>直系血親_稱謂</Name>
+		<QuestionType>Relative</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="父"/>
+				<item has_remark="False" key="母"/>
+				<item has_remark="False" key="祖父"/>
+				<item has_remark="False" key="祖母"/>
+				<item has_remark="False" key="曾祖父"/>
+				<item has_remark="False" key="曾祖母"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>直系血親_姓名</Name>
+		<QuestionType>Relative</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>直系血親_存、歿</Name>
+		<QuestionType>Relative</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="存"/>
+				<item has_remark="False" key="歿"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>直系血親_出生年</Name>
+		<QuestionType>Relative</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>直系血親_職業</Name>
+		<QuestionType>Relative</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>直系血親_工作機構</Name>
+		<QuestionType>Relative</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>直系血親_職稱</Name>
+		<QuestionType>Relative</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>學習狀況</GroupName>
+		<Name>特殊專長_樂器演奏</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>學習狀況</GroupName>
+		<Name>特殊專長_外語能力</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>直系血親_教育程度</Name>
+		<QuestionType>Relative</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="不識字"/>
+				<item has_remark="False" key="識字(未就學)"/>
+				<item has_remark="False" key="小學 "/>
+				<item has_remark="False" key="初中(職)"/>
+				<item has_remark="False" key="高中(職)"/>
+				<item has_remark="False" key="專科"/>
+				<item has_remark="False" key="學士"/>
+				<item has_remark="False" key="碩士"/>
+				<item has_remark="False" key="博士"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>兄弟姊妹_稱謂</Name>
+		<QuestionType>Sibling</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>兄弟姊妹_姓名</Name>
+		<QuestionType>Sibling</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>兄弟姊妹_畢肆業學校</Name>
+		<QuestionType>Sibling</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>兄弟姊妹_出生年次</Name>
+		<QuestionType>Sibling</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>兄弟姊妹_備註</Name>
+		<QuestionType>Sibling</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>父母關係</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="同住"/>
+				<item has_remark="False" key="分住"/>
+				<item has_remark="False" key="分居"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>家庭氣氛</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="很和諧"/>
+				<item has_remark="False" key="和諧"/>
+				<item has_remark="False" key="普通"/>
+				<item has_remark="False" key="不和諧"/>
+				<item has_remark="False" key="很不和諧"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>父親管教方式</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="民主式"/>
+				<item has_remark="False" key="權威式"/>
+				<item has_remark="False" key="放任式"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>母親管教方式</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="民主式"/>
+				<item has_remark="False" key="權威式"/>
+				<item has_remark="False" key="放任式"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>備註</GroupName>
+		<Name>備註</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>居住環境</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="住宅區"/>
+				<item has_remark="False" key="商業區"/>
+				<item has_remark="False" key="混和(住商工)區"/>
+				<item has_remark="False" key="軍眷區"/>
+				<item has_remark="False" key="農村"/>
+				<item has_remark="False" key="漁村"/>
+				<item has_remark="False" key="工礦區"/>
+				<item has_remark="False" key="山地"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>本人住宿</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="在家裡"/>
+				<item has_remark="False" key="寄居親友家裡"/>
+				<item has_remark="False" key="住校"/>
+				<item has_remark="False" key="在外賃屋"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>經濟狀況</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="富裕"/>
+				<item has_remark="False" key="小康"/>
+				<item has_remark="False" key="普通"/>
+				<item has_remark="False" key="清寒"/>
+				<item has_remark="False" key="貧困"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>每星期零用錢</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>我覺得是否足夠</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="足夠"/>
+				<item has_remark="False" key="剛好"/>
+				<item has_remark="False" key="不足"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>學習狀況</GroupName>
+		<Name>最喜歡的學科</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>學習狀況</GroupName>
+		<Name>最感困難的學科</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>學習狀況</GroupName>
+		<Name>特殊專長</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="球類"/>
+				<item has_remark="False" key="田徑"/>
+				<item has_remark="False" key="游泳"/>
+				<item has_remark="False" key="國術"/>
+				<item has_remark="False" key="美術"/>
+				<item has_remark="False" key="樂器演奏"/>
+				<item has_remark="False" key="唱歌"/>
+				<item has_remark="False" key="工藝"/>
+				<item has_remark="False" key="家事"/>
+				<item has_remark="False" key="演說"/>
+				<item has_remark="False" key="寫作"/>
+				<item has_remark="False" key="舞蹈"/>
+				<item has_remark="False" key="戲劇"/>
+				<item has_remark="False" key="書法"/>
+				<item has_remark="False" key="珠算"/>
+				<item has_remark="False" key="外語"/>
+				<item has_remark="False" key="英打"/>
+				<item has_remark="False" key="中打"/>
+				<item has_remark="False" key="會計"/>
+				<item has_remark="False" key="統計"/>
+				<item has_remark="False" key="領導"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>學習狀況</GroupName>
+		<Name>休閒興趣</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="電影欣賞"/>
+				<item has_remark="False" key="閱讀"/>
+				<item has_remark="False" key="登山"/>
+				<item has_remark="False" key="露營"/>
+				<item has_remark="False" key="旅行郊遊"/>
+				<item has_remark="False" key="划船游泳"/>
+				<item has_remark="False" key="釣魚"/>
+				<item has_remark="False" key="樂器演奏"/>
+				<item has_remark="False" key="唱歌"/>
+				<item has_remark="False" key="音樂欣賞"/>
+				<item has_remark="False" key="舞蹈"/>
+				<item has_remark="False" key="繪畫"/>
+				<item has_remark="False" key="集郵"/>
+				<item has_remark="False" key="打球"/>
+				<item has_remark="False" key="國術"/>
+				<item has_remark="False" key="編織"/>
+				<item has_remark="False" key="下棋"/>
+				<item has_remark="False" key="養小動物"/>
+				<item has_remark="False" key="作物栽培"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>學習狀況</GroupName>
+		<Name>社團幹部</Name>
+		<QuestionType>SEMESTER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>學習狀況</GroupName>
+		<Name>班級幹部</Name>
+		<QuestionType>SEMESTER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>家中最了解我的人</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>常指導我做功課的人</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>我讀過且印象最深刻的課外書是</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>喜歡的人</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>最要好的朋友</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>最喜歡做的事</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>最不喜歡做的事</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>國中時的學校生活</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>最快樂的回憶</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>最痛苦的回憶</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>最足以描述自己的幾句話</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自我認識</GroupName>
+		<Name>個性_1</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自我認識</GroupName>
+		<Name>優點_1</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自我認識</GroupName>
+		<Name>需要改進的地方_1</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自我認識</GroupName>
+		<Name>填寫日期_1</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>生活感想</GroupName>
+		<Name>內容1_1</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>生活感想</GroupName>
+		<Name>內容2_1</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>生活感想</GroupName>
+		<Name>內容3_1</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>生活感想</GroupName>
+		<Name>填寫日期_2</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>生活感想</GroupName>
+		<Name>內容1_2</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>生活感想</GroupName>
+		<Name>內容2_2</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>生活感想</GroupName>
+		<Name>內容3_2</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>生活感想</GroupName>
+		<Name>填寫日期_2</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>畢業後計畫</GroupName>
+		<Name>升學意願</Name>
+		<QuestionType>MULTI_ANSWER</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="理"/>
+				<item has_remark="False" key="工"/>
+				<item has_remark="False" key="文史"/>
+				<item has_remark="False" key="法"/>
+				<item has_remark="False" key="商"/>
+				<item has_remark="False" key="醫"/>
+				<item has_remark="False" key="農"/>
+				<item has_remark="False" key="教育"/>
+				<item has_remark="False" key="藝術"/>
+				<item has_remark="False" key="海洋"/>
+				<item has_remark="False" key="軍"/>
+				<item has_remark="False" key="警"/>
+				<item has_remark="True" key="其它"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>畢業後計畫</GroupName>
+		<Name>就業意願</Name>
+		<QuestionType>MULTI_ANSWER</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="自行就業"/>
+				<item has_remark="False" key="需要輔導就業"/>
+				<item has_remark="False" key="希望參加職業訓練"/>
+				<item has_remark="True" key="其它"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>喜歡的人_因為</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>讀過且印象最深刻的課外書</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>填寫日期</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自我認識</GroupName>
+		<Name>個性_2</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自我認識</GroupName>
+		<Name>個性_3</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>畢業後計畫</GroupName>
+		<Name>參加職業訓練</Name>
+		<QuestionType>MULTI_ANSWER</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="機械加工"/>
+				<item has_remark="False" key="機密機械加工"/>
+				<item has_remark="False" key="金屬加工"/>
+				<item has_remark="False" key="焊接及切割"/>
+				<item has_remark="False" key="電子及儀表"/>
+				<item has_remark="False" key="電機及電工"/>
+				<item has_remark="False" key="家用電器"/>
+				<item has_remark="False" key="營建土木"/>
+				<item has_remark="False" key="車輛修護"/>
+				<item has_remark="False" key="農業機械"/>
+				<item has_remark="False" key="農業經營"/>
+				<item has_remark="False" key="園藝經營"/>
+				<item has_remark="False" key="農產加工"/>
+				<item has_remark="False" key="畜牧"/>
+				<item has_remark="False" key="船員訓練"/>
+				<item has_remark="False" key="縫紉"/>
+				<item has_remark="False" key="美容"/>
+				<item has_remark="False" key="會計"/>
+				<item has_remark="False" key="護理"/>
+				<item has_remark="False" key="其它"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>畢業後計畫</GroupName>
+		<Name>受訓地區</Name>
+		<QuestionType>MULTI_ANSWER</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="北區"/>
+				<item has_remark="False" key="中區"/>
+				<item has_remark="False" key="南區"/>
+				<item has_remark="False" key="東區"/>
+				<item has_remark="False" key="其它"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>畢業後計畫</GroupName>
+		<Name>將來職業</Name>
+		<QuestionType>PRIORITY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="機械加工"/>
+				<item has_remark="False" key="機密機械加工"/>
+				<item has_remark="False" key="金屬加工"/>
+				<item has_remark="False" key="焊接及切割"/>
+				<item has_remark="False" key="電子及儀表"/>
+				<item has_remark="False" key="電機及電工"/>
+				<item has_remark="False" key="家用電器"/>
+				<item has_remark="False" key="營建土木"/>
+				<item has_remark="False" key="車輛修護"/>
+				<item has_remark="False" key="農業機械"/>
+				<item has_remark="False" key="農業經營"/>
+				<item has_remark="False" key="園藝經營"/>
+				<item has_remark="False" key="農產加工"/>
+				<item has_remark="False" key="畜牧"/>
+				<item has_remark="False" key="船員訓練"/>
+				<item has_remark="False" key="縫紉"/>
+				<item has_remark="False" key="美容"/>
+				<item has_remark="False" key="會計"/>
+				<item has_remark="False" key="護理"/>
+				<item has_remark="False" key="其它"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>畢業後計畫</GroupName>
+		<Name>就業地區</Name>
+		<QuestionType>PRIORITY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="北區"/>
+				<item has_remark="False" key="中區"/>
+				<item has_remark="False" key="南區"/>
+				<item has_remark="False" key="東區"/>
+				<item has_remark="False" key="其它"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>適應情形</GroupName>
+		<Name>生活習慣</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="甚佳"/>
+				<item has_remark="False" key="良好"/>
+				<item has_remark="False" key="普通"/>
+				<item has_remark="False" key="欠佳"/>
+				<item has_remark="False" key="甚劣"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>適應情形</GroupName>
+		<Name>人際關係</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="甚佳"/>
+				<item has_remark="False" key="良好"/>
+				<item has_remark="False" key="普通"/>
+				<item has_remark="False" key="欠佳"/>
+				<item has_remark="False" key="甚劣"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>適應情形</GroupName>
+		<Name>外向行為</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="甚佳"/>
+				<item has_remark="False" key="良好"/>
+				<item has_remark="False" key="普通"/>
+				<item has_remark="False" key="欠佳"/>
+				<item has_remark="False" key="甚劣"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>適應情形</GroupName>
+		<Name>內向行為</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="甚佳"/>
+				<item has_remark="False" key="良好"/>
+				<item has_remark="False" key="普通"/>
+				<item has_remark="False" key="欠佳"/>
+				<item has_remark="False" key="甚劣"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>適應情形</GroupName>
+		<Name>學習動機</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="甚佳"/>
+				<item has_remark="False" key="良好"/>
+				<item has_remark="False" key="普通"/>
+				<item has_remark="False" key="欠佳"/>
+				<item has_remark="False" key="甚劣"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>適應情形</GroupName>
+		<Name>服務熱忱</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="甚佳"/>
+				<item has_remark="False" key="良好"/>
+				<item has_remark="False" key="普通"/>
+				<item has_remark="False" key="欠佳"/>
+				<item has_remark="False" key="甚劣"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>適應情形</GroupName>
+		<Name>人生態度</Name>
+		<QuestionType>YEARLY</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="False" key="甚佳"/>
+				<item has_remark="False" key="良好"/>
+				<item has_remark="False" key="普通"/>
+				<item has_remark="False" key="欠佳"/>
+				<item has_remark="False" key="甚劣"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>家中最了解我的人_因為</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>我在家中最怕的人是</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>我在家中最怕的人是_因為</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>我覺得我的優點是</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>我覺得我的缺點是</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>最喜歡的國小（國中）老師</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>最喜歡的國小（國中）老師__因為</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>小學（國中）老師或同學常說我是</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>小學（國中）時我曾在班上登任過的職務有</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>我在小學（國中）得過的獎有</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>我覺得我自己的過去最滿意的是</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>我排遣休閒時間的方法是</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>我最難忘的一件事是</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>自我的心聲_一年級_我目前遇到最大的困難是</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>自我的心聲_一年級_我目前最需要的協助是</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>自我的心聲_二年級_我目前遇到最大的困難是</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>自我的心聲_二年級_我目前最需要的協助是</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>自我的心聲_三年級_我目前遇到最大的困難是</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>自我的心聲_三年級_我目前最需要的協助是</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>最喜歡做的事_因為</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>最不喜歡做的事_因為</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>他是怎樣的人</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自我認識</GroupName>
+		<Name>填寫日期_2</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自我認識</GroupName>
+		<Name>填寫日期_3</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自我認識</GroupName>
+		<Name>需要改進的地方_2</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自我認識</GroupName>
+		<Name>需要改進的地方_3</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自我認識</GroupName>
+		<Name>優點_2</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自我認識</GroupName>
+		<Name>優點_3</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>監護人_姓名</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>監護人_性別</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>監護人_關係</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>監護人_電話</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>監護人_通訊地址</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>直系血親_電話</Name>
+		<QuestionType>Relative</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>兄弟姊妹_排行</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>本人概況</GroupName>
+		<Name>原住民血統</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items>
+			<Items>
+				<item has_remark="True" key="有"/>
+				<item has_remark="False" key="無"/>
+			</Items>
+		</Items>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>家庭狀況</GroupName>
+		<Name>直系血親_國籍</Name>
+		<QuestionType>Relative</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+	<QuestionsData>
+		<GroupName>自傳</GroupName>
+		<Name>自傳</Name>
+		<QuestionType>SINGLE_ANSWER</QuestionType>
+		<Items/>
+		<CanStudentEdit>是</CanStudentEdit>
+	</QuestionsData>
+</Response>
