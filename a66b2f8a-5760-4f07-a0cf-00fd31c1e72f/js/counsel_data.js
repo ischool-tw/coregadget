@@ -1,152 +1,153 @@
 _gg.col_Question = {
-        //'區塊編號' : [
-        // {   ID: 區塊編號
-        //     GroupName: 對照題目及存檔用
-        //     Name: 對照題目及存檔用
-        //     Alias: 瀏覽用標題
-        //     Title: 編輯用標題，若未填寫以 Alias 為主
-        //     ControlType: [radio | checkbox | select | textarea | text(預設值)]
-        //       只對 QuestionType=SINGLE_ANSWER、MULTI_ANSWER 有用
-        //     TagName: 存檔的欄位名稱
-        //       只對 QuestionType=Relative、Sibling、SEMESTER、YEARLY有用
-        //     Limit: 優先順序數量上限
-        //       只對 QuestionType=PRIORITY有用
-        //     Placeholder: 若未填寫以 Alias 為主，Name 次之
-        // }
-        'A1' : [
+    //'區塊編號' : [
+    // {   ID: 區塊編號
+    //     GroupName: 對照題目及存檔用
+    //     Name: 對照題目及存檔用
+    //     Alias: 瀏覽用標題
+    //     Title: 編輯用標題，若未填寫以 Alias 為主
+    //     ControlType: [radio | checkbox | select | textarea | text(預設值)]
+    //       只對 QuestionType=SINGLE_ANSWER、MULTI_ANSWER 有用
+    //     TagName: 存檔的欄位名稱
+    //       只對 QuestionType=Relative、Sibling、SEMESTER、YEARLY有用
+    //     Limit: 優先順序數量上限
+    //       只對 QuestionType=PRIORITY有用
+    //     Placeholder: 若未填寫以 Alias 為主，Name 次之
+    // }
+    'A1': [
+    { ID: 'A1', GroupName: '本人概況', Name: '手機號碼', Alias: '手機號碼' },
             { ID: 'A1', GroupName: '本人概況', Name: '血型', Alias: '血型', ControlType: 'radio' },
             { ID: 'A1', GroupName: '本人概況', Name: '宗教', Alias: '宗教', ControlType: 'radio' },
             { ID: 'A1', GroupName: '本人概況', Name: '生理缺陷', Alias: '生理缺陷', ControlType: 'checkbox' },
             { ID: 'A1', GroupName: '本人概況', Name: '曾患特殊疾病', Alias: '曾患特殊疾病', ControlType: 'checkbox' },
-            { ID: 'A1', GroupName: '本人概況', Name: '原住民血統', Alias: '原住民血統', ControlType: 'radio'  }
-        ],
-        'A2' : [
-            { ID: 'A2', GroupName: '家庭狀況', Name: '監護人_姓名', Alias: '姓名' },
-            { ID: 'A2', GroupName: '家庭狀況', Name: '監護人_性別', Alias: '性別', ControlType: 'select' },
-            { ID: 'A2', GroupName: '家庭狀況', Name: '監護人_關係', Alias: '關係' },
-            { ID: 'A2', GroupName: '家庭狀況', Name: '監護人_電話', Alias: '電話' },
-            { ID: 'A2', GroupName: '家庭狀況', Name: '監護人_通訊地址', Alias: '地址' }
-        ],
-        'A3' : [
-            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_稱謂', Alias: '稱謂', TagName: 'Title', ControlType: 'select' },
-            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_姓名', Alias: '姓名', TagName: 'Name' },
-            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_出生年', Alias: '出生年', TagName: 'BirthYear', Validator: '{digits:true, range:[1, ' + (new Date().getFullYear()-1911) + ']}' },
-            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_存、歿', Alias: '存歿', TagName: 'IsAlive', ControlType: 'select' },
-            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_電話', Alias: '電話', TagName: 'Phone' },
-            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_職業', Alias: '職業', TagName: 'Job' },
-            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_工作機構', Alias: '工作機構', TagName: 'Institute' },
-            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_職稱', Alias: '職稱', TagName: 'JobTitle' },
-            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_教育程度', Alias: '教育程度', TagName: 'EduDegree', ControlType: 'select' },
-            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_國籍', Alias: '國籍', TagName: 'National' },
-            { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_行動電話', Alias: '手機', TagName: 'CellPhone' }
-        ],
-        'A4' :[
-            { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_排行', Alias: '排行' },
-            { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_稱謂', Alias: '稱謂', TagName: 'Title', ControlType: 'select' },
-            { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_姓名', Alias: '姓名', TagName: 'Name', Validator: 'required="true"' },
-            { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_出生年次', Alias: '出生年次', TagName: 'BirthYear', Validator: '{digits:true, range:[1, ' + (new Date().getFullYear()-1911) + ']}' },
-            { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_畢肆業學校', Alias: '畢業學校', TagName: 'SchoolName' },
-            { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_備註', Alias: '備註', TagName: 'Remark' }
-        ],
-        'A5' :[
-            { ID: 'A5', GroupName: '本人概況', Name: '身高', Alias: '身高', Validator: '{number:true, min:0}' },
-            { ID: 'A5', GroupName: '本人概況', Name: '體重', Alias: '體重', Validator: '{number:true, min:0}' }
-        ],
-        'B1' :[
-            { ID: 'B1', GroupName: '家庭狀況', Name: '父母關係', Alias: '父母關係', ControlType: 'select' },
-            { ID: 'B1', GroupName: '家庭狀況', Name: '家庭氣氛', Alias: '家庭氣氛', ControlType: 'select' },
-            { ID: 'B1', GroupName: '家庭狀況', Name: '父親管教方式', Alias: '父親管教方式', ControlType: 'select' },
-            { ID: 'B1', GroupName: '家庭狀況', Name: '母親管教方式', Alias: '母親管教方式', ControlType: 'select' },
-            { ID: 'B1', GroupName: '家庭狀況', Name: '居住環境', Alias: '居住環境', ControlType: 'select' },
-            { ID: 'B1', GroupName: '家庭狀況', Name: '本人住宿', Alias: '本人住宿', ControlType: 'select' },
-            { ID: 'B1', GroupName: '家庭狀況', Name: '經濟狀況', Alias: '家庭經濟概況', ControlType: 'select' },
-            { ID: 'B1', GroupName: '家庭狀況', Name: '每星期零用錢', Alias: '每星期零用錢(元)' },
-            { ID: 'B1', GroupName: '家庭狀況', Name: '我覺得是否足夠', Alias: '零用金是否足夠', ControlType: 'select' }
-        ],
-        'B2' :[
-            { ID: 'B2', GroupName: '學習狀況', Name: '最喜歡的學科', Alias: '最喜歡的學科' },
-            { ID: 'B2', GroupName: '學習狀況', Name: '最感困難的學科', Alias: '最困難的學科' },
-            { ID: 'B2', GroupName: '學習狀況', Name: '特殊專長', Alias: '特殊專長', ControlType: 'checkbox' },
-            { ID: 'B2', GroupName: '學習狀況', Name: '休閒興趣', Alias: '休閒興趣', ControlType: 'checkbox' },
-            { ID: 'B2', GroupName: '學習狀況', Name: '特殊專長_樂器演奏', Alias: '樂器演奏' },
-            { ID: 'B2', GroupName: '學習狀況', Name: '特殊專長_外語能力', Alias: '外語能力' },
-        ],
-        'B3' :[
-            { ID: 'B3', GroupName: '學習狀況', Name: '班級幹部', Alias: '班級幹部' },
-            { ID: 'B3', GroupName: '學習狀況', Name: '社團幹部', Alias: '社團幹部' }
-        ],
-        'B4' :[
-            { ID: 'B4', GroupName: '自我認識', Name: '個性_1', Alias: '個性' },
-            { ID: 'B4', GroupName: '自我認識', Name: '優點_1', Alias: '優點' },
-            { ID: 'B4', GroupName: '自我認識', Name: '需要改進的地方_1', Alias: '需要改進', ControlType: 'textarea' },
-            { ID: 'B4', GroupName: '自我認識', Name: '填寫日期_1', Alias: '填寫日期' },
-            { ID: 'B4', GroupName: '自我認識', Name: '個性_2', Alias: '個性' },
-            { ID: 'B4', GroupName: '自我認識', Name: '優點_2', Alias: '優點' },
-            { ID: 'B4', GroupName: '自我認識', Name: '需要改進的地方_2', Alias: '需要改進', ControlType: 'textarea' },
-            { ID: 'B4', GroupName: '自我認識', Name: '填寫日期_2', Alias: '填寫日期' },
-            { ID: 'B4', GroupName: '自我認識', Name: '個性_3', Alias: '個性' },
-            { ID: 'B4', GroupName: '自我認識', Name: '優點_3', Alias: '優點' },
-            { ID: 'B4', GroupName: '自我認識', Name: '需要改進的地方_3', Alias: '需要改進', ControlType: 'textarea' },
-            { ID: 'B4', GroupName: '自我認識', Name: '填寫日期_3', Alias: '填寫日期' }
-        ],
-        'B5' :[
-            { ID: 'B5', GroupName: '生活感想', Name: '內容1_1', Alias: '期望', ControlType: 'textarea' },
-            { ID: 'B5', GroupName: '生活感想', Name: '內容2_1', Alias: '為達理想，所需要的努力', ControlType: 'textarea' },
-            { ID: 'B5', GroupName: '生活感想', Name: '內容3_1', Alias: '期望師長給幫助', ControlType: 'textarea' },
-            { ID: 'B5', GroupName: '生活感想', Name: '填寫日期_1', Alias: '填寫日期' },
-            { ID: 'B5', GroupName: '生活感想', Name: '內容1_2', Alias: '一年來的感想', ControlType: 'textarea' },
-            { ID: 'B5', GroupName: '生活感想', Name: '內容2_2', Alias: '今後努力的目標', ControlType: 'textarea' },
-            { ID: 'B5', GroupName: '生活感想', Name: '內容3_2', Alias: '期望師長給幫助', ControlType: 'textarea' },
-            { ID: 'B5', GroupName: '生活感想', Name: '填寫日期_2', Alias: '填寫日期' }
-        ],
-        'C1' :[
-            { ID: 'C1', GroupName: '畢業後計畫', Name: '升學意願', Alias: '升學意願', ControlType: 'checkbox' },
-            { ID: 'C1', GroupName: '畢業後計畫', Name: '就業意願', Alias: '就業意願', ControlType: 'checkbox' },
-            { ID: 'C1', GroupName: '畢業後計畫', Name: '參加職業訓練', Alias: '希望參加職業訓練種類', ControlType: 'checkbox' },
-            { ID: 'C1', GroupName: '畢業後計畫', Name: '受訓地區', Alias: '希望參加職業訓練地區', ControlType: 'checkbox' },
-            { ID: 'C1', GroupName: '畢業後計畫', Name: '將來職業', Alias: '將來職業意願', ControlType: 'select', Limit: '3' },
-            { ID: 'C1', GroupName: '畢業後計畫', Name: '就業地區', Alias: '將來就業地區', ControlType: 'select', Limit: '3' }
-        ],
-        'D1' :[
-            { ID: 'D1', GroupName: '自傳', Name: '家中最了解我的人', Alias: '家中最了解我的人' },
-            { ID: 'D1', GroupName: '自傳', Name: '家中最了解我的人_因為', Alias: '家中最了解我的人_因為' },
-            { ID: 'D1', GroupName: '自傳', Name: '常指導我做功課的人', Alias: '常指導我做功課的人' },
-            { ID: 'D1', GroupName: '自傳', Name: '讀過且印象最深刻的課外書', Alias: '讀過印象最深的課外讀物' },
-            { ID: 'D1', GroupName: '自傳', Name: '喜歡的人', Alias: '最喜歡的人是', Title: '最喜歡的人' },
-            { ID: 'D1', GroupName: '自傳', Name: '喜歡的人_因為', Alias: '，因為', Title: '因為', ControlType: 'textarea' },
-            { ID: 'D1', GroupName: '自傳', Name: '最要好的朋友', Alias: '最要好的朋友是',Title: '最要好的朋友' },
-            { ID: 'D1', GroupName: '自傳', Name: '他是怎樣的人', Alias: '，他', Title: '他是怎樣的人？<br/>（請加描述）', Placeholder: '他是怎樣的人？（請加描述）', ControlType: 'textarea' },
-            { ID: 'D1', GroupName: '自傳', Name: '最喜歡做的事', Alias: '最喜歡做的事是', Title: '最喜歡做的事' },
-            { ID: 'D1', GroupName: '自傳', Name: '最喜歡做的事_因為', Alias: '，因為', Title: '因為', ControlType: 'textarea' },
-            { ID: 'D1', GroupName: '自傳', Name: '最不喜歡做的事', Alias: '最不喜歡做的事是', Title: '最不喜歡做的事' },
-            { ID: 'D1', GroupName: '自傳', Name: '最不喜歡做的事_因為', Alias: '，因為', Title: '因為', ControlType: 'textarea' },
-            { ID: 'D1', GroupName: '自傳', Name: '國中時的學校生活', Alias: '國中時的學校生活是', Title: '國中時的學校生活' },
-            { ID: 'D1', GroupName: '自傳', Name: '最快樂的回憶', Alias: '最快樂的回憶是', Title: '最快樂的回憶',  ControlType: 'textarea' },
-            { ID: 'D1', GroupName: '自傳', Name: '最痛苦的回憶', Alias: '最痛苦的回憶是', Title: '最痛苦的回憶', ControlType: 'textarea' },
-            { ID: 'D1', GroupName: '自傳', Name: '最足以描述自己的幾句話', Alias: '最足以描述自己的幾句話是', ControlType: 'textarea' },
-            { ID: 'D1', GroupName: '自傳', Name: '我在家中最怕的人是', Alias: '我在家中最怕的人是' },
-            { ID: 'D1', GroupName: '自傳', Name: '我在家中最怕的人是_因為', Alias: '我在家中最怕的人是_因為' },
-            { ID: 'D1', GroupName: '自傳', Name: '我覺得我的優點是', Alias: '我覺得我的優點是' },
-            { ID: 'D1', GroupName: '自傳', Name: '我覺得我的缺點是', Alias: '我覺得我的缺點是' },
-            { ID: 'D1', GroupName: '自傳', Name: '最喜歡的國小（國中）老師', Alias: '最喜歡的國小（國中）老師' },
-            { ID: 'D1', GroupName: '自傳', Name: '最喜歡的國小（國中）老師__因為', Alias: '最喜歡的國小（國中）老師__因為' },
-            { ID: 'D1', GroupName: '自傳', Name: '小學（國中）老師或同學常說我是', Alias: '小學（國中）老師或同學常說我是' },
-            { ID: 'D1', GroupName: '自傳', Name: '小學（國中）時我曾在班上登任過的職務有', Alias: '小學（國中）時我曾在班上登任過的職務有' },
-            { ID: 'D1', GroupName: '自傳', Name: '我在小學（國中）得過的獎有', Alias: '我在小學（國中）得過的獎有' },
-            { ID: 'D1', GroupName: '自傳', Name: '我覺得我自己的過去最滿意的是', Alias: '我覺得我自己的過去最滿意的是' },
-            { ID: 'D1', GroupName: '自傳', Name: '我排遣休閒時間的方法是', Alias: '我排遣休閒時間的方法是' },
-            { ID: 'D1', GroupName: '自傳', Name: '我最難忘的一件事是', Alias: '我最難忘的一件事是' },
-            { ID: 'D1', GroupName: '自傳', Name: '自傳', Alias: '自傳' },
-            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_一年級_我目前遇到最大的困難是', Alias: '自我的心聲_一年級_我目前遇到最大的困難是' },
-            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_一年級_我目前最需要的協助是', Alias: '自我的心聲_一年級_我目前最需要的協助是' },
-            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_二年級_我目前遇到最大的困難是', Alias: '自我的心聲_二年級_我目前遇到最大的困難是' },
-            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_二年級_我目前最需要的協助是', Alias: '自我的心聲_二年級_我目前最需要的協助是' },
-            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_三年級_我目前遇到最大的困難是', Alias: '自我的心聲_三年級_我目前遇到最大的困難是' },
-            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_三年級_我目前最需要的協助是', Alias: '自我的心聲_三年級_我目前最需要的協助是' },
-            { ID: 'D1', GroupName: '自傳', Name: '填寫日期', Alias: '填寫日期' }
-        ],
-        'E1' :[],
-        'F1' :[]
+            { ID: 'A1', GroupName: '本人概況', Name: '原住民血統', Alias: '原住民血統', ControlType: 'radio' }
+    ],
+    'A2': [
+        { ID: 'A2', GroupName: '家庭狀況', Name: '監護人_姓名', Alias: '姓名' },
+        { ID: 'A2', GroupName: '家庭狀況', Name: '監護人_性別', Alias: '性別', ControlType: 'select' },
+        { ID: 'A2', GroupName: '家庭狀況', Name: '監護人_關係', Alias: '關係' },
+        { ID: 'A2', GroupName: '家庭狀況', Name: '監護人_電話', Alias: '電話' },
+        { ID: 'A2', GroupName: '家庭狀況', Name: '監護人_通訊地址', Alias: '地址' }
+    ],
+    'A3': [
+        { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_稱謂', Alias: '稱謂', TagName: 'Title', ControlType: 'select' },
+        { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_姓名', Alias: '姓名', TagName: 'Name' },
+        { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_出生年', Alias: '出生年', TagName: 'BirthYear', Validator: '{digits:true, range:[1, ' + (new Date().getFullYear() - 1911) + ']}' },
+        { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_存、歿', Alias: '存歿', TagName: 'IsAlive', ControlType: 'select' },
+        { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_電話', Alias: '電話', TagName: 'Phone' },
+        { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_職業', Alias: '職業', TagName: 'Job' },
+        { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_工作機構', Alias: '工作機構', TagName: 'Institute' },
+        { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_職稱', Alias: '職稱', TagName: 'JobTitle' },
+        { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_教育程度', Alias: '教育程度', TagName: 'EduDegree', ControlType: 'select' },
+        { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_國籍', Alias: '國籍', TagName: 'National' },
+        { ID: 'A3', GroupName: '家庭狀況', Name: '直系血親_行動電話', Alias: '手機', TagName: 'CellPhone' }
+    ],
+    'A4': [
+        { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_排行', Alias: '排行' },
+        { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_稱謂', Alias: '稱謂', TagName: 'Title', ControlType: 'select' },
+        { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_姓名', Alias: '姓名', TagName: 'Name', Validator: 'required="true"' },
+        { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_出生年次', Alias: '出生年次', TagName: 'BirthYear', Validator: '{digits:true, range:[1, ' + (new Date().getFullYear() - 1911) + ']}' },
+        { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_畢肆業學校', Alias: '畢業學校', TagName: 'SchoolName' },
+        { ID: 'A4', GroupName: '家庭狀況', Name: '兄弟姊妹_備註', Alias: '備註', TagName: 'Remark' }
+    ],
+    'A5': [
+        { ID: 'A5', GroupName: '本人概況', Name: '身高', Alias: '身高', Validator: '{number:true, min:0}' },
+        { ID: 'A5', GroupName: '本人概況', Name: '體重', Alias: '體重', Validator: '{number:true, min:0}' }
+    ],
+    'B1': [
+        { ID: 'B1', GroupName: '家庭狀況', Name: '父母關係', Alias: '父母關係', ControlType: 'select' },
+        { ID: 'B1', GroupName: '家庭狀況', Name: '家庭氣氛', Alias: '家庭氣氛', ControlType: 'select' },
+        { ID: 'B1', GroupName: '家庭狀況', Name: '父親管教方式', Alias: '父親管教方式', ControlType: 'select' },
+        { ID: 'B1', GroupName: '家庭狀況', Name: '母親管教方式', Alias: '母親管教方式', ControlType: 'select' },
+        { ID: 'B1', GroupName: '家庭狀況', Name: '居住環境', Alias: '居住環境', ControlType: 'select' },
+        { ID: 'B1', GroupName: '家庭狀況', Name: '本人住宿', Alias: '本人住宿', ControlType: 'select' },
+        { ID: 'B1', GroupName: '家庭狀況', Name: '經濟狀況', Alias: '家庭經濟概況', ControlType: 'select' },
+        { ID: 'B1', GroupName: '家庭狀況', Name: '每星期零用錢', Alias: '每星期零用錢(元)' },
+        { ID: 'B1', GroupName: '家庭狀況', Name: '我覺得是否足夠', Alias: '零用金是否足夠', ControlType: 'select' }
+    ],
+    'B2': [
+        { ID: 'B2', GroupName: '學習狀況', Name: '最喜歡的學科', Alias: '最喜歡的學科' },
+        { ID: 'B2', GroupName: '學習狀況', Name: '最感困難的學科', Alias: '最困難的學科' },
+        { ID: 'B2', GroupName: '學習狀況', Name: '特殊專長', Alias: '特殊專長', ControlType: 'checkbox' },
+        { ID: 'B2', GroupName: '學習狀況', Name: '休閒興趣', Alias: '休閒興趣', ControlType: 'checkbox' },
+        { ID: 'B2', GroupName: '學習狀況', Name: '特殊專長_樂器演奏', Alias: '樂器演奏' },
+        { ID: 'B2', GroupName: '學習狀況', Name: '特殊專長_外語能力', Alias: '外語能力' },
+    ],
+    'B3': [
+        { ID: 'B3', GroupName: '學習狀況', Name: '班級幹部', Alias: '班級幹部' },
+        { ID: 'B3', GroupName: '學習狀況', Name: '社團幹部', Alias: '社團幹部' }
+    ],
+    'B4': [
+        { ID: 'B4', GroupName: '自我認識', Name: '個性_1', Alias: '個性' },
+        { ID: 'B4', GroupName: '自我認識', Name: '優點_1', Alias: '優點' },
+        { ID: 'B4', GroupName: '自我認識', Name: '需要改進的地方_1', Alias: '需要改進', ControlType: 'textarea' },
+        { ID: 'B4', GroupName: '自我認識', Name: '填寫日期_1', Alias: '填寫日期' },
+        { ID: 'B4', GroupName: '自我認識', Name: '個性_2', Alias: '個性' },
+        { ID: 'B4', GroupName: '自我認識', Name: '優點_2', Alias: '優點' },
+        { ID: 'B4', GroupName: '自我認識', Name: '需要改進的地方_2', Alias: '需要改進', ControlType: 'textarea' },
+        { ID: 'B4', GroupName: '自我認識', Name: '填寫日期_2', Alias: '填寫日期' },
+        { ID: 'B4', GroupName: '自我認識', Name: '個性_3', Alias: '個性' },
+        { ID: 'B4', GroupName: '自我認識', Name: '優點_3', Alias: '優點' },
+        { ID: 'B4', GroupName: '自我認識', Name: '需要改進的地方_3', Alias: '需要改進', ControlType: 'textarea' },
+        { ID: 'B4', GroupName: '自我認識', Name: '填寫日期_3', Alias: '填寫日期' }
+    ],
+    'B5': [
+        { ID: 'B5', GroupName: '生活感想', Name: '內容1_1', Alias: '期望', ControlType: 'textarea' },
+        { ID: 'B5', GroupName: '生活感想', Name: '內容2_1', Alias: '為達理想，所需要的努力', ControlType: 'textarea' },
+        { ID: 'B5', GroupName: '生活感想', Name: '內容3_1', Alias: '期望師長給幫助', ControlType: 'textarea' },
+        { ID: 'B5', GroupName: '生活感想', Name: '填寫日期_1', Alias: '填寫日期' },
+        { ID: 'B5', GroupName: '生活感想', Name: '內容1_2', Alias: '一年來的感想', ControlType: 'textarea' },
+        { ID: 'B5', GroupName: '生活感想', Name: '內容2_2', Alias: '今後努力的目標', ControlType: 'textarea' },
+        { ID: 'B5', GroupName: '生活感想', Name: '內容3_2', Alias: '期望師長給幫助', ControlType: 'textarea' },
+        { ID: 'B5', GroupName: '生活感想', Name: '填寫日期_2', Alias: '填寫日期' }
+    ],
+    'C1': [
+        { ID: 'C1', GroupName: '畢業後計畫', Name: '升學意願', Alias: '升學意願', ControlType: 'checkbox' },
+        { ID: 'C1', GroupName: '畢業後計畫', Name: '就業意願', Alias: '就業意願', ControlType: 'checkbox' },
+        { ID: 'C1', GroupName: '畢業後計畫', Name: '參加職業訓練', Alias: '希望參加職業訓練種類', ControlType: 'checkbox' },
+        { ID: 'C1', GroupName: '畢業後計畫', Name: '受訓地區', Alias: '希望參加職業訓練地區', ControlType: 'checkbox' },
+        { ID: 'C1', GroupName: '畢業後計畫', Name: '將來職業', Alias: '將來職業意願', ControlType: 'select', Limit: '3' },
+        { ID: 'C1', GroupName: '畢業後計畫', Name: '就業地區', Alias: '將來就業地區', ControlType: 'select', Limit: '3' }
+    ],
+    'D1': [
+        { ID: 'D1', GroupName: '自傳', Name: '家中最了解我的人', Alias: '家中最了解我的人' },
+        { ID: 'D1', GroupName: '自傳', Name: '家中最了解我的人_因為', Alias: '家中最了解我的人_因為' },
+        { ID: 'D1', GroupName: '自傳', Name: '常指導我做功課的人', Alias: '常指導我做功課的人' },
+        { ID: 'D1', GroupName: '自傳', Name: '讀過且印象最深刻的課外書', Alias: '讀過印象最深的課外讀物' },
+        { ID: 'D1', GroupName: '自傳', Name: '喜歡的人', Alias: '最喜歡的人是', Title: '最喜歡的人' },
+        { ID: 'D1', GroupName: '自傳', Name: '喜歡的人_因為', Alias: '，因為', Title: '因為', ControlType: 'textarea' },
+        { ID: 'D1', GroupName: '自傳', Name: '最要好的朋友', Alias: '最要好的朋友是', Title: '最要好的朋友' },
+        { ID: 'D1', GroupName: '自傳', Name: '他是怎樣的人', Alias: '，他', Title: '他是怎樣的人？<br/>（請加描述）', Placeholder: '他是怎樣的人？（請加描述）', ControlType: 'textarea' },
+        { ID: 'D1', GroupName: '自傳', Name: '最喜歡做的事', Alias: '最喜歡做的事是', Title: '最喜歡做的事' },
+        { ID: 'D1', GroupName: '自傳', Name: '最喜歡做的事_因為', Alias: '，因為', Title: '因為', ControlType: 'textarea' },
+        { ID: 'D1', GroupName: '自傳', Name: '最不喜歡做的事', Alias: '最不喜歡做的事是', Title: '最不喜歡做的事' },
+        { ID: 'D1', GroupName: '自傳', Name: '最不喜歡做的事_因為', Alias: '，因為', Title: '因為', ControlType: 'textarea' },
+        { ID: 'D1', GroupName: '自傳', Name: '國中時的學校生活', Alias: '國中時的學校生活是', Title: '國中時的學校生活' },
+        { ID: 'D1', GroupName: '自傳', Name: '最快樂的回憶', Alias: '最快樂的回憶是', Title: '最快樂的回憶', ControlType: 'textarea' },
+        { ID: 'D1', GroupName: '自傳', Name: '最痛苦的回憶', Alias: '最痛苦的回憶是', Title: '最痛苦的回憶', ControlType: 'textarea' },
+        { ID: 'D1', GroupName: '自傳', Name: '最足以描述自己的幾句話', Alias: '最足以描述自己的幾句話是', ControlType: 'textarea' },
+        { ID: 'D1', GroupName: '自傳', Name: '我在家中最怕的人是', Alias: '我在家中最怕的人是' },
+        { ID: 'D1', GroupName: '自傳', Name: '我在家中最怕的人是_因為', Alias: '我在家中最怕的人是_因為' },
+        { ID: 'D1', GroupName: '自傳', Name: '我覺得我的優點是', Alias: '我覺得我的優點是' },
+        { ID: 'D1', GroupName: '自傳', Name: '我覺得我的缺點是', Alias: '我覺得我的缺點是' },
+        { ID: 'D1', GroupName: '自傳', Name: '最喜歡的國小（國中）老師', Alias: '最喜歡的國小（國中）老師' },
+        { ID: 'D1', GroupName: '自傳', Name: '最喜歡的國小（國中）老師__因為', Alias: '最喜歡的國小（國中）老師__因為' },
+        { ID: 'D1', GroupName: '自傳', Name: '小學（國中）老師或同學常說我是', Alias: '小學（國中）老師或同學常說我是' },
+        { ID: 'D1', GroupName: '自傳', Name: '小學（國中）時我曾在班上登任過的職務有', Alias: '小學（國中）時我曾在班上登任過的職務有' },
+        { ID: 'D1', GroupName: '自傳', Name: '我在小學（國中）得過的獎有', Alias: '我在小學（國中）得過的獎有' },
+        { ID: 'D1', GroupName: '自傳', Name: '我覺得我自己的過去最滿意的是', Alias: '我覺得我自己的過去最滿意的是' },
+        { ID: 'D1', GroupName: '自傳', Name: '我排遣休閒時間的方法是', Alias: '我排遣休閒時間的方法是' },
+        { ID: 'D1', GroupName: '自傳', Name: '我最難忘的一件事是', Alias: '我最難忘的一件事是' },
+        { ID: 'D1', GroupName: '自傳', Name: '自傳', Alias: '自傳' },
+        { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_一年級_我目前遇到最大的困難是', Alias: '自我的心聲_一年級_我目前遇到最大的困難是' },
+        { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_一年級_我目前最需要的協助是', Alias: '自我的心聲_一年級_我目前最需要的協助是' },
+        { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_二年級_我目前遇到最大的困難是', Alias: '自我的心聲_二年級_我目前遇到最大的困難是' },
+        { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_二年級_我目前最需要的協助是', Alias: '自我的心聲_二年級_我目前最需要的協助是' },
+        { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_三年級_我目前遇到最大的困難是', Alias: '自我的心聲_三年級_我目前遇到最大的困難是' },
+        { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_三年級_我目前最需要的協助是', Alias: '自我的心聲_三年級_我目前最需要的協助是' },
+        { ID: 'D1', GroupName: '自傳', Name: '填寫日期', Alias: '填寫日期' }
+    ],
+    'E1': [],
+    'F1': []
 };
 
 _gg.loadCounselData = function () {
@@ -172,7 +173,7 @@ _gg.loadCounselData = function () {
 
             if (student) {
                 var items = [];
-                $(student.contrastGrade).each(function(index, contrast){
+                $(student.contrastGrade).each(function (index, contrast) {
                     // 設定模組年級對照表的資訊
                     // 1. 學生年級替換成模組年級
                     // 2. 因學期對照表不含現在學期，故另外加入
@@ -184,11 +185,11 @@ _gg.loadCounselData = function () {
 
                     // 判斷學期對照表有無符合的年級
                     if (student.SemsHistory && student.SemsHistory.History) {
-                        $(student.SemsHistory.History).each(function(index, item){
+                        $(student.SemsHistory.History).each(function (index, item) {
                             // 覆寫年級對應學年度，處理學生重讀
                             if (contrast.TrueGradeYear === item.GradeYear) {
                                 if (item.SchoolYear)
-                                var schoolYear = (parseInt(item.SchoolYear, 10) || 0);
+                                    var schoolYear = (parseInt(item.SchoolYear, 10) || 0);
                                 if (contrast.SchoolYear < schoolYear) {
                                     contrast.SchoolYear = item.SchoolYear;
                                 }
@@ -197,7 +198,7 @@ _gg.loadCounselData = function () {
                     }
 
                     if (contrast.SchoolYear) {
-                        items.push('<button class="btn btn-large" grade="' +index+ '">' +contrast.TrueGradeYear+ '年級(' +contrast.SchoolYear+ ')</button>');
+                        items.push('<button class="btn btn-large" grade="' + index + '">' + contrast.TrueGradeYear + '年級(' + contrast.SchoolYear + ')</button>');
                     }
                 });
 
@@ -206,7 +207,7 @@ _gg.loadCounselData = function () {
             }
 
             // 關閉三年級的生活感想
-            if (_gg.grade === (_gg.student.contrastGrade.length-1).toString()) {
+            if (_gg.grade === (_gg.student.contrastGrade.length - 1).toString()) {
                 $('#B5').hide();
             } else {
                 $('#B5').show();
@@ -221,19 +222,19 @@ _gg.loadCounselData = function () {
             $.each(_gg.col_Question, function (key, values) {
                 $(values).each(function (index, item) {
                     switch ((_ref = item.QuestionType) != null ? _ref.toUpperCase() : void 0) {
-                        case 'SINGLE_ANSWER' :
+                        case 'SINGLE_ANSWER':
                             tmp_use_orign = _gg.singleRecord;
                             break;
-                        case 'MULTI_ANSWER' :
+                        case 'MULTI_ANSWER':
                             tmp_use_orign = _gg.multipleRecord;
                             break;
-                        case 'SEMESTER' :
+                        case 'SEMESTER':
                             tmp_use_orign = _gg.semesterData;
                             break;
-                        case 'YEARLY' :
+                        case 'YEARLY':
                             tmp_use_orign = _gg.yearlyData;
                             break;
-                        case 'PRIORITY' :
+                        case 'PRIORITY':
                             tmp_use_orign = _gg.priorityData;
                             break;
                     }
@@ -247,7 +248,7 @@ _gg.loadCounselData = function () {
             });
         };
 
-        if (_gg.singleRecord &&  _gg.semesterData && _gg.multipleRecord &&
+        if (_gg.singleRecord && _gg.semesterData && _gg.multipleRecord &&
             _gg.yearlyData && _gg.relative && _gg.sibling && _gg.priorityData && _gg.interviewRecord && _gg.quizData) {
 
             if (_gg.loadDataReady) {
@@ -282,10 +283,10 @@ _gg.loadCounselData = function () {
                         if (error !== null) {
                             $("#mainMsg").html("<div class='alert alert-error'>\n  <button class='close' data-dismiss='alert'>×</button>\n  <strong>呼叫服務失敗</strong>(GetSchoolAllGrade)\n</div>");
                         } else {
-                            _gg.contrastGrade[0]={};
+                            _gg.contrastGrade[0] = {};
                             if (response.Response && response.Response.Grade) {
                                 $(response.Response.Grade).each(function (index, item) {
-                                    _gg.contrastGrade[index+1] = {
+                                    _gg.contrastGrade[index + 1] = {
                                         TrueGradeYear: item.GradeYear,
                                         SchoolYear: 0
                                     };
@@ -320,8 +321,8 @@ _gg.loadCounselData = function () {
                                     $(values).each(function (g_index, g_item) {
                                         if (item.GroupName === g_item.GroupName && item.Name === g_item.Name) {
                                             g_item.CanTeacherEdit = item.CanTeacherEdit;
-                                            g_item.QuestionType   = item.QuestionType;
-                                            g_item.Options        = item.Items.Items;
+                                            g_item.QuestionType = item.QuestionType;
+                                            g_item.Options = item.Items.Items;
                                             return false;
                                         }
                                     });
