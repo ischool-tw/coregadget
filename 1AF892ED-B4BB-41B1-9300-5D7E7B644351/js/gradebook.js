@@ -458,7 +458,7 @@
             var flag = false;
             if ($scope.current.Exam.Type == 'Number') {
                 var temp = Number($scope.current.Value);
-                if (temp != NaN
+                if (!isNaN(temp)
                     && (!$scope.current.Exam.Range || (!$scope.current.Exam.Range.Max && $scope.current.Exam.Range.Max !== 0) || temp <= $scope.current.Exam.Range.Max)
                     && (!$scope.current.Exam.Range || (!$scope.current.Exam.Range.Min && $scope.current.Exam.Range.Min !== 0) || temp >= $scope.current.Exam.Range.Min))
                     flag = true;
@@ -990,7 +990,7 @@
                     [].concat(course.Scores.Score || []).forEach(function (examRec, index) {
                         var p = Number(examRec.Percentage) || 0;
                         var s = stu["Exam" + examRec.ExamID];
-                        if (stu["Exam" + examRec.ExamID]) {
+                        if (stu["Exam" + examRec.ExamID] || stu["Exam" + examRec.ExamID] == "0") {
                             total += seed * p * Number(stu["Exam" + examRec.ExamID]);
                             base += p;
                         }
@@ -1043,7 +1043,7 @@
                                                     var sum = 0;
                                                     var hasVal = false;
                                                     examRec.SubExamList.forEach(function (subExamRec) {
-                                                        if (stu["Exam" + subExamRec.ExamID]) {
+                                                        if (stu["Exam" + subExamRec.ExamID] || stu["Exam" + subExamRec.ExamID] == "0") {
                                                             hasVal = true;
                                                             sum += Number(stu["Exam" + subExamRec.ExamID] || 0);
                                                         }
