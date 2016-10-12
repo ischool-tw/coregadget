@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -11,16 +11,19 @@
     <script src="js/jquery-1.11.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     
-    <script src="http://web.ischool.com.tw/devlibrary/gadget.js"></script>
-        <script>
-    init({
-        application: "dev.sh_d",
-        paramValues: {},
-        oAuth: {
-            clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
-            clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311'
-        }
-    });
+    <script src="js/gadget.js"></script>
+    <script>
+        init({
+            application: "test.kh.edu.tw",
+            //paramValues: { "system_position": "student" },
+            paramValues: {},
+            oAuth: {
+                clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+                clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
+                account: 'stitch@ischool.com.tw',
+                password: window.prompt('password:')
+            }
+        });
     </script>
 </head>
 
