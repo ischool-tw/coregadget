@@ -1,0 +1,642 @@
+﻿<!DOCTYPE html>
+<html ng-app="app">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="js/gadget.js"></script>
+    <script>
+        init({
+            application: "test.whsh.tc.edu.tw",
+            paramValues: {},
+            oAuth: {
+                clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+                clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
+                //account: 'teacher01.whsh@1campus.net',
+                //account: 'teacher02.whsh@1campus.net',
+                account: 'teacher03.whsh@1campus.net',
+                password: 1234//window.prompt('password:')
+            }
+        });
+    </script>
+
+
+
+    <title>輔導系統</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <!-- Bootstrap Material Design -->
+    <link href="css/bootstrap-material-design.css" rel="stylesheet">
+    <link href="css/ripples.min.css" rel="stylesheet">
+
+    <style>
+        .navbar .navbar-brand {
+            height: 50px;
+            padding: 10px 0px;
+        }
+
+        .navbar .navbar-nav > li > a {
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .navbar-form {
+            width: auto;
+            border: 0;
+            margin-left: 0;
+            margin-right: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+
+        .panel-body > div {
+            margin-bottom: 10px;
+        }
+
+        .table > thead > tr > td.active,
+        .table > tbody > tr > td.active,
+        .table > tfoot > tr > td.active,
+        .table > thead > tr > th.active,
+        .table > tbody > tr > th.active,
+        .table > tfoot > tr > th.active,
+        .table > thead > tr.active > td,
+        .table > tbody > tr.active > td,
+        .table > tfoot > tr.active > td,
+        .table > thead > tr.active > th,
+        .table > tbody > tr.active > th,
+        .table > tfoot > tr.active > th {
+            background-color: #eee;
+        }
+
+        .form-group .control-label {
+            font-size: 11px !important;
+            line-height: 1.5 !important;
+            /* font-weight: inherit; */
+            margin: 0 !important;
+        }
+
+        body {
+            font-family: "新細明體","Helvetica Neue",Helvetica,Arial,sans-serif;
+        }
+
+        .msd-elastic {
+            max-height: 500px;
+        }
+    </style>
+
+
+
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/sortable.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/angular-strap.min.js"></script>
+    <script src="js/angular-strap.tpl.min.js"></script>
+    <script src="js/elastic.js"></script>
+    <!-- Bootstrap Material Design -->
+    <script src="js/ripples.min.js"></script>
+    <script src="js/material.min.js"></script>
+
+    <script src="js/mainCtrl.js"></script>
+</head>
+
+
+<body ng-controller="MainCtrl">
+    <div ng-if="!Init" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+    <div ng-if="InitErr" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">{{InitErr}}</div>
+    <div ng-if="ConselStudent"
+         style="position: absolute;top: 0;right: 0;bottom: 0;left: 0;max-width: 1024px;margin: 0 auto;background: #fafafa;">
+        <div style="position:absolute;top:0px;left:0px;bottom:0px;width:256px;">
+            <div style="height:100%;padding-top:50px;">
+                <nav class="navbar navbar-inverse"
+                     style="position:absolute; margin-top:-50px;margin-bottom: 0px;z-index: 1;left: 0px;right: 0px;">
+                    <div style="padding-left:10px;padding-right:10px;">
+                        <div class="navbar-brand col-xs-12">
+                            <form class="navbar-form navbar-left"
+                                  style="margin-top:-2px;padding:0px;width: 100%;">
+                                <div class="form-group"
+                                     style="width: 100%;">
+                                    <input ng-model="StuFilter.Filter"
+                                           ng-keydown="Filter($event)"
+                                           type="text"
+                                           class="form-control"
+                                           style="width: 100%;"
+                                           placeholder="搜尋：姓名、學號、班級、座號"
+                                           select-on-click />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </nav>
+                <div style="height:100%;overflow:auto;">
+                    <table class="table table-hover">
+                        <tbody ng-repeat="clsRec in FilterClass">
+                            <tr>
+                                <td class="text-left"
+                                    colspan="3">
+                                    <strong>{{clsRec.ClassName}}</strong>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="stuRec in clsRec.Student"
+                                ng-click="SetCurrent(stuRec)"
+                                ng-class="{active:stuRec==CurrentStudent}">
+                                <td class="text-center">{{stuRec.SeatNo}}</td>
+                                <td class="text-left">{{stuRec.StudentName}}</td>
+                                <td class="text-right">{{stuRec.StudentNumber}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div style="position:absolute;top:0px;left:256px;right:0px;bottom:0px;">
+            <div style="height:100%;padding-top:50px;">
+                <div class="navbar navbar-inverse"
+                     style="position:absolute; margin-top:-50px;margin-bottom: 0px;z-index: 1;left: 0px;right: 0px;">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <button type="button"
+                                    class="navbar-toggle"
+                                    data-toggle="collapse"
+                                    data-target=".navbar-inverse-collapse"
+                                    style="margin-top:9px;margin-bottom:9px;">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <div class="navbar-brand"
+                                 style="margin-left:0px;">{{CurrentStudent.StudentName}}</div>
+                        </div>
+                        <div ng-if="CurrentStudent"
+                             class="navbar-collapse collapse navbar-inverse-collapse">
+                            <ul class="nav navbar-nav navbar-right">
+                                <!--<li ng-class="{active:CurrentView=='Counsel'}">-->
+                                <li class="disabled">
+                                    <a href="javascript:void(0)"
+                                       ng-click="SetCurrentView('Counsel')">
+                                        綜合紀錄表
+                                    </a>
+                                </li>
+                                <!--<li ng-class="{active:CurrentView=='Visit'}">-->
+                                <li class="disabled">
+                                    <a href="javascript:void(0)"
+                                       ng-click="SetCurrentView('Visit')">
+                                        家長聯繫
+                                    </a>
+                                </li>
+                                <li ng-class="{active:CurrentView=='Interview'}">
+                                    <a href="javascript:void(0)"
+                                       ng-click="SetCurrentView('Interview')">
+                                        輔導紀錄
+                                    </a>
+                                </li>
+                                <!--<li ng-class="{active:CurrentView=='Quiz'}">-->
+                                <li class="disabled">
+                                    <a href="javascript:void(0)"
+                                       ng-click="SetCurrentView('Quiz')">
+                                        心理測驗
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="CurrentStudent&&CurrentView=='Counsel'"
+                     style="height:100%;overflow:auto;">
+                    <div ng-if="CurrentAction==''">
+                        <div ng-if="!CurrentStudent.InterviewRecord" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+                        <div ng-if="CurrentStudent.InterviewRecord.length == 0" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有輔導紀錄</div>
+                    </div>
+                </div>
+                <div ng-if="CurrentStudent&&CurrentView=='Visit'"
+                     style="height:100%;overflow:auto;">
+                    <div ng-if="CurrentAction==''">
+                        <div ng-if="!CurrentStudent.InterviewRecord" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+                        <div ng-if="CurrentStudent.InterviewRecord.length == 0" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有輔導紀錄</div>
+                    </div>
+                </div>
+                <div ng-if="CurrentStudent&&CurrentView=='Interview'"
+                     style="height:100%;overflow:auto;">
+                    <!--InterviewList-->
+                    <div ng-if="CurrentAction==''">
+                        <div ng-if="!CurrentStudent.InterviewRecord" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+                        <div ng-if="CurrentStudent.InterviewRecord.length == 0" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有輔導紀錄</div>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <a class="btn btn-sm btn-default"
+                                   style="padding: 8px 10px;margin: -14px 0px;"
+                                   href="javascript:void(0)"
+                                   ng-click="ShowInterviewEditor()">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                    新增
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 ">
+                            <div ng-repeat="rec in CurrentStudent.InterviewRecord"
+                                 class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="col-xs-12" style="float:inherit;">
+                                        <table class="col-xs-12" style="float:inherit;">
+                                            <tr>
+                                                <td class="text-left">
+                                                    <span>編號：</span><span>{{rec.InterviewNo}}</span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <a class="btn btn-sm btn-default"
+                                                       style="padding: 8px 10px;margin: -14px 0px;"
+                                                       href="javascript:void(0)"
+                                                       ng-click="ShowInterviewDetial(rec)">
+                                                        <i class="fa fa-address-card-o" aria-hidden="true"></i>
+                                                        檢視
+                                                    </a>
+                                                    <a class="btn btn-sm btn-default"
+                                                       ng-class="{disabled:rec.EditRole!='輔導老師'&&rec.EditRole!='紀錄者'}"
+                                                       style="padding: 8px 10px;margin: -14px 0px;"
+                                                       href="javascript:void(0)"
+                                                       ng-click="ShowInterviewEditor(rec)">
+                                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                        修改
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="col-xs-12 col-sm-4" style="overflow:hidden;">
+                                        <span>晤談日期：</span><span>{{rec.InterviewDate}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4" style="overflow:hidden;">
+                                        <span>晤談事由：</span><span>{{rec.Cause}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4" style="overflow:hidden;">
+                                        <span>晤談對象：</span><span>{{rec.IntervieweeType}}</span>
+                                    </div>
+                                    <div class="col-xs-12" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                        <span>內容要點：</span><span>{{rec.ContentDigest}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--InterviewList End-->
+                    <!--ShowInterviewDetial-->
+                    <div ng-if="CurrentAction=='ShowInterviewDetial'">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <a class="btn btn-sm btn-default"
+                                   style="padding: 8px 10px;margin: -14px 0px;"
+                                   href="javascript:void(0)"
+                                   ng-click="ClearAction();">
+                                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                    返回
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 ">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>編號：</span>
+                                        <span>{{InterviewDetial.InterviewNo}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>學年度：</span>
+                                        <span>{{InterviewDetial.SchoolYear}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>學期：</span>
+                                        <span>{{InterviewDetial.Semester}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>晤談日期：</span>
+                                        <span>{{InterviewDetial.InterviewDate}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>晤談時間：</span>
+                                        <span>{{InterviewDetial.InterviewTime}}</span>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <span>晤談事由：</span>
+                                        <span>{{InterviewDetial.Cause}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>晤談對象：</span>
+                                        <span>{{InterviewDetial.IntervieweeType}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>晤談方式：</span>
+                                        <span>{{InterviewDetial.InterviewType}}</span>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <span>地點：</span>
+                                        <span>{{InterviewDetial.Place}}</span>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <span>參與人員：</span>
+                                        <span ng-repeat="item in InterviewDetial.Attendees">
+                                            <span ng-if="$index>0">、</span>
+                                            <u ng-if="item.Remark">
+                                                {{item.Name}}：{{item.Remark}}
+                                            </u>
+                                            <span ng-if="!item.Remark">
+                                                {{item.Name}}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <span>處理方式：</span>
+                                        <span ng-repeat="item in InterviewDetial.CounselType">
+                                            <span ng-if="$index>0">、</span>
+                                            <u ng-if="item.Remark">
+                                                {{item.Name}}：{{item.Remark}}
+                                            </u>
+                                            <span ng-if="!item.Remark">
+                                                {{item.Name}}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <span>案件類別：</span>
+                                        <span ng-repeat="item in InterviewDetial.CounselTypeKind">
+                                            <span ng-if="$index>0">、</span>
+                                            <u ng-if="item.Remark">
+                                                {{item.Name}}：{{item.Remark}}
+                                            </u>
+                                            <span ng-if="!item.Remark">
+                                                {{item.Name}}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <span>內容要點：</span>
+                                        <p style="white-space: pre-line;margin-left:15px;">{{InterviewDetial.ContentDigest}}</p>
+                                    </div>
+                                    <div class="pull-right col-xd-12 col-sm-4">
+                                        <span>紀錄者：</span>
+                                        <span>{{InterviewDetial.AuthorName}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--ShowInterviewDetial End-->
+                    <!-- ShowInterviewEditor -->
+                    <div ng-if="CurrentAction=='ShowInterviewEditor'">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <a class="btn btn-sm btn-default"
+                                   style="padding: 8px 10px;margin: -14px 0px;"
+                                   href="javascript:void(0)"
+                                   ng-click="ClearAction();">
+                                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                    返回
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <form class="form-horizontal">
+                                        <fieldset>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label" for="InterviewNo">編號：</label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" id="InterviewNo" placeholder="" ng-model="InterviewDetial.InterviewNo">
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label" for="SchoolYear">
+                                                    <span class="text-danger">*</span>
+                                                    學年度：
+                                                </label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" id="SchoolYear" placeholder="" ng-model="InterviewDetial.SchoolYear">
+                                                </div>
+                                                <label class="col-sm-2 control-label" for="Semester">
+                                                    <span class="text-danger">*</span>
+                                                    學期：
+                                                </label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" id="Semester" placeholder="" ng-model="InterviewDetial.Semester">
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label" for="InterviewNo">
+                                                    <span class="text-danger">*</span>
+                                                    晤談日期：
+                                                </label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" id="InterviewDate" placeholder="西元年/月/日" ng-model="InterviewDetial.InterviewDate">
+                                                </div>
+                                                <label class="col-sm-2 control-label" for="InterviewTime">晤談時間：</label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" id="InterviewTime" placeholder="OO:OO ~ OO:OO" ng-model="InterviewDetial.InterviewTime">
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label" for="Cause">
+                                                    <span class="text-danger">*</span>
+                                                    晤談事由：
+                                                </label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" id="Cause" placeholder="" ng-model="InterviewDetial.Cause">
+                                                </div>
+                                                <div class="col-sm-offset-2 col-sm-10">
+                                                    <div ng-repeat="txt in CauseOption">
+                                                        <a class="btn btn-xs btn-primary btn-raised pull-left"
+                                                           ng-class="{'active':InterviewDetial.Cause===txt}"
+                                                           href="javascript:void(0)"
+                                                           ng-click="SetInterviewCause(InterviewDetial, txt);">
+                                                            {{txt}}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label">
+                                                    <span class="text-danger">*</span>
+                                                    晤談對象：
+                                                </label>
+                                                <div class="col-sm-10"
+                                                     style="margin-top: -7px;">
+                                                    <div class="radio-inline" ng-repeat="opt in IntervieweeTypeOption">
+                                                        <label>
+                                                            <input type="radio" name="IntervieweeType" value="{{opt}}" ng-model="InterviewDetial.IntervieweeType" />
+                                                            <span ng-style="{color:InterviewDetial.IntervieweeType==opt?'#555':'#BFBFBF'}">{{opt}}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label">
+                                                    <span class="text-danger">*</span>
+                                                    晤談方式：
+                                                </label>
+                                                <div class="col-sm-10"
+                                                     style="margin-top: -7px;">
+                                                    <div class="radio-inline" ng-repeat="opt in InterviewTypeOption">
+                                                        <label>
+                                                            <input type="radio" name="InterviewType" value="{{opt}}" ng-model="InterviewDetial.InterviewType" />
+                                                            <span ng-style="{color:InterviewDetial.InterviewType==opt?'#555':'#BFBFBF'}">{{opt}}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label" for="Place">地點：</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="Place" placeholder="" ng-model="InterviewDetial.Place">
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label"
+                                                       style="padding-bottom: 5px;">
+                                                    <span class="text-danger">*</span>
+                                                    參與人員：
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <div class="checkbox"
+                                                         style="padding: 0px;">
+                                                        <label ng-repeat="opt in InterviewDetial.AttendeesOption"
+                                                               style="padding:0px 10px 10px 0px;display: inline-block;">
+                                                            <input type="checkbox" value="{{opt.Name}}" ng-model="opt.Checked"><span class="checkbox-material"><span class="check"></span></span>
+                                                            <span ng-style="{color:opt.Checked?'#555':'#BFBFBF'}">
+                                                                {{opt.Name}}
+                                                                <span ng-if="opt.HasRemark">：</span>
+                                                            </span>
+                                                            <input ng-if="opt.HasRemark"
+                                                                   ng-style="{color:opt.Checked?'':'#BFBFBF'}"
+                                                                   type="text"
+                                                                   class="form-control"
+                                                                   style="display: inline-block;width:150px;"
+                                                                   placeholder=""
+                                                                   ng-model="opt.Remark">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label"
+                                                       style="padding-bottom: 5px;">
+                                                    <span class="text-danger">*</span>
+                                                    處理方式：
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <div class="checkbox"
+                                                         style="padding: 0px;">
+                                                        <label ng-repeat="opt in InterviewDetial.CounselTypeOption"
+                                                               style="padding:0px 10px 10px 0px;display: inline-block;">
+                                                            <input type="checkbox" value="{{opt.Name}}" ng-model="opt.Checked"><span class="checkbox-material"><span class="check"></span></span>
+                                                            <span ng-style="{color:opt.Checked?'#555':'#BFBFBF'}">
+                                                                {{opt.Name}}
+                                                                <span ng-if="opt.HasRemark">：</span>
+                                                            </span>
+                                                            <input ng-if="opt.HasRemark"
+                                                                   ng-style="{color:opt.Checked?'':'#BFBFBF'}"
+                                                                   type="text"
+                                                                   class="form-control"
+                                                                   style="display: inline-block;width:150px;"
+                                                                   placeholder=""
+                                                                   ng-model="opt.Remark">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2  control-label"
+                                                       style="padding-bottom: 5px;">
+                                                    <span class="text-danger">*</span>
+                                                    案件類別：
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <div class="checkbox"
+                                                         style="padding: 0px;">
+                                                        <label ng-repeat="opt in InterviewDetial.CounselTypeKindOption"
+                                                               style="padding:0px 10px 10px 0px;display: inline-block;">
+                                                            <input type="checkbox" value="{{opt.Name}}" ng-model="opt.Checked"><span class="checkbox-material"><span class="check"></span></span>
+                                                            <span ng-style="{color:opt.Checked?'#555':'#BFBFBF'}">
+                                                                {{opt.Name}}
+                                                                <span ng-if="opt.HasRemark">：</span>
+                                                            </span>
+                                                            <input ng-if="opt.HasRemark"
+                                                                   ng-style="{color:opt.Checked?'':'#BFBFBF'}"
+                                                                   type="text"
+                                                                   class="form-control"
+                                                                   style="display: inline-block;width:150px;"
+                                                                   placeholder=""
+                                                                   ng-model="opt.Remark">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label" for="ContentDigest">
+                                                    <span class="text-danger">*</span>
+                                                    內容要點：
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <textarea class="form-control msd-elastic" id="ContentDigest" ng-model="InterviewDetial.ContentDigest"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label" for="AuthorName">紀錄者：</label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" id="AuthorName" placeholder="" ng-model="InterviewDetial.AuthorName">
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label">開放查閱：</label>
+                                                <div class="col-sm-10 ">
+                                                    <div class="checkbox"
+                                                         style="padding: 0px;">
+                                                        <label style="padding:0px 10px 10px 0px;display: inline-block;">
+                                                            <input type="checkbox" ng-model="InterviewDetial.IsPublic"><span class="checkbox-material"><span class="check"></span></span>
+                                                            <span ng-style="{color:InterviewDetial.IsPublic?'#555':'#BFBFBF'}">
+                                                                指定的認輔老師與班導師皆可查閱此筆晤談紀錄
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </form>
+                                </div>
+                                <div class="panel-footer">
+                                    <form class="form-horizontal">
+                                        <fieldset>
+                                            <div class="form-group form-group-sm" style="margin: 0px;">
+                                                <div class="col-sm-offset-10 col-sm-2">
+                                                    <button type="submit" class="btn btn-primary btn-raised" ng-click="SaveInterview(InterviewDetial)">儲存</button>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ShowInterviewEditor End -->
+                </div>
+                <div ng-if="CurrentStudent&&CurrentView=='Quiz'"
+                     style="height:100%;overflow:auto;">
+                    <div ng-if="CurrentAction==''">
+                        <div ng-if="!CurrentStudent.InterviewRecord" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+                        <div ng-if="CurrentStudent.InterviewRecord.length == 0" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有輔導紀錄</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
