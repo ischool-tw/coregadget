@@ -177,16 +177,16 @@
                              class="navbar-collapse collapse navbar-inverse-collapse">
                             <ul class="nav navbar-nav navbar-right">
                                 <!--<li ng-class="{active:CurrentView=='Counsel'}">-->
-                                <li class="disabled">
+                                <li class="disabled hide">
                                     <a href="javascript:void(0)"
                                        ng-click="SetCurrentView('Counsel')">
                                         綜合紀錄表
                                     </a>
                                 </li>
                                 <!--<li ng-class="{active:CurrentView=='Visit'}">-->
-                                <li class="disabled">
+                                <li ng-class="{active:CurrentView=='HomeVisit'}">
                                     <a href="javascript:void(0)"
-                                       ng-click="SetCurrentView('Visit')">
+                                       ng-click="SetCurrentView('HomeVisit')">
                                         家長聯繫
                                     </a>
                                 </li>
@@ -197,7 +197,7 @@
                                     </a>
                                 </li>
                                 <!--<li ng-class="{active:CurrentView=='Quiz'}">-->
-                                <li class="disabled">
+                                <li class="disabled hide">
                                     <a href="javascript:void(0)"
                                        ng-click="SetCurrentView('Quiz')">
                                         心理測驗
@@ -214,13 +214,349 @@
                         <div ng-if="CurrentStudent.InterviewRecord.length == 0" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有輔導紀錄</div>
                     </div>
                 </div>
-                <div ng-if="CurrentStudent&&CurrentView=='Visit'"
+
+                <!--HomeVisit-->
+                <div ng-if="CurrentStudent&&CurrentView=='HomeVisit'"
                      style="height:100%;overflow:auto;">
+                    <!--HomeVisitList-->
                     <div ng-if="CurrentAction==''">
-                        <div ng-if="!CurrentStudent.InterviewRecord" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
-                        <div ng-if="CurrentStudent.InterviewRecord.length == 0" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有輔導紀錄</div>
+                        <div ng-if="!CurrentStudent.HomeVisitRecord" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+                        <div ng-if="CurrentStudent.HomeVisitRecord.length == 0" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有家長聯繫紀錄</div>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <a class="btn btn-sm btn-default"
+                                   style="padding: 8px 10px;margin: -14px 0px;"
+                                   href="javascript:void(0)"
+                                   ng-click="ShowHomeVisitEditor()">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                    新增
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 ">
+                            <div ng-repeat="rec in CurrentStudent.HomeVisitRecord"
+                                 class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="col-xs-12" style="float:inherit;">
+                                        <table class="col-xs-12" style="float:inherit;">
+                                            <tr>
+                                                <td class="text-left">
+                                                    <span>編號：</span><span>{{rec.HomeVisitNo}}</span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <a class="btn btn-sm btn-default"
+                                                       style="padding: 8px 10px;margin: -14px 0px;"
+                                                       href="javascript:void(0)"
+                                                       ng-click="ShowHomeVisitDetial(rec)">
+                                                        <i class="fa fa-address-card-o" aria-hidden="true"></i>
+                                                        檢視
+                                                    </a>
+                                                    <a class="btn btn-sm btn-default"
+                                                       ng-class="{disabled:rec.EditRole!='輔導老師'&&rec.EditRole!='紀錄者'}"
+                                                       style="padding: 8px 10px;margin: -14px 0px;"
+                                                       href="javascript:void(0)"
+                                                       ng-click="ShowHomeVisitEditor(rec)">
+                                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                        修改
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="col-xs-12 col-sm-4" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                        <span>聯繫日期：</span><span>{{rec.HomeVisitDate}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                        <span>聯繫事由：</span><span>{{rec.Cause}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                        <span>聯繫方式：</span><span>{{rec.HomeVisitType}}</span>
+                                    </div>
+                                    <div class="col-xs-12" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                        <span>內容要點：</span><span>{{rec.ContentDigest}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <!--HomeVisitList End-->
+                    <!--ShowHomeVisitDetial-->
+                    <div ng-if="CurrentAction=='ShowHomeVisitDetial'">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <a class="btn btn-sm btn-default"
+                                   style="padding: 8px 10px;margin: -14px 0px;"
+                                   href="javascript:void(0)"
+                                   ng-click="ClearAction();">
+                                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                    返回
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 ">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>編號：</span>
+                                        <span>{{HomeVisitDetial.HomeVisitNo}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>學年度：</span>
+                                        <span>{{HomeVisitDetial.SchoolYear}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>學期：</span>
+                                        <span>{{HomeVisitDetial.Semester}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>聯繫日期：</span>
+                                        <span>{{HomeVisitDetial.HomeVisitDate}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>聯繫時間：</span>
+                                        <span>{{HomeVisitDetial.HomeVisitTime}}</span>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <span>聯繫事由：</span>
+                                        <span>{{HomeVisitDetial.Cause}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>聯繫方式：</span>
+                                        <span>{{HomeVisitDetial.HomeVisitType}}</span>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <span>地點：</span>
+                                        <span>{{HomeVisitDetial.Place}}</span>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <span>聯繫成員：</span>
+                                        <span ng-repeat="item in HomeVisitDetial.Attendees">
+                                            <span ng-if="$index>0">、</span>
+                                            <u ng-if="item.Remark">
+                                                {{item.Name}}：{{item.Remark}}
+                                            </u>
+                                            <span ng-if="!item.Remark">
+                                                {{item.Name}}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <span>聯繫類別：</span>
+                                        <span ng-repeat="item in HomeVisitDetial.CounselTypeKind">
+                                            <span ng-if="$index>0">、</span>
+                                            <u ng-if="item.Remark">
+                                                {{item.Name}}：{{item.Remark}}
+                                            </u>
+                                            <span ng-if="!item.Remark">
+                                                {{item.Name}}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <span>內容要點：</span>
+                                        <p style="white-space: pre-line;margin-left:15px;">{{HomeVisitDetial.ContentDigest}}</p>
+                                    </div>
+                                    <div class="pull-right col-xd-12 col-sm-4">
+                                        <span>紀錄者：</span>
+                                        <span>{{HomeVisitDetial.AuthorName}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--ShowHomeVisitDetial End-->
+                    <!-- ShowHomeVisitEditor -->
+                    <div ng-if="CurrentAction=='ShowHomeVisitEditor'">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <a class="btn btn-sm btn-default"
+                                   style="padding: 8px 10px;margin: -14px 0px;"
+                                   href="javascript:void(0)"
+                                   ng-click="ClearAction();">
+                                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                    返回
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <form class="form-horizontal">
+                                        <fieldset>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label" for="HomeVisitNo">編號：</label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" id="HomeVisitNo" placeholder="" ng-model="HomeVisitDetial.HomeVisitNo">
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label" for="SchoolYear">
+                                                    <span class="text-danger">*</span>
+                                                    學年度：
+                                                </label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" id="SchoolYear" placeholder="" ng-model="HomeVisitDetial.SchoolYear">
+                                                </div>
+                                                <label class="col-sm-2 control-label" for="Semester">
+                                                    <span class="text-danger">*</span>
+                                                    學期：
+                                                </label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" id="Semester" placeholder="" ng-model="HomeVisitDetial.Semester">
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label" for="HomeVisitNo">
+                                                    <span class="text-danger">*</span>
+                                                    聯繫日期：
+                                                </label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" id="HomeVisitDate" placeholder="西元年/月/日" ng-model="HomeVisitDetial.HomeVisitDate">
+                                                </div>
+                                                <label class="col-sm-2 control-label" for="HomeVisitTime">聯繫時間：</label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" id="HomeVisitTime" placeholder="OO:OO ~ OO:OO" ng-model="HomeVisitDetial.HomeVisitTime">
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label" for="Cause">
+                                                    <span class="text-danger">*</span>
+                                                    聯繫事由：
+                                                </label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" id="Cause" placeholder="" ng-model="HomeVisitDetial.Cause">
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label">
+                                                    <span class="text-danger">*</span>
+                                                    聯繫方式：
+                                                </label>
+                                                <div class="col-sm-10"
+                                                     style="margin-top: -7px;">
+                                                    <div class="radio-inline" ng-repeat="opt in HomeVisitTypeOption">
+                                                        <label>
+                                                            <input type="radio" name="HomeVisitType" value="{{opt}}" ng-model="HomeVisitDetial.HomeVisitType" />
+                                                            <span ng-style="{color:HomeVisitDetial.HomeVisitType==opt?'#555':'#BFBFBF'}">{{opt}}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label" for="Place">地點：</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="Place" placeholder="" ng-model="HomeVisitDetial.Place">
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label"
+                                                       style="padding-bottom: 5px;">
+                                                    <span class="text-danger">*</span>
+                                                    聯繫成員：
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <div class="checkbox"
+                                                         style="padding: 0px;">
+                                                        <label ng-repeat="opt in HomeVisitDetial.AttendeesOption"
+                                                               style="padding:0px 10px 10px 0px;display: inline-block;">
+                                                            <input type="checkbox" value="{{opt.Name}}" ng-model="opt.Checked"><span class="checkbox-material"><span class="check"></span></span>
+                                                            <span ng-style="{color:opt.Checked?'#555':'#BFBFBF'}">
+                                                                {{opt.Name}}
+                                                                <span ng-if="opt.HasRemark">：</span>
+                                                            </span>
+                                                            <input ng-if="opt.HasRemark"
+                                                                   ng-style="{color:opt.Checked?'':'#BFBFBF'}"
+                                                                   type="text"
+                                                                   class="form-control"
+                                                                   style="display: inline-block;width:150px;"
+                                                                   placeholder=""
+                                                                   ng-model="opt.Remark">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2  control-label"
+                                                       style="padding-bottom: 5px;">
+                                                    <span class="text-danger">*</span>
+                                                    聯繫類別：
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <div class="checkbox"
+                                                         style="padding: 0px;">
+                                                        <label ng-repeat="opt in HomeVisitDetial.CounselTypeKindOption"
+                                                               style="padding:0px 10px 10px 0px;display: inline-block;">
+                                                            <input type="checkbox" value="{{opt.Name}}" ng-model="opt.Checked"><span class="checkbox-material"><span class="check"></span></span>
+                                                            <span ng-style="{color:opt.Checked?'#555':'#BFBFBF'}">
+                                                                {{opt.Name}}
+                                                                <span ng-if="opt.HasRemark">：</span>
+                                                            </span>
+                                                            <input ng-if="opt.HasRemark"
+                                                                   ng-style="{color:opt.Checked?'':'#BFBFBF'}"
+                                                                   type="text"
+                                                                   class="form-control"
+                                                                   style="display: inline-block;width:150px;"
+                                                                   placeholder=""
+                                                                   ng-model="opt.Remark">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label" for="ContentDigest">
+                                                    <span class="text-danger">*</span>
+                                                    內容要點：
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <textarea class="form-control msd-elastic" id="ContentDigest" ng-model="HomeVisitDetial.ContentDigest"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label" for="AuthorName">紀錄者：</label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" id="AuthorName" placeholder="" ng-model="HomeVisitDetial.AuthorName">
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <label class="col-sm-2 control-label">開放查閱：</label>
+                                                <div class="col-sm-10 ">
+                                                    <div class="checkbox"
+                                                         style="padding: 0px;">
+                                                        <label style="padding:0px 10px 10px 0px;display: inline-block;">
+                                                            <input type="checkbox" ng-model="HomeVisitDetial.IsPublic"><span class="checkbox-material"><span class="check"></span></span>
+                                                            <span ng-style="{color:HomeVisitDetial.IsPublic?'#555':'#BFBFBF'}">
+                                                                指定的認輔老師與班導師皆可查閱此筆家庭聯繫紀錄
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </form>
+                                </div>
+                                <div class="panel-footer">
+                                    <form class="form-horizontal">
+                                        <fieldset>
+                                            <div class="form-group form-group-sm" style="margin: 0px;">
+                                                <div class="col-sm-offset-10 col-sm-2">
+                                                    <button type="submit" class="btn btn-primary btn-raised" ng-click="SaveHomeVisit(HomeVisitDetial)">儲存</button>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ShowHomeVisitEditor End -->
                 </div>
+                <!--HomeVisit End-->
+
+                <!--Interview-->
                 <div ng-if="CurrentStudent&&CurrentView=='Interview'"
                      style="height:100%;overflow:auto;">
                     <!--InterviewList-->
@@ -270,13 +606,13 @@
                                     </div>
                                 </div>
                                 <div class="panel-body">
-                                    <div class="col-xs-12 col-sm-4" style="overflow:hidden;">
+                                    <div class="col-xs-12 col-sm-4" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
                                         <span>晤談日期：</span><span>{{rec.InterviewDate}}</span>
                                     </div>
-                                    <div class="col-xs-12 col-sm-4" style="overflow:hidden;">
+                                    <div class="col-xs-12 col-sm-4" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
                                         <span>晤談事由：</span><span>{{rec.Cause}}</span>
                                     </div>
-                                    <div class="col-xs-12 col-sm-4" style="overflow:hidden;">
+                                    <div class="col-xs-12 col-sm-4" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
                                         <span>晤談對象：</span><span>{{rec.IntervieweeType}}</span>
                                     </div>
                                     <div class="col-xs-12" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
@@ -287,6 +623,7 @@
                         </div>
                     </div>
                     <!--InterviewList End-->
+
                     <!--ShowInterviewDetial-->
                     <div ng-if="CurrentAction=='ShowInterviewDetial'">
                         <div class="panel panel-default">
@@ -388,6 +725,7 @@
                         </div>
                     </div>
                     <!--ShowInterviewDetial End-->
+
                     <!-- ShowInterviewEditor -->
                     <div ng-if="CurrentAction=='ShowInterviewEditor'">
                         <div class="panel panel-default">
@@ -451,7 +789,7 @@
                                                     <input type="text" class="form-control" id="Cause" placeholder="" ng-model="InterviewDetial.Cause">
                                                 </div>
                                                 <div class="col-sm-offset-2 col-sm-10">
-                                                    <div ng-repeat="txt in CauseOption">
+                                                    <div ng-repeat="txt in InterviewCauseOption">
                                                         <a class="btn btn-xs btn-primary btn-raised pull-left"
                                                            ng-class="{'active':InterviewDetial.Cause===txt}"
                                                            href="javascript:void(0)"
@@ -627,6 +965,8 @@
                     </div>
                     <!-- ShowInterviewEditor End -->
                 </div>
+                <!--Interview End-->
+
                 <div ng-if="CurrentStudent&&CurrentView=='Quiz'"
                      style="height:100%;overflow:auto;">
                     <div ng-if="CurrentAction==''">
