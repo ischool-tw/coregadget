@@ -154,6 +154,8 @@
                         else {
                             stuRec.HomeVisitRecord = [].concat(response.HomeVisitRecord || []);
                             [].concat(response.HomeVisitRecord || []).forEach(function (rec) {
+                                rec.IsPublic = (rec.IsPublic == 'true');
+                                rec.IsClassPublic = (rec.IsClassPublic == 'true');
                                 rec.HomeVisitDate = new Date(parseInt(rec.HomeVisitDate)).toLocaleDateString();
                                 rec.Attendees = [].concat(rec.Attendees || []);
                                 rec.CounselTypeKind = [].concat(rec.CounselTypeKind || []);
@@ -234,6 +236,7 @@
         $scope.SaveHomeVisit = function (record) {
             var rec = {};
             angular.copy(record, rec);
+
             //#region 轉換AttendeesOption到Attendees
             rec.Attendees = { Item: [] };
             [].concat(rec.AttendeesOption || []).forEach(function (opt) {
@@ -259,6 +262,38 @@
             delete rec.CounselTypeKindOption;
             //#endregion
 
+
+            //驗證
+            var err = "";
+            if (!rec.SchoolYear||isNaN(parseInt(rec.SchoolYear)))
+                err += (err ? '\n' : '') + "學年度輸入錯誤!";
+            if (!rec.Semester || isNaN(parseInt(rec.Semester)))
+                err += (err ? '\n' : '') + "學期輸入錯誤!";
+
+            if (isNaN(new Date(rec.HomeVisitDate).getTime()))
+                err += (err ? '\n' : '') + "日期格式錯誤!";
+            else
+                rec.HomeVisitDate = new Date(rec.HomeVisitDate).toLocaleDateString();
+
+            if (!rec.Cause)
+                err += (err ? '\n' : '') + "聯繫事由不得空白!";
+
+            if (!rec.HomeVisitType)
+                err += (err ? '\n' : '') + "聯繫方式不得空白!";
+
+            if (rec.Attendees.Item.length==0)
+                err += (err ? '\n' : '') + "聯繫成員不得空白!";
+
+            if (rec.CounselTypeKind.Item.length == 0)
+                err += (err ? '\n' : '') + "聯繫類別不得空白!";
+
+            if (!rec.ContentDigest)
+                err += (err ? '\n' : '') + "內容要點不得空白!";
+
+            if (err) {
+                alert(err);
+                return;
+            }
 
             gadget.getContract('ischool.counsel.v2.teacher').send({
                 service: rec.UID ? "PutHomeVisitRecord" : "PushHomeVisitRecord",
@@ -290,6 +325,8 @@
                         else {
                             stuRec.InterviewRecord = [].concat(response.InterviewRecord || []);
                             [].concat(response.InterviewRecord || []).forEach(function (rec) {
+                                rec.IsPublic = (rec.IsPublic == 'true');
+                                rec.IsClassPublic = (rec.IsClassPublic == 'true');
                                 rec.InterviewDate = new Date(parseInt(rec.InterviewDate)).toLocaleDateString();
                                 rec.Attendees = [].concat(rec.Attendees || []);
                                 rec.CounselType = [].concat(rec.CounselType || []);
@@ -432,6 +469,43 @@
             delete rec.CounselTypeKindOption;
             //#endregion
 
+            //驗證
+            var err = "";
+            if (!rec.SchoolYear || isNaN(parseInt(rec.SchoolYear)))
+                err += (err ? '\n' : '') + "學年度輸入錯誤!";
+            if (!rec.Semester || isNaN(parseInt(rec.Semester)))
+                err += (err ? '\n' : '') + "學期輸入錯誤!";
+
+            if (isNaN(new Date(rec.InterviewDate).getTime()))
+                err += (err ? '\n' : '') + "日期格式錯誤!";
+            else
+                rec.InterviewDate = new Date(rec.InterviewDate).toLocaleDateString();
+
+            if (!rec.Cause)
+                err += (err ? '\n' : '') + "晤談事由不得空白!";
+
+            if (!rec.IntervieweeType)
+                err += (err ? '\n' : '') + "晤談對象不得空白!";
+
+            if (!rec.InterviewType)
+                err += (err ? '\n' : '') + "晤談方式不得空白!";
+
+            if (rec.Attendees.Item.length == 0)
+                err += (err ? '\n' : '') + "參與人員不得空白!";
+
+            if (rec.CounselType.Item.length == 0)
+                err += (err ? '\n' : '') + "處理方式不得空白!";
+
+            if (rec.CounselTypeKind.Item.length == 0)
+                err += (err ? '\n' : '') + "案件類別不得空白!";
+
+            if (!rec.ContentDigest)
+                err += (err ? '\n' : '') + "內容要點不得空白!";
+
+            if (err) {
+                alert(err);
+                return;
+            }
 
             gadget.getContract('ischool.counsel.v2.teacher').send({
                 service: rec.UID ? "PutInterviewRecord" : "PushInterviewRecord",
