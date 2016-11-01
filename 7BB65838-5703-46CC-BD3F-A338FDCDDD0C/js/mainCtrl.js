@@ -139,6 +139,9 @@
         $scope.ClearAction = function () {
             $scope.CurrentAction = '';
         }
+        $scope.ClearCurrentStudent = function () {
+            delete $scope.CurrentStudent;
+        }
 
 
         //#region HomeVisitRecord 家長聯繫
@@ -531,7 +534,6 @@
             body: '',
             result: function (response, error, http) {
                 $scope.$apply(function () {
-                    $scope.init = true;
                     if (!response) {
                         $scope.initErr = '無法取得輔導學生資訊';
                     }
@@ -546,7 +548,6 @@
                             body: '',
                             result: function (response, error, http) {
                                 $scope.$apply(function () {
-                                    $scope.init = true;
                                     if (!response) {
                                         $scope.initErr = '無法取得輔導學生資訊.';
                                     }
@@ -571,6 +572,7 @@
                                             $scope.ConselStudent.push(stuRec);
                                         });
                                         $scope.Filter({ keyCode: 13 });
+                                        $scope.init = true;
                                     }
                                 });
                             }

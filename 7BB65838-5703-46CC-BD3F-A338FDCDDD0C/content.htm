@@ -30,6 +30,26 @@
     <link href="css/bootstrap-material-design.css" rel="stylesheet">
     <link href="css/ripples.min.css" rel="stylesheet">
 
+
+
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/sortable.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/angular-strap.min.js"></script>
+    <script src="js/angular-strap.tpl.min.js"></script>
+    <script src="js/elastic.js"></script>
+    <!-- Bootstrap Material Design -->
+    <script src="js/ripples.min.js"></script>
+    <script src="js/material.min.js"></script>
+
+    <script src="js/mainCtrl.js"></script>
+
+
+
     <style>
         .navbar .navbar-brand {
             height: 50px;
@@ -85,34 +105,69 @@
         .msd-elastic {
             max-height: 500px;
         }
+
+        .my-switch {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            max-width: 1024px;
+            margin: 0 auto;
+            background: #fafafa;
+            overflow: hidden;
+        }
+
+        .my-list {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            bottom: 0px;
+            width: 256px;
+        }
+
+        .my-detial {
+            position: absolute;
+            top: 0px;
+            left: 256px;
+            right: 0px;
+            bottom: 0px;
+        }
+
+        @media (max-width: 768px) {
+            .my-switch {
+                width: 100%;
+            }
+
+                .my-switch.my-switch-detial {
+                    margin-left: -100%;
+                    overflow: inherit;
+                }
+
+            .my-list {
+                width: 100%;
+            }
+
+            .my-detial {
+                position: absolute;
+                top: 0px;
+                left: 100%;
+                right: inherit;
+                bottom: 0px;
+                width: 100%;
+            }
+        }
     </style>
-
-
-
-
-
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery-ui.min.js"></script>
-    <script src="js/angular.min.js"></script>
-    <script src="js/sortable.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/angular-strap.min.js"></script>
-    <script src="js/angular-strap.tpl.min.js"></script>
-    <script src="js/elastic.js"></script>
-    <!-- Bootstrap Material Design -->
-    <script src="js/ripples.min.js"></script>
-    <script src="js/material.min.js"></script>
-
-    <script src="js/mainCtrl.js"></script>
 </head>
 
 
 <body ng-controller="MainCtrl">
-    <div ng-if="!Init" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
-    <div ng-if="InitErr" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">{{InitErr}}</div>
+    <div ng-if="!init" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+    <div ng-if="initErr" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">{{InitErr}}</div>
     <div ng-if="ConselStudent"
-         style="position: absolute;top: 0;right: 0;bottom: 0;left: 0;max-width: 1024px;margin: 0 auto;background: #fafafa;">
-        <div style="position:absolute;top:0px;left:0px;bottom:0px;width:256px;">
+         class="my-switch"
+         ng-class="{'my-switch-detial':CurrentStudent}">
+        <div class="my-list">
             <div style="height:100%;padding-top:50px;">
                 <nav class="navbar navbar-inverse"
                      style="position:absolute; margin-top:-50px;margin-bottom: 0px;z-index: 1;left: 0px;right: 0px;">
@@ -155,7 +210,7 @@
                 </div>
             </div>
         </div>
-        <div style="position:absolute;top:0px;left:256px;right:0px;bottom:0px;">
+        <div class="my-detial">
             <div style="height:100%;padding-top:50px;">
                 <div class="navbar navbar-inverse"
                      style="position:absolute; margin-top:-50px;margin-bottom: 0px;z-index: 1;left: 0px;right: 0px;">
@@ -170,8 +225,22 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <div class="navbar-brand"
-                                 style="margin-left:0px;">{{CurrentStudent.StudentName}}</div>
+
+                            <div class="navbar-brand visible-xs"
+                                 style="margin-left:0px;">
+                                <a class="btn btn-sm btn-default"
+                                   style="padding: 8px 10px;margin: -14px 0px -14px 10px;color: white;"
+                                   href="javascript:void(0)"
+                                   ng-click="ClearCurrentStudent()">
+                                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                </a>
+                                <span>{{CurrentStudent.StudentName}}</span>
+                            </div>
+
+                            <div class="navbar-brand hidden-xs"
+                                 style="margin-left:0px;">
+                                <span>{{CurrentStudent.StudentName}}</span>
+                            </div>
                         </div>
                         <div ng-if="CurrentStudent"
                              class="navbar-collapse collapse navbar-inverse-collapse">
@@ -231,6 +300,7 @@
                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                     新增
                                 </a>
+                                <span class="visible-xs pull-right">家長聯繫</span>
                             </div>
                         </div>
                         <div class="col-xs-12 ">
@@ -293,6 +363,7 @@
                                     <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                     返回
                                 </a>
+                                <span class="visible-xs pull-right">家長聯繫</span>
                             </div>
                         </div>
                         <div class="col-xs-12 ">
@@ -379,6 +450,7 @@
                                     返回
                                 </a>
                             </div>
+                            <span class="visible-xs pull-right">家長聯繫</span>
                         </div>
 
                         <div class="col-xs-12">
@@ -392,14 +464,18 @@
                                                     <input type="text" class="form-control" id="HomeVisitNo" placeholder="" ng-model="HomeVisitDetial.HomeVisitNo">
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
-                                                <label class="col-sm-2 control-label" for="SchoolYear">
+                                            <div class="form-group form-group-sm col-sm-6"
+                                                 style="padding:0px;">
+                                                <label class="col-sm-4 control-label" for="SchoolYear">
                                                     <span class="text-danger">*</span>
                                                     學年度：
                                                 </label>
-                                                <div class="col-sm-3">
+                                                <div class="col-sm-6">
                                                     <input type="text" class="form-control" id="SchoolYear" placeholder="" ng-model="HomeVisitDetial.SchoolYear">
                                                 </div>
+                                            </div>
+                                            <div class="form-group form-group-sm col-sm-6"
+                                                 style="padding:0px;">
                                                 <label class="col-sm-2 control-label" for="Semester">
                                                     <span class="text-danger">*</span>
                                                     學期：
@@ -408,16 +484,20 @@
                                                     <input type="text" class="form-control" id="Semester" placeholder="" ng-model="HomeVisitDetial.Semester">
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
-                                                <label class="col-sm-2 control-label" for="HomeVisitNo">
+                                            <div class="form-group form-group-sm col-sm-6"
+                                                 style="padding:0px;">
+                                                <label class="col-sm-4 control-label" for="HomeVisitDate">
                                                     <span class="text-danger">*</span>
                                                     聯繫日期：
                                                 </label>
-                                                <div class="col-sm-3">
+                                                <div class="col-sm-6">
                                                     <input type="text" class="form-control" id="HomeVisitDate" placeholder="西元年/月/日" ng-model="HomeVisitDetial.HomeVisitDate">
                                                 </div>
-                                                <label class="col-sm-2 control-label" for="HomeVisitTime">聯繫時間：</label>
-                                                <div class="col-sm-3">
+                                            </div>
+                                            <div class="form-group form-group-sm col-sm-6"
+                                                 style="padding:0px;">
+                                                <label class="col-sm-4 control-label" for="HomeVisitTime">聯繫時間：</label>
+                                                <div class="col-sm-6">
                                                     <input type="text" class="form-control" id="HomeVisitTime" placeholder="OO:OO ~ OO:OO" ng-model="HomeVisitDetial.HomeVisitTime">
                                                 </div>
                                             </div>
@@ -555,7 +635,6 @@
                     <!-- ShowHomeVisitEditor End -->
                 </div>
                 <!--HomeVisit End-->
-
                 <!--Interview-->
                 <div ng-if="CurrentStudent&&CurrentView=='Interview'"
                      style="height:100%;overflow:auto;">
@@ -572,6 +651,7 @@
                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                     新增
                                 </a>
+                                <span class="visible-xs pull-right">輔導紀錄</span>
                             </div>
                         </div>
                         <div class="col-xs-12 ">
@@ -623,7 +703,6 @@
                         </div>
                     </div>
                     <!--InterviewList End-->
-
                     <!--ShowInterviewDetial-->
                     <div ng-if="CurrentAction=='ShowInterviewDetial'">
                         <div class="panel panel-default">
@@ -635,6 +714,7 @@
                                     <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                     返回
                                 </a>
+                                <span class="visible-xs pull-right">輔導紀錄</span>
                             </div>
                         </div>
                         <div class="col-xs-12 ">
@@ -725,7 +805,6 @@
                         </div>
                     </div>
                     <!--ShowInterviewDetial End-->
-
                     <!-- ShowInterviewEditor -->
                     <div ng-if="CurrentAction=='ShowInterviewEditor'">
                         <div class="panel panel-default">
@@ -737,6 +816,7 @@
                                     <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                     返回
                                 </a>
+                                <span class="visible-xs pull-right">輔導紀錄</span>
                             </div>
                         </div>
 
@@ -751,32 +831,41 @@
                                                     <input type="text" class="form-control" id="InterviewNo" placeholder="" ng-model="InterviewDetial.InterviewNo">
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
-                                                <label class="col-sm-2 control-label" for="SchoolYear">
+
+                                            <div class="form-group form-group-sm col-sm-6"
+                                                 style="padding:0px;">
+                                                <label class="col-sm-4 control-label" for="SchoolYear">
                                                     <span class="text-danger">*</span>
                                                     學年度：
                                                 </label>
-                                                <div class="col-sm-3">
+                                                <div class="col-sm-6">
                                                     <input type="text" class="form-control" id="SchoolYear" placeholder="" ng-model="InterviewDetial.SchoolYear">
                                                 </div>
-                                                <label class="col-sm-2 control-label" for="Semester">
+                                            </div>
+                                            <div class="form-group form-group-sm col-sm-6"
+                                                 style="padding:0px;">
+                                                <label class="col-sm-4 control-label" for="Semester">
                                                     <span class="text-danger">*</span>
                                                     學期：
                                                 </label>
-                                                <div class="col-sm-3">
+                                                <div class="col-sm-6">
                                                     <input type="text" class="form-control" id="Semester" placeholder="" ng-model="InterviewDetial.Semester">
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
-                                                <label class="col-sm-2 control-label" for="InterviewNo">
+                                            <div class="form-group form-group-sm col-sm-6"
+                                                 style="padding:0px;">
+                                                <label class="col-sm-4 control-label" for="InterviewDate">
                                                     <span class="text-danger">*</span>
                                                     晤談日期：
                                                 </label>
-                                                <div class="col-sm-3">
+                                                <div class="col-sm-6">
                                                     <input type="text" class="form-control" id="InterviewDate" placeholder="西元年/月/日" ng-model="InterviewDetial.InterviewDate">
                                                 </div>
-                                                <label class="col-sm-2 control-label" for="InterviewTime">晤談時間：</label>
-                                                <div class="col-sm-3">
+                                            </div>
+                                            <div class="form-group form-group-sm col-sm-6"
+                                                 style="padding:0px;">
+                                                <label class="col-sm-4 control-label" for="InterviewTime">晤談時間：</label>
+                                                <div class="col-sm-6">
                                                     <input type="text" class="form-control" id="InterviewTime" placeholder="OO:OO ~ OO:OO" ng-model="InterviewDetial.InterviewTime">
                                                 </div>
                                             </div>
