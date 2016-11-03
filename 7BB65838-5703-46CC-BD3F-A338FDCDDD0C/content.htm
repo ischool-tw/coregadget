@@ -12,9 +12,9 @@
             oAuth: {
                 clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
                 clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
-                //account: 'teacher01.whsh@1campus.net',
+                account: 'teacher01.whsh@1campus.net',
                 //account: 'teacher02.whsh@1campus.net',
-                account: 'teacher03.whsh@1campus.net',
+                //account: 'teacher03.whsh@1campus.net',
                 password: 1234//window.prompt('password:')
             }
         });
@@ -92,10 +92,39 @@
         }
 
         .form-group .control-label {
-            font-size: 11px !important;
-            line-height: 1.5 !important;
+            font-size: 14px !important;
+            line-height: 1.42857143 !important;
             /* font-weight: inherit; */
-            margin: 0 !important;
+            margin: 0px 0px 5px 0px !important;
+            padding-top: 0px;
+        }
+
+        .form-group .checkbox label, .form-group .radio label, .form-group label {
+            font-size: 14px;
+            line-height: 1.42857143;
+            font-weight: 400;
+        }
+
+        .form-group .form-control {
+            height: 23px;
+            padding: 0px;
+            margin: 0px 0px 0px 0px;
+            font-size: 14px;
+        }
+
+        .form-control::-moz-placeholder {
+            font-size: 12px !important;
+            line-height: 1.42857143;
+        }
+
+        .form-control:-ms-input-placeholder {
+            font-size: 12px !important;
+            line-height: 1.42857143;
+        }
+
+        .form-control::-webkit-input-placeholder {
+            font-size: 12px !important;
+            line-height: 1.42857143;
         }
 
         body {
@@ -256,13 +285,13 @@
                                 <li ng-class="{active:CurrentView=='HomeVisit'}">
                                     <a href="javascript:void(0)"
                                        ng-click="SetCurrentView('HomeVisit')">
-                                        家長聯繫
+                                        家庭聯繫
                                     </a>
                                 </li>
                                 <li ng-class="{active:CurrentView=='Interview'}">
                                     <a href="javascript:void(0)"
                                        ng-click="SetCurrentView('Interview')">
-                                        輔導紀錄
+                                        學生晤談
                                     </a>
                                 </li>
                                 <!--<li ng-class="{active:CurrentView=='Quiz'}">-->
@@ -279,8 +308,8 @@
                 <div ng-if="CurrentStudent&&CurrentView=='Counsel'"
                      style="height:100%;overflow:auto;">
                     <div ng-if="CurrentAction==''">
-                        <div ng-if="!CurrentStudent.InterviewRecord" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
-                        <div ng-if="CurrentStudent.InterviewRecord.length == 0" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有輔導紀錄</div>
+                        <div ng-if="!CurrentStudent.CounselRecord" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+                        <div ng-if="CurrentStudent.CounselRecord.length == 0" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有綜合紀錄表紀錄</div>
                     </div>
                 </div>
 
@@ -290,7 +319,7 @@
                     <!--HomeVisitList-->
                     <div ng-if="CurrentAction==''">
                         <div ng-if="!CurrentStudent.HomeVisitRecord" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
-                        <div ng-if="CurrentStudent.HomeVisitRecord.length == 0" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有家長聯繫紀錄</div>
+                        <div ng-if="CurrentStudent.HomeVisitRecord.length == 0" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有家庭聯繫紀錄</div>
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <a class="btn btn-sm btn-default"
@@ -300,7 +329,7 @@
                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                     新增
                                 </a>
-                                <span class="visible-xs pull-right">家長聯繫</span>
+                                <span class="visible-xs pull-right text-muted">家庭聯繫</span>
                             </div>
                         </div>
                         <div class="col-xs-12 ">
@@ -345,7 +374,7 @@
                                         <span>聯繫方式：</span><span>{{rec.HomeVisitType}}</span>
                                     </div>
                                     <div class="col-xs-12" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
-                                        <span>內容要點：</span><span>{{rec.ContentDigest}}</span>
+                                        <span>內容：</span><span>{{rec.ContentDigest}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -363,7 +392,7 @@
                                     <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                     返回
                                 </a>
-                                <span class="visible-xs pull-right">家長聯繫</span>
+                                <span class="visible-xs pull-right text-muted">家庭聯繫</span>
                             </div>
                         </div>
                         <div class="col-xs-12 ">
@@ -426,7 +455,7 @@
                                         </span>
                                     </div>
                                     <div class="col-xs-12">
-                                        <span>內容要點：</span>
+                                        <span>內容：</span>
                                         <p style="white-space: pre-line;margin-left:15px;">{{HomeVisitDetial.ContentDigest}}</p>
                                     </div>
                                     <div class="pull-right col-xd-12 col-sm-4">
@@ -449,8 +478,8 @@
                                     <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                     返回
                                 </a>
+                                <span class="visible-xs pull-right text-muted">家庭聯繫</span>
                             </div>
-                            <span class="visible-xs pull-right">家長聯繫</span>
                         </div>
 
                         <div class="col-xs-12">
@@ -458,50 +487,62 @@
                                 <div class="panel-body">
                                     <form class="form-horizontal">
                                         <fieldset>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label" for="HomeVisitNo">編號：</label>
                                                 <div class="col-sm-3">
                                                     <input type="text" class="form-control" id="HomeVisitNo" placeholder="" ng-model="HomeVisitDetial.HomeVisitNo">
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm col-sm-6"
-                                                 style="padding:0px;">
-                                                <label class="col-sm-4 control-label" for="SchoolYear">
-                                                    <span class="text-danger">*</span>
-                                                    學年度：
-                                                </label>
-                                                <div class="col-sm-6">
-                                                    <input type="text" class="form-control" id="SchoolYear" placeholder="" ng-model="HomeVisitDetial.SchoolYear">
+                                            <div style="display: inline-block;width: 100%;">
+                                                <div class="form-group col-sm-6"
+                                                     style="padding:0px;">
+                                                    <label class="col-sm-4 control-label" for="SchoolYear">
+                                                        <span class="text-danger">*</span>
+                                                        學年度：
+                                                    </label>
+                                                    <div class="col-sm-6">
+                                                        <input type="text" class="form-control" id="SchoolYear" placeholder="" ng-model="HomeVisitDetial.SchoolYear">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-sm-6"
+                                                     style="padding:0px;">
+                                                    <label class="col-sm-4 control-label" for="Semester">
+                                                        <span class="text-danger">*</span>
+                                                        學期：
+                                                    </label>
+                                                    <div class="col-sm-6">
+                                                        <input type="text" class="form-control" id="Semester" placeholder="" ng-model="HomeVisitDetial.Semester">
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm col-sm-6"
-                                                 style="padding:0px;">
-                                                <label class="col-sm-2 control-label" for="Semester">
-                                                    <span class="text-danger">*</span>
-                                                    學期：
-                                                </label>
-                                                <div class="col-sm-3">
-                                                    <input type="text" class="form-control" id="Semester" placeholder="" ng-model="HomeVisitDetial.Semester">
-                                                </div>
-                                            </div>
-                                            <div class="form-group form-group-sm col-sm-6"
-                                                 style="padding:0px;">
-                                                <label class="col-sm-4 control-label" for="HomeVisitDate">
+                                            <div class="form-group ">
+                                                <label class="col-sm-2 control-label" for="HomeVisitDate">
                                                     <span class="text-danger">*</span>
                                                     聯繫日期：
                                                 </label>
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-3">
                                                     <input type="text" class="form-control" id="HomeVisitDate" placeholder="西元年/月/日" ng-model="HomeVisitDetial.HomeVisitDate">
                                                 </div>
+                                                <div class="col-sm-offset-2 col-sm-10">
+                                                    <div ng-repeat="txt in HomeVisitDateOption">
+                                                        <a class="btn btn-xs btn-primary btn-raised pull-left"
+                                                           ng-class="{'active':HomeVisitDetial.HomeVisitDate===txt}"
+                                                           href="javascript:void(0)"
+                                                           ng-click="SetHomeVisitDate(HomeVisitDetial, txt);">
+                                                            {{txt}}
+                                                        </a>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="form-group form-group-sm col-sm-6"
-                                                 style="padding:0px;">
-                                                <label class="col-sm-4 control-label" for="HomeVisitTime">聯繫時間：</label>
-                                                <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label" for="HomeVisitTime">
+                                                    聯繫時間：
+                                                </label>
+                                                <div class="col-sm-3">
                                                     <input type="text" class="form-control" id="HomeVisitTime" placeholder="OO:OO ~ OO:OO" ng-model="HomeVisitDetial.HomeVisitTime">
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label" for="Cause">
                                                     <span class="text-danger">*</span>
                                                     聯繫事由：
@@ -510,7 +551,7 @@
                                                     <input type="text" class="form-control" id="Cause" placeholder="" ng-model="HomeVisitDetial.Cause">
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label">
                                                     <span class="text-danger">*</span>
                                                     聯繫方式：
@@ -525,13 +566,13 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label" for="Place">地點：</label>
-                                                <div class="col-sm-10">
+                                                <div class="col-sm-3">
                                                     <input type="text" class="form-control" id="Place" placeholder="" ng-model="HomeVisitDetial.Place">
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label"
                                                        style="padding-bottom: 5px;">
                                                     <span class="text-danger">*</span>
@@ -539,7 +580,7 @@
                                                 </label>
                                                 <div class="col-sm-10">
                                                     <div class="checkbox"
-                                                         style="padding: 0px;">
+                                                         style="padding: 0px;margin-top: -5px;">
                                                         <label ng-repeat="opt in HomeVisitDetial.AttendeesOption"
                                                                style="padding:0px 10px 10px 0px;display: inline-block;">
                                                             <input type="checkbox" value="{{opt.Name}}" ng-model="opt.Checked"><span class="checkbox-material"><span class="check"></span></span>
@@ -558,7 +599,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2  control-label"
                                                        style="padding-bottom: 5px;">
                                                     <span class="text-danger">*</span>
@@ -566,7 +607,7 @@
                                                 </label>
                                                 <div class="col-sm-10">
                                                     <div class="checkbox"
-                                                         style="padding: 0px;">
+                                                         style="padding: 0px;margin-top: -5px;">
                                                         <label ng-repeat="opt in HomeVisitDetial.CounselTypeKindOption"
                                                                style="padding:0px 10px 10px 0px;display: inline-block;">
                                                             <input type="checkbox" value="{{opt.Name}}" ng-model="opt.Checked"><span class="checkbox-material"><span class="check"></span></span>
@@ -586,26 +627,26 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label" for="ContentDigest">
                                                     <span class="text-danger">*</span>
-                                                    內容要點：
+                                                    內容：
                                                 </label>
                                                 <div class="col-sm-10">
                                                     <textarea class="form-control msd-elastic" id="ContentDigest" ng-model="HomeVisitDetial.ContentDigest"></textarea>
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label" for="AuthorName">紀錄者：</label>
                                                 <div class="col-sm-3">
                                                     <input type="text" class="form-control" id="AuthorName" placeholder="" ng-model="HomeVisitDetial.AuthorName">
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label">開放查閱：</label>
                                                 <div class="col-sm-10 ">
                                                     <div class="checkbox"
-                                                         style="padding: 0px;">
+                                                         style="padding: 0px;margin-top: -5px;">
                                                         <label style="padding:0px 10px 10px 0px;display: inline-block;">
                                                             <input type="checkbox" ng-model="HomeVisitDetial.IsPublic"><span class="checkbox-material"><span class="check"></span></span>
                                                             <span ng-style="{color:HomeVisitDetial.IsPublic?'#555':'#BFBFBF'}">
@@ -621,7 +662,7 @@
                                 <div class="panel-footer">
                                     <form class="form-horizontal">
                                         <fieldset>
-                                            <div class="form-group form-group-sm" style="margin: 0px;">
+                                            <div class="form-group" style="margin: 0px;">
                                                 <div class="col-sm-offset-10 col-sm-2">
                                                     <button type="submit" class="btn btn-primary btn-raised" ng-click="SaveHomeVisit(HomeVisitDetial)">儲存</button>
                                                 </div>
@@ -641,7 +682,7 @@
                     <!--InterviewList-->
                     <div ng-if="CurrentAction==''">
                         <div ng-if="!CurrentStudent.InterviewRecord" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
-                        <div ng-if="CurrentStudent.InterviewRecord.length == 0" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有輔導紀錄</div>
+                        <div ng-if="CurrentStudent.InterviewRecord.length == 0" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有學生晤談紀錄</div>
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <a class="btn btn-sm btn-default"
@@ -651,7 +692,7 @@
                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                     新增
                                 </a>
-                                <span class="visible-xs pull-right">輔導紀錄</span>
+                                <span class="visible-xs pull-right text-muted">學生晤談紀錄</span>
                             </div>
                         </div>
                         <div class="col-xs-12 ">
@@ -696,7 +737,7 @@
                                         <span>晤談對象：</span><span>{{rec.IntervieweeType}}</span>
                                     </div>
                                     <div class="col-xs-12" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
-                                        <span>內容要點：</span><span>{{rec.ContentDigest}}</span>
+                                        <span>內容：</span><span>{{rec.ContentDigest}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -714,7 +755,7 @@
                                     <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                     返回
                                 </a>
-                                <span class="visible-xs pull-right">輔導紀錄</span>
+                                <span class="visible-xs pull-right text-muted">學生晤談紀錄</span>
                             </div>
                         </div>
                         <div class="col-xs-12 ">
@@ -793,7 +834,7 @@
                                         </span>
                                     </div>
                                     <div class="col-xs-12">
-                                        <span>內容要點：</span>
+                                        <span>內容：</span>
                                         <p style="white-space: pre-line;margin-left:15px;">{{InterviewDetial.ContentDigest}}</p>
                                     </div>
                                     <div class="pull-right col-xd-12 col-sm-4">
@@ -816,7 +857,7 @@
                                     <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                     返回
                                 </a>
-                                <span class="visible-xs pull-right">輔導紀錄</span>
+                                <span class="visible-xs pull-right text-muted">學生晤談</span>
                             </div>
                         </div>
 
@@ -825,57 +866,77 @@
                                 <div class="panel-body">
                                     <form class="form-horizontal">
                                         <fieldset>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label" for="InterviewNo">編號：</label>
                                                 <div class="col-sm-3">
                                                     <input type="text" class="form-control" id="InterviewNo" placeholder="" ng-model="InterviewDetial.InterviewNo">
                                                 </div>
                                             </div>
+                                            <div style="display: inline-block;width: 100%;">
+                                                <div class="form-group col-sm-6"
+                                                     style="padding:0px;">
+                                                    <label class="col-sm-4 control-label" for="SchoolYear">
+                                                        <span class="text-danger">*</span>
+                                                        學年度：
+                                                    </label>
+                                                    <div class="col-sm-6">
+                                                        <input type="text" class="form-control" id="SchoolYear" placeholder="" ng-model="InterviewDetial.SchoolYear">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-sm-6"
+                                                     style="padding:0px;">
+                                                    <label class="col-sm-4 control-label" for="Semester">
+                                                        <span class="text-danger">*</span>
+                                                        學期：
+                                                    </label>
+                                                    <div class="col-sm-6">
+                                                        <input type="text" class="form-control" id="Semester" placeholder="" ng-model="InterviewDetial.Semester">
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                            <div class="form-group form-group-sm col-sm-6"
-                                                 style="padding:0px;">
-                                                <label class="col-sm-4 control-label" for="SchoolYear">
-                                                    <span class="text-danger">*</span>
-                                                    學年度：
-                                                </label>
-                                                <div class="col-sm-6">
-                                                    <input type="text" class="form-control" id="SchoolYear" placeholder="" ng-model="InterviewDetial.SchoolYear">
-                                                </div>
-                                            </div>
-                                            <div class="form-group form-group-sm col-sm-6"
-                                                 style="padding:0px;">
-                                                <label class="col-sm-4 control-label" for="Semester">
-                                                    <span class="text-danger">*</span>
-                                                    學期：
-                                                </label>
-                                                <div class="col-sm-6">
-                                                    <input type="text" class="form-control" id="Semester" placeholder="" ng-model="InterviewDetial.Semester">
-                                                </div>
-                                            </div>
-                                            <div class="form-group form-group-sm col-sm-6"
-                                                 style="padding:0px;">
-                                                <label class="col-sm-4 control-label" for="InterviewDate">
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label" for="InterviewDate">
                                                     <span class="text-danger">*</span>
                                                     晤談日期：
                                                 </label>
-                                                <div class="col-sm-6">
-                                                    <input type="text" class="form-control" id="InterviewDate" placeholder="西元年/月/日" ng-model="InterviewDetial.InterviewDate">
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" id="InterviewDate" placeholder="自填或下方選取(格式：西元年/月/日)" ng-model="InterviewDetial.InterviewDate">
+                                                </div>
+                                                <div class="col-sm-offset-2 col-sm-10">
+                                                    <div ng-repeat="txt in InterviewDateOption">
+                                                        <a class="btn btn-xs btn-primary btn-raised pull-left"
+                                                           ng-class="{'active':InterviewDetial.InterviewDate===txt}"
+                                                           href="javascript:void(0)"
+                                                           ng-click="SetInterviewDate(InterviewDetial, txt);">
+                                                            {{txt}}
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm col-sm-6"
-                                                 style="padding:0px;">
-                                                <label class="col-sm-4 control-label" for="InterviewTime">晤談時間：</label>
-                                                <div class="col-sm-6">
-                                                    <input type="text" class="form-control" id="InterviewTime" placeholder="OO:OO ~ OO:OO" ng-model="InterviewDetial.InterviewTime">
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label" for="InterviewTime">晤談時間：</label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" id="InterviewTime" placeholder="自填或下方選取" ng-model="InterviewDetial.InterviewTime">
+                                                </div>
+                                                <div class="col-sm-offset-2 col-sm-10">
+                                                    <div ng-repeat="txt in InterviewTimeOption">
+                                                        <a class="btn btn-xs btn-primary btn-raised pull-left"
+                                                           ng-class="{'active':InterviewDetial.InterviewTime===txt}"
+                                                           href="javascript:void(0)"
+                                                           ng-click="SetInterviewTime(InterviewDetial, txt);">
+                                                            {{txt}}
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label" for="Cause">
                                                     <span class="text-danger">*</span>
                                                     晤談事由：
                                                 </label>
                                                 <div class="col-sm-3">
-                                                    <input type="text" class="form-control" id="Cause" placeholder="" ng-model="InterviewDetial.Cause">
+                                                    <input type="text" class="form-control" id="Cause" placeholder="自填或下方選取" ng-model="InterviewDetial.Cause">
                                                 </div>
                                                 <div class="col-sm-offset-2 col-sm-10">
                                                     <div ng-repeat="txt in InterviewCauseOption">
@@ -888,7 +949,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label">
                                                     <span class="text-danger">*</span>
                                                     晤談對象：
@@ -903,7 +964,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label">
                                                     <span class="text-danger">*</span>
                                                     晤談方式：
@@ -918,13 +979,13 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label" for="Place">地點：</label>
-                                                <div class="col-sm-10">
+                                                <div class="col-sm-3">
                                                     <input type="text" class="form-control" id="Place" placeholder="" ng-model="InterviewDetial.Place">
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label"
                                                        style="padding-bottom: 5px;">
                                                     <span class="text-danger">*</span>
@@ -932,7 +993,7 @@
                                                 </label>
                                                 <div class="col-sm-10">
                                                     <div class="checkbox"
-                                                         style="padding: 0px;">
+                                                         style="padding: 0px;margin-top: -5px;">
                                                         <label ng-repeat="opt in InterviewDetial.AttendeesOption"
                                                                style="padding:0px 10px 10px 0px;display: inline-block;">
                                                             <input type="checkbox" value="{{opt.Name}}" ng-model="opt.Checked"><span class="checkbox-material"><span class="check"></span></span>
@@ -951,7 +1012,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label"
                                                        style="padding-bottom: 5px;">
                                                     <span class="text-danger">*</span>
@@ -959,7 +1020,7 @@
                                                 </label>
                                                 <div class="col-sm-10">
                                                     <div class="checkbox"
-                                                         style="padding: 0px;">
+                                                         style="padding: 0px;margin-top: -5px;">
                                                         <label ng-repeat="opt in InterviewDetial.CounselTypeOption"
                                                                style="padding:0px 10px 10px 0px;display: inline-block;">
                                                             <input type="checkbox" value="{{opt.Name}}" ng-model="opt.Checked"><span class="checkbox-material"><span class="check"></span></span>
@@ -978,7 +1039,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2  control-label"
                                                        style="padding-bottom: 5px;">
                                                     <span class="text-danger">*</span>
@@ -986,7 +1047,7 @@
                                                 </label>
                                                 <div class="col-sm-10">
                                                     <div class="checkbox"
-                                                         style="padding: 0px;">
+                                                         style="padding: 0px;margin-top: -5px;">
                                                         <label ng-repeat="opt in InterviewDetial.CounselTypeKindOption"
                                                                style="padding:0px 10px 10px 0px;display: inline-block;">
                                                             <input type="checkbox" value="{{opt.Name}}" ng-model="opt.Checked"><span class="checkbox-material"><span class="check"></span></span>
@@ -1006,30 +1067,30 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label" for="ContentDigest">
                                                     <span class="text-danger">*</span>
-                                                    內容要點：
+                                                    內容：
                                                 </label>
                                                 <div class="col-sm-10">
                                                     <textarea class="form-control msd-elastic" id="ContentDigest" ng-model="InterviewDetial.ContentDigest"></textarea>
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label" for="AuthorName">紀錄者：</label>
                                                 <div class="col-sm-3">
                                                     <input type="text" class="form-control" id="AuthorName" placeholder="" ng-model="InterviewDetial.AuthorName">
                                                 </div>
                                             </div>
-                                            <div class="form-group form-group-sm">
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label">開放查閱：</label>
                                                 <div class="col-sm-10 ">
                                                     <div class="checkbox"
-                                                         style="padding: 0px;">
+                                                         style="padding: 0px;margin-top: -5px;">
                                                         <label style="padding:0px 10px 10px 0px;display: inline-block;">
                                                             <input type="checkbox" ng-model="InterviewDetial.IsPublic"><span class="checkbox-material"><span class="check"></span></span>
                                                             <span ng-style="{color:InterviewDetial.IsPublic?'#555':'#BFBFBF'}">
-                                                                指定的認輔老師與班導師皆可查閱此筆晤談紀錄
+                                                                指定的認輔老師與班導師皆可查閱此筆學生晤談
                                                             </span>
                                                         </label>
                                                     </div>
@@ -1041,7 +1102,7 @@
                                 <div class="panel-footer">
                                     <form class="form-horizontal">
                                         <fieldset>
-                                            <div class="form-group form-group-sm" style="margin: 0px;">
+                                            <div class="form-group" style="margin: 0px;">
                                                 <div class="col-sm-offset-10 col-sm-2">
                                                     <button type="submit" class="btn btn-primary btn-raised" ng-click="SaveInterview(InterviewDetial)">儲存</button>
                                                 </div>
@@ -1059,8 +1120,8 @@
                 <div ng-if="CurrentStudent&&CurrentView=='Quiz'"
                      style="height:100%;overflow:auto;">
                     <div ng-if="CurrentAction==''">
-                        <div ng-if="!CurrentStudent.InterviewRecord" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
-                        <div ng-if="CurrentStudent.InterviewRecord.length == 0" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有輔導紀錄</div>
+                        <div ng-if="!CurrentStudent.QuizRecord" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+                        <div ng-if="CurrentStudent.QuizRecord.length == 0" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有心理測驗紀錄</div>
                     </div>
                 </div>
             </div>
