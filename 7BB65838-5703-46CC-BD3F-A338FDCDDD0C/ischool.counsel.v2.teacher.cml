@@ -1,0 +1,679 @@
+<Contract Name="ischool.counsel.v2.teacher" Enabled="True">
+	<Definition>
+		<Authentication Extends="ta" />
+	</Definition>
+	<Package Name="_">
+		<Service Enabled="true" Name="GetCounselStudent">
+			<Definition Type="JavaScript">
+	<Code>
+		<![CDATA[
+var request = getRequest().Request || getRequest();
+var teacherID = parseInt( getContextProperty('TeacherID') );
+
+var sql="\
+SELECT student_id as \"StudentID\", grade_year as \"GradeYear\", class_name as \"ClassName\", seat_no as \"SeatNo\", student_number as \"StudentNumber\", name as \"StudentName\", 輔導老師, 班導師, 認輔老師  \
+FROM ( \
+	SELECT student.id as student_id, class.id as class_id, class.grade_year, class.display_order, class.class_name, student.seat_no, student.student_number, student.name \
+		, CASE ( SELECT COUNT(*) FROM tag_teacher LEFT OUTER JOIN tag on tag_teacher.ref_tag_id = tag.id WHERE ( tag.name = '輔導主任'  OR tag.name = '輔導老師' ) AND tag_teacher.ref_teacher_id = "+teacherID+" ) WHEN 0 THEN 'false' ELSE 'true' END as 輔導老師 \
+		, CASE ( SELECT COUNT(*) FROM class as cls WHERE cls.id = class.id AND class.ref_teacher_id = "+teacherID+") WHEN 0 THEN 'false' ELSE 'true' END as 班導師 \
+		, CASE ( SELECT COUNT(*) FROM $counsel.student_list as stud_list LEFT OUTER JOIN tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id LEFT OUTER JOIN tag on tag_teacher.ref_tag_id = tag.id WHERE tag.name = '認輔老師' AND stud_list.ref_student_id = student.id AND tag_teacher.ref_teacher_id = "+teacherID+" ) WHEN 0 THEN 'false' ELSE 'true' END as 認輔老師 \
+	FROM student \
+		LEFT OUTER JOIN class on class.id = student.ref_class_id \
+	WHERE student.status in (1, 2) \
+) as cstudent \
+WHERE 輔導老師='true' OR 班導師='true' OR 認輔老師='true' \
+ORDER BY grade_year, display_order, class_name, seat_no, student_id \
+";
+var list=executeSql(sql).toArray();
+return {ConselStudent: list};
+
+	]]>
+	</Code>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetHomeVisitRecord">
+			<Definition Type="JavaScript">
+	<Code>
+		<![CDATA[
+var request = getRequest().Request || getRequest();
+var teacherID = parseInt( getContextProperty('TeacherID') );
+var teacherAcc = getContextProperty('UserName');
+var studentID = parseInt( request.StudentID );
+
+if(!studentID)
+	throw "缺少StudentID";
+
+	
+var sql="\
+SELECT $counsel.home_visit_record.* \
+	, extract(epoch FROM home_visit_date AT TIME ZONE 'Asia/Shanghai')*1000 as idate \
+	, CASE WHEN 輔導老師 = 'true' THEN '輔導老師' WHEN author_id = '"+teacherAcc+"' THEN '紀錄者' ELSE '無' END as EditRole \
+FROM  ( \
+		SELECT student_id, grade_year as \"GradeYear\", class_name as \"ClassName\", seat_no as \"SeatNo\", student_number as \"StudentNumber\", name as \"StudentName\", 輔導老師, 班導師, 認輔老師  \
+		FROM ( \
+			SELECT student.id as student_id, class.id as class_id, class.grade_year, class.display_order, class.class_name, student.seat_no, student.student_number, student.name \
+				, CASE ( SELECT COUNT(*) FROM tag_teacher LEFT OUTER JOIN tag on tag_teacher.ref_tag_id = tag.id WHERE ( tag.name = '輔導主任'  OR tag.name = '輔導老師' ) AND tag_teacher.ref_teacher_id = "+teacherID+" ) WHEN 0 THEN 'false' ELSE 'true' END as 輔導老師 \
+				, CASE ( SELECT COUNT(*) FROM class as cls WHERE cls.id = class.id AND class.ref_teacher_id = "+teacherID+") WHEN 0 THEN 'false' ELSE 'true' END as 班導師 \
+				, CASE ( SELECT COUNT(*) FROM $counsel.student_list as stud_list LEFT OUTER JOIN tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id LEFT OUTER JOIN tag on tag_teacher.ref_tag_id = tag.id WHERE tag.name = '認輔老師' AND stud_list.ref_student_id = student.id AND tag_teacher.ref_teacher_id = "+teacherID+" ) WHEN 0 THEN 'false' ELSE 'true' END as 認輔老師 \
+			FROM student \
+				LEFT OUTER JOIN class on class.id = student.ref_class_id \
+			WHERE student.status in (1, 2) \
+		) as cstudent \
+		WHERE 輔導老師='true' OR 班導師='true' OR 認輔老師='true' \
+	) as myStudent \
+	LEFT OUTER JOIN $counsel.home_visit_record on myStudent.student_id = $counsel.home_visit_record.ref_student_id \
+WHERE \
+	uid is not null \
+	AND myStudent.student_id = "+studentID+" \
+	AND ( \
+		myStudent.輔導老師='true' \
+		OR ( $counsel.home_visit_record.is_public = true ) \
+		OR ( myStudent.班導師='true' AND $counsel.home_visit_record.is_class_public = true ) \
+		OR ( $counsel.home_visit_record.author_id = '"+teacherAcc+"' ) \
+	) \
+";
+var list=[];
+[].concat(executeSql(sql).toArray()||[]).forEach(function(rec){
+	rec.UID = rec.uid;
+	delete rec.uid;
+	
+	delete rec.last_update;
+
+	rec.HomeVisitNo=rec.home_visit_no ;
+	delete rec.home_visit_no;
+	
+	rec.SchoolYear=rec.schoolyear ;
+	delete rec.schoolyear;
+	
+	rec.Semester=rec.semester ;
+	delete rec.semester;
+	
+	rec.HomeVisitDate=rec.idate ;
+	delete rec.idate;
+	delete rec.home_visit_date;
+	
+	rec.HomeVisitTime=rec.home_visit_time ;
+	delete rec.home_visit_time;
+	
+	rec.Cause=rec.cause ;
+	delete rec.cause;
+	
+	rec.HomeVisitType=rec.home_visit_type;
+	delete rec.home_visit_type;
+	
+	rec.Place=rec.place;
+	delete rec.place;
+	
+	rec.Attendees=rec.attendees ;
+	delete rec.attendees;
+	
+	rec.CounselTypeKind=rec.counsel_type_kind ;
+	delete rec.counsel_type_kind;
+	
+	rec.ContentDigest=rec.content_digest ;
+	delete rec.content_digest;
+	
+	rec.Attachment=rec.attachment ;
+	delete rec.attachment;
+	
+	rec.AuthorID=rec.author_id ;
+	delete rec.author_id;
+	
+	rec.AuthorName=rec.author_name ;
+	delete rec.author_name;
+	
+	rec.RefStudentID=rec.ref_student_id ;
+	delete rec.ref_student_id;
+	
+	rec.RefTeacherID=rec.teacher_id ;
+	delete rec.teacher_id;
+	
+	rec.IsPublic=rec.is_public == 't' ;
+	delete rec.is_public;
+	
+	rec.IsClassPublic=rec.is_class_public == 't' ;
+	delete rec.is_class_public;
+	
+	rec.EditRole = rec.editrole;
+	delete rec.editrole;
+	
+	['Attendees', 'CounselTypeKind'].forEach(function(key){
+		if( rec[key] ){
+			var l = [];
+			[].concat(xml2json.parser('<r>'+rec[key]+'</r>').r.Item || []).forEach(function(item){
+				if( item.remark )
+					l.push({Name:item.name, Remark: item.remark});
+				else
+					l.push({Name:item.name});
+			});
+			rec[key] = l;
+		}
+	});
+	
+	list.push(rec);
+});;
+
+
+return {HomeVisitRecord: list};
+
+	]]>
+	</Code>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetInterviewRecord">
+			<Definition Type="JavaScript">
+	<Code>
+		<![CDATA[
+var request = getRequest().Request || getRequest();
+var teacherID = parseInt( getContextProperty('TeacherID') );
+var teacherAcc = getContextProperty('UserName');
+var studentID = parseInt( request.StudentID );
+
+if(!studentID)
+	throw "缺少StudentID";
+
+	
+var sql="\
+SELECT $counsel.interview_record.* \
+	, extract(epoch FROM interview_date AT TIME ZONE 'Asia/Shanghai')*1000 as idate \
+	, CASE WHEN 輔導老師 = 'true' THEN '輔導老師' WHEN author_id = '"+teacherAcc+"' THEN '紀錄者' ELSE '無' END as EditRole \
+FROM  ( \
+		SELECT student_id, grade_year as \"GradeYear\", class_name as \"ClassName\", seat_no as \"SeatNo\", student_number as \"StudentNumber\", name as \"StudentName\", 輔導老師, 班導師, 認輔老師  \
+		FROM ( \
+			SELECT student.id as student_id, class.id as class_id, class.grade_year, class.display_order, class.class_name, student.seat_no, student.student_number, student.name \
+				, CASE ( SELECT COUNT(*) FROM tag_teacher LEFT OUTER JOIN tag on tag_teacher.ref_tag_id = tag.id WHERE ( tag.name = '輔導主任'  OR tag.name = '輔導老師' ) AND tag_teacher.ref_teacher_id = "+teacherID+" ) WHEN 0 THEN 'false' ELSE 'true' END as 輔導老師 \
+				, CASE ( SELECT COUNT(*) FROM class as cls WHERE cls.id = class.id AND class.ref_teacher_id = "+teacherID+") WHEN 0 THEN 'false' ELSE 'true' END as 班導師 \
+				, CASE ( SELECT COUNT(*) FROM $counsel.student_list as stud_list LEFT OUTER JOIN tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id LEFT OUTER JOIN tag on tag_teacher.ref_tag_id = tag.id WHERE tag.name = '認輔老師' AND stud_list.ref_student_id = student.id AND tag_teacher.ref_teacher_id = "+teacherID+" ) WHEN 0 THEN 'false' ELSE 'true' END as 認輔老師 \
+			FROM student \
+				LEFT OUTER JOIN class on class.id = student.ref_class_id \
+			WHERE student.status in (1, 2) \
+		) as cstudent \
+		WHERE 輔導老師='true' OR 班導師='true' OR 認輔老師='true' \
+	) as myStudent \
+	LEFT OUTER JOIN $counsel.interview_record on myStudent.student_id = $counsel.interview_record.ref_student_id \
+WHERE \
+	uid is not null \
+	AND myStudent.student_id = "+studentID+" \
+	AND ( \
+		myStudent.輔導老師='true' \
+		OR ( $counsel.interview_record.is_public = true ) \
+		OR ( myStudent.班導師='true' AND $counsel.interview_record.is_class_public = true ) \
+		OR ( $counsel.interview_record.author_id = '"+teacherAcc+"' ) \
+	) \
+ORDER BY interview_date desc, uid \
+";
+var list=[];
+[].concat(executeSql(sql).toArray()||[]).forEach(function(rec){
+	rec.UID = rec.uid;
+	delete rec.uid;
+	
+	delete rec.last_update;
+
+	rec.InterviewNo=rec.interview_no ;
+	delete rec.interview_no;
+	
+	rec.SchoolYear=rec.schoolyear ;
+	delete rec.schoolyear;
+	
+	rec.Semester=rec.semester ;
+	delete rec.semester;
+	
+	rec.InterviewDate=rec.idate ;
+	delete rec.idate;
+	delete rec.interview_date;
+	
+	rec.InterviewTime=rec.interview_time ;
+	delete rec.interview_time;
+	
+	rec.Cause=rec.cause ;
+	delete rec.cause;
+	
+	rec.IntervieweeType=rec.interviewee_type;
+	delete rec.interviewee_type;
+	
+	rec.InterviewType=rec.interview_type;
+	delete rec.interview_type;
+	
+	rec.Place=rec.place;
+	delete rec.place;
+	
+	rec.Attendees=rec.attendees ;
+	delete rec.attendees;
+	
+	rec.CounselType=rec.counsel_type ;
+	delete rec.counsel_type;
+	
+	rec.CounselTypeKind=rec.counsel_type_kind ;
+	delete rec.counsel_type_kind;
+	
+	rec.ContentDigest=rec.content_digest ;
+	delete rec.content_digest;
+	
+	rec.Attachment=rec.attachment ;
+	delete rec.attachment;
+	
+	rec.AuthorID=rec.author_id ;
+	delete rec.author_id;
+	
+	rec.AuthorName=rec.author_name ;
+	delete rec.author_name;
+	
+	rec.RefStudentID=rec.ref_student_id ;
+	delete rec.ref_student_id;
+	
+	rec.RefTeacherID=rec.teacher_id ;
+	delete rec.teacher_id;
+	
+	rec.IsPublic=rec.is_public == 't' ;
+	delete rec.is_public;
+	
+	rec.IsClassPublic=rec.is_class_public == 't' ;
+	delete rec.is_class_public;
+	
+	rec.EditRole = rec.editrole;
+	delete rec.editrole;
+	
+	['Attendees', 'CounselType', 'CounselTypeKind'].forEach(function(key){
+		if( rec[key] ){
+			var l = [];
+			[].concat(xml2json.parser('<r>'+rec[key]+'</r>').r.Item || []).forEach(function(item){
+				if( item.remark )
+					l.push({Name:item.name, Remark: item.remark});
+				else
+					l.push({Name:item.name});
+			});
+			rec[key] = l;
+		}
+	});
+	
+	list.push(rec);
+});;
+
+
+return {InterviewRecord: list};
+
+	]]>
+	</Code>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetStatus">
+			<Definition Type="javascript">
+	<Code>
+		<![CDATA[
+			var sql = "\
+SELECT \
+	xpath_string(list.content, '/SystemConfig/DefaultSchoolYear') as \"SchoolYear\", \
+	xpath_string(list.content, '/SystemConfig/DefaultSemester') as \"Semester\", \
+	teacher.teacher_name as \"TeacherName\" ,\
+	teacher.st_login_name as \"LoginName\" \
+FROM list  \
+	CROSS JOIN teacher \
+WHERE list.name='系統設定' AND teacher.id = '"+ parseInt( getContextProperty('TeacherID') )+"' \
+";
+			var rs = executeSql(sql);
+			var result = {
+					SchoolYear: null,
+					Semester: null
+				};
+			if (rs.next()) {
+				result = {
+					SchoolYear: rs.get("SchoolYear"),
+					Semester: rs.get("Semester"),
+					TeacherName: rs.get("TeacherName"),
+					LoginName: rs.get("LoginName")
+				}
+			}
+			return result;
+		]]>
+	</Code>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="PushHomeVisitRecord">
+			<Definition Type="JavaScript">
+	<Code>
+		<![CDATA[
+var request = getRequest().Request || getRequest();
+var teacherID = parseInt( getContextProperty('TeacherID') );
+var teacherAcc = getContextProperty('UserName');
+
+var record = request.HomeVisitRecord;
+
+if( !record )
+	throw "缺少HomeVisitRecord";
+
+var parser = parseXml.CreateParser();
+['Attendees', 'CounselTypeKind'].forEach(function(key){
+	if( record[key] ){
+		[].concat( record[key].Item || [] ).forEach(function(item){
+			item['@name']=item.Name;
+			delete item.Name;
+			if( item.Remark ){
+				item['@remark']=item.Remark;
+				delete item.Remark;
+			}
+		});
+		record[key] = parser.parse(record[key], 'root').replace("<root>", "").replace("</root>", "");
+	}
+});
+	
+executeSql(" \
+INSERT INTO $counsel.home_visit_record \
+( \
+ 	home_visit_no, \
+	schoolyear, \
+	semester, \
+	home_visit_date, \
+	home_visit_time, \
+	cause, \
+	home_visit_type, \
+	place, \
+	attendees, \
+	counsel_type_kind, \
+	content_digest, \
+	author_id, \
+	author_name, \
+	is_public, \
+	is_class_public, \
+	ref_student_id, \
+	teacher_id \
+) \
+SELECT \
+	'"+(record.HomeVisitNo || '') +"', \
+	'"+(record.SchoolYear || '') +"', \
+	'"+(record.Semester || '') +"', \
+	'"+(record.HomeVisitDate || '') +"', \
+	'"+(record.HomeVisitTime || '') +"', \
+	'"+(record.Cause || '') +"', \
+	'"+(record.HomeVisitType || '') +"', \
+	'"+(record.Place || '') +"', \
+	'"+(record.Attendees || '') +"', \
+	'"+(record.CounselTypeKind || '') +"', \
+	'"+(record.ContentDigest || '') +"', \
+	'"+(record.AuthorID || '') +"', \
+	'"+(record.AuthorName || '') +"', \
+	" +(record.IsPublic || 'false') +", \
+	" +(record.IsClassPublic || 'false') +", \
+	'"+(record.RefStudentID || '') +"', \
+	'"+teacherID +"' \
+FROM ( \
+	SELECT * \
+	FROM ( \
+		SELECT student_id \
+		FROM ( \
+			SELECT student.id as student_id, class.id as class_id, class.grade_year, class.display_order, class.class_name, student.seat_no, student.student_number, student.name \
+				, CASE ( SELECT COUNT(*) FROM tag_teacher LEFT OUTER JOIN tag on tag_teacher.ref_tag_id = tag.id WHERE ( tag.name = '輔導主任'  OR tag.name = '輔導老師' ) AND tag_teacher.ref_teacher_id = "+teacherID+" ) WHEN 0 THEN 'false' ELSE 'true' END as 輔導老師 \
+				, CASE ( SELECT COUNT(*) FROM class as cls WHERE cls.id = class.id AND class.ref_teacher_id = "+teacherID+") WHEN 0 THEN 'false' ELSE 'true' END as 班導師 \
+				, CASE ( SELECT COUNT(*) FROM $counsel.student_list as stud_list LEFT OUTER JOIN tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id LEFT OUTER JOIN tag on tag_teacher.ref_tag_id = tag.id WHERE tag.name = '認輔老師' AND stud_list.ref_student_id = student.id AND tag_teacher.ref_teacher_id = "+teacherID+" ) WHEN 0 THEN 'false' ELSE 'true' END as 認輔老師 \
+			FROM student \
+				LEFT OUTER JOIN class on class.id = student.ref_class_id \
+			WHERE student.status in (1, 2) \
+		) as cstudent \
+		WHERE 輔導老師='true' OR 班導師='true' OR 認輔老師='true' \
+	) as myStudent \
+WHERE \
+	myStudent.student_id = "+record.RefStudentID+" \
+) as 挖崊老師 \
+");
+	
+
+		]]>
+	</Code>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="PushInterviewRecord">
+			<Definition Type="JavaScript">
+	<Code>
+		<![CDATA[
+var request = getRequest().Request || getRequest();
+var teacherID = parseInt( getContextProperty('TeacherID') );
+var teacherAcc = getContextProperty('UserName');
+
+var record = request.InterviewRecord;
+
+if( !record )
+	throw "缺少InterviewRecord";
+
+var parser = parseXml.CreateParser();
+['Attendees', 'CounselType', 'CounselTypeKind'].forEach(function(key){
+	if( record[key] ){
+		[].concat( record[key].Item || [] ).forEach(function(item){
+			item['@name']=item.Name;
+			delete item.Name;
+			if( item.Remark ){
+				item['@remark']=item.Remark;
+				delete item.Remark;
+			}
+		});
+		record[key] = parser.parse(record[key], 'root').replace("<root>", "").replace("</root>", "");
+	}
+});
+	
+executeSql(" \
+INSERT INTO $counsel.interview_record \
+( \
+ 	interview_no, \
+	schoolyear, \
+	semester, \
+	interview_date, \
+	interview_time, \
+	cause, \
+	interviewee_type, \
+	interview_type, \
+	place, \
+	attendees, \
+	counsel_type, \
+	counsel_type_kind, \
+	content_digest, \
+	attachment, \
+	author_id, \
+	author_name, \
+	is_public, \
+	is_class_public, \
+	ref_student_id, \
+	teacher_id \
+) \
+SELECT \
+	'"+(record.InterviewNo || '') +"', \
+	'"+(record.SchoolYear || '') +"', \
+	'"+(record.Semester || '') +"', \
+	'"+(record.InterviewDate || '') +"', \
+	'"+(record.InterviewTime || '') +"', \
+	'"+(record.Cause || '') +"', \
+	'"+(record.IntervieweeType || '') +"', \
+	'"+(record.InterviewType || '') +"', \
+	'"+(record.Place || '') +"', \
+	'"+(record.Attendees || '') +"', \
+	'"+(record.CounselType || '') +"', \
+	'"+(record.CounselTypeKind || '') +"', \
+	'"+(record.ContentDigest || '') +"', \
+	'"+(record.Attachment || '') +"', \
+	'"+(record.AuthorID || '') +"', \
+	'"+(record.AuthorName || '') +"', \
+	" +(record.IsPublic || 'false') +", \
+	" +(record.IsClassPublic || 'false') +", \
+	'"+(record.RefStudentID || '') +"', \
+	'"+teacherID +"' \
+FROM ( \
+	SELECT * \
+	FROM ( \
+		SELECT student_id \
+		FROM ( \
+			SELECT student.id as student_id, class.id as class_id, class.grade_year, class.display_order, class.class_name, student.seat_no, student.student_number, student.name \
+				, CASE ( SELECT COUNT(*) FROM tag_teacher LEFT OUTER JOIN tag on tag_teacher.ref_tag_id = tag.id WHERE ( tag.name = '輔導主任'  OR tag.name = '輔導老師' ) AND tag_teacher.ref_teacher_id = "+teacherID+" ) WHEN 0 THEN 'false' ELSE 'true' END as 輔導老師 \
+				, CASE ( SELECT COUNT(*) FROM class as cls WHERE cls.id = class.id AND class.ref_teacher_id = "+teacherID+") WHEN 0 THEN 'false' ELSE 'true' END as 班導師 \
+				, CASE ( SELECT COUNT(*) FROM $counsel.student_list as stud_list LEFT OUTER JOIN tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id LEFT OUTER JOIN tag on tag_teacher.ref_tag_id = tag.id WHERE tag.name = '認輔老師' AND stud_list.ref_student_id = student.id AND tag_teacher.ref_teacher_id = "+teacherID+" ) WHEN 0 THEN 'false' ELSE 'true' END as 認輔老師 \
+			FROM student \
+				LEFT OUTER JOIN class on class.id = student.ref_class_id \
+			WHERE student.status in (1, 2) \
+		) as cstudent \
+		WHERE 輔導老師='true' OR 班導師='true' OR 認輔老師='true' \
+	) as myStudent \
+WHERE \
+	myStudent.student_id = "+record.RefStudentID+" \
+) as 挖崊老師 \
+");
+	
+
+		]]>
+	</Code>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="PutHomeVisitRecord">
+			<Definition Type="JavaScript">
+	<Code>
+		<![CDATA[
+var request = getRequest().Request || getRequest();
+var teacherID = parseInt( getContextProperty('TeacherID') );
+var teacherAcc = getContextProperty('UserName');
+var studentID = parseInt( request.StudentID );
+
+var record = request.HomeVisitRecord;
+
+if( !record )
+	throw "缺少HomeVisitRecord";
+
+var parser = parseXml.CreateParser();
+['Attendees', 'CounselTypeKind'].forEach(function(key){
+	if( record[key] ){
+		[].concat( record[key].Item || [] ).forEach(function(item){
+			item['@name']=item.Name;
+			delete item.Name;
+			if( item.Remark ){
+				item['@remark']=item.Remark;
+				delete item.Remark;
+			}
+		});
+		record[key] = parser.parse(record[key], 'root').replace("<root>", "").replace("</root>", "");
+	}
+});
+	
+executeSql(" \
+UPDATE $counsel.home_visit_record \
+	SET home_visit_no = '"+(record.HomeVisitNo || '') +"', \
+		schoolyear = '"+(record.SchoolYear || '') +"', \
+		semester = '"+(record.Semester || '') +"', \
+		home_visit_date = '"+(record.HomeVisitDate || '') +"', \
+		home_visit_time = '"+(record.HomeVisitTime || '') +"', \
+		cause = '"+(record.Cause || '') +"', \
+		home_visit_type = '"+(record.HomeVisitType || '') +"', \
+		place = '"+(record.Place || '') +"', \
+		attendees = '"+(record.Attendees || '') +"', \
+		counsel_type_kind = '"+(record.CounselTypeKind || '') +"', \
+		content_digest = '"+(record.ContentDigest || '') +"', \
+		author_id = '"+(record.AuthorID || '') +"', \
+		author_name = '"+(record.AuthorName || '') +"', \
+		is_public = "+(record.IsPublic || 'false') +", \
+		is_class_public = "+(record.IsClassPublic || 'false') +" \
+WHERE \
+	uid = "+record.UID+" AND uid in ( \
+		SELECT $counsel.home_visit_record.uid \
+		FROM  ( \
+				SELECT student_id, grade_year as \"GradeYear\", class_name as \"ClassName\", seat_no as \"SeatNo\", student_number as \"StudentNumber\", name as \"StudentName\", 輔導老師, 班導師, 認輔老師  \
+				FROM ( \
+					SELECT student.id as student_id, class.id as class_id, class.grade_year, class.display_order, class.class_name, student.seat_no, student.student_number, student.name \
+						, CASE ( SELECT COUNT(*) FROM tag_teacher LEFT OUTER JOIN tag on tag_teacher.ref_tag_id = tag.id WHERE ( tag.name = '輔導主任'  OR tag.name = '輔導老師' ) AND tag_teacher.ref_teacher_id = "+teacherID+" ) WHEN 0 THEN 'false' ELSE 'true' END as 輔導老師 \
+						, CASE ( SELECT COUNT(*) FROM class as cls WHERE cls.id = class.id AND class.ref_teacher_id = "+teacherID+") WHEN 0 THEN 'false' ELSE 'true' END as 班導師 \
+						, CASE ( SELECT COUNT(*) FROM $counsel.student_list as stud_list LEFT OUTER JOIN tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id LEFT OUTER JOIN tag on tag_teacher.ref_tag_id = tag.id WHERE tag.name = '認輔老師' AND stud_list.ref_student_id = student.id AND tag_teacher.ref_teacher_id = "+teacherID+" ) WHEN 0 THEN 'false' ELSE 'true' END as 認輔老師 \
+					FROM student \
+						LEFT OUTER JOIN class on class.id = student.ref_class_id \
+					WHERE student.status in (1, 2) \
+				) as cstudent \
+				WHERE 輔導老師='true' OR 班導師='true' OR 認輔老師='true' \
+			) as myStudent \
+			LEFT OUTER JOIN $counsel.home_visit_record on myStudent.student_id = $counsel.home_visit_record.ref_student_id \
+		WHERE \
+			uid is not null \
+			AND ( \
+				myStudent.輔導老師='true' \
+				OR ( $counsel.home_visit_record.author_id = '"+teacherAcc+"' ) \
+			) \
+	) \
+");
+	
+
+		]]>
+	</Code>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="PutInterviewRecord">
+			<Definition Type="JavaScript">
+	<Code>
+		<![CDATA[
+var request = getRequest().Request || getRequest();
+var teacherID = parseInt( getContextProperty('TeacherID') );
+var teacherAcc = getContextProperty('UserName');
+var studentID = parseInt( request.StudentID );
+
+var record = request.InterviewRecord;
+
+if( !record )
+	throw "缺少InterviewRecord";
+
+var parser = parseXml.CreateParser();
+['Attendees', 'CounselType', 'CounselTypeKind'].forEach(function(key){
+	if( record[key] ){
+		[].concat( record[key].Item || [] ).forEach(function(item){
+			item['@name']=item.Name;
+			delete item.Name;
+			if( item.Remark ){
+				item['@remark']=item.Remark;
+				delete item.Remark;
+			}
+		});
+		record[key] = parser.parse(record[key], 'root').replace("<root>", "").replace("</root>", "");
+	}
+});
+	
+executeSql(" \
+UPDATE $counsel.interview_record \
+	SET interview_no = '"+(record.InterviewNo || '') +"', \
+		schoolyear = '"+(record.SchoolYear || '') +"', \
+		semester = '"+(record.Semester || '') +"', \
+		interview_date = '"+(record.InterviewDate || '') +"', \
+		interview_time = '"+(record.InterviewTime || '') +"', \
+		cause = '"+(record.Cause || '') +"', \
+		interviewee_type = '"+(record.IntervieweeType || '') +"', \
+		interview_type = '"+(record.InterviewType || '') +"', \
+		place = '"+(record.Place || '') +"', \
+		attendees = '"+(record.Attendees || '') +"', \
+		counsel_type = '"+(record.CounselType || '') +"', \
+		counsel_type_kind = '"+(record.CounselTypeKind || '') +"', \
+		content_digest = '"+(record.ContentDigest || '') +"', \
+		attachment = '"+(record.Attachment || '') +"', \
+		author_id = '"+(record.AuthorID || '') +"', \
+		author_name = '"+(record.AuthorName || '') +"', \
+		is_public = "+(record.IsPublic || 'false') +", \
+		is_class_public = "+(record.IsClassPublic || 'false') +" \
+WHERE \
+	uid = "+record.UID+" AND uid in ( \
+		SELECT $counsel.interview_record.uid \
+		FROM  ( \
+				SELECT student_id, grade_year as \"GradeYear\", class_name as \"ClassName\", seat_no as \"SeatNo\", student_number as \"StudentNumber\", name as \"StudentName\", 輔導老師, 班導師, 認輔老師  \
+				FROM ( \
+					SELECT student.id as student_id, class.id as class_id, class.grade_year, class.display_order, class.class_name, student.seat_no, student.student_number, student.name \
+						, CASE ( SELECT COUNT(*) FROM tag_teacher LEFT OUTER JOIN tag on tag_teacher.ref_tag_id = tag.id WHERE ( tag.name = '輔導主任'  OR tag.name = '輔導老師' ) AND tag_teacher.ref_teacher_id = "+teacherID+" ) WHEN 0 THEN 'false' ELSE 'true' END as 輔導老師 \
+						, CASE ( SELECT COUNT(*) FROM class as cls WHERE cls.id = class.id AND class.ref_teacher_id = "+teacherID+") WHEN 0 THEN 'false' ELSE 'true' END as 班導師 \
+						, CASE ( SELECT COUNT(*) FROM $counsel.student_list as stud_list LEFT OUTER JOIN tag_teacher on stud_list.ref_teacher_tag_id = tag_teacher.id LEFT OUTER JOIN tag on tag_teacher.ref_tag_id = tag.id WHERE tag.name = '認輔老師' AND stud_list.ref_student_id = student.id AND tag_teacher.ref_teacher_id = "+teacherID+" ) WHEN 0 THEN 'false' ELSE 'true' END as 認輔老師 \
+					FROM student \
+						LEFT OUTER JOIN class on class.id = student.ref_class_id \
+					WHERE student.status in (1, 2) \
+				) as cstudent \
+				WHERE 輔導老師='true' OR 班導師='true' OR 認輔老師='true' \
+			) as myStudent \
+			LEFT OUTER JOIN $counsel.interview_record on myStudent.student_id = $counsel.interview_record.ref_student_id \
+		WHERE \
+			uid is not null \
+			AND ( \
+				myStudent.輔導老師='true' \
+				OR ( $counsel.interview_record.author_id = '"+teacherAcc+"' ) \
+			) \
+	) \
+");
+	
+
+		]]>
+	</Code>
+</Definition>
+		</Service>
+	</Package>
+</Contract>
