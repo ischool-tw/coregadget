@@ -225,7 +225,8 @@ jQuery(function () {
                 var self = MyViewModel;
 
                 _gg.connection.send({
-                    service: "_.GetAllCourse",
+                    //service: "_.GetAllCourse",
+                    service: "_.GetAlumniCourse",
                     body: {
                         Request: {
                             Condition: {
@@ -236,22 +237,34 @@ jQuery(function () {
                     },
                     result: function (response, error, http) {
                         if (error !== null) {
-                            _gg.set_error_message('#mainMsg', 'GetAllCourse', error);
+                            //_gg.set_error_message('#mainMsg', 'GetAllCourse', error);
+                            _gg.set_error_message('#mainMsg', 'GetAlumniCourse', error);
                         } else {
-                            if (response.Response && response.Response.Course) {
-                                $(response.Response.Course).each(function (index, item) {
-                                    var tmp = '', _teachers = [];
-                                    if (item.TeacherURLName) {
-                                        tmp = item.TeacherURLName.split(', ');
-                                        $(tmp).each(function (index, teacher) {
-                                            if (($(teacher).attr('href'))) {
-                                                _teachers.push('<a href="' + $(teacher).attr('href') + '" target="_blank">' + $(teacher).html() + '</a>');
-                                            } else {
-                                                _teachers.push($(teacher).html());
-                                            }
-                                        })
-                                        item.TeacherURLName = _teachers.join(', ');
-                                    }
+                            
+                            //if (response.Response && response.Response.Course) {
+                            if (response.Response && response.Response.AlumniCourseRecord) {
+
+                                //$(response.Response.Course).each(function (index, item) {
+                                $(response.Response.AlumniCourseRecord).each(function (index, item) {
+
+                                    //var tmp = '', _teachers = [];
+                                    //if (item.TeacherURLName) {
+                                    //    tmp = item.TeacherURLName.split(', ');
+                                    //    $(tmp).each(function (index, teacher) {
+                                    //        if (($(teacher).attr('href'))) {
+                                    //            _teachers.push('<a href="' + $(teacher).attr('href') + '" target="_blank">' + $(teacher).html() + '</a>');
+                                    //        } else {
+                                    //            _teachers.push($(teacher).html());
+                                    //        }
+                                    //    })
+                                    //    item.TeacherURLName = _teachers.join(', ');
+                                    //}
+
+                                    // 目前AlumniCourseRecord 無TeacherName、TeacherURLName、CourseID欄位 先塞空值。
+                                    item.TeacherName = 'YO';
+                                    item.TeacherURLName = '<a href="http://www.management.ntu.edu.tw/zh-TW/IB/teachers/184" target="_blank">YO</a>';
+                                    item.CourseID = item.Uid;
+
 
                                     self.all_course.push(item);
                                     self.all_col_course[item.CourseID] = item;
@@ -262,8 +275,8 @@ jQuery(function () {
                                     self.get_sc_attend();
                                     self.get_registration_confirm();
                                 } else if (self.currentData.Item() === '1' || self.currentData.Item() === '2') {
-                                    self.get_conflict_course();
-                                    self.get_attend();
+                                    //self.get_conflict_course();
+                                    //self.get_attend();
                                     self.get_can_choose_course();
                                 } else if (self.currentData.Item() === 's2' || self.currentData.Item() === 's3') {
                                     self.get_conflict_course();
@@ -319,7 +332,8 @@ jQuery(function () {
                 var self = MyViewModel;
 
                 _gg.connection.send({
-                    service: "_.GetCSAttend",
+                    //service: "_.GetCSAttend",
+                    service: "_.GetAlumniSCAttend",
                     body: {
                         Request: {
                             Condition: {
@@ -330,7 +344,8 @@ jQuery(function () {
                     },
                     result: function (response, error, http) {
                         if (error !== null) {
-                            _gg.set_error_message('#mainMsg', 'GetCSAttend', error);
+                            //_gg.set_error_message('#mainMsg', 'GetCSAttend', error);
+                            _gg.set_error_message('#mainMsg', 'GetAlumniSCAttend', error);
                         } else {
                             if (response.Response && response.Response.Attend) {
                                 $(response.Response.Attend).each(function (index, item) {
@@ -356,7 +371,8 @@ jQuery(function () {
                 var self = MyViewModel;
 
                 _gg.connection.send({
-                    service: "_.GetCSAttend",
+                    //service: "_.GetCSAttend",
+                    service: "_.GetAlumniSCAttend",
                     body: {
                         Request: {
                             Condition: {
@@ -367,7 +383,8 @@ jQuery(function () {
                     },
                     result: function (response, error, http) {
                         if (error !== null) {
-                            _gg.set_error_message('#mainMsg', 'GetCSAttend', error);
+                            //_gg.set_error_message('#mainMsg', 'GetCSAttend', error);
+                            _gg.set_error_message('#mainMsg', 'GetAlumniSCAttend', error);
                         } else {
                             if (response.Response && response.Response.Attend) {
                                 $(response.Response.Attend).each(function (index, item) {
@@ -442,9 +459,10 @@ jQuery(function () {
             can_choose_course: ko.observableArray(),
             get_can_choose_course: function () {
                 var self = MyViewModel;
-
+                
                 _gg.connection.send({
-                    service: "_.GetCanChooseCourse",
+                    //service: "_.GetCanChooseCourse",
+                    service: "_.GetAlumniCourse",
                     body: {
                         Request: {
                             Condition: {
@@ -455,11 +473,13 @@ jQuery(function () {
                     },
                     result: function (response, error, http) {
                         if (error !== null) {
-                            _gg.set_error_message('#mainMsg', 'GetCanChooseCourse', error);
+                            //_gg.set_error_message('#mainMsg', 'GetCanChooseCourse', error);
+                            _gg.set_error_message('#mainMsg', 'GetAlumniCourse', error);
                         } else {
-                            if (response.Response && response.Response.Course) {
-                                $(response.Response.Course).each(function (index, item) {
-                                    var _course = self.all_col_course[item.CourseID];
+                            if (response.Response && response.Response.AlumniCourseRecord) {
+                                $(response.Response.AlumniCourseRecord).each(function (index, item) {
+                                    //var _course = self.all_col_course[item.CourseID];
+                                    var _course = self.all_col_course[item.Uid];
                                     if (_course) {
                                         _course.WillAdd = ko.observable(false);
                                         _course.HaveConflict = ko.observableArray();
@@ -654,36 +674,36 @@ jQuery(function () {
             // 衝堂課程
             conflict_col_course: {},
             get_conflict_course: function () {
-                var self = MyViewModel;
+                //var self = MyViewModel;
 
-                _gg.connection.send({
-                    service: "_.GetConflictCourse",
-                    body: {
-                        Request: {
-                            Condition: {
-                                SchoolYear: self.currentData.SchoolYear() || '',
-                                Semester: self.currentData.Semester() || ''
-                            }
-                        }
-                    },
-                    result: function (response, error, http) {
-                        if (error !== null) {
-                            _gg.set_error_message('#mainMsg', 'GetConflictCourse', error);
-                        } else {
-                            var items = {};
-                            if (response.Response && response.Response.ConflictCourse) {
-                                $(response.Response.ConflictCourse).each(function (index, item) {
-                                    if (!items[item.CourseIDA]) {
-                                        items[item.CourseIDA] = [];
-                                    }
-                                    items[item.CourseIDA].push(item.CourseIDB);
-                                });
-                            }
-                            self.conflict_col_course = items;
-                            self.show_conflict_course();
-                        }
-                    }
-                });
+                //_gg.connection.send({
+                //    service: "_.GetConflictCourse",
+                //    body: {
+                //        Request: {
+                //            Condition: {
+                //                SchoolYear: self.currentData.SchoolYear() || '',
+                //                Semester: self.currentData.Semester() || ''
+                //            }
+                //        }
+                //    },
+                //    result: function (response, error, http) {
+                //        if (error !== null) {
+                //            _gg.set_error_message('#mainMsg', 'GetConflictCourse', error);
+                //        } else {
+                //            var items = {};
+                //            if (response.Response && response.Response.ConflictCourse) {
+                //                $(response.Response.ConflictCourse).each(function (index, item) {
+                //                    if (!items[item.CourseIDA]) {
+                //                        items[item.CourseIDA] = [];
+                //                    }
+                //                    items[item.CourseIDA].push(item.CourseIDB);
+                //                });
+                //            }
+                //            self.conflict_col_course = items;
+                //            self.show_conflict_course();
+                //        }
+                //    }
+                //});
             },
             show_conflict_course: function () {
                 var self = MyViewModel;
