@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
   <ModulePrefs title="輔導系統V2"  iconfamily="css/images/nav08.png">
-      <Title lang="zh-TW">輔導系統</Title>
+      <Title lang="zh-TW">輔導系統(綜合紀錄表)</Title>
       <Icon>icon.png</Icon>
       <Mobile />
       <Title lang="zh-CN" />
