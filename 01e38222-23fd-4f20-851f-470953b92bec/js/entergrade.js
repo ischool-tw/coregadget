@@ -142,15 +142,16 @@ angular.module('entergrade', [])
                                 var tmp = [].concat(response.Result.Course);
                                 respCourse = [];
 
-                                angular.forEach(tmp, function(value, index) {
-                                    var grade = parseInt(value.GradeYear, 10)
-                                    if (grade && grade > 2) {
-                                        respCourse.push(value);
-                                    } else if (grade && grade <= 2) {
-                                        if (value.SubjectChineseName === "Gr.1 C.S.S." || value.SubjectChineseName === "C.S.S." || value.SubjectChineseName === "Chinese") {
-                                            respCourse.push(value);
-                                        }
-                                    }
+                                angular.forEach(tmp, function (value, index) {
+                                    respCourse.push(value);
+                                    //var grade = parseInt(value.GradeYear, 10)
+                                    //if (grade && grade > 2) {
+                                    //    respCourse.push(value);
+                                    //} else if (grade && grade <= 2) {
+                                    //    if (value.SubjectChineseName === "Gr.1 C.S.S." || value.SubjectChineseName === "C.S.S." || value.SubjectChineseName === "Chinese") {
+                                    //        respCourse.push(value);
+                                    //    }
+                                    //}
                                 });
                             }
                             next();
