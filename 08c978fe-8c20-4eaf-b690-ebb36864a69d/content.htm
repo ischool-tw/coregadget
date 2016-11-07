@@ -137,7 +137,7 @@
             </div>-->
             <!-- 1-4 -->
             <div class="btn-group pull-right"
-                 ng-if="currentStudent&&currentStudent.GradeYear <= 4"
+                 ng-if="currentStudent&&currentCourse.GradeYear <= 4"
                  style="margin-right:4px;">
                 <a class="btn btn-default btn-sm dropdown-toggle"
                    data-toggle="dropdown">
@@ -153,12 +153,12 @@
                             <tr ng-repeat="item in currentStudent.EditConduct.Conducts.Conduct">
                                 <td>
                                     <div class="pull-right">
-                                        <a ng-if="currentStudent.GradeYear <= 4"
+                                        <a ng-if="currentCourse.GradeYear <= 4"
                                            class="btn btn-xs btn-default"
                                            ng-click="overview(item, 1)">
                                             Midterm
                                         </a>
-                                        <a ng-if="currentStudent.GradeYear <= 4"
+                                        <a ng-if="currentCourse.GradeYear <= 4"
                                            class="btn btn-xs btn-default"
                                            ng-click=" overview(item, 2)">
                                             Final
@@ -192,7 +192,7 @@
             </div>
             <!-- 5-12 -->
             <div class="btn-group pull-right"
-                 ng-if="currentStudent&&currentStudent.GradeYear > 4"
+                 ng-if="currentStudent&&currentCourse.GradeYear > 4"
                  style="margin-right:4px;">
                 <a class="btn btn-default btn-sm dropdown-toggle"
                    data-toggle="dropdown">
@@ -217,7 +217,7 @@
             </div>
             <!-- 1-4只開放期中 -->
             <div class="btn-group pull-right"
-                 ng-if="currentCourse&&current.MiddleOpeningC=='true'&&current.FinalOpeningC!=='true'&&currentStudent.GradeYear <= 4"
+                 ng-if="currentCourse&&current.MiddleOpeningC=='true'&&current.FinalOpeningC!=='true'&&currentCourse.GradeYear <= 4"
                  style="margin-right:4px;">
                 <a class="btn btn-sm btn-default"
                    ng-click="configDefaultValue(1)"
@@ -228,7 +228,7 @@
             </div>
             <!-- 1-4只開放期末 -->
             <div class="btn-group pull-right"
-                 ng-if="currentCourse&&current.MiddleOpeningC!=='true'&&current.FinalOpeningC=='true'&&currentStudent.GradeYear <= 4"
+                 ng-if="currentCourse&&current.MiddleOpeningC!=='true'&&current.FinalOpeningC=='true'&&currentCourse.GradeYear <= 4"
                  style="margin-right:4px;">
                 <a class="btn btn-sm btn-default"
                    ng-click="configDefaultValue(2)"
@@ -239,7 +239,7 @@
             </div>
             <!-- 1-4開放其中跟期末 -->
             <div class="btn-group pull-right"
-                 ng-if="currentCourse&&current.MiddleOpeningC=='true'&&current.FinalOpeningC=='true'&&currentStudent.GradeYear <= 4"
+                 ng-if="currentCourse&&current.MiddleOpeningC=='true'&&current.FinalOpeningC=='true'&&currentCourse.GradeYear <= 4"
                  style="margin-right:4px;">
                 <a class="btn btn-default btn-sm dropdown-toggle"
                    ng-if="currentConduct"
@@ -266,7 +266,7 @@
             </div>
             <!-- 5-12只開放期末 -->
             <div class="btn-group pull-right"
-                 ng-if="currentCourse&&current.FinalOpeningC=='true'&&currentStudent.GradeYear > 4"
+                 ng-if="currentCourse&&current.FinalOpeningC=='true'&&currentCourse.GradeYear > 4"
                  style="margin-right:4px;">
                 <a class="btn btn-sm btn-default"
                    ng-click="configDefaultValue(3)"
@@ -484,10 +484,10 @@
                            style="margin-bottom:-1px;">
                         <thead>
                             <tr>
-                                <th class="col-xs-2" ng-if="currentStudent.GradeYear <= 4">Midterm</th>
-                                <th class="col-xs-2" ng-if="currentStudent.GradeYear <= 4">Final</th>
-                                <th class="col-xs-2" ng-if="currentStudent.GradeYear > 4">Final</th>
-                                <th ng-class="{'col-xs-8':currentStudent.GradeYear <= 4 , 'col-xs-10':currentStudent.GradeYear > 4}"
+                                <th class="col-xs-2" ng-if="currentCourse.GradeYear <= 4">Midterm</th>
+                                <th class="col-xs-2" ng-if="currentCourse.GradeYear <= 4">Final</th>
+                                <th class="col-xs-2" ng-if="currentCourse.GradeYear > 4">Final</th>
+                                <th ng-class="{'col-xs-8':currentCourse.GradeYear <= 4 , 'col-xs-10':currentCourse.GradeYear > 4}"
                                     style="position:relative;">
                                     <span>{{item.Group}}</span>
                                     <div style="position:absolute;top:-25px;"
@@ -497,17 +497,17 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="temp in item.Item" ng-class="{'warning':temp.selected}">
-                                <td ng-if="currentStudent.GradeYear <= 4" ng-click="selectConduct(temp,1)" style="cursor:pointer;position: relative;">
+                                <td ng-if="currentCourse.GradeYear <= 4" ng-click="selectConduct(temp,1)" style="cursor:pointer;position: relative;">
                                     {{temp.MidtermGrade}}
                                     <div ng-if="!temp.MidtermGrade&&current.MiddleOpeningC==='true'"
                                          style="border: solid red 2px;width: 1px;height: 1px;position: absolute;left: 5px;top: 5px;z-index: 1;border-radius: 3px;"></div>
                                 </td>
-                                <td ng-if="currentStudent.GradeYear <= 4" ng-click="selectConduct(temp,2)" style="cursor:pointer;position: relative;">
+                                <td ng-if="currentCourse.GradeYear <= 4" ng-click="selectConduct(temp,2)" style="cursor:pointer;position: relative;">
                                     {{temp.FinalGrade}}
                                     <div ng-if="!temp.FinalGrade&&current.FinalOpeningC==='true'"
                                          style="border: solid red 2px;width: 1px;height: 1px;position: absolute;left: 5px;top: 5px;z-index: 1;border-radius: 3px;"></div>
                                 </td>
-                                <td ng-if="currentStudent.GradeYear > 4" ng-click="selectConduct(temp,3)" style="cursor:pointer;position: relative;">
+                                <td ng-if="currentCourse.GradeYear > 4" ng-click="selectConduct(temp,3)" style="cursor:pointer;position: relative;">
                                     {{temp.Grade}}
                                     <div ng-if="!temp.Grade&&current.FinalOpeningC==='true'"
                                          style="border: solid red 2px;width: 1px;height: 1px;position: absolute;left: 5px;top: 5px;z-index: 1;border-radius: 3px;"></div>
@@ -519,7 +519,7 @@
                     <table class="table table-bordered table-hover"
                            ng-if="teacherType == 'homeroom'&&currentStudent">
                         <thead>
-                            <tr ng-if="currentStudent.GradeYear <= 4">
+                            <tr ng-if="currentCourse.GradeYear <= 4">
                                 <th style="width:50%;position:relative;">
                                     Midterm Comment
                                 </th>
@@ -529,7 +529,7 @@
                                          id="{{'scrollAnchorComment'}}"></div>
                                 </th>
                             </tr>
-                            <tr ng-if="currentStudent.GradeYear > 4">
+                            <tr ng-if="currentCourse.GradeYear > 4">
                                 <th style="width:50%;position:relative;">
                                     Final Comment
                                     <div style="position:absolute;top:-25px;"
@@ -538,7 +538,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-if="currentStudent.GradeYear <= 4">
+                            <tr ng-if="currentCourse.GradeYear <= 4">
                                 <td ng-click="selectConduct({type:'Comment'}, 1)"
                                     ng-class="{'warning':currentConduct.type == 'Comment'&&currentConduct.Period==1}"
                                     style="cursor:pointer;position: relative;">
@@ -556,7 +556,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr ng-if="currentStudent.GradeYear > 4">
+                            <tr ng-if="currentCourse.GradeYear > 4">
                                 <td ng-click="selectConduct({type:'Comment'}, 3)"
                                     ng-class="{'warning':currentConduct.type == 'Comment'&&currentConduct.Period==3}"
                                     style="cursor:pointer;position: relative;">
@@ -809,7 +809,7 @@
                                                    ng-if="currentConduct.canInputGrade"
                                                    class="btn btn-xs {{1==2?'btn-warning':'btn-primary'}}"
                                                    style="min-width:30px;"
-                                                   ng-click="setGroupDefault(currentStudent.GradeYear,currentCourse.SubjectChineseName,item,code.Value)">{{code.Value}}</a>
+                                                   ng-click="setGroupDefault(currentCourse.GradeYear,currentCourse.SubjectChineseName,item,code.Value)">{{code.Value}}</a>
                                             </div>
                                         </div>
                                         <span style="vertical-align: middle;">{{item.Group}}</span>
@@ -822,8 +822,8 @@
                                         <div class="pull-right">
                                             <div class="btn-group">
                                                 <a ng-if="currentConduct.canInputGrade"
-                                                   class="btn btn-xs {{getDefault(currentStudent.GradeYear,currentCourse.SubjectChineseName,item.Group,temp.Title)=='erase'?'btn-warning':'btn-default'}}"
-                                                   ng-click="setDefault(currentStudent.GradeYear,currentCourse.SubjectChineseName,item.Group,temp.Title,'erase')">
+                                                   class="btn btn-xs {{getDefault(currentCourse.GradeYear,currentCourse.SubjectChineseName,item.Group,temp.Title)=='erase'?'btn-warning':'btn-default'}}"
+                                                   ng-click="setDefault(currentCourse.GradeYear,currentCourse.SubjectChineseName,item.Group,temp.Title,'erase')">
                                                     <i class="glyphicon glyphicon-erase"></i>
                                                     erase
                                                 </a>
@@ -831,9 +831,9 @@
                                             <div class="btn-group">
                                                 <a ng-repeat="code in temp.Code"
                                                    ng-if="currentConduct.canInputGrade"
-                                                   class="btn btn-xs {{getDefault(currentStudent.GradeYear,currentCourse.SubjectChineseName,item.Group,temp.Title)==code.Value?'btn-warning':'btn-default'}}"
+                                                   class="btn btn-xs {{getDefault(currentCourse.GradeYear,currentCourse.SubjectChineseName,item.Group,temp.Title)==code.Value?'btn-warning':'btn-default'}}"
                                                    style="min-width:30px;"
-                                                   ng-click="setDefault(currentStudent.GradeYear,currentCourse.SubjectChineseName,item.Group,temp.Title,code.Value)">{{code.Value}}</a>
+                                                   ng-click="setDefault(currentCourse.GradeYear,currentCourse.SubjectChineseName,item.Group,temp.Title,code.Value)">{{code.Value}}</a>
                                             </div>
                                         </div>
                                         <span>{{$index+1}}. {{temp.Title}}</span>
