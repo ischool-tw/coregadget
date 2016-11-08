@@ -415,8 +415,9 @@
             //#endregion
 
             //#region 轉換CounselType到CounselTypeOption
-            var counselTypeOption = [{ Name: "暫時結案" }, { Name: "專案輔導" }, { Name: "導師輔導" }, { Name: "轉介", HasRemark: true },
-                { Name: "就醫", HasRemark: true }, { Name: "其他", HasRemark: true }];
+            var counselTypeOption = [{ Name: "暫時結案" }, { Name: "專案輔導" }, { Name: "導師輔導" },
+                { Name: "會商處理" }, { Name: "提供諮詢" }, { Name: "個案研究" }, { Name: "個別晤談" },
+                { Name: "轉介", HasRemark: true }, { Name: "就醫", HasRemark: true }, { Name: "其他", HasRemark: true }];
             //{ Name: "會商處理" }, { Name: "轉介輔導" }, { Name: "提供諮詢" }, { Name: "個案研究" }, { Name: "個別晤談" },
             $scope.InterviewDetial.CounselTypeOption = [];
             var list = [].concat(rec.CounselType || []);
