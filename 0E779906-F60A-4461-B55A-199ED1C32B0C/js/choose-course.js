@@ -85,9 +85,12 @@ jQuery(function () {
 
                 quit_txt = quit_list.join(', ');
                 add_txt = add_list.join(', ');
-                
+
                 if (vm.currentData.Item() === '1') {
-                    html_txt = vm.configuration.cs_cancel1_content_template();
+                    //html_txt = vm.configuration.cs_cancel1_content_template();
+
+                    //html_txt = "YO 你選課了歐~";
+
                 } else if (vm.currentData.Item() === '2') {
                     html_txt = vm.configuration.cs_cancel2_content_template();
                 }
@@ -139,6 +142,13 @@ jQuery(function () {
     this.MyViewModel = (function () {
         var conn_log = gadget.getContract("emba.student");
         var _all_opening_data = {};
+
+        var Black_List;
+
+        var Student_Status;
+
+
+
         return {
             weburl: ko.observable('javascript:void(0);'),
             get_weburl: function () {
@@ -240,32 +250,26 @@ jQuery(function () {
                             //_gg.set_error_message('#mainMsg', 'GetAllCourse', error);
                             _gg.set_error_message('#mainMsg', 'GetAlumniCourse', error);
                         } else {
-                            
+
                             //if (response.Response && response.Response.Course) {
                             if (response.Response && response.Response.AlumniCourseRecord) {
 
                                 //$(response.Response.Course).each(function (index, item) {
                                 $(response.Response.AlumniCourseRecord).each(function (index, item) {
 
-                                    //var tmp = '', _teachers = [];
-                                    //if (item.TeacherURLName) {
-                                    //    tmp = item.TeacherURLName.split(', ');
-                                    //    $(tmp).each(function (index, teacher) {
-                                    //        if (($(teacher).attr('href'))) {
-                                    //            _teachers.push('<a href="' + $(teacher).attr('href') + '" target="_blank">' + $(teacher).html() + '</a>');
-                                    //        } else {
-                                    //            _teachers.push($(teacher).html());
-                                    //        }
-                                    //    })
-                                    //    item.TeacherURLName = _teachers.join(', ');
-                                    //}
-
-                                    // 目前AlumniCourseRecord 無TeacherName、TeacherURLName、CourseID欄位 先塞空值。
-                                    item.TeacherName = 'YO';
-                                    item.TeacherURLName = '<a href="http://www.management.ntu.edu.tw/zh-TW/IB/teachers/184" target="_blank">YO</a>';
+                                    var tmp = '', _teachers = [];
+                                    if (item.TeacherURLName) {
+                                        tmp = item.TeacherURLName.split(', ');
+                                        $(tmp).each(function (index, teacher) {
+                                            if (($(teacher).attr('href'))) {
+                                                _teachers.push('<a href="' + $(teacher).attr('href') + '" target="_blank">' + $(teacher).html() + '</a>');
+                                            } else {
+                                                _teachers.push($(teacher).html());
+                                            }
+                                        })
+                                        item.TeacherURLName = _teachers.join(', ');
+                                    }
                                     item.CourseID = item.Uid;
-
-
                                     self.all_course.push(item);
                                     self.all_col_course[item.CourseID] = item;
                                 });
@@ -276,34 +280,45 @@ jQuery(function () {
                                     self.get_registration_confirm();
                                 } else if (self.currentData.Item() === '1' || self.currentData.Item() === '2') {
                                     //self.get_conflict_course();
-                                    //self.get_attend();
-                                    self.get_can_choose_course();
-                                } else if (self.currentData.Item() === 's2' || self.currentData.Item() === 's3') {
-                                    self.get_conflict_course();
-                                } else if (self.currentData.Item() === 's4') {
-                                    self.get_registration_confirm();
-                                    self.get_sc_attend();
-                                } else if (self.currentData.Item() === 's5') {
-                                    self.get_conflict_course();
+                                    self.get_attend();
+
+                                    // 2016/11/10 穎驊筆記，把 self.get_can_choose_course()包在 self.get_attend()內處理了，避免不同步引起畫面錯亂的問題 ;
+                                    //self.get_can_choose_course();
+
                                 }
+                                    //else if (self.currentData.Item() === 's2' || self.currentData.Item() === 's3') {
+                                    //    self.get_conflict_course();
+                                    //} else if (self.currentData.Item() === 's4') {
+                                    //    self.get_registration_confirm();
+                                    //    self.get_sc_attend();
+                                    //} else if (self.currentData.Item() === 's5') {
+                                    //    self.get_conflict_course();
+                                    //}
+
+                                    //2016/11/9 穎驊筆記  因應校友選課目前格式，把上面的的註解掉，一階段完後直接接s4，顯示選課結果
+                                else if (self.currentData.Item() === 's4') {
+                                    self.get_sc_attend();
+                                }
+
                             }
                         }
                     }
                 });
             },
 
+
             // 退選訊息、Mail樣版
             configuration: {
-                //email_content1_template: ko.observable(),
-                //email_content2_template: ko.observable(),
-                //cs_cancel1_content_template: ko.observable(),
-                //cs_cancel2_content_template: ko.observable(),
-                //cs_final_message: ko.observable(),
-                //cs_content1_template: ko.observable(),
-                //cs_content2_template: ko.observable(),
-                //email_content1_template_subject: ko.observable(),
-                //email_content2_template_subject: ko.observable(),
-                //retreat_notices_word: ko.observable()
+                email_content1_template: ko.observable(),
+                email_content2_template: ko.observable(),
+                cs_cancel1_content_template: ko.observable(),
+                cs_cancel2_content_template: ko.observable(),
+                cs_final_message: ko.observable(),
+                cs_content1_template: ko.observable(),
+                cs_content2_template: ko.observable(),
+                email_content1_template_subject: ko.observable(),
+                email_content2_template_subject: ko.observable(),
+                retreat_notices_word: ko.observable(),
                 emba_alumnicoursemodule_course_description_temp: ko.observable()
             },
             get_configuration: function () {
@@ -333,7 +348,7 @@ jQuery(function () {
 
                 _gg.connection.send({
                     //service: "_.GetCSAttend",
-                    service: "_.GetAlumniSCAttend",
+                    service: "_.GetElectiveSCAttend",
                     body: {
                         Request: {
                             Condition: {
@@ -345,15 +360,22 @@ jQuery(function () {
                     result: function (response, error, http) {
                         if (error !== null) {
                             //_gg.set_error_message('#mainMsg', 'GetCSAttend', error);
-                            _gg.set_error_message('#mainMsg', 'GetAlumniSCAttend', error);
+                            _gg.set_error_message('#mainMsg', 'GetElectiveSCAttend', error);
                         } else {
-                            if (response.Response && response.Response.Attend) {
-                                $(response.Response.Attend).each(function (index, item) {
-                                    var _course = self.all_col_course[item.CourseID];
+                            if (response.Response && response.Response.ElectiveSCAttendRecord) {
+                                $(response.Response.ElectiveSCAttendRecord).each(function (index, item) {
+                                    var _course = self.all_col_course[item.RefAlumniId];
                                     if (_course) {
                                         _course.WillQuit = ko.observable(false);
                                         _course.HaveConflict = ko.observableArray();
-                                        _course.ChooseItem = item.Item;
+
+                                        //2016/11/10 穎驊註解，用來取得 本課程為在哪一階段所選，因校友選課只有一階段，所以目前統一為1
+                                        //_course.ChooseItem = item.Item;                                        
+                                        _course.ChooseItem = '1';
+
+                                        _course.IsSelected = true;
+
+                                        _course.ElectiveUID = item.ElectiveUID;
                                         self.curr_attend.push(_course);
                                     }
                                 });
@@ -363,6 +385,7 @@ jQuery(function () {
                             }
                         }
 
+                        self.get_can_choose_course();
                         //self.CallbackQueue.JobFinished();
                     }
                 });
@@ -459,7 +482,7 @@ jQuery(function () {
             can_choose_course: ko.observableArray(),
             get_can_choose_course: function () {
                 var self = MyViewModel;
-                
+
                 _gg.connection.send({
                     //service: "_.GetCanChooseCourse",
                     service: "_.GetAlumniCourse",
@@ -480,11 +503,15 @@ jQuery(function () {
                                 $(response.Response.AlumniCourseRecord).each(function (index, item) {
                                     //var _course = self.all_col_course[item.CourseID];
                                     var _course = self.all_col_course[item.Uid];
+
                                     if (_course) {
-                                        _course.WillAdd = ko.observable(false);
-                                        _course.HaveConflict = ko.observableArray();
-                                        self.can_choose_course.push(_course);
+                                        if (!_course.IsSelected) {
+                                            _course.WillAdd = ko.observable(false);
+                                            _course.HaveConflict = ko.observableArray();
+                                            self.can_choose_course.push(_course);
+                                        }
                                     }
+
                                 });
                             }
                         }
@@ -551,7 +578,8 @@ jQuery(function () {
                 var self = MyViewModel;
 
                 _gg.connection.send({
-                    service: "_.GetSCAttend_ext",
+                    //service: "_.GetSCAttend_ext",
+                    service: "_.GetAlumniSCAttend",
                     body: {
                         Request: {
                             Condition: {
@@ -562,13 +590,14 @@ jQuery(function () {
                     },
                     result: function (response, error, http) {
                         if (error !== null) {
-                            _gg.set_error_message('#mainMsg', 'GetSCAttend_ext', error);
+                            //_gg.set_error_message('#mainMsg', 'GetSCAttend_ext', error);
+                            _gg.set_error_message('#mainMsg', 'GetAlumniSCAttend', error);
                         } else {
-                            if (response.Response && response.Response.SCattendExt) {
-                                $(response.Response.SCattendExt).each(function (index, item) {
-                                    var _course = self.all_col_course[item.CourseID];
+                            if (response.Response && response.Response.SCAttendRecord) {
+                                $(response.Response.SCAttendRecord).each(function (index, item) {
+                                    var _course = self.all_col_course[item.RefAlumniId];
                                     if (_course) {
-                                        self.sc_attend.push(self.all_col_course[item.CourseID]);
+                                        self.sc_attend.push(self.all_col_course[item.RefAlumniId]);
                                     }
                                 });
                             }
@@ -827,6 +856,12 @@ jQuery(function () {
                             if (response.Response && response.Response.StudentInfo) {
                                 $(response.Response.StudentInfo).each(function (index, item) {
                                     set_student(item);
+
+                                    Black_List = item.BlackList;
+
+                                    //取得學生狀態，1=一般生，4=休學，16=畢業生
+                                    Student_Status = item.Status;
+
                                 });
                             }
                             self.checkStudentStatus();
@@ -984,387 +1019,490 @@ jQuery(function () {
                 });
                 return add_list;
             },
+
+            //2016/11/10 穎驊註解，把舊的save_quit_add方法註解掉，另外因應校友選課出了新的方法
+
+            //save_quit_add: function () {
+            //    var self = MyViewModel;
+            //    var add_list = [], add_log = [], add_complete = false, log_add_content = [];
+            //    var quit_list = [], quit_log = [], quit_complete = false, log_quit_content = [];
+            //    var course_add_html = '', course_quit_html = '';
+
+            //    var get_course_html = function (courses) {
+            //        var _txt = [];
+            //        _txt.push(
+            //            '<table border="1" cellpadding="5px" style="border: 1px solid #C3C3C3; border-collapse: collapse;">' +
+            //            '    <thead>' +
+            //            '      <tr>' +
+            //            '        <th>課程編號</th>' +
+            //            '        <th>班次</th>' +
+            //            '        <th>（必/選修）課程名稱</th>' +
+            //            '        <th>授課教師</th>' +
+            //            '        <th>學分</th>' +
+            //            '        <th>人數上限</th>' +
+            //            '        <th>教室</th>' +
+            //            '        <th>上課時間</th>' +
+            //            '      </tr>' +
+            //            '    </thead>' +
+            //            '    <tbody>'
+            //        );
+            //        if (courses.length === 0) {
+            //            _txt.push('<tr><td colspan="8">無課程</td>');
+            //        } else {
+            //            $(courses).each(function (index, item) {
+            //                _txt.push(
+            //                    '<tr>' +
+            //                    '    <td>' + (item.NewSubjectCode || '') + '</td>' +
+            //                    '    <td>' + (item.ClassName || '') + '</td>' +
+            //                    '    <td>' +
+            //                    '      <span>' + _gg.getCourseType(item.CourseType) + '</span>' +
+            //                    '      <span>' + (item.CourseName || '') + '</span>' +
+            //                    '    </td>' +
+            //                    '    <td>' + (item.TeacherURLName || '') + '</td>' +
+            //                    '    <td>' + (item.Credit || '') + '</td>' +
+            //                    '    <td>' + (item.Capacity || '') + '</td>' +
+            //                    '    <td>' + (item.Classroom || '') + '</td>' +
+            //                    '    <td>' + (item.CourseTimeInfo || '') + '</td>' +
+            //                    '</tr>' +
+            //                    '<tr>' +
+            //                    '    <td colspan="8">' + (item.Memo || '') + '</td>' +
+            //                    '</tr>'
+            //                );
+            //            });
+            //        }
+            //        _txt.push('</tbody></table>');
+
+            //        return _txt.join('');
+            //    };
+
+            //    var complete_process = function () {
+            //        if (add_complete && quit_complete) {
+            //            $('#myModal').modal('hide');
+            //            $('body').scrollTop(0);
+            //            $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
+            //            setTimeout("$('#mainMsg').html('')", 5000);
+            //            // 送出Email
+            //            var send_Mail = function (add_list_backup, quit_list_backup, course_add_html_backup, course_quit_html_backup) {
+            //                //	收件人
+            //                var receiver = [], mail_tmpl_name = '', course_html = '';
+            //                for (var ii = 1; ii <= 5; ii += 1) {
+            //                    if (self.student['Email' + ii]()) {
+            //                        // receiver.push(
+            //                        // {
+            //                        //     'email': self.student['Email' + ii](),
+            //                        //     'name': self.student.StudentName() || '',
+            //                        //     'type': 'to'
+            //                        // });
+            //                        receiver.push((self.student.StudentName() || '') + '<' + self.student['Email' + ii]() + '>');
+            //                    }
+            //                }
+            //                var receivers = receiver.join(',');
+            //                if (receivers) {
+            //                    //	選課結果寄出時間
+            //                    var n = new Date();
+            //                    var y = n.getFullYear();
+            //                    var m = (n.getMonth() + 1 < 10) ? ("0" + (n.getMonth() + 1)) : (n.getMonth() + 1);
+            //                    var d = (n.getDate() < 10) ? ("0" + (n.getDate())) : (n.getDate());
+            //                    var h = (n.getHours() < 10) ? ("0" + (n.getHours())) : (n.getHours());
+            //                    var mi = (n.getMinutes() < 10) ? ("0" + (n.getMinutes())) : (n.getMinutes());
+            //                    var s = (n.getSeconds() < 10) ? ("0" + (n.getSeconds())) : (n.getSeconds());
+            //                    var mail_sending_time = y + "/" + m + "/" + d + " " + h + ":" + mi + ":" + s;
+
+            //                    //	信件主旨
+            //                    var mail_subject = '';
+            //                    //	信件內容
+            //                    var mail_content = '';
+            //                    //	階段別
+            //                    var period = '';
+            //                    if (self.currentData.Item() === '1') {
+            //                        mail_subject = self.configuration['email_content1_template_subject']();
+            //                        mail_content = self.configuration['email_content1_template']();
+            //                        period = '第一階段';
+            //                    } else if (self.currentData.Item() === '2') {
+            //                        mail_subject = self.configuration['email_content2_template_subject']();
+            //                        mail_content = self.configuration['email_content2_template']();
+            //                        period = '第二階段';
+            //                    }
+
+            //                    //	加選課程清單
+            //                    //course_add_html
+
+            //                    //	退選課程清單
+            //                    //course_quit_html
+            //                    //	加退選狀態
+            //                    var status = '';
+            //                    if (add_list_backup.length > 0)
+            //                        status += '加';
+            //                    if (quit_list_backup.length > 0)
+            //                        status += '退';
+            //                    status += '選';
+
+            //                    mail_subject = mail_subject.replace(/\[\[學年度\]\]/g, self.currentData.SchoolYear());
+            //                    mail_subject = mail_subject.replace(/\[\[學期\]\]/g, self.currentData.FullSemester());
+            //                    mail_subject = mail_subject.replace(/\[\[階段別\]\]/g, period);
+            //                    mail_subject = mail_subject.replace(/\[\[選課結果寄出時間\]\]/g, mail_sending_time);
+            //                    mail_subject = mail_subject.replace(/\[\[加退選狀態\]\]/g, status);
+            //                    mail_subject = mail_subject.replace(/\[\[加選堂數\]\]/g, add_list_backup.length);
+            //                    mail_subject = mail_subject.replace(/\[\[退選堂數\]\]/g, quit_list_backup.length);
+            //                    mail_subject = mail_subject.replace(/\[\[加選課程\]\]/g, (add_list_backup.length > 0) ? '<p>加選課程：</p>' + course_add_html_backup : '');
+            //                    mail_subject = mail_subject.replace(/\[\[退選課程\]\]/g, (quit_list_backup.length > 0) ? '<p>退選課程：</p>' + course_quit_html_backup : '');
+            //                    mail_subject = mail_subject.replace(/\[\[選課結果\]\]/g, '<p>選課結果：</p>' + get_course_html(self.curr_attend()));
+
+            //                    mail_content = mail_content.replace(/\[\[學年度\]\]/g, self.currentData.SchoolYear());
+            //                    mail_content = mail_content.replace(/\[\[學期\]\]/g, self.currentData.FullSemester());
+            //                    mail_content = mail_content.replace(/\[\[階段別\]\]/g, period);
+            //                    mail_content = mail_content.replace(/\[\[選課結果寄出時間\]\]/g, mail_sending_time);
+            //                    mail_content = mail_content.replace(/\[\[加退選狀態\]\]/g, status);
+            //                    mail_content = mail_content.replace(/\[\[加選堂數\]\]/g, add_list_backup.length);
+            //                    mail_content = mail_content.replace(/\[\[退選堂數\]\]/g, quit_list_backup.length);
+            //                    mail_content = mail_content.replace(/\[\[加選課程\]\]/g, (add_list_backup.length > 0) ? '<p>加選課程：</p>' + course_add_html_backup : '');
+            //                    mail_content = mail_content.replace(/\[\[退選課程\]\]/g, (quit_list_backup.length > 0) ? '<p>退選課程：</p>' + course_quit_html_backup : '');
+            //                    mail_content = mail_content.replace(/\[\[選課結果\]\]/g, '<p>選課結果：</p>' + get_course_html(self.curr_attend()));
+
+            //                    _gg.connection.send({
+            //                        service: "_.SendMail",
+            //                        body: {
+            //                            Request: {
+            //                                Receiver: receivers,
+            //                                Subject: mail_subject,
+            //                                HtmlContent: mail_content
+            //                            }
+            //                        },
+            //                        result: function (response, error, http) {
+            //                            if (error) {
+            //                                conn_log.ready(function () {
+            //                                    gadget.getContract("emba.student").send({
+            //                                        service: "public.AddLog",
+            //                                        body: {
+            //                                            Request: {
+            //                                                Log: {
+            //                                                    Actor: conn_log.getUserInfo().UserName,
+            //                                                    ActionType: "選課結果通知",
+            //                                                    Action: "發送選課結果通知失敗",
+            //                                                    TargetCategory: "student",
+            //                                                    ClientInfo: {
+            //                                                        ClientInfo: {}
+            //                                                    },
+            //                                                    ActionBy: "ischool web 選課小工具",
+            //                                                    Description: '學生「' + self.student.StudentName() + '」發送選課結果通知失敗：' + JSON.stringify(error)
+            //                                                }
+            //                                            }
+            //                                        }
+            //                                    });
+            //                                });
+            //                            } else {
+            //                                conn_log.ready(function () {
+            //                                    gadget.getContract("emba.student").send({
+            //                                        service: "public.AddLog",
+            //                                        body: {
+            //                                            Request: {
+            //                                                Log: {
+            //                                                    Actor: conn_log.getUserInfo().UserName,
+            //                                                    ActionType: "選課結果通知",
+            //                                                    Action: "發送選課結果通知成功",
+            //                                                    TargetCategory: "student",
+            //                                                    ClientInfo: {
+            //                                                        ClientInfo: {}
+            //                                                    },
+            //                                                    ActionBy: "ischool web 選課小工具",
+            //                                                    Description: '學生「' + self.student.StudentName() + '」發送選課結果通知成功'
+            //                                                }
+            //                                            }
+            //                                        }
+            //                                    });
+            //                                });
+            //                            }
+            //                        }
+            //                    });
+            //                } else {
+            //                    conn_log.ready(function () {
+            //                        gadget.getContract("emba.student").send({
+            //                            service: "public.AddLog",
+            //                            body: {
+            //                                Request: {
+            //                                    Log: {
+            //                                        Actor: conn_log.getUserInfo().UserName,
+            //                                        ActionType: "選課結果通知",
+            //                                        Action: "發送選課結果通知失敗",
+            //                                        TargetCategory: "student",
+            //                                        ClientInfo: {
+            //                                            ClientInfo: {}
+            //                                        },
+            //                                        ActionBy: "ischool web 選課小工具",
+            //                                        Description: '學生「' + self.student.StudentName() + '」未設定Email'
+            //                                    }
+            //                                }
+            //                            }
+            //                        });
+            //                    });
+            //                }
+            //                self.CallbackQueue.JobFinished();
+            //            };
+
+            //            //	以下4行是原來的程式
+            //            //self.curr_attend.removeAll();
+            //            //self.can_choose_course.removeAll();
+            //            //self.get_attend(send_Mail);
+            //            //self.get_can_choose_course();
+
+            //            //	以下程式是為了重構寄信而新寫的
+            //            //	1、備份加選課程及退選課程
+            //            var add_list_backup = self.get_add_list() || [];
+            //            var quit_list_backup = self.get_quit_list() || [];
+            //            var course_add_html_backup = get_course_html(add_list_backup) || '';
+            //            var course_quit_html_backup = get_course_html(quit_list_backup) || '';
+
+            //            //	2、清空curr_attend及can_choose_course
+            //            self.curr_attend.removeAll();
+            //            self.can_choose_course.removeAll();
+
+            //            //	3、get_attend
+            //            self.CallbackQueue.Push(self.get_attend_no_callback);
+
+            //            //	4、send_Mail
+            //            self.CallbackQueue.Push(function () {
+            //                send_Mail(add_list_backup, quit_list_backup, course_add_html_backup, course_quit_html_backup);
+            //            });
+
+            //            //	5、get_can_choose_course
+            //            self.CallbackQueue.Push(function () {
+            //                self.get_can_choose_course();
+            //                self.CallbackQueue.JobFinished();
+            //            });
+            //            //	6、Let's go！
+            //            self.CallbackQueue.Start();
+            //        }
+            //    };
+
+            //    var _add = self.get_add_list();
+            //    if (_add.length > 0) {
+            //        course_add_html = get_course_html(_add);
+            //        $(_add).each(function (index, item) {
+            //            add_list.push('<Course><CourseID>' + item.CourseID + '</CourseID></Course>');
+            //            add_log.push('<Course><CourseID>' + item.CourseID + '</CourseID>' +
+            //                '<Action>insert</Action><ActionBy>student</ActionBy></Course>');
+            //            log_add_content.push(
+            //                '學生「' + self.student.StudentName() + '」加選課程：\n' + item.CourseName
+            //            );
+            //        });
+
+            //        _gg.connection.send({
+            //            service: "_.AddCSAttend",
+            //            body: '<Request>' + add_list.join('') + '</Request>',
+            //            result: function (response, error, http) {
+            //                if (error !== null) {
+            //                    $('#save-data').button('reset');
+            //                    $('#myModal [data-dismiss="modal"]').show();
+            //                    _gg.set_error_message('#errorMessage', 'AddCSAttend', error);
+            //                } else {
+            //                    conn_log.ready(function () {
+            //                        _gg.connection.send({
+            //                            service: "_.AddCSAttendLog",
+            //                            body: '<Request>' + add_log.join('') + '</Request>',
+
+            //                            result: function (response, error, http) {
+            //                                if (error !== null) {
+            //                                    $('#save-data').button('reset');
+            //                                    $('#myModal [data-dismiss="modal"]').show();
+            //                                    _gg.set_error_message('#errorMessage', 'AddCSAttendLog', error);
+            //                                } else {
+            //                                    gadget.getContract("emba.student").send({
+            //                                        service: "public.AddLog",
+            //                                        body: {
+            //                                            Request: {
+            //                                                Log: {
+            //                                                    Actor: conn_log.getUserInfo().UserName,
+            //                                                    ActionType: "加選",
+            //                                                    Action: "加選課程",
+            //                                                    TargetCategory: "student",
+            //                                                    ClientInfo: {
+            //                                                        ClientInfo: {}
+            //                                                    },
+            //                                                    ActionBy: "ischool web 選課小工具",
+            //                                                    Description: log_add_content.join(',')
+            //                                                }
+            //                                            }
+            //                                        }
+            //                                    });
+            //                                    add_complete = true;
+            //                                    complete_process();
+            //                                }
+            //                            }
+            //                        });
+            //                    });
+            //                }
+            //            }
+            //        });
+            //    } else {
+            //        add_complete = true;
+            //        complete_process();
+            //    }
+
+
+            //    var _quit = self.get_quit_list();
+            //    if (_quit.length > 0) {
+            //        course_quit_html = get_course_html(_quit);
+            //        $(_quit).each(function (index, item) {
+            //            quit_list.push('<Course><CourseID>' + item.CourseID + '</CourseID></Course>');
+            //            quit_log.push('<Course><CourseID>' + item.CourseID + '</CourseID>' +
+            //                '<Action>delete</Action><ActionBy>student</ActionBy></Course>');
+            //            log_quit_content.push(
+            //                '學生「' + self.student.StudentName() + '」退選課程：\n' + item.CourseName
+            //            );
+            //        });
+
+            //_gg.connection.send({
+            //    service: "_.DelCSAttend",
+            //    body: '<Request>' + quit_list.join('') + '</Request>',
+            //    result: function (response, error, http) {
+            //        if (error !== null) {
+            //            $('#save-data').button('reset');
+            //            $('#myModal [data-dismiss="modal"]').show();
+            //            _gg.set_error_message('#errorMessage', 'DelCSAttend', error);
+            //        } else {
+            //            conn_log.ready(function () {
+            //                _gg.connection.send({
+            //                    service: "_.AddCSAttendLog",
+            //                    body: '<Request>' + quit_log.join('') + '</Request>',
+
+            //                    result: function (response, error, http) {
+            //                        if (error !== null) {
+            //                            $('#save-data').button('reset');
+            //                            $('#myModal [data-dismiss="modal"]').show();
+            //                            _gg.set_error_message('#errorMessage', 'AddCSAttendLog', error);
+            //                        } else {
+            //                            gadget.getContract("emba.student").send({
+            //                                service: "public.AddLog",
+            //                                body: {
+            //                                    Request: {
+            //                                        Log: {
+            //                                            Actor: conn_log.getUserInfo().UserName,
+            //                                            ActionType: "退選",
+            //                                            Action: "退選課程",
+            //                                            TargetCategory: "student",
+            //                                            ClientInfo: {
+            //                                                ClientInfo: {}
+            //                                            },
+            //                                            ActionBy: "ischool web 選課小工具",
+            //                                            Description: log_quit_content.join(',')
+            //                                        }
+            //                                    }
+            //                                }
+            //                            });
+            //                            quit_complete = true;
+            //                            complete_process();
+            //                        }
+            //                    }
+            //                });
+            //            });
+            //        }
+            //    }
+            //});
+            //    } else {
+            //        quit_complete = true;
+            //        complete_process();
+            //    }
+            //},
+
             save_quit_add: function () {
                 var self = MyViewModel;
-                var add_list = [], add_log = [], add_complete = false, log_add_content = [];
-                var quit_list = [], quit_log = [], quit_complete = false, log_quit_content = [];
-                var course_add_html = '', course_quit_html = '';
+                var add_list = [];
+                var add_list_ID = [];
+                var add_complete = false;
+                var quit_complete = false;
 
-                var get_course_html = function (courses) {
-                    var _txt = [];
-                    _txt.push(
-                        '<table border="1" cellpadding="5px" style="border: 1px solid #C3C3C3; border-collapse: collapse;">' +
-                        '    <thead>' +
-                        '      <tr>' +
-                        '        <th>課程編號</th>' +
-                        '        <th>班次</th>' +
-                        '        <th>（必/選修）課程名稱</th>' +
-                        '        <th>授課教師</th>' +
-                        '        <th>學分</th>' +
-                        '        <th>人數上限</th>' +
-                        '        <th>教室</th>' +
-                        '        <th>上課時間</th>' +
-                        '      </tr>' +
-                        '    </thead>' +
-                        '    <tbody>'
-                    );
-                    if (courses.length === 0) {
-                        _txt.push('<tr><td colspan="8">無課程</td>');
-                    } else {
-                        $(courses).each(function (index, item) {
-                            _txt.push(
-                                '<tr>' +
-                                '    <td>' + (item.NewSubjectCode || '') + '</td>' +
-                                '    <td>' + (item.ClassName || '') + '</td>' +
-                                '    <td>' +
-                                '      <span>' + _gg.getCourseType(item.CourseType) + '</span>' +
-                                '      <span>' + (item.CourseName || '') + '</span>' +
-                                '    </td>' +
-                                '    <td>' + (item.TeacherURLName || '') + '</td>' +
-                                '    <td>' + (item.Credit || '') + '</td>' +
-                                '    <td>' + (item.Capacity || '') + '</td>' +
-                                '    <td>' + (item.Classroom || '') + '</td>' +
-                                '    <td>' + (item.CourseTimeInfo || '') + '</td>' +
-                                '</tr>' +
-                                '<tr>' +
-                                '    <td colspan="8">' + (item.Memo || '') + '</td>' +
-                                '</tr>'
-                            );
-                        });
+                //處理加選
+                add_list = self.get_add_list();
+
+                $(add_list).each(function (index, item) {
+
+                    var json = {
+                        Field: {
+                            RefAlumniId:
+                            item.CourseID
+                        }
+                    };
+                    add_list_ID.push(json);
+                });
+
+                var bodyjson_add_list_id = {
+                    Request: {
+                        ElectiveScattendRecord: add_list_ID
                     }
-                    _txt.push('</tbody></table>');
+                }
 
-                    return _txt.join('');
-                };
+                _gg.connection.send({
+                    service: "_.SetElectiveSCAttend",
+                    body:
+                         bodyjson_add_list_id,
+
+                    result: function (response, error, http) {
+                        add_complete = true;
+                        complete_process();
+                    }
+                });
+
+                //處理退選
+                var quit_list = [];
+                var quit_list_ID = [];
+
+                quit_list = self.get_quit_list();
+
+                $(quit_list).each(function (index, item) {
+
+                    var json = {
+                        Condition: {
+                            Uid:
+                            item.ElectiveUID
+                        }
+                    };
+                    quit_list_ID.push(json);
+                });
+
+                $(quit_list).each(function (index, item) {
+
+                    item.IsSelected = false;
+
+                });
+
+
+                var bodyjson_quit_list_ID = {
+                    Request: {
+                        ElectiveScattendRecord: quit_list_ID
+                    }
+                }
+
+                _gg.connection.send({
+                    service: "_.WithdrawnElective",
+                    body:
+                         bodyjson_quit_list_ID,
+                    result: function (response, error, http) {
+                        quit_complete = true;
+                        complete_process();
+                    }
+                });
 
                 var complete_process = function () {
+                    // 確保加入選課、刪除選課都已經完畢後，在執行。
                     if (add_complete && quit_complete) {
                         $('#myModal').modal('hide');
                         $('body').scrollTop(0);
                         $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
                         setTimeout("$('#mainMsg').html('')", 5000);
-                        // 送出Email
-                        var send_Mail = function (add_list_backup, quit_list_backup, course_add_html_backup, course_quit_html_backup) {
-                            //	收件人
-                            var receiver = [], mail_tmpl_name = '', course_html = '';
-                            for (var ii = 1; ii <= 5; ii += 1) {
-                                if (self.student['Email' + ii]()) {
-                                    // receiver.push(
-                                    // {
-                                    //     'email': self.student['Email' + ii](),
-                                    //     'name': self.student.StudentName() || '',
-                                    //     'type': 'to'
-                                    // });
-                                    receiver.push((self.student.StudentName() || '') + '<' + self.student['Email' + ii]() + '>');
-                                }
-                            }
-                            var receivers = receiver.join(',');
-                            if (receivers) {
-                                //	選課結果寄出時間
-                                var n = new Date();
-                                var y = n.getFullYear();
-                                var m = (n.getMonth() + 1 < 10) ? ("0" + (n.getMonth() + 1)) : (n.getMonth() + 1);
-                                var d = (n.getDate() < 10) ? ("0" + (n.getDate())) : (n.getDate());
-                                var h = (n.getHours() < 10) ? ("0" + (n.getHours())) : (n.getHours());
-                                var mi = (n.getMinutes() < 10) ? ("0" + (n.getMinutes())) : (n.getMinutes());
-                                var s = (n.getSeconds() < 10) ? ("0" + (n.getSeconds())) : (n.getSeconds());
-                                var mail_sending_time = y + "/" + m + "/" + d + " " + h + ":" + mi + ":" + s;
 
-                                //	信件主旨
-                                var mail_subject = '';
-                                //	信件內容
-                                var mail_content = '';
-                                //	階段別
-                                var period = '';
-                                if (self.currentData.Item() === '1') {
-                                    mail_subject = self.configuration['email_content1_template_subject']();
-                                    mail_content = self.configuration['email_content1_template']();
-                                    period = '第一階段';
-                                } else if (self.currentData.Item() === '2') {
-                                    mail_subject = self.configuration['email_content2_template_subject']();
-                                    mail_content = self.configuration['email_content2_template']();
-                                    period = '第二階段';
-                                }
-
-                                //	加選課程清單
-                                //course_add_html
-
-                                //	退選課程清單
-                                //course_quit_html
-                                //	加退選狀態
-                                var status = '';
-                                if (add_list_backup.length > 0)
-                                    status += '加';
-                                if (quit_list_backup.length > 0)
-                                    status += '退';
-                                status += '選';
-
-                                mail_subject = mail_subject.replace(/\[\[學年度\]\]/g, self.currentData.SchoolYear());
-                                mail_subject = mail_subject.replace(/\[\[學期\]\]/g, self.currentData.FullSemester());
-                                mail_subject = mail_subject.replace(/\[\[階段別\]\]/g, period);
-                                mail_subject = mail_subject.replace(/\[\[選課結果寄出時間\]\]/g, mail_sending_time);
-                                mail_subject = mail_subject.replace(/\[\[加退選狀態\]\]/g, status);
-                                mail_subject = mail_subject.replace(/\[\[加選堂數\]\]/g, add_list_backup.length);
-                                mail_subject = mail_subject.replace(/\[\[退選堂數\]\]/g, quit_list_backup.length);
-                                mail_subject = mail_subject.replace(/\[\[加選課程\]\]/g, (add_list_backup.length > 0) ? '<p>加選課程：</p>' + course_add_html_backup : '');
-                                mail_subject = mail_subject.replace(/\[\[退選課程\]\]/g, (quit_list_backup.length > 0) ? '<p>退選課程：</p>' + course_quit_html_backup : '');
-                                mail_subject = mail_subject.replace(/\[\[選課結果\]\]/g, '<p>選課結果：</p>' + get_course_html(self.curr_attend()));
-
-                                mail_content = mail_content.replace(/\[\[學年度\]\]/g, self.currentData.SchoolYear());
-                                mail_content = mail_content.replace(/\[\[學期\]\]/g, self.currentData.FullSemester());
-                                mail_content = mail_content.replace(/\[\[階段別\]\]/g, period);
-                                mail_content = mail_content.replace(/\[\[選課結果寄出時間\]\]/g, mail_sending_time);
-                                mail_content = mail_content.replace(/\[\[加退選狀態\]\]/g, status);
-                                mail_content = mail_content.replace(/\[\[加選堂數\]\]/g, add_list_backup.length);
-                                mail_content = mail_content.replace(/\[\[退選堂數\]\]/g, quit_list_backup.length);
-                                mail_content = mail_content.replace(/\[\[加選課程\]\]/g, (add_list_backup.length > 0) ? '<p>加選課程：</p>' + course_add_html_backup : '');
-                                mail_content = mail_content.replace(/\[\[退選課程\]\]/g, (quit_list_backup.length > 0) ? '<p>退選課程：</p>' + course_quit_html_backup : '');
-                                mail_content = mail_content.replace(/\[\[選課結果\]\]/g, '<p>選課結果：</p>' + get_course_html(self.curr_attend()));
-
-                                _gg.connection.send({
-                                    service: "_.SendMail",
-                                    body: {
-                                        Request: {
-                                            Receiver: receivers,
-                                            Subject: mail_subject,
-                                            HtmlContent: mail_content
-                                        }
-                                    },
-                                    result: function (response, error, http) {
-                                        if (error) {
-                                            conn_log.ready(function () {
-                                                gadget.getContract("emba.student").send({
-                                                    service: "public.AddLog",
-                                                    body: {
-                                                        Request: {
-                                                            Log: {
-                                                                Actor: conn_log.getUserInfo().UserName,
-                                                                ActionType: "選課結果通知",
-                                                                Action: "發送選課結果通知失敗",
-                                                                TargetCategory: "student",
-                                                                ClientInfo: {
-                                                                    ClientInfo: {}
-                                                                },
-                                                                ActionBy: "ischool web 選課小工具",
-                                                                Description: '學生「' + self.student.StudentName() + '」發送選課結果通知失敗：' + JSON.stringify(error)
-                                                            }
-                                                        }
-                                                    }
-                                                });
-                                            });
-                                        } else {
-                                            conn_log.ready(function () {
-                                                gadget.getContract("emba.student").send({
-                                                    service: "public.AddLog",
-                                                    body: {
-                                                        Request: {
-                                                            Log: {
-                                                                Actor: conn_log.getUserInfo().UserName,
-                                                                ActionType: "選課結果通知",
-                                                                Action: "發送選課結果通知成功",
-                                                                TargetCategory: "student",
-                                                                ClientInfo: {
-                                                                    ClientInfo: {}
-                                                                },
-                                                                ActionBy: "ischool web 選課小工具",
-                                                                Description: '學生「' + self.student.StudentName() + '」發送選課結果通知成功'
-                                                            }
-                                                        }
-                                                    }
-                                                });
-                                            });
-                                        }
-                                    }
-                                });
-                            } else {
-                                conn_log.ready(function () {
-                                    gadget.getContract("emba.student").send({
-                                        service: "public.AddLog",
-                                        body: {
-                                            Request: {
-                                                Log: {
-                                                    Actor: conn_log.getUserInfo().UserName,
-                                                    ActionType: "選課結果通知",
-                                                    Action: "發送選課結果通知失敗",
-                                                    TargetCategory: "student",
-                                                    ClientInfo: {
-                                                        ClientInfo: {}
-                                                    },
-                                                    ActionBy: "ischool web 選課小工具",
-                                                    Description: '學生「' + self.student.StudentName() + '」未設定Email'
-                                                }
-                                            }
-                                        }
-                                    });
-                                });
-                            }
-                            self.CallbackQueue.JobFinished();
-                        };
-
-                        //	以下4行是原來的程式
-                        //self.curr_attend.removeAll();
-                        //self.can_choose_course.removeAll();
-                        //self.get_attend(send_Mail);
-                        //self.get_can_choose_course();
-
-                        //	以下程式是為了重構寄信而新寫的
-                        //	1、備份加選課程及退選課程
-                        var add_list_backup = self.get_add_list() || [];
-                        var quit_list_backup = self.get_quit_list() || [];
-                        var course_add_html_backup = get_course_html(add_list_backup) || '';
-                        var course_quit_html_backup = get_course_html(quit_list_backup) || '';
-
-                        //	2、清空curr_attend及can_choose_course
+                        //刷新畫面
                         self.curr_attend.removeAll();
                         self.can_choose_course.removeAll();
 
-                        //	3、get_attend
-                        self.CallbackQueue.Push(self.get_attend_no_callback);
-
-                        //	4、send_Mail
-                        self.CallbackQueue.Push(function () {
-                            send_Mail(add_list_backup, quit_list_backup, course_add_html_backup, course_quit_html_backup);
-                        });
-
-                        //	5、get_can_choose_course
-                        self.CallbackQueue.Push(function () {
-                            self.get_can_choose_course();
-                            self.CallbackQueue.JobFinished();
-                        });
-                        //	6、Let's go！
-                        self.CallbackQueue.Start();
+                        //重新取得選課、可選課程資料
+                        self.get_attend();
+                        // 2016/11/10 穎驊筆記，把 self.get_can_choose_course()包在 self.get_attend()內處理了，避免不同步引起畫面錯亂的問題 ;
+                        //self.get_can_choose_course();
                     }
-                };
-
-                var _add = self.get_add_list();
-                if (_add.length > 0) {
-                    course_add_html = get_course_html(_add);
-                    $(_add).each(function (index, item) {
-                        add_list.push('<Course><CourseID>' + item.CourseID + '</CourseID></Course>');
-                        add_log.push('<Course><CourseID>' + item.CourseID + '</CourseID>' +
-                            '<Action>insert</Action><ActionBy>student</ActionBy></Course>');
-                        log_add_content.push(
-                            '學生「' + self.student.StudentName() + '」加選課程：\n' + item.CourseName
-                        );
-                    });
-
-                    _gg.connection.send({
-                        service: "_.AddCSAttend",
-                        body: '<Request>' + add_list.join('') + '</Request>',
-                        result: function (response, error, http) {
-                            if (error !== null) {
-                                $('#save-data').button('reset');
-                                $('#myModal [data-dismiss="modal"]').show();
-                                _gg.set_error_message('#errorMessage', 'AddCSAttend', error);
-                            } else {
-                                conn_log.ready(function () {
-                                    _gg.connection.send({
-                                        service: "_.AddCSAttendLog",
-                                        body: '<Request>' + add_log.join('') + '</Request>',
-
-                                        result: function (response, error, http) {
-                                            if (error !== null) {
-                                                $('#save-data').button('reset');
-                                                $('#myModal [data-dismiss="modal"]').show();
-                                                _gg.set_error_message('#errorMessage', 'AddCSAttendLog', error);
-                                            } else {
-                                                gadget.getContract("emba.student").send({
-                                                    service: "public.AddLog",
-                                                    body: {
-                                                        Request: {
-                                                            Log: {
-                                                                Actor: conn_log.getUserInfo().UserName,
-                                                                ActionType: "加選",
-                                                                Action: "加選課程",
-                                                                TargetCategory: "student",
-                                                                ClientInfo: {
-                                                                    ClientInfo: {}
-                                                                },
-                                                                ActionBy: "ischool web 選課小工具",
-                                                                Description: log_add_content.join(',')
-                                                            }
-                                                        }
-                                                    }
-                                                });
-                                                add_complete = true;
-                                                complete_process();
-                                            }
-                                        }
-                                    });
-                                });
-                            }
-                        }
-                    });
-                } else {
-                    add_complete = true;
-                    complete_process();
                 }
-
-
-                var _quit = self.get_quit_list();
-                if (_quit.length > 0) {
-                    course_quit_html = get_course_html(_quit);
-                    $(_quit).each(function (index, item) {
-                        quit_list.push('<Course><CourseID>' + item.CourseID + '</CourseID></Course>');
-                        quit_log.push('<Course><CourseID>' + item.CourseID + '</CourseID>' +
-                            '<Action>delete</Action><ActionBy>student</ActionBy></Course>');
-                        log_quit_content.push(
-                            '學生「' + self.student.StudentName() + '」退選課程：\n' + item.CourseName
-                        );
-                    });
-
-                    _gg.connection.send({
-                        service: "_.DelCSAttend",
-                        body: '<Request>' + quit_list.join('') + '</Request>',
-                        result: function (response, error, http) {
-                            if (error !== null) {
-                                $('#save-data').button('reset');
-                                $('#myModal [data-dismiss="modal"]').show();
-                                _gg.set_error_message('#errorMessage', 'DelCSAttend', error);
-                            } else {
-                                conn_log.ready(function () {
-                                    _gg.connection.send({
-                                        service: "_.AddCSAttendLog",
-                                        body: '<Request>' + quit_log.join('') + '</Request>',
-
-                                        result: function (response, error, http) {
-                                            if (error !== null) {
-                                                $('#save-data').button('reset');
-                                                $('#myModal [data-dismiss="modal"]').show();
-                                                _gg.set_error_message('#errorMessage', 'AddCSAttendLog', error);
-                                            } else {
-                                                gadget.getContract("emba.student").send({
-                                                    service: "public.AddLog",
-                                                    body: {
-                                                        Request: {
-                                                            Log: {
-                                                                Actor: conn_log.getUserInfo().UserName,
-                                                                ActionType: "退選",
-                                                                Action: "退選課程",
-                                                                TargetCategory: "student",
-                                                                ClientInfo: {
-                                                                    ClientInfo: {}
-                                                                },
-                                                                ActionBy: "ischool web 選課小工具",
-                                                                Description: log_quit_content.join(',')
-                                                            }
-                                                        }
-                                                    }
-                                                });
-                                                quit_complete = true;
-                                                complete_process();
-                                            }
-                                        }
-                                    });
-                                });
-                            }
-                        }
-                    });
-                } else {
-                    quit_complete = true;
-                    complete_process();
-                }
+                complete_process();
             },
+
             set_full_semester: function () {
                 var self = MyViewModel;
 
@@ -1405,17 +1543,35 @@ jQuery(function () {
 
                 if (self.currentData.Item()) {
                     // 在階段內
-                    if (MyViewModel.currentData.Item() === '1') {
-                        $("#cs_content_template").html(self.configuration.emba_alumnicoursemodule_course_description_temp());
-                        //$("#cs_content_template").html(self.configuration.cs_content1_template());
-                    };
-                    if (MyViewModel.currentData.Item() === '2') {
-                        $("#cs_content_template").html(self.configuration.cs_content2_template());
-                    };
 
-                    $('#sa01 button[ac-type=save1]').tooltip({
-                        trigger: "manual"
-                    });
+                    //2016/11/8 穎驊建立校友選課黑名單禁選課機制
+                    if (Black_List === 'true') {
+
+                        $('#sa01 .memb-list, #sa06 .memb-list').remove();
+                        $('#sa01').html('<p>您目前沒有校友選課權限，請聯繫EMBA辦公室。</p>');
+                        MyViewModel.currentData.Item('s2');
+                    }
+                        // Student_Status=16 為畢業校友
+                    else if (Student_Status !== '16') {
+                        $('#sa01 .memb-list, #sa06 .memb-list').remove();
+                        $('#sa01').html('<p>非畢業校友請至一般學生選課功能。</p>');
+                        MyViewModel.currentData.Item('s2');
+                    }
+
+                    else {
+                        if (MyViewModel.currentData.Item() === '1') {
+                            $("#cs_content_template").html(self.configuration.emba_alumnicoursemodule_course_description_temp());
+                            //$("#cs_content_template").html(self.configuration.cs_content1_template());
+                        };
+                        if (MyViewModel.currentData.Item() === '2') {
+                            $("#cs_content_template").html(self.configuration.cs_content2_template());
+                        };
+
+                        $('#sa01 button[ac-type=save1]').tooltip({
+                            trigger: "manual"
+                        });
+                    }
+
                 } else {
                     // 1. 第一階段選課前，可選課程=目前尚未開放選課,課程總表 + 衝堂課程=無資料
                     // 2. 第一第二階段選課中間~可選課程=目前尚未開放第二階段選課
@@ -1423,36 +1579,53 @@ jQuery(function () {
                     // 4. 加退選期間結束後~選課最終確認,課程總表 + 衝堂課程=本學期選課已結束，目前尚未開放下一學期選課
                     // 5. 第一階段選課前五天，可選課程=目前尚未開放選課,課程總表+衝堂課程=正常顯示
 
-                    if (_all_opening_data['Level0_EndTime']) {
-                        Enddate = new Date(_all_opening_data['Level0_EndTime']);
-                        if (Enddate < today) {
-                            Status = 4;
-                        }
-                    }
+                    //if (_all_opening_data['Level0_EndTime']) {
+                    //    Enddate = new Date(_all_opening_data['Level0_EndTime']);
+                    //    if (Enddate < today) {
+                    //        Status = 4;
+                    //    }
+                    //}
 
-                    if (_all_opening_data['Level2_EndTime']) {
-                        if (_all_opening_data['Level0_BeginTime']) {
-                            Startdate = new Date(_all_opening_data['Level2_EndTime']);
-                            Enddate = new Date(_all_opening_data['Level0_BeginTime']);
-                            if (Startdate < today && Enddate > today) {
-                                Status = 3;
-                            }
-                        } else {
-                            Status = 3;
-                        }
-                    }
+                    //if (_all_opening_data['Level2_EndTime']) {
+                    //    if (_all_opening_data['Level0_BeginTime']) {
+                    //        Startdate = new Date(_all_opening_data['Level2_EndTime']);
+                    //        Enddate = new Date(_all_opening_data['Level0_BeginTime']);
+                    //        if (Startdate < today && Enddate > today) {
+                    //            Status = 3;
+                    //        }
+                    //    } else {
+                    //        Status = 3;
+                    //    }
+                    //}
 
-                    if (_all_opening_data['Level1_EndTime']) {
-                        Startdate = new Date(_all_opening_data['Level1_EndTime']);
-                        if (_all_opening_data['Level2_BeginTime']) {
-                            Enddate = new Date(_all_opening_data['Level2_BeginTime']);
-                            if (Startdate < today && Enddate > today) {
-                                Status = 2;
-                            }
-                        } else if (Startdate < today) {
-                            Status = 2;
-                        }
-                    }
+                    //if (_all_opening_data['Level1_EndTime']) {
+                    //    Startdate = new Date(_all_opening_data['Level1_EndTime']);
+                    //    if (_all_opening_data['Level2_BeginTime']) {
+                    //        Enddate = new Date(_all_opening_data['Level2_BeginTime']);
+                    //        if (Startdate < today && Enddate > today) {
+                    //            Status = 2;
+                    //        }
+                    //    } else if (Startdate < today) {
+                    //        Status = 2;
+                    //    }
+                    //}
+
+                    //if (_all_opening_data['Level1_BeginTime']) {
+                    //    Startdate = new Date(_all_opening_data['Level1_BeginTime']);
+                    //    addDays = new Date(Startdate.getFullYear(), Startdate.getMonth(), Startdate.getDate() - 6);
+                    //    if (Startdate > today) {
+                    //        if (today >= addDays) {
+                    //            Status = 5;
+                    //        } else {
+                    //            Status = 1;
+                    //        }
+                    //    }
+                    //}
+
+                    //2016/11/10 穎驊註解，如果校友選課期間為非階段內，先預設當作已經選完的狀態4
+                    Status = 4;
+
+                    //假如現在時間為在選課時間之前，則為狀態5、狀態1
 
                     if (_all_opening_data['Level1_BeginTime']) {
                         Startdate = new Date(_all_opening_data['Level1_BeginTime']);
@@ -1466,6 +1639,17 @@ jQuery(function () {
                         }
                     }
 
+                    //假如是黑名單，則為狀況6
+                    if (Black_List === 'true') {
+                        Status = 6;
+                    }
+
+                    //假如不是 校友，則為狀況7
+                    if (Student_Status !== '16') {
+                        Status = 7;
+                    }
+
+                    //依照不同的狀況，介面會有不同的預設。
                     switch (Status) {
                         case 5:
                             $('#sa01 .memb-list, #sa06 .memb-list').remove();
@@ -1489,21 +1673,37 @@ jQuery(function () {
                             MyViewModel.currentData.Item('s3');
                             break;
                         case 4:
-                            $('#sa01 .memb-list, button[ac-type="save0"], button[ac-type="printCourse"]').remove();
-                            $('#sa02, #sa03').html('<p>本學期選課已結束，目前尚未開放下一學期選課</p>');
-                            // 收到加退選單資訊，呈現到加退選結束時間+10日
-                            if (_all_opening_data['Level0_EndTime']) {
-                                basicDate = new Date(_all_opening_data['Level0_EndTime']);
-                                addDays = new Date(basicDate.getFullYear(), basicDate.getMonth(), basicDate.getDate() + 11);
-                                if (today > addDays) {
-                                    $('#sa06 .memb-list').remove();
-                                }
-                            } else {
-                                $('#sa06 .memb-list').remove();
-                            }
+                            //$('#sa01 .memb-list, button[ac-type="save0"], button[ac-type="printCourse"]').remove();
+                            //$('#sa02, #sa03').html('<p>本學期選課已結束，目前尚未開放下一學期選課</p>');
+                            //// 收到加退選單資訊，呈現到加退選結束時間+10日
+                            //if (_all_opening_data['Level0_EndTime']) {
+                            //    basicDate = new Date(_all_opening_data['Level0_EndTime']);
+                            //    addDays = new Date(basicDate.getFullYear(), basicDate.getMonth(), basicDate.getDate() + 11);
+                            //    if (today > addDays) {
+                            //        $('#sa06 .memb-list').remove();
+                            //    }
+                            //} else {
+                            //    $('#sa06 .memb-list').remove();
+                            //}
 
+                            //校友選課不需要上面資訊，故註解掉。
                             MyViewModel.currentData.Item('s4');
                             break;
+
+                            //2016/11/8 穎驊建立校友選課黑名單禁選課機制
+                        case 6:
+                            $('#sa01 .memb-list, #sa06 .memb-list').remove();
+                            $('#sa01').html('<p>您目前沒有校友選課權限，請聯繫EMBA辦公室。</p>');
+                            MyViewModel.currentData.Item('s2');
+                            break;
+
+                            //2016/11/8 穎驊建立非畢業校友禁選課機制
+                        case 7:
+                            $('#sa01 .memb-list, #sa06 .memb-list').remove();
+                            $('#sa01').html('<p>非畢業校友請至一般學生選課功能。</p>');
+                            MyViewModel.currentData.Item('s2');
+                            break;
+
                         default:
                             $('#sa01 .memb-list, #sa06 .memb-list').remove();
                             $('h1').html('選課');
@@ -1517,14 +1717,14 @@ jQuery(function () {
                 $('#myTab li > a:first').trigger('click');
             },
 
-            // 依學生狀態決定顯示內容
+            // 依學生狀態決定顯示內容 ，1=在學，4=休學，16 =畢業。
             checkStudentStatus: function () {
                 var self = MyViewModel;
-                if (self.student.Status() === '1' || self.student.Status() === '4') {
+                if (self.student.Status() === '1' || self.student.Status() === '4' || self.student.Status() === '16') {
                     self.get_openingdata();
                 } else {
-                    $('h1').html('選課');
-                    $('#myTabContent').html('很抱歉，您無權限操作此功能');
+                    //$('h1').html('選課');
+                    //$('#myTabContent').html('很抱歉，您無權限操作此功能');
                 }
             }
 
@@ -1536,6 +1736,8 @@ jQuery(function () {
     //MyViewModel.get_faq();
     MyViewModel.get_configuration();
     MyViewModel.CallbackQueue = CreateCallbackQueue();
+
+    
 })();
 
 _gg.getCourseType = function (type) {

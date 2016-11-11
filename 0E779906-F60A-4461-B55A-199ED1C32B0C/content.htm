@@ -41,14 +41,26 @@
             <span class="my-received-msg" data-bind="text: sc_msg_received"></span>
         </div>
       </script>
+
+
+      <!--<script type="text/html" id="Item1Tmp2">
+          <div class="my-sure" >
+              <p style="font-size:160%;">您目前並無選課權限</p>
+              <button type="button" class="btn btn-success" ac-type="save1" data-toggle="modal" data-target="#myModal" rel="tooltip" title="紅底為衝堂或不得重複加選" data-placement="left">穎驊測試</button>
+              <button type="button" class="btn" data-bind="click: reset_add_quit">取消</button>
+          </div>
+      </script>-->
+
+
+
       <div class="row-fluid">
         <div class="span12">
             <h1>
               <span data-bind="text: currentData.SchoolYear"></span> 學年度 <span data-bind="text: currentData.FullSemester"></span>
                 <ul id="myTab" class="nav nav-tabs my-navtabs">
                     <li data-bind="if: currentData.Item() === '1' || currentData.Item() === '2' || currentData.Item() === 's1' || currentData.Item() === 's2' || currentData.Item() === 's5'"><a href="#sa01" data-toggle="tab">可選課程</a></li>
-                    <!--<li data-bind="if: currentData.Item() === '0' || currentData.Item() === 's3' || currentData.Item() === 's4'"><a href="#sa06" data-toggle="tab">選課最終確認</a></li>
-                    <li><a href="#sa02" data-toggle="tab">課程總表</a></li>
+                    <li data-bind="if: currentData.Item() === '0' || currentData.Item() === 's3' || currentData.Item() === 's4'"><a href="#sa06" data-toggle="tab">選課確認</a></li>
+                    <!--<li><a href="#sa02" data-toggle="tab">課程總表</a></li>
                     <li><a href="#sa03" data-toggle="tab">衝堂與限制複選課程</a></li>
                     <li><a href="#sa04" data-toggle="tab">選課注意事項</a></li>
                     <li><a href="#sa05" data-toggle="tab">選課問答集</a></li>
@@ -65,11 +77,13 @@
                     </div>
                   </div>
 
+                  <!--<div data-bind="template: { name: 'Item1Tmp2'}" class='memb-list' ></div>-->
+
                   <div data-bind="template: { name: 'Item1Tmpl'}" class='memb-list'></div>
                   <table class="table table-bordered table-striped">
                         <thead>
                           <tr>
-                            <th colspan="9" class="my-table-head1">第一階段<font color="blue">已選課程</font></th>
+                            <th colspan="9" class="my-table-head1"><font color="blue">已選課程</font></th>
                           </tr>
                           <tr>
                             <th><font size="3">退選</font></th>
