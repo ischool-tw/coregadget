@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs title="課程歷年成績查詢" description="課程歷年成績查詢 2016版(高雄)" bgcolor="#fdb53f" iconfamily="css/images/nav42.png">
+    <Title lang="zh-TW">課程歷年成績查詢</Title>
+    <Icon>src/icon.png</Icon>
+    <Title lang="zh-CN">课程历年成绩查询</Title>
+    <Title lang="en-US" />
+  </ModulePrefs>
+</Module>
+

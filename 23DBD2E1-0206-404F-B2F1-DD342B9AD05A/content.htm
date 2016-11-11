@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html ng-app="PassedCourseScore">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/gadget.js"></script>
+    <script>
+        init({
+            application: "test.kh.edu.tw",
+            paramValues: {},
+            oAuth: {
+                clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+                clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
+                account: 'stitch@ischool.com.tw',
+                password: '1234'//window.prompt('password:')
+            }
+        });
+    </script>
+
+
+    <title>CourseScore</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <link href="css/base.css" rel="stylesheet" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+
+    <script src="js/angular.min.js"></script>
+    <script src="js/sortable.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/xml2json.js"></script>
+    <script src="js/angular-strap.min.js"></script>
+    <script src="js/angular-strap.tpl.min.js"></script>
+
+    <script src="js/passed.course.score.js"></script>
+</head>
+
+
+<body ng-controller="MainCtrl">
+    <div ng-if="!(semesterList)" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+    <div id="gadget" class="my-page" ng-if="semesterList">
+        <h1>課程歷年成績查詢</h1>
+        <div>
+            <div class="btn-group">
+                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    {{current.semester.schoolYear}} {{current.semester.semester}}
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="semester in semesterList"
+                        ng-class="{active:semester==current.semester}">
+                        <a href="javascript:;" ng-click="setCurrentSemester(semester)">{{semester.schoolYear}} {{semester.semester}}</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    {{current.course.CourseName}}
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="course in current.semester.courseList"
+                        ng-class="{active:course==current.course}">
+                        <a href="javascript:;" ng-click="setCurrentCourse(course)">{{course.CourseName}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div ng-if="current.course.ExamList" class="hidden-xs" style="margin-top:10px;">
+            <div>
+                <table class="table table-bordered table-striped text-center"
+                       style="table-layout:fixed;">
+                    <thead>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 95px;"
+                                rowspan="2">
+                                學生
+                            </th>
+                            <th ng-repeat="exam in current.course.ExamList"
+                                class="text-center"
+                                style="padding: 8px 2px;"
+                                colspan="{{exam.colSpan}}">
+                                <span>
+                                    {{exam.Name}}
+                                </span>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th ng-repeat="subExam in current.course.ScoreList"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <h6 style="margin:0px;">
+                                    {{subExam.Name}}
+                                </h6>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="stuRec in current.course.StudentList">
+                            <td class="text-left">
+                                <span ng-if="stuRec.SeatNo"
+                                      style="min-width:24px;display:inline-block;">{{stuRec.SeatNo}}.&nbsp;</span>
+                                <span>{{stuRec.StudentName}}</span>
+                            </td>
+                            <td ng-repeat="exam in current.course.ScoreList"
+                                class="text-center">
+                                <h6 style="margin:0px;">
+                                    <small>
+                                        <span>
+                                           {{stuRec[exam.Key]}}
+                                        </span>
+                                    </small>
+                                </h6>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
