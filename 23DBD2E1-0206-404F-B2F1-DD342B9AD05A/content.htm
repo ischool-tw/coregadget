@@ -78,8 +78,7 @@
                     <thead>
                         <tr>
                             <th class="text-center"
-                                style="padding: 8px 2px;width: 145px;"
-                                rowspan="2">
+                                style="padding: 8px 2px;width: 145px;">
                                 學生
                             </th>
                             <th ng-repeat="exam in current.course.ExamList"
@@ -92,6 +91,12 @@
                             </th>
                         </tr>
                         <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 145px;">
+                                <h6 style="margin:0px;display: inline-block;">
+                                    班級 座號 姓名
+                                </h6>
+                            </th>
                             <th ng-repeat="subExam in current.course.ScoreList"
                                 class="text-center"
                                 style="padding: 8px 2px;"
