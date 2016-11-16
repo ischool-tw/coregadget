@@ -41,7 +41,7 @@
     <div ng-if="!(semesterList)" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
 
     <div ng-if="(current.course.StudentList.length==0)" style="position:absolute;top:50%;left:20%;margin-top:-20px;margin-left:-50px;">本學期本課程無任何學生。</div>
-    
+
     <div id="gadget" class="my-page" ng-if="semesterList">
         <h1>課程歷年成績查詢</h1>
         <div>
@@ -71,7 +71,7 @@
             </div>
         </div>
 
-        <div ng-if="current.course.ExamList" class="hidden-xs" style="margin-top:10px;">
+        <div ng-if="current.course.ExamList" style="margin-top:10px;">
             <div>
                 <table class="table table-bordered table-striped text-center"
                        style="table-layout:fixed;">
@@ -96,7 +96,7 @@
                                 class="text-center"
                                 style="padding: 8px 2px;"
                                 colspan="{{subExam.colSpan}}">
-                                <h6 style="margin:0px;">
+                                <h6 style="margin:0px;display: inline-block;">
                                     {{subExam.Name}}
                                 </h6>
                             </th>
@@ -114,8 +114,9 @@
                             </td>
                             <td ng-repeat="score in current.course.ScoreList"
                                 class="text-center"
+                                ng-class="{'text-left':score.Name=='文字評量'}"
                                 colspan="{{score.colSpan}}">
-                                <h6 style="margin:0px;">
+                                <h6 style="margin:0px;display: inline-block;">
                                     <small>
                                         <span>
                                             {{stuRec[score.Key]||"-"}}
@@ -126,6 +127,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <h6 class="text-muted">如需存檔使用，可圈選整張表格後複製(Ctrl+C)，至Excel貼上。</h6>
             </div>
         </div>
     </div>
