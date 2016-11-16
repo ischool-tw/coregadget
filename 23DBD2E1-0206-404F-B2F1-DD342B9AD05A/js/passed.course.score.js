@@ -39,12 +39,32 @@
             $scope.current.course = course;
             course.ExamList = [];
             course.ScoreList = [];
+            var gradeItemID = {};
+
+            var targetExam = {
+                ExamID: "課程總成績",
+                Name: "課程總成績",
+                colSpan: 2,
+                SubExamList: ["分數評量", "努力程度"]
+            };
+
+            course.ScoreList.push({
+                Name: "分數評量",
+                Key: "Exam" + targetExam.ExamID + "///^///" + "分數評量"
+            });
+            course.ScoreList.push({
+                Name: "努力程度",
+                Key: "Exam" + targetExam.ExamID + "///^///" + "努力程度"
+            });
+
+            course.ExamList.push(targetExam);
+
 
             [].concat(course.Scores.Score || []).forEach(function (examRec, index) {
                 course.ExamList.push({
                     ExamID: examRec.ExamID,
                     Name: examRec.Name,
-                    colSpan:2,
+                    colSpan: 2,
                     SubExamList: ["分數評量", "努力程度"]
                 });
                 course.ScoreList.push({
@@ -56,7 +76,7 @@
                     Key: "Exam" + examRec.ExamID + "///^///" + "努力程度"
                 });
             });
-            
+
             $scope.connection.send({
                 service: "TeacherAccess.GetCourseExtensions",
                 body: {
@@ -72,37 +92,55 @@
                         alert("TeacherAccess.GetCourseExtensions Error");
                     } else {
 
-                        var targetExam = {
-                            ExamID: "平時評量",
-                            Name: "平時評量",
-                            colSpan: 2,
-                            SubExamList: ["分數評量", "努力程度"]
-                        };
-                        course.ScoreList.push({
-                            Name: "分數評量",
-                            Key: "Exam" + targetExam.ExamID + "///^///" + "分數評量"
-                        });
-                        course.ScoreList.push({
-                            Name: "努力程度",
-                            Key: "Exam" + targetExam.ExamID + "///^///" + "努力程度"
-                        });
-                        //var gradeItemID = {};
+                        $scope.$apply(function () {
+                            var targetExam = {
+                                ExamID: "平時評量",
+                                Name: "平時評量",
+                                colSpan: 2,
+                                SubExamList: ["分數評量", "努力程度"]
+                            };
+                            course.ScoreList.push({
+                                Name: "分數評量",
+                                Key: "Exam" + targetExam.ExamID + "///^///" + "分數評量"
+                            });
+                            course.ScoreList.push({
+                                Name: "努力程度",
+                                Key: "Exam" + targetExam.ExamID + "///^///" + "努力程度"
+                            });
 
-                        course.ExamList.push(targetExam);
-                        [].concat(response.Response.CourseExtension.Extension || []).forEach(function (extensionRec) {
-                            if (extensionRec.GradeItem && extensionRec.GradeItem.Item) {
-                                [].concat(extensionRec.GradeItem.Item || []).forEach(function (item, index) {
-                                    targetExam.SubExamList.push(item.Name);
-                                    targetExam.colSpan++;
-                                    course.ScoreList.push({
-                                        Name: item.Name,
-                                        Key: "Exam" + targetExam.ExamID + "///^///" + item.Name
+                            //var gradeItemID = {};
+
+                            course.ExamList.push(targetExam);
+                            if (response.Response && response.Response.CourseExtension)
+                            [].concat(response.Response.CourseExtension.Extension || []).forEach(function (extensionRec) {
+                                if (extensionRec.GradeItem && extensionRec.GradeItem.Item) {
+                                    [].concat(extensionRec.GradeItem.Item || []).forEach(function (item, index) {
+                                        targetExam.SubExamList.push(item.Name);
+                                        targetExam.colSpan++;
+                                        course.ScoreList.push({
+                                            Name: item.Name,
+                                            Key: "Exam" + targetExam.ExamID + "///^///" + item.Name
+                                        });
+                                        gradeItemID[item.SubExamID] = "Exam" + targetExam.ExamID + "///^///" + item.Name;
                                     });
-                                    //gradeItemID[item.SubExamID] = item.Name;
-                                });
-                            }
-                        });
+                                }
+                            });
 
+                            var targetExam = {
+                                ExamID: "文字評量",
+                                Name: "文字評量",
+                                colSpan: 3,
+                                SubExamList: ["文字評量"]
+                            };
+
+                            course.ExamList.push(targetExam);
+
+                            course.ScoreList.push({
+                                Name: "文字評量",
+                                Key: "文字評量",
+                                colSpan: 3
+                            });
+                        });
 
                         $scope.connection.send({
                             service: "TeacherAccess.GetCourseStudents",
@@ -164,7 +202,44 @@
                                         }
                                     });
 
-                                    return;
+
+                                    //抓平時評量成績
+                                    $scope.connection.send({
+                                        service: "TeacherAccess.GetSCAttendExtensions",
+                                        body: {
+                                            Content: {
+
+                                                ExtensionCondition: {
+                                                    '@CourseID': '' + course.CourseID,
+                                                    Name: ['GradeBook']
+                                                }
+                                            }
+                                        },
+                                        result: function (response, error, http) {
+
+                                            if (error) {
+                                                alert("TeacherAccess.GetSCAttendExtensions Error");
+                                            } else {
+                                                $scope.$apply(function () {
+                                                    [].concat(response.Response.SCAttendExtension || []).forEach(function (Objects, index) {
+
+                                                        if (Objects.Extension && Objects.Extension.Exam) {
+
+                                                            [].concat(Objects.Extension.Exam.Item || []).forEach(function (Item, index) {
+
+                                                                studentMapping[Objects.StudentID][gradeItemID[Item.SubExamID]] = Item.Score;
+
+                                                            });
+
+                                                        }
+                                                    });
+                                                    //$scope.setupCurrent();
+                                                });
+                                            }
+                                        }
+                                    });
+
+                                    //return;
                                     //抓課程總成績
                                     $scope.connection.send({
                                         service: "TeacherAccess.GetCourseSemesterScore",
@@ -186,9 +261,21 @@
                                             if (error) {
                                                 alert("TeacherAccess.GetCourseSemesterScore Error");
                                             } else {
+
                                                 $scope.$apply(function () {
                                                     [].concat(response.Scores.Item || []).forEach(function (finalScoreRec, index) {
-                                                        studentMapping[finalScoreRec.StudentID]["Exam" + finalScore.ExamID] = finalScoreRec.Score;
+
+                                                        studentMapping[finalScoreRec.StudentID]["Exam" + "平時評量" + "///^///" + "分數評量"] = finalScoreRec.Extension.Extension.OrdinarilyScore;
+
+                                                        studentMapping[finalScoreRec.StudentID]["Exam" + "平時評量" + "///^///" + "努力程度"] = finalScoreRec.Extension.Extension.OrdinarilyEffort
+
+
+                                                        studentMapping[finalScoreRec.StudentID]["Exam" + "課程總成績" + "///^///" + "分數評量"] = finalScoreRec.Score;
+
+                                                        studentMapping[finalScoreRec.StudentID]["Exam" + "課程總成績" + "///^///" + "努力程度"] = finalScoreRec.Extension.Extension.Effort;
+
+                                                        studentMapping[finalScoreRec.StudentID]["文字評量"] = finalScoreRec.Extension.Extension.Text;
+
                                                     });
                                                 });
                                             }
@@ -230,9 +317,9 @@
                                     var courseList = [];
 
                                     [].concat(response.Courses.Course || []).forEach(function (courseRec, index) {
-                                        if (courseRec.SchoolYear != schoolYear || courseRec.Semester != semester) {
-                                            courseList.push(courseRec);
-                                        }
+                                        //if (courseRec.SchoolYear != schoolYear || courseRec.Semester != semester) {
+                                        courseList.push(courseRec);
+                                        //}
                                     });
                                     courseList.sort(function (b, a) {
                                         if (a.SchoolYear != b.SchoolYear)
@@ -248,10 +335,10 @@
                                     $scope.semesterList = [];
                                     var currsentSems = {};
                                     courseList.forEach(function (course) {
-                                        if (course.SchoolYear != currsentSems.schoolYear || course.Semester != currsentSems.semester) {
+                                        if (course.SchoolYear + "學年度" != currsentSems.schoolYear || course.Semester + "學期" != currsentSems.semester) {
                                             currsentSems = {
-                                                schoolYear: course.SchoolYear,
-                                                semester: course.Semester,
+                                                schoolYear: course.SchoolYear + "學年度",
+                                                semester: course.Semester + "學期",
                                                 courseList: []
                                             };
                                             $scope.semesterList.push(currsentSems);

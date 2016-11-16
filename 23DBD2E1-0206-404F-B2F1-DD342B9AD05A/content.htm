@@ -39,6 +39,9 @@
 
 <body ng-controller="MainCtrl">
     <div ng-if="!(semesterList)" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+
+    <div ng-if="(current.course.StudentList.length==0)" style="position:absolute;top:50%;left:20%;margin-top:-20px;margin-left:-50px;">本學期本課程無任何學生。</div>
+    
     <div id="gadget" class="my-page" ng-if="semesterList">
         <h1>課程歷年成績查詢</h1>
         <div>
@@ -75,7 +78,7 @@
                     <thead>
                         <tr>
                             <th class="text-center"
-                                style="padding: 8px 2px;width: 95px;"
+                                style="padding: 8px 2px;width: 145px;"
                                 rowspan="2">
                                 學生
                             </th>
@@ -91,7 +94,8 @@
                         <tr>
                             <th ng-repeat="subExam in current.course.ScoreList"
                                 class="text-center"
-                                style="padding: 8px 2px;">
+                                style="padding: 8px 2px;"
+                                colspan="{{subExam.colSpan}}">
                                 <h6 style="margin:0px;">
                                     {{subExam.Name}}
                                 </h6>
@@ -102,15 +106,19 @@
                         <tr ng-repeat="stuRec in current.course.StudentList">
                             <td class="text-left">
                                 <span ng-if="stuRec.SeatNo"
+                                      style="min-width:35px;display:inline-block;">{{stuRec.ClassName}}&nbsp;</span>
+
+                                <span ng-if="stuRec.SeatNo"
                                       style="min-width:24px;display:inline-block;">{{stuRec.SeatNo}}.&nbsp;</span>
                                 <span>{{stuRec.StudentName}}</span>
                             </td>
-                            <td ng-repeat="exam in current.course.ScoreList"
-                                class="text-center">
+                            <td ng-repeat="score in current.course.ScoreList"
+                                class="text-center"
+                                colspan="{{score.colSpan}}">
                                 <h6 style="margin:0px;">
                                     <small>
                                         <span>
-                                           {{stuRec[exam.Key]}}
+                                            {{stuRec[score.Key]||"-"}}
                                         </span>
                                     </small>
                                 </h6>
