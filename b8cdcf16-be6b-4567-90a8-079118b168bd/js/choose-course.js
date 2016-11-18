@@ -273,6 +273,7 @@ jQuery(function () {
                                     self.get_sc_attend();
                                     self.get_registration_confirm();
                                 } else if (self.currentData.Item() === '1' || self.currentData.Item() === '2') {
+                                    self.get_sc_attend();
                                     self.get_conflict_course();
                                     self.get_attend();
                                     self.get_can_choose_course();
@@ -417,7 +418,19 @@ jQuery(function () {
                     var self = MyViewModel;
                     if (self.conflict_col_course[_courseID]) {
                         var _conflict = [];
-                        $(self.conflict_col_course[_courseID]).each(function(key, value) {
+                        $(self.conflict_col_course[_courseID]).each(function (key, value) {
+                            // 與已指定課程比較
+                            $(self.sc_attend()).each(function (index, item) {
+                                if (item.CourseID === value && !item.WillQuit()) {
+                                    if (!status) {
+                                        _conflict.push(item.CourseID);
+                                        item.HaveConflict.push(_courseID);
+                                    } else {
+                                        item.HaveConflict.remove(_courseID);
+                                    }
+                                }
+                            });
+
                             // 與已選課程比較
                             $(self.curr_attend()).each(function(index, item) {
                                 if (item.CourseID === value && !item.WillQuit()) {
@@ -504,7 +517,18 @@ jQuery(function () {
                     var self = MyViewModel;
                     if (self.conflict_col_course[_courseID]) {
                         var _conflict = [];
-                        $(self.conflict_col_course[_courseID]).each(function(key, value) {
+                        $(self.conflict_col_course[_courseID]).each(function (key, value) {
+                            // 與已指定課程比較
+                            $(self.sc_attend()).each(function (index, item) {
+                                if (item.CourseID === value && !item.WillQuit()) {
+                                    if (status) {
+                                        _conflict.push(item.CourseID);
+                                        item.HaveConflict.push(_courseID);
+                                    } else {
+                                        item.HaveConflict.remove(_courseID);
+                                    }
+                                }
+                            });
                             // 與已選課程比較
                             $(self.curr_attend()).each(function(index, item) {
                                 if (item.CourseID === value && !item.WillQuit()) {
@@ -575,7 +599,9 @@ jQuery(function () {
                                 $(response.Response.SCattendExt).each(function(index, item) {
                                     var _course = self.all_col_course[item.CourseID];
                                     if (_course) {
-                                        self.sc_attend.push(self.all_col_course[item.CourseID]);
+                                        _course.WillQuit = ko.observable(false);
+                                        _course.HaveConflict = ko.observableArray();
+                                        self.sc_attend.push(_course);
                                     }
                                 });
                             }
@@ -952,6 +978,10 @@ jQuery(function () {
             ,
             reset_add_quit : function() {
                 var self = MyViewModel;
+                $(self.sc_attend()).each(function (index, item) {
+                    item.WillQuit(false);
+                    item.HaveConflict([]);
+                });
                 $(self.curr_attend()).each(function(index, item) {
                     item.WillQuit(false);
                     item.HaveConflict([]);
