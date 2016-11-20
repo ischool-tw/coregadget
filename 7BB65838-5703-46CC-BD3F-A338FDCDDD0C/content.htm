@@ -12,9 +12,9 @@
             oAuth: {
                 clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
                 clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
-                account: 'teacher01.whsh@1campus.net',
+                //account: 'teacher01.whsh@1campus.net',
                 //account: 'teacher02.whsh@1campus.net',
-                //account: 'teacher03.whsh@1campus.net',
+                account: 'teacher03.whsh@1campus.net',
                 password: 1234//window.prompt('password:')
             }
         });
@@ -340,7 +340,7 @@
                                         <table class="col-xs-12" style="float:inherit;">
                                             <tr>
                                                 <td class="text-left">
-                                                    <span>編號：</span><span>{{rec.HomeVisitNo}}</span>
+                                                    <span>聯繫日期：</span><span>{{rec.HomeVisitDate}}</span>
                                                 </td>
                                                 <td class="text-right">
                                                     <a class="btn btn-sm btn-default"
@@ -365,7 +365,9 @@
                                 </div>
                                 <div class="panel-body">
                                     <div class="col-xs-12 col-sm-4" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
-                                        <span>聯繫日期：</span><span>{{rec.HomeVisitDate}}</span>
+                                        <span>紀錄者：</span>
+                                        <span>{{HomeVisitDetial.AuthorName}}</span>
+                                        <span>({{HomeVisitDetial.AuthorRole}})</span>
                                     </div>
                                     <div class="col-xs-12 col-sm-4" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
                                         <span>聯繫事由：</span><span>{{rec.Cause}}</span>
@@ -431,8 +433,20 @@
                                         <span>{{HomeVisitDetial.Place}}</span>
                                     </div>
                                     <div class="col-xs-12">
-                                        <span>聯繫成員：</span>
+                                        <span>參與成員：</span>
                                         <span ng-repeat="item in HomeVisitDetial.Attendees">
+                                            <span ng-if="$index>0">、</span>
+                                            <u ng-if="item.Remark">
+                                                {{item.Name}}：{{item.Remark}}
+                                            </u>
+                                            <span ng-if="!item.Remark">
+                                                {{item.Name}}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <span>聯繫成員：</span>
+                                        <span ng-repeat="item in HomeVisitDetial.Contact">
                                             <span ng-if="$index>0">、</span>
                                             <u ng-if="item.Remark">
                                                 {{item.Name}}：{{item.Remark}}
@@ -461,6 +475,7 @@
                                     <div class="pull-right col-xd-12 col-sm-4">
                                         <span>紀錄者：</span>
                                         <span>{{HomeVisitDetial.AuthorName}}</span>
+                                        <span>({{HomeVisitDetial.AuthorRole}})</span>
                                     </div>
                                 </div>
                             </div>
@@ -478,6 +493,15 @@
                                     <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                     返回
                                 </a>
+                                <a class="btn btn-sm btn-default"
+                                   ng-class="{disabled:HomeVisitDetial.EditRole!='紀錄者'}"
+                                   ng-if="HomeVisitDetial.UID"
+                                   style="padding: 8px 10px;margin: -14px 0px;"
+                                   href="javascript:void(0)"
+                                   ng-click="DeleteHomeVisitRecord(HomeVisitDetial)">
+                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    刪除
+                                </a>
                                 <span class="visible-xs pull-right text-muted">家庭聯繫</span>
                             </div>
                         </div>
@@ -492,6 +516,12 @@
                                                 <div class="col-sm-3">
                                                     <input type="text" class="form-control" id="HomeVisitNo" placeholder="" ng-model="HomeVisitDetial.HomeVisitNo">
                                                 </div>
+                                                <h6 class="col-sm-offset-2 col-sm-10 text-muted"
+                                                    style="margin-top: 2px;margin-bottom: -15px;">
+                                                    <small>
+                                                        非必填，供管理案件使用。
+                                                    </small>
+                                                </h6>
                                             </div>
                                             <div style="display: inline-block;width: 100%;">
                                                 <div class="form-group col-sm-6"
@@ -576,12 +606,39 @@
                                                 <label class="col-sm-2 control-label"
                                                        style="padding-bottom: 5px;">
                                                     <span class="text-danger">*</span>
-                                                    聯繫成員：
+                                                    參與成員：
                                                 </label>
                                                 <div class="col-sm-10">
                                                     <div class="checkbox"
                                                          style="padding: 0px;margin-top: -5px;">
                                                         <label ng-repeat="opt in HomeVisitDetial.AttendeesOption"
+                                                               style="padding:0px 10px 10px 0px;display: inline-block;">
+                                                            <input type="checkbox" value="{{opt.Name}}" ng-model="opt.Checked"><span class="checkbox-material"><span class="check"></span></span>
+                                                            <span ng-style="{color:opt.Checked?'#555':'#BFBFBF'}">
+                                                                {{opt.Name}}
+                                                                <span ng-if="opt.HasRemark">：</span>
+                                                            </span>
+                                                            <input ng-if="opt.HasRemark"
+                                                                   ng-style="{color:opt.Checked?'':'#BFBFBF'}"
+                                                                   type="text"
+                                                                   class="form-control"
+                                                                   style="display: inline-block;width:150px;"
+                                                                   placeholder=""
+                                                                   ng-model="opt.Remark">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label"
+                                                       style="padding-bottom: 5px;">
+                                                    <span class="text-danger">*</span>
+                                                    聯繫成員：
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <div class="checkbox"
+                                                         style="padding: 0px;margin-top: -5px;">
+                                                        <label ng-repeat="opt in HomeVisitDetial.ContactOption"
                                                                style="padding:0px 10px 10px 0px;display: inline-block;">
                                                             <input type="checkbox" value="{{opt.Name}}" ng-model="opt.Checked"><span class="checkbox-material"><span class="check"></span></span>
                                                             <span ng-style="{color:opt.Checked?'#555':'#BFBFBF'}">
@@ -636,12 +693,12 @@
                                                     <textarea class="form-control msd-elastic" id="ContentDigest" ng-model="HomeVisitDetial.ContentDigest"></textarea>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <!--<div class="form-group">
                                                 <label class="col-sm-2 control-label" for="AuthorName">紀錄者：</label>
                                                 <div class="col-sm-3">
                                                     <input type="text" class="form-control" id="AuthorName" placeholder="" ng-model="HomeVisitDetial.AuthorName">
                                                 </div>
-                                            </div>
+                                            </div>-->
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label">開放查閱：</label>
                                                 <div class="col-sm-10 ">
@@ -703,7 +760,7 @@
                                         <table class="col-xs-12" style="float:inherit;">
                                             <tr>
                                                 <td class="text-left">
-                                                    <span>編號：</span><span>{{rec.InterviewNo}}</span>
+                                                    <span>晤談日期：</span><span>{{rec.InterviewDate}}</span>
                                                 </td>
                                                 <td class="text-right">
                                                     <a class="btn btn-sm btn-default"
@@ -728,10 +785,12 @@
                                 </div>
                                 <div class="panel-body">
                                     <div class="col-xs-12 col-sm-4" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
-                                        <span>晤談日期：</span><span>{{rec.InterviewDate}}</span>
+                                        <span>紀錄者：</span>
+                                        <span>{{rec.AuthorName}}</span>
+                                        <span>({{rec.AuthorRole}})</span>
                                     </div>
                                     <div class="col-xs-12 col-sm-4" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
-                                        <span>晤談事由：</span><span>{{rec.Cause}}</span>
+                                        <span>晤談動機：</span><span>{{rec.Cause}}</span>
                                     </div>
                                     <div class="col-xs-12 col-sm-4" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
                                         <span>晤談對象：</span><span>{{rec.IntervieweeType}}</span>
@@ -782,7 +841,7 @@
                                         <span>{{InterviewDetial.InterviewTime}}</span>
                                     </div>
                                     <div class="col-xs-12">
-                                        <span>晤談事由：</span>
+                                        <span>晤談動機：</span>
                                         <span>{{InterviewDetial.Cause}}</span>
                                     </div>
                                     <div class="col-xs-12 col-sm-4">
@@ -840,6 +899,7 @@
                                     <div class="pull-right col-xd-12 col-sm-4">
                                         <span>紀錄者：</span>
                                         <span>{{InterviewDetial.AuthorName}}</span>
+                                        <span>({{InterviewDetial.AuthorRole}})</span>
                                     </div>
                                 </div>
                             </div>
@@ -857,7 +917,16 @@
                                     <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                     返回
                                 </a>
-                                <span class="visible-xs pull-right text-muted">學生晤談</span>
+                                <a class="btn btn-sm btn-default"
+                                   ng-class="{disabled:InterviewDetial.EditRole!='紀錄者'}"
+                                   ng-if="InterviewDetial.UID"
+                                   style="padding: 8px 10px;margin: -14px 0px;"
+                                   href="javascript:void(0)"
+                                   ng-click="DeleteInterviewRecord(InterviewDetial)">
+                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    刪除
+                                </a>
+                                <span class="visible-xs pull-right text-muted">學生晤談紀錄</span>
                             </div>
                         </div>
 
@@ -871,6 +940,12 @@
                                                 <div class="col-sm-3">
                                                     <input type="text" class="form-control" id="InterviewNo" placeholder="" ng-model="InterviewDetial.InterviewNo">
                                                 </div>
+                                                <h6 class="col-sm-offset-2 col-sm-10 text-muted"
+                                                    style="margin-top: 2px;margin-bottom: -15px;">
+                                                    <small>
+                                                        非必填，供管理案件使用。
+                                                    </small>
+                                                </h6>
                                             </div>
                                             <div style="display: inline-block;width: 100%;">
                                                 <div class="form-group col-sm-6"
@@ -933,7 +1008,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label" for="Cause">
                                                     <span class="text-danger">*</span>
-                                                    晤談事由：
+                                                    晤談動機：
                                                 </label>
                                                 <div class="col-sm-3">
                                                     <input type="text" class="form-control" id="Cause" placeholder="自填或下方選取" ng-model="InterviewDetial.Cause">
@@ -1076,12 +1151,12 @@
                                                     <textarea class="form-control msd-elastic" id="ContentDigest" ng-model="InterviewDetial.ContentDigest"></textarea>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <!--<div class="form-group">
                                                 <label class="col-sm-2 control-label" for="AuthorName">紀錄者：</label>
                                                 <div class="col-sm-3">
                                                     <input type="text" class="form-control" id="AuthorName" placeholder="" ng-model="InterviewDetial.AuthorName">
                                                 </div>
-                                            </div>
+                                            </div>-->
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label">開放查閱：</label>
                                                 <div class="col-sm-10 ">

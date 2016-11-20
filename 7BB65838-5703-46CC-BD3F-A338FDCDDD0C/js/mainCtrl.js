@@ -70,10 +70,10 @@
                     Attachment: "",
                     AuthorID: "teacher01.whsh@1campus.net",
                     AuthorName: "張玉秀",
+                    AuthorRole: '班導師',
                     RefStudentID: "483",
                     RefTeacherID: "102",
                     IsPublic: "false",
-                    IsClassPublic: "true",
                     EditRole: "紀錄者"
                 }]
             },
@@ -83,7 +83,7 @@
 
             InterviewDateOption: ['2016/1/3', '2016/1/2', '2016/1/1'],
             InterviewTimeOption: ['早休', '第一節', '第二節', '第三節', '第四節', '午休', '第五節', '第六節', '第七節', '第八節'],
-            InterviewCauseOption: ["主動來談", "約談", "家長要求", "教師轉介", "同學引介", "教官轉介", "他室轉介", "家長晤談", "個案討論", "電話關心"],
+            InterviewCauseOption: ["主動來談", "約談", "家長要求", "教師轉介", "同學引介", "教官轉介", "他室轉介"], //, "家長晤談", "個案討論", "電話關心"
             IntervieweeTypeOption: ["學生", "家長", "其他"],
             InterviewTypeOption: ["面談", "電話", "家訪", "電子信箱", "聯絡簿", "其他"]
         };
@@ -102,7 +102,7 @@
             d.setDate(d.getDate() - 1);
         }
         $scope.InterviewTimeOption = ['早休', '第一節', '第二節', '第三節', '第四節', '午休', '第五節', '第六節', '第七節', '第八節'];
-        $scope.InterviewCauseOption = ["主動來談", "約談", "家長要求", "教師轉介", "同學引介", "教官轉介", "他室轉介", "家長晤談", "個案討論", "電話關心"];
+        $scope.InterviewCauseOption = ["主動來談", "約談", "家長要求", "教師轉介", "同學引介", "教官轉介", "他室轉介"]; //, "家長晤談", "個案討論", "電話關心"
         $scope.IntervieweeTypeOption = ["學生", "家長", "其他"];
         $scope.InterviewTypeOption = ["面談", "電話", "家訪", "電子信箱", "聯絡簿", "其他"];
 
@@ -168,14 +168,14 @@
                 result: function (response, error, http) {
                     $scope.$apply(function () {
                         if (!response)
-                            alert('GetHomeVisitRecord Error' + error);
+                            alert('GetHomeVisitRecord Error' + JSON.stringify(error));
                         else {
                             stuRec.HomeVisitRecord = [].concat(response.HomeVisitRecord || []);
                             [].concat(response.HomeVisitRecord || []).forEach(function (rec) {
                                 rec.IsPublic = (rec.IsPublic == 'true');
-                                rec.IsClassPublic = (rec.IsClassPublic == 'true');
                                 rec.HomeVisitDate = new Date(parseInt(rec.HomeVisitDate)).toLocaleDateString();
                                 rec.Attendees = [].concat(rec.Attendees || []);
+                                rec.Contact = [].concat(rec.Contact || []);
                                 rec.CounselTypeKind = [].concat(rec.CounselTypeKind || []);
                             });
                         }
@@ -198,7 +198,6 @@
                     AuthorID: $scope.LoginName,
                     AuthorName: $scope.TeacherName,
                     RefStudentID: $scope.CurrentStudent.StudentID,
-                    IsClassPublic: $scope.CurrentStudent.輔導老師 ? false : $scope.CurrentStudent.班導師,
                     IsPublic: false,
                     EditRole: $scope.CurrentStudent.輔導老師 ? "輔導老師" : "紀錄者"
                 };
@@ -207,7 +206,7 @@
             $scope.HomeVisitDetial = {};
             angular.copy(rec, $scope.HomeVisitDetial);
             //#region 轉換Attendees到AttendeesOption
-            var attendeesOption = [{ Name: '學生本人' }, { Name: '父母' }, { Name: '祖父母' }, { Name: '叔伯姨姑' }, { Name: '兄姊' }, { Name: '師長' }, { Name: '其他', HasRemark: true }];
+            var attendeesOption = [{ Name: '學生' }, { Name: '教官' }, { Name: '輔導老師' }, { Name: '班導師' }, { Name: '任課老師' }, { Name: '家長' }, { Name: '專家' }, { Name: '醫師' }, { Name: '社工人員' }, { Name: '其他', HasRemark: true }];
             $scope.HomeVisitDetial.AttendeesOption = [];
             attendeesOption.forEach(function (opt) {
                 var item = { Name: opt.Name, HasRemark: opt.HasRemark, Checked: false };
@@ -222,7 +221,23 @@
                 $scope.HomeVisitDetial.AttendeesOption.push(item);
             });
             //#endregion
-
+            //#region 轉換Contact到ContactOption
+            var contactOption = [{ Name: '學生本人' }, { Name: '父母' }, { Name: '祖父母' }, { Name: '叔伯姨姑' }, { Name: '兄姊' }, { Name: '師長' }, { Name: '其他', HasRemark: true }];
+            $scope.HomeVisitDetial.ContactOption = [];
+            contactOption.forEach(function (opt) {
+                var item = { Name: opt.Name, HasRemark: opt.HasRemark, Checked: false };
+                [].concat(rec.Contact || []).forEach(function (val) {
+                    if (val.Name == item.Name) {
+                        item.Checked = true;
+                        if (item.HasRemark) {
+                            item.Remark = val.Remark;
+                        }
+                    }
+                });
+                $scope.HomeVisitDetial.ContactOption.push(item);
+            });
+            //#endregion
+            
             //#region 轉換CounselTypeKind到CounselTypeKindOption
             var counselTypeKindOption = [{ Name: '家人議題' }, { Name: '違規行為' }, { Name: '心理困擾' }, { Name: '學習問題' },
                 { Name: '性別議題' }, { Name: '人際關係' }, { Name: '生涯規劃' }, { Name: '自傷/自殺' },
@@ -245,6 +260,26 @@
             //#endregion
 
             $scope.CurrentAction = 'ShowHomeVisitEditor';
+        }
+        //刪除聯繫紀錄
+        $scope.DeleteHomeVisitRecord = function (rec) {
+            var strconfirm = confirm("將會刪除此筆聯繫紀錄，並且無法回復，確定要執行刪除?");
+            if (strconfirm == true) {
+                gadget.getContract('ischool.counsel.v2.teacher').send({
+                    service: "DeleteHomeVisitRecord",
+                    body: { InterviewRecord: { UID: rec.UID } },
+                    result: function (response, error, http) {
+                        if (!response)
+                            alert("DeleteHomeVisitRecord" + ' Error' + JSON.stringify(error));
+                        else {
+                            $scope.$apply(function () {
+                                //重新讀取
+                                $scope.SetCurrentView('HomeVisit');
+                            });
+                        }
+                    }
+                });
+            }
         }
 
         //點快速選項設定日期
@@ -272,6 +307,20 @@
             });
             delete rec.AttendeesOption;
             //#endregion
+
+            //#region 轉換ContactOption到Contact
+            rec.Contact = { Item: [] };
+            [].concat(rec.ContactOption || []).forEach(function (opt) {
+                if (opt.Checked) {
+                    if (opt.HasRemark)
+                        rec.Contact.Item.push({ Name: opt.Name, Remark: opt.Remark });
+                    else
+                        rec.Contact.Item.push({ Name: opt.Name });
+                }
+            });
+            delete rec.ContactOption;
+            //#endregion
+
             //#region 轉換CounselTypeKindOption到CounselTypeKind
             rec.CounselTypeKind = { Item: [] };
             [].concat(rec.CounselTypeKindOption || []).forEach(function (opt) {
@@ -305,6 +354,9 @@
                 err += (err ? '\n' : '') + "聯繫方式不得空白!";
 
             if (rec.Attendees.Item.length == 0)
+                err += (err ? '\n' : '') + "參與成員不得空白!";
+
+            if (rec.Contact.Item.length == 0)
                 err += (err ? '\n' : '') + "聯繫成員不得空白!";
 
             if (rec.CounselTypeKind.Item.length == 0)
@@ -323,7 +375,7 @@
                 body: { HomeVisitRecord: rec },
                 result: function (response, error, http) {
                     if (!response)
-                        alert((rec.UID ? "PutHomeVisitRecord" : "PushHomeVisitRecord") + ' Error' + error);
+                        alert((rec.UID ? "PutHomeVisitRecord" : "PushHomeVisitRecord") + ' Error' + JSON.stringify(error));
                     else {
                         $scope.$apply(function () {
                             //重新讀取
@@ -344,12 +396,11 @@
                 result: function (response, error, http) {
                     $scope.$apply(function () {
                         if (!response)
-                            alert('GetInterviewRecord Error' + error);
+                            alert('GetInterviewRecord Error' + JSON.stringify(error));
                         else {
                             stuRec.InterviewRecord = [].concat(response.InterviewRecord || []);
                             [].concat(response.InterviewRecord || []).forEach(function (rec) {
                                 rec.IsPublic = (rec.IsPublic == 'true');
-                                rec.IsClassPublic = (rec.IsClassPublic == 'true');
                                 rec.InterviewDate = new Date(parseInt(rec.InterviewDate)).toLocaleDateString();
                                 rec.Attendees = [].concat(rec.Attendees || []);
                                 rec.CounselType = [].concat(rec.CounselType || []);
@@ -375,7 +426,6 @@
                     AuthorID: $scope.LoginName,
                     AuthorName: $scope.TeacherName,
                     RefStudentID: $scope.CurrentStudent.StudentID,
-                    IsClassPublic: $scope.CurrentStudent.輔導老師 ? false : $scope.CurrentStudent.班導師,
                     IsPublic: false,
                     EditRole: $scope.CurrentStudent.輔導老師 ? "輔導老師" : "紀錄者"
                 };
@@ -415,9 +465,8 @@
             //#endregion
 
             //#region 轉換CounselType到CounselTypeOption
-            var counselTypeOption = [{ Name: "暫時結案" }, { Name: "專案輔導" }, { Name: "導師輔導" },
-                { Name: "會商處理" }, { Name: "提供諮詢" }, { Name: "個案研究" }, { Name: "個別晤談" },
-                { Name: "轉介", HasRemark: true }, { Name: "就醫", HasRemark: true }, { Name: "其他", HasRemark: true }];
+            var counselTypeOption = [{ Name: "個別晤談" }, { Name: "提供諮詢" }, { Name: "專案輔導" }, { Name: "會商處理" }, { Name: "暫時結案" }, { Name: "導師輔導" },
+                { Name: "個案研究" }, { Name: "轉介", HasRemark: true }, { Name: "就醫", HasRemark: true }, { Name: "其他", HasRemark: true }];
             //{ Name: "會商處理" }, { Name: "轉介輔導" }, { Name: "提供諮詢" }, { Name: "個案研究" }, { Name: "個別晤談" },
             $scope.InterviewDetial.CounselTypeOption = [];
             var list = [].concat(rec.CounselType || []);
@@ -477,6 +526,27 @@
             //#endregion
 
             $scope.CurrentAction = 'ShowInterviewEditor';
+        }
+
+        //刪除晤談紀錄
+        $scope.DeleteInterviewRecord = function (rec) {
+            var strconfirm = confirm("將會刪除此筆晤談紀錄，並且無法回復，確定要執行刪除?");
+            if (strconfirm == true) {
+                gadget.getContract('ischool.counsel.v2.teacher').send({
+                    service: "DeleteInterviewRecord",
+                    body: { InterviewRecord: { UID: rec.UID } },
+                    result: function (response, error, http) {
+                        if (!response)
+                            alert("DeleteInterviewRecord" + ' Error' + JSON.stringify(error));
+                        else {
+                            $scope.$apply(function () {
+                                //重新讀取
+                                $scope.SetCurrentView('Interview');
+                            });
+                        }
+                    }
+                });
+            }
         }
 
         //點快速選項設定日期
@@ -577,7 +647,7 @@
                 body: { InterviewRecord: rec },
                 result: function (response, error, http) {
                     if (!response)
-                        alert((rec.UID ? "PutInterviewRecord" : "PushInterviewRecord") + ' Error' + error);
+                        alert((rec.UID ? "PutInterviewRecord" : "PushInterviewRecord") + ' Error' + JSON.stringify(error));
                     else {
                         $scope.$apply(function () {
                             //重新讀取
@@ -588,6 +658,7 @@
             });
         }
         //#endregion
+
 
 
 
