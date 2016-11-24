@@ -71,9 +71,10 @@
                                class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th colspan="8" class="my-table-head1"><font color="blue">已指定課程</font></th>
+                                    <th colspan="9" class="my-table-head1"><font color="blue">已指定課程</font></th>
                                 </tr>
                                 <tr>
+                                    <th style="width: 45px;"><font size="3">退選</font></th>
                                     <th>課程編號</th>
                                     <th>班次</th>
                                     <th>（必/選修）課程名稱</th>
@@ -86,6 +87,10 @@
                             </thead>
                             <tbody data-bind="foreach: sc_attend">
                                 <tr data-bind="css: { 'my-error': HaveConflict().length > 0}">
+                                    <td rowspan="2"
+                                        class="text-center">
+                                        <button type="button" class="btn btn-danger btn-mini" ac-type="withdrawn" data-target="#myModal" data-bind="attr:{ courseID: CourseID }">退選</button>
+                                    </td>
                                     <td data-bind="text: NewSubjectCode"></td>
                                     <td data-bind="text: ClassName"></td>
                                     <td data-bind="type_format: CourseType">
@@ -100,6 +105,42 @@
                                 </tr>
                                 <tr data-bind="css: { 'my-error': HaveConflict().length > 0}">
                                     <td colspan="8" data-bind="text: Memo"></td>
+                                </tr>
+                            </tbody>
+                        </table>                        
+                        <!-- 指定課程退選 -->
+                        <table data-bind="visible: sc_attend_withdrawn_log().length > 0"
+                               class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th colspan="9" class="my-table-head1"><font color="blue">指定課程退選紀錄</font></th>
+                                </tr>
+                                <tr>
+                                    <th>退選時間</th>
+                                    <th>課程編號</th>
+                                    <th>班次</th>
+                                    <th>（必/選修）課程名稱</th>
+                                    <th>授課教師</th>
+                                    <th>學分</th>
+                                    <th>人數上限</th>
+                                    <th>教室</th>
+                                    <th>上課時間</th>
+                                </tr>
+                            </thead>
+                            <tbody data-bind="foreach: sc_attend_withdrawn_log">
+                                <tr>
+                                    <td data-bind="text: Time"></td>
+                                    <td data-bind="text: NewSubjectCode"></td>
+                                    <td data-bind="text: ClassName"></td>
+                                    <td data-bind="type_format: CourseType">
+                                        <a data-bind="visible: Syllabus, text: CourseName, attr: { href: Syllabus }" target="_blank"></a>
+                                        <span data-bind="visible: !Syllabus, text: CourseName"></span>
+                                    </td>
+                                    <td data-bind="html: TeacherURLName"></td>
+                                    <td data-bind="text: Credit"></td>
+                                    <td data-bind="text: Capacity"></td>
+                                    <td data-bind="text: Classroom"></td>
+                                    <td data-bind="text: CourseTimeInfo"></td>
                                 </tr>
                             </tbody>
                         </table>
