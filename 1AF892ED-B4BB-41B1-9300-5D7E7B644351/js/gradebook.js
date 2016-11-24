@@ -81,10 +81,6 @@
 
         $scope.params.DefaultRound = gadget.params.DefaultRound || '2';
 
-
-
-        $scope.studentCheck = [];
-
         $scope.showCreateModal = function (index) {
             if (index || index == 0) {
                 $('#myList').removeClass('fade').modal('hide').addClass('fade');
@@ -632,10 +628,11 @@
                         alert("TeacherAccess.SetCourseExamScoreWithExtension Error");
                     } else {
                         $scope.$apply(function () {
-                            $scope.studentCheck = [];
                             $scope.studentList.forEach(function (studentRec, index) {
-                                var RawstudentRec = angular.copy(studentRec);
-                                $scope.studentCheck.push(RawstudentRec);
+                                var rawStudentRec = angular.copy(studentRec);
+                                for (var key in rawStudentRec) {
+                                    studentRec[key + 'Origin'] = studentRec[key];
+                                }
                             });
                         });
                         alert("儲存完成。");
@@ -1218,10 +1215,11 @@
                                                         });
                                                     });
 
-                                                    $scope.studentCheck = [];
                                                     $scope.studentList.forEach(function (studentRec, index) {
-                                                        var RawstudentRec = angular.copy(studentRec);
-                                                        $scope.studentCheck.push(RawstudentRec);
+                                                        var rawStudentRec = angular.copy(studentRec);
+                                                        for (var key in rawStudentRec) {
+                                                            studentRec[key + 'Origin'] = studentRec[key];
+                                                        }
                                                     });
                                                     $scope.setupCurrent();
                                                 });
@@ -1254,10 +1252,11 @@
                                                         studentMapping[finalScoreRec.StudentID]["Exam" + finalScore.ExamID] = finalScoreRec.Score;
                                                     });
 
-                                                    $scope.studentCheck = [];
                                                     $scope.studentList.forEach(function (studentRec, index) {
-                                                        var RawstudentRec = angular.copy(studentRec);
-                                                        $scope.studentCheck.push(RawstudentRec);
+                                                        var rawStudentRec = angular.copy(studentRec);
+                                                        for (var key in rawStudentRec) {
+                                                            studentRec[key + 'Origin'] = studentRec[key];
+                                                        }
                                                     });
                                                 });
                                             }
@@ -1275,27 +1274,16 @@
             var pass = true;
             [].concat($scope.examList || []).forEach(function (examRec) {
                 [].concat($scope.studentList || []).forEach(function (stuRec) {
-                    pass = (pass & !!$scope.checkOneCell(stuRec.StudentID, 'Exam' + examRec.ExamID));
+                    pass = (pass & !!$scope.checkOneCell(stuRec, 'Exam' + examRec.ExamID));
                 });
             });
             return pass;
         }
 
 
-        $scope.checkOneCell = function (studentID, examKey) {
+        $scope.checkOneCell = function (studentRec, examKey) {
             var pass = true;
-            if (examKey != "Exam學期成績_試算") {
-                $scope.studentCheck.forEach(function (studentRecO, index1) {
-                    $scope.studentList.forEach(function (studentRec, index2) {
-                        if (studentRecO.StudentID == studentID && studentRec.StudentID == studentID) {
-                            if (studentRecO[examKey] != studentRec[examKey]) {
-                                console.log('check:' + studentRec.StudentName + '/' + examKey + ' from:' + studentRecO[examKey] + ' to:' + studentRec[examKey])
-                                pass = false;
-                            }
-                        }
-                    });
-                });
-            }
+            pass = (studentRec[examKey] == studentRec[examKey + 'Origin']) || (studentRec[examKey + 'Origin'] === undefined) || (examKey == "Exam學期成績_試算");
             return pass;
         }
 

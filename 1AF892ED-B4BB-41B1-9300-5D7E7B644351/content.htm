@@ -312,7 +312,7 @@
                                 class="text-center"
                                 style="position:relative;"
                                 ng-click="setCurrent(stuRec, exam, true, true)">
-                                <div ng-if="!checkOneCell(stuRec.StudentID, 'Exam'+exam.ExamID)"
+                                <div ng-if="!checkOneCell(stuRec, 'Exam'+exam.ExamID)"
                                      style="display: inline-block; background-color: red; position: absolute; left: 3px; top: 3px; width: 4px; height: 5px; border-radius: 3px;">
                                 </div>
                                 <h6 ng-if="exam.Group" style="margin:0px;display:inline-block;">
