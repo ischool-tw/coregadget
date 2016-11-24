@@ -82,7 +82,7 @@
         $scope.params.DefaultRound = gadget.params.DefaultRound || '2';
 
 
-      
+
         $scope.studentCheck = [];
 
         $scope.showCreateModal = function (index) {
@@ -486,8 +486,13 @@
                 var temp = Number($scope.current.Value);
                 if (!isNaN(temp)
                     && (!$scope.current.Exam.Range || (!$scope.current.Exam.Range.Max && $scope.current.Exam.Range.Max !== 0) || temp <= $scope.current.Exam.Range.Max)
-                    && (!$scope.current.Exam.Range || (!$scope.current.Exam.Range.Min && $scope.current.Exam.Range.Min !== 0) || temp >= $scope.current.Exam.Range.Min))
+                    && (!$scope.current.Exam.Range || (!$scope.current.Exam.Range.Min && $scope.current.Exam.Range.Min !== 0) || temp >= $scope.current.Exam.Range.Min)) {
                     flag = true;
+                    if (!$scope.current.Exam.Group) {
+                        var round = Math.pow(10, $scope.params[$scope.current.Exam.Name + 'Round'] || $scope.params.DefaultRound);
+                        temp = Math.round(temp * round) / round;
+                    }
+                }
                 if ($scope.current.Value == "缺")
                     flag = true;
                 if (flag) {
@@ -1043,7 +1048,7 @@
                 Lock: false,
                 Group: finalScore,
                 Fn: function (stu) {
-                    var total = 0, base = 0, seed = 1000;
+                    var total = 0, base = 0, seed = 10000;
                     [].concat(course.Scores.Score || []).forEach(function (examRec, index) {
                         var p = Number(examRec.Percentage) || 0;
                         var s = stu["Exam" + examRec.ExamID];
@@ -1053,13 +1058,15 @@
                                 base += p;
                             }
                     });
-                    if (base)
+                    if (base) {
                         //var size = Math.pow(10, 2);
                         //stu["Exam" + finalScorePreview.ExamID] = Math.floor(total / base) / seed;
-
-                        stu["Exam" + finalScorePreview.ExamID] = Math.round((Math.floor(total / base) / seed) * Math.pow(10, $scope.params.試算Round || $scope.params.DefaultRound)) / Math.pow(10, $scope.params.試算Round || $scope.params.DefaultRound);
-
-                        
+                        var round = Math.pow(10, $scope.params[finalScorePreview.Name + 'Round'] || $scope.params.DefaultRound);
+                        stu["Exam" + finalScorePreview.ExamID] = Math.round((Math.floor(total / base) / seed) * round) / round;
+                    }
+                    else {
+                        stu["Exam" + finalScorePreview.ExamID] = "";
+                    }
                 }
             };
             finalScore.SubExamList = [finalScorePreview];
@@ -1106,7 +1113,7 @@
                                                     var sum = 0;
                                                     var hasVal = false;
                                                     var IsAbsent = false;
-                                                    var seed = 1000;
+                                                    var seed = 10000;
                                                     examRec.SubExamList.forEach(function (subExamRec) {
                                                         if (stu["Exam" + subExamRec.ExamID] || stu["Exam" + subExamRec.ExamID] == "0") {
                                                             hasVal = true;
@@ -1133,11 +1140,10 @@
 
                                                         //    $scope.params[roundRec] = roundRec.Value;
                                                         //});
+                                                        var round = Math.pow(10, $scope.params[examRec.Name + 'Round'] || $scope.params.DefaultRound);
 
-                                                        var round = $scope.params[examRec.Name + 'Round'] || $scope.params.DefaultRound;
-                          
-                                                        stu["Exam" + examRec.ExamID] = hasVal ? Math.round((sum / seed) * Math.pow(10, round)) / Math.pow(10, round) : '';
-                                                                                                                
+                                                        stu["Exam" + examRec.ExamID] = hasVal ? Math.round((Math.floor(sum) / seed) * round) / round : '';
+
                                                     }
 
                                                 };
