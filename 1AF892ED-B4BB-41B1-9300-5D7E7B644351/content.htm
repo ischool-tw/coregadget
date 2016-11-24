@@ -8,7 +8,14 @@
     <script>
         init({
             application: "test.whsh.tc.edu.tw",
-            paramValues: {},
+            paramValues: {
+                "DefaultRound": "1", //預設小數點位數
+                "第一次期中考Round": "1",
+                "第二次期中考Round": "2",
+                "期末考Round": "7",
+                "試算Round": "1", //指定評量項目小數點位數
+                "學期成績Round": "2"
+            },
             oAuth: {
                 clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
                 clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
@@ -51,7 +58,7 @@
         <h1>成績管理</h1>
         <div>
             <div class="btn-group pull-right">
-                <a ng-click="saveAll()" class="btn btn-default">
+                <a ng-click="saveAll()" class="btn btn-default" ng-class="{'btn-danger':!checkAllTable()}">
                     <i class="fa fa-floppy-o"></i>
                     儲存
                 </a>
@@ -285,7 +292,7 @@
                                 ng-if="exam.Group"
                                 class="text-center"
                                 style="padding: 8px 2px;">
-                                <h6 style="margin:0px;">
+                                <h6 style="margin: 0px; display: inline-block;">
                                     {{exam.SubName}}
                                 </h6>
                             </th>
@@ -303,8 +310,12 @@
                             </td>
                             <td ng-repeat="exam in examList | filter: filterPermission"
                                 class="text-center"
+                                style="position:relative;"
                                 ng-click="setCurrent(stuRec, exam, true, true)">
-                                <h6 ng-if="exam.Group" style="margin:0px;">
+                                <div ng-if="!checkOneCell(stuRec.StudentID, 'Exam'+exam.ExamID)"
+                                     style="display: inline-block; background-color: red; position: absolute; left: 3px; top: 3px; width: 4px; height: 5px; border-radius: 3px;">
+                                </div>
+                                <h6 ng-if="exam.Group" style="margin:0px;display:inline-block;">
                                     <small>
                                         <span>
                                             {{stuRec['Exam'+exam.ExamID]}}

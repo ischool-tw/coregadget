@@ -77,6 +77,14 @@
             }
         };
 
+        $scope.params = gadget.params;
+
+        $scope.params.DefaultRound = gadget.params.DefaultRound || '2';
+
+
+      
+        $scope.studentCheck = [];
+
         $scope.showCreateModal = function (index) {
             if (index || index == 0) {
                 $('#myList').removeClass('fade').modal('hide').addClass('fade');
@@ -324,6 +332,16 @@
                     $scope.studentList.forEach(function (stuRec) {
                         examItem.Fn(stuRec);
                     });
+
+                    $scope.studentList_for_check_2 = [];
+
+                    $scope.studentList.forEach(function (studentRec, index) {
+
+                        $scope.studentList_for_check_2.push(studentRec);
+                    });
+
+
+
                     ////eval("(function(){return 10;})")();
                     //$scope.studentList.forEach(function (std) {
                     //    var param = "";
@@ -453,6 +471,14 @@
             }, 1);
         }
 
+        $scope.Save_btn_listener = function () {
+
+            return "btn btn-default";
+        }
+
+
+
+
         $scope.enterGrade = function (event) {
             if (event && (event.keyCode !== 13 || $scope.isMobile)) return;
             var flag = false;
@@ -462,8 +488,10 @@
                     && (!$scope.current.Exam.Range || (!$scope.current.Exam.Range.Max && $scope.current.Exam.Range.Max !== 0) || temp <= $scope.current.Exam.Range.Max)
                     && (!$scope.current.Exam.Range || (!$scope.current.Exam.Range.Min && $scope.current.Exam.Range.Min !== 0) || temp >= $scope.current.Exam.Range.Min))
                     flag = true;
+                if ($scope.current.Value == "缺")
+                    flag = true;
                 if (flag) {
-                    if ($scope.current.Value != "")
+                    if ($scope.current.Value != "" && $scope.current.Value != "缺")
                         $scope.current.Value = temp;
                 }
             }
@@ -475,12 +503,27 @@
             }
         }
 
+        gadget.onLeave(function () {
+            var data_changed = !$scope.checkAllTable();
+
+            if (data_changed) {
+                return "尚未儲存資料，現在離開視窗將不會儲存本次更動";
+            }
+            else {
+                return "";
+            }
+
+        });
+
         $scope.selectValue = function (val) {
             $scope.current.Value = val;
             $scope.saveGrade();
         }
 
         $scope.saveGrade = function (matchNext) {
+
+            $scope.Data_is_original = false;
+            $scope.Data_has_changed = true;
 
             $scope.current.Student["Exam" + $scope.current.Exam.ExamID] = $scope.current.Value;
             $scope.calc();
@@ -580,10 +623,16 @@
                 service: "TeacherAccess.SetCourseExamScoreWithExtension",
                 body: body,
                 result: function (response, error, http) {
-
                     if (error) {
                         alert("TeacherAccess.SetCourseExamScoreWithExtension Error");
                     } else {
+                        $scope.$apply(function () {
+                            $scope.studentCheck = [];
+                            $scope.studentList.forEach(function (studentRec, index) {
+                                var RawstudentRec = angular.copy(studentRec);
+                                $scope.studentCheck.push(RawstudentRec);
+                            });
+                        });
                         alert("儲存完成。");
                     }
                 }
@@ -928,6 +977,14 @@
         });
 
         $scope.setCurrentCourse = function (course) {
+            if ($scope.studentList) {
+                var data_changed = !$scope.checkAllTable();
+                if (data_changed) {
+                    if (!window.confirm("警告:尚未儲存資料，現在離開視窗將不會儲存本次更動"))
+                        return;
+                }
+            }
+
             $scope.current.Student = null;
             $scope.studentList = null;
             $scope.current.VisibleExam = [];
@@ -986,17 +1043,23 @@
                 Lock: false,
                 Group: finalScore,
                 Fn: function (stu) {
-                    var total = 0, base = 0, seed = 100;
+                    var total = 0, base = 0, seed = 1000;
                     [].concat(course.Scores.Score || []).forEach(function (examRec, index) {
                         var p = Number(examRec.Percentage) || 0;
                         var s = stu["Exam" + examRec.ExamID];
-                        if (stu["Exam" + examRec.ExamID] || stu["Exam" + examRec.ExamID] == "0") {
-                            total += seed * p * Number(stu["Exam" + examRec.ExamID]);
-                            base += p;
-                        }
+                        if (stu["Exam" + examRec.ExamID] != "缺")
+                            if (stu["Exam" + examRec.ExamID] || stu["Exam" + examRec.ExamID] == "0") {
+                                total += seed * p * Number(stu["Exam" + examRec.ExamID]);
+                                base += p;
+                            }
                     });
                     if (base)
-                        stu["Exam" + finalScorePreview.ExamID] = Math.floor(total / base) / seed;
+                        //var size = Math.pow(10, 2);
+                        //stu["Exam" + finalScorePreview.ExamID] = Math.floor(total / base) / seed;
+
+                        stu["Exam" + finalScorePreview.ExamID] = Math.round((Math.floor(total / base) / seed) * Math.pow(10, $scope.params.試算Round || $scope.params.DefaultRound)) / Math.pow(10, $scope.params.試算Round || $scope.params.DefaultRound);
+
+                        
                 }
             };
             finalScore.SubExamList = [finalScorePreview];
@@ -1042,13 +1105,41 @@
                                                 examRec.Fn = function (stu) {
                                                     var sum = 0;
                                                     var hasVal = false;
+                                                    var IsAbsent = false;
+                                                    var seed = 1000;
                                                     examRec.SubExamList.forEach(function (subExamRec) {
                                                         if (stu["Exam" + subExamRec.ExamID] || stu["Exam" + subExamRec.ExamID] == "0") {
                                                             hasVal = true;
-                                                            sum += Number(stu["Exam" + subExamRec.ExamID] || 0);
+
+                                                            if (stu["Exam" + subExamRec.ExamID] == "缺") {
+                                                                sum += "缺";
+
+                                                                IsAbsent = true;
+
+                                                            }
+                                                            else {
+
+                                                                sum += Number(stu["Exam" + subExamRec.ExamID] * seed || 0);
+                                                            }
+
                                                         }
                                                     });
-                                                    stu["Exam" + examRec.ExamID] = hasVal ? sum : '';
+                                                    if (IsAbsent) {
+                                                        stu["Exam" + examRec.ExamID] = "缺";
+                                                    }
+                                                    else {
+
+                                                        //[].concat(gadget.params || []).forEach(function (roundRec, index) {
+
+                                                        //    $scope.params[roundRec] = roundRec.Value;
+                                                        //});
+
+                                                        var round = $scope.params[examRec.Name + 'Round'] || $scope.params.DefaultRound;
+                          
+                                                        stu["Exam" + examRec.ExamID] = hasVal ? Math.round((sum / seed) * Math.pow(10, round)) / Math.pow(10, round) : '';
+                                                                                                                
+                                                    }
+
                                                 };
                                             }
                                             return;
@@ -1077,6 +1168,8 @@
                                     $scope.$apply(function () {
                                         $scope.studentList = [];
 
+
+
                                         [].concat(response.Students.Student || []).forEach(function (studentRec, index) {
                                             studentRec.SeatNo = studentRec.SeatNumber;
                                             studentRec.index = index;
@@ -1086,6 +1179,9 @@
                                             $scope.studentList.push(studentRec);
                                             studentMapping[studentRec.StudentID] = studentRec;
                                         });
+
+
+
                                     });
                                     //抓定期評量成績
                                     $scope.connection.send({
@@ -1098,7 +1194,6 @@
                                             }
                                         },
                                         result: function (response, error, http) {
-
                                             if (error) {
                                                 alert("TeacherAccess.GetCourseExamScore Error");
                                             } else {
@@ -1109,12 +1204,18 @@
                                                         $scope.examList.forEach(function (examRec) {
                                                             if (examRec.ExamID == examScoreRec.ExamID) {
                                                                 [].concat(examRec.SubExamList || []).forEach(function (subExamRec) {
-                                                                    if (subExamRec.ExtName && examScoreRec.Extension.Extension[subExamRec.ExtName]) {
+                                                                    if (subExamRec.ExtName && examScoreRec.Extension && examScoreRec.Extension.Extension && examScoreRec.Extension.Extension[subExamRec.ExtName]) {
                                                                         studentMapping[examScoreRec.StudentID]["Exam" + subExamRec.ExamID] = examScoreRec.Extension.Extension[subExamRec.ExtName];
                                                                     }
                                                                 });
                                                             }
                                                         });
+                                                    });
+
+                                                    $scope.studentCheck = [];
+                                                    $scope.studentList.forEach(function (studentRec, index) {
+                                                        var RawstudentRec = angular.copy(studentRec);
+                                                        $scope.studentCheck.push(RawstudentRec);
                                                     });
                                                     $scope.setupCurrent();
                                                 });
@@ -1139,13 +1240,18 @@
                                             }
                                         },
                                         result: function (response, error, http) {
-
                                             if (error) {
                                                 alert("TeacherAccess.GetCourseSemesterScore Error");
                                             } else {
                                                 $scope.$apply(function () {
                                                     [].concat(response.Scores.Item || []).forEach(function (finalScoreRec, index) {
                                                         studentMapping[finalScoreRec.StudentID]["Exam" + finalScore.ExamID] = finalScoreRec.Score;
+                                                    });
+
+                                                    $scope.studentCheck = [];
+                                                    $scope.studentList.forEach(function (studentRec, index) {
+                                                        var RawstudentRec = angular.copy(studentRec);
+                                                        $scope.studentCheck.push(RawstudentRec);
                                                     });
                                                 });
                                             }
@@ -1157,7 +1263,34 @@
                     }
                 }
             });
+        }
 
+        $scope.checkAllTable = function () {
+            var pass = true;
+            [].concat($scope.examList || []).forEach(function (examRec) {
+                [].concat($scope.studentList || []).forEach(function (stuRec) {
+                    pass = (pass & !!$scope.checkOneCell(stuRec.StudentID, 'Exam' + examRec.ExamID));
+                });
+            });
+            return pass;
+        }
+
+
+        $scope.checkOneCell = function (studentID, examKey) {
+            var pass = true;
+            if (examKey != "Exam學期成績_試算") {
+                $scope.studentCheck.forEach(function (studentRecO, index1) {
+                    $scope.studentList.forEach(function (studentRec, index2) {
+                        if (studentRecO.StudentID == studentID && studentRec.StudentID == studentID) {
+                            if (studentRecO[examKey] != studentRec[examKey]) {
+                                console.log('check:' + studentRec.StudentName + '/' + examKey + ' from:' + studentRecO[examKey] + ' to:' + studentRec[examKey])
+                                pass = false;
+                            }
+                        }
+                    });
+                });
+            }
+            return pass;
         }
 
 
