@@ -78,291 +78,14 @@
         };
 
         $scope.params = gadget.params;
-
         $scope.params.DefaultRound = gadget.params.DefaultRound || '2';
-
-        $scope.showCreateModal = function (index) {
-            if (index || index == 0) {
-                $('#myList').removeClass('fade').modal('hide').addClass('fade');
-            }
-            if (index == undefined) {
-                $scope.createItem = {
-                    Name: '',
-                    Type: 'Number',
-                    Lock: false,
-                    Access: {
-                        Teacher: "None",
-                        Student: "None",
-                        Parent: "None"
-                    }
-                }
-            }
-            else {
-                //$scope.createItem = {
-                //    Name: '',
-                //    Type: 'Number',
-                //    Lock: false,
-                //    targetIndex: index
-                //}
-                //for (var k in $scope.examList[index]) {
-                //    if (k !== "$$hashKey") {
-                //        $scope.createItem[k] = $scope.examList[index][k];
-                //    }
-                //}
-                $scope.createItem = angular.copy($scope.examList[index]);
-
-                $scope.createItem.Name = $scope.createItem.Name || '';
-                $scope.createItem.Type = $scope.createItem.Type || 'Number';
-                $scope.createItem.Lock = $scope.createItem.Lock || false;
-                $scope.createItem.targetIndex = index;
-                if (!$scope.createItem.Access) {
-                    $scope.createItem.Access = {
-                        Teacher: "None",
-                        Student: "None",
-                        Parent: "None"
-                    };
-                }
-            }
-            delete $scope.errMsg;
-            $('#createModal').modal('show');
-
-            $timeout(function () {
-                $('#newColName:visible').focus().select();
-            }, 200);
-        }
-
-        $scope.showManageModal = function () {
-            $('#myList').modal('show').on('hide.bs.modal', function (e) {
-                if ($scope.current.ExamOrder && $scope.current.VisibleExam) {
-                    var newOrder = [];
-                    var oldOrder = $scope.current.ExamOrder;
-                    $scope.examList.forEach(function (examItem) {
-                        newOrder.push(examItem.Name);
-                        var index = oldOrder.indexOf(examItem.Name);
-                        if (index >= 0)
-                            oldOrder.splice(index, 1);
-                    });
-                    $scope.current.ExamOrder = newOrder.concat(oldOrder);
-
-                    $.ajax({
-                        url: "../api/private/put/config",
-                        contentType: "application/json; charset=utf-8",
-                        dataType: 'json',
-                        type: 'put',
-                        data: JSON.stringify({
-                            ExamOrder: $scope.current.ExamOrder,
-                            VisibleExam: $scope.current.VisibleExam
-                        }),
-                        success: function (data) {
-                            if (data.status !== "success") alert(JSON.stringify(data));
-                            //$scope.getExam();
-                        }
-                    });
-                }
-            });
-        }
-
-        $scope.lockExam = function (index, lock) {
-            $scope.examList[index].Lock = lock;
-
-            var data = angular.copy($scope.examList[index]);
-            //var data = {};
-            //for (var k in $scope.examList[index]) {
-            //    if (k !== "$$hashKey") {
-            //        data[k] = $scope.examList[index][k];
-            //    }
-            //}
-            $.ajax({
-                url: "../api/private/put/exam",
-                contentType: "application/json; charset=utf-8",
-                dataType: 'json',
-                type: 'put',
-                data: JSON.stringify(data),
-                success: function (data) {
-                    if (data.status !== "success") alert(JSON.stringify(data));
-                }
-            });
-        }
-
-        $scope.showExam = function (examItem) {
-            if ($scope.current && $scope.current.VisibleExam && $scope.current.VisibleExam.indexOf(examItem.Name) < 0)
-                $scope.current.VisibleExam.push(examItem.Name);
-        }
-
-        $scope.hideExam = function (examItem) {
-            if ($scope.current && $scope.current.VisibleExam && $scope.current.VisibleExam.indexOf(examItem.Name) >= 0)
-                $scope.current.VisibleExam.splice($scope.current.VisibleExam.indexOf(examItem.Name), 1);
-            if ($scope.current.Exam == examItem)
-                $scope.current.Exam = null;
-        }
-
-        $scope.saveExamItem = function () {
-            if ($scope.createItem.Name === '') {
-                $scope.errMsg = '名稱不可空白';
-                return;
-            }
-
-            var flag = false;
-            angular.forEach($scope.examList, function (item, index) {
-                if (item.Name === $scope.createItem.Name && index !== $scope.createItem.targetIndex)
-                    flag = true; //判斷重複
-            });
-            if (flag) {
-                $scope.errMsg = '名稱不可重複';
-                return;
-            }
-
-            if ($scope.createItem.Type === 'Enum') {
-                if ($scope.createItem.Option.length === 0) return;
-                var temp = false;
-                angular.forEach($scope.createItem.Option, function (item) {
-                    if (item.Label === '')
-                        temp = true;
-                });
-
-                if (temp) {
-                    $scope.errMsg = '選項不可為空白';
-                    return;
-                }
-            }
-            if ($scope.createItem.targetIndex == undefined) {
-                $scope.examList.push($scope.createItem);
-                var ex = angular.copy($scope.createItem);
-                //var ex = {};
-                //for (var k in $scope.createItem) {
-                //    if (k !== "$$hashKey") {
-                //        ex[k] = $scope.createItem[k];
-                //    }
-                //}
-                $.ajax({
-                    url: "../api/private/post/exam",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: 'json',
-                    type: 'post',
-                    data: JSON.stringify(ex),
-                    success: function (data) {
-                        if (data.status !== "success") alert(JSON.stringify(data));
-                        $scope.getExam();
-                    }
-                });
-            }
-            else {
-                if ($scope.examList[$scope.createItem.targetIndex].Name !== $scope.createItem.Name) {
-                    deleteItem = $scope.examList[$scope.createItem.targetIndex];
-                    $scope.studentList.forEach(function (st) {
-                        st[$scope.createItem.Name] = st[$scope.examList[$scope.createItem.targetIndex].Name];
-                        delete st[$scope.examList[$scope.createItem.targetIndex].Name];
-                    })
-                }
-                $scope.examList[$scope.createItem.targetIndex] = $scope.createItem;
-                delete $scope.createItem.targetIndex;
-
-                var data = angular.copy($scope.createItem);
-                //var data = {};
-                //for (var k in $scope.createItem) {
-                //    if (k !== "$$hashKey") {
-                //        data[k] = $scope.createItem[k];
-                //    }
-                //}
-                $.ajax({
-                    url: "../api/private/put/exam",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: 'json',
-                    type: 'put',
-                    data: JSON.stringify(data),
-                    success: function (data) {
-                        if (data.status !== "success") alert(JSON.stringify(data));
-                    }
-                });
-            }
-            $('#createModal').modal('hide');
-            if ($scope.createItem.Type == "Program")
-                $scope.calc();
-
-
-            var ts = ($scope.current.Student || ($scope.studentList && $scope.studentList.length > 0) ? $scope.studentList[0] : null)
-                , te = $scope.createItem;
-            if (ts && te) {
-                $scope.setCurrent(ts, te, true, true);
-            }
-            if ($scope.current.ExamOrder.indexOf($scope.createItem.Name) < 0)
-                $scope.current.ExamOrder.push($scope.createItem.Name);
-            if ($scope.current.VisibleExam.indexOf($scope.createItem.Name) < 0)
-                $scope.current.VisibleExam.push($scope.createItem.Name);
-
-            $.ajax({
-                url: "../api/private/put/config",
-                contentType: "application/json; charset=utf-8",
-                dataType: 'json',
-                type: 'put',
-                data: JSON.stringify({
-                    ExamOrder: $scope.current.ExamOrder,
-                    VisibleExam: $scope.current.VisibleExam
-                }),
-                success: function (data) {
-                    if (data.status !== "success") alert(JSON.stringify(data));
-                    //$scope.getExam();
-                }
-            });
-        }
-
-        $scope.deleteExamItem = function () {
-            if (window.confirm("確定要刪除？")) {
-                $.ajax({
-                    url: "../api/private/delete/exam/id/" + $scope.examList[$scope.createItem.targetIndex]._id,
-                    type: 'delete',
-                    success: function (data) {
-                        if (JSON.parse(data).status !== "success") alert(JSON.stringify(data));
-                        $scope.getExam();
-                    }
-                });
-                if ($scope.current.Exam == $scope.examList[$scope.createItem.targetIndex])
-                    $scope.current.Exam = null;
-                $scope.examList.splice($scope.createItem.targetIndex, 1);
-            }
-        }
-
+        
         $scope.calc = function () {
             [].concat($scope.examList).reverse().forEach(function (examItem) {
                 if (examItem.Permission == "Editor" && !!!examItem.Lock && examItem.Type == "Program") {
                     $scope.studentList.forEach(function (stuRec) {
                         examItem.Fn(stuRec);
                     });
-
-                    $scope.studentList_for_check_2 = [];
-
-                    $scope.studentList.forEach(function (studentRec, index) {
-
-                        $scope.studentList_for_check_2.push(studentRec);
-                    });
-
-
-
-                    ////eval("(function(){return 10;})")();
-                    //$scope.studentList.forEach(function (std) {
-                    //    var param = "";
-                    //    for (var i = 0; i < $scope.examList.length; i++) {
-                    //        var e = $scope.examList[i];
-                    //        if (e.Type !== "Program") {
-                    //            if (e.Type == "Number") {
-                    //                if (angular.isNumber(std[e.Name])) {
-                    //                    //this[e.Name] = std[e.Name];
-                    //                    param += "var " + e.Name + "=" + JSON.stringify(std[e.Name]) + ";\n";
-                    //                }
-                    //            }
-                    //            else {
-                    //                //this[e.Name] = std[e.Name];
-                    //                param += "var " + e.Name + "=" + JSON.stringify(std[e.Name]) + ";\n";
-                    //            }
-                    //        }
-                    //    }
-                    //    try {
-                    //        std[examItem.Name] = eval("(function(){" + param + " return " + examItem.Fn + ";})")();
-                    //    }
-                    //    catch (exc) {
-                    //        std[examItem.Name] = null;
-                    //    }
-                    //});
                 }
             });
         }
@@ -372,27 +95,12 @@
             $timeout(function () {
                 $('.pg-seatno-textbox:visible').select().focus();
             }, 1);
-            $.ajax({
-                url: "../api/private/put/config",
-                contentType: "application/json; charset=utf-8",
-                dataType: 'json',
-                type: 'put',
-                data: JSON.stringify({
-                    SelectMode: $scope.current.SelectMode,
-                }),
-                success: function (data) {
-                    if (data.status !== "success") alert(JSON.stringify(data));
-                    //$scope.getExam();
-                }
-            });
         }
 
         $scope.setCurrent = function (student, exam, setCondition, setFocus) {
             $scope.current.Exam = exam;
             $scope.current.Student = student;
-
-            if (exam) $scope.setAnalytics(exam);
-
+            
             var val = (student || {})['Exam' + (exam || {}).ExamID];
             $scope.current.Value = (angular.isNumber(val) ? val : (val || ""));
             if (setCondition && student) {
@@ -407,8 +115,7 @@
         }
 
         $scope.submitStudentNo = function (event) {
-            if (event && (event.keyCode !== 13 || $scope.isMobile)) return;
-            //if (event.keyCode !== 13) return; // 13是enter按鈕的代碼，return是跳出
+            if (event && (event.keyCode !== 13 || $scope.isMobile)) return; // 13是enter按鈕的代碼，return是跳出
             if (!$scope.current.Student) return;
             $('.pg-grade-textbox:visible').focus();
             $timeout(function () {
@@ -467,14 +174,6 @@
             }, 1);
         }
 
-        $scope.Save_btn_listener = function () {
-
-            return "btn btn-default";
-        }
-
-
-
-
         $scope.enterGrade = function (event) {
             if (event && (event.keyCode !== 13 || $scope.isMobile)) return;
             var flag = false;
@@ -500,7 +199,7 @@
                 flag = true;
             }
             if (flag) {
-                $scope.saveGrade();
+                $scope.submitGrade();
             }
         }
 
@@ -518,10 +217,10 @@
 
         $scope.selectValue = function (val) {
             $scope.current.Value = val;
-            $scope.saveGrade();
+            $scope.submitGrade();
         }
 
-        $scope.saveGrade = function (matchNext) {
+        $scope.submitGrade = function (matchNext) {
 
             $scope.Data_is_original = false;
             $scope.Data_has_changed = true;
@@ -547,45 +246,6 @@
                     $('.pg-grade-textbox:visible').select();
                 }
             }, 1);
-
-            //var updateValue = [];
-            //angular.forEach($scope.studentList, function (st) {
-            //    if (storageDataIndex[st.StudentID]) {
-            //        var hasChanged = false;
-            //        for (var key in angular.copy(st)) {
-            //            if (key !== "index"
-            //                && key !== "SeatNo"
-            //                && key !== "StudentName"
-            //                && key !== "$$hashKey"
-            //                && key !== "selected"
-            //                && (storageDataIndex[st.StudentID][key] === 0 ? 0 : (storageDataIndex[st.StudentID][key] || '')) !== (st[key] === 0 ? 0 : (st[key] || ''))
-            //                ) {
-            //                hasChanged = true;
-            //                storageDataIndex[st.StudentID][key] = st[key];
-            //            }
-            //        }
-            //        if (hasChanged) {
-            //            updateValue.push(storageDataIndex[st.StudentID]);
-            //        }
-            //    }
-            //    //else {
-            //    //    storageData.push(st);
-            //    //    storageDataIndex[st.StudentID] = st;
-            //    //}
-            //});
-            //if (updateValue.length > 0) {
-            //    $.ajax({
-            //        url: "../api/private/put/score",
-            //        contentType: "application/json; charset=utf-8",
-            //        dataType: 'json',
-            //        type: 'put',
-            //        data: JSON.stringify(updateValue),
-            //        success: function (data) {
-            //            if (data.status !== "success") alert(JSON.stringify(data));
-            //        }
-            //    });
-            //}
-            ////window.localStorage[application + '/' + groupId + '/studentList'] = JSON.stringify(storageData);
         }
 
         $scope.saveAll = function () {
@@ -642,216 +302,9 @@
         }
 
         $scope.isMobile = navigator.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/gi) ? true : false;
-        //alert($scope.isMobile)
-        $scope.toggleCreateItemType = function (type) {
-            $scope.createItem.Type = type;
-            if (type === 'Number') {
-                //$scope.createItem.Range = {
-                //    Max: '100',
-                //    Min: '0'
-                //}
-            } else if (type === 'Enum') {
-                $scope.createItem.Option = [{
-                    Label: 'A'
-                }, {
-                    Label: 'B'
-                }, {
-                    Label: 'C'
-                }, {
-                    Label: 'D'
-                }];
-            }
-        }
-
-        $scope.addOptionItem = function () {
-            $scope.createItem.Option.push({
-                Label: ''
-            });
-            $('.pg-newoption:last-of-type').focus();
-            $timeout(function () {
-                $('.pg-newoption:last-of-type').select();
-            }, 1);
-        }
-
-        $scope.removeOptionItem = function (index) {
-            $scope.createItem.Option.splice(index, 1);
-        }
-
-        $scope.numberValue = function (examItem) {
-            if (examItem.Type == 'Number') return true;
-            var allNumber = true;
-            $scope.studentList.forEach(function (st) {
-                if (st[examItem.Name] && !angular.isNumber(st[examItem.Name])) {
-                    allNumber = false;
-                }
-            });
-            return allNumber;
-        }
-
-        $scope.countRange = function (examItem, max, min) {
-            if (!angular.isNumber(max))
-                max = Number.MAX_VALUE;
-            if (!angular.isNumber(min))
-                min = (0 - Number.MAX_VALUE);
-            var count = 0;
-            $scope.studentList.forEach(function (st) {
-                if (angular.isNumber(st[examItem.Name]) && st[examItem.Name] >= min && st[examItem.Name] < max)
-                    count++;
-            });
-            return count;
-        }
-
-        $scope.getMax = function (examItem) {
-            var result = null;
-            $scope.studentList.forEach(function (st) {
-                if (angular.isNumber(st[examItem.Name]) && (result == null || st[examItem.Name] > result)) {
-                    result = st[examItem.Name];
-                }
-            });
-            return result;
-        }
-
-        $scope.getMin = function (examItem) {
-            var result = null;
-            $scope.studentList.forEach(function (st) {
-                if (angular.isNumber(st[examItem.Name]) && (result == null || st[examItem.Name] < result)) {
-                    result = st[examItem.Name];
-                }
-            });
-            return result;
-        }
-
-        $scope.getAvg = function (examItem) {
-            var powseed = 3;
-            $scope.studentList.forEach(function (st) {
-                try {
-                    var seed = ('' + st[examItem.Name]).split('.')[1].length;
-                    if (seed > powseed)
-                        powseed = seed;
-                }
-                catch (exc) { }
-            });
-            powseed = Math.pow(10, powseed);
-            var powsum = 0;
-            var count = 0;
-            $scope.studentList.forEach(function (st) {
-                if (angular.isNumber(st[examItem.Name])) {
-                    powsum += st[examItem.Name] * powseed;
-                    count++;
-                }
-            });
-            if (count > 0)
-                return Math.round(powsum / count) / powseed;
-            else
-                return null;
-        }
-
-        $scope.countValue = function (examItem, option) {
-            var result = null;
-            $scope.studentList.forEach(function (st) {
-                if (st[examItem.Name] == option) {
-                    if (result == null)
-                        result = 1;
-                    else
-                        result++;
-                }
-            });
-            return result;
-        }
-
-        $scope.setAnalytics = function (examItem) {
-            if ($scope.numberValue(examItem)) {
-                $scope.analytics = {
-                    Type: "Number",
-                    Target: examItem
-
-                }
-            }
-            if (examItem.Type == 'Enum') {
-                $scope.analytics = {
-                    Type: "Enum",
-                    Target: examItem
-                }
-            }
-        }
-
+        
         $scope.filterPermission = function (examItem) {
             return (examItem.Permission == "Read" || examItem.Permission == "Editor") && ($scope.current.VisibleExam && $scope.current.VisibleExam.indexOf(examItem.Name) >= 0);
-        }
-
-        //$scope.orderByExamOrder = function (examItem) {
-        //    if ($scope.current.ExamOrder) {
-        //        var index = $scope.current.ExamOrder.indexOf(examItem.Name);
-        //        if (index < 0)
-        //            return $scope.examList.length - 1;
-        //        else {
-        //            return index;
-        //        }
-        //    }
-        //    else {
-        //        return $scope.examList.length - 1;
-        //    }
-        //}
-
-        $scope.sortableOptions = {
-            activate: function () {
-                //console.log("activate");
-            },
-            beforeStop: function () {
-                //console.log("beforeStop");
-            },
-            change: function () {
-                //console.log("change");
-            },
-            create: function () {
-                //console.log("create");
-            },
-            deactivate: function () {
-                //console.log("deactivate");
-            },
-            out: function () {
-                //console.log("out");
-            },
-            over: function () {
-                //console.log("over");
-            },
-            receive: function () {
-                //console.log("receive");
-            },
-            remove: function () {
-                //console.log("remove");
-            },
-            sort: function () {
-                //console.log("sort");
-            },
-            start: function () {
-                //console.log("start");
-            },
-            update: function (e, ui) {
-                //console.log("update");
-
-                //var logEntry = tmpList.map(function (i) {
-                //    return i.value;
-                //}).join(', ');
-                //$scope.sortingLog.push('Update: ' + logEntry);
-            },
-            stop: function (e, ui) {
-                //console.log("stop");
-
-                //// this callback has the changed model
-                //var logEntry = tmpList.map(function (i) {
-                //    return i.value;
-                //}).join(', ');
-                //$scope.sortingLog.push('Stop: ' + logEntry);
-
-                $scope.examList.forEach(function (examItem) {
-                    console.log(examItem.Name);
-                });
-            }
-        };
-
-        $scope.getOwnerName = function (examItem) {
-            return "";
         }
 
         $scope.setupCurrent = function () {
@@ -905,27 +358,6 @@
                 });
             }
         }
-
-        $scope.sortExamList = function () {
-            if ($scope.current.ExamOrder && $scope.examList) {
-                var orignOrder = [].concat($scope.examList);
-                $scope.examList.sort(function (e1, e2) {
-                    var i1 = $scope.current.ExamOrder.indexOf(e1.Name);
-                    var i2 = $scope.current.ExamOrder.indexOf(e2.Name);
-                    if (i1 == i2) {
-                        return orignOrder.indexOf(e1) - orignOrder.indexOf(e2);
-                    }
-                    else {
-                        if (i1 < 0) i1 = orignOrder.length + $scope.current.ExamOrder.length + orignOrder.indexOf(e1);
-                        if (i2 < 0) i2 = orignOrder.length + $scope.current.ExamOrder.length + orignOrder.indexOf(e2);
-
-                        return i1 - i2;
-                    }
-                });
-                $scope.setupCurrent();
-            }
-        }
-
 
         $scope.current = {
             SelectMode: "Seq.",
@@ -1001,39 +433,6 @@
                 $scope.examList.push(examRec);
                 $scope.current.VisibleExam.push(examRec.Name);
                 $scope.current.ExamOrder.push(examRec.Name);
-
-
-                //if (examRec.Name != '平時成績') {
-                //    var parent = examRec;
-                //    parent.SubExamList = [];
-                //    [
-                //        { ExamID: parent.ExamID + "_" + '讀卡', Name: parent.Name + '-' + '讀卡', SubName: '讀卡', Type: 'Number', Permission: 'Read', Group: parent },
-                //        { ExamID: parent.ExamID + "_" + '試卷', Name: parent.Name + '-' + '試卷', SubName: '試卷', Type: 'Number', Permission: 'Editor', Group: parent }
-                //    ].forEach(function (subExamRec) {
-                //        parent.SubExamList.push(subExamRec);
-                //        $scope.examList.push(subExamRec);
-                //        $scope.current.VisibleExam.push(subExamRec.Name);
-                //    });
-                //}
-                //else {
-                //    var parent = examRec;
-                //    parent.SubExamList = [];
-                //    [
-                //        { ExamID: parent.ExamID + "_" + '1', Name: parent.Name + '-' + '1', SubName: '1', Type: 'Number', Permission: 'Editor', Group: parent },
-                //        { ExamID: parent.ExamID + "_" + '2', Name: parent.Name + '-' + '2', SubName: '2', Type: 'Number', Permission: 'Editor', Group: parent },
-                //        { ExamID: parent.ExamID + "_" + '3', Name: parent.Name + '-' + '3', SubName: '3', Type: 'Number', Permission: 'Editor', Group: parent },
-                //        { ExamID: parent.ExamID + "_" + '4', Name: parent.Name + '-' + '4', SubName: '4', Type: 'Number', Permission: 'Editor', Group: parent },
-                //        { ExamID: parent.ExamID + "_" + '5', Name: parent.Name + '-' + '5', SubName: '5', Type: 'Number', Permission: 'Editor', Group: parent },
-                //        { ExamID: parent.ExamID + "_" + '6', Name: parent.Name + '-' + '6', SubName: '6', Type: 'Number', Permission: 'Editor', Group: parent },
-                //        { ExamID: parent.ExamID + "_" + '7', Name: parent.Name + '-' + '7', SubName: '7', Type: 'Number', Permission: 'Editor', Group: parent },
-                //        { ExamID: parent.ExamID + "_" + '8', Name: parent.Name + '-' + '8', SubName: '8', Type: 'Number', Permission: 'Editor', Group: parent },
-                //        { ExamID: parent.ExamID + "_" + '9', Name: parent.Name + '-' + '9', SubName: '9', Type: 'Number', Permission: 'Editor', Group: parent }
-                //    ].forEach(function (subExamRec) {
-                //        parent.SubExamList.push(subExamRec);
-                //        $scope.examList.push(subExamRec);
-                //        $scope.current.VisibleExam.push(subExamRec.Name);
-                //    });
-                //}
             });
             var finalScore = { ExamID: '學期成績', Name: '學期成績', Type: 'Number', Permission: 'Editor', Lock: true };
             var finalScorePreview = {
@@ -1056,8 +455,6 @@
                             }
                     });
                     if (base) {
-                        //var size = Math.pow(10, 2);
-                        //stu["Exam" + finalScorePreview.ExamID] = Math.floor(total / base) / seed;
                         var round = Math.pow(10, $scope.params[finalScorePreview.Name + 'Round'] || $scope.params.DefaultRound);
                         stu["Exam" + finalScorePreview.ExamID] = Math.round((Math.floor(total / base) / seed) * round) / round;
                     }
@@ -1132,17 +529,9 @@
                                                         stu["Exam" + examRec.ExamID] = "缺";
                                                     }
                                                     else {
-
-                                                        //[].concat(gadget.params || []).forEach(function (roundRec, index) {
-
-                                                        //    $scope.params[roundRec] = roundRec.Value;
-                                                        //});
                                                         var round = Math.pow(10, $scope.params[examRec.Name + 'Round'] || $scope.params.DefaultRound);
-
                                                         stu["Exam" + examRec.ExamID] = hasVal ? Math.round((Math.floor(sum) / seed) * round) / round : '';
-
                                                     }
-
                                                 };
                                             }
                                             return;
@@ -1163,16 +552,12 @@
                                 }
                             },
                             result: function (response, error, http) {
-
                                 if (error) {
                                     alert("TeacherAccess.GetCourseStudents Error");
                                 } else {
                                     var studentMapping = {};
                                     $scope.$apply(function () {
                                         $scope.studentList = [];
-
-
-
                                         [].concat(response.Students.Student || []).forEach(function (studentRec, index) {
                                             studentRec.SeatNo = studentRec.SeatNumber;
                                             studentRec.index = index;
@@ -1182,9 +567,6 @@
                                             $scope.studentList.push(studentRec);
                                             studentMapping[studentRec.StudentID] = studentRec;
                                         });
-
-
-
                                     });
                                     //抓定期評量成績
                                     $scope.connection.send({
