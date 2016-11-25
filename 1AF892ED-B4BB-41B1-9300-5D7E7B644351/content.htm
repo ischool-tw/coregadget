@@ -9,12 +9,12 @@
         init({
             application: "test.whsh.tc.edu.tw",
             paramValues: {
-                "DefaultRound": "1", //預設小數點位數
-                "第一次期中考Round": "1",
-                "第二次期中考Round": "2",
-                "期末考Round": "7",
-                "試算Round": "1", //指定評量項目小數點位數
-                "學期成績Round": "2"
+                "DefaultRound": "2" //預設小數點位數
+                //"第一次期中考Round": "1",
+                //"第二次期中考Round": "2",
+                //"期末考Round": "7",
+                //"試算Round": "1", //指定評量項目小數點位數
+                //"學期成績Round": "2"
             },
             oAuth: {
                 clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
@@ -313,7 +313,8 @@
                                 style="position:relative;"
                                 ng-click="setCurrent(stuRec, exam, true, true)">
                                 <div ng-if="!checkOneCell(stuRec, 'Exam'+exam.ExamID)"
-                                     style="display: inline-block; background-color: red; position: absolute; left: 3px; top: 3px; width: 4px; height: 5px; border-radius: 3px;">
+                                     ng-attr-title="{{stuRec['Exam'+exam.ExamID+'Origin']?'原值為：'+stuRec['Exam'+exam.ExamID+'Origin']:''}}"
+                                     style="display: inline-block; background-color: red; position: absolute; left: 3px; top: 3px; width: 5px; height: 6px; border-radius: 5px;">
                                 </div>
                                 <h6 ng-if="exam.Group" style="margin:0px;display:inline-block;">
                                     <small>

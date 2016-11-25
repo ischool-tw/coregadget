@@ -79,7 +79,7 @@
 
         $scope.params = gadget.params;
         $scope.params.DefaultRound = gadget.params.DefaultRound || '2';
-        
+
         $scope.calc = function () {
             [].concat($scope.examList).reverse().forEach(function (examItem) {
                 if (examItem.Permission == "Editor" && !!!examItem.Lock && examItem.Type == "Program") {
@@ -100,7 +100,7 @@
         $scope.setCurrent = function (student, exam, setCondition, setFocus) {
             $scope.current.Exam = exam;
             $scope.current.Student = student;
-            
+
             var val = (student || {})['Exam' + (exam || {}).ExamID];
             $scope.current.Value = (angular.isNumber(val) ? val : (val || ""));
             if (setCondition && student) {
@@ -302,7 +302,7 @@
         }
 
         $scope.isMobile = navigator.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/gi) ? true : false;
-        
+
         $scope.filterPermission = function (examItem) {
             return (examItem.Permission == "Read" || examItem.Permission == "Editor") && ($scope.current.VisibleExam && $scope.current.VisibleExam.indexOf(examItem.Name) >= 0);
         }
@@ -506,31 +506,33 @@
                                                 examRec.Fn = function (stu) {
                                                     var sum = 0;
                                                     var hasVal = false;
-                                                    var IsAbsent = false;
+                                                    var isAbsent = false;
                                                     var seed = 10000;
                                                     examRec.SubExamList.forEach(function (subExamRec) {
                                                         if (stu["Exam" + subExamRec.ExamID] || stu["Exam" + subExamRec.ExamID] == "0") {
                                                             hasVal = true;
-
                                                             if (stu["Exam" + subExamRec.ExamID] == "缺") {
-                                                                sum += "缺";
-
-                                                                IsAbsent = true;
-
+                                                                isAbsent = true;
                                                             }
                                                             else {
-
                                                                 sum += Number(stu["Exam" + subExamRec.ExamID] * seed || 0);
                                                             }
 
                                                         }
                                                     });
-                                                    if (IsAbsent) {
+                                                    if (isAbsent) {
                                                         stu["Exam" + examRec.ExamID] = "缺";
                                                     }
                                                     else {
-                                                        var round = Math.pow(10, $scope.params[examRec.Name + 'Round'] || $scope.params.DefaultRound);
-                                                        stu["Exam" + examRec.ExamID] = hasVal ? Math.round((Math.floor(sum) / seed) * round) / round : '';
+                                                        if (hasVal) {
+                                                            var round = Math.pow(10, $scope.params[examRec.Name + 'Round'] || $scope.params.DefaultRound);
+                                                            stu["Exam" + examRec.ExamID] = Math.round((Math.floor(sum) / seed) * round) / round;
+                                                        }
+                                                        else {
+                                                            if (stu["Exam" + examRec.ExamID] !== "缺")
+                                                                stu["Exam" + examRec.ExamID] = '';
+                                                        }
+
                                                     }
                                                 };
                                             }
@@ -568,6 +570,9 @@
                                             studentMapping[studentRec.StudentID] = studentRec;
                                         });
                                     });
+                                    var getCourseExamScoreFinish = false;
+                                    var getCourseSemesterScore = false;
+
                                     //抓定期評量成績
                                     $scope.connection.send({
                                         service: "TeacherAccess.GetCourseExamScore",
@@ -596,14 +601,17 @@
                                                             }
                                                         });
                                                     });
-
-                                                    $scope.studentList.forEach(function (studentRec, index) {
-                                                        var rawStudentRec = angular.copy(studentRec);
-                                                        for (var key in rawStudentRec) {
-                                                            studentRec[key + 'Origin'] = studentRec[key];
-                                                        }
-                                                    });
-                                                    $scope.setupCurrent();
+                                                    getCourseExamScoreFinish = true;
+                                                    //定期跟總成績都抓完
+                                                    if (getCourseExamScoreFinish && getCourseSemesterScore) {
+                                                        $scope.studentList.forEach(function (studentRec, index) {
+                                                            var rawStudentRec = angular.copy(studentRec);
+                                                            for (var key in rawStudentRec) {
+                                                                studentRec[key + 'Origin'] = studentRec[key];
+                                                            }
+                                                        });
+                                                        $scope.setupCurrent();
+                                                    }
                                                 });
                                             }
                                         }
@@ -634,12 +642,17 @@
                                                         studentMapping[finalScoreRec.StudentID]["Exam" + finalScore.ExamID] = finalScoreRec.Score;
                                                     });
 
-                                                    $scope.studentList.forEach(function (studentRec, index) {
-                                                        var rawStudentRec = angular.copy(studentRec);
-                                                        for (var key in rawStudentRec) {
-                                                            studentRec[key + 'Origin'] = studentRec[key];
-                                                        }
-                                                    });
+                                                    getCourseSemesterScore = true;
+                                                    //定期跟總成績都抓完
+                                                    if (getCourseExamScoreFinish && getCourseSemesterScore) {
+                                                        $scope.studentList.forEach(function (studentRec, index) {
+                                                            var rawStudentRec = angular.copy(studentRec);
+                                                            for (var key in rawStudentRec) {
+                                                                studentRec[key + 'Origin'] = studentRec[key];
+                                                            }
+                                                        });
+                                                        $scope.setupCurrent();
+                                                    }
                                                 });
                                             }
                                         }
