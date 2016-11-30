@@ -237,7 +237,7 @@
                 $scope.HomeVisitDetial.ContactOption.push(item);
             });
             //#endregion
-            
+
             //#region 轉換CounselTypeKind到CounselTypeKindOption
             var counselTypeKindOption = [{ Name: '家人議題' }, { Name: '違規行為' }, { Name: '心理困擾' }, { Name: '學習問題' },
                 { Name: '性別議題' }, { Name: '人際關係' }, { Name: '生涯規劃' }, { Name: '自傷/自殺' },
@@ -344,8 +344,17 @@
 
             if (isNaN(new Date(rec.HomeVisitDate).getTime()))
                 err += (err ? '\n' : '') + "日期格式錯誤!";
-            else
-                rec.HomeVisitDate = new Date(rec.HomeVisitDate).toLocaleDateString();
+            else {
+                var date = new Date(rec.HomeVisitDate);
+                var mm = date.getMonth() + 1; // getMonth() is zero-based
+                var dd = date.getDate();
+
+                rec.HomeVisitDate = [
+                    date.getFullYear(),
+                    mm,
+                    dd
+                ].join('/');
+            }
 
             if (!rec.Cause)
                 err += (err ? '\n' : '') + "聯繫事由不得空白!";
@@ -613,8 +622,17 @@
 
             if (isNaN(new Date(rec.InterviewDate).getTime()))
                 err += (err ? '\n' : '') + "日期格式錯誤!";
-            else
-                rec.InterviewDate = new Date(rec.InterviewDate).toLocaleDateString();
+            else {
+                var date = new Date(rec.InterviewDate);
+                var mm = date.getMonth() + 1; // getMonth() is zero-based
+                var dd = date.getDate();
+
+                rec.InterviewDate = [
+                    date.getFullYear(),
+                    mm,
+                    dd
+                ].join('/');
+            }
 
             if (!rec.Cause)
                 err += (err ? '\n' : '') + "晤談事由不得空白!";
