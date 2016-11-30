@@ -267,7 +267,7 @@
             if (strconfirm == true) {
                 gadget.getContract('ischool.counsel.v2.teacher').send({
                     service: "DeleteHomeVisitRecord",
-                    body: { InterviewRecord: { UID: rec.UID } },
+                    body: { HomeVisitRecord: { UID: rec.UID } },
                     result: function (response, error, http) {
                         if (!response)
                             alert("DeleteHomeVisitRecord" + ' Error' + JSON.stringify(error));
