@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs title="重補修成績" description="教師-重補修成績 V2">
+    <Icon>icon.png</Icon>
+    <Mobile/>
+    <Title lang="zh-TW">重補修成績</Title>
+    <Title lang="zh-CN"></Title>
+    <Title lang="en-US"></Title>
+  </ModulePrefs>
+</Module>

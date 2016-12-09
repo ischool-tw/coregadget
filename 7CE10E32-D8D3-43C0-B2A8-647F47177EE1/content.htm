@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="js/gadget.js"></script>
+    <script>
+        init({
+            application: "test.whsh.tc.edu.tw",
+            paramValues: {},
+            oAuth: {
+                clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+                clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
+                account: 'student07.whsh@1campus.net',
+                password: 1234//window.prompt('password:')
+            }
+        });
+    </script>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <!-- Bootstrap Material Design -->
+    <!--<link href="css/bootstrap-material-design.css" rel="stylesheet">
+    <link href="css/ripples.min.css" rel="stylesheet">-->
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/sortable.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/angular-strap.min.js"></script>
+    <script src="js/angular-strap.tpl.min.js"></script>
+    <script src="js/elastic.js"></script>
+    <!-- Bootstrap Material Design -->
+    <!--<script src="js/ripples.min.js"></script>
+    <script src="js/material.min.js"></script>-->
+
+    <script src="js/mainCtrl.js"></script>
+    <style>
+        body {
+            font-family: "新細明體","Helvetica Neue",Helvetica,Arial,sans-serif;
+        }
+
+        .my-panel {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            max-width: 1024px;
+            margin: 0px auto 20px auto;
+        }
+    </style>
+</head>
+
+<body ng-controller="MainCtrl">
+    <div ng-if="!init" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+    <div ng-if="initErr" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">{{initErr}}</div>
+
+    <div ng-if="Session"
+         class="my-panel">
+        <div style="min-height:100%;"
+             class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">重補修系統</h3>
+            </div>
+            <div class="panel-body"
+                 style="min-height:100%;">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" ng-if="!Session.RegistrationClosed" ng-class="{active:ShowTab=='registration'}" ng-click="SetShowTab('registration')"><a href="javascript:void(0)">課程選課登記</a></li>
+                    <li role="presentation" ng-class="{active:ShowTab=='courseList'}" ng-click="SetShowTab('courseList')"><a href="javascript:void(0)">課程及成績查詢</a></li>
+                </ul>
+                <div ng-if="!Session.RegistrationClosed && ShowTab=='registration'"
+                     class="panel panel-default">
+                    <div class="panel-heading">
+                        <div>開放梯次：{{Session.SchoolYear}} 學年度 第 {{Session.Semester}} 學期 第 {{Session.Round}} 梯次</div>
+                        <div>選課登記時間：</div>
+                        <div style="margin-left:15px;">
+                            {{Session.RegistrationOpenTime}} ~ {{Session.RegistrationCloseTime}}
+                            <span class="label label-warning" ng-if="!Session.RegistrationOpening">尚未開放</span>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <p>重補修課程選課登記</p>
+                        <table class="table table-bordered"
+                               ng-class="{'table-striped table-hover':Subject.length>0}">
+                            <thead>
+                                <tr>
+                                    <th class="text-center col-sm-1">
+                                        選課登記
+                                    </th>
+                                    <th class="text-center col-sm-1">
+                                        重修/補修
+                                    </th>
+                                    <th class="text-center col-sm-1">
+                                        學期
+                                    </th>
+                                    <th class="text-center col-sm-6">
+                                        科目
+                                    </th>
+                                    <th class="text-center col-sm-1">
+                                        學分數
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="subjRec in Subject"
+                                    ng-click="SetCurrent(subjRec)"
+                                    ng-class="{active:subjRec==CurrentStudent}">
+                                    <td class="text-center">
+                                        <input type="checkbox" ng-model="subjRec.Selected">
+                                    </td>
+                                    <td class="text-center">{{subjRec.Type}}</td>
+                                    <td class="text-center">{{subjRec.FailSemester}}</td>
+                                    <td class="text-left">{{subjRec.FullName}}</td>
+                                    <td class="text-center">{{subjRec.Credit}}</td>
+                                </tr>
+                                <tr ng-if="Subject.length==0">
+                                    <td colspan="5"
+                                        style="height: 450px;vertical-align: middle;"
+                                        class="text-center">
+                                        沒有可選的重補修課程。
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div ng-if="Subject.length>0">
+                            <a class="btn btn-default btn-sm"
+                               ng-click="saveSSSelect()">送出</a>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="ShowTab=='courseList' && SubjectHistory.length==0"
+                     class="panel panel-default">
+                    <div class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有重補修紀錄。</div>
+                </div>
+
+                <div ng-if="ShowTab=='courseList' && SubjectHistory.length>0"
+                     ng-repeat="round in SubjectHistory"
+                     class="panel panel-default">
+                    <div class="panel-heading">
+                        <div>{{round.SchoolYear}} 學年度 第 {{round.Semester}} 學期 第 {{round.Round}} 梯次</div>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-bordered"
+                               ng-class="{'table-striped table-hover':Subject.length>0}">
+                            <thead>
+                                <tr>
+                                    <th class="text-center col-sm-2">
+                                        科目
+                                    </th>
+                                    <th class="text-center col-sm-1">
+                                        學分數
+                                    </th>
+                                    <th class="text-center col-sm-4">
+                                        課程
+                                    </th>
+                                    <th class="text-center col-sm-1">
+                                        總成績
+                                    </th>
+                                    <th class="text-center col-sm-1">
+                                        期中
+                                    </th>
+                                    <th class="text-center col-sm-1">
+                                        期末
+                                    </th>
+                                    <th class="text-center col-sm-1">
+                                        平時
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="subjRec in round.List"
+                                    ng-class="{'text-muted':!subjRec.CourseName}">
+                                    <td class="text-left">{{subjRec.FullName}}</td>
+                                    <td class="text-center">{{subjRec.Credit}}</td>
+                                    <td class="text-left">{{subjRec.CourseName || subjRec.FailReason}}</td>
+                                    <td class="text-center">{{subjRec.Score}}</td>
+                                    <td class="text-center">{{subjRec.SubScore1}}</td>
+                                    <td class="text-center">{{subjRec.SubScore2}}</td>
+                                    <td class="text-center">{{subjRec.SubScore3}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

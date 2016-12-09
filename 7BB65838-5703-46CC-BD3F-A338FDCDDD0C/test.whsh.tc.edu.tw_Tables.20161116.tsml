@@ -1,0 +1,48 @@
+<Content>
+	<Table Name="counsel.home_visit_record">
+		<Field AllowNull="true" DataType="BigInt" Default="" Indexed="false" Name="uid" />
+		<Field AllowNull="true" DataType="Datetime" Default="" Indexed="false" Name="last_update" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="attendees" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="author_id" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="author_name" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="author_role" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="cause" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="contact" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="content_digest" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="counsel_type_kind" />
+		<Field AllowNull="true" DataType="Datetime" Default="" Indexed="false" Name="home_visit_date" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="home_visit_no" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="home_visit_time" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="home_visit_type" />
+		<Field AllowNull="true" DataType="Boolean" Default="" Indexed="false" Name="is_public" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="place" />
+		<Field AllowNull="true" DataType="Number" Default="" Indexed="false" Name="ref_student_id" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="schoolyear" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="semester" />
+		<Field AllowNull="true" DataType="Number" Default="" Indexed="false" Name="teacher_id" />
+	</Table>
+	<Table Name="counsel.interview_record">
+		<Field AllowNull="true" DataType="BigInt" Default="" Indexed="false" Name="uid" />
+		<Field AllowNull="true" DataType="Datetime" Default="" Indexed="false" Name="last_update" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="attachment" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="attendees" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="author_id" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="author_name" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="author_role" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="cause" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="content_digest" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="counsel_type" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="counsel_type_kind" />
+		<Field AllowNull="true" DataType="Datetime" Default="" Indexed="false" Name="interview_date" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="interviewee_type" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="interview_no" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="interview_time" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="interview_type" />
+		<Field AllowNull="true" DataType="Boolean" Default="" Indexed="false" Name="is_public" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="place" />
+		<Field AllowNull="true" DataType="Number" Default="" Indexed="false" Name="ref_student_id" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="schoolyear" />
+		<Field AllowNull="true" DataType="String" Default="" Indexed="false" Name="semester" />
+		<Field AllowNull="true" DataType="Number" Default="" Indexed="false" Name="teacher_id" />
+	</Table>
+</Content>
