@@ -125,6 +125,7 @@ var _gg = function () {
                                 });
 
                                 var student = Student;
+
                                 Opening = "no";
 
                                 // TODO: 取得開放時間

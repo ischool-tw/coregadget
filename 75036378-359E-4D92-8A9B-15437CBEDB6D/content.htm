@@ -1,0 +1,616 @@
+﻿<!DOCTYPE html>
+<html ng-app="app">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="js/gadget.js"></script>
+    <script>
+        init({
+            application: "test.whsh.tc.edu.tw",
+            paramValues: {},
+            oAuth: {
+                clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+                clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
+                //account: 'teacher01.whsh@1campus.net',
+                //account: 'teacher02.whsh@1campus.net',
+                //account: 'teacher03.whsh@1campus.net',
+                account: 'student01.whsh',
+                //account: 'student03.whsh@1campus.net',
+                
+                password: 1234//window.prompt('password:')
+            }
+        });
+    </script>
+
+
+
+    <title>社團系統</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <!-- Bootstrap Material Design -->
+    <link href="css/bootstrap-material-design.css" rel="stylesheet">
+    <link href="css/ripples.min.css" rel="stylesheet">
+
+
+
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/sortable.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/angular-strap.min.js"></script>
+    <script src="js/angular-strap.tpl.min.js"></script>
+    <script src="js/elastic.js"></script>
+    <!-- Bootstrap Material Design -->
+    <script src="js/ripples.min.js"></script>
+    <script src="js/material.min.js"></script>
+
+    <script src="js/mainCtrl.js"></script>
+
+
+
+    <style>
+        .navbar .navbar-brand {
+            height: 50px;
+            padding: 10px 0px;
+        }
+
+        .navbar .navbar-nav > li > a {
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .navbar-form {
+            width: auto;
+            border: 0;
+            margin-left: 0;
+            margin-right: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+
+        .panel-body > div {
+            margin-bottom: 10px;
+        }
+
+        .table > thead > tr > td.active,
+        .table > tbody > tr > td.active,
+        .table > tfoot > tr > td.active,
+        .table > thead > tr > th.active,
+        .table > tbody > tr > th.active,
+        .table > tfoot > tr > th.active,
+        .table > thead > tr.active > td,
+        .table > tbody > tr.active > td,
+        .table > tfoot > tr.active > td,
+        .table > thead > tr.active > th,
+        .table > tbody > tr.active > th,
+        .table > tfoot > tr.active > th {
+            background-color: #96FF96;
+        }
+
+        .form-group .control-label {
+            font-size: 14px !important;
+            line-height: 1.42857143 !important;
+            /* font-weight: inherit; */
+            margin: 0px 0px 5px 0px !important;
+            padding-top: 0px;
+        }
+
+        .form-group .checkbox label, .form-group .radio label, .form-group label {
+            font-size: 14px;
+            line-height: 1.42857143;
+            font-weight: 400;
+        }
+
+        .form-group .form-control {
+            height: 23px;
+            padding: 0px;
+            margin: 0px 0px 0px 0px;
+            font-size: 14px;
+        }
+
+        .form-control::-moz-placeholder {
+            font-size: 12px !important;
+            line-height: 1.42857143;
+        }
+
+        .form-control:-ms-input-placeholder {
+            font-size: 12px !important;
+            line-height: 1.42857143;
+        }
+
+        .form-control::-webkit-input-placeholder {
+            font-size: 12px !important;
+            line-height: 1.42857143;
+        }
+
+        body {
+            font-family: "新細明體","Helvetica Neue",Helvetica,Arial,sans-serif;
+        }
+
+        .msd-elastic {
+            max-height: 500px;
+        }
+
+        .my-switch {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            max-width: 1024px;
+            margin: 0 auto;
+            background: #fafafa;
+            overflow: hidden;
+        }
+
+        .my-list {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            bottom: 0px;
+            width: 256px;
+        }
+
+        .my-detial {
+            position: absolute;
+            top: 0px;
+            left: 256px;
+            right: 0px;
+            bottom: 0px;
+        }
+
+        @media (max-width: 768px) {
+            .my-switch {
+                width: 100%;
+            }
+
+                .my-switch.my-switch-detial {
+                    margin-left: -100%;
+                    overflow: inherit;
+                }
+
+            .my-list {
+                width: 100%;
+            }
+
+            .my-detial {
+                position: absolute;
+                top: 0px;
+                left: 100%;
+                right: inherit;
+                bottom: 0px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+
+<body ng-controller="MainCtrl">
+    <!--<div ng-if="!init" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>-->
+    <!--<div ng-if="initErr" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">{{InitErr}}</div>-->
+    
+    <div ng-if="FilterClub"
+         class="my-switch "
+         ng-class="{'my-switch-detial':CurrentView}">
+        <div class="my-list">
+            <div style="height:100%;padding-top:50px;background-color: Window; ">
+                <nav class="navbar navbar-default"
+                     style="position: absolute; margin-top: -50px; margin-bottom: 0px; z-index: 1; left: 0px; right: 0px; background: #45bf9a">
+                    <div style="padding-left:10px;padding-right:10px;">
+                        <div class="navbar-brand col-xs-12">
+                            <form class="navbar-form navbar-left"
+                                  style="margin-top:-2px;padding:0px;width: 100%;">
+                                <div class="form-group"
+                                     style="width: 100%;">
+                                    <input ng-model="ClubFilter.Filter"
+                                           ng-keydown="Filter($event)"
+                                           type="text"
+                                           class="form-control"
+                                           style="width: 100%;"
+                                           placeholder="搜尋： 社團名稱"
+                                           select-on-click />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </nav>
+                <div style="background:#bbecd7">
+                    <span style="display:inline-block; margin-top: 16px">{{OpenTime}}</span>
+                    <span style="display:inline-block; margin-top: 16px">{{StageMode}}</span>
+                    <br>
+                    <br>
+                    <span class="fa fa-check" aria-hidden="true" style="color:green"> = 已選上社團 </span>
+                    <br>
+                    <span class="fa fa-star" aria-hidden="true" style="color: #F59F00"> = 已排入志願序社團 </span>
+                    <br>
+                    <span class="fa fa-lock" aria-hidden="true"> = 鎖定社團 </span>
+
+                </div>
+                <div style="height: 100%; overflow: auto; background: #e5f6ee; ">
+
+
+
+                    <table class="table table-hover">
+                        <tr>
+                            <td class="text-left"
+                                colspan="3" ng-click="SetCurrentView('Choose_Club')"
+                                ng-if="Stage!=3 && StageMode =='模式:志願序'">
+                                <strong>選社志願表 <span class="fa fa-list-alt" aria-hidden="true"> </span></strong>
+                            </td>
+                        </tr>
+                        <!--<tr>
+                            <td class="text-left"
+                                colspan="3" ng-click="SetCurrentView('My_Club')">
+
+                                <strong>社團成績</strong>
+                            </td>
+                        </tr>-->
+                        <!--<tr>
+                            <td class="text-left"
+                                colspan="3">
+                                <strong>現在最多可以選:{{Max_Wish_Count}}個志願</strong>
+                            </td>
+                        </tr>-->
+                        <!--<tr>
+                            <td class="text-left"
+                                colspan="3">
+                                <strong>現在是:{{SchoolYear}}學年{{Semester}}學期</strong>
+                            </td>
+                        </tr>-->
+                        <!--<tr>
+                            <td class="text-left"
+                                colspan="3">
+                                <strong>我是:{{student.Name}} {{student.GradeYear}} 年級 性別:{{student.Gender}} 科別:{{student.DeptName}} </strong>
+                            </td>
+                        </tr>-->
+                        <!--<tr>
+                            <td class="text-left"
+                                colspan="3">
+                                <strong>我現在的社團是 {{student.ClubName}} </strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left"
+                                colspan="3">
+                                <strong>選社鎖定: {{student.Lock}} </strong>
+                            </td>
+                        </tr>-->
+
+
+                        <tr ng-repeat="ClubRec in FilterClub" ng-click="BeforeSetCurrent(ClubRec); " ng-class="{active:ClubRec==CurrentClub}">
+                            <td class="text-left ">
+                                {{ClubRec.ClubName}}
+                                <span ng-if="ClubRec.ClubID== student.ClubID" class="fa fa-check" aria-hidden="true" style="color:green"> </span>
+                                <span ng-if="AlreadyInVolunteer(ClubRec) && Stage!=3 && StageMode =='模式:志願序' " class="fa fa-star" aria-hidden="true" style="color: #F59F00"> </span>
+                                <span ng-if="ClubRec.ClubID== student.ClubID && Stage==3 && StageMode =='目前身分為鎖社狀態，不開放選社' " class="fa fa-lock" aria-hidden="true"> </span>
+                            </td>
+                            <td class="text-right">{{ClubRec.TotalCount}}/{{ClubRec.Limit}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="my-detial">
+            <div style="height: 100%; padding-top: 50px;">
+                <div class="navbar navbar-default"
+                     style="position: absolute; margin-top: -50px; margin-bottom: 0px; z-index: 1; left: 0px; right: 0px; background: #45bf9a; ">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <!--<button type="button"
+                                    class="navbar-toggle"
+                                    data-toggle="collapse"
+                                    data-target=".navbar-inverse-collapse"
+                                    style="margin-top:9px;margin-bottom:9px;">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>-->
+                            <div class="navbar-brand visible-xs"
+                                 style="margin-left:0px;">
+                                <a class="btn btn-sm btn-default"
+                                   style="padding: 8px 10px;margin: -14px 0px -14px 10px;color: white;"
+                                   href="javascript:void(0)"
+                                   ng-click="ClearCurrentClub()">
+                                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                </a>
+                                <span>{{CurrentTitle}}</span>
+                            </div>
+                            <div class="navbar-brand hidden-xs"
+                                 style="margin-left:0px;">
+                                <span>{{CurrentTitle}}</span>
+                            </div>
+                        </div>
+                        <div ng-if="CurrentClub"
+                             class="navbar-collapse collapse navbar-inverse-collapse">
+                            <ul class="nav navbar-nav navbar-right">
+                                <!--<2016/12/7 穎驊註解此區為右上角 NavBar 的功能按鈕區塊，先註解起來，以後可以用到。-->
+                                <!--<li ng-class="{active:CurrentView=='HomeVisit'}">
+                                    <a href="javascript:void(0)"
+                                       ng-click="SetCurrentView('HomeVisit')">
+                                        家庭聯繫
+                                    </a>
+                                </li>-->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 當正在初始化，學生資料、社團資料都上尚未抓到時，顯示Loading -->
+                <div ng-if="!student">
+                    <div ng-if="!student" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+                </div>
+                
+
+                <!--VolunteerClubList-->
+                <div ng-if="CurrentView=='Choose_Club'"
+                     style="height: 100%; overflow: auto; background:#f0faf5">
+
+
+                    <div ng-if="!VolunteerClub" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+
+                    <div class="col-xs-12 ">
+
+                        <div class="panel panel-default">
+                            <div class="col-xs-12 col-sm-9 " style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
+                            </div>
+                            <div class="col-xs-12 col-sm-3 " style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                <a class="btn btn-sm btn-default"
+                                   style="margin-right: auto;color:white; background-color:lightgreen"
+                                   href="javascript:void(0)"
+                                   ng-click="SaveVolunteerClubList();">
+                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                    儲存志願序更動
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="col-xs-12 ">
+                            <div class="panel panel-default">
+                                <div class="panel-body" style="background-color: #F5F5F5">
+                                    <div class="col-xs-12 col-sm-12">
+                                        <strong>志願序清單</strong>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12">
+                                        <div class="col-xs-12 col-sm-2">
+                                            <span>志願序：</span>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-3">
+                                            <span>社團名稱：</span>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-4">
+                                            <span>人數上限：</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12" style="background-color: #EDEDED" ng-repeat="ClubRec in VolunteerClub">
+                                        <div class="col-xs-12 col-sm-2">
+                                            <span style="margin-top:17px; display:table;">
+                                                <span class="fa fa-star" aria-hidden="true" style="color: #F59F00"></span>
+                                                {{ClubRec.VolunteerIndex}}
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-3">
+                                            <span style="margin-top: 17px; display:table;">{{ClubRec.ClubName}}</span>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-4">
+                                            <span style="margin-top: 17px; display: table;">{{ClubRec.Limit}}</span>
+                                        </div>
+
+                                        <div class="btn-group btn-group-xs">
+                                            <button type="button" class="btn btn-raised btn-success btn-default" style="background-color: #A1FFA1; margin-right: 5px;"
+                                                    ng-click="SetVolunteerClubUp(ClubRec);">
+                                                <i class=" fa fa-arrow-up" aria-hidden="true">
+                                                </i>
+                                            </button>
+                                        </div>
+                                        <div class="btn-group btn-group-xs">
+                                            <button type="button" class="btn btn-raised   btn-default" style="background-color: #FFDEA1; margin-right: 5px; "
+                                                    ng-click="SetVolunteerClubDown(ClubRec);">
+                                                <i class="fa fa-arrow-down" aria-hidden="true" style="color: white"></i>
+                                            </button>
+                                        </div>
+                                        <div class="btn-group btn-group-xs">
+                                            <button type="button" class="btn btn-raised   btn-default" style="background-color: #FFA1A1; margin-right: 5px; "
+                                                    ng-click="RemoveVolunteerClub(ClubRec);">
+                                                <i class="fa fa-minus-square" aria-hidden="true" style="color: white"></i>
+                                            </button>
+                                        </div>
+                                        <!--<div class="col-xs-12 col-sm-1">
+                                            <a class="btn btn-sm btn-default"
+                                               style="margin-right: auto;color:white; background-color:lightgreen"
+                                               href="javascript:void(0)"
+                                               ng-click="SetVolunteerClubUp(ClubRec);">
+                                                <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-1">
+                                            <a class="btn btn-sm btn-default"
+                                               style="margin-right: auto;color:white; background-color:yellow"
+                                               href="javascript:void(0)"
+                                               ng-click="SetVolunteerClubDown(ClubRec);">
+                                                <i class="fa fa-arrow-down" aria-hidden="true"></i>
+
+                                            </a>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-1">
+                                            <a class="btn btn-sm btn-default"
+                                               style="color:white; background-color:red; height:20px; width:20px  "
+                                               href="javascript:void(0)"
+                                               ng-click="RemoveVolunteerClub(ClubRec);">
+                                                <i class="fa fa-minus-square" aria-hidden="true" style="margin:auto "></i>
+                                            </a>
+                                        </div>-->
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12">
+                                        <strong>最多可以選:{{Max_Wish_Count}}個志願</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 ">
+                        </div>
+                    </div>
+                </div>
+                <!--VolunteerClubList_ End-->
+
+                <!--Club_Detail-->
+                <div ng-if="CurrentClub&&CurrentView=='Club_Detail'"
+                     style="height: 100%; overflow: auto; background: #f0faf5">
+                    <div ng-if="!CurrentClub_info" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+                    <div class="col-xs-12 ">
+                        <div class="panel panel-default">
+                            <div class="col-xs-12 col-sm-2 " style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                <!--<span style="display:inline-block; margin-top: 16px">{{OpenTime}}</span>-->
+                            </div>
+                            <div class="pull-right">
+                                <div ng-if="Stage!=3 && StageMode =='模式:志願序' && !AlreadyInVolunteer(CurrentClub_info)" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis; ">
+                                    <a class="btn btn-sm btn-success"
+                                       style="margin-right: auto; color: white; background-color: lightgreen;"
+                                       href="javascript:void(0)"
+                                       ng-click="AddNewVolunteerClub(CurrentClub_info);">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                        加入選社志願序
+                                    </a>
+                                </div>
+                                <div ng-if="Stage!=3 && StageMode =='模式:志願序' && AlreadyInVolunteer(CurrentClub_info)" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                    <a class="btn btn-sm btn-danger"
+                                       style="margin-right: auto; color: white; background-color: #FFA1A1; "
+                                       href="javascript:void(0)"
+                                       ng-click="RemoveOldVolunteerClub(CurrentClub_info);">
+                                        <i class="fa fa-minus-square" aria-hidden="true"></i>
+                                        移出選社志願序
+                                    </a>
+                                </div>
+                                <div ng-if="Stage!=3 && StageMode =='模式:先搶先贏' && student.ClubID !=CurrentClub_info.ClubID" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                    <a class="btn btn-sm btn-success "
+                                       style="margin-right: auto; color: white; background-color: lightgreen"
+                                       href="javascript:void(0)"
+                                       ng-click="ChooseClub(CurrentClub_info);">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                        選社
+                                    </a>
+                                </div>
+                                <div ng-if="Stage!=3 && StageMode =='模式:先搶先贏' && student.ClubID ==CurrentClub_info.ClubID" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                    <a class="btn btn-sm btn-danger"
+                                       style="margin-right: auto; color: white; background-color: #FFA1A1; "
+                                       href="javascript:void(0)"
+                                       ng-click="RemoveClub(CurrentClub_info);">
+                                        <i class="fa fa-minus-square" aria-hidden="true"></i>
+                                        退選
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+
+                        <div class="col-xs-12 ">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="col-xs-12 col-sm-12" >
+                                        <strong>社團基本資料</strong>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>學年：</span>
+                                        <span>{{CurrentClub_info.SchoolYear}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>學期：</span>
+                                        <span>{{CurrentClub_info.Semester}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>類別：</span>
+                                        <span>{{CurrentClub_info.ClubCategory}}</span>
+                                    </div>
+
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>代碼：</span>
+                                        <span>{{CurrentClub_info.ClubNumber}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>評等：</span>
+                                        <span>{{CurrentClub_info.Level}}</span>
+                                    </div>
+           
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>老師1：</span>
+                                        <span>{{CurrentClub_info.TeacherName1}}</span>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <span>老師2：</span>
+                                        <span>{{CurrentClub_info.TeacherName2}}</span>
+                                    </div>
+                                    <div class="col-xs-12  col-sm-4">
+                                        <span>老師3：</span>
+                                        <span>{{CurrentClub_info.TeacherName3}}</span>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <span>場地：</span>
+                                        <span>{{CurrentClub_info.Location}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 ">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="col-xs-12 col-sm-12" >
+                                        <strong>社團條件</strong>
+                                    </div>
+                                    <div class="col-xs-12  col-sm-4">
+                                        <span>名額：</span>
+                                        <span>{{CurrentClub_info.Limit}}</span>
+                                    </div>
+                                    <div class="col-xs-12  col-sm-4">
+                                        <span>性別：</span>
+                                        <span>{{CurrentClub_info.GenderRestrict}}</span>
+                                    </div>
+                                    <div class="col-xs-12  col-sm-4" style="word-wrap:break-word; display:inline-block">
+                                        <span>科別：</span>
+                                        <span>{{CurrentClub_info.DeptRestrict_detail}}</span>
+                                    </div>
+                                    <div class="col-xs-12  col-sm-4">
+                                        <span>一年級名額：</span>
+                                        <span>{{CurrentClub_info.Grade1Limit}}</span>
+                                    </div>
+                                    <div class="col-xs-12  col-sm-4">
+                                        <span>二年級名額：</span>
+                                        <span>{{CurrentClub_info.Grade2Limit}}</span>
+                                    </div>
+                                    <div class="col-xs-12  col-sm-4">
+                                        <span>三年級名額：</span>
+                                        <span>{{CurrentClub_info.Grade3Limit}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 ">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="col-xs-12 col-sm-12" >
+                                        <strong>社團簡介</strong>                                        
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12" style="word-wrap:break-word; display:inline-block">
+                                        <span>{{CurrentClub_info.About}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Club_Detail End-->
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
