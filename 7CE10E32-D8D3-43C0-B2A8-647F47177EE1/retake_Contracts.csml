@@ -261,28 +261,26 @@ WHERE
 	<Action>Select</Action>
 	<SQLTemplate>
 		<![CDATA[
-			select @@FieldList
-			from $shschool.retake.subject subject
-			join $shschool.retake.session session on session.active='true' and session.school_year=subject.school_year and session.semester=subject.semester and session.round=subject.round
-			join $shschool.retake.course_timetable timetable on timetable.uid = subject.course_timetable_id
-			join $shschool.retake.cdselect cdselect on cdselect.ref_course_timetable_id = timetable.uid and cdselect.dept_name in (
-				select 
-					CASE WHEN d1.name is null THEN d2.name ELSE d1.name END
-				from student s
-					left outer join class c on c.id = s.ref_class_id
-					left outer join dept d1 on d1.id = s.ref_dept_id
-					left outer join dept d2 on d2.id = c.ref_dept_id
-				where s.id = '@@StudentID' and s.status in (1, 2)
-			)
-			join (SELECT * FROM
-				xpath_table('uid',
-				'subject_content',
-				'$shschool.retake.suggest_list',
-				'/Subjects/Subject/@Name|/Subjects/Subject/@Level|/Subjects/Subject/@Credit|/Subjects/Subject/@Type|/Subjects/Subject/@Required|/Subjects/Subject/@Score|/Subjects/Subject/@SchoolYear|/Subjects/Subject/@Semester|/Subjects/Subject/@GradeYear',
-				'ref_session_id=(select uid from $shschool.retake.session where active=''true'') and ref_student_id=''@@StudentID''')
-				AS t(uid integer, "subject_name" character varying, "subject_level" character varying, "credit" integer, "type" character varying, "required" character varying, "score" character varying, "schoolyear" character varying, "semester" character varying, "gradeyear" character varying)
-			) suggest_list on suggest_list.subject_name = subject.subject_name and suggest_list.subject_level=cast(subject.subject_level as character varying) and suggest_list.credit=subject.credit
-			left join (select distinct ref_subject_id from $shschool.retake.ssselect ssselect where ref_student_id = '@@StudentID') ssselect on subject.uid = ssselect.ref_subject_id
+			SELECT  @@FieldList
+			FROM $shschool.retake.subject subject
+			INNER JOIN $shschool.retake.session session on session.active='true' and session.school_year=subject.school_year and session.semester=subject.semester and session.round=subject.round
+			INNER JOIN (
+				SELECT * FROM
+					xpath_table('ref_student_id',
+					'subject_content',
+					'$shschool.retake.suggest_list',
+					'/Subjects/Subject/@Name|/Subjects/Subject/@Level|/Subjects/Subject/@Credit|/Subjects/Subject/@Type|/Subjects/Subject/@Required|/Subjects/Subject/@Score|/Subjects/Subject/@SchoolYear|/Subjects/Subject/@Semester|/Subjects/Subject/@GradeYear',
+					'ref_session_id=(select uid from $shschool.retake.session where active=''true'') and ref_student_id=''@@StudentID''')
+					AS t(ref_student_id integer, "subject_name" character varying, "subject_level" character varying, "credit" integer, "type" character varying, "required" character varying, "score" character varying, "schoolyear" character varying, "semester" character varying, "gradeyear" character varying)
+				) suggest_list on suggest_list.subject_name = subject.subject_name and suggest_list.subject_level=cast(subject.subject_level as character varying) and suggest_list.credit=subject.credit
+			INNER JOIN (
+					SELECT s.id as ref_student_id, CASE WHEN d1.name is null THEN d2.name ELSE d1.name END as dept_name
+					FROM student s
+						LEFT OUTER JOIN class c on c.id = s.ref_class_id
+						LEFT OUTER JOIN dept d1 on d1.id = s.ref_dept_id
+						LEFT OUTER JOIN dept d2 on d2.id = c.ref_dept_id
+				) studentDept on subject.dept_name = studentDept.dept_name AND suggest_list.ref_student_id = studentDept.ref_student_id
+			LEFT OUTER JOIN (select distinct ref_subject_id from $shschool.retake.ssselect ssselect where ref_student_id = '@@StudentID') ssselect on subject.uid = ssselect.ref_subject_id
 			WHERE @@Condition 
 		]]>
 	</SQLTemplate>
@@ -294,13 +292,101 @@ WHERE
 		<Field Alias="Credit" Mandatory="True" Source="Credit" Target="subject.credit" />
 		<Field Alias="Type" Mandatory="True" Source="Type" Target="suggest_list.type" />
 		<Field Alias="Required" Mandatory="True" Source="Required" Target="suggest_list.required" />
-		<Field Alias="FailScore" Mandatory="True" Source="Required" Target="suggest_list.score" />
-		<Field Alias="FailSchoolYear" Mandatory="True" Source="Required" Target="suggest_list.schoolyear" />
-		<Field Alias="FailSemester" Mandatory="True" Source="Required" Target="suggest_list.semester" />
-		<Field Alias="FailGradeYear" Mandatory="True" Source="Required" Target="suggest_list.gradeyear" />
-		<Field Alias="TimetableID" Mandatory="True" Source="TimetableID" Target="subject.course_timetable_id" />
-		<Field Alias="TimetableName" Mandatory="True" Source="TimetableName" Target="timetable.name" />
-		<Field Alias="Selected" Mandatory="True" Source="Selected" Target="CASE WHEN ssselect.ref_subject_id IS NULL THEN 'no' ELSE 'yes' END" />
+		<Field Alias="FailScore" Mandatory="True" Source="FailScore" Target="suggest_list.score" />
+		<Field Alias="FailSchoolYear" Mandatory="True" Source="FailSchoolYear" Target="suggest_list.schoolyear" />
+		<Field Alias="FailSemester" Mandatory="True" Source="FailSemester" Target="suggest_list.semester" />
+		<Field Alias="FailGradeYear" Mandatory="True" Source="FailGradeYear" Target="suggest_list.gradeyear" />
+		<Field Alias="Selected" Mandatory="True" Source="Selected" Target="CASE WHEN ssselect.ref_subject_id IS NULL THEN 'false' ELSE 'true' END" />
+	</FieldList>
+	<Conditions Name="Condition" Required="False" Source="Condition" />
+	<InternalVariable>
+		<Variable Key="StudentID" Name="StudentID" Source="UserInfo" />
+	</InternalVariable>
+</Definition>
+		</Service>
+		<Service Enabled="true" Name="GetSubjectHistory">
+			<Definition Type="dbhelper">
+	<Action>Select</Action>
+	<SQLTemplate>
+		<![CDATA[
+SELECT  @@FieldList
+FROM (
+		SELECT csselect.ref_student_id, course.subject_name, course.subject_level, course.credit, course.school_year, course.semester, course.round
+		FROM $shschool.retake.scselect csselect
+			LEFT OUTER JOIN $shschool.retake.course course on course.uid = csselect.ref_course_id
+		UNION
+		SELECT ssselect.ref_student_id, subject.subject_name, subject.subject_level, subject.credit, subject.school_year, subject.semester, subject.round
+		FROM $shschool.retake.ssselect ssselect
+			LEFT OUTER JOIN $shschool.retake.subject subject on ssselect.ref_subject_id = subject.uid
+	) as scourse
+	LEFt OUTER JOIN student on student.id = scourse.ref_student_id
+	LEFt OUTER JOIN class on class.id = student.ref_class_id
+	LEFT OUTER JOIN (
+		SELECT s.id as ref_student_id, CASE WHEN d1.name is null THEN d2.name ELSE d1.name END as stu_dept
+		FROM student s
+			LEFT OUTER JOIN class c on c.id = s.ref_class_id
+			LEFT OUTER JOIN dept d1 on d1.id = s.ref_dept_id
+			LEFT OUTER JOIN dept d2 on d2.id = c.ref_dept_id
+	) as dept on student.id = dept.ref_student_id
+	LEFT OUTER JOIN $shschool.retake.session session on scourse.school_year=session.school_year and scourse.semester=session.semester and scourse.round=session.round
+	LEFT OUTER JOIN (
+		SELECT ssselect.ref_student_id, subject.subject_name, subject.subject_level, subject.credit, subject.school_year, subject.semester, subject.round
+			, subject.subject_type, subject.uid, ssselect.fail_reason, ssselect.uid as ssselect_id
+		FROM $shschool.retake.ssselect ssselect
+			LEFT OUTER JOIN $shschool.retake.subject subject on ssselect.ref_subject_id = subject.uid
+	) as sscourse on sscourse.ref_student_id = scourse.ref_student_id 
+		AND sscourse.subject_name = scourse.subject_name 
+		AND (
+			sscourse.subject_level = scourse.subject_level 
+			OR (
+				sscourse.subject_level is null
+				AND
+				scourse.subject_level is null
+			)
+		)
+		AND sscourse.credit = scourse.credit
+		AND sscourse.school_year = scourse.school_year
+		AND sscourse.semester = scourse.semester
+		AND sscourse.round = scourse.round 
+	LEFT OUTER JOIN (
+		SELECT csselect.ref_student_id, course.subject_name, course.subject_level, course.credit, course.school_year, course.semester, course.round
+			, course.course_name, course.subject_type, course.uid
+			, csselect.score, csselect.sub_score1, csselect.sub_score2, csselect.sub_score3
+		FROM $shschool.retake.scselect csselect
+			LEFT OUTER JOIN $shschool.retake.course course on course.uid = csselect.ref_course_id
+	) as cscourse on cscourse.ref_student_id = scourse.ref_student_id 
+		AND cscourse.subject_name = scourse.subject_name 
+		AND (
+			cscourse.subject_level = scourse.subject_level 
+			OR (
+				cscourse.subject_level is null
+				AND
+				scourse.subject_level is null
+			)
+		)
+		AND cscourse.credit = scourse.credit
+		AND cscourse.school_year = scourse.school_year
+		AND cscourse.semester = scourse.semester
+		AND cscourse.round = scourse.round
+WHERE 
+	student.id = @@StudentID
+		]]>
+	</SQLTemplate>
+	<ResponseRecordElement>SubjectList/Subject</ResponseRecordElement>
+	<FieldList Name="FieldList" Source="Field">
+		<Field Alias="SchoolYear" Mandatory="True" Source="SchoolYear" Target="session.school_year" />
+		<Field Alias="Semester" Mandatory="True" Source="Semester" Target="session.semester" />
+		<Field Alias="Round" Mandatory="True" Source="Round" Target="session.round" />
+		<Field Alias="SubjectName" Mandatory="True" Source="SubjectName" Target="scourse.subject_name" />
+		<Field Alias="SubjectLevel" Mandatory="True" Source="SubjectLevel" Target="scourse.subject_level" />
+		<Field Alias="Credit" Mandatory="True" Source="Credit" Target="scourse.credit" />
+		<Field Alias="Type" Mandatory="True" Source="Type" Target="CASE WHEN cscourse.subject_type is null THEN sscourse.subject_type ELSE cscourse.subject_type END" />
+		<Field Alias="CourseName" Mandatory="True" Source="CourseName" Target="cscourse.course_name" />
+		<Field Alias="FailReason" Mandatory="True" Source="FailReason" Target="fail_reason" />
+		<Field Alias="Score" Mandatory="True" Source="Score" Target="cscourse.score" />
+		<Field Alias="SubScore1" Mandatory="True" Source="SubScore1" Target="cscourse.sub_score1" />
+		<Field Alias="SubScore2" Mandatory="True" Source="SubScore2" Target="cscourse.sub_score2" />
+		<Field Alias="SubScore3" Mandatory="True" Source="SubScore3" Target="cscourse.sub_score3" />
 	</FieldList>
 	<Conditions Name="Condition" Required="False" Source="Condition" />
 	<InternalVariable>
