@@ -68,16 +68,13 @@
 				    }
 				}
             ],
-            analytics: {
-                Type: "Number || Enum",
-                Target: {
-                    Name: 'Midterm',
-                    Type: 'Number'
-                }
-            }
+            process: [{
+
+            }]
         };
 
         $scope.params = gadget.params;
+
         $scope.params.DefaultRound = gadget.params.DefaultRound || '2';
 
         $scope.calc = function () {
@@ -282,20 +279,74 @@
 
             $scope.connection.send({
                 service: "TeacherAccess.SetCourseExamScoreWithExtension",
+                autoRetry: true,
                 body: body,
                 result: function (response, error, http) {
                     if (error) {
                         alert("TeacherAccess.SetCourseExamScoreWithExtension Error");
                     } else {
-                        $scope.$apply(function () {
-                            $scope.studentList.forEach(function (studentRec, index) {
-                                var rawStudentRec = angular.copy(studentRec);
-                                for (var key in rawStudentRec) {
-                                    studentRec[key + 'Origin'] = studentRec[key];
+                        if ($scope.current.Course.AllowUpload == '是' && new Date($scope.current.Course.InputStartTime) < new Date() && new Date() < new Date($scope.current.Course.InputEndTime)) {
+                            //#region 儲存學期成績
+                            var body = {
+                                Content: {
+                                    Course: {
+                                        '@CourseID': $scope.current.Course.CourseID,
+                                        Student: []
+                                    }
+                                }
+                            };
+                            [].concat($scope.studentList || []).forEach(function (studentRec, index) {
+                                var obj = {
+                                    '@StudentID': studentRec.StudentID,
+                                    '@Score': studentRec["Exam" + '學期成績']
+                                };
+                                body.Content.Course.Student.push(obj);
+                            });
+                            $scope.connection.send({
+                                service: "TeacherAccess.SetCourseSemesterScore",
+                                autoRetry: true,
+                                body: body,
+                                result: function (response, error, http) {
+                                    if (error) {
+                                        //失敗但評量成績已儲存
+                                        $scope.$apply(function () {
+                                            $scope.studentList.forEach(function (studentRec, index) {
+                                                var rawStudentRec = angular.copy(studentRec);
+                                                for (var key in rawStudentRec) {
+                                                    if (!key.match(/(學期成績|Origin)$/gi))
+                                                        studentRec[key + 'Origin'] = studentRec[key];
+                                                }
+                                            });
+                                        });
+                                        alert("TeacherAccess.SetCourseSemesterScore Error");
+                                    } else {
+                                        $scope.$apply(function () {
+                                            $scope.studentList.forEach(function (studentRec, index) {
+                                                var rawStudentRec = angular.copy(studentRec);
+                                                for (var key in rawStudentRec) {
+                                                    if (!key.match(/Origin$/gi))
+                                                        studentRec[key + 'Origin'] = studentRec[key];
+                                                }
+                                            });
+                                        });
+                                        alert("儲存完成。");
+                                    }
                                 }
                             });
-                        });
-                        alert("儲存完成。");
+                            //#endregion
+                        }
+                        else {
+                            $scope.$apply(function () {
+                                $scope.studentList.forEach(function (studentRec, index) {
+                                    var rawStudentRec = angular.copy(studentRec);
+                                    for (var key in rawStudentRec) {
+                                        if (!key.match(/(學期成績|Origin)$/gi))
+                                            studentRec[key + 'Origin'] = studentRec[key];
+                                    }
+                                });
+                            });
+                            alert("儲存完成。");
+                        }
                     }
                 }
             });
@@ -367,10 +418,12 @@
             Exam: null,
             Course: null
         };
+
         $scope.connection = gadget.getContract("ta");
 
         $scope.connection.send({
             service: "TeacherAccess.GetCurrentSemester",
+            autoRetry: true,
             body: '',
             result: function (response, error, http) {
 
@@ -382,6 +435,7 @@
 
                     $scope.connection.send({
                         service: "TeacherAccess.GetMyCourses",
+                        autoRetry: true,
                         body: {
                             Content: {
                                 Field: { All: '' },
@@ -425,6 +479,17 @@
             $scope.current.ExamOrder = [];
             $scope.current.Course = course;
             $scope.examList = [];
+            $scope.process = [
+                {
+                    Name: '複製試算成績->學期成績',
+                    Fn: function () {
+                        [].concat($scope.studentList || []).forEach(function (studentRec, index) {
+                            studentRec["Exam" + '學期成績'] = studentRec["Exam" + '學期成績_試算'];
+                        });
+                        alert('學期成績已代入');
+                    }
+                }
+            ];
 
             [].concat(course.Scores.Score || []).forEach(function (examRec, index) {
                 examRec.Type = 'Number';
@@ -433,8 +498,16 @@
                 $scope.examList.push(examRec);
                 $scope.current.VisibleExam.push(examRec.Name);
                 $scope.current.ExamOrder.push(examRec.Name);
+
+                var importProcess = {
+                    Name: '匯入' + examRec.Name,
+                    Fn: function () {
+
+                    }
+                };
             });
-            var finalScore = { ExamID: '學期成績', Name: '學期成績', Type: 'Number', Permission: 'Editor', Lock: true };
+            var finalScore = { ExamID: '學期成績', Name: '學期成績', Type: 'Number', Permission: 'Editor', Lock: !(course.AllowUpload == '是' && new Date(course.InputStartTime) < new Date() && new Date() < new Date(course.InputEndTime)) };
+            $scope.process[0].Disabled = finalScore.Lock;
             var finalScorePreview = {
                 ExamID: '學期成績_試算',
                 Name: '學期成績_試算',
@@ -463,6 +536,7 @@
                     }
                 }
             };
+
             finalScore.SubExamList = [finalScorePreview];
 
             $scope.examList.splice(0, 0, finalScore, finalScorePreview);
@@ -472,6 +546,7 @@
 
             $scope.connection.send({
                 service: "TeacherAccess.GetCourseExtensions",
+                autoRetry: true,
                 body: {
                     Content: {
                         ExtensionCondition: {
@@ -546,6 +621,7 @@
 
                         $scope.connection.send({
                             service: "TeacherAccess.GetCourseStudents",
+                            autoRetry: true,
                             body: {
                                 Content: {
                                     Field: { All: '' },
@@ -576,6 +652,7 @@
                                     //抓定期評量成績
                                     $scope.connection.send({
                                         service: "TeacherAccess.GetCourseExamScore",
+                                        autoRetry: true,
                                         body: {
                                             Content: {
                                                 Field: { All: '' },
@@ -607,7 +684,8 @@
                                                         $scope.studentList.forEach(function (studentRec, index) {
                                                             var rawStudentRec = angular.copy(studentRec);
                                                             for (var key in rawStudentRec) {
-                                                                studentRec[key + 'Origin'] = studentRec[key];
+                                                                if (!key.match(/Origin$/gi))
+                                                                    studentRec[key + 'Origin'] = studentRec[key];
                                                             }
                                                         });
                                                         $scope.setupCurrent();
@@ -620,6 +698,7 @@
                                     //抓課程總成績
                                     $scope.connection.send({
                                         service: "TeacherAccess.GetCourseSemesterScore",
+                                        autoRetry: true,
                                         body: {
                                             Content: {
                                                 Field: {
@@ -648,7 +727,8 @@
                                                         $scope.studentList.forEach(function (studentRec, index) {
                                                             var rawStudentRec = angular.copy(studentRec);
                                                             for (var key in rawStudentRec) {
-                                                                studentRec[key + 'Origin'] = studentRec[key];
+                                                                if (!key.match(/Origin$/gi))
+                                                                    studentRec[key + 'Origin'] = studentRec[key];
                                                             }
                                                         });
                                                         $scope.setupCurrent();
@@ -674,7 +754,6 @@
             });
             return pass;
         }
-
 
         $scope.checkOneCell = function (studentRec, examKey) {
             var pass = true;

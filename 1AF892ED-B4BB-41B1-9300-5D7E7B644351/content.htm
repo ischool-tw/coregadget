@@ -58,6 +58,20 @@
         <h1>成績管理</h1>
         <div>
             <div class="btn-group pull-right">
+                <div ng-if="process" class="btn-group">
+                    <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-cog" aria-hidden="true"></i>
+                        <span>批次</span>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="item in process"
+                            ng-if="!item.Hide"
+                            ng-class="{disabled:item.Disabled}">
+                            <a href="javascript:;" ng-click="item.Disabled?'':item.Fn()">{{item.Name}}</a>
+                        </li>
+                    </ul>
+                </div>
                 <a ng-click="saveAll()" class="btn btn-default" ng-class="{'btn-danger':!checkAllTable()}">
                     <i class="fa fa-floppy-o"></i>
                     儲存
@@ -145,8 +159,8 @@
                             <td>目前學生</td>
                             <td>
                                 <span ng-if="current.Student.ClassName">
-                                    {{current.Student.ClassName}}班
-                                    <span ng-if="current.Student.SeatNo">{{current.Student.SeatNo}}號</span>
+                                    {{current.Student.ClassName}}
+                                    <span ng-if="current.Student.SeatNo">({{current.Student.SeatNo}})</span>
                                 </span>
                                 <span>{{current.Student.StudentName}}</span>
                             </td>
