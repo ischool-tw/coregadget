@@ -464,6 +464,112 @@
             }
         });
 
+        $scope.getProcess = function () {
+            if ($scope.examList && $scope.examList.length > 0 && $scope.examList[0].ExamID == '學期成績') {
+                var process = [
+                    {
+                        Name: '學期成績',
+                        Type: 'Header'
+                    },
+                    {
+                        Name: '代入試算成績->學期成績',
+                        Type: 'Function',
+                        Fn: function () {
+                            [].concat($scope.studentList || []).forEach(function (studentRec, index) {
+                                studentRec["Exam" + '學期成績'] = studentRec["Exam" + '學期成績_試算'];
+                            });
+                            alert('學期成績已代入');
+                        },
+                        Disabled: $scope.examList[0].Lock
+                    }
+                ];
+
+                //#region 匯入
+                var importProcesses = [];
+                [].concat($scope.examList).forEach(function (examRec, index) {
+                    if (examRec.Type == 'Number' && examRec.Permission == "Editor") {
+                        var importProcess = {
+                            Name: '匯入' + examRec.Name,
+                            Type: 'Function',
+                            Fn: function () {
+                                delete importProcess.ParseString;
+                                delete importProcess.ParseValues;
+                                $scope.importProcess = importProcess;
+                                $('#importModal').modal('show');
+                            },
+                            Parse: function () {
+                                importProcess.ParseString = importProcess.ParseString || '';
+                                importProcess.ParseValues = importProcess.ParseString.split("\n");
+                                importProcess.HasError = false;
+                                for (var i = 0; i < importProcess.ParseValues.length; i++) {
+                                    var flag = false;
+                                    var temp = Number(importProcess.ParseValues[i]);
+                                    if (!isNaN(temp)
+                                        && (!$scope.current.Exam.Range || (!$scope.current.Exam.Range.Max && $scope.current.Exam.Range.Max !== 0) || temp <= $scope.current.Exam.Range.Max)
+                                        && (!$scope.current.Exam.Range || (!$scope.current.Exam.Range.Min && $scope.current.Exam.Range.Min !== 0) || temp >= $scope.current.Exam.Range.Min)) {
+                                        flag = true;
+                                        if (!$scope.current.Exam.Group) {
+                                            var round = Math.pow(10, $scope.params[$scope.current.Exam.Name + 'Round'] || $scope.params.DefaultRound);
+                                            temp = Math.round(temp * round) / round;
+                                        }
+                                    }
+                                    if (importProcess.ParseValues[i] == "缺")
+                                        flag = true;
+                                    if (flag) {
+                                        if (!isNaN(temp) && importProcess.ParseValues[i] != "")
+                                            importProcess.ParseValues[i] = temp;
+                                    }
+                                    else {
+                                        importProcess.ParseValues[i] = '錯誤';
+                                        importProcess.HasError = true;
+                                    }
+                                }
+
+                                $scope.studentList.forEach(function (stuRec, index) {
+                                    if (index >= importProcess.ParseValues.length) {
+                                        importProcess.ParseValues.push('錯誤');
+                                        importProcess.HasError = true;
+                                    }
+                                });
+
+                            },
+                            Clear: function () {
+                                delete importProcess.ParseValues;
+                            },
+                            Import: function () {
+                                if (importProcess.HasError == true)
+                                    return;
+                                $scope.studentList.forEach(function (stuRec, index) {
+                                    if (!importProcess.ParseValues[index] && importProcess.ParseValues[index] !== 0)
+                                        stuRec['Exam' + examRec.ExamID] = '';
+                                    else
+                                        stuRec['Exam' + examRec.ExamID] = importProcess.ParseValues[index];
+                                });
+                                $scope.calc();
+                                $('#importModal').modal('hide');
+                            },
+                            Disabled: examRec.Lock
+                        };
+
+                        importProcesses.push(importProcess);
+                    }
+                });
+                if (importProcesses.length > 0) {
+                    process = process.concat({
+                        Name: '匯入',
+                        Type: 'Header'
+                    }).concat(importProcesses);
+                }
+                //#endregion
+
+
+                $scope.process = process;
+            }
+            else {
+                $scope.process = [];
+            }
+        }
+
         $scope.setCurrentCourse = function (course) {
             if ($scope.studentList) {
                 var data_changed = !$scope.checkAllTable();
@@ -479,17 +585,6 @@
             $scope.current.ExamOrder = [];
             $scope.current.Course = course;
             $scope.examList = [];
-            $scope.process = [
-                {
-                    Name: '複製試算成績->學期成績',
-                    Fn: function () {
-                        [].concat($scope.studentList || []).forEach(function (studentRec, index) {
-                            studentRec["Exam" + '學期成績'] = studentRec["Exam" + '學期成績_試算'];
-                        });
-                        alert('學期成績已代入');
-                    }
-                }
-            ];
 
             [].concat(course.Scores.Score || []).forEach(function (examRec, index) {
                 examRec.Type = 'Number';
@@ -498,16 +593,8 @@
                 $scope.examList.push(examRec);
                 $scope.current.VisibleExam.push(examRec.Name);
                 $scope.current.ExamOrder.push(examRec.Name);
-
-                var importProcess = {
-                    Name: '匯入' + examRec.Name,
-                    Fn: function () {
-
-                    }
-                };
             });
             var finalScore = { ExamID: '學期成績', Name: '學期成績', Type: 'Number', Permission: 'Editor', Lock: !(course.AllowUpload == '是' && new Date(course.InputStartTime) < new Date() && new Date() < new Date(course.InputEndTime)) };
-            $scope.process[0].Disabled = finalScore.Lock;
             var finalScorePreview = {
                 ExamID: '學期成績_試算',
                 Name: '學期成績_試算',
@@ -748,9 +835,11 @@
         $scope.checkAllTable = function () {
             var pass = true;
             [].concat($scope.examList || []).forEach(function (examRec) {
-                [].concat($scope.studentList || []).forEach(function (stuRec) {
-                    pass = (pass & !!$scope.checkOneCell(stuRec, 'Exam' + examRec.ExamID));
-                });
+                if (pass)
+                    [].concat($scope.studentList || []).forEach(function (stuRec) {
+                        if (pass)
+                            pass = !!$scope.checkOneCell(stuRec, 'Exam' + examRec.ExamID);
+                    });
             });
             return pass;
         }
