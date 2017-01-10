@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs title="課程回饋(文華專案)">
+      <Title lang="zh-TW">課程回饋</Title>
+      <Icon>icon.png</Icon>
+      <Mobile />
+      <Title lang="zh-CN" />
+      <Title lang="en-US" />
+  </ModulePrefs>
+</Module>

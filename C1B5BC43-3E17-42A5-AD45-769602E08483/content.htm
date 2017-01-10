@@ -1,0 +1,366 @@
+﻿<!DOCTYPE html>
+<html ng-app="app">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="js/gadget.js"></script>
+    <script>
+        init({
+            application: "test.whsh.tc.edu.tw",
+            paramValues: {},
+            oAuth: {
+                clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+                clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
+                account: 'student06.whsh@1campus.net',
+                password: window.prompt('password:')
+            }
+        });
+    </script>
+
+
+
+    <title>課程回饋</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <!-- Bootstrap Material Design -->
+    <link href="css/bootstrap-material-design.css" rel="stylesheet">
+    <link href="css/ripples.min.css" rel="stylesheet">
+
+
+
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/sortable.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/angular-strap.min.js"></script>
+    <script src="js/angular-strap.tpl.min.js"></script>
+    <script src="js/elastic.js"></script>
+    <!-- Bootstrap Material Design -->
+    <script src="js/ripples.min.js"></script>
+    <script src="js/material.min.js"></script>
+
+    <script src="js/mainCtrl.js"></script>
+
+
+
+    <style>
+        .navbar .navbar-brand {
+            height: 50px;
+            padding: 10px 0px;
+        }
+
+        .navbar .navbar-nav > li > a {
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .navbar-form {
+            width: auto;
+            border: 0;
+            margin-left: 0;
+            margin-right: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+
+        .panel-body > div {
+            margin-bottom: 10px;
+        }
+
+        .table > thead > tr > td.active,
+        .table > tbody > tr > td.active,
+        .table > tfoot > tr > td.active,
+        .table > thead > tr > th.active,
+        .table > tbody > tr > th.active,
+        .table > tfoot > tr > th.active,
+        .table > thead > tr.active > td,
+        .table > tbody > tr.active > td,
+        .table > tfoot > tr.active > td,
+        .table > thead > tr.active > th,
+        .table > tbody > tr.active > th,
+        .table > tfoot > tr.active > th {
+            background-color: #eee;
+        }
+
+        .form-group {
+            margin-top: 18px;
+        }
+
+            .form-group .control-label {
+                font-size: 14px !important;
+                line-height: 1.42857143 !important;
+                /* font-weight: inherit; */
+                color: #808080;
+                margin: 0px 0px 18px 0px !important;
+                padding-top: 0px;
+            }
+
+            .form-group .checkbox label, .form-group .radio label, .form-group label {
+                font-size: 14px;
+                line-height: 1.42857143;
+                font-weight: 400;
+            }
+
+            .form-group .form-control {
+                height: 23px;
+                padding: 0px;
+                margin: 0px 0px 0px 0px;
+                font-size: 14px;
+            }
+
+        .form-control::-moz-placeholder {
+            font-size: 12px !important;
+            line-height: 1.42857143;
+        }
+
+        .form-control:-ms-input-placeholder {
+            font-size: 12px !important;
+            line-height: 1.42857143;
+        }
+
+        .form-control::-webkit-input-placeholder {
+            font-size: 12px !important;
+            line-height: 1.42857143;
+        }
+
+        body {
+            font-family: "新細明體","Helvetica Neue",Helvetica,Arial,sans-serif;
+        }
+
+        .msd-elastic {
+            max-height: 500px;
+        }
+
+        .my-switch {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            max-width: 1024px;
+            margin: 0 auto;
+            background: #fafafa;
+            overflow: hidden;
+        }
+
+        .my-list {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            bottom: 0px;
+            width: 320px;
+        }
+
+        .my-detial {
+            position: absolute;
+            top: 0px;
+            left: 320px;
+            right: 0px;
+            bottom: 0px;
+        }
+
+        @media (max-width: 768px) {
+            .my-switch {
+                width: 100%;
+            }
+
+                .my-switch.my-switch-detial {
+                    margin-left: -100%;
+                    overflow: inherit;
+                }
+
+            .my-list {
+                width: 100%;
+            }
+
+            .my-detial {
+                position: absolute;
+                top: 0px;
+                left: 100%;
+                right: inherit;
+                bottom: 0px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+
+<body ng-controller="MainCtrl">
+    <div ng-if="!Init" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+    <div ng-if="InitErr" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">{{InitErr}}</div>
+    <div ng-if="Init&&!InitErr"
+         class="my-switch"
+         ng-class="{'my-switch-detial': !!CurrentQuestionnaire}">
+        <div class="my-list">
+            <div style="height:100%;padding-top:50px;">
+                <nav class="navbar navbar-inverse"
+                     style="position:absolute; margin-top:-50px;margin-bottom: 0px;z-index: 1;left: 0px;right: 0px;">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <div class="navbar-brand "
+                                 style="margin-left:0px;">
+                                <span>課程回饋</span>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                <div ng-if="Group.length > 0"
+                     style="height:100%;overflow:auto;">
+                    <table class="table table-hover" ng-repeat="groupRec in Group">
+                        <thead>
+                            <tr>
+                                <th>{{groupRec.GroupName}}</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="questionnaireRec in groupRec.Questionnaire">
+                            <tr ng-class="{'active':CurrentQuestionnaire == questionnaireRec}"
+                                ng-click="SetCurrentQuestionnaire(questionnaireRec)">
+                                <td class="text-left"
+                                    style="padding-left:15px;">
+                                    {{questionnaireRec.FormName}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div ng-if="Group.length == 0"
+                     style="height:100%;overflow:auto;">
+                    <div>
+                        <div class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-60px;">沒有問卷需要填寫</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="my-detial">
+            <div style="height:100%;padding-top:50px;">
+                <div class="navbar navbar-inverse"
+                     style="position:absolute; margin-top:-50px;margin-bottom: 0px;z-index: 1;left: 0px;right: 0px;">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <div class="navbar-brand visible-xs"
+                                 style="margin-left:0px;">
+                                <a class="btn btn-sm btn-default"
+                                   style="padding: 8px 10px;margin: -14px 0px -14px 10px;color: white;"
+                                   href="javascript:void(0)"
+                                   ng-click="ClearCurrentQuestionnaire()">
+                                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                </a>
+                                <span>{{CurrentQuestionnaire.GroupName}} {{CurrentQuestionnaire.FormName}}</span>
+                            </div>
+                            <div class="navbar-brand hidden-xs"
+                                 style="margin-left:0px;">
+                                <small>{{CurrentQuestionnaire.GroupName}} {{CurrentQuestionnaire.FormName}}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="!CurrentQuestionnaire && Group.length>0"
+                     style="height:100%;overflow:auto;">
+                    <div>
+                        <div class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">請選取問卷</div>
+                    </div>
+                </div>
+                <div ng-if="CurrentQuestionnaire"
+                     style="height:100%;overflow:auto;">
+                    <div>
+                        <div class="col-xs-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <p>填寫時間：{{CurrentQuestionnaire.StartTime}}~{{CurrentQuestionnaire.EndTime}}</p>
+                                    <p ng-if="CurrentQuestionnaire.FormContent.Memo"
+                                       style="white-space:pre-wrap;word-wrap: break-word;text-align:left;">{{CurrentQuestionnaire.FormContent.Memo}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div ng-repeat="section in CurrentQuestionnaire.FormContent.Section">
+                                        <form class="form-horizontal">
+                                            <fieldset>
+                                                <div class="form-group"
+                                                     style="margin-bottom:-18px;">
+                                                    <label class="col-xs-12 control-label"
+                                                           style="white-space:pre-wrap;word-wrap: break-word;text-align:left;"><strong>{{section.Title}}</strong></label>
+                                                </div>
+                                                <div class="form-group"
+                                                     ng-repeat="question in section.Question">
+                                                    <div class="col-sm-12">
+                                                        <label ng-if="question.Type=='text'"
+                                                               for="{{question.ID}}"
+                                                               class="control-label"
+                                                               style="white-space:pre-wrap;word-wrap: break-word;text-align:left;"><span class="text-danger" ng-if="!question.Verify()">*</span>{{question.Title}}</label>
+                                                        <label ng-if="question.Type=='option'"
+                                                               for="{{question.ID}}"
+                                                               class="control-label"
+                                                               style="white-space:pre-wrap;word-wrap: break-word;text-align:left;"><span class="text-danger" ng-if="!question.Verify()">*</span><span>{{question.Title}}</span><small ng-if="question.Min==1&&question.Max==1">(單選)</small><small ng-if="question.Min&&question.Max&&question.Max>1&&question.Min!=question.Max">(選{{question.Min}}~{{question.Max}}項)</small><small ng-if="question.Min&&question.Max&&question.Max>1&&question.Min==question.Max">(選{{question.Max}}項)</small></label>
+                                                    </div>
+                                                    <div ng-if="question.Type=='text'"
+                                                         class="col-sm-12">
+                                                        <textarea class="form-control msd-elastic" id="{{question.ID}}" ng-model="question.Answer"></textarea>
+                                                    </div>
+                                                    <div ng-if="question.Type=='option'"
+                                                         class="col-sm-12">
+                                                        <div class="checkbox"
+                                                             style="padding: 0px;margin-top: -5px;">
+                                                            <label ng-repeat="opt in question.Option"
+                                                                   style="padding:0px 10px 10px 0px;display: inline-block;">
+                                                                <input type="checkbox" value="{{opt.Key}}" ng-model="opt.Checked" ng-change="CheckOpt(opt, question)">
+                                                                <span class="checkbox-material">
+                                                                    <span class="check"></span>
+                                                                </span>
+                                                                <span ng-repeat="part in opt.Template track by $index"
+                                                                      ng-style="{color:opt.Checked?'#555':'#BFBFBF'}">
+                                                                    <span ng-if="part !== '%TEXT%'">
+                                                                        {{part}}
+                                                                    </span>
+                                                                    <span ng-if="part === '%TEXT%'">
+                                                                        ：
+                                                                        <input ng-style="{color:opt.Checked?'':'#BFBFBF'}"
+                                                                               type="text"
+                                                                               class="form-control"
+                                                                               style="display: inline-block;width:150px;"
+                                                                               placeholder=""
+                                                                               ng-model="opt.Split[$index]">
+                                                                    </span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <form class="form-horizontal">
+                                        <fieldset>
+                                            <div class="form-group" style="margin: 0px;">
+                                                <div class="col-sm-offset-10 col-sm-2">
+                                                    <button type="submit" 
+                                                            class="btn btn-primary btn-raised" 
+                                                            ng-class="{disabled:!Verify(CurrentQuestionnaire)}" 
+                                                            ng-click="SaveQuestionnaire(CurrentQuestionnaire)">儲存</button>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
