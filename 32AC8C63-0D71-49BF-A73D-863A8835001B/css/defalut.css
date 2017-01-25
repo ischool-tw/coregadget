@@ -1,0 +1,37 @@
+table input[type="text"] {
+	margin:0;
+}
+
+.radio.inline {
+	white-space: nowrap;
+}
+
+.table tbody tr.my-title > td {
+	background:#F6FBFF;
+}
+
+th.align-center, td.align-center {
+	text-align: center;
+	vertical-align: middle;
+}
+
+th.the-width {
+	width:9%;
+}
+
+input.error {
+	border: 2px solid red;
+}
+
+td.mi {
+	#background-color:lightyellow;
+	cursor:pointer;
+}
+
+td.selected {
+	#background-color:lightgreen;
+}
+
+tr.hand {
+	cursor:pointer;
+}

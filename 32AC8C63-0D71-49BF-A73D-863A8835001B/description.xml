@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs title="校內志願選填" description="大學推甄校內志願選填系統">
+    <Title lang="zh-TW">校內志願選填</Title>
+    <Icon>icon.png</Icon>
+    <Title lang="zh-CN">
+    </Title>
+    <Title lang="en-US">
+    </Title>
+  </ModulePrefs>
+</Module>
