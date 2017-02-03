@@ -13,6 +13,7 @@ ischool.chooseWish.Schools = function () {
     var filterAryDeptNames = {};
 
     var formatDeptName = function (dept) {
+        if (!dept) return '';
         return (dept.SchoolDeptCode + " " + dept.School + " - " + dept.Dept + "（" + dept.Group + "）");
     };
 
@@ -62,19 +63,19 @@ ischool.chooseWish.Schools = function () {
                 return dicDeptNames[deptFullName];
         },
 
-        getAllDeptNames: function (filterGroup) {        
-            if (filterGroup) {            
-                if (!filterAryDeptNames[filterGroup]){
+        getAllDeptNames: function (filterGroup) {
+            if (filterGroup) {
+                if (!filterAryDeptNames[filterGroup]) {
                     filterAryDeptNames[filterGroup] = [];
                     $(ary).each(function (index, dept) {
                         //比對filterGroup要用filterGroup(學生Group) contains 校系Group的方式，四技的資料中會有同校系允許多個組同時選的狀況，學生會被允許選則多個Group
-                        if(filterGroup.indexOf(dept.Group) !== -1){
+                        if (filterGroup.indexOf(dept.Group) !== -1) {
                             var deptFullName = formatDeptName(dept);
                             filterAryDeptNames[filterGroup].push(deptFullName);
                         }
                     });
                 }
-            
+
                 return filterAryDeptNames[filterGroup];
             }
             else

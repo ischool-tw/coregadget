@@ -11,7 +11,7 @@ ischool.chooseWish = ischool.chooseWish || {};
 /* =====   程式進入點   ==== */
 $(document).ready(function() {
 	/* 開啟下載中畫面 */
-	$('#myModal').modal('show')
+    $('#myModal').modal('show');
 
 
 	//contract : ischool.preRecommendedAdmission
@@ -53,14 +53,13 @@ $(document).ready(function() {
 //初始化 ischool.chooseWish.User 物件
 var initUser = function(currentUser) {
 	if (currentUser) {
-		ischool.chooseWish.User = {};
-		var user = ischool.chooseWish.User;
-		user.isStudent = true;
-		user.userID = currentUser.UserName;
-		//user.fullName = currentUser.Property[3]["@text"];
-		//user.seatNo = currentUser.Property[7]["@text"];
-		//user.studentID = currentUser.Property[8]["@text"];
-		//user.classID = currentUser.Property[10]["@text"];
+	    ischool.chooseWish.User = {
+	        isStudent: true,
+	        StudentID: ''
+	    };
+	    [].concat(currentUser.Property || []).forEach(function(property){
+	        ischool.chooseWish.User[property.Name] = property["@text"];
+	    });
 	}
 };
 
@@ -86,13 +85,20 @@ var getSettings = function() {
 
 				ischool.chooseWish.Settings = resp.Setting;
 				$('#divMsg').html(resp.Setting.Message);
-				$('#divPopupMsg').html(resp.Setting.PopupMessage);
+				if (resp.Setting.PopupMessage)
+				    $('#divPopupMsg').html(resp.Setting.PopupMessage);
+				else
+				    $('#myModal').modal('hide');
 				ischool.chooseWish.Settings.StartTime = new Date(resp.Setting.StartTime.split(".")[0]);
 				ischool.chooseWish.Settings.EndTime = new Date(resp.Setting.EndTime.split(".")[0]);
 				var util = ischool.chooseWish.Util;
-				$('#openPeriod').html(util.formatDateTime(resp.Setting.StartTime) + " ~ " + util.formatDateTime( resp.Setting.EndTime));
-				$('#currentRank').html(resp.Setting.CurrentGroup);
-
+				$('#openPeriod').html(util.formatDateTime(resp.Setting.StartTime) + " ~ " + util.formatDateTime(resp.Setting.EndTime));
+				if (resp.Setting.CurrentGroup === '0') {
+				    $('#currentRank').html('0 (不分梯次)');
+				}
+				else {
+				    $('#currentRank').html(resp.Setting.CurrentGroup);
+				}
 				//確認三個資訊都取得後才進行下一步
 				isDone.settings = true ;
 				if (isDone.settings && isDone.serverTime && isDone.allDepts)
@@ -160,11 +166,21 @@ var changeServerTime = function() {
 var initUI = function() {
 	/* 如果是可以選志願的學生 */
 	if (ischool.chooseWish.User && ischool.chooseWish.User.isStudent) {
-		initChooseWishUI();
+	    initChooseWishUI();
+	    if (ischool.chooseWish.Settings.DenyStudentSearch == 't')
+	    {
+	        $('#liSearchWish').hide();
+	        $('#writewish .span5').hide();
+	        $('#writewish .span7').addClass('span12').removeClass('span7');
+	    }
+        else
+	        initQueryWishUI();
 	}
-
-	/* 只能查志願了 */
-	initQueryWishUI();
+	else {
+	    /* 教師只能查志願 */
+	    initQueryWishUI();
+	}
+	$(".my-page").show();
 };
 
 var initChooseWishUI = function() {
