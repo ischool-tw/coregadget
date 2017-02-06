@@ -557,7 +557,7 @@ ischool.chooseWish.QueryWishController = function () {
                         tr.appendTo(tbody);
 
                         if (studWish.ScoreDetial) {//有成績明細就加成績明細
-                            var trScoreDetial = $('<tr><td colspan="7">' + studWish.ScoreDetial + '</td></tr>');
+                            var trScoreDetial = $('<tr><td colspan="7" style="white-space: pre-wrap;">' + studWish.ScoreDetial + '</td></tr>');
                             trScoreDetial.appendTo(tbody);
 
                             trScoreDetial.hide();
