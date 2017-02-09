@@ -394,11 +394,20 @@ angular.module('allsearch', [])
                         //console.log(response);
                         $scope.$apply(function () {
                             if (response !== null && response !== '' && response.ExamScore !== null && response.ExamScore !== '') {
-                                $scope.exam = [].concat(response.ExamScore);
+                                $scope.exam = [];
 
-                                angular.forEach($scope.exam, function (item) {
+                                angular.forEach([].concat(response.ExamScore), function (item) {
+                                    if (item.GradeYear > 4 || (item.GradeYear > 2 && item.SchoolYear < 105))
+                                        $scope.exam.push(item);
+
                                     if (item.Exam !== null && item.Exam !== '') {
                                         item.Exam = [].concat(item.Exam);
+                                        item.Exam.sort(function (i1, i2) {
+                                            if (i1.Credit == i2.Credit) {
+                                                return i1.SubjectChineseName > i2.SubjectChineseName;
+                                            }
+                                            return i2.Credit - i1.Credit;
+                                        });
                                     }
                                 });
 
