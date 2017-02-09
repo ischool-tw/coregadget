@@ -135,10 +135,10 @@
                                     <li>
                                         <a href="#tab3" data-toggle="tab" ng-click="GetGradeScore(3)">Semester</a>
                                     </li>
-                                    <li ng-if="exam" >
+                                    <li ng-if="exam.length>0" >
                                         <a href="#tab4" data-toggle="tab">Quarter</a>
                                     </li>
-                                    <li ng-if="!exam" class="disabled">
+                                    <li ng-if="!exam||exam.length==0" class="disabled">
                                         <a href="javascript:void(0);">Quarter</a>
                                     </li>
                                     <li>
@@ -159,10 +159,10 @@
                             <li>
                                 <a href="#tab3" data-toggle="tab" ng-click="GetGradeScore(3)">Semester</a>
                             </li>
-                            <li ng-if="exam" >
+                            <li ng-if="exam.length>0">
                                 <a href="#tab4" data-toggle="tab">Quarter</a>
                             </li>
-                            <li ng-if="!exam" class="disabled">
+                            <li ng-if="!exam||exam.length==0" class="disabled">
                                 <a href="javascript:void(0);">Quarter</a>
                             </li>
                             <li>
