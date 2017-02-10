@@ -147,6 +147,9 @@
                 if ($scope.CurrentView == "HomeVisit")
                     $scope.GetHomeVisit($scope.CurrentStudent);
 
+                if ($scope.CurrentView == "PsychologicalTests")
+                $scope.GetPsychologicalTests($scope.CurrentStudent);
+
             }
             //把選單縮回去
             $('.navbar-collapse.in').collapse('hide');
@@ -158,6 +161,115 @@
             delete $scope.CurrentStudent;
         }
 
+
+        //2017/2/6  穎驊新增
+        //讀取心理測驗
+        $scope.GetPsychologicalTests = function (stuRec) {
+            gadget.getContract('ischool.counsel.v2.teacher').send({
+                service: "GetPsychologicalTestsRecord",
+                body: { StudentID: stuRec.StudentID },
+                result: function (response, error, http) {
+                    $scope.$apply(function () {
+                        if (!response)
+                            alert('GetPsychologicalTestsRecord Error' + JSON.stringify(error));
+                        else {
+
+                            if (response.PsychologicalTestsRecord) {
+                                stuRec.PsychologicalTestsRecord = response.PsychologicalTestsRecord;
+
+                                // 轉成 mm 微秒
+                                var d = Date.parse(response.PsychologicalTestsRecord.AptitudeTest.implementation_date)
+                                
+                                var dd = new Date(d);
+
+                                // 轉顯示成 YYYY/MM/d 的格式
+                                stuRec.PsychologicalTestsRecord.AptitudeTest.implementation_date = dd.getFullYear() + "/" + (dd.getMonth() + 1) + "/" + dd.getDate();
+
+                            }
+                            else
+                            {
+                                stuRec.PsychologicalTestsRecord = [];
+                            }
+                            
+
+                            //if (response.PsychologicalTestsRecord)
+                            //{                                
+                            //    [].concat(response.PsychologicalTestsRecord.AptitudeTest || []).forEach(function (stuRec) {
+
+                            //        //心理測驗報表:1.新編多元性向測驗文華高中測驗結果
+
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest = [];
+
+                            //        //語文推理 : 原始分數、量表分數、百分等級
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.language_reasoning_original_score = response.PsychologicalTestsRecord.AptitudeTest.language_reasoning_original_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.language_reasoning_scale_score = response.PsychologicalTestsRecord.AptitudeTest.language_reasoning_scale_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.language_reasoning_pr_level = response.PsychologicalTestsRecord.AptitudeTest.language_reasoning_pr_level;
+
+                            //        //數字推理 : 原始分數、量表分數、百分等級
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.digit_reasoning_original_score = response.PsychologicalTestsRecord.AptitudeTest.digit_reasoning_original_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.digit_reasoning_scale_score = response.PsychologicalTestsRecord.AptitudeTest.digit_reasoning_scale_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.digit_reasoning_pr_level = response.PsychologicalTestsRecord.AptitudeTest.digit_reasoning_pr_level;
+
+                            //        //圖形推理 : 原始分數、量表分數、百分等級
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.image_reasoning_original_score = response.PsychologicalTestsRecord.AptitudeTest.image_reasoning_original_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.image_reasoning_scale_score = response.PsychologicalTestsRecord.AptitudeTest.image_reasoning_scale_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.image_reasoning_pr_level = response.PsychologicalTestsRecord.AptitudeTest.image_reasoning_pr_level;
+
+                            //        //機械推理 : 原始分數、量表分數、百分等級
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.mechanical_reasoning_original_score = response.PsychologicalTestsRecord.AptitudeTest.mechanical_reasoning_original_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.mechanical_reasoning_scale_score = response.PsychologicalTestsRecord.AptitudeTest.mechanical_reasoning_scale_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.mechanical_reasoning_pr_level = response.PsychologicalTestsRecord.AptitudeTest.mechanical_reasoning_pr_level;
+
+                            //        //空間關係 : 原始分數、量表分數、百分等級
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.dimension_relation_original_score = response.PsychologicalTestsRecord.AptitudeTest.dimension_relation_original_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.dimension_relation_scale_score = response.PsychologicalTestsRecord.AptitudeTest.dimension_relation_scale_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.dimension_relation_pr_level = response.PsychologicalTestsRecord.AptitudeTest.dimension_relation_pr_level;
+
+                            //        //中文詞語 : 原始分數、量表分數、百分等級
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.chineses_words_original_score = response.PsychologicalTestsRecord.AptitudeTest.chineses_words_original_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.chineses_words_scale_score = response.PsychologicalTestsRecord.AptitudeTest.chineses_words_scale_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.chineses_words_pr_level = response.PsychologicalTestsRecord.AptitudeTest.chineses_words_pr_level;
+
+                            //        //英文詞語 : 原始分數、量表分數、百分等級
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.english_words_original_score = response.PsychologicalTestsRecord.AptitudeTest.english_words_original_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.english_words_scale_score = response.PsychologicalTestsRecord.AptitudeTest.english_words_scale_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.english_words_pr_level = response.PsychologicalTestsRecord.AptitudeTest.english_words_pr_level;
+
+                            //        //知覺速度 : 原始分數、量表分數、百分等級
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.perception_time_original_score = response.PsychologicalTestsRecord.AptitudeTest.perception_time_original_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.perception_time_scale_score = response.PsychologicalTestsRecord.AptitudeTest.perception_time_scale_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.perception_time_pr_level = response.PsychologicalTestsRecord.AptitudeTest.perception_time_pr_level;
+
+                            //        //學業性向 : 組合分數、百分等級
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.learning_aptitude_assemble_score = response.PsychologicalTestsRecord.AptitudeTest.learning_aptitude_assemble_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.learning_aptitude_pr_level = response.PsychologicalTestsRecord.AptitudeTest.learning_aptitude_pr_level;
+
+                            //        //理工性向 : 組合分數、百分等級
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.science_aptitude_assemble_score = response.PsychologicalTestsRecord.AptitudeTest.science_aptitude_assemble_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.science_aptitude_pr_level = response.PsychologicalTestsRecord.AptitudeTest.science_aptitude_pr_level;
+
+                            //        //文科性向 : 組合分數、百分等級
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.literal_aptitude_assemble_score = response.PsychologicalTestsRecord.AptitudeTest.literal_aptitude_assemble_score;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.literal_aptitude_pr_level = response.PsychologicalTestsRecord.AptitudeTest.literal_aptitude_pr_level;
+
+                            //        //知覺速度 : 作答題數、答對題數
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.perception_time_complete_quiz_count = response.PsychologicalTestsRecord.AptitudeTest.perception_time_complete_quiz_count;
+                            //        stuRec.PsychologicalTestsRecord.AptitudeTest.perception_time_correct_quiz_count = response.PsychologicalTestsRecord.AptitudeTest.perception_time_correct_quiz_count;
+
+                            //        //心理測驗報表:2.興趣量表施測結果
+
+
+                            //        //心理測驗報表:3.青少年心理健康量表施測結果
+
+                            //    });
+                            //}
+
+                          
+                        }
+                    });
+                }
+            });
+        }
 
         //#region HomeVisitRecord 家長聯繫
         //讀取家長聯繫
