@@ -15,7 +15,7 @@
                 //account: 'teacher01.whsh@1campus.net',
                 //account: 'teacher02.whsh@1campus.net',
                 account: 'teacher02.whsh@1campus.net',
-                password: 1234//window.prompt('password:')
+                password: window.prompt('password:')
             }
         });
     </script>
@@ -1194,8 +1194,8 @@
                 <div ng-if="CurrentStudent&&CurrentView=='PsychologicalTests'"
                      style="height:100%;overflow:auto;">
                     <div ng-if="CurrentAction==''">
-                        <div ng-if="!CurrentStudent.PsychologicalTestsRecord" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
-                        <div ng-if="CurrentStudent.PsychologicalTestsRecord.length == 0" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有心理測驗紀錄</div>
+                        <div ng-if="CurrentStudent.PsychologicalTestsRecord === undefined" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+                        <div ng-if="CurrentStudent.PsychologicalTestsRecord === null" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有心理測驗紀錄</div>
                     </div>
                     <div ng-if="CurrentStudent.PsychologicalTestsRecord.AptitudeTest" class="col-xs-12" style=" margin-top:20px; ">
                         <div class=" panel panel-default">
@@ -1204,121 +1204,22 @@
                                     <table class="col-xs-12" style="float:inherit;">
                                         <tr>
                                             <td class="text-left">
-                                                <span>新編多元性向測驗測驗結果</span>                                                
+                                                <span>新編多元性向測驗測驗結果</span>
+                                            </td>
+                                            <td class="text-right">
+                                                <span>測驗日期:</span>
+                                                <span>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ImplementationDate}}</span>
                                             </td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
                             <div class="panel-body">
-                                <!--<table style=" font-family: arial, sans-serif; border-collapse: collapse; width: 100%;">
-                                    <tr style=" background-color: #dddddd">
-                                        <th style="border: 1px solid #dddddd; text-align: center; padding: 8px;">領域</th>
-                                        <th style="border: 1px solid #dddddd; text-align: center; padding: 8px;">原始分數</th>
-                                        <th style="border: 1px solid #dddddd; text-align: center; padding: 8px;">百分等級</th>
-                                        <th style="border: 1px solid #dddddd; text-align: center; padding: 8px;">量表分數</th>
-
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">語文推理</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.language_reasoning_original_score}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.language_reasoning_pr_level}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.language_reasoning_scale_score}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">數字推理</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.digit_reasoning_original_score}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.digit_reasoning_pr_level}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.digit_reasoning_scale_score}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">圖形推理</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.image_reasoning_original_score}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.image_reasoning_pr_level}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.image_reasoning_scale_score}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">機械推理</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.mechanical_reasoning_original_score}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.mechanical_reasoning_pr_level}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.mechanical_reasoning_scale_score}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">空間關係</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.dimension_relation_original_score}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.dimension_relation_pr_level}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.dimension_relation_scale_score}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">中文詞語</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.chineses_words_original_score}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.chineses_words_pr_level}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.chineses_words_scale_score}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">英文詞語</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.english_words_original_score}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.english_words_scale_score}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.english_words_pr_level}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">知覺速度</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.perception_time_original_score}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.perception_time_pr_level}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.perception_time_scale_score}}</td>
-
-                                    </tr>
-                                    <tr>
-                                        <td>&nbsp</td>
-                                        <td>&nbsp</td>
-                                        <td>&nbsp</td>
-                                        <td>&nbsp</td>
-                                    </tr>
-                                    <tr style=" background-color: #dddddd">
-                                        <th style="border: 1px solid #dddddd; text-align: center; padding: 8px;">領域</th>
-                                        <th style="border: 1px solid #dddddd; text-align: center; padding: 8px;">組合分數</th>
-                                        <th style="border: 1px solid #dddddd; text-align: center; padding: 8px;">百分等級</th>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">學業性向</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.learning_aptitude_assemble_score}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.learning_aptitude_pr_level}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">理工性向</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.science_aptitude_assemble_score}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.science_aptitude_pr_level}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">文科性向</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.literal_aptitude_assemble_score}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.literal_aptitude_pr_level}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>&nbsp</td>
-                                        <td>&nbsp</td>
-                                        <td>&nbsp</td>
-                                        <td>&nbsp</td>
-                                    </tr>
-                                    <tr style=" background-color: #dddddd">
-                                        <th style="border: 1px solid #dddddd; text-align: center; padding: 8px;">領域</th>
-                                        <th style="border: 1px solid #dddddd; text-align: center; padding: 8px;">作答題數</th>
-                                        <th style="border: 1px solid #dddddd; text-align: center; padding: 8px;">答對題數</th>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">知覺速度</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.perception_time_complete_quiz_count}}</td>
-                                        <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.perception_time_correct_quiz_count}}</td>
-                                    </tr>
-                                </table>
-                                <br>-->
-                                <span>測驗日期:</span>
-                                <span>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.implementation_date}}</span>
                                 <table class="table table-bordered table-striped table-condensed table-hover">
                                     <tbody>
                                         <tr class="active">
                                             <th class="text-center">領域</th>
-                                            <th class="text-center">原始分數</th>                                            
+                                            <th class="text-center">原始分數</th>
                                             <th class="text-center">量表分數</th>
                                             <th class="text-center">百分等級</th>
                                         </tr>
@@ -1326,90 +1227,90 @@
                                     <tbody class="text-center">
                                         <tr>
                                             <td>語文推理</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.language_reasoning_original_score}}</td>                                            
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.language_reasoning_scale_score}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.language_reasoning_pr_level}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LanguageReasoningOriginalScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LanguageReasoningScaleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LanguageReasoningPrLevel}}</td>
                                         </tr>
                                         <tr>
                                             <td>數字推理</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.digit_reasoning_original_score}}</td>                                            
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.digit_reasoning_scale_score}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.digit_reasoning_pr_level}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DigitReasoningOriginalScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DigitReasoningScaleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DigitReasoningPrLevel}}</td>
                                         </tr>
                                         <tr>
                                             <td>圖形推理</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.image_reasoning_original_score}}</td>                                            
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.image_reasoning_scale_score}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.image_reasoning_pr_level}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ImageReasoningOriginalScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ImageReasoningScaleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ImageReasoningPrLevel}}</td>
                                         </tr>
                                         <tr>
                                             <td>機械推理</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.mechanical_reasoning_original_score}}</td>                                            
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.mechanical_reasoning_scale_score}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.mechanical_reasoning_pr_level}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.MechanicalReasoningOriginalScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.MechanicalReasoningScaleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.MechanicalReasoningPrLevel}}</td>
                                         </tr>
                                         <tr>
                                             <td>空間關係</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.dimension_relation_original_score}}</td>                                            
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.dimension_relation_scale_score}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.dimension_relation_pr_level}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DimensionRelationOriginalScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DimensionRelationScaleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DimensionRelationPrLevel}}</td>
                                         </tr>
                                         <tr>
                                             <td>中文詞語</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.chineses_words_original_score}}</td>                                            
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.chineses_words_scale_score}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.chineses_words_pr_level}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ChinesesWordsOriginalScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ChinesesWordsScaleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ChinesesWordsPrLevel}}</td>
                                         </tr>
                                         <tr>
                                             <td>英文詞語</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.english_words_original_score}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.english_words_scale_score}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.english_words_pr_level}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.EnglishWordsOriginalScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.EnglishWordsScaleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.EnglishWordsPrLevel}}</td>
                                         </tr>
                                         <tr>
                                             <td>知覺速度</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.perception_time_original_score}}</td>                                            
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.perception_time_scale_score}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.perception_time_pr_level}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.PerceptionTimeOriginalScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.PerceptionTimeScaleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.PerceptionTimePrLevel}}</td>
 
                                         </tr>
                                     </tbody>
-                                    <tbody>
+                                    <tbody class="text-center">
                                         <tr class="active">
-                                            <th colspan="2" style="text-align: center;">領域</th>
-                                            <th style="text-align: center;">組合分數</th>
-                                            <th style="text-align: center;">百分等級</th>
+                                            <th colspan="2" class="text-center">領域</th>
+                                            <th class="text-center">組合分數</th>
+                                            <th class="text-center">百分等級</th>
                                         </tr>
                                     </tbody>
                                     <tbody class="text-center">
                                         <tr>
                                             <td colspan="2">學業性向</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.learning_aptitude_assemble_score}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.learning_aptitude_pr_level}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LearningAptitudeAssembleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LearningAptitudePrLevel}}</td>
                                         </tr>
                                         <tr>
                                             <td colspan="2">理工性向</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.science_aptitude_assemble_score}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.science_aptitude_pr_level}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ScienceAptitudeAssembleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ScienceAptitudePrLevel}}</td>
                                         </tr>
                                         <tr>
                                             <td colspan="2">文科性向</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.literal_aptitude_assemble_score}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.literal_aptitude_pr_level}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LiteralAptitudeAssembleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LiteralAptitudePrLevel}}</td>
                                         </tr>
                                     </tbody>
                                     <tbody>
-                                        <tr class="active">
-                                            <th colspan="2" style="border: 1px solid #dddddd; text-align: center; padding: 8px;">領域</th>
-                                            <th style="border: 1px solid #dddddd; text-align: center; padding: 8px;">作答題數</th>
-                                            <th style="border: 1px solid #dddddd; text-align: center; padding: 8px;">答對題數</th>
+                                        <tr class="active ">
+                                            <th colspan="2" class="text-center">領域</th>
+                                            <th class="text-center">作答題數</th>
+                                            <th class="text-center">答對題數</th>
                                         </tr>
                                     </tbody>
                                     <tbody class="text-center">
                                         <tr>
-                                            <td colspan="2" style="border: 1px solid #dddddd; text-align: center; padding: 4px;">知覺速度</td>
-                                            <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.perception_time_complete_quiz_count}}</td>
-                                            <td style="border: 1px solid #dddddd; text-align: center; padding: 4px;">{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.perception_time_correct_quiz_count}}</td>
+                                            <td colspan="2">知覺速度</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.PerceptionTimeCompleteQuizCount}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.PerceptionTimeCorrectQuizCount}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
