@@ -563,7 +563,7 @@ ischool.chooseWish.QueryWishController = function () {
                                 popover.popover({
                                     html: true,
                                     placement: 'bottom',
-                                    title: 'title',
+                                    title: '成績內容',
                                     trigger: 'manual',
                                     content: studWish.ScoreDetial,
                                     container: 'body'
