@@ -484,7 +484,7 @@ ischool.chooseWish.QueryWishController = function () {
         var tbody = $('#tblStudentsOfDept').find('tbody');
 
         if (deptCode == '0' | deptCode == '') {
-            tbody.html('');	//clear content
+            tbody.empty();	//clear content
             return;
         }
 
@@ -507,23 +507,23 @@ ischool.chooseWish.QueryWishController = function () {
             //body : ('<Request><SchoolDeptCode>' + deptCode + '</SchoolDeptCode></Request>'),
             autoRetry: true,
             result: function (resp, errorInfo, XMLHttpRequest) {
-                tbody.html('');	//clear content
                 if (errorInfo) {
                     ischool.chooseWish.Util.showMsg("取得選擇『" + deptName + "』的學生清單失敗：" + errorInfo);
                 }
                 else {
                     var studs = ischool.chooseWish.Util.handleArray(resp.WishList.Wish);
 
+                    var removeTr = tbody.find('tr');
                     var html = '';
                     $(studs).each(function (index, studWish) {
                         html = ('<tr stud-id="' + studWish.StudentID + '" class-name="' + studWish.ClassName + '" seat-no="' + studWish.SeatNo + '" stud-name="' + studWish.StudentName + '"> \
-	                                	<td><a href="javascript:void(0);" cls-id="' + studWish.ClassID + '">' + studWish.ClassName + '</a></td> \
-	                                	<td><a href="javascript:void(0);" stud-id="' + studWish.StudentID + '">' + studWish.StudentName + '</a></td> \
-	                                	<td>' + studWish.WishPriority + '</td> \
-	                                	<td>' + studWish.ScoreRank + '</td> \
-	                                	<td>' + studWish.TotalScore + '</td> \
-	                                	<td>' + studWish.Group + '</td> \
-	                                	<td>' + studWish.ChooseWishRank + '</td> \
+	                                	<td class="align-center"><a href="javascript:void(0);" cls-id="' + studWish.ClassID + '">' + studWish.ClassName + '</a></td> \
+	                                	<td class="align-center"><a href="javascript:void(0);" stud-id="' + studWish.StudentID + '">' + studWish.StudentName + '</a></td> \
+	                                	<td class="align-center">' + studWish.WishPriority + '</td> \
+	                                	<td class="align-center">' + studWish.ScoreRank + '</td> \
+	                                	<td class="align-center">' + studWish.TotalScore + '</td> \
+	                                	<td class="align-center">' + studWish.Group + '</td> \
+	                                	<td class="align-center">' + studWish.ChooseWishRank + '</td> \
 	                                </tr>');
                         var tr = $(html);
 
@@ -557,22 +557,30 @@ ischool.chooseWish.QueryWishController = function () {
                         tr.appendTo(tbody);
 
                         if (studWish.ScoreDetial) {//有成績明細就加成績明細
-                            var trScoreDetial = $('<tr><td colspan="7" style="white-space: pre-wrap;">' + studWish.ScoreDetial + '</td></tr>');
-                            trScoreDetial.appendTo(tbody);
-
-                            trScoreDetial.hide();
-                            //tr.find('td').mouseover(function() {
-                            $([tr.find('td')[3], tr.find('td')[4]]).mouseover(function () {
-                                trScoreDetial.show();
-                            }).mouseout(function () {
-                                trScoreDetial.hide();
-                            });
-                            trScoreDetial.mouseover(function () {
-                                trScoreDetial.show();
-                            }).mouseout(function () {
-                                trScoreDetial.hide();
+                            [tr.find('td')[3], tr.find('td')[4]].forEach(function (hover) {
+                                var popover = $('<div style="white-space: pre-wrap;" />');
+                                popover.appendTo(tr.find('td')[1]);
+                                popover.popover({
+                                    html: true,
+                                    placement: 'bottom',
+                                    title: 'title',
+                                    trigger: 'manual',
+                                    content: studWish.ScoreDetial,
+                                    container: 'body'
+                                });
+                                $(hover).mouseover(function () {
+                                    popover.popover('show');
+                                }).mouseout(function () {
+                                    popover.popover('hide');
+                                }).click(function () {
+                                    popover.popover('show');
+                                });
                             });
                         }
+                    });
+
+                    $(removeTr).each(function (index, remove) {
+                        remove.remove();
                     });
 
                 }

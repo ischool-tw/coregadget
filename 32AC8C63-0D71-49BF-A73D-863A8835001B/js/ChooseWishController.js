@@ -202,9 +202,17 @@ ischool.chooseWish.ChooseWishController = function () {
             }).change(function () {
                 var currentTr = $(this).parent().parent();
                 var deptName = $(this).val();
-                if ((deptName == clearItemText) | (deptName == '')) {	//delete this wish
+
+                if (currentTr.attr("running") === "true") {
+                    console.log("running");
+                    return;
+
+                }
+
+                if ((deptName == clearItemText) || (deptName == '')) {	//delete this wish
                     //檢查是否 uid 存在，若是，則要先刪除
                     if (currentTr.attr("uid")) {
+                        currentTr.attr("running", "true");
                         _deleteMyWish(currentTr.attr("uid"));
                     }
                     else {
@@ -223,10 +231,11 @@ ischool.chooseWish.ChooseWishController = function () {
                             var aryParams = [];
                             aryParams.push({ uid: currentTr.attr('uid'), deptCode: dept.SchoolDeptCode });
                             //_updateMyWish( dept.SchoolDeptCode , currentTr.attr("wishPriority"), currentTr.attr("uid"));
+                            currentTr.attr("running", "true");
                             _updateMyWish(aryParams);
                         }
                         else {
-
+                            currentTr.attr("running", "true");
                             _insertMyWish(dept.SchoolDeptCode, currentTr.attr("wishPriority"));
                         }
 
@@ -294,10 +303,9 @@ ischool.chooseWish.ChooseWishController = function () {
     };
 
     var initStudentsByDeptCode = function (deptCode, heightLightStudentID) {
-
         var tbody = $('#tblStudsOfDept').find('tbody');
-        tbody.empty();
         if (deptCode == '') {
+            tbody.empty();
             initDeptsByStudentID('', '');
             return;
         }
@@ -321,20 +329,21 @@ ischool.chooseWish.ChooseWishController = function () {
             autoRetry: true,
             result: function (resp, errorInfo, XMLHttpRequest) {
                 if (errorInfo) {
-                    tbody.html('');	//clear content
+                    tbody.empty();	//clear content
                     ischool.chooseWish.Util.showMsg("取得選擇『" + deptName + "』的學生清單失敗：" + errorInfo);
                 }
                 else {
+                    var removeTr = tbody.find('tr');
                     $('#lblDeptName').html(deptName);
                     [].concat(resp.WishList.Wish || []).forEach(function (studWish) {
                         var html = ('<tr stud-id="' + studWish.StudentID + '" class-name="' + studWish.ClassName + '" seat-no="' + studWish.SeatNo + '" stud-name="' + studWish.StudentName + '" class="hand"> \
-	                                	<td>' + studWish.ClassName + '</td> \
-	                                	<td>' + studWish.StudentName + '</td> \
-	                                	<td>' + studWish.WishPriority + '</td> \
-	                                	<td>' + studWish.ScoreRank + '</td> \
-	                                	<td>' + studWish.TotalScore + '</td> \
-	                                	<td>' + studWish.Group + '</td> \
-	                                	<td>' + studWish.ChooseWishRank + '</td> \
+	                                	<td class="align-center">' + studWish.ClassName + '</td> \
+	                                	<td class="align-center">' + studWish.StudentName + '</td> \
+	                                	<td class="align-center">' + studWish.WishPriority + '</td> \
+	                                	<td class="align-center">' + studWish.ScoreRank + '</td> \
+	                                	<td class="align-center">' + studWish.TotalScore + '</td> \
+	                                	<td class="align-center">' + studWish.Group + '</td> \
+	                                	<td class="align-center">' + studWish.ChooseWishRank + '</td> \
 	                                </tr>');
                         var tr = $(html);
 
@@ -358,23 +367,32 @@ ischool.chooseWish.ChooseWishController = function () {
                         tr.appendTo(tbody);
 
                         if (studWish.ScoreDetial) {//有成績明細就加成績明細
-                            var trScoreDetial = $('<tr><td colspan="7" style="white-space: pre-wrap;">' + studWish.ScoreDetial + '</td></tr>');
-                            trScoreDetial.appendTo(tbody);
-
-                            trScoreDetial.hide();
-                            //tr.find('td').mouseover(function() {
-                            $([tr.find('td')[3], tr.find('td')[4]]).mouseover(function () {
-                                trScoreDetial.show();
-                            }).mouseout(function () {
-                                trScoreDetial.hide();
-                            });
-                            trScoreDetial.mouseover(function () {
-                                trScoreDetial.show();
-                            }).mouseout(function () {
-                                trScoreDetial.hide();
+                            [tr.find('td')[3], tr.find('td')[4]].forEach(function (hover) {
+                                var popover = $('<div style="white-space: pre-wrap;" />');
+                                popover.appendTo(tr.find('td')[1]);
+                                popover.popover({
+                                    html: true,
+                                    placement: 'bottom',
+                                    title: 'title',
+                                    trigger: 'manual',
+                                    content: studWish.ScoreDetial,
+                                    container: 'body'
+                                });
+                                $(hover).mouseover(function () {
+                                    popover.popover('show');
+                                }).mouseout(function () {
+                                    popover.popover('hide');
+                                }).click(function () {
+                                    popover.popover('show');
+                                });
                             });
                         }
                     });
+
+                    $(removeTr).each(function (index, remove) {
+                        remove.remove();
+                    });
+
                 }
             }
         });
@@ -413,7 +431,7 @@ ischool.chooseWish.ChooseWishController = function () {
                     [].concat(resp.WishList.Wish || []).forEach(function (studWish) {
                         //var isLocked = (studWish.FinalDeptCode == studWish.SchoolDeptCode);	//這位學生已經分發過了。
                         var html = ('<tr deptCode="' + studWish.SchoolDeptCode + '"  class="hand"> \
-	                                	<td>' + studWish.WishPriority + '</td> \
+	                                	<td class="align-center">' + studWish.WishPriority + '</td> \
 	                                	<td>' + ischool.chooseWish.Schools.getFullDeptNameByCode(studWish.SchoolDeptCode) + '</td> \
 	                              </tr>');
                         var tr = $(html);
