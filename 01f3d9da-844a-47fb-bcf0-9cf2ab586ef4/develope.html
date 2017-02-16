@@ -157,7 +157,7 @@
                                 <a href="#tab2" data-toggle="tab">Attendance Management</a>
                             </li>
                             <li>
-                                <a href="#tab3" data-toggle="tab" ng-click="GetGradeScore(3)">Semester</a>
+                                <a href="#tab3" data-toggle="tab" ng-click="GetGradeScore(5)">Semester</a>
                             </li>
                             <li ng-if="exam.length>0">
                                 <a href="#tab4" data-toggle="tab">Quarter</a>
@@ -427,7 +427,7 @@
                             <div class="tab-pane" id="tab3">
                                 <ul class="nav nav-pills nav-justified" style="margin-bottom:10px;">
                                     <li ng-repeat="grade in [5,6,7,8,9,10,11,12]">
-                                        <a href="#" ng-click="GetGradeScore(grade)">{{'Gr.' + grade}}</a>
+                                        <a href="javascript:void(0);" ng-click="GetGradeScore(grade)">{{'Gr.' + grade}}</a>
                                     </li>
                                 </ul>
                                 <table class="table table-bordered my-grade" style="margin-top:10px;">
@@ -774,14 +774,16 @@
                                     </ul>
                                 </div>
 
-                                <div class="tab-pane" style="font-style:italic;font-weight:bold">
-                                    <br />M=Meets expectations S=Meets needs with Support N=Not yet within expectations N/A=Not Available
-                                </div>
-
                                 <div class="panel panel-info" style="margin-top:10px;" ng-repeat="conduct in currentConduct.Conduct">
-                                    <div class="panel-heading" ng-if="conduct.SubjectChineseName != ''">{{conduct.SubjectChineseName + ' ' + conduct.SubjectEnglishName}}</div>
+                                    <div class="panel-heading">
+                                        <div ng-if="conduct.SubjectChineseName != ''">{{conduct.SubjectChineseName + ' ' + conduct.SubjectEnglishName}}</div>
+                                        <div ng-if="conduct.SubjectChineseName == ''">Homeroom Teacher</div>
+                                    </div>
                                     <table class="table table-bordered table-striped table-hover" ng-repeat="item in conduct.ShowConduct.Conducts.Conduct">
                                         <thead>
+                                            <tr ng-if="checkScoringScale(item,$index)">
+                                                <td colspan="3" style="font-style:italic;font-weight:bold;font-size:0.3em;">{{getScoringScale(item)}}</td>
+                                            </tr>
                                             <tr>
                                                 <th class="text-center col-md-2">Midterm</th>
                                                 <th class="text-center col-md-2">Final</th>

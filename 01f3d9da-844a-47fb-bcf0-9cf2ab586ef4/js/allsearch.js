@@ -240,7 +240,30 @@ angular.module('allsearch', [])
             });
 
         }
+        $scope.checkScoringScale = function (item, index) {
+            var val = $scope.getScoringScale(item);
+            if (index == 0 || $scope.currentScoringScale !== val) {
+                $scope.currentScoringScale = val;
+                return true;
+            }
+            else
+                return false;
+        };
 
+        $scope.getScoringScale = function (item) {
+            var val = '';
+            if (item.ScoringScale == '2015.Conduct')
+                val = '3=Consistently、2=Sometimes/ Progressing、1=Needs Attention、N/A=Not available';
+            else if (item.ScoringScale == '2015.Class')
+                val = 'D=Distinguished Command、S=Strong Command/Secure、M=Developing / Average、P=Partial Command、N=Little or No Command、N/A=Not available';
+            else {
+                if (item.Group == "Conduct")
+                    val = '3=Consistently、2=Sometimes/ Progressing、1=Needs Attention、N/A=Not available';
+                else
+                    val = 'M=Meets expectations、S=Meets needs with Support、N=Not yet within expectations、N/A=Not available';
+            }
+            return val;
+        };
         $scope.getConduct = function () {
 
             $scope.custom_connection.send({
@@ -313,6 +336,7 @@ angular.module('allsearch', [])
                                                 if (!flag) {
                                                     var temp = {
                                                         Group: x.Group,
+                                                        ScoringScale: x.ScoringScale,
                                                         Item: []
                                                     };
 
