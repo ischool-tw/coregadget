@@ -34,9 +34,10 @@ $(document).ready(function () {
         //如果登入 contract 失敗，表示雖不能選課，但還是學校師生，可以查詢
         cnStud.loginFailed(function (loginError) {
             //a. hide 選志願畫面
-            $('#liWriteWish').hide();
-            $('#myTab li:eq(1) a').tab('show');
+            $('#liWriteWish').remove();
+            $('#writewish').remove();
             $('#tabName').html('查看志願');
+            $('#searchwish').addClass('active in');
             //a. 取得設定
             getSettings();
         });
@@ -192,7 +193,7 @@ var initUI = function () {
         /* 教師只能查志願 */
         initQueryWishUI();
     }
-    $(".my-page").show();
+    $(".my-page").removeClass('hide');
 };
 
 var initChooseWishUI = function () {
