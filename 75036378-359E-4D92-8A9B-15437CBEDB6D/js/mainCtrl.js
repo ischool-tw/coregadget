@@ -470,12 +470,17 @@
                     if (error !== null) {
                         alert('GetVolunteer' + JSON.stringify(error));
                     } else {
+
+                        var ClubList = [];
+                        var ClubList_Log = [];
+
+
                         if (response.Response.Volunteer && response.Response.Volunteer.Content
                             && response.Response.Volunteer.Content.xml
                             && response.Response.Volunteer.Content.xml.Club) {
 
-                            var ClubList = [];
-                            var ClubList_Log = [];
+                            //var ClubList = [];
+                            //var ClubList_Log = [];
 
                             $(response.Response.Volunteer.Content.xml.Club).each(function (index, item) {
                                 for (var index in dicClub) {
@@ -487,7 +492,7 @@
                                     }
                                 }
                             });
-
+                        }
                             VolunteerClub_Log = ClubList_Log;
 
                             $scope.$apply(function () {
@@ -500,7 +505,7 @@
                                 }
                             });
                         }
-                    }
+                    
                 }
             });
         }
