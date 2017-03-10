@@ -175,9 +175,10 @@
                             alert('GetPsychologicalTestsRecord Error' + JSON.stringify(error));
                         else {
                             if (response.PsychologicalTestsRecord && response.PsychologicalTestsRecord.AptitudeTest) {
-
-                                if (response.PsychologicalTestsRecord && response.PsychologicalTestsRecord.AptitudeTest) {
+                                
                                     stuRec.PsychologicalTestsRecord = response.PsychologicalTestsRecord;
+
+                                    
 
                                     if (response.PsychologicalTestsRecord.AptitudeTest.ImplementationDate) {
                                         // 轉成 mm 微秒
@@ -187,13 +188,30 @@
                                         // 轉顯示成 YYYY/MM/d 的格式
                                         stuRec.PsychologicalTestsRecord.AptitudeTest.ImplementationDate = dd.getFullYear() + "/" + (dd.getMonth() + 1) + "/" + dd.getDate();
                                     }
-                                }
+                                
 
                             }
-                            else
+                            if (response.PsychologicalTestsRecord && response.PsychologicalTestsRecord.InterestTest)
                             {
-                                stuRec.PsychologicalTestsRecord = null;
+                                //新增 興趣測驗
+                                stuRec.PsychologicalTestsRecord.InterestTest = response.PsychologicalTestsRecord.InterestTest;
+
+                                if (response.PsychologicalTestsRecord.InterestTest.ImplementationDate) {
+                                    // 轉成 mm 微秒
+                                    var d = Date.parse(response.PsychologicalTestsRecord.InterestTest.ImplementationDate);
+                                    var dd = new Date(d);
+
+                                    // 轉顯示成 YYYY/MM/d 的格式
+                                    stuRec.PsychologicalTestsRecord.InterestTest.ImplementationDate = dd.getFullYear() + "/" + (dd.getMonth() + 1) + "/" + dd.getDate();
+                                }
+                            
+                            
                             }
+                            if (!response.PsychologicalTestsRecord.InterestTest && !response.PsychologicalTestsRecord.AptitudeTest)
+                            {
+                                stuRec.PsychologicalTestsRecord = '沒有心理測驗紀錄';
+
+                            }                            
                         }
                     });
                 }

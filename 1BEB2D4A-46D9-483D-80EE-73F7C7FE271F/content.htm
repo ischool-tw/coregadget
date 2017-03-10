@@ -1,0 +1,764 @@
+﻿<!DOCTYPE html>
+<html ng-app="app">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="js/gadget.js"></script>
+    <script>
+        init({
+            application: "test.whsh.tc.edu.tw",
+            paramValues: {},
+            oAuth: {
+                clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+                clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
+                //account: 'teacher01.whsh@1campus.net',
+                //account: 'teacher02.whsh@1campus.net',
+                account: 'teacher02.whsh@1campus.net',
+                password: window.prompt('password:')
+            }
+        });
+    </script>
+
+
+
+    <title>輔導系統</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <!-- Bootstrap Material Design -->
+    <link href="css/bootstrap-material-design.css" rel="stylesheet">
+    <link href="css/ripples.min.css" rel="stylesheet">
+
+
+
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/sortable.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/angular-strap.min.js"></script>
+    <script src="js/angular-strap.tpl.min.js"></script>
+    <script src="js/elastic.js"></script>
+    <!-- Bootstrap Material Design -->
+    <script src="js/ripples.min.js"></script>
+    <script src="js/material.min.js"></script>
+
+    <script src="js/mainCtrl.js"></script>
+
+
+
+    <style>
+        .navbar .navbar-brand {
+            height: 50px;
+            padding: 10px 0px;
+        }
+
+        .navbar .navbar-nav > li > a {
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .navbar-form {
+            width: auto;
+            border: 0;
+            margin-left: 0;
+            margin-right: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+
+        .panel-body > div {
+            margin-bottom: 10px;
+        }
+
+        .table > thead > tr > td.active,
+        .table > tbody > tr > td.active,
+        .table > tfoot > tr > td.active,
+        .table > thead > tr > th.active,
+        .table > tbody > tr > th.active,
+        .table > tfoot > tr > th.active,
+        .table > thead > tr.active > td,
+        .table > tbody > tr.active > td,
+        .table > tfoot > tr.active > td,
+        .table > thead > tr.active > th,
+        .table > tbody > tr.active > th,
+        .table > tfoot > tr.active > th {
+            background-color: #eee;
+        }
+
+        .form-group .control-label {
+            font-size: 14px !important;
+            line-height: 1.42857143 !important;
+            /* font-weight: inherit; */
+            margin: 0px 0px 5px 0px !important;
+            padding-top: 0px;
+        }
+
+        .form-group .checkbox label, .form-group .radio label, .form-group label {
+            font-size: 14px;
+            line-height: 1.42857143;
+            font-weight: 400;
+        }
+
+        .form-group .form-control {
+            height: 23px;
+            padding: 0px;
+            margin: 0px 0px 0px 0px;
+            font-size: 14px;
+        }
+
+        .form-control::-moz-placeholder {
+            font-size: 12px !important;
+            line-height: 1.42857143;
+        }
+
+        .form-control:-ms-input-placeholder {
+            font-size: 12px !important;
+            line-height: 1.42857143;
+        }
+
+        .form-control::-webkit-input-placeholder {
+            font-size: 12px !important;
+            line-height: 1.42857143;
+        }
+
+        body {
+            font-family: "新細明體","Helvetica Neue",Helvetica,Arial,sans-serif;
+        }
+
+        .msd-elastic {
+            max-height: 500px;
+        }
+
+        .my-switch {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            max-width: 1024px;
+            margin: 0 auto;
+            background: #fafafa;
+            overflow: hidden;
+        }
+
+        .my-list {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            bottom: 0px;
+            width: 256px;
+        }
+
+        .my-detial {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            max-width: 1024px;
+        }        
+        @media (max-width: 768px) {
+            .my-switch {
+                width: 100%;
+            }
+
+                .my-switch.my-switch-detial {
+                    margin-left: 0%;
+                    overflow: inherit;
+                }
+
+            .my-list {
+                width: 100%;
+            }
+
+            .my-detial {
+                position: absolute;
+                top: 0px;
+                left: 100%;
+                right: inherit;
+                bottom: 0px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+
+<body ng-controller="MainCtrl">
+
+    <!-- 日後處理 init-->
+    <!--<div ng-if="!init" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+    <div ng-if="initErr" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">{{InitErr}}</div>-->
+
+
+    <!--<div ng-if="ConselStudent"
+         class="my-switch"
+         ng-class="{'my-switch-detial':CurrentStudent}">-->
+        <!--<div class="my-list">
+            <div style="height:100%;padding-top:50px;">
+                <nav class="navbar navbar-inverse"
+                     style="position:absolute; margin-top:-50px;margin-bottom: 0px;z-index: 1;left: 0px;right: 0px;">
+                    <div style="padding-left:10px;padding-right:10px;">
+                        <div class="navbar-brand col-xs-12">
+                            <form class="navbar-form navbar-left"
+                                  style="margin-top:-2px;padding:0px;width: 100%;">
+                                <div class="form-group"
+                                     style="width: 100%;">
+                                    <input ng-model="StuFilter.Filter"
+                                           ng-keydown="Filter($event)"
+                                           type="text"
+                                           class="form-control"
+                                           style="width: 100%;"
+                                           placeholder="搜尋：姓名、學號、班級、座號"
+                                           select-on-click />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </nav>
+                <div style="height:100%;overflow:auto;">
+                    <table class="table table-hover">
+                        <tbody ng-repeat="clsRec in FilterClass">
+                            <tr>
+                                <td class="text-left"
+                                    colspan="3">
+                                    <strong>{{clsRec.ClassName}}</strong>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="stuRec in clsRec.Student"
+                                ng-click="SetCurrent(stuRec)"
+                                ng-class="{active:stuRec==CurrentStudent}">
+                                <td class="text-center">{{stuRec.SeatNo}}</td>
+                                <td class="text-left">{{stuRec.StudentName}}</td>
+                                <td class="text-right">{{stuRec.StudentNumber}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>-->
+        <div class="my-detial">
+            <div style="height:100%;padding-top:50px;">
+                <div class="navbar navbar-inverse"
+                     style="position: absolute; margin-top: -50px; margin-bottom: 0px; z-index: 1; left: 0px; right: 0px; background: #96c7f8; ">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <button type="button"
+                                    class="navbar-toggle"
+                                    data-toggle="collapse"
+                                    data-target=".navbar-inverse-collapse"
+                                    style="margin-top:9px;margin-bottom:9px;">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+
+                            <div class="navbar-brand visible-xs"
+                                 style="margin-left:0px;">
+                                <a class="btn btn-sm btn-default"
+                                   style="padding: 8px 10px;margin: -14px 0px -14px 10px;color: white;"
+                                   href="javascript:void(0)"
+                                   ng-click="ClearCurrentStudent()">
+                                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                </a>
+                                <span>{{CurrentStudent.StudentName}}</span>
+                            </div>
+
+                            <div class="navbar-brand hidden-xs"
+                                 style="margin-left:0px;">
+                                <span>{{CurrentStudent.StudentName}}</span>
+                            </div>
+                        </div>
+                        <div 
+                             class="navbar-collapse collapse navbar-inverse-collapse"
+                             style="background: #96c7f8;">
+                            <ul class="nav navbar-nav navbar-right">
+                                <!--<li ng-class="{active:CurrentView=='Counsel'}">-->
+                                <li >
+                                    <a href="javascript:void(0)"
+                                       ng-click="SetCurrentView('OverallRecordTable')">
+                                        綜合紀錄表
+                                    </a>
+                                </li>
+                                <li ng-class="{active:CurrentView=='PsychologicalTests'}">
+                                    <a href="javascript:void(0)"
+                                       ng-click="SetCurrentView('PsychologicalTests')">
+                                        心理測驗
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="CurrentView=='OverallRecordTable'"
+                     style="height: 100%; overflow: auto; background: #eef2f7;">
+                    <div ng-if="CurrentAction==''">
+
+                        <!--<div ng-if="!CurrentStudent.CounselRecord" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+
+                        <div ng-if="CurrentStudent.CounselRecord.length == 0" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有綜合紀錄表紀錄</div>-->
+
+                    </div>
+                    <div ng-if="OpeningTime">
+                        <div class="text-muted" style="margin-left:10px; margin-right:10px; margin-top:10px;  background: #FFC9C9">開放時間:{{OpeningTime}} </div>
+                    </div>
+               
+
+
+
+
+                    <div class=" panel panel-default" style=" margin-left: 10px; margin-right: 10px; margin-top: 10px;" ng-repeat="panel in MappingOverallRecordTable">
+                        <div class="panel-heading">
+                            <div class="col-xs-12" style="float:inherit;">
+                                <table class="col-xs-12" style="float:inherit;">
+                                    <tr>
+                                        <td class="text-center col-sm-9">
+                                            <span>{{panel.Title}}</span>
+                                        </td>
+                                        <td class="text-right col-sm-3" style="padding-right:0px;">
+                                            <a class="btn btn-sm btn-default disabled" ng-class="{disabled:rec.EditRole!='輔導老師'&amp;&amp;rec.EditRole!='紀錄者'}" style="padding: 8px 10px;margin: -14px 0px;" href="javascript:void(0)" ng-click="ShowHomeVisitEditor(rec)">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                儲存
+                                            </a>
+                                            <a ng-if="!panel.Minimized" class="btn btn-sm btn-default" style="padding: 8px 10px;margin: -14px 0px;" href="javascript:void(0)" ng-click="panel.Minimize()">
+                                                <i class="fa fa-window-minimize" aria-hidden="true"></i>
+                                            </a>
+                                            <a ng-if="panel.Minimized" class="btn btn-sm btn-default" style="padding: 8px 10px;margin: -14px 0px;" href="javascript:void(0)" ng-click="panel.Maximize()">
+                                                <i class="fa fa-window-maximize" aria-hidden="true"></i>
+                                            </a>
+
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div ng-if="!panel.Minimized" class="panel-body">
+                            <div class="col-xs-12 form-group" style="float:inherit;">
+                                <table class="col-xs-12" style="float:inherit;">
+
+                                    <tbody class="text-center" ng-repeat="Q in panel.Question">
+                                        <tr>
+                                            <td class="text-right col-sm-2 " style="vertical-align: top; padding-left: 0px; padding-right: 0px; ">
+                                                <label class=" control-label" style="color:black; padding-top:10px">
+                                                    {{Q.Title}}
+                                                </label>
+                                                <span ng-if="Q.Title">：</span>
+
+                                            </td>
+                                            <td class="text-right col-sm-10 " style="vertical-align:top"></td>
+                                        </tr>
+                                        <tr ng-if="Q.Type =='單選填答'" ng-repeat="item in Q.Option">
+                                            <td class="text-right col-sm-2 " style="vertical-align:top"></td>
+                                            <td class="text-left col-sm-10 " style="vertical-align:top">
+                                                <div class="form-group" style="margin-top:0px">
+                                                    <label class=" control-label" style="color:black; padding-top:10px">
+                                                        {{item.Name}}：
+                                                    </label>
+                                                    <input type="text"
+                                                           class="form-control"
+                                                           style="display: inline-block; height: 25px; width: 250px; padding-bottom: 8px ;color: rgb(85, 85, 85);"
+                                                           placeholder="">
+                                                    <label class=" control-label" style="color:black; padding-top:10px" ng-if=" item.HasRemark">
+                                                        因為：
+                                                    </label>
+                                                    <input type="text"
+                                                           class="form-control"
+                                                           style="display: inline-block; height: 25px; width: 150px; padding-bottom: 8px ;color: rgb(85, 85, 85);"
+                                                           placeholder="" ng-if=" item.HasRemark">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="Q.Type =='單選'">
+                                            <td class="text-right col-sm-2 " style="vertical-align:top"></td>
+                                            <td class="text-left col-sm-10">
+                                                <div class="form-group" style="margin-top:0px">
+                                                    <div class="radio-inline ng-scope" ng-repeat="item in Q.Option">
+                                                        <label style="height:27px">
+                                                            <input type="radio" name="IntervieweeType" value="{{item.Name}}" ng-model="InterviewDetial.IntervieweeType" class="ng-pristine ng-valid">
+                                                            <span class="ng-binding" style="color: rgb(85, 85, 85);">
+                                                                {{item.Name}}
+                                                                <span ng-if="item.HasRemark">：</span>
+                                                            </span>
+                                                            <input ng-if="item.HasRemark"
+                                                                   type="text"
+                                                                   class="form-control"
+                                                                   style="display: inline-block; height: 20px; width: 150px; padding-bottom: 8px ;color: rgb(85, 85, 85);"
+                                                                   placeholder=""
+                                                                   ng-model="item.Remark">
+                                                            <span style="color: rgb(85, 85, 85);" ng-if="Q.Title=='原住民血統' && item.Name=='有'">我的</span>
+                                                            <input type="text"
+                                                                   class="form-control"
+                                                                   style="display: inline-block; height: 25px; width: 150px; padding-bottom: 8px; color: rgb(85, 85, 85);"
+                                                                   placeholder="親屬稱謂"
+                                                                   ng-if="Q.Title=='原住民血統'&& item.Name=='有'">
+                                                            <span style="color: rgb(85, 85, 85);" ng-if="Q.Title=='原住民血統' && item.Name=='有'">是原住民，屬於</span>
+                                                            <input type="text"
+                                                                   class="form-control"
+                                                                   style="display: inline-block; height: 25px; width: 150px; padding-bottom: 8px; color: rgb(85, 85, 85);"
+                                                                   placeholder="族別名稱"
+                                                                   ng-if="Q.Title=='原住民血統'&& item.Name=='有'">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="Q.Type =='多選'">
+                                            <td class="text-right col-sm-2 " style="vertical-align:top"></td>
+                                            <td class="text-left col-sm-10">
+                                                <div class="checkbox form-group" style="padding: 0px; margin-top: 10px;">
+                                                    <label ng-repeat="item in Q.Option" style="padding:0px 10px 10px 0px;display: inline-block;">
+                                                        <input type="checkbox" value="{{item.Name}}" ng-model="item.Checked"><span class="checkbox-material"><span class="check"></span></span>
+                                                        <span ng-style="{color:item.Checked?'#555':'#BFBFBF'}">
+                                                            {{item.Name}}
+                                                            <span ng-if="item.HasRemark">：</span>
+                                                        </span>
+                                                        <input ng-if="item.HasRemark"
+                                                               type="text"
+                                                               class="form-control"
+                                                               style="display: inline-block; width: 150px; color: rgb(85, 85, 85);"
+                                                               placeholder=""
+                                                               ng-model="opt.Name">
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="Q.Type =='3YearsData單選'">
+                                            <td class="text-right col-sm-2 " style="vertical-align:top"></td>
+                                            <td class="text-left col-sm-10">
+                                                <table class="table table-bordered table-striped table-condensed table-hover">
+                                                    <tbody>
+                                                        <tr class="active">
+                                                            <th class="text-center " ng-repeat="item in Q.TableTitle">{{item}}</th>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tbody class="text-center">
+                                                        <tr ng-repeat="opt in Q.TotalWillingTitle">
+                                                            <td ng-if="opt.Name">{{opt.Name}}</td>
+                                                            <td ng-if="opt.Name" align="left" ng-repeat="gradeData in opt.GradesCounter">
+                                                                <div class="form-group" style="margin-top:0px">
+                                                                    <select class="form-control" name="EduDegree0" data-type="EduDegree" ng-if="opt.IsSelect">
+                                                                        <option ng-repeat="select_option in opt.Option" value="select_option.Name">{{select_option.Name}}</option>
+                                                                    </select>
+                                                                    <input type="text"
+                                                                           class="form-control"
+                                                                           style="display: inline-block; height: 25px; width: 100%; padding-bottom: 8px; color: rgb(85, 85, 85);"
+                                                                           placeholder=""
+                                                                           ng-if="!opt.IsSelect&&!opt.IsMultipleSelect">
+                                                                    <a ng-if="opt.IsMultipleSelect" class="btn btn-sm btn-default" style="padding: inherit; margin: auto;" href="javascript:void(0)" ng-click="OpenCloseMutipleOption(panel.Title,opt.Name,gradeData.Grade)">
+                                                                        <i class="fa fa-wrench" aria-hidden="true"></i>
+                                                                    </a>
+                                                                    <span ng-if="opt.IsMultipleSelect">{{gradeData.GetMutipleDataListItem(panel.Title,opt.Name,gradeData.Grade)}}  </span>
+                                                                </div>
+                                                            </td>
+                                                            <td ng-if="!opt.Name&&!opt.MultipleOptionHide" colspan="4">
+                                                                <div>
+                                                                    <span>{{opt.Grade}}年級--{{opt.MutilpleTilte}}</span>
+                                                                    <div class="checkbox form-group" style="padding: 0px; margin-top: 10px;">
+                                                                        <label ng-repeat="Multipleitem in opt.MultipleOption" style="padding:0px 10px 10px 0px;display: inline-block;">
+                                                                            <input type="checkbox" value="{{Multipleitem.Name}}" ng-model="Multipleitem.Checked" ><span class="checkbox-material"><span class="check"></span></span>
+                                                                            <span ng-style="{color:Multipleitem.Checked?'#555':'#BFBFBF'}">
+                                                                                {{Multipleitem.Name}}
+                                                                                <span ng-if="Multipleitem.HasRemark">：</span>
+                                                                            </span>
+                                                                            <input ng-if="Multipleitem.HasRemark"
+                                                                                   type="text"
+                                                                                   class="form-control"
+                                                                                   style="display: inline-block; width: 150px; color: rgb(85, 85, 85);"
+                                                                                   placeholder=""
+                                                                                   ng-model="Multipleitem.Name">
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="Q.Type =='6SemeasterData單選填答'">
+                                            <td class="text-right col-sm-2 " style="vertical-align:top"></td>
+                                            <td class="text-left col-sm-10">
+                                                <table class="table table-bordered table-striped table-condensed table-hover " style="table-layout:fixed">
+                                                    <tbody>
+                                                        <tr class="active">
+                                                            <th class="text-center " ng-repeat="item in Q.TableTitle">{{item}}</th>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tbody class="text-center" ng-repeat="opt in Q.TotalWillingTitle">
+                                                        <tr>
+                                                            <td width="60%">{{opt.Name}}</td>
+                                                            <td width="100%" align="left" ng-repeat="semester in opt.SemesterCounter">
+                                                                <div class="form-group" style="margin:0px">
+                                                                    <input type="text"
+                                                                           class="form-control"
+                                                                           style="display: inline-block; height: 25px; width: 100%; padding-bottom: 8px; color: rgb(85, 85, 85);"
+                                                                           placeholder=""
+                                                                           ng-if="!opt.IsSelect">
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="Q.Type =='意願序'">
+                                            <td class="text-right col-sm-2 " style="vertical-align:top"></td>
+                                            <td class="text-left col-sm-10">
+                                                <table class="table table-bordered table-striped table-condensed table-hover">
+                                                    <tbody>
+                                                        <tr class="active">
+                                                            <th class="text-center " ng-repeat="item in Q.TableTitle">{{item}}</th>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tbody class="text-center" ng-repeat="opt in Q.TotalWillingTitle">
+                                                        <tr>
+                                                            <td>{{opt.Name}}</td>
+                                                            <td align="left" ng-repeat="willings in opt.WillingCounter">
+                                                                <div class="form-group" style="margin:0px">
+                                                                    <select class="form-control" name="EduDegree0" data-type="EduDegree" ng-if="opt.IsSelect">
+                                                                        <option ng-repeat="select_option in opt.Option" value="select_option.Name">{{select_option.Name}}</option>
+                                                                    </select>
+                                                                    <input type="text"
+                                                                           class="form-control"
+                                                                           style="display: inline-block; height: 25px; width: 100%; padding-bottom: 8px; color: rgb(85, 85, 85);"
+                                                                           placeholder=""
+                                                                           ng-if="!opt.IsSelect">
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="Q.Type =='Sibling單選'">
+                                            <td class="text-right col-sm-2 " style="vertical-align:top">兄弟姊妹資料：</td>
+                                            <td class="text-left col-sm-10">
+                                                <table class="table table-bordered table-striped table-condensed table-hover">
+                                                    <tbody>
+                                                        <tr class="active">
+                                                            <th class="text-center " ng-repeat="item in Q.TableTitle">{{item}}</th>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tbody class="text-center" ng-repeat="item in Q.SiblingCounter">
+                                                        <tr>
+                                                            <td ng-repeat="item in Q.TableTitle">
+                                                                <div class="form-group" style="margin-top:0px">
+                                                                    <input type="text"
+                                                                           class="form-control"
+                                                                           style="display: inline-block; height: 25px; width: 100%; padding-bottom: 8px; color: rgb(85, 85, 85);"
+                                                                           placeholder="">
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tbody class="text-right">
+                                                        <tr>
+                                                            <td colspan="4">
+                                                                <a class="btn btn-sm btn-default" style="padding: inherit; margin: auto;" href="javascript:void(0)" ng-click="AddExtraSiblings()">
+                                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="Q.Type =='Consanguinity單選'">
+                                            <td class="text-right col-sm-2 " style="vertical-align:top"></td>
+                                            <td class="text-left col-sm-10" style="padding-left:0px; padding-right:0px">
+                                                <table class="table table-bordered table-striped table-condensed table-hover">
+                                                    <tbody>
+                                                        <tr class="active">
+                                                            <!--<th class="text-center" ng-repeat="item in Q.TableTitle" style="padding-left: 0px; padding-right: 0px; " ng-style="item.Width">{{item.Name}}</th>-->
+                                                            <th class="text-center" style="width:70px">稱謂</th>
+                                                            <th class="text-center" style="width:70px">姓名</th>
+                                                            <th class="text-center" style="width:45px">存/歿</th>
+                                                            <th class="text-center" style="width:55px">出生年</th>
+                                                            <th class="text-center" style="width:55px">職業</th>
+                                                            <th class="text-center" style="width:70px">工作機構</th>
+                                                            <th class="text-center" style="width:55px">職稱</th>
+                                                            <th class="text-center" style="width:70px">教育程度</th>
+                                                            <th class="text-center" style="width:70px">電話</th>
+                                                            <th class="text-center" style="width:55px">原國籍</th>
+                                                            <th class="text-center" style="width:70px">行動電話</th>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tbody class="text-center">
+                                                        <tr ng-repeat="item in Q.ConsanguinityCounter">
+                                                            <td align="left" ng-repeat="item in Q.TotalWillingTitle">
+                                                                <div class="form-group" style="margin-top:0px">
+                                                                    <select class="form-control" name="EduDegree0" data-type="EduDegree" ng-if="item.IsSelect">
+                                                                        <option ng-repeat="select_option in item.Option" value="select_option.Name">{{select_option.Name}}</option>
+                                                                    </select>
+                                                                    <input type="text"
+                                                                           class="form-control"
+                                                                           style="display: inline-block; height: 25px; width: 100%; padding-bottom: 8px; color: rgb(85, 85, 85);"
+                                                                           placeholder=""
+                                                                           ng-if="!item.IsSelect">
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tbody class="text-right">
+                                                        <tr>
+                                                            <td colspan="11">
+                                                                <a class="btn btn-sm btn-default" style="padding: inherit; margin: auto;" href="javascript:void(0)" ng-click="AddExtraConsanguinities()">
+                                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                
+                
+             
+
+                <div ng-if="CurrentView=='PsychologicalTests'"
+                     style="height: 100%; overflow: auto; background: #eef2f7; ">
+                    <div ng-if="CurrentAction==''">
+                        <div ng-if="CurrentStudent.PsychologicalTestsRecord === undefined" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+                        <div ng-if="CurrentStudent.PsychologicalTestsRecord === null" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有心理測驗紀錄</div>
+                    </div>
+                    <div ng-if="CurrentStudent.PsychologicalTestsRecord.AptitudeTest" class="col-xs-12" style=" margin-top:20px; ">
+                        <div class=" panel panel-default">
+                            <div class="panel-heading">
+                                <div class="col-xs-12" style="float:inherit;">
+                                    <table class="col-xs-12" style="float:inherit;">
+                                        <tr>
+                                            <td class="text-left">
+                                                <span>新編多元性向測驗測驗結果</span>
+                                            </td>
+                                            <td class="text-right">
+                                                <span>測驗日期:</span>
+                                                <span>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ImplementationDate}}</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-bordered table-striped table-condensed table-hover">
+                                    <tbody>
+                                        <tr class="active">
+                                            <th class="text-center">領域</th>
+                                            <th class="text-center">原始分數</th>
+                                            <th class="text-center">量表分數</th>
+                                            <th class="text-center">百分等級</th>
+                                        </tr>
+                                    </tbody>
+                                    <tbody class="text-center">
+                                        <tr>
+                                            <td>語文推理</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LanguageReasoningOriginalScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LanguageReasoningScaleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LanguageReasoningPrLevel}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>數字推理</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DigitReasoningOriginalScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DigitReasoningScaleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DigitReasoningPrLevel}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>圖形推理</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ImageReasoningOriginalScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ImageReasoningScaleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ImageReasoningPrLevel}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>機械推理</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.MechanicalReasoningOriginalScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.MechanicalReasoningScaleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.MechanicalReasoningPrLevel}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>空間關係</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DimensionRelationOriginalScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DimensionRelationScaleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DimensionRelationPrLevel}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>中文詞語</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ChinesesWordsOriginalScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ChinesesWordsScaleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ChinesesWordsPrLevel}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>英文詞語</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.EnglishWordsOriginalScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.EnglishWordsScaleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.EnglishWordsPrLevel}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>知覺速度</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.PerceptionTimeOriginalScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.PerceptionTimeScaleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.PerceptionTimePrLevel}}</td>
+
+                                        </tr>
+                                    </tbody>
+                                    <tbody class="text-center">
+                                        <tr class="active">
+                                            <th colspan="2" class="text-center">領域</th>
+                                            <th class="text-center">組合分數</th>
+                                            <th class="text-center">百分等級</th>
+                                        </tr>
+                                    </tbody>
+                                    <tbody class="text-center">
+                                        <tr>
+                                            <td colspan="2">學業性向</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LearningAptitudeAssembleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LearningAptitudePrLevel}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">理工性向</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ScienceAptitudeAssembleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ScienceAptitudePrLevel}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">文科性向</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LiteralAptitudeAssembleScore}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LiteralAptitudePrLevel}}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody>
+                                        <tr class="active ">
+                                            <th colspan="2" class="text-center">領域</th>
+                                            <th class="text-center">作答題數</th>
+                                            <th class="text-center">答對題數</th>
+                                        </tr>
+                                    </tbody>
+                                    <tbody class="text-center">
+                                        <tr>
+                                            <td colspan="2">知覺速度</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.PerceptionTimeCompleteQuizCount}}</td>
+                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.PerceptionTimeCorrectQuizCount}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    <!--</div>-->
+</body>
+
+</html>
