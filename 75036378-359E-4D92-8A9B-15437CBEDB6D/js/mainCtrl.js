@@ -698,13 +698,11 @@
                     $scope.$apply(function () {
                         if (error !== null) {
                             alert('GetCurrentSemester' + JSON.stringify(error));
-                        } else {
-                            $(response.Result.SystemConfig).each(function (index, item) {
-                                $scope.SchoolYear = item.DefaultSchoolYear;
-                                $scope.Semester = item.DefaultSemester;
-                                SchoolYear = item.DefaultSchoolYear;
-                                Semester = item.DefaultSemester;
-                            });
+                        } else {                            
+                            $scope.SchoolYear = response.SchoolYear;
+                            $scope.Semester = response.Semester;
+                            SchoolYear = response.SchoolYear;
+                            Semester = response.Semester;                            
                         }
                     });
 
