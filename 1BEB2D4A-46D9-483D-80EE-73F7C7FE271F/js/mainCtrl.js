@@ -89,6 +89,13 @@
                        
         };
 
+        $scope.student =
+            {
+                Name: '',
+                Grade_Year:'',
+            }
+
+
         $scope.MappingOverallRecordTable = [
             {
                 Title: '綜合紀錄表--本人概況',
@@ -105,35 +112,40 @@
                         {
                             Title: '血型',
                             Type: '單選',
-                            Option: [{ Name: 'A' }, { Name: 'B' }, { Name: 'O' }, { Name: 'AB' }, { Name: '其他', HasRemark: true }]
+                            Key: '本人概況_血型',
+                            Option: [{ Name: 'A', Value: '' }, { Name: 'B', Value: '' }, { Name: 'O', Value: '' }, { Name: 'AB', Value: '' }, { Name: '其他',Value:'',RemarkValue:'', HasRemark: true }]
                         },
                         {
                             Title: '宗教',
                             Type: '單選',
-                            Option: [{ Name: '無' }, { Name: '佛教' }, { Name: '基督教' }, { Name: '天主教' }, { Name: '回教' }, { Name: '道教' }]
+                            Key: '本人概況_宗教',
+                            Option: [{ Name: '無', Value: '' }, { Name: '佛教', Value: '' }, { Name: '基督教', Value: '' }, { Name: '天主教', Value: '' }, { Name: '回教', Value: '' }, { Name: '道教', Value: '' }]
                         },
                         {
                             Title: '原住民血統',
                             Type: '單選',
-                            Option: [{ Name: '無' }, { Name: '有' }]
+                            Key: '本人概況_原住民血統',
+                            Option: [{ Name: '無', Value: '' }, { Name: '有' ,Value: '',Relation:'',Race:''}]
                         },
                         {
                             Title: '生理缺陷',
                             Type: '多選',
-                            Option: [{ Name: '無', Checked: false }, { Name: '近視', Checked: false }, { Name: '其他視覺障礙', Checked: false }, { Name: '聽覺障礙', Checked: false }, { Name: '肢體障礙', Checked: false }, { Name: '其他', Checked: false, HasRemark: true }]
+                            Key: '本人概況_生理缺陷',
+                            Option: [{ Name: '無', Checked: false }, { Name: '近視', Checked: false }, { Name: '其它視覺障礙', Checked: false }, { Name: '聽覺障礙', Checked: false }, { Name: '肢體障礙', Checked: false }, { Name: '其它', Checked: false,RemarkValue:'', HasRemark: true }]
                         },
                         {
                             Title: '特殊疾病',
                             Type: '多選',
-                            Option: [{ Name: '無', Checked: false }, { Name: '腦炎', Checked: false }, { Name: '癲癇', Checked: false }, { Name: '心臟病', Checked: false }, { Name: '小兒麻痺', Checked: false }, { Name: '氣喘', Checked: false }, { Name: '過敏症', Checked: false }, { Name: '肺結核', Checked: false }, { Name: '其他', Checked: false, HasRemark: true }]
+                            Key: '本人概況_曾患特殊疾病',
+                            Option: [{ Name: '無', Checked: false }, { Name: '腦炎', Checked: false }, { Name: '癲癇', Checked: false }, { Name: '心臟病', Checked: false }, { Name: '小兒麻痺', Checked: false }, { Name: '氣喘', Checked: false }, { Name: '過敏症', Checked: false }, { Name: '肺結核', Checked: false }, { Name: '其它', Checked: false, RemarkValue: '', HasRemark: true }]
                         },
                         {
                             Title: '身高體重',
                             Type: '6SemeasterData單選填答',
                             TableTitle: ['項目', '1上', '1下', '2上', '2下', '3上', '3下'],
                             TotalWillingTitle: [
-                                { Name: '身高', Option: [], SemesterCounter: [{}, {}, {}, {}, {}, {},], IsSelect: false },
-                                { Name: '體重', Option: [], SemesterCounter: [{}, {}, {}, {}, {}, {}, ], IsSelect: false }
+                                { Name: '身高(cm)', Key: '本人概況_身高', Option: [], SemesterCounter: [{ Semester: 's1a' }, { Semester: 's1b' }, { Semester: 's2a' }, { Semester: 's2b' }, { Semester: 's3a' }, { Semester: 's3b' }, ], IsSelect: false },
+                                { Name: '體重(kg)', Key: '本人概況_體重', Option: [], SemesterCounter: [{ Semester: 's1a' }, { Semester: 's1b' }, { Semester: 's2a' }, { Semester: 's2b' }, { Semester: 's3a' }, { Semester: 's3b' }, ], IsSelect: false }
                             ],
                             Option: ['身高', '體重']
                         }
@@ -154,38 +166,44 @@
                     {
                         Title: '監護人',
                         Type: '單選填答',
-                        Option: [{ Name: '姓名' },{ Name: '性別' },{ Name: '電話' },{ Name: '關係' },{ Name: '通訊地址' }]
+                        Option: [
+                            { Name: '監護人姓名', Key: '家庭狀況_監護人_姓名' },
+                            { Name: '監護人性別', Key: '家庭狀況_監護人_性別' },
+                            { Name: '監護人電話', Key: '家庭狀況_監護人_電話' },
+                            { Name: '監護人關係', Key: '家庭狀況_監護人_關係' },
+                            { Name: '監護人通訊地址', Key: '家庭狀況_監護人_通訊地址' }]
                     },
                     {
                         Title: '直系血親',
                         Type: 'Consanguinity單選',
                         TableTitle: [{ Name: '稱謂', Width: 'width: 10%' }, { Name: '姓名', Width: 'width: 10%' }, { Name: '存歿', Width: 'width: 10%' }, { Name: '出生年', Width: 'width: 10%' }, { Name: '職業', Width: 'width: 10%' }, { Name: '工作機構', Width: 'width: 10%' }, { Name: '職稱', Width: 'width: 10%' }, { Name: '教育程度', Width: 'width: 10%' }, { Name: '電話', Width: 'width: 10%' }, { Name: '原國籍', Width: 'width: 10%' }, { Name: '行動電話', Width: 'width: 10%' }],
                         TotalWillingTitle: [
-                            { Option: [{ Name: '' }, { Name: '父' }, { Name: '母' }, { Name: '祖父' }, { Name: '祖母' }, { Name: '曾祖父' }, { Name: '曾祖母' }], IsSelect: true },
-                            {},
-                            { Option: [{ Name: '' }, { Name: '存' }, { Name: '歿' }], IsSelect: true },
-                            {},
-                            {},
-                            {},
-                            {},
-                            { Option: [{ Name: '' }, { Name: '不識字' }, { Name: '識字(未就學)' }, { Name: '小學' }, { Name: '初中(職)' }, { Name: '高中(職)' }, { Name: '專科' }, { Name: '學士' }, { Name: '碩士' }, { Name: '博士' }], IsSelect: true },
-                            {},
-                            {},
-                            {}
+                            { Title: '稱謂', Option: [{ Name: '' }, { Name: '父' }, { Name: '母' }, { Name: '祖父' }, { Name: '祖母' }, { Name: '曾祖父' }, { Name: '曾祖母' }], IsSelect: true },
+                            { Title: '姓名', },
+                            { Title: '存歿', Option: [{ Name: '' }, { Name: '存' }, { Name: '歿' }], IsSelect: true },
+                            { Title: '出生年', },
+                            { Title: '職業', },
+                            { Title: '工作機構', },
+                            { Title: '職稱', },
+                            { Title: '教育程度', Option: [{ Name: '' }, { Name: '不識字' }, { Name: '識字(未就學)' }, { Name: '小學' }, { Name: '初中(職)' }, { Name: '高中(職)' }, { Name: '專科' }, { Name: '學士' }, { Name: '碩士' }, { Name: '博士' }], IsSelect: true },
+                            { Title: '電話', },
+                            { Title: '原國籍', },
+                            { Title: '行動電話', }
                         ],
-                        ConsanguinityCounter: [{}, {}, {}, {}]
+                        ConsanguinityCounter: [{ IsEmpty: true }, { IsEmpty: true }, { IsEmpty: true }, { IsEmpty: true }]
                     },
                     {
                         Title: '兄弟姊妹',
+                        Key: '家庭狀況_兄弟姊妹_排行',
                         Type: '單選',                       
                         Option: [{ Name: '我是獨子' }, { Name: '我有兄弟姊妹，我排行第', HasRemark: true }]
                     },
                     {
                         Title: '',
                         Type: 'Sibling單選',
-                        TableTitle: ['姓名', '畢(肆)業學校', '出生年', '備註'],                        
+                        TableTitle: ['稱謂','姓名','畢業學校', '出生年', '備註'],                        
                         Option: [],
-                        SiblingCounter: [{}, {}, {}, {}]
+                        SiblingCounter: [{ IsEmpty: true }, { IsEmpty: true }, { IsEmpty: true }, { IsEmpty: true }]
                     },
                     {
                         Title: '其他項目',
@@ -193,48 +211,48 @@
                         TableTitle: ['項目','1年級', '2年級', '3年級'],
                         TotalWillingTitle: [
                             {
-                                Name: '父母關係', Option: [{ Name: '' }, { Name: '同住' }, { Name: '分住' }, { Name: '分居' }, { Name: '離婚' }, { Name: '單親-父' }, { Name: '單親-母' }, { Name: '單親-其他親屬' }, { Name: '特殊監護' }],
-                                GradesCounter: [{}, {}, {}],
+                                Name: '父母關係', Key: '家庭狀況_父母關係', Option: [{ Name: '' }, { Name: '同住' }, { Name: '分住' }, { Name: '分居' }, { Name: '離婚' }, { Name: '單親-父' }, { Name: '單親-母' }, { Name: '單親-其他親屬' }, { Name: '特殊監護' }],
+                                GradesCounter: [{ Grade: '1', }, { Grade: '2', }, { Grade: '3', }],
                                 IsSelect: true
                             },
                             {
-                                Name: '家庭氣氛', Option: [{ Name: '' }, { Name: '很和諧' }, { Name: '和諧' }, { Name: '普通' }, { Name: '不和諧' }, { Name: '很不和諧' }],
-                                GradesCounter: [{}, {}, {}],
+                                Name: '家庭氣氛', Key: '家庭狀況_家庭氣氛', Option: [{ Name: '' }, { Name: '很和諧' }, { Name: '和諧' }, { Name: '普通' }, { Name: '不和諧' }, { Name: '很不和諧' }],
+                                GradesCounter: [{ Grade: '1', }, { Grade: '2', }, { Grade: '3', }],
                                 IsSelect: true
                             },
                             {
-                                Name: '父親管教方式', Option: [{ Name: '' }, { Name: '民主式' }, { Name: '權威式' }, { Name: '放任式' }],
-                                GradesCounter: [{}, {}, {}],
+                                Name: '父親管教方式', Key: '家庭狀況_父親管教方式', Option: [{ Name: '' }, { Name: '民主式' }, { Name: '權威式' }, { Name: '放任式' }],
+                                GradesCounter: [{ Grade: '1', }, { Grade: '2', }, { Grade: '3', }],
                                 IsSelect: true
                             },
                             {
-                                Name: '母親管教方式', Option: [{ Name: '' }, { Name: '民主式' }, { Name: '權威式' }, { Name: '放任式' }],
-                                GradesCounter: [{}, {}, {}],
+                                Name: '母親管教方式', Key: '家庭狀況_母親管教方式', Option: [{ Name: '' }, { Name: '民主式' }, { Name: '權威式' }, { Name: '放任式' }],
+                                GradesCounter: [{ Grade: '1', }, { Grade: '2', }, { Grade: '3', }],
                                 IsSelect: true
                             },
                             {
-                                Name: '居住環境', Option: [{ Name: '' }, { Name: '住宅區' }, { Name: '商業區' }, { Name: '混和(住商工)區' }, { Name: '軍眷區' }, { Name: '農村' }, { Name: '漁村' }, { Name: '工礦區' }, { Name: '山地' }],
-                                GradesCounter: [{}, {}, {}],
+                                Name: '居住環境', Key: '家庭狀況_居住環境', Option: [{ Name: '' }, { Name: '住宅區' }, { Name: '商業區' }, { Name: '混和(住商工)區' }, { Name: '軍眷區' }, { Name: '農村' }, { Name: '漁村' }, { Name: '工礦區' }, { Name: '山地' }],
+                                GradesCounter: [{ Grade: '1', }, { Grade: '2', }, { Grade: '3', }],
                                 IsSelect: true
                             },
                             {
-                                Name: '本人住宿', Option: [{ Name: '' }, { Name: '在家裡' }, { Name: '寄居親友家裡' }, { Name: '住校' }, { Name: '在外賃屋' }],
-                                GradesCounter: [{}, {}, {}],
+                                Name: '本人住宿', Key: '家庭狀況_本人住宿', Option: [{ Name: '' }, { Name: '在家裡' }, { Name: '寄居親友家裡' }, { Name: '住校' }, { Name: '在外賃屋' }],
+                                GradesCounter: [{ Grade: '1', }, { Grade: '2', }, { Grade: '3', }],
                                 IsSelect: true
                             },
                             {
-                                Name: '經濟狀況', Option: [{ Name: '' }, { Name: '富裕' }, { Name: '小康' }, { Name: '普通' }, { Name: '清寒' }, { Name: '貧困' }],
-                                GradesCounter: [{}, {}, {}],
+                                Name: '經濟狀況', Key: '家庭狀況_經濟狀況', Option: [{ Name: '' }, { Name: '富裕' }, { Name: '小康' }, { Name: '普通' }, { Name: '清寒' }, { Name: '貧困' }],
+                                GradesCounter: [{ Grade: '1', }, { Grade: '2', }, { Grade: '3', }],
                                 IsSelect: true
                             },
                             {
-                                Name: '每星期零用錢(元)', Option: [],
-                                GradesCounter: [{}, {}, {}],
+                                Name: '每星期零用錢(元)', Key: '家庭狀況_每星期零用錢', Option: [],
+                                GradesCounter: [{ Grade: '1', }, { Grade: '2', }, { Grade: '3', }],
                                 IsSelect: false
                             },
                             {
-                                Name: '我覺得是否足夠', Option: [{ Name: '' }, { Name: '足夠' }, { Name: '剛好' }, { Name: '不足' }],
-                                GradesCounter: [{}, {}, {}],
+                                Name: '我覺得是否足夠', Key: '家庭狀況_我覺得是否足夠', Option: [{ Name: '' }, { Name: '足夠' }, { Name: '剛好' }, { Name: '不足' }],
+                                GradesCounter: [{ Grade: '1', }, { Grade: '2', }, { Grade: '3', }],
                                 IsSelect: true
                             }
                             ],
@@ -259,14 +277,16 @@
                                Type: '3YearsData單選',
                                TableTitle: ['項目', '1年級', '2年級', '3年級'],
                                TotalWillingTitle: [
-                                   { Name: '最喜歡學科', Option: [], GradesCounter: [{}, {}, {}], IsSelect: false },
-                                   { Name: '最感困難學科', Option: [], GradesCounter: [{}, {}, {}], IsSelect: false },
-                                   { Name: '樂器演奏', Option: [], GradesCounter: [{}, {}, {}], IsSelect: false },
-                                   { Name: '外語能力', Option: [], GradesCounter: [{}, {}, {}], IsSelect: false },
+                                   { Name: '最喜歡學科', Key: '學習狀況_最喜歡的學科', Option: [], GradesCounter: [{ Grade: '1', }, { Grade: '2', }, { Grade: '3', }], IsSelect: false },
+                                   { Name: '最感困難學科', Key: '學習狀況_最感困難的學科', Option: [], GradesCounter: [{ Grade: '1', }, { Grade: '2', }, { Grade: '3', }], IsSelect: false },
+                                   { Name: '樂器演奏', Key: '學習狀況_特殊專長_樂器演奏', Option: [], GradesCounter: [{ Grade: '1', }, { Grade: '2', }, { Grade: '3', }], IsSelect: false },
+                                   { Name: '外語能力', Key: '學習狀況_特殊專長_外語能力', Option: [], GradesCounter: [{ Grade: '1', }, { Grade: '2', }, { Grade: '3', }], IsSelect: false },
                                    {
-                                       Name: '特殊專長', Option: [],
+                                       //此項目可以多選
+                                       Name: '特殊專長',
+                                       Key: '',
+                                       Option: [],
                                        GradesCounter: [
-
                                            {
                                                Grade: '1',
                                            MutipleDataList: [],
@@ -378,6 +398,7 @@
                                    {
                                        Grade:'1',
                                        MutilpleTilte: '特殊專長',
+                                       Key: '學習狀況_特殊專長',
                                        MultipleOption: [{ Name: '球類', Checked: false }, { Name: '田徑', Checked: false }, { Name: '游泳', Checked: false }, { Name: '國術', Checked: false },
                                        { Name: '美術', Checked: false }, { Name: '樂器演奏', Checked: false }, { Name: '唱歌', Checked: false }, { Name: '工藝', Checked: false }, { Name: '家事', Checked: false }, { Name: '演說', Checked: false }, { Name: '寫作', Checked: false }, { Name: '舞蹈', Checked: false },
                                        { Name: '戲劇', Checked: false }, { Name: '書法', Checked: false }, { Name: '珠算', Checked: false }, { Name: '外語', Checked: false }, { Name: '英打', Checked: false }, { Name: '中打', Checked: false }, { Name: '會計', Checked: false }, { Name: '統計', Checked: false }, { Name: '領導', Checked: false }],
@@ -388,6 +409,7 @@
                                    {
                                        Grade: '2',
                                        MutilpleTilte: '特殊專長',
+                                       Key: '學習狀況_特殊專長',
                                        MultipleOption: [{ Name: '球類', Checked: false }, { Name: '田徑', Checked: false }, { Name: '游泳', Checked: false }, { Name: '國術', Checked: false },
                                        { Name: '美術', Checked: false }, { Name: '樂器演奏', Checked: false }, { Name: '唱歌', Checked: false }, { Name: '工藝', Checked: false }, { Name: '家事', Checked: false }, { Name: '演說', Checked: false }, { Name: '寫作', Checked: false }, { Name: '舞蹈', Checked: false },
                                        { Name: '戲劇', Checked: false }, { Name: '書法', Checked: false }, { Name: '珠算', Checked: false }, { Name: '外語', Checked: false }, { Name: '英打', Checked: false }, { Name: '中打', Checked: false }, { Name: '會計', Checked: false }, { Name: '統計', Checked: false }, { Name: '領導', Checked: false }],
@@ -398,6 +420,7 @@
                                    {
                                        Grade: '3',
                                        MutilpleTilte: '特殊專長',
+                                       Key: '學習狀況_特殊專長',
                                        MultipleOption: [{ Name: '球類', Checked: false }, { Name: '田徑', Checked: false }, { Name: '游泳', Checked: false }, { Name: '國術', Checked: false },
                                        { Name: '美術', Checked: false }, { Name: '樂器演奏', Checked: false }, { Name: '唱歌', Checked: false }, { Name: '工藝', Checked: false }, { Name: '家事', Checked: false }, { Name: '演說', Checked: false }, { Name: '寫作', Checked: false }, { Name: '舞蹈', Checked: false },
                                        { Name: '戲劇', Checked: false }, { Name: '書法', Checked: false }, { Name: '珠算', Checked: false }, { Name: '外語', Checked: false }, { Name: '英打', Checked: false }, { Name: '中打', Checked: false }, { Name: '會計', Checked: false }, { Name: '統計', Checked: false }, { Name: '領導', Checked: false }],
@@ -406,6 +429,7 @@
                                        MultipleOptionHide: true
                                    },
                                    {
+                                       //此項目可以多選
                                        Name: '休閒興趣', Option: [], IsSelect: false,
                                        GradesCounter: [
                                            {
@@ -518,6 +542,7 @@
                                    {
                                        Grade: '1',
                                        MutilpleTilte: '休閒興趣',
+                                       Key: '學習狀況_休閒興趣',
                                        MultipleOption: [{ Name: '電影欣賞', Checked: false }, { Name: '閱讀', Checked: false }, { Name: '登山', Checked: false }, { Name: '露營', Checked: false },
                                        { Name: '旅行郊遊', Checked: false }, { Name: '划船游泳', Checked: false }, { Name: '釣魚', Checked: false }, { Name: '樂器演奏', Checked: false }, { Name: '唱歌', Checked: false }, { Name: '音樂欣賞', Checked: false }, { Name: '舞蹈', Checked: false }, { Name: '繪畫', Checked: false },
                                        { Name: '集郵', Checked: false }, { Name: '打球', Checked: false }, { Name: '國術', Checked: false }, { Name: '編織', Checked: false }, { Name: '下棋', Checked: false }, { Name: '養小動物', Checked: false }, { Name: '作物栽培', Checked: false }], GradesCounter: [{}, {}, {}],
@@ -528,6 +553,7 @@
                                    {
                                        Grade: '2',
                                        MutilpleTilte: '休閒興趣',
+                                       Key: '學習狀況_休閒興趣',
                                        MultipleOption: [{ Name: '電影欣賞', Checked: false }, { Name: '閱讀', Checked: false }, { Name: '登山', Checked: false }, { Name: '露營', Checked: false },
                                        { Name: '旅行郊遊', Checked: false }, { Name: '划船游泳', Checked: false }, { Name: '釣魚', Checked: false }, { Name: '樂器演奏', Checked: false }, { Name: '唱歌', Checked: false }, { Name: '音樂欣賞', Checked: false }, { Name: '舞蹈', Checked: false }, { Name: '繪畫', Checked: false },
                                        { Name: '集郵', Checked: false }, { Name: '打球', Checked: false }, { Name: '國術', Checked: false }, { Name: '編織', Checked: false }, { Name: '下棋', Checked: false }, { Name: '養小動物', Checked: false }, { Name: '作物栽培', Checked: false }], GradesCounter: [{}, {}, {}],
@@ -538,6 +564,7 @@
                                    {
                                        Grade: '3',
                                        MutilpleTilte: '休閒興趣',
+                                       Key: '學習狀況_休閒興趣',
                                        MultipleOption: [{ Name: '電影欣賞', Checked: false }, { Name: '閱讀', Checked: false }, { Name: '登山', Checked: false }, { Name: '露營', Checked: false },
                                        { Name: '旅行郊遊', Checked: false }, { Name: '划船游泳', Checked: false }, { Name: '釣魚', Checked: false }, { Name: '樂器演奏', Checked: false }, { Name: '唱歌', Checked: false }, { Name: '音樂欣賞', Checked: false }, { Name: '舞蹈', Checked: false }, { Name: '繪畫', Checked: false },
                                        { Name: '集郵', Checked: false }, { Name: '打球', Checked: false }, { Name: '國術', Checked: false }, { Name: '編織', Checked: false }, { Name: '下棋', Checked: false }, { Name: '養小動物', Checked: false }, { Name: '作物栽培', Checked: false }], GradesCounter: [{}, {}, {}],
@@ -567,8 +594,8 @@
                                Type: '6SemeasterData單選填答',
                                TableTitle: ['項目', '1上', '1下', '2上', '2下', '3上', '3下'],
                                TotalWillingTitle: [
-                                   { Name: '社團幹部', Option: [], SemesterCounter: [{}, {}, {}, {}, {}, {}, ], IsSelect: false },
-                                   { Name: '班級幹部', Option: [], SemesterCounter: [{}, {}, {}, {}, {}, {}, ], IsSelect: false }
+                                   { Name: '社團幹部', Key: '學習狀況_社團幹部', Option: [], SemesterCounter: [{ Semester: 's1a' }, { Semester: 's1b' }, { Semester: 's2a' }, { Semester: 's2b' }, { Semester: 's3a' }, { Semester: 's3b' }, ], IsSelect: false },
+                                   { Name: '班級幹部', Key: '學習狀況_班級幹部', Option: [], SemesterCounter: [{ Semester: 's1a' }, { Semester: 's1b' }, { Semester: 's2a' }, { Semester: 's2b' }, { Semester: 's3a' }, { Semester: 's3b' }, ], IsSelect: false }
                                ],
                                Option: []
                            }
@@ -591,9 +618,30 @@
                         Type: '3YearsData單選',
                         TableTitle: ['項目', '1年級', '2年級', '3年級'],
                         TotalWillingTitle: [                            
-                            { Name: '個性', Option: [], GradesCounter: [{}, {}, {}],IsSelect: false  },
-                            { Name: '優點', Option: [], GradesCounter: [{}, {}, {}], IsSelect: false },
-                            { Name: '需要改進的地方', Option: [], GradesCounter: [{}, {}, {}], IsSelect: false },
+                            {
+                                Name: '個性', Option: [],
+                                GradesCounter: [
+                                    { Key: '自我認識_個性_1' },
+                                    { Key: '自我認識_個性_2' },
+                                    { Key: '自我認識_個性_3' }
+                                ], IsSelect: false
+                            },
+                            {
+                                Name: '優點', Option: [],
+                                GradesCounter: [
+                                    { Key: '自我認識_優點_1' },
+                                    { Key: '自我認識_優點_2' },
+                                    { Key: '自我認識_優點_3' }
+                                ], IsSelect: false
+                            },
+                            {
+                                Name: '需要改進的地方', Option: [],
+                                GradesCounter: [
+                                    { Key: '自我認識_需要改進的地方_1' },
+                                    { Key: '自我認識_需要改進的地方_2' },
+                                    { Key: '自我認識_需要改進的地方_3' }
+                                ], IsSelect: false
+                            },
                             
                         ],
                         Option: []
@@ -617,9 +665,30 @@
                         Type: '3YearsData單選',
                         TableTitle: ['項目', '1年級', '2年級', '3年級'],
                         TotalWillingTitle: [
-                            { Name: '期望', Option: [], GradesCounter: [{}, {}, {}], IsSelect: false },
-                            { Name: '為達到理想，所需要做的努力', Option: [], GradesCounter: [{}, {}, {}], IsSelect: false },
-                            { Name: '期望師長給予的幫助', Option: [], GradesCounter: [{}, {}, {}], IsSelect: false },
+                            {
+                                Name: '期望', Option: [],
+                                GradesCounter: [
+                                    { Key: '生活感想_內容1_1' },
+                                    { Key: '生活感想_內容1_2' },
+                                    { Key: '生活感想_內容1_3' }
+                                ], IsSelect: false
+                            },
+                            {
+                                Name: '為達到理想，所需要做的努力', Option: [],
+                                GradesCounter: [
+                                    { Key: '生活感想_內容2_1' },
+                                    { Key: '生活感想_內容2_2' },
+                                    { Key: '生活感想_內容2_3' }
+                                ], IsSelect: false
+                            },
+                            {
+                                Name: '期望師長給予的幫助', Option: [],
+                                GradesCounter: [
+                                    { Key: '生活感想_內容3_1' },
+                                    { Key: '生活感想_內容3_2' },
+                                    { Key: '生活感想_內容3_3' }
+                                ], IsSelect: false
+                            },
                         ],
                         Option: []
                     }
@@ -640,37 +709,52 @@
                     {
                         Title: '升學意願',
                         Type: '多選',
+                        Key: '畢業後計畫_升學意願',
                         Option: [{ Name: '理', Checked: false }, { Name: '工', Checked: false }, { Name: '文史', Checked: false }, { Name: '法', Checked: false },
-                            { Name: '商', Checked: false }, { Name: '醫', Checked: false }, { Name: '農', Checked: false }, { Name: '教育', Checked: false }, { Name: '藝術', Checked: false }, { Name: '海洋', Checked: false }, { Name: '軍', Checked: false }, { Name: '警', Checked: false }, { Name: '其他', Checked: false, HasRemark: true }]
+                            { Name: '商', Checked: false }, { Name: '醫', Checked: false }, { Name: '農', Checked: false }, { Name: '教育', Checked: false }, { Name: '藝術', Checked: false }, { Name: '海洋', Checked: false }, { Name: '軍', Checked: false }, { Name: '警', Checked: false }, { Name: '其它', Checked: false, HasRemark: true }]
                     },
                     {
                         Title: '就業意願',
                         Type: '多選',
-                        Option: [{ Name: '自行就業', Checked: false }, { Name: '需要輔導就業', Checked: false }, { Name: '希望參加職業訓練', Checked: false }, { Name: '其他', Checked: false, HasRemark: true }]
+                        Key: '畢業後計畫_就業意願',
+                        Option: [{ Name: '自行就業', Checked: false }, { Name: '需要輔導就業', Checked: false }, { Name: '希望參加職業訓練', Checked: false }, { Name: '其它', Checked: false, HasRemark: true }]
                     },
                     {
                         Title: '職業意願',
                         Type: '多選',
+                        Key: '畢業後計畫_參加職業訓練',
                         Option: [{ Name: '機械加工', Checked: false }, { Name: '機密機械加工', Checked: false }, { Name: '金屬加工', Checked: false }, { Name: '焊接及切割', Checked: false }, { Name: '電子及儀表', Checked: false }, { Name: '電機及電工', Checked: false },
                             { Name: '家用電器', Checked: false }, { Name: '營建土木', Checked: false }, { Name: '車輛修護', Checked: false }, { Name: '農業機械', Checked: false }, { Name: '農業經營', Checked: false }, { Name: '園藝經營', Checked: false },
-                            { Name: '農產加工', Checked: false }, { Name: '畜牧', Checked: false }, { Name: '船員訓練', Checked: false }, { Name: '縫紉', Checked: false }, { Name: '美容', Checked: false }, { Name: '會計', Checked: false }, { Name: '護理', Checked: false }, { Name: '其他', Checked: false, HasRemark: true }]
+                            { Name: '農產加工', Checked: false }, { Name: '畜牧', Checked: false }, { Name: '船員訓練', Checked: false }, { Name: '縫紉', Checked: false }, { Name: '美容', Checked: false }, { Name: '會計', Checked: false }, { Name: '護理', Checked: false }, { Name: '其它', Checked: false, HasRemark: true }]
                     },
                     {
                         Title: '受訓地區',
                         Type: '多選',
-                        Option: [{ Name: '北區', Checked: false }, { Name: '中區', Checked: false }, { Name: '南區', Checked: false }, { Name: '東區', Checked: false }, { Name: '其他', Checked: false, HasRemark: true }]
+                        Key: '畢業後計畫_受訓地區',
+                        Option: [{ Name: '北區', Checked: false }, { Name: '中區', Checked: false }, { Name: '南區', Checked: false }, { Name: '東區', Checked: false }, { Name: '其它', Checked: false, HasRemark: true }]
                     },
                     {
                         Title: '就業',
                         Type: '意願序',
+                        Key: '',
                         TableTitle: ['項目','意願1', '意願2', '意願3'],
                         TotalWillingTitle: [
                             {
-                                Name: '將來職業', Option: [{ Name: '' },{ Name: '機械加工' }, { Name: '機密機械加工' }, { Name: '金屬加工' }, { Name: '焊接及切割' }, { Name: '電子及儀表' }, { Name: '電機及電工' },
+                                Name: '將來職業',
+                                Key: '畢業後計畫_將來職業',
+                                Option: [{ Name: '' }, { Name: '機械加工' }, { Name: '機密機械加工' }, { Name: '金屬加工' }, { Name: '焊接及切割' }, { Name: '電子及儀表' }, { Name: '電機及電工' },
                                 { Name: '家用電器' }, { Name: '營建土木' }, { Name: '車輛修護' }, { Name: '農業機械' }, { Name: '農業經營' }, { Name: '園藝經營' },
-                                { Name: '農產加工' }, { Name: '畜牧' }, { Name: '船員訓練' }, { Name: '縫紉' }, { Name: '美容' }, { Name: '會計' }, { Name: '護理' }, { Name: '其他' }], WillingCounter: [{}, {}, {}], IsSelect: true
+                                { Name: '農產加工' }, { Name: '畜牧' }, { Name: '船員訓練' }, { Name: '縫紉' }, { Name: '美容' }, { Name: '會計' }, { Name: '護理' }, { Name: '其它' }],
+                                WillingCounter: [{ priority: '1', selectvalue: '' }, { priority: '2', selectvalue: '' }, { priority: '3', selectvalue: '' }],
+                                IsSelect: true
                             },
-                            { Name: '就業地區', Option: [{ Name: '' }, { Name: '北區' }, { Name: '中區' }, { Name: '南區' }, { Name: '東區' }, { Name: '其他' }], WillingCounter: [{}, {}, {}],IsSelect: true }
+                            {
+                                Name: '就業地區',
+                                Key: '畢業後計畫_就業地區',
+                                Option: [{ Name: '' }, { Name: '北區' }, { Name: '中區' }, { Name: '南區' }, { Name: '東區' }, { Name: '其它' }],
+                                WillingCounter: [{ priority: '1', selectvalue: '' }, { priority: '2', selectvalue: '' }, { priority: '3', selectvalue: '' }],
+                                IsSelect: true
+                            }
                             ],
                         Option: [,
                              ]
@@ -692,18 +776,43 @@
                     {
                         Title: '自傳',
                         Type: '單選填答',
-                        Option: [{ Name: '家中最了解我的人', HasRemark: true }, { Name: '我在家中最怕的人是', HasRemark: true }, { Name: '我覺得我的優點是' }, { Name: '我覺得我的缺點是' }, { Name: '常指導我做功課的人' },
-                            { Name: '讀過印象最深的課外書' }, { Name: '最喜歡的人', HasRemark: true }, { Name: '最要好的朋友' }, { Name: '他是怎樣的人？' }, { Name: '最喜歡的國小（國中）老師' }, { Name: '他是怎樣的人？' },
-                            { Name: '小學（國中）老師或同學常說我是' }, { Name: '小學（國中）時我曾在班上登任過的職務有' }, { Name: '我在小學（國中）得過的獎有' }, { Name: '我覺得我自己的過去最滿意的是' }, { Name: '我排遣休閒時間的方法是' },
-                            { Name: '我最難忘的一件事是' }, { Name: '最喜歡做的事', HasRemark: true }, { Name: '最不喜歡做的事', HasRemark: true }, { Name: '國中時的學校生活' }, { Name: '最快樂的回憶' }, { Name: '最痛苦的回憶' }, { Name: '最足以描述自己的幾句話是' },
-                            { Name: '自傳' }
+                        Option: [
+                            { Name: '家中最了解我的人', Key: '自傳_家中最了解我的人', ReasonKey: '自傳_家中最了解我的人_因為', HasRemark: true },
+                            { Name: '我在家中最怕的人是', Key: '自傳_我在家中最怕的人是', ReasonKey: '自傳_我在家中最怕的人是_因為', HasRemark: true },
+                            { Name: '我覺得我的優點是', Key: '自傳_我覺得我的優點是' },
+                            { Name: '我覺得我的缺點是', Key: '自傳_我覺得我的缺點是' },
+                            { Name: '常指導我做功課的人', Key: '自傳_常指導我做功課的人' },
+                            { Name: '讀過印象最深的課外書', Key: '自傳_讀過且印象最深刻的課外書' },
+                            { Name: '最喜歡的人', Key: '自傳_喜歡的人', ReasonKey: '自傳_喜歡的人_因為', HasRemark: true },
+                            { Name: '最要好的朋友', Key: '自傳_最要好的朋友' },
+                            { Name: '他是怎樣的人？', Key: '自傳_他是怎樣的人' },
+                            { Name: '最喜歡的國小（國中）老師', Key: '自傳_最喜歡的國小（國中）老師' },
+                            { Name: '他是怎樣的人？', Key: '自傳_最喜歡的國小（國中）老師__因為' },
+                            { Name: '小學（國中）老師或同學常說我是', Key: '自傳_小學（國中）老師或同學常說我是' },
+                            { Name: '小學（國中）時我曾在班上登任過的職務有', Key: '自傳_小學（國中）時我曾在班上登任過的職務有' },
+                            { Name: '我在小學（國中）得過的獎有', Key: '自傳_我在小學（國中）得過的獎有' },
+                            { Name: '我覺得我自己的過去最滿意的是', Key: '自傳_我覺得我自己的過去最滿意的是' },
+                            { Name: '我排遣休閒時間的方法是', Key: '自傳_我排遣休閒時間的方法是' },
+                            { Name: '我最難忘的一件事是', Key: '自傳_我最難忘的一件事是' },
+                            { Name: '最喜歡做的事', Key: '自傳_最喜歡做的事', ReasonKey: '自傳_最喜歡做的事_因為', HasRemark: true },
+                            { Name: '最不喜歡做的事', Key: '自傳_最不喜歡做的事', ReasonKey: '自傳_最不喜歡做的事_因為', HasRemark: true },
+                            { Name: '國中時的學校生活', Key: '自傳_國中時的學校生活' },
+                            { Name: '最快樂的回憶', Key: '自傳_最快樂的回憶' },
+                            { Name: '最痛苦的回憶', Key: '自傳_最痛苦的回憶' },
+                            { Name: '最足以描述自己的幾句話是', Key: '自傳_最足以描述自己的幾句話' },
+                            { Name: '自傳', Key: '自傳_自傳' }
                         ]
                     },
                     {
                         Title: '自我的心聲',
                         Type: '單選填答',
-                        Option: [{ Name: '自我的心聲_一年級_我目前遇到最大的困難是' }, { Name: '自我的心聲_一年級_我目前最需要的協助是' }, { Name: '自我的心聲_二年級_我目前遇到最大的困難是' },
-                            { Name: '自我的心聲_二年級_我目前最需要的協助是' }, { Name: '自我的心聲_三年級_我目前遇到最大的困難是' },{ Name: '自我的心聲_三年級_我目前最需要的協助是'}
+                        Option: [
+                            { Name: '自我的心聲_一年級_我目前遇到最大的困難是', Key: '自傳_自我的心聲_一年級_我目前遇到最大的困難是' },
+                            { Name: '自我的心聲_一年級_我目前最需要的協助是', Key: '自傳_自我的心聲_一年級_我目前最需要的協助是' },
+                            { Name: '自我的心聲_二年級_我目前遇到最大的困難是', Key: '自傳_自我的心聲_二年級_我目前遇到最大的困難是' },
+                            { Name: '自我的心聲_二年級_我目前最需要的協助是', Key: '自傳_自我的心聲_二年級_我目前最需要的協助是' },
+                            { Name: '自我的心聲_三年級_我目前遇到最大的困難是', Key: '自傳_自我的心聲_三年級_我目前遇到最大的困難是' },
+                            { Name: '自我的心聲_三年級_我目前最需要的協助是', Key: '自傳_自我的心聲_三年級_我目前最需要的協助是' }
                         ]
                     }                
                 ]
@@ -735,128 +844,9 @@
 
 
 
+     
+        $scope.OpenCloseMutipleOption = function (PanelName, MutilpleTilte, Grade) {
 
-
-        $scope.BloodTypeOption = [{ Name: 'A' }, { Name: 'B' }, { Name: 'O' }, { Name: 'AB' }, { Name: '其他', HasRemark: true }];
-
-        $scope.ReligionTypeOption = ["無", "佛教", "基督教", "天主教", "回教", "道教"];
-
-        $scope.IndigenousOption = [{ Name: '無' }, { Name: '有'}];
-
-
-        $scope.GradeYearTilteOption = ["1年級", "2年級", "3年級"];
-        
-        $scope.SemesterTilteOption = ["1上", "1下", "2上", "2下", "3上", "3下"];
-
-
-        $scope.GuardianOption = ["姓名", "性別", "電話", "關係", "通訊地址"];
-
-        $scope.SiblingOption = [{ Name: '我是獨子' }, { Name: '我有兄弟姊妹，我排行第', HasRemark: true }];
-
-        $scope.SpecialtyOption = ["球類", "田徑", "游泳", "國術", "美術", "樂器演奏", "唱歌", "工藝", "家事", "演說", "寫作", "舞蹈", "戲劇", "書法", "珠算", "外語", "英打", "中打", "會計", "統計", "領導"];
-
-        $scope.InterestingOption = ["", "電影欣賞", "閱讀", "登山", "露營", "旅行郊遊", "划船游泳", "釣魚", "樂器演奏", "唱歌", "音樂欣賞", "舞蹈", "繪畫", "集郵", "打球", "國術", "編織", "下棋", "養小動物", "作物栽培"];
-
-
-        $scope.WishOption = ["意願1", "意願2", "意願3"];
-
-        $scope.WillingVocationOption = ["", "機械加工", "機密機械加工", "金屬加工", "焊接及切割", "電子及儀表", "電機及電工","家用電器", "營建土木", "車輛修護", "農業機械", "農業經營", "園藝經營", "農產加工","畜牧", "船員訓練", "縫紉", "美容", "會計", "護理", "其它"];
-
-
-        $scope.WishLocationOption = ["北區", "中區", "南區", "東區", "其它"];
-
-
-        $scope.AutobiographyOption = [{ Name: '家中最了解我的人', HasRemark: true },
-{ Name: '我在家中最怕的人是', HasRemark: true },
-{ Name: '我覺得我的優點是' },
-{ Name: '我覺得我的缺點是' },
-{ Name: '常指導我做功課的人'},
-{ Name: '讀過印象最深的課外書'},
-{ Name: '最喜歡的人', HasRemark: true },
-{ Name: '最要好的朋友'},
-{ Name: '他是怎樣的人？'},
-{ Name: '最喜歡的國小（國中）老師'},
-{ Name: '他是怎樣的人？'},
-{ Name: '小學（國中）老師或同學常說我是'},
-{ Name: '小學（國中）時我曾在班上登任過的職務有'},
-{ Name: '我在小學（國中）得過的獎有'},
-{ Name: '我覺得我自己的過去最滿意的是'},
-{ Name: '我排遣休閒時間的方法是'},
-{ Name: '我最難忘的一件事是'},
-{ Name: '最喜歡做的事', HasRemark: true },
-{ Name: '最不喜歡做的事', HasRemark: true },
-{ Name: '國中時的學校生活'},
-{ Name: '最快樂的回憶'},
-{ Name: '最痛苦的回憶'},
-{ Name: '最足以描述自己的幾句話是'},
-{ Name: '自傳' },
-{ Name: '自我的心聲_一年級_我目前遇到最大的困難是' },
-{ Name: '自我的心聲_一年級_我目前最需要的協助是' },
-{ Name: '自我的心聲_二年級_我目前遇到最大的困難是' },
-{ Name: '自我的心聲_二年級_我目前最需要的協助是' },
-{ Name: '自我的心聲_三年級_我目前遇到最大的困難是' },
-{ Name: '自我的心聲_三年級_我目前最需要的協助是' }
-        ];
-
-        
-
-        $scope.EachPanelStatusOption = [{ Name: '綜合紀錄表--本人概況', Minimized: false, Saved: true }, { Name: '綜合紀錄表--家庭狀況', Minimized: false, Saved: true }, { Name: '綜合紀錄表--學習狀況', Minimized: false, Saved: true },
-        { Name: '綜合紀錄表--自我認識', Minimized: false, Saved: true }, { Name: '綜合紀錄表--畢業後計畫', Minimized: false, Saved: true }, { Name: '綜合紀錄表--自傳', Minimized: false, Saved: true }];
-
-
-        $scope.Minimized = false;
-
-
-
-
-        $scope.Minimize = function (PanelName) {
-
-            //$scope.Minimized = true;
-
-            $scope.EachPanelStatusOption.forEach(function (opt) {
-
-                if (opt.Name == PanelName)
-                {
-                    opt.Minimized = true;
-                }                               
-            });
-
-            
-        }
-
-        $scope.Maximize = function (PanelName) {
-
-            //$scope.Minimized = false;
-
-            $scope.EachPanelStatusOption.forEach(function (opt) {
-
-                if (opt.Name == PanelName) {
-                    opt.Minimized = false;
-                }
-            });
-            
-        }
-
-
-        $scope.CheckMinimized = function (PanelName) {
-
-            var IsMinimize = false;
-
-            
-            $scope.EachPanelStatusOption.forEach(function (opt) {
-
-                if (opt.Name == PanelName) {
-
-                    IsMinimize = opt.Minimized;
-                    
-                }
-            });
-
-            return IsMinimize;
-        }
-
-        $scope.OpenCloseMutipleOption = function (PanelName, MutilpleTilte,Grade) {
-            
             $scope.MappingOverallRecordTable.forEach(function (opt) {
 
                 if (opt.Title == PanelName) {
@@ -864,23 +854,23 @@
 
 
                         if (opt2.Grade != Grade && opt2.MutilpleTilte == MutilpleTilte && opt2.MultipleOptionHide == false) {
-                            opt2.MultipleOptionHide = true;                            
+                            opt2.MultipleOptionHide = true;
                         }
-                        if (opt2.Grade == Grade && opt2.MutilpleTilte==MutilpleTilte&& opt2.MultipleOptionHide ==true ) {
+                        if (opt2.Grade == Grade && opt2.MutilpleTilte == MutilpleTilte && opt2.MultipleOptionHide == true) {
                             opt2.MultipleOptionHide = false;
-                            
+
                             return;
                         }
                         if (opt2.Grade == Grade && opt2.MutilpleTilte == MutilpleTilte && opt2.MultipleOptionHide == false) {
                             opt2.MultipleOptionHide = true;
-                            
+
                             return;
                         }
-                    });                                     
+                    });
                 }
-            });      
+            });
         }
-
+       
         $scope.AddExtraSiblings = function () {
 
             var item = {};
@@ -895,7 +885,7 @@
 
         $scope.AddExtraConsanguinities = function () {
 
-            var item = {};
+            var item = {IsEmpty: true };
 
             $scope.MappingOverallRecordTable.forEach(function (opt) {
 
@@ -905,21 +895,762 @@
             });
         }
 
-        //$scope.CloseMutipleOption = function (Name) {
+        $scope.init = function () {
 
-        //    $scope.MappingOverallRecordTable.forEach(function (opt) {
 
-        //        if (opt.Title == Name) {
-        //            opt.Question[0].TotalWillingTitle.forEach(function (opt2) {
+            // TODO: 取得個人資料
+            gadget.getContract('ischool.counsel.v2.student').send({
+                service: "_.GetMyBaseInfo",
+                body: '',
+                result: function (response, error, http) {
+                    $scope.$apply(function () {
+                        if (error !== null) {
+                            alert('GetMyBaseInfo Error' + JSON.stringify(error));
+                        } else {
+                            $(response.Student).each(function (index, item) {
+                                Student = {                                    
+                                    Name: item.Name,                                    
+                                    GradeYear: item.Grade_Year,                                    
+                                };
+                             
+                            });                           
+                            $scope.student = Student;
 
-        //                if (!opt2.MultipleOptionHide) {
-        //                    opt2.MultipleOptionHide = true;
-        //                }
-        //            });
-        //        }
-        //    });
-        //}
+                            // TODO: 取得開放時間
+                            gadget.getContract('ischool.counsel.v2.student').send({
+                                service: "_.GetOpeningHours",
+                                body: '',
+                                result: function (response, error, http) {
 
+                                    if (error !== null) {
+                                        alert('GetOpeningHours Error' + JSON.stringify(error));
+                                    } else {
+
+                                        if (response.Response && response.Response.CounselsystemList
+                                            && response.Response.CounselsystemList.Content && response.Response.CounselsystemList.Content.Content
+                                            && response.Response.CounselsystemList.Content.Content.Item) {
+                                            $(response.Response.CounselsystemList.Content.Content.Item).each(function (index, item) {
+
+                                                if (item.GradeYear == $scope.student.GradeYear) {
+
+                                                    var tmp_Date = new Date();
+                                                    var Startdate = new Date(item.StartDateTime);
+                                                    var Enddate = new Date(item.EndDateTime);
+
+                                                    //在開放時間內
+                                                    if (Enddate > tmp_Date > Startdate) {
+
+                                                        $scope.OpeningTime = "填寫開放時間:" + Startdate + "~" + Enddate;
+                                                    }
+                                                    //不再開放時間內
+                                                    else
+                                                    {
+
+                                                        $scope.OpeningTime = "目前不再開放時間內，無法填寫";
+
+                                                    }                                                
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+
+                            // TODO: 取得綜合紀錄表內容
+                            gadget.getContract('ischool.counsel.v2.student').send({
+                                service: "_.GetAllABCardData",
+                                body: '',
+                                result: function (response, error, http) {
+
+                                    if (error !== null) {
+                                        alert('GetAllABCardData Error' + JSON.stringify(error));
+                                    } else {
+
+
+                                        $scope.getSelfBaseData(response);
+
+                                        $scope.getFamilyData(response);
+                                                                                
+                                        $scope.getStudyData(response);
+
+                                        $scope.getSelfKonwingData(response);
+
+                                        $scope.getLifeFeelingData(response);
+
+                                        $scope.getAfterGraduateData(response);
+
+                                        $scope.getAutobiographyData(response);
+
+                                        
+                                 
+                                    }
+                                }
+                            });
+
+                        }
+                    });
+                }
+            });     
+        }
+
+
+        $scope.getSelfBaseData = function (response) {
+
+            //單選
+            if (response.allABCardData && response.allABCardData.singleRecord) {
+                $(response.allABCardData.singleRecord).each(function (index, item) {
+
+                    $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                        if (opt.Title == "綜合紀錄表--本人概況") {
+
+                            //本人概況
+                            opt.Question.forEach(function (opt2) {
+
+                                if(opt2.Key == item.key)
+                                {
+                                    opt2.Option.forEach(function (opt3) {
+                                        if (opt3.Name == item.data) {
+
+                                            opt3.Value = item.data;
+
+                                            if(item.remark)
+                                            {
+                                                opt3.RemarkValue = item.remark;
+                                            }
+                                        }
+                                    });                                
+                                }
+                                if (opt2.Key == item.key && opt2.Key == '本人概況_原住民血統') {
+                                    opt2.Option.forEach(function (opt3) {
+                                        if (opt3.Name == item.data && opt3.Name == "有") {
+
+                                            opt3.Value = item.data;
+
+                                            // item.remark 格式:  爸爸_阿美族
+                                            if (item.remark) {
+
+                                                var ss = item.remark.split('_');
+
+                                                opt3.Relation = ss[0];
+                                                opt3.Race = ss[1];                                                
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+            // 多選
+            if (response.allABCardData && response.allABCardData.mutipleRecord) {
+                $(response.allABCardData.mutipleRecord).each(function (index, item) {
+
+                    $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                        if (opt.Title == "綜合紀錄表--本人概況") {
+
+                            //
+                            opt.Question.forEach(function (opt2) {
+
+                                if (opt2.Key == item.key) {
+                                    opt2.Option.forEach(function (opt3) {
+
+                                        if (opt3.Name == item.data) {
+
+                                            opt3.Checked = true;
+
+                                            if (item.remark) {
+                                                opt3.RemarkValue = item.remark;
+                                            }
+
+                                        }                                        
+                                    });
+                                }
+
+                            });
+                        }
+                    });
+                });
+            }
+
+            // 多學期資料
+            if (response.allABCardData && response.allABCardData.semesterRecord) {
+                $(response.allABCardData.semesterRecord).each(function (index, item) {
+
+                    $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                        if (opt.Title == "綜合紀錄表--本人概況") {
+
+                            //
+                            opt.Question.forEach(function (opt2) {
+
+                                if (opt2.Type == "6SemeasterData單選填答")
+                                {                                    
+                                    opt2.TotalWillingTitle.forEach(function (opt3) {
+
+                                        if (opt3.Key == item.key) {
+
+                                            opt3.SemesterCounter.forEach(function (opt4) {
+
+                                                if (opt4.Semester == 's1a') {
+
+                                                    opt4.Value = item.s1a;
+
+                                                }
+                                                if (opt4.Semester == 's1b') {
+
+                                                    opt4.Value = item.s1b;
+
+                                                }
+                                                if (opt4.Semester == 's2a') {
+
+                                                    opt4.Value = item.s2a;
+
+                                                }
+                                                if (opt4.Semester == 's2b') {
+
+                                                    opt4.Value = item.s2b;
+
+                                                }
+                                                if (opt4.Semester == 's3a') {
+
+                                                    opt4.Value = item.s3a;
+
+                                                }
+                                                if (opt4.Semester == 's3b') {
+
+                                                    opt4.Value = item.s3b;
+
+                                                }
+                                            });                                            
+                                        }
+                                    });                                    
+                                }                                
+                            });
+                        }
+                    });
+                });
+            }
+        }
+
+        $scope.getFamilyData = function (response) {
+            
+            //單選，由於儲存結構 這邊處理 是否有兄弟姊妹和一般的單選不太一樣，要注意。
+            if (response.allABCardData && response.allABCardData.singleRecord) {
+                $(response.allABCardData.singleRecord).each(function (index, item) {
+
+                    $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                        if (opt.Title == "綜合紀錄表--家庭狀況") {
+
+                            //
+                            opt.Question.forEach(function (opt2) {
+
+                                if (opt2.Key == item.key && opt2.Key == '家庭狀況_兄弟姊妹_排行') {
+                                    
+                                    if (item.data != "") {
+                                        opt2.Option[1].Value = opt2.Option[1].Name;
+                                        opt2.Option[1].RemarkValue = item.data;
+                                    }
+                                        // 假如沒有兄弟姊妹的話，自動將 "我是獨子"勾選起來
+                                    else
+                                    {
+                                        opt2.Option[0].Value = opt2.Option[0].Name;
+                                    }                                                                        
+                                }
+                            });
+
+                            //監護人
+                            opt.Question[0].Option.forEach(function (opt2) {
+
+                                if (opt2.Key == item.key) {
+                                    opt2.Value = item.data;
+                                }                                
+                            });
+                        }
+                    });
+                });                             
+            }
+
+
+            // 血親型資料
+            if (response.allABCardData && response.allABCardData.relativeRecord) {
+
+                
+
+                $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                    if (opt.Title == '綜合紀錄表--家庭狀況') {
+                        
+                        for (; opt.Question[1].ConsanguinityCounter.length < response.allABCardData.relativeRecord.length;)
+                        {
+                            var item = { IsEmpty: true };
+                            opt.Question[1].ConsanguinityCounter.push(item);
+
+                        }
+                    }
+                });
+                               
+                $(response.allABCardData.relativeRecord).each(function (index, item) {
+
+                    var itemAlreadyLink = false;
+
+                    $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                        if (opt.Title == "綜合紀錄表--家庭狀況") {
+
+                            opt.Question.forEach(function (opt2) {
+
+                                if (opt2.Type == "Consanguinity單選") {
+                                                                            
+                                    opt2.ConsanguinityCounter.forEach(function (opt4) {
+
+                                        opt2.TotalWillingTitle.forEach(function (opt3) {
+                                            
+                                            if (opt4.IsEmpty)
+                                            {
+                                                opt4[opt3.Title] = "";                                                                                                
+                                            }                                      
+                                        });
+
+                                        if (opt4.IsEmpty && !itemAlreadyLink) {
+                                            opt4.稱謂 = item.title;
+                                            opt4.姓名 = item.name;
+                                            opt4.存歿 = item.is_alive?'存':'歿';
+                                            opt4.出生年 = item.birth_year;
+                                            opt4.職業 = item.job;
+                                            opt4.工作機構 = item.institute;
+                                            opt4.職稱 = item.job_title;
+                                            opt4.教育程度 = item.edu_degree;
+                                            opt4.電話 = item.phone;
+                                            opt4.原國籍 = item.national;
+                                            opt4.行動電話 = item.cell_phone;
+
+                                            itemAlreadyLink = true;
+                                            opt4.IsEmpty = false;
+                                        }                                                                                
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+
+            // 兄弟姊妹型資料
+            if (response.allABCardData && response.allABCardData.siblingRecord) {
+
+
+
+                $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                    if (opt.Title == '綜合紀錄表--家庭狀況') {
+
+                        for (; opt.Question[3].SiblingCounter.length < response.allABCardData.siblingRecord.length;) {
+                            var item = { IsEmpty: true };
+                            opt.Question[3].SiblingCounter.push(item);
+
+                        }
+                    }
+                });
+
+                $(response.allABCardData.siblingRecord).each(function (index, item) {
+
+                    var itemAlreadyLink = false;
+
+                    $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                        if (opt.Title == "綜合紀錄表--家庭狀況") {
+
+                            opt.Question.forEach(function (opt2) {
+
+                                if (opt2.Type == "Sibling單選") {
+
+                                    opt2.SiblingCounter.forEach(function (opt4) {
+
+                                        opt2.TableTitle.forEach(function (opt3) {
+
+                                            if (opt4.IsEmpty) {
+                                                opt4[opt3] = "";
+                                            }
+                                        });
+
+                                        if (opt4.IsEmpty && !itemAlreadyLink) {
+                                            opt4.稱謂 = item.title;
+                                            opt4.姓名 = item.name;
+                                            opt4.畢業學校 =item.school_name;
+                                            opt4.出生年 = item.birth_year;
+                                            opt4.備註 = item.remark;
+                                            
+                                            itemAlreadyLink = true;
+                                            opt4.IsEmpty = false;
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+
+
+            // 年度型資料
+            if (response.allABCardData && response.allABCardData.yearlyRecord) {
+                $(response.allABCardData.yearlyRecord).each(function (index, item) {
+
+                    $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                        if (opt.Title == "綜合紀錄表--家庭狀況") {
+
+                            opt.Question.forEach(function (opt2) {
+
+                                if (opt2.Type == "3YearsData單選") {
+                                    opt2.TotalWillingTitle.forEach(function (opt3) {
+
+                                        if (opt3.Key == item.key) {
+                                           
+                                                opt3.GradesCounter.forEach(function (opt4) {
+
+                                                    if (opt4.Grade == '1') {
+
+                                                        opt4.Value = item.g1;
+
+                                                    }
+                                                    if (opt4.Grade == '2') {
+
+                                                        opt4.Value = item.g2;
+
+                                                    }
+                                                    if (opt4.Grade == '3') {
+
+                                                        opt4.Value = item.g3;
+
+                                                    }
+                                                });                                            
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+
+
+
+
+
+        }
+
+
+        $scope.getStudyData = function (response) {
+            
+            // 多學期資料
+            if (response.allABCardData && response.allABCardData.semesterRecord) {
+                $(response.allABCardData.semesterRecord).each(function (index, item) {
+
+                    $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                        if (opt.Title == "綜合紀錄表--學習狀況") {
+
+                            //
+                            opt.Question.forEach(function (opt2) {
+
+                                if (opt2.Type == "6SemeasterData單選填答") {
+                                    opt2.TotalWillingTitle.forEach(function (opt3) {
+
+                                        if (opt3.Key == item.key) {
+
+                                            opt3.SemesterCounter.forEach(function (opt4) {
+
+                                                if (opt4.Semester == 's1a') {
+
+                                                    opt4.Value = item.s1a;
+
+                                                }
+                                                if (opt4.Semester == 's1b') {
+
+                                                    opt4.Value = item.s1b;
+
+                                                }
+                                                if (opt4.Semester == 's2a') {
+
+                                                    opt4.Value = item.s2a;
+
+                                                }
+                                                if (opt4.Semester == 's2b') {
+
+                                                    opt4.Value = item.s2b;
+
+                                                }
+                                                if (opt4.Semester == 's3a') {
+
+                                                    opt4.Value = item.s3a;
+
+                                                }
+                                                if (opt4.Semester == 's3b') {
+
+                                                    opt4.Value = item.s3b;
+
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+            // 年度型資料
+            if (response.allABCardData && response.allABCardData.yearlyRecord) {
+                $(response.allABCardData.yearlyRecord).each(function (index, item) {
+
+                    $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                        if (opt.Title == "綜合紀錄表--學習狀況") {
+                           
+                            opt.Question.forEach(function (opt2) {
+
+                                if (opt2.Type == "3YearsData單選") {
+                                    opt2.TotalWillingTitle.forEach(function (opt3) {
+
+                                        if (opt3.Key == item.key) {
+
+                                            if (opt3.Key == '學習狀況_特殊專長' || opt3.Key == '學習狀況_休閒興趣') {
+
+                                                var glList = item.g1.split(',');
+
+                                                var g2List = item.g2.split(',');
+
+                                                var g3List = item.g3.split(',');
+
+
+                                                opt3.MultipleOption.forEach(function (opt4) {
+
+                                                    if (opt3.Grade == '1') {
+
+                                                        glList.forEach(function (opt5) {
+                                                            if (opt4.Name == opt5)
+                                                            {
+                                                                opt4.Checked = true;
+                                                            }
+                                                        });
+                                                    }
+                                                    if (opt3.Grade == '2') {
+
+                                                        g2List.forEach(function (opt5) {
+                                                            if (opt4.Name == opt5) {
+                                                                opt4.Checked = true;
+                                                            }
+                                                        });
+                                                    }
+                                                    if (opt3.Grade == '3') {
+
+                                                        g3List.forEach(function (opt5) {
+                                                            if (opt4.Name == opt5) {
+                                                                opt4.Checked = true;
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                            else
+                                            {
+                                                opt3.GradesCounter.forEach(function (opt4) {
+
+                                                    if (opt4.Grade == '1') {
+
+                                                        opt4.Value = item.g1;
+
+                                                    }
+                                                    if (opt4.Grade == '2') {
+
+                                                        opt4.Value = item.g2;
+
+                                                    }
+                                                    if (opt4.Grade == '3') {
+
+                                                        opt4.Value = item.g3;
+
+                                                    }
+                                                });
+                                            }                                            
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+
+        }
+
+
+        $scope.getAfterGraduateData = function (response) {
+            if (response.allABCardData && response.allABCardData.mutipleRecord) {
+                $(response.allABCardData.mutipleRecord).each(function (index, item) {
+
+                    $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                        if (opt.Title == "綜合紀錄表--畢業後計畫") {
+
+                            //畢業後計畫
+                            opt.Question.forEach(function (opt2) {
+
+                                if (opt2.Key == item.key)
+                                {
+                                    opt2.Option.forEach(function (opt3) {
+
+                                        if (opt3.Name == item.data) {
+
+                                            opt3.Checked = true;
+
+                                            if (item.remark) {
+                                                opt3.RemarkValue = item.remark;
+                                            }
+                                        }
+                                    });
+                                }
+                                
+                            });
+                        }
+                    });
+                });
+            }
+
+            if (response.allABCardData && response.allABCardData.priorityRecord) {
+                $(response.allABCardData.priorityRecord).each(function (index, item) {
+
+                    $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                        if (opt.Title == "綜合紀錄表--畢業後計畫") {
+
+                            // 就業
+                            opt.Question[4].TotalWillingTitle.forEach(function (opt2) {
+
+                                if (opt2.Key == item.key) {
+                                    opt2.WillingCounter.forEach(function (opt3) {
+
+
+                                        if (opt3.priority =='1')
+                                        {
+                                            opt3.selectvalue = item.p1;
+                                        }
+                                        if (opt3.priority == '2') {
+                                            opt3.selectvalue = item.p2;
+                                        }
+                                        if (opt3.priority == '3') {
+                                            opt3.selectvalue = item.p3;
+                                        }                                      
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+        }
+
+
+        $scope.getSelfKonwingData = function (response) {
+            if (response.allABCardData && response.allABCardData.singleRecord) {
+                $(response.allABCardData.singleRecord).each(function (index, item) {
+
+                    $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                        if (opt.Title == "綜合紀錄表--自我認識") {
+
+                            //自我認識
+                            opt.Question[0].TotalWillingTitle.forEach(function (opt2) {
+
+                                opt2.GradesCounter.forEach(function (opt3) {
+                                    if (opt3.Key == item.key) {
+                                        opt3.Value = item.data;
+                                    }
+                                });
+                            });
+                        }
+                    });
+                });
+            }
+        }
+
+        $scope.getLifeFeelingData = function (response) {
+            if (response.allABCardData && response.allABCardData.singleRecord) {
+                $(response.allABCardData.singleRecord).each(function (index, item) {
+
+                    $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                        if (opt.Title == "綜合紀錄表--生活感想") {
+
+                            //生活感想
+                            opt.Question[0].TotalWillingTitle.forEach(function (opt2) {
+
+                                opt2.GradesCounter.forEach(function (opt3) {
+                                    if (opt3.Key == item.key) {
+                                        opt3.Value = item.data;
+                                    }
+                                });
+                            });
+                        }
+                    });
+                });
+            }
+        }
+
+
+        $scope.getAutobiographyData = function (response)
+        {
+            if (response.allABCardData && response.allABCardData.singleRecord)
+            {
+                $(response.allABCardData.singleRecord).each(function (index, item) {
+                                                                     
+                    $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                        if (opt.Title == "綜合紀錄表--自傳") {
+
+                            //自傳
+                            opt.Question[0].Option.forEach(function (opt2a) {
+
+                                if (opt2a.Key == item.key) {
+                                    opt2a.Value = item.data;
+                                }
+                                if (opt2a.ReasonKey == item.key) {
+                                    opt2a.ReasonValue = item.data;
+                                }
+                            });
+
+                            //自我的心聲
+                            opt.Question[1].Option.forEach(function (opt2b) {
+
+                                if (opt2b.Key == item.key) {
+                                    opt2b.Value = item.data;
+                                }
+                            });
+                        }
+                    });
+                });            
+            }            
+        }
+
+        
+
+
+
+
+
+        $scope.init();
+        
 
 
 

@@ -14,7 +14,7 @@
                 clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
                 //account: 'teacher01.whsh@1campus.net',
                 //account: 'teacher02.whsh@1campus.net',
-                account: 'teacher02.whsh@1campus.net',
+                account: 'student02.whsh@1campus.net',
                 password: window.prompt('password:')
             }
         });
@@ -343,16 +343,15 @@
                                 <table class="col-xs-12" style="float:inherit;">
 
                                     <tbody class="text-center" ng-repeat="Q in panel.Question">
-                                        <tr>
+                                        <!--<tr>
                                             <td class="text-right col-sm-2 " style="vertical-align: top; padding-left: 0px; padding-right: 0px; ">
                                                 <label class=" control-label" style="color:black; padding-top:10px">
                                                     {{Q.Title}}
                                                 </label>
                                                 <span ng-if="Q.Title">：</span>
-
                                             </td>
                                             <td class="text-right col-sm-10 " style="vertical-align:top"></td>
-                                        </tr>
+                                        </tr>-->
                                         <tr ng-if="Q.Type =='單選填答'" ng-repeat="item in Q.Option">
                                             <td class="text-right col-sm-2 " style="vertical-align:top"></td>
                                             <td class="text-left col-sm-10 " style="vertical-align:top">
@@ -363,24 +362,24 @@
                                                     <input type="text"
                                                            class="form-control"
                                                            style="display: inline-block; height: 25px; width: 250px; padding-bottom: 8px ;color: rgb(85, 85, 85);"
-                                                           placeholder="">
+                                                           placeholder="" ng-model="item.Value">
                                                     <label class=" control-label" style="color:black; padding-top:10px" ng-if=" item.HasRemark">
                                                         因為：
                                                     </label>
                                                     <input type="text"
                                                            class="form-control"
                                                            style="display: inline-block; height: 25px; width: 150px; padding-bottom: 8px ;color: rgb(85, 85, 85);"
-                                                           placeholder="" ng-if=" item.HasRemark">
+                                                           placeholder="" ng-if=" item.HasRemark" ng-model="item.ReasonValue">
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr ng-if="Q.Type =='單選'">
-                                            <td class="text-right col-sm-2 " style="vertical-align:top"></td>
+                                            <td class="text-right col-sm-2 " style="vertical-align:top">{{Q.Title}}</td>
                                             <td class="text-left col-sm-10">
                                                 <div class="form-group" style="margin-top:0px">
                                                     <div class="radio-inline ng-scope" ng-repeat="item in Q.Option">
                                                         <label style="height:27px">
-                                                            <input type="radio" name="IntervieweeType" value="{{item.Name}}" ng-model="InterviewDetial.IntervieweeType" class="ng-pristine ng-valid">
+                                                            <input type="radio" name="{{Q.Title}}" value="{{item.Name}}" ng-model="item.Value" class="ng-pristine ng-valid">
                                                             <span class="ng-binding" style="color: rgb(85, 85, 85);">
                                                                 {{item.Name}}
                                                                 <span ng-if="item.HasRemark">：</span>
@@ -388,28 +387,30 @@
                                                             <input ng-if="item.HasRemark"
                                                                    type="text"
                                                                    class="form-control"
-                                                                   style="display: inline-block; height: 20px; width: 150px; padding-bottom: 8px ;color: rgb(85, 85, 85);"
-                                                                   placeholder=""
-                                                                   ng-model="item.Remark">
+                                                                   style="display: inline-block; height: 20px; width: 150px; padding-bottom: 4px ;color: rgb(85, 85, 85);"
+                                                                   placeholder="請輸入..."
+                                                                   ng-model="item.RemarkValue">
                                                             <span style="color: rgb(85, 85, 85);" ng-if="Q.Title=='原住民血統' && item.Name=='有'">我的</span>
-                                                            <input type="text"
+                                                            <input ng-if="Q.Title=='原住民血統'&& item.Name=='有'"
+                                                                   type="text"
                                                                    class="form-control"
                                                                    style="display: inline-block; height: 25px; width: 150px; padding-bottom: 8px; color: rgb(85, 85, 85);"
                                                                    placeholder="親屬稱謂"
-                                                                   ng-if="Q.Title=='原住民血統'&& item.Name=='有'">
+                                                                   ng-model="item.Relation">
                                                             <span style="color: rgb(85, 85, 85);" ng-if="Q.Title=='原住民血統' && item.Name=='有'">是原住民，屬於</span>
-                                                            <input type="text"
+                                                            <input ng-if="Q.Title=='原住民血統'&& item.Name=='有'"
+                                                                   type="text"
                                                                    class="form-control"
                                                                    style="display: inline-block; height: 25px; width: 150px; padding-bottom: 8px; color: rgb(85, 85, 85);"
                                                                    placeholder="族別名稱"
-                                                                   ng-if="Q.Title=='原住民血統'&& item.Name=='有'">
+                                                                   ng-model="item.Race">
                                                         </label>
                                                     </div>
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr ng-if="Q.Type =='多選'">
-                                            <td class="text-right col-sm-2 " style="vertical-align:top"></td>
+                                            <td class="text-right col-sm-2 " style="vertical-align:top; padding-top:15px ">{{Q.Title}}</td>
                                             <td class="text-left col-sm-10">
                                                 <div class="checkbox form-group" style="padding: 0px; margin-top: 10px;">
                                                     <label ng-repeat="item in Q.Option" style="padding:0px 10px 10px 0px;display: inline-block;">
@@ -423,13 +424,13 @@
                                                                class="form-control"
                                                                style="display: inline-block; width: 150px; color: rgb(85, 85, 85);"
                                                                placeholder=""
-                                                               ng-model="opt.Name">
+                                                               ng-model="item.RemarkValue">
                                                     </label>
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr ng-if="Q.Type =='3YearsData單選'">
-                                            <td class="text-right col-sm-2 " style="vertical-align:top"></td>
+                                            <td class="text-right col-sm-2 " style="vertical-align:top">{{Q.Title}}</td>
                                             <td class="text-left col-sm-10">
                                                 <table class="table table-bordered table-striped table-condensed table-hover">
                                                     <tbody>
@@ -442,14 +443,15 @@
                                                             <td ng-if="opt.Name">{{opt.Name}}</td>
                                                             <td ng-if="opt.Name" align="left" ng-repeat="gradeData in opt.GradesCounter">
                                                                 <div class="form-group" style="margin-top:0px">
-                                                                    <select class="form-control" name="EduDegree0" data-type="EduDegree" ng-if="opt.IsSelect">
-                                                                        <option ng-repeat="select_option in opt.Option" value="select_option.Name">{{select_option.Name}}</option>
+                                                                    <select class="form-control" name="EduDegree0" data-type="EduDegree" ng-if="opt.IsSelect" ng-model="gradeData.Value">
+                                                                        <option ng-repeat="select_option in opt.Option" ng-value="select_option.Name" >{{select_option.Name}}</option>
                                                                     </select>
                                                                     <input type="text"
                                                                            class="form-control"
                                                                            style="display: inline-block; height: 25px; width: 100%; padding-bottom: 8px; color: rgb(85, 85, 85);"
                                                                            placeholder=""
-                                                                           ng-if="!opt.IsSelect&&!opt.IsMultipleSelect">
+                                                                           ng-if="!opt.IsSelect&&!opt.IsMultipleSelect"
+                                                                           ng-model="gradeData.Value">
                                                                     <a ng-if="opt.IsMultipleSelect" class="btn btn-sm btn-default" style="padding: inherit; margin: auto;" href="javascript:void(0)" ng-click="OpenCloseMutipleOption(panel.Title,opt.Name,gradeData.Grade)">
                                                                         <i class="fa fa-wrench" aria-hidden="true"></i>
                                                                     </a>
@@ -482,7 +484,7 @@
                                             </td>
                                         </tr>
                                         <tr ng-if="Q.Type =='6SemeasterData單選填答'">
-                                            <td class="text-right col-sm-2 " style="vertical-align:top"></td>
+                                            <td class="text-right col-sm-2 " style="vertical-align:top;padding-left:0px">{{Q.Title}}</td>
                                             <td class="text-left col-sm-10">
                                                 <table class="table table-bordered table-striped table-condensed table-hover " style="table-layout:fixed">
                                                     <tbody>
@@ -499,7 +501,8 @@
                                                                            class="form-control"
                                                                            style="display: inline-block; height: 25px; width: 100%; padding-bottom: 8px; color: rgb(85, 85, 85);"
                                                                            placeholder=""
-                                                                           ng-if="!opt.IsSelect">
+                                                                           ng-if="!opt.IsSelect"
+                                                                           ng-model="semester.Value">
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -508,7 +511,7 @@
                                             </td>
                                         </tr>
                                         <tr ng-if="Q.Type =='意願序'">
-                                            <td class="text-right col-sm-2 " style="vertical-align:top"></td>
+                                            <td class="text-right col-sm-2 " style="vertical-align:top">{{Q.Title}}</td>
                                             <td class="text-left col-sm-10">
                                                 <table class="table table-bordered table-striped table-condensed table-hover">
                                                     <tbody>
@@ -521,14 +524,9 @@
                                                             <td>{{opt.Name}}</td>
                                                             <td align="left" ng-repeat="willings in opt.WillingCounter">
                                                                 <div class="form-group" style="margin:0px">
-                                                                    <select class="form-control" name="EduDegree0" data-type="EduDegree" ng-if="opt.IsSelect">
-                                                                        <option ng-repeat="select_option in opt.Option" value="select_option.Name">{{select_option.Name}}</option>
-                                                                    </select>
-                                                                    <input type="text"
-                                                                           class="form-control"
-                                                                           style="display: inline-block; height: 25px; width: 100%; padding-bottom: 8px; color: rgb(85, 85, 85);"
-                                                                           placeholder=""
-                                                                           ng-if="!opt.IsSelect">
+                                                                    <select class="form-control"  ng-if="opt.IsSelect" ng-model="willings.selectvalue">
+                                                                        <option ng-repeat="select_option in opt.Option" ng-value="select_option.Name" >{{select_option.Name}}</option>
+                                                                    </select>                                                         
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -537,7 +535,7 @@
                                             </td>
                                         </tr>
                                         <tr ng-if="Q.Type =='Sibling單選'">
-                                            <td class="text-right col-sm-2 " style="vertical-align:top">兄弟姊妹資料：</td>
+                                            <td class="text-right col-sm-2 " style="vertical-align:top">兄弟姊妹資料</td>
                                             <td class="text-left col-sm-10">
                                                 <table class="table table-bordered table-striped table-condensed table-hover">
                                                     <tbody>
@@ -545,21 +543,22 @@
                                                             <th class="text-center " ng-repeat="item in Q.TableTitle">{{item}}</th>
                                                         </tr>
                                                     </tbody>
-                                                    <tbody class="text-center" ng-repeat="item in Q.SiblingCounter">
+                                                    <tbody class="text-center" ng-repeat="siblings in Q.SiblingCounter">
                                                         <tr>
                                                             <td ng-repeat="item in Q.TableTitle">
                                                                 <div class="form-group" style="margin-top:0px">
                                                                     <input type="text"
                                                                            class="form-control"
                                                                            style="display: inline-block; height: 25px; width: 100%; padding-bottom: 8px; color: rgb(85, 85, 85);"
-                                                                           placeholder="">
+                                                                           placeholder=""
+                                                                           ng-model="siblings[item]">
                                                                 </div>
                                                             </td>
                                                         </tr>
                                                     </tbody>
                                                     <tbody class="text-right">
                                                         <tr>
-                                                            <td colspan="4">
+                                                            <td colspan="5">
                                                                 <a class="btn btn-sm btn-default" style="padding: inherit; margin: auto;" href="javascript:void(0)" ng-click="AddExtraSiblings()">
                                                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                                                 </a>
@@ -570,7 +569,7 @@
                                             </td>
                                         </tr>
                                         <tr ng-if="Q.Type =='Consanguinity單選'">
-                                            <td class="text-right col-sm-2 " style="vertical-align:top"></td>
+                                            <td class="text-right col-sm-2 " style="vertical-align:top">{{Q.Title}}</td>
                                             <td class="text-left col-sm-10" style="padding-left:0px; padding-right:0px">
                                                 <table class="table table-bordered table-striped table-condensed table-hover">
                                                     <tbody>
@@ -589,18 +588,19 @@
                                                             <th class="text-center" style="width:70px">行動電話</th>
                                                         </tr>
                                                     </tbody>
-                                                    <tbody class="text-center">
-                                                        <tr ng-repeat="item in Q.ConsanguinityCounter">
+                                                    <tbody class="text-center" ng-repeat="consanguinitycounter in Q.ConsanguinityCounter">
+                                                        <tr>
                                                             <td align="left" ng-repeat="item in Q.TotalWillingTitle">
                                                                 <div class="form-group" style="margin-top:0px">
-                                                                    <select class="form-control" name="EduDegree0" data-type="EduDegree" ng-if="item.IsSelect">
-                                                                        <option ng-repeat="select_option in item.Option" value="select_option.Name">{{select_option.Name}}</option>
+                                                                    <select class="form-control" ng-if="item.IsSelect" ng-model="consanguinitycounter[item.Title]">
+                                                                        <option ng-repeat="select_option in item.Option" ng-value="select_option.Name">{{select_option.Name}}</option>
                                                                     </select>
                                                                     <input type="text"
                                                                            class="form-control"
                                                                            style="display: inline-block; height: 25px; width: 100%; padding-bottom: 8px; color: rgb(85, 85, 85);"
                                                                            placeholder=""
-                                                                           ng-if="!item.IsSelect">
+                                                                           ng-if="!item.IsSelect"
+                                                                           ng-model="consanguinitycounter[item.Title]">
                                                                 </div>
                                                             </td>
                                                         </tr>
