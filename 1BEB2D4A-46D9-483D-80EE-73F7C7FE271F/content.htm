@@ -322,7 +322,7 @@
                                             <span>{{panel.Title}}</span>
                                         </td>
                                         <td class="text-right col-sm-3" style="padding-right:0px;">
-                                            <a class="btn btn-sm btn-default disabled" ng-class="{disabled:rec.EditRole!='輔導老師'&amp;&amp;rec.EditRole!='紀錄者'}" style="padding: 8px 10px;margin: -14px 0px;" href="javascript:void(0)" ng-click="ShowHomeVisitEditor(rec)">
+                                            <a class="btn btn-sm btn-default"  style="padding: 8px 10px;margin: -14px 0px;" href="javascript:void(0)" ng-click="panel.Save()">
                                                 <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                                 儲存
                                             </a>
@@ -379,7 +379,7 @@
                                                 <div class="form-group" style="margin-top:0px">
                                                     <div class="radio-inline ng-scope" ng-repeat="item in Q.Option">
                                                         <label style="height:27px">
-                                                            <input type="radio" name="{{Q.Title}}" value="{{item.Name}}" ng-model="item.Value" class="ng-pristine ng-valid">
+                                                            <input type="radio" name="{{Q.Title}}" value="{{item.Name}}" ng-model="Q.Value" class="ng-pristine ng-valid">
                                                             <span class="ng-binding" style="color: rgb(85, 85, 85);">
                                                                 {{item.Name}}
                                                                 <span ng-if="item.HasRemark">：</span>
@@ -440,7 +440,7 @@
                                                     </tbody>
                                                     <tbody class="text-center">
                                                         <tr ng-repeat="opt in Q.TotalWillingTitle">
-                                                            <td ng-if="opt.Name">{{opt.Name}}</td>
+                                                            <td ng-if="opt.Name"  >{{opt.Name}}</td>
                                                             <td ng-if="opt.Name" align="left" ng-repeat="gradeData in opt.GradesCounter">
                                                                 <div class="form-group" style="margin-top:0px">
                                                                     <select class="form-control" name="EduDegree0" data-type="EduDegree" ng-if="opt.IsSelect" ng-model="gradeData.Value">
