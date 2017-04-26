@@ -330,8 +330,15 @@ input[type=checkbox]:not(:disabled) ~ .lever:active:after {
         display: none;
     }
     .my-page {
-        margin-bottom: 55px;
         box-shadow: none;
+        margin: 20px auto 0;
+        padding-bottom: 80px;
+        position: fixed;
+        overflow: auto;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
     }
     .btn-floating {
         bottom: 25px;
