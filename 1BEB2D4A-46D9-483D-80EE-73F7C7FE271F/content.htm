@@ -308,11 +308,17 @@
                     <div ng-if="OpeningTime">
                         <div class="text-muted" style="margin-left:10px; margin-right:10px; margin-top:10px;  background: #FFC9C9">開放時間:{{OpeningTime}} </div>
                     </div>
-               
-
-
-
-
+                    <div class="panel panel-default" style=" margin-left: 10px; margin-right: 10px; margin-top: 10px; height:25px; " ng-if="!IsNotInOpeningTime">
+                        <div class="panel-body" style="padding: 0px">
+                            <div class="col-xs-9"></div>
+                            <div class="col-xs-3" style=" text-align: right;">
+                                <a class="btn btn-sm btn-default" style="padding: 0px 0px;margin: 0px 0px;" href="javascript:void(0)" ng-click="SaveAllPanelData()">
+                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                    全部儲存
+                                </a>
+                            </div>                            
+                        </div>
+                    </div>               
                     <div class=" panel panel-default" style=" margin-left: 10px; margin-right: 10px; margin-top: 10px;" ng-repeat="panel in MappingOverallRecordTable">
                         <div class="panel-heading">
                             <div class="col-xs-12" style="float:inherit;">
@@ -322,7 +328,7 @@
                                             <span>{{panel.Title}}</span>
                                         </td>
                                         <td class="text-right col-sm-3" style="padding-right:0px;">
-                                            <a class="btn btn-sm btn-default"  style="padding: 8px 10px;margin: -14px 0px;" href="javascript:void(0)" ng-click="panel.Save()">
+                                            <a ng-if="!IsNotInOpeningTime" ng-class="panel.IsPanelDirty?'btn btn-sm btn-danger':'btn btn-sm btn-default'" style="padding: 8px 10px;margin: -14px 0px;" href="javascript:void(0)" ng-click="panel.Save()">
                                                 <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                                 儲存
                                             </a>
@@ -332,7 +338,6 @@
                                             <a ng-if="panel.Minimized" class="btn btn-sm btn-default" style="padding: 8px 10px;margin: -14px 0px;" href="javascript:void(0)" ng-click="panel.Maximize()">
                                                 <i class="fa fa-window-maximize" aria-hidden="true"></i>
                                             </a>
-
                                         </td>
                                     </tr>
                                 </table>
@@ -353,23 +358,36 @@
                                             <td class="text-right col-sm-10 " style="vertical-align:top"></td>
                                         </tr>-->
                                         <tr ng-if="Q.Type =='單選填答'" ng-repeat="item in Q.Option">
-                                            <td class="text-right col-sm-2 " style="vertical-align:top"></td>
-                                            <td class="text-left col-sm-10 " style="vertical-align:top">
+                                            <td class="text-right col-sm-1 " style="vertical-align:top"></td>
+                                            <td class="text-left col-sm-11" style="vertical-align:top">
                                                 <div class="form-group" style="margin-top:0px">
-                                                    <label class=" control-label" style="color:black; padding-top:10px">
-                                                        {{item.Name}}：
-                                                    </label>
-                                                    <input type="text"
-                                                           class="form-control"
-                                                           style="display: inline-block; height: 25px; width: 250px; padding-bottom: 8px ;color: rgb(85, 85, 85);"
-                                                           placeholder="" ng-model="item.Value">
-                                                    <label class=" control-label" style="color:black; padding-top:10px" ng-if=" item.HasRemark">
-                                                        因為：
-                                                    </label>
-                                                    <input type="text"
-                                                           class="form-control"
-                                                           style="display: inline-block; height: 25px; width: 150px; padding-bottom: 8px ;color: rgb(85, 85, 85);"
-                                                           placeholder="" ng-if=" item.HasRemark" ng-model="item.ReasonValue">
+                                                    <div class="col-sm-12">
+                                                        <label class=" control-label  col-sm-3" style="color: black; padding-top: 10px; padding-left:0px; padding-right: 5px;">
+                                                            {{item.Name}}：
+                                                        </label>
+                                                        <!--<input type="text"
+        class="form-control"
+        style="display: inline-block; height: 25px; width: auto; padding-bottom: 8px ;color: rgb(85, 85, 85);"
+        placeholder="" ng-model="item.Value" ng-disabled="IsNotInOpeningTime">-->
+                                                        <div>
+                                                            <textarea class="form-control msd-elastic col-sm-9" id="" style="width: 400px; padding-left: 0px; padding-top: 10px; padding-right:0px " ng-model="item.Value" ng-disabled="IsNotInOpeningTime" placeholder="請輸入..." ng-change="panel.PanelChangeCheck()"></textarea>
+                                                        </div>
+                                                    </div>                                                    
+                                                    <div class="col-sm-12" ng-if=" item.HasRemark">
+                                                                                                                                                                                                                                   
+                                                        <label class=" control-label col-sm-3" style="color:black; width:45px; padding-top:10px; padding-left:0px; padding-right:0px; " ng-if=" item.HasRemark">
+                                                            因為：
+                                                        </label>
+                                                        
+                                                        <!--<input type="text"
+        class="form-control"
+        style="display: inline-block; height: 25px; width: 150px; padding-bottom: 8px ;color: rgb(85, 85, 85);"
+        placeholder="" ng-if=" item.HasRemark" ng-model="item.ReasonValue" ng-disabled="IsNotInOpeningTime">-->
+                                                        
+                                                            
+                                                        <textarea class="form-control msd-elastic col-sm-9" id="" style="width: 80%; padding-left: 0px; padding-top: 10px; " ng-model="item.ReasonValue" ng-disabled="IsNotInOpeningTime" placeholder="請輸入..." ng-change="panel.PanelChangeCheck()"></textarea>
+                                                        
+                                                    </div>                                                    
                                                 </div>
                                             </td>
                                         </tr>
@@ -379,7 +397,7 @@
                                                 <div class="form-group" style="margin-top:0px">
                                                     <div class="radio-inline ng-scope" ng-repeat="item in Q.Option">
                                                         <label style="height:27px">
-                                                            <input type="radio" name="{{Q.Title}}" value="{{item.Name}}" ng-model="Q.Value" class="ng-pristine ng-valid">
+                                                            <input type="radio" name="{{Q.Title}}" value="{{item.Name}}" ng-model="Q.Value" class="ng-pristine ng-valid" ng-disabled="IsNotInOpeningTime" ng-change="panel.PanelChangeCheck()">
                                                             <span class="ng-binding" style="color: rgb(85, 85, 85);">
                                                                 {{item.Name}}
                                                                 <span ng-if="item.HasRemark">：</span>
@@ -387,23 +405,29 @@
                                                             <input ng-if="item.HasRemark"
                                                                    type="text"
                                                                    class="form-control"
-                                                                   style="display: inline-block; height: 20px; width: 150px; padding-bottom: 4px ;color: rgb(85, 85, 85);"
+                                                                   style="display: inline-block; height: 25px; width: 150px; padding-bottom: 4px ;color: rgb(85, 85, 85);"
                                                                    placeholder="請輸入..."
-                                                                   ng-model="item.RemarkValue">
+                                                                   ng-model="item.RemarkValue"
+                                                                   ng-disabled="IsNotInOpeningTime"
+                                                                   ng-change="panel.PanelChangeCheck()">
                                                             <span style="color: rgb(85, 85, 85);" ng-if="Q.Title=='原住民血統' && item.Name=='有'">我的</span>
                                                             <input ng-if="Q.Title=='原住民血統'&& item.Name=='有'"
                                                                    type="text"
                                                                    class="form-control"
                                                                    style="display: inline-block; height: 25px; width: 150px; padding-bottom: 8px; color: rgb(85, 85, 85);"
                                                                    placeholder="親屬稱謂"
-                                                                   ng-model="item.Relation">
+                                                                   ng-model="item.Relation"
+                                                                   ng-disabled="IsNotInOpeningTime"
+                                                                   ng-change="panel.PanelChangeCheck()">
                                                             <span style="color: rgb(85, 85, 85);" ng-if="Q.Title=='原住民血統' && item.Name=='有'">是原住民，屬於</span>
                                                             <input ng-if="Q.Title=='原住民血統'&& item.Name=='有'"
                                                                    type="text"
                                                                    class="form-control"
                                                                    style="display: inline-block; height: 25px; width: 150px; padding-bottom: 8px; color: rgb(85, 85, 85);"
                                                                    placeholder="族別名稱"
-                                                                   ng-model="item.Race">
+                                                                   ng-model="item.Race"
+                                                                   ng-disabled="IsNotInOpeningTime"
+                                                                   ng-change="panel.PanelChangeCheck()">
                                                         </label>
                                                     </div>
                                                 </div>
@@ -414,7 +438,7 @@
                                             <td class="text-left col-sm-10">
                                                 <div class="checkbox form-group" style="padding: 0px; margin-top: 10px;">
                                                     <label ng-repeat="item in Q.Option" style="padding:0px 10px 10px 0px;display: inline-block;">
-                                                        <input type="checkbox" value="{{item.Name}}" ng-model="item.Checked"><span class="checkbox-material"><span class="check"></span></span>
+                                                        <input type="checkbox" value="{{item.Name}}" ng-model="item.Checked" ng-disabled="IsNotInOpeningTime" ng-change="panel.PanelChangeCheck()"><span class="checkbox-material"><span class="check"></span></span>
                                                         <span ng-style="{color:item.Checked?'#555':'#BFBFBF'}">
                                                             {{item.Name}}
                                                             <span ng-if="item.HasRemark">：</span>
@@ -424,7 +448,9 @@
                                                                class="form-control"
                                                                style="display: inline-block; width: 150px; color: rgb(85, 85, 85);"
                                                                placeholder=""
-                                                               ng-model="item.RemarkValue">
+                                                               ng-model="item.RemarkValue"
+                                                               ng-disabled="IsNotInOpeningTime"
+                                                               ng-change="panel.PanelChangeCheck()">
                                                     </label>
                                                 </div>
                                             </td>
@@ -443,15 +469,17 @@
                                                             <td ng-if="opt.Name"  >{{opt.Name}}</td>
                                                             <td ng-if="opt.Name" align="left" ng-repeat="gradeData in opt.GradesCounter">
                                                                 <div class="form-group" style="margin-top:0px">
-                                                                    <select class="form-control" name="EduDegree0" data-type="EduDegree" ng-if="opt.IsSelect" ng-model="gradeData.Value">
-                                                                        <option ng-repeat="select_option in opt.Option" ng-value="select_option.Name" >{{select_option.Name}}</option>
+                                                                    <select class="form-control" name="EduDegree0" data-type="EduDegree" ng-if="opt.IsSelect" ng-model="gradeData.Value" ng-disabled="IsNotInOpeningTime" ng-change="panel.PanelChangeCheck()">
+                                                                        <option ng-repeat="select_option in opt.Option" ng-value="select_option.Name" ng-disabled="IsNotInOpeningTime">{{select_option.Name}}</option>
                                                                     </select>
                                                                     <input type="text"
                                                                            class="form-control"
                                                                            style="display: inline-block; height: 25px; width: 100%; padding-bottom: 8px; color: rgb(85, 85, 85);"
                                                                            placeholder=""
                                                                            ng-if="!opt.IsSelect&&!opt.IsMultipleSelect"
-                                                                           ng-model="gradeData.Value">
+                                                                           ng-model="gradeData.Value"
+                                                                           ng-disabled="IsNotInOpeningTime"
+                                                                           ng-change="panel.PanelChangeCheck()">
                                                                     <a ng-if="opt.IsMultipleSelect" class="btn btn-sm btn-default" style="padding: inherit; margin: auto;" href="javascript:void(0)" ng-click="OpenCloseMutipleOption(panel.Title,opt.Name,gradeData.Grade)">
                                                                         <i class="fa fa-wrench" aria-hidden="true"></i>
                                                                     </a>
@@ -463,7 +491,7 @@
                                                                     <span>{{opt.Grade}}年級--{{opt.MutilpleTilte}}</span>
                                                                     <div class="checkbox form-group" style="padding: 0px; margin-top: 10px;">
                                                                         <label ng-repeat="Multipleitem in opt.MultipleOption" style="padding:0px 10px 10px 0px;display: inline-block;">
-                                                                            <input type="checkbox" value="{{Multipleitem.Name}}" ng-model="Multipleitem.Checked" ><span class="checkbox-material"><span class="check"></span></span>
+                                                                            <input type="checkbox" value="{{Multipleitem.Name}}" ng-model="Multipleitem.Checked" ng-disabled="IsNotInOpeningTime" ng-change="panel.PanelChangeCheck()"><span class="checkbox-material"><span class="check"></span></span>
                                                                             <span ng-style="{color:Multipleitem.Checked?'#555':'#BFBFBF'}">
                                                                                 {{Multipleitem.Name}}
                                                                                 <span ng-if="Multipleitem.HasRemark">：</span>
@@ -473,7 +501,9 @@
                                                                                    class="form-control"
                                                                                    style="display: inline-block; width: 150px; color: rgb(85, 85, 85);"
                                                                                    placeholder=""
-                                                                                   ng-model="Multipleitem.Name">
+                                                                                   ng-model="Multipleitem.Name"
+                                                                                   ng-disabled="IsNotInOpeningTime"
+                                                                                   ng-change="panel.PanelChangeCheck()">
                                                                         </label>
                                                                     </div>
                                                                 </div>
@@ -502,7 +532,9 @@
                                                                            style="display: inline-block; height: 25px; width: 100%; padding-bottom: 8px; color: rgb(85, 85, 85);"
                                                                            placeholder=""
                                                                            ng-if="!opt.IsSelect"
-                                                                           ng-model="semester.Value">
+                                                                           ng-model="semester.Value"
+                                                                           ng-disabled="IsNotInOpeningTime"
+                                                                           ng-change="panel.PanelChangeCheck()">
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -524,8 +556,8 @@
                                                             <td>{{opt.Name}}</td>
                                                             <td align="left" ng-repeat="willings in opt.WillingCounter">
                                                                 <div class="form-group" style="margin:0px">
-                                                                    <select class="form-control"  ng-if="opt.IsSelect" ng-model="willings.selectvalue">
-                                                                        <option ng-repeat="select_option in opt.Option" ng-value="select_option.Name" >{{select_option.Name}}</option>
+                                                                    <select class="form-control" ng-if="opt.IsSelect" ng-model="willings.selectvalue" ng-disabled="IsNotInOpeningTime" ng-change="panel.PanelChangeCheck()">
+                                                                        <option ng-repeat="select_option in opt.Option" ng-value="select_option.Name" ng-disabled="IsNotInOpeningTime">{{select_option.Name}}</option>
                                                                     </select>                                                         
                                                                 </div>
                                                             </td>
@@ -551,12 +583,14 @@
                                                                            class="form-control"
                                                                            style="display: inline-block; height: 25px; width: 100%; padding-bottom: 8px; color: rgb(85, 85, 85);"
                                                                            placeholder=""
-                                                                           ng-model="siblings[item]">
+                                                                           ng-model="siblings[item]"
+                                                                           ng-disabled="IsNotInOpeningTime"
+                                                                           ng-change="panel.PanelChangeCheck()">
                                                                 </div>
                                                             </td>
                                                         </tr>
                                                     </tbody>
-                                                    <tbody class="text-right">
+                                                    <tbody ng-if="!IsNotInOpeningTime" class="text-right">
                                                         <tr>
                                                             <td colspan="5">
                                                                 <a class="btn btn-sm btn-default" style="padding: inherit; margin: auto;" href="javascript:void(0)" ng-click="AddExtraSiblings()">
@@ -592,20 +626,22 @@
                                                         <tr>
                                                             <td align="left" ng-repeat="item in Q.TotalWillingTitle">
                                                                 <div class="form-group" style="margin-top:0px">
-                                                                    <select class="form-control" ng-if="item.IsSelect" ng-model="consanguinitycounter[item.Title]">
-                                                                        <option ng-repeat="select_option in item.Option" ng-value="select_option.Name">{{select_option.Name}}</option>
+                                                                    <select class="form-control" ng-if="item.IsSelect" ng-model="consanguinitycounter[item.Title]" ng-disabled="IsNotInOpeningTime" ng-change="panel.PanelChangeCheck()">
+                                                                        <option ng-repeat="select_option in item.Option" ng-value="select_option.Name" ng-disabled="IsNotInOpeningTime">{{select_option.Name}}</option>
                                                                     </select>
                                                                     <input type="text"
                                                                            class="form-control"
                                                                            style="display: inline-block; height: 25px; width: 100%; padding-bottom: 8px; color: rgb(85, 85, 85);"
                                                                            placeholder=""
                                                                            ng-if="!item.IsSelect"
-                                                                           ng-model="consanguinitycounter[item.Title]">
+                                                                           ng-model="consanguinitycounter[item.Title]"
+                                                                           ng-disabled="IsNotInOpeningTime"
+                                                                           ng-change="panel.PanelChangeCheck()">
                                                                 </div>
                                                             </td>
                                                         </tr>
                                                     </tbody>
-                                                    <tbody class="text-right">
+                                                    <tbody ng-if="!IsNotInOpeningTime" class="text-right">
                                                         <tr>
                                                             <td colspan="11">
                                                                 <a class="btn btn-sm btn-default" style="padding: inherit; margin: auto;" href="javascript:void(0)" ng-click="AddExtraConsanguinities()">
@@ -622,6 +658,7 @@
                             </div>
                         </div>
                     </div>
+                   
 
                 </div>
                 

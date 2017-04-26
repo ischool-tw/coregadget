@@ -96,10 +96,13 @@
             }
 
 
+        $scope.PanelDataIsDirty = false;
+
         $scope.MappingOverallRecordTable = [
             {
                 Title: '綜合紀錄表--本人概況',
                 Minimized: false,
+                IsPanelDirty: false,
                 GetStatus: function () { },
                 Save: function () {
 
@@ -232,6 +235,25 @@
 
 
                 },
+                PanelChangeCheck: function () {
+
+                    var question_option_original_list = this.Question_Option_Original_List;
+
+
+                    if (JSON.stringify(question_option_original_list.OptionList) != angular.toJson(this.Question)) {
+                        question_option_original_list.IsDirty = true;
+                    }
+                    else {
+                        question_option_original_list.IsDirty = false;
+                    }
+
+                    this.IsPanelDirty = false;
+
+                    if (question_option_original_list.IsDirty) {
+                        this.IsPanelDirty = true;
+                    }
+
+                },
                 Minimize: function () {
                     this.Minimized = true;
                 },
@@ -291,11 +313,17 @@
                             ],
                             Option: ['身高', '體重']
                         }
-                ]
+                ],
+                Question_Option_Original_List:
+                           {
+                               IsDirty: false,
+                               OptionList: []
+                           }
             },
             {
                 Title: '綜合紀錄表--家庭狀況',
                 Minimized: false,
+                IsPanelDirty: false,
                 GetStatus: function () { },
                 Save: function () {
 
@@ -476,6 +504,25 @@
 
 
                 },
+                PanelChangeCheck: function () {
+
+                    var question_option_original_list = this.Question_Option_Original_List;
+
+
+                    if (JSON.stringify(question_option_original_list.OptionList) != angular.toJson(this.Question)) {
+                        question_option_original_list.IsDirty = true;
+                    }
+                    else {
+                        question_option_original_list.IsDirty = false;
+                    }
+
+                    this.IsPanelDirty = false;
+
+                    if (question_option_original_list.IsDirty) {
+                        this.IsPanelDirty = true;
+                    }
+
+                },
                 Minimize: function () {
                     this.Minimized = true;
                 },
@@ -522,7 +569,7 @@
                         Option: [{ Name: '我是獨子' }, { Name: '我有兄弟姊妹，我排行第', HasRemark: true }]
                     },
                     {
-                        Title: '',
+                        Title: '兄弟姊妹資料',
                         Type: 'Sibling單選',
                         TableName: '$ischool.counsel.sibling',
                         TableTitle: ['稱謂', '姓名', '畢業學校', '出生年', '備註'],
@@ -583,14 +630,19 @@
                         ],
                         Option: []
                     }
-                ]
+                ],
+                Question_Option_Original_List:
+                           {
+                               IsDirty: false,
+                               OptionList: []
+                           }
             },
             {
                 Title: '綜合紀錄表--學習狀況',
                 Minimized: false,
+                IsPanelDirty: false,
                 GetStatus: function () { },
                 Save: function () {
-
 
                     var record = {};
 
@@ -702,6 +754,25 @@
 
 
                 },
+                PanelChangeCheck: function () {
+
+                    var question_option_original_list = this.Question_Option_Original_List;
+
+
+                    if (angular.toJson(question_option_original_list.OptionList) != angular.toJson(this.Question)) {
+                        question_option_original_list.IsDirty = true;
+                    }
+                    else {
+                        question_option_original_list.IsDirty = false;
+                    }
+
+                    this.IsPanelDirty = false;
+
+                    if (question_option_original_list.IsDirty) {
+                        this.IsPanelDirty = true;
+                    }
+
+                },
                 Minimize: function () {
                     this.Minimized = true;
                 },
@@ -733,7 +804,7 @@
                                                    var MutipleDataList = [];
 
                                                    var Items = '';
-
+                                                   
                                                    $scope.MappingOverallRecordTable.forEach(function (opt) {
 
                                                        if (opt.Title == PanelName) {
@@ -748,6 +819,17 @@
                                                                            MutipleDataList.push(op3.Name);
                                                                        }
                                                                    });
+
+                                                                   // 將原始資料 Question_Option_Original_List 之MultipleOptionHide 屬性 同步 與現在的Question 一樣
+                                                                   //(因為MultipleOptionHide 屬性並不是我們關心的 已變動屬性)
+                                                                   opt.Question_Option_Original_List.OptionList[0].TotalWillingTitle.forEach(function (opt4) {
+
+                                                                       if (opt4.Grade == opt2.Grade && opt4.MutilpleTilte == opt2.MutilpleTilte)
+                                                                       {
+                                                                           opt4.MultipleOptionHide = opt2.MultipleOptionHide;
+
+                                                                       }
+                                                                   });
                                                                }
                                                            });
                                                        }
@@ -759,6 +841,16 @@
 
                                                    this.Value = Items;
 
+                                             
+                                                   // 如果資料改變 因為 PanelChangeCheck() 會較 GetMutipleDataListItem 早，  需要重呼叫一次檢查
+                                                   $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                                                       if (opt.Title == PanelName)
+                                                       {
+                                                           opt.PanelChangeCheck();
+                                                       }
+                                                   });
+                                                                                           
                                                    return Items;
 
                                                }
@@ -786,6 +878,16 @@
                                                                        MutipleDataList.push(op3.Name);
                                                                    }
                                                                });
+
+                                                               // 將原始資料 Question_Option_Original_List 之MultipleOptionHide 屬性 同步 與現在的Question 一樣
+                                                               //(因為MultipleOptionHide 屬性並不是我們關心的 已變動屬性)
+                                                               opt.Question_Option_Original_List.OptionList[0].TotalWillingTitle.forEach(function (opt4) {
+
+                                                                   if (opt4.Grade == opt2.Grade && opt4.MutilpleTilte == opt2.MutilpleTilte) {
+                                                                       opt4.MultipleOptionHide = opt2.MultipleOptionHide;
+
+                                                                   }
+                                                               });
                                                            }
                                                        });
                                                    }
@@ -796,6 +898,14 @@
                                                this.MutipleDataList = MutipleDataList;
 
                                                this.Value = Items;
+
+                                               // 如果資料改變 因為 PanelChangeCheck() 會較 GetMutipleDataListItem 早，  需要重呼叫一次檢查
+                                               $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                                                   if (opt.Title == PanelName) {
+                                                       opt.PanelChangeCheck();
+                                                   }
+                                               });
 
                                                return Items;
                                            }
@@ -823,6 +933,16 @@
                                                                        MutipleDataList.push(op3.Name);
                                                                    }
                                                                });
+
+                                                               // 將原始資料 Question_Option_Original_List 之MultipleOptionHide 屬性 同步 與現在的Question 一樣
+                                                               //(因為MultipleOptionHide 屬性並不是我們關心的 已變動屬性)
+                                                               opt.Question_Option_Original_List.OptionList[0].TotalWillingTitle.forEach(function (opt4) {
+
+                                                                   if (opt4.Grade == opt2.Grade && opt4.MutilpleTilte == opt2.MutilpleTilte) {
+                                                                       opt4.MultipleOptionHide = opt2.MultipleOptionHide;
+
+                                                                   }
+                                                               });
                                                            }
                                                        });
                                                    }
@@ -833,6 +953,14 @@
                                                this.MutipleDataList = MutipleDataList;
 
                                                this.Value = Items;
+
+                                               // 如果資料改變 因為 PanelChangeCheck() 會較 GetMutipleDataListItem 早，  需要重呼叫一次檢查
+                                               $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                                                   if (opt.Title == PanelName) {
+                                                       opt.PanelChangeCheck();
+                                                   }
+                                               });
 
                                                return Items;
                                            }
@@ -901,6 +1029,16 @@
                                                                            MutipleDataList.push(op3.Name);
                                                                        }
                                                                    });
+
+                                                                   // 將原始資料 Question_Option_Original_List 之MultipleOptionHide 屬性 同步 與現在的Question 一樣
+                                                                   //(因為MultipleOptionHide 屬性並不是我們關心的 已變動屬性)
+                                                                   opt.Question_Option_Original_List.OptionList[0].TotalWillingTitle.forEach(function (opt4) {
+
+                                                                       if (opt4.Grade == opt2.Grade && opt4.MutilpleTilte == opt2.MutilpleTilte) {
+                                                                           opt4.MultipleOptionHide = opt2.MultipleOptionHide;
+
+                                                                       }
+                                                                   });
                                                                }
                                                            });
                                                        }
@@ -911,6 +1049,14 @@
                                                    this.MutipleDataList = MutipleDataList;
 
                                                    this.Value = Items;
+
+                                                   // 如果資料改變 因為 PanelChangeCheck() 會較 GetMutipleDataListItem 早，  需要重呼叫一次檢查
+                                                   $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                                                       if (opt.Title == PanelName) {
+                                                           opt.PanelChangeCheck();
+                                                       }
+                                                   });
 
                                                    return Items;
                                                }
@@ -938,6 +1084,16 @@
                                                                            MutipleDataList.push(op3.Name);
                                                                        }
                                                                    });
+
+                                                                   // 將原始資料 Question_Option_Original_List 之MultipleOptionHide 屬性 同步 與現在的Question 一樣
+                                                                   //(因為MultipleOptionHide 屬性並不是我們關心的 已變動屬性)
+                                                                   opt.Question_Option_Original_List.OptionList[0].TotalWillingTitle.forEach(function (opt4) {
+
+                                                                       if (opt4.Grade == opt2.Grade && opt4.MutilpleTilte == opt2.MutilpleTilte) {
+                                                                           opt4.MultipleOptionHide = opt2.MultipleOptionHide;
+
+                                                                       }
+                                                                   });
                                                                }
                                                            });
                                                        }
@@ -948,6 +1104,14 @@
                                                    this.MutipleDataList = MutipleDataList;
 
                                                    this.Value = Items;
+
+                                                   // 如果資料改變 因為 PanelChangeCheck() 會較 GetMutipleDataListItem 早，  需要重呼叫一次檢查
+                                                   $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                                                       if (opt.Title == PanelName) {
+                                                           opt.PanelChangeCheck();
+                                                       }
+                                                   });
 
                                                    return Items;
                                                }
@@ -975,6 +1139,16 @@
                                                                            MutipleDataList.push(op3.Name);
                                                                        }
                                                                    });
+
+                                                                   // 將原始資料 Question_Option_Original_List 之MultipleOptionHide 屬性 同步 與現在的Question 一樣
+                                                                   //(因為MultipleOptionHide 屬性並不是我們關心的 已變動屬性)
+                                                                   opt.Question_Option_Original_List.OptionList[0].TotalWillingTitle.forEach(function (opt4) {
+
+                                                                       if (opt4.Grade == opt2.Grade && opt4.MutilpleTilte == opt2.MutilpleTilte) {
+                                                                           opt4.MultipleOptionHide = opt2.MultipleOptionHide;
+
+                                                                       }
+                                                                   });
                                                                }
                                                            });
                                                        }
@@ -985,6 +1159,14 @@
                                                    this.MutipleDataList = MutipleDataList;
 
                                                    this.Value = Items;
+
+                                                   // 如果資料改變 因為 PanelChangeCheck() 會較 GetMutipleDataListItem 早，  需要重呼叫一次檢查
+                                                   $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                                                       if (opt.Title == PanelName) {
+                                                           opt.PanelChangeCheck();
+                                                       }
+                                                   });
 
                                                    return Items;
                                                }
@@ -1052,11 +1234,17 @@
                                ],
                                Option: []
                            }
-                ]
+                ],
+                Question_Option_Original_List:
+                           {
+                               IsDirty: false,                     
+                               OptionList: []
+                           }
             },
             {
                 Title: '綜合紀錄表--自我認識',
                 Minimized: false,
+                IsPanelDirty: false,
                 GetStatus: function () { },
                 Save: function () {
 
@@ -1104,6 +1292,25 @@
                             }
                         }
                     });
+                },
+                PanelChangeCheck: function () {
+
+                    var question_option_original_list = this.Question_Option_Original_List;
+
+
+                    if (JSON.stringify(question_option_original_list.OptionList) != angular.toJson(this.Question)) {
+                        question_option_original_list.IsDirty = true;
+                    }
+                    else {
+                        question_option_original_list.IsDirty = false;
+                    }
+
+                    this.IsPanelDirty = false;
+
+                    if (question_option_original_list.IsDirty) {
+                        this.IsPanelDirty = true;
+                    }
+
                 },
                 Minimize: function () {
                     this.Minimized = true;
@@ -1146,11 +1353,17 @@
                         ],
                         Option: []
                     }
-                ]
+                ],
+                Question_Option_Original_List:
+                           {
+                               IsDirty: false,
+                               OptionList: []
+                           }
             },
             {
                 Title: '綜合紀錄表--生活感想',
                 Minimized: false,
+                IsPanelDirty: false,
                 GetStatus: function () { },
                 Save: function () {
 
@@ -1198,6 +1411,25 @@
                             }
                         }
                     });
+
+                },
+                PanelChangeCheck: function () {
+
+                    var question_option_original_list = this.Question_Option_Original_List;
+
+
+                    if (JSON.stringify(question_option_original_list.OptionList) != angular.toJson(this.Question)) {
+                        question_option_original_list.IsDirty = true;
+                    }
+                    else {
+                        question_option_original_list.IsDirty = false;
+                    }
+
+                    this.IsPanelDirty = false;
+
+                    if (question_option_original_list.IsDirty) {
+                        this.IsPanelDirty = true;
+                    }
 
                 },
                 Minimize: function () {
@@ -1318,15 +1550,19 @@
                                     { Key: '生活感想_內容3_3' }
                                 ], IsSelect: false
                             },
-                        ],
-                        Option: []
+                        ],                                            
                     }
-
-                ]
+                ],
+                Question_Option_Original_List:
+                           {
+                               IsDirty: false,
+                               OptionList: []
+                           }
             },
             {
                 Title: '綜合紀錄表--畢業後計畫',
                 Minimized: false,
+                IsPanelDirty: false,
                 GetStatus: function () { },
                 Save: function () {
 
@@ -1409,6 +1645,28 @@
                     });
 
                 },
+                PanelChangeCheck: function () {
+
+                    var question_option_original_list = this.Question_Option_Original_List;
+
+
+                    if (JSON.stringify(question_option_original_list.OptionList) != angular.toJson(this.Question))
+                    {
+                        question_option_original_list.IsDirty = true;
+                    }
+                    else
+                    {
+                        question_option_original_list.IsDirty = false;
+                    }
+                    
+                    this.IsPanelDirty = false;
+                    
+                    if (question_option_original_list.IsDirty)
+                    {
+                        this.IsPanelDirty = true;
+                    }
+                    
+                },
                 Minimize: function () {
                     this.Minimized = true;
                 },
@@ -1474,11 +1732,17 @@
                         Option: [,
                         ]
                     },
-                ]
+                ],
+                Question_Option_Original_List:
+                  {
+                      IsDirty: false,
+                      OptionList: []
+                  }
             },
             {
                 Title: '綜合紀錄表--自傳',
                 Minimized: false,
+                IsPanelDirty: false,
                 GetStatus: function () { },
                 Save: function () {
 
@@ -1493,16 +1757,22 @@
                         if (q.TableName == '$ischool.counsel.single_record') {
                             q.Option.forEach(function (opt) {
 
-                                if (opt.Value) {
-                                    var singlerecord = {};
+                                //if (opt.Value) {
+                                //    var singlerecord = {};
 
-                                    singlerecord.Key = opt.Key;
-                                    singlerecord.Value = opt.Value;
+                                //    singlerecord.Key = opt.Key;
+                                //    singlerecord.Value = opt.Value;
 
-                                    singlerecords.push(singlerecord);
-                                }
+                                //    singlerecords.push(singlerecord);
+                                //}
+                                var singlerecord = {};
+
+                                singlerecord.Key = opt.Key;
+                                singlerecord.Value = opt.Value;
+
+                                singlerecords.push(singlerecord);
                                 // 有備註 、因為 的欄位
-                                if (opt.ReasonValue) {
+                                if (opt.ReasonKey) {
                                     var singlerecord = {};
 
                                     singlerecord.Key = opt.ReasonKey;
@@ -1510,6 +1780,24 @@
 
                                     singlerecords.push(singlerecord);
                                 }
+                                //// 儲存空字串
+                                //if (opt.Value =="") {
+                                //    var singlerecord = {};
+
+                                //    singlerecord.Key = opt.Key;
+                                //    singlerecord.Value = opt.Value;
+
+                                //    singlerecords.push(singlerecord);
+                                //}
+                                ////// 儲存空字串 有備註 、因為 的欄位
+                                //if (opt.ReasonValue =="") {
+                                //    var singlerecord = {};
+
+                                //    singlerecord.Key = opt.ReasonKey;
+                                //    singlerecord.Value = opt.ReasonValue;
+
+                                //    singlerecords.push(singlerecord);
+                                //}
                             });
                         }
                     });
@@ -1534,6 +1822,65 @@
                         }
                     });
                 },
+                PanelChangeCheck: function () {
+                    
+                    var question_option_original_list = this.Question_Option_Original_List;
+
+                    this.Question.forEach(function (q) {                        
+                        //單選
+                        if (q.TableName == '$ischool.counsel.single_record') {
+                            q.Option.forEach(function (opt) {
+                   
+                                question_option_original_list.OptionList.forEach(function (ori_opt) {
+
+                                    if (ori_opt.Key == opt.Key)
+                                    {
+                                        if (ori_opt.Value != opt.Value) {
+
+                                            ori_opt.OptionIsDirty = true;
+                                        }
+                                        else
+                                        {
+                                            ori_opt.OptionIsDirty = false;
+                                        }
+                                    }
+                                    // 有備註 、因為 的欄位
+                                    if (opt.ReasonKey) {
+
+                                        if (ori_opt.Key == opt.ReasonKey) {
+
+                                            if (ori_opt.Value != opt.ReasonValue) {
+
+                                                ori_opt.OptionIsDirty = true;
+                                            }
+                                            else
+                                            {
+                                                ori_opt.OptionIsDirty = false;
+                                            }
+                                        }
+                                    }
+                                });                                                                                       
+                            });
+                        }
+                    });
+                                       
+                    this.IsPanelDirty = false;
+
+                    var ori_opt_contain_dirty = false;
+                   
+                    question_option_original_list.OptionList.forEach(function (ori_opt) {
+
+                        if (ori_opt.OptionIsDirty)
+                        {
+                            ori_opt_contain_dirty = true;                            
+                        }                                            
+                    });
+
+                    if (ori_opt_contain_dirty)
+                    {
+                        this.IsPanelDirty = true;                    
+                    }
+                },                
                 Minimize: function () {
                     this.Minimized = true;
                 },
@@ -1585,7 +1932,14 @@
                             { Name: '自我的心聲_三年級_我目前最需要的協助是', Key: '自傳_自我的心聲_三年級_我目前最需要的協助是' }
                         ]
                     }
-                ]
+                ],                
+                Question_Option_Original_List:
+                    {
+                        IsDirty: false,
+                        OptionList: [
+                            {Key:'',Vaule:''}
+                        ]
+                    }
             }
         ]
 
@@ -1595,6 +1949,8 @@
         $scope.CurrentView = "Interview";
 
         $scope.OpeningTime = "開放時間";
+
+        $scope.IsNotInOpeningTime = false;
 
         $scope.HomeVisitTypeOption = ["家庭訪問", "電話聯絡", "函件聯絡", "個別約談家長", "家長座談", "其他"];
         $scope.HomeVisitDateOption = [];
@@ -1711,12 +2067,14 @@
                                                     if (Enddate > tmp_Date && tmp_Date > Startdate) {
 
                                                         $scope.OpeningTime = "填寫開放時間:" + Startdate + "~" + Enddate;
+                                                        $scope.IsNotInOpeningTime = false;
                                                     }
                                                         //不再開放時間內
                                                     else {
 
                                                         $scope.OpeningTime = "目前不再開放時間內，無法填寫";
-
+                                                        $scope.IsNotInOpeningTime = true;
+                                                        
                                                     }
                                                 }
                                             });
@@ -1750,7 +2108,8 @@
 
                                         $scope.getAutobiographyData(response);
 
-
+                                        // 將scope更動套用
+                                        $scope.$apply();
 
                                     }
                                 }
@@ -1764,6 +2123,19 @@
 
 
         $scope.getSelfBaseData = function (response) {
+
+            // 清空上次的 original資料， 並更新 dirty 狀態
+            $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                if (opt.Title == "綜合紀錄表--本人概況") {
+
+                    opt.Question_Option_Original_List.IsDirty = false;
+                    opt.IsPanelDirty = false;
+                    opt.Question_Option_Original_List.OptionList.length = 0;
+
+                }
+            });
+
 
             //單選
             if (response.allABCardData && response.allABCardData.singleRecord) {
@@ -1900,9 +2272,41 @@
                     });
                 });
             }
+
+
+            $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                if (opt.Title == "綜合紀錄表--本人概況") {
+
+                    //綜合紀錄表--本人概況_原始資料
+                    opt.Question.forEach(function (opt2) {
+
+                        var opt2_ori = {};
+
+                        opt2_ori = JSON.parse(JSON.stringify(opt2))
+
+                        opt.Question_Option_Original_List.OptionList.push(opt2_ori);
+
+                    });
+                }
+            });
         }
 
         $scope.getFamilyData = function (response) {
+
+
+            // 清空上次的 original資料， 並更新 dirty 狀態
+            $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                if (opt.Title == "綜合紀錄表--家庭狀況") {
+
+                    opt.Question_Option_Original_List.IsDirty = false;
+                    opt.IsPanelDirty = false;
+                    opt.Question_Option_Original_List.OptionList.length = 0;
+
+                }
+            });
+
 
             //單選，由於儲存結構 這邊處理 是否有兄弟姊妹和一般的單選不太一樣，要注意。
             if (response.allABCardData && response.allABCardData.singleRecord) {
@@ -2105,14 +2509,41 @@
             }
 
 
+            $scope.MappingOverallRecordTable.forEach(function (opt) {
 
+                if (opt.Title == "綜合紀錄表--家庭狀況") {
 
+                    //綜合紀錄表--家庭狀況_原始資料
+                    opt.Question.forEach(function (opt2) {
 
+                        var opt2_ori = {};
+
+                        opt2_ori = JSON.parse(JSON.stringify(opt2))
+
+                        opt.Question_Option_Original_List.OptionList.push(opt2_ori);
+
+                    });
+                }
+            });
 
         }
 
 
         $scope.getStudyData = function (response) {
+
+
+            // 清空上次的 original資料， 並更新 dirty 狀態
+            $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                if (opt.Title == "綜合紀錄表--學習狀況") {
+
+                    opt.Question_Option_Original_List.IsDirty = false;
+                    opt.IsPanelDirty = false;
+                    opt.Question_Option_Original_List.OptionList.length = 0;
+
+                }
+            });
+
 
             // 多學期資料
             if (response.allABCardData && response.allABCardData.semesterRecord) {
@@ -2255,11 +2686,232 @@
                 });
             }
 
+            $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                if (opt.Title == "綜合紀錄表--學習狀況") {
+
+                    //綜合紀錄表--學習狀況_原始資料
+                    opt.Question.forEach(function (opt2) {
+
+                        var opt2_ori = {};
+
+                        opt2_ori = JSON.parse(JSON.stringify(opt2))
+
+                        opt.Question_Option_Original_List.OptionList.push(opt2_ori);
+
+                    });
+
+                    
+                    opt.Question_Option_Original_List.OptionList[0].TotalWillingTitle.forEach(function (opt3) {
+
+                        if(opt3.Grade == "1" && opt3.MutilpleTilte == "特殊專長")
+                        {
+                            opt.Question_Option_Original_List.OptionList[0].TotalWillingTitle.forEach(function (opt4) {
+
+                                if(opt4.Name == "特殊專長")
+                                {
+                                    opt4.GradesCounter.forEach(function (opt5) {
+
+                                        if (opt5.Grade == "1")
+                                        {
+                                            var MutipleDataList = [];
+                                            var Items = '';
+
+                                            opt3.MultipleOption.forEach(function (op6) {
+
+                                                if (op6.Checked) {
+
+                                                    MutipleDataList.push(op6.Name);
+                                                }
+                                            });
+
+                                            Items = MutipleDataList.join(',');
+
+                                            opt5.MutipleDataList = MutipleDataList;
+
+                                            opt5.Value = Items;
+
+                                        }
+                                    });
+                                   
+                                }                                                            
+                            });                                                
+                        }
+                        if (opt3.Grade == "2" && opt3.MutilpleTilte == "特殊專長")
+                        {
+                            opt.Question_Option_Original_List.OptionList[0].TotalWillingTitle.forEach(function (opt4) {
+
+                                if (opt4.Name == "特殊專長") {
+                                    opt4.GradesCounter.forEach(function (opt5) {
+
+                                        if (opt5.Grade == "2") {
+                                            var MutipleDataList = [];
+                                            var Items = '';
+
+                                            opt3.MultipleOption.forEach(function (op6) {
+
+                                                if (op6.Checked) {
+
+                                                    MutipleDataList.push(op6.Name);
+                                                }
+                                            });
+
+                                            Items = MutipleDataList.join(',');
+
+                                            opt5.MutipleDataList = MutipleDataList;
+
+                                            opt5.Value = Items;
+
+                                        }
+                                    });
+
+                                }
+                            });
+                        }
+                        if (opt3.Grade == "3" && opt3.MutilpleTilte == "特殊專長")
+                        {
+                            opt.Question_Option_Original_List.OptionList[0].TotalWillingTitle.forEach(function (opt4) {
+
+                                if (opt4.Name == "特殊專長") {
+                                    opt4.GradesCounter.forEach(function (opt5) {
+
+                                        if (opt5.Grade == "3") {
+                                            var MutipleDataList = [];
+                                            var Items = '';
+
+                                            opt3.MultipleOption.forEach(function (op6) {
+
+                                                if (op6.Checked) {
+
+                                                    MutipleDataList.push(op6.Name);
+                                                }
+                                            });
+
+                                            Items = MutipleDataList.join(',');
+
+                                            opt5.MutipleDataList = MutipleDataList;
+
+                                            opt5.Value = Items;
+
+                                        }
+                                    });
+
+                                }
+                            });
+                        }
+                        if (opt3.Grade == "1" && opt3.MutilpleTilte == "休閒興趣") {
+                            opt.Question_Option_Original_List.OptionList[0].TotalWillingTitle.forEach(function (opt4) {
+
+                                if (opt4.Name == "休閒興趣") {
+                                    opt4.GradesCounter.forEach(function (opt5) {
+
+                                        if (opt5.Grade == "1") {
+                                            var MutipleDataList = [];
+                                            var Items = '';
+
+                                            opt3.MultipleOption.forEach(function (op6) {
+
+                                                if (op6.Checked) {
+
+                                                    MutipleDataList.push(op6.Name);
+                                                }
+                                            });
+
+                                            Items = MutipleDataList.join(',');
+
+                                            opt5.MutipleDataList = MutipleDataList;
+
+                                            opt5.Value = Items;
+
+                                        }
+                                    });
+
+                                }
+                            });
+                        }
+                        if (opt3.Grade == "2" && opt3.MutilpleTilte == "休閒興趣") {
+                            opt.Question_Option_Original_List.OptionList[0].TotalWillingTitle.forEach(function (opt4) {
+
+                                if (opt4.Name == "休閒興趣") {
+                                    opt4.GradesCounter.forEach(function (opt5) {
+
+                                        if (opt5.Grade == "2") {
+                                            var MutipleDataList = [];
+                                            var Items = '';
+
+                                            opt3.MultipleOption.forEach(function (op6) {
+
+                                                if (op6.Checked) {
+
+                                                    MutipleDataList.push(op6.Name);
+                                                }
+                                            });
+
+                                            Items = MutipleDataList.join(',');
+
+                                            opt5.MutipleDataList = MutipleDataList;
+
+                                            opt5.Value = Items;
+
+                                        }
+                                    });
+
+                                }
+                            });
+                        }
+                        if (opt3.Grade == "3" && opt3.MutilpleTilte == "休閒興趣") {
+                            opt.Question_Option_Original_List.OptionList[0].TotalWillingTitle.forEach(function (opt4) {
+
+                                if (opt4.Name == "休閒興趣") {
+                                    opt4.GradesCounter.forEach(function (opt5) {
+
+                                        if (opt5.Grade == "3") {
+                                            var MutipleDataList = [];
+                                            var Items = '';
+
+                                            opt3.MultipleOption.forEach(function (op6) {
+
+                                                if (op6.Checked) {
+
+                                                    MutipleDataList.push(op6.Name);
+                                                }
+                                            });
+
+                                            Items = MutipleDataList.join(',');
+
+                                            opt5.MutipleDataList = MutipleDataList;
+
+                                            opt5.Value = Items;
+
+                                        }
+                                    });
+
+                                }
+                            });
+                        }                        
+                    });            
+                }
+            });
+
 
         }
 
 
         $scope.getAfterGraduateData = function (response) {
+
+            // 清空上次的 original資料， 並更新 dirty 狀態
+            $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                if (opt.Title == "綜合紀錄表--畢業後計畫") {
+
+                    opt.Question_Option_Original_List.IsDirty = false;
+                    opt.IsPanelDirty = false;
+                    opt.Question_Option_Original_List.OptionList.length = 0;
+
+                }
+            });
+
+
             if (response.allABCardData && response.allABCardData.mutipleRecord) {
                 $(response.allABCardData.mutipleRecord).each(function (index, item) {
 
@@ -2285,6 +2937,7 @@
                                 }
 
                             });
+
                         }
                     });
                 });
@@ -2320,10 +2973,43 @@
                     });
                 });
             }
+
+
+            $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                if (opt.Title == "綜合紀錄表--畢業後計畫") {
+
+                    //畢業後計畫
+                    opt.Question.forEach(function (opt2) {
+
+                        var opt2_ori = {};
+
+                        opt2_ori = JSON.parse(JSON.stringify(opt2))
+
+                        opt.Question_Option_Original_List.OptionList.push(opt2_ori);
+                 
+                    });
+                }
+            });
+
+
         }
 
 
         $scope.getSelfKonwingData = function (response) {
+
+            // 清空上次的 original資料， 並更新 dirty 狀態
+            $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                if (opt.Title == "綜合紀錄表--自我認識") {
+
+                    opt.Question_Option_Original_List.IsDirty = false;
+                    opt.IsPanelDirty = false;
+                    opt.Question_Option_Original_List.OptionList.length = 0;
+
+                }
+            });
+
             if (response.allABCardData && response.allABCardData.singleRecord) {
                 $(response.allABCardData.singleRecord).each(function (index, item) {
 
@@ -2344,9 +3030,41 @@
                     });
                 });
             }
+
+            $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                if (opt.Title == "綜合紀錄表--自我認識") {
+
+                    //綜合紀錄表--自我認識_原始資料
+                    opt.Question.forEach(function (opt2) {
+
+                        var opt2_ori = {};
+
+                        opt2_ori = JSON.parse(JSON.stringify(opt2))
+
+                        opt.Question_Option_Original_List.OptionList.push(opt2_ori);
+
+                    });
+                }
+            });
+
         }
 
         $scope.getLifeFeelingData = function (response) {
+
+            // 清空上次的 original資料， 並更新 dirty 狀態
+            $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                if (opt.Title == "綜合紀錄表--生活感想") {
+
+                    opt.Question_Option_Original_List.IsDirty = false;
+                    opt.IsPanelDirty = false;
+                    opt.Question_Option_Original_List.OptionList.length = 0;
+
+                }
+            });
+
+
             if (response.allABCardData && response.allABCardData.singleRecord) {
                 $(response.allABCardData.singleRecord).each(function (index, item) {
 
@@ -2371,45 +3089,118 @@
                     });
                 });
             }
+
+            $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                if (opt.Title == "綜合紀錄表--生活感想") {
+
+                    //綜合紀錄表--生活感想_原始資料
+                    opt.Question.forEach(function (opt2) {
+
+                        var opt2_ori = {};
+
+                        opt2_ori = JSON.parse(JSON.stringify(opt2))
+
+                        opt.Question_Option_Original_List.OptionList.push(opt2_ori);
+
+                    });
+                }
+            });
+
         }
 
 
         $scope.getAutobiographyData = function (response) {
+
+            // 清空上次的 original資料， 並更新 dirty 狀態
+            $scope.MappingOverallRecordTable.forEach(function (opt) {
+
+                if (opt.Title == "綜合紀錄表--自傳") {
+
+                    opt.Question_Option_Original_List.IsDirty = false;
+                    opt.IsPanelDirty = false;
+                    opt.Question_Option_Original_List.OptionList.length = 0;
+                    
+                }
+            });
+
+
+
             if (response.allABCardData && response.allABCardData.singleRecord) {
                 $(response.allABCardData.singleRecord).each(function (index, item) {
-
+                    
                     $scope.MappingOverallRecordTable.forEach(function (opt) {
 
                         if (opt.Title == "綜合紀錄表--自傳") {
-
+                                                        
                             //自傳
                             opt.Question[0].Option.forEach(function (opt2a) {
 
                                 if (opt2a.Key == item.key) {
                                     opt2a.Value = item.data;
+
+                                    //存放 選項原始資料
+                                    var option_ori = {};
+
+                                    option_ori.Key = item.key;
+                                    option_ori.Value = item.data;
+
+                                    opt.Question_Option_Original_List.OptionList.push(option_ori);
+
+
                                 }
                                 if (opt2a.ReasonKey == item.key) {
                                     opt2a.ReasonValue = item.data;
-                                }
-                            });
 
+                                    //存放 選項原始資料
+                                    var option_ori = {};
+                                    
+                                    option_ori.Key = item.key;
+                                    option_ori.Value = item.data;
+
+                                    opt.Question_Option_Original_List.OptionList.push(option_ori);
+
+                                }                                
+                            });
+                            
                             //自我的心聲
                             opt.Question[1].Option.forEach(function (opt2b) {
 
                                 if (opt2b.Key == item.key) {
                                     opt2b.Value = item.data;
+
+                                    //存放 選項原始資料
+                                    var option_ori = {};
+
+                                    option_ori.Key = item.key;
+                                    option_ori.Value = item.data;
+
+                                    opt.Question_Option_Original_List.OptionList.push(option_ori);
+
                                 }
-                            });
+                            });                            
                         }
                     });
                 });
             }
+
+            
         }
 
         $scope.init();
 
+        // 儲存本次所有的改變
+        $scope.SaveAllPanelData = function () {
 
+            $scope.MappingOverallRecordTable.forEach(function (opt) 
+            {
+                opt.Save();                        
+            });
 
+            //$scope.init();
+        }
+
+     
 
         $scope.StuFilter = { Filter: '' };
 
