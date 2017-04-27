@@ -107,13 +107,14 @@ input, .panel-body .btn {
         box-shadow: none;
     }
     .page-container {
-        padding-bottom: 80px;
-        position: fixed;
         overflow: auto;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
+	-webkit-overflow-scrolling: touch;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding-bottom: 80px;
     }
     .btn-floating {
         bottom: 25px;
