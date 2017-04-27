@@ -105,7 +105,8 @@ input, .panel-body .btn {
     }
     .my-page {
         box-shadow: none;
-        margin: 20px auto 0;
+    }
+    .page-container {
         padding-bottom: 80px;
         position: fixed;
         overflow: auto;
