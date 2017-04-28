@@ -39,6 +39,7 @@
             -->
             <div class="header-space"></div>
             <!-- 查詢 -->
+            <a href="javascript:;" class="btn btn-danger btn-floating btn-large" ng-click="queryStudent();"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
             <div class="content" ng-show="panel=='filter'">
                 <div class="panel panel-info">
                     <div class="panel-heading"><i class="fa fa-fw fa-user"></i> 基本查詢</div>
@@ -342,7 +343,6 @@
                         </div>
                     </div>
                 </div>
-                <a href="javascript:;" class="btn btn-danger btn-floating btn-large" ng-click="queryStudent();"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
             </div>
             <!-- 查詢結果 -->
             <div class="content search-list" ng-show="panel=='result'">
