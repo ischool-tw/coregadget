@@ -8,21 +8,23 @@
     background: none;
 }
 
-.dropdown-menu > li > a {
+.dropdown-menu>li>a {
     white-space: pre-wrap;
 }
 
-input, .panel-body .btn {
+input,
+.panel-body .btn {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .checkbox-inline {
-	vertical-align: -webkit-baseline-middle;
+    vertical-align: -webkit-baseline-middle;
 }
 
-.panel-body .col-sm-4, .modal .col-sm-3 {
+.panel-body .col-sm-4,
+.modal .col-sm-3 {
     margin-bottom: 15px;
 }
 
@@ -61,17 +63,18 @@ input, .panel-body .btn {
     border-radius: 2px;
 }
 
-.breadcrumb div > li {
+.breadcrumb div>li {
     display: inline-block;
 }
 
-.breadcrumb div > li + li:before {
+.breadcrumb div>li+li:before {
     content: "/\00a0";
     padding: 0 5px;
     color: #cccccc;
 }
 
-.breadcrumb .col-sm-10, .breadcrumb .col-sm-9 {
+.breadcrumb .col-sm-10,
+.breadcrumb .col-sm-9 {
     padding-top: 6px;
     padding-bottom: 6px;
 }
@@ -93,6 +96,13 @@ input, .panel-body .btn {
     z-index: 10;
 }
 
+.page-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
 .page-container .content {
     position: fixed;
     top: 0;
@@ -117,16 +127,9 @@ input, .panel-body .btn {
     .my-page {
         box-shadow: none;
     }
-    .page-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+    .page-container .content {
+        padding-bottom: 80px;
     }
-	.page-container .content {
-		padding-bottom: 80px;
-	}
     .btn-floating {
         bottom: 25px;
         right: 25px;
@@ -207,6 +210,6 @@ input, .panel-body .btn {
         border-right: 1px solid #d0d0d0;
     }*/
     .breadcrumb .col-sm-3 .btn {
-    	width: 49%;
+        width: 49%;
     }
 }
