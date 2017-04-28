@@ -309,8 +309,10 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                 body: { filter: body_obj },
                 result: function(response, error, http) {
                     if (!error) {
-                        $scope.students = [].concat(response.Result.Student || []);
-                        $scope.$apply();
+                        $scope.$apply(function() {
+                            $scope.students = [].concat(response.Result.Student || []);
+                            $scope.panel = "result"; // 呈現查詢結果
+                        });
                     }
                 }
             });
@@ -326,7 +328,6 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                     }
                 }
             });
-            $scope.panel = "result"; // 呈現查詢結果
         }
     };
 
