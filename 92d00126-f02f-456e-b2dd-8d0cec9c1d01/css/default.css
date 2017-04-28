@@ -182,11 +182,11 @@ input {
     border-radius: 2px;
 }
 
-.breadcrumb div > li {
+.breadcrumb div>li {
     display: inline-block;
 }
 
-.breadcrumb div > li + li:before {
+.breadcrumb div>li+li:before {
     content: "/\00a0";
     padding: 0 5px;
     color: #cccccc;
@@ -257,11 +257,11 @@ input {
     height: 0;
 }
 
-.switch label input[type=checkbox]:checked + .lever {
+.switch label input[type=checkbox]:checked+.lever {
     background-color: #84c7c1;
 }
 
-.switch label input[type=checkbox]:checked + .lever:after {
+.switch label input[type=checkbox]:checked+.lever:after {
     background-color: #26a69a;
 }
 
@@ -293,25 +293,33 @@ input {
     transition: left 0.3s ease, background .3s ease, box-shadow 0.1s ease;
 }
 
-input[type=checkbox]:checked:not(:disabled) ~ .lever:active:after {
+input[type=checkbox]:checked:not(:disabled)~.lever:active:after {
     box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(38, 166, 154, 0.1);
 }
 
-input[type=checkbox]:not(:disabled) ~ .lever:active:after {
+input[type=checkbox]:not(:disabled)~.lever:active:after {
     box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(0, 0, 0, 0.08);
 }
 
-.switch label input[type=checkbox]:checked + .lever:after {
+.switch label input[type=checkbox]:checked+.lever:after {
     left: 19px;
 }
 
-.switch input[type=checkbox][disabled] + .lever {
+.switch input[type=checkbox][disabled]+.lever {
     cursor: default;
 }
 
-.switch label input[type=checkbox][disabled] + .lever:after,
-.switch label input[type=checkbox][disabled]:checked + .lever:after {
+.switch label input[type=checkbox][disabled]+.lever:after,
+.switch label input[type=checkbox][disabled]:checked+.lever:after {
     background-color: #BDBDBD;
+}
+
+.page-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 .page-container .content {
@@ -343,16 +351,9 @@ input[type=checkbox]:not(:disabled) ~ .lever:active:after {
     .my-page {
         box-shadow: none;
     }
-    .page-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+    .page-container .content {
+        padding-bottom: 80px;
     }
-	.page-container .content {
-		padding-bottom: 80px;
-	}
     .btn-floating {
         bottom: 25px;
         right: 25px;
@@ -494,7 +495,7 @@ input[type=checkbox]:not(:disabled) ~ .lever:active:after {
 }
 
 div.other {
-    border:1px solid #ddd;
+    border: 1px solid #ddd;
     position: relative;
     z-index: 2;
     float: left;
