@@ -93,6 +93,17 @@ input, .panel-body .btn {
     z-index: 10;
 }
 
+.page-container .content {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-bottom: 160px;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
 @media (max-width: 767px) {
     .panel-body hr {
         display: none;
@@ -114,14 +125,7 @@ input, .panel-body .btn {
         bottom: 0;
     }
 	.page-container .content {
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
 		padding-bottom: 80px;
-		overflow-y: scroll;
-		-webkit-overflow-scrolling: touch;
 	}
     .btn-floating {
         bottom: 25px;
