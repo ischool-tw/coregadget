@@ -1,39 +1,39 @@
 var app = angular.module("app", ["checklist-model"]);
 
-app.controller('MainCtrl', ['$scope', function($scope) {
+app.controller('MainCtrl', ['$scope', function ($scope) {
     $scope.connection = gadget.getContract("emba.student");
 
     $scope.myInfo = {};
     // StudentInfo
     var _StudentInfo = {
         // 姓名
-        'Name':'',
+        'Name': '',
         // 性別
-        'Gender':'',
+        'Gender': '',
         // 出生日期
-        'Birthdate':'',
+        'Birthdate': '',
         // 緊急聯絡人
-        'CustodianName':'',
+        'CustodianName': '',
         // 住家電話
-        'PermanentPhone':'',
+        'PermanentPhone': '',
         // 行動電話1
-        'SMSPhone':'',
+        'SMSPhone': '',
         // 聯絡人電話 CustodianOtherInfo.CustodianOtherInfo.Phone
-        'CustodianOtherInfo':{
-            'CustodianOtherInfo':{
-                'Phone':'',
-                'Email':'',
-                'Job':'',
-                'EducationDegree':'',
-                'Relationship':''
+        'CustodianOtherInfo': {
+            'CustodianOtherInfo': {
+                'Phone': '',
+                'Email': '',
+                'Job': '',
+                'EducationDegree': '',
+                'Relationship': ''
             }
         },
         // 公司電話  OtherPhones.PhoneList.PhoneNumber[0]
         // 行動電話2 OtherPhones.PhoneList.PhoneNumber[1]
         // 秘書電話  OtherPhones.PhoneList.PhoneNumber[2]
-        'OtherPhones':{
-            'PhoneList':{
-                'PhoneNumber':[
+        'OtherPhones': {
+            'PhoneList': {
+                'PhoneNumber': [
                     '',
                     '',
                     ''
@@ -41,43 +41,43 @@ app.controller('MainCtrl', ['$scope', function($scope) {
             }
         },
         // 聯絡地址 MailingAddress.AddressList.Address
-        'MailingAddress':{
-            'AddressList':{
-                'Address':{
-                    'ZipCode':'',
-                    'County':'',
-                    'Town':'',
-                    'District':'',
-                    'Area':'',
-                    'DetailAddress':''
+        'MailingAddress': {
+            'AddressList': {
+                'Address': {
+                    'ZipCode': '',
+                    'County': '',
+                    'Town': '',
+                    'District': '',
+                    'Area': '',
+                    'DetailAddress': ''
                 }
             }
         },
         // 住家地址 PermanentAddress.AddressList.Address
-        'PermanentAddress':{
-            'AddressList':{
-                'Address':{
-                    'Area':'',
-                    'County':'',
-                    'DetailAddress':'',
-                    'District':'',
-                    'Latitude':'',
-                    'Longitude':'',
-                    'Town':'',
-                    'ZipCode':''
+        'PermanentAddress': {
+            'AddressList': {
+                'Address': {
+                    'Area': '',
+                    'County': '',
+                    'DetailAddress': '',
+                    'District': '',
+                    'Latitude': '',
+                    'Longitude': '',
+                    'Town': '',
+                    'ZipCode': ''
                 }
             }
         },
         // 公司地址 OtherAddresses.AddressList.Address
-        'OtherAddresses':{
-            'AddressList':{
-                'Address':{
-                    'ZipCode':'',
-                    'County':'',
-                    'Town':'',
-                    'District':'',
-                    'Area':'',
-                    'DetailAddress':''
+        'OtherAddresses': {
+            'AddressList': {
+                'Address': {
+                    'ZipCode': '',
+                    'County': '',
+                    'Town': '',
+                    'District': '',
+                    'Area': '',
+                    'DetailAddress': ''
                 }
             }
         }
@@ -85,101 +85,100 @@ app.controller('MainCtrl', ['$scope', function($scope) {
     // StudentBrief2
     var _StudentBrief2 = {
         // e-mail欄-5個
-        'EmailList':{
-            'email1':'',
-            'email2':'',
-            'email3':'',
-            'email4':'',
-            'email5':''
+        'EmailList': {
+            'email1': '',
+            'email2': '',
+            'email3': '',
+            'email4': '',
+            'email5': ''
         }
     };
     // Willingness
     var _Willingness = {
         // 經驗調查-你個人或所屬組織，是否參與「社會企業」相關活動
-        'IsSocialEnterprise':'',
+        'IsSocialEnterprise': '',
         // 經驗調查-分享你個人或所屬組織，是否參與「社會企業」相關活動
-        'IsSharingEnterprise':'',
+        'IsSharingEnterprise': '',
         // 經驗調查-簡述你個人或所屬組織，是否參與「社會企業」相關活動
-        'DescriptionEnterprise':'',
+        'DescriptionEnterprise': '',
         // 經驗調查-你個人或所屬組織，是否參與「非營利組織」相關活動
-        'IsNonProfitOrganizations':'',
+        'IsNonProfitOrganizations': '',
         // 經驗調查-分享你個人或所屬組織，是否參與「非營利組織」相關活動
-        'IsSharingOrganizations':'',
+        'IsSharingOrganizations': '',
         // 經驗調查-簡述你個人或所屬組織，是否參與「非營利組織」相關活動
-        'DescriptionOrganizations':'',
+        'DescriptionOrganizations': '',
         // 經驗調查-你個人或所屬組織，是否參與「企業社會責任(CSR)」相關活動
-        'IsCorporateSocialResponsibility':'',
+        'IsCorporateSocialResponsibility': '',
         // 經驗調查-分享你個人或所屬組織，是否參與「企業社會責任(CSR)」相關活動
-        'IsSharingResponsibility':'',
+        'IsSharingResponsibility': '',
         // 經驗調查-簡述你個人或所屬組織，是否參與「企業社會責任(CSR)」相關活動
-        'DescriptionResponsibility':'',
+        'DescriptionResponsibility': '',
         // 經驗調查-你個人或所屬組織，是否參與「創業」相關活動
-        'IsVenture':'',
+        'IsVenture': '',
         // 經驗調查-分享你個人或所屬組織，是否參與「創業」相關活動
-        'IsSharingVenture':'',
+        'IsSharingVenture': '',
         // 經驗調查-簡述你個人或所屬組織，是否參與「創業」相關活動
-        'DescriptionVenture':'',
+        'DescriptionVenture': '',
         // 意願調查-是否擔任台大管理學院相關課程「業師」意願
-        'IsEntrepreneurialTeam':'',
+        'IsEntrepreneurialTeam': '',
         // 意願調查-分享是否擔任台大管理學院相關課程「業師」意願
-        'IsSharingEntrpreneurial':'',
+        'IsSharingEntrpreneurial': '',
         // 意願調查-簡述是否擔任台大管理學院相關課程「業師」意願
-        'DescriptionEntrpreneurial':'',
+        'DescriptionEntrpreneurial': '',
         // 分享興趣
-        'IsSharingInterest':'',
+        'IsSharingInterest': '',
         // 分享EMBA社團
-        'IsSharingEMBAGroups':'',
+        'IsSharingEMBAGroups': '',
         // 分享參與校外組織
-        'IsSharingExternalOrganization':''
+        'IsSharingExternalOrganization': ''
     };
     // StudentInfo - DataSharing
     var _DataSharing = {
         // 要分享的項目
-        'DataSharing':{
-            'Name':'true', // 姓名
-            'Gender':'true', // 性別
-            'Birthdate':'false', // 出生日期
-            'Custodian':'false', // 緊急聯絡人
-            'CustodianPhone':'false', // 聯絡人電話
-            'ContactPhone':'false',
-            'PermanentPhone':'false', // 住家電話
-            'OtherPhoneList':{
-                'PhoneNumber':[
-                    {
-                        '@text':'false',
-                        '@':[
+        'DataSharing': {
+            'Name': 'true', // 姓名
+            'Gender': 'true', // 性別
+            'Birthdate': 'false', // 出生日期
+            'Custodian': 'false', // 緊急聯絡人
+            'CustodianPhone': 'false', // 聯絡人電話
+            'ContactPhone': 'false',
+            'PermanentPhone': 'false', // 住家電話
+            'OtherPhoneList': {
+                'PhoneNumber': [{
+                        '@text': 'false',
+                        '@': [
                             'title'
                         ],
-                        'title':'公司電話'
+                        'title': '公司電話'
                     },
                     {
-                        '@text':'false',
-                        '@':[
+                        '@text': 'false',
+                        '@': [
                             'title'
                         ],
-                        'title':'行動電話2'
+                        'title': '行動電話2'
                     },
                     {
-                        '@text':'false',
-                        '@':[
+                        '@text': 'false',
+                        '@': [
                             'title'
                         ],
-                        'title':'秘書電話'
+                        'title': '秘書電話'
                     }
                 ]
             },
-            'SMSPhone':'false', // 行動電話1
-            'EmailList':{
-                'Email1':'false',
-                'Email2':'false',
-                'Email3':'false',
-                'Email4':'false',
-                'Email5':'false'
+            'SMSPhone': 'false', // 行動電話1
+            'EmailList': {
+                'Email1': 'false',
+                'Email2': 'false',
+                'Email3': 'false',
+                'Email4': 'false',
+                'Email5': 'false'
             },
-            'ContactAddress':'false', // 聯絡地址
-            'PermanentAddress':'false', // 住家地址
-            'OtherAddressList':{ // 公司地址
-                'Address':[
+            'ContactAddress': 'false', // 聯絡地址
+            'PermanentAddress': 'false', // 住家地址
+            'OtherAddressList': { // 公司地址
+                'Address': [
                     'false',
                     'false',
                     'false'
@@ -190,19 +189,19 @@ app.controller('MainCtrl', ['$scope', function($scope) {
     // Publicist
     var _Publicist = {
         // 公關姓名
-        'PublicistName':'',
+        'PublicistName': '',
         // 公關室電話
-        'PublicRelationsOfficeTelephone':'',
+        'PublicRelationsOfficeTelephone': '',
         // 公室傳真
-        'PublicRelationsOfficeFax':'',
+        'PublicRelationsOfficeFax': '',
         // 公關室e-amil
-        'PublicistEmail':'',
+        'PublicistEmail': '',
         // 公司網址
-        'CompanyWebsite':''
+        'CompanyWebsite': ''
     };
 
     // 將地址合併成字串
-    $scope.myInfo.mergeAddress = function(address) {
+    $scope.myInfo.mergeAddress = function (address) {
         if (address.AddressList && address.AddressList.Address) {
             return [
                 (address.AddressList.Address.ZipCode || ''),
@@ -217,19 +216,19 @@ app.controller('MainCtrl', ['$scope', function($scope) {
         }
     };
     // 設定，值為字串型態， 'true' or 'false'
-    $scope.myInfo.toggleSLTF = function(value) {
+    $scope.myInfo.toggleSLTF = function (value) {
         return (value != 'true' ? 'true' : 'false');
     };
-    $scope.myInfo.validEmail = function(mail) {
+    $scope.myInfo.validEmail = function (mail) {
         return (!!!mail) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(mail);
     };
 
     // 個人基本資料管理
-    $scope.myInfo.load = function() {
+    $scope.myInfo.load = function () {
         $scope.connection.send({
             service: "default.GetMyAdvancedInfo",
             body: {},
-            result: function(response, error, http) {
+            result: function (response, error, http) {
                 if (!error) {
                     if (response.Result) {
                         $scope.myInfo.StudentInfo = angular.copy(_StudentInfo);
@@ -239,8 +238,8 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                         $scope.myInfo.Publicist = angular.copy(_Publicist);
 
                         // 合件右物件至左物件，但不新增左物件
-                        var mergeObject = function(x, y) {
-                            for (var key in  x) {
+                        var mergeObject = function (x, y) {
+                            for (var key in x) {
                                 if (y && (angular.isObject(x[key]) || angular.isArray(x[key]))) {
                                     mergeObject(x[key], y[key]);
                                 } else {
@@ -289,11 +288,11 @@ app.controller('MainCtrl', ['$scope', function($scope) {
             }
         });
     };
-    $scope.myInfo.edit_address = function(type, item) {
+    $scope.myInfo.edit_address = function (type, item) {
         // 編輯聯絡地址 MailingAddress
         // 編輯公司地址 OtherAddresses
         // 住家地址 PermanentAddress
-        if (['MailingAddress', 'OtherAddresses', 'PermanentAddress'].indexOf(type)!==-1) {
+        if (['MailingAddress', 'OtherAddresses', 'PermanentAddress'].indexOf(type) !== -1) {
             $scope.myInfo.current = {
                 type: type,
                 address: angular.copy(item)
@@ -301,14 +300,14 @@ app.controller('MainCtrl', ['$scope', function($scope) {
             $("#address").modal("show");
         }
     };
-    $scope.myInfo.set_address = function() {
+    $scope.myInfo.set_address = function () {
         $scope.myInfo.StudentInfo[$scope.myInfo.current.type] = $scope.myInfo.current.address;
-        $scope.myInfo.StudentInfo[$scope.myInfo.current.type+'_desc'] = $scope.myInfo.mergeAddress($scope.myInfo.current.address);
+        $scope.myInfo.StudentInfo[$scope.myInfo.current.type + '_desc'] = $scope.myInfo.mergeAddress($scope.myInfo.current.address);
         delete $scope.myInfo.current;
         $("#address").modal("hide");
     };
 
-    $scope.myInfo.save = function() {
+    $scope.myInfo.save = function () {
         // 判斷是否正在處理中
         if ($scope.myInfo.StudentInfo.saveing) return;
 
@@ -341,10 +340,10 @@ app.controller('MainCtrl', ['$scope', function($scope) {
         // 驗證有無勾選其它，但未填
         var stu_additionals_content = [];
         var stu_addition_valid = true;
-        angular.forEach(_Additionals.Species, function(sname) {
-            var specie = $scope.AdditionalSetup['S_'+sname];
+        angular.forEach(_Additionals.Species, function (sname) {
+            var specie = $scope.AdditionalSetup['S_' + sname];
             stu_addition_valid = $scope.stu_additionals.valid(sname, specie);
-            stu_additionals_content = stu_additionals_content.concat($scope.stu_additionals.result['my_'+sname]);
+            stu_additionals_content = stu_additionals_content.concat($scope.stu_additionals.result['my_' + sname]);
         });
 
         if (!stu_addition_valid) return;
@@ -354,17 +353,41 @@ app.controller('MainCtrl', ['$scope', function($scope) {
 
         $scope.myInfo.StudentInfo.saveing = true;
 
-        var requestStudentInfo = { Request: { Content: $scope.myInfo.StudentInfo } };
-        var requestStudentBrief2 = { Request: { Content: $scope.myInfo.StudentBrief2 } };
+        var requestStudentInfo = {
+            Request: {
+                Content: $scope.myInfo.StudentInfo
+            }
+        };
+        var requestStudentBrief2 = {
+            Request: {
+                Content: $scope.myInfo.StudentBrief2
+            }
+        };
         requestStudentBrief2.Request.Content.DataSharing = $scope.myInfo.DataSharing;
-        var requestWillingness = { Request: { Content: $scope.myInfo.Willingness } };
-        var requestPublicist = { Request: { Content: $scope.myInfo.Publicist } };
-        var requestAdditional = { studentAdditional: { Content: stu_additionals_content } }
+        var requestWillingness = {
+            Request: {
+                Content: $scope.myInfo.Willingness
+            }
+        };
+        var requestPublicist = {
+            Request: {
+                Content: $scope.myInfo.Publicist
+            }
+        };
+        var requestAdditional = {
+            studentAdditional: {
+                Content: stu_additionals_content
+            }
+        }
 
         // 儲存內容
-        var saveStu = false, saveSB = false, saveWi = false, saveSA = false, saveSP = false;
+        var saveStu = false,
+            saveSB = false,
+            saveWi = false,
+            saveSA = false,
+            saveSP = false;
         var count = 5;
-        var finish = function() {
+        var finish = function () {
             count--;
             if (saveStu && saveSB && saveWi && saveSA && saveSP) {
                 //alert("儲存成功");
@@ -381,9 +404,9 @@ app.controller('MainCtrl', ['$scope', function($scope) {
         $scope.connection.send({
             service: "default.UpdateStudentInfo",
             body: requestStudentInfo,
-            result: function(response, error, http) {
+            result: function (response, error, http) {
                 if (!error) {
-                    if (response.Result && response.Result.EffectRows === "1") {
+                    if (response.Result && parseInt(response.Result.EffectRows, 10) > 0) {
                         saveStu = true;
                         finish();
                     }
@@ -398,9 +421,9 @@ app.controller('MainCtrl', ['$scope', function($scope) {
         $scope.connection.send({
             service: "default.UpdateStudentBrief",
             body: requestStudentBrief2,
-            result: function(response, error, http) {
+            result: function (response, error, http) {
                 if (!error) {
-                    if (response.Result && response.Result.EffectRows === "1") {
+                    if (response.Result && parseInt(response.Result.EffectRows, 10) > 0) {
                         saveSB = true;
                         finish();
                     }
@@ -415,9 +438,9 @@ app.controller('MainCtrl', ['$scope', function($scope) {
         $scope.connection.send({
             service: "default.SetWillingness",
             body: requestWillingness,
-            result: function(response, error, http) {
+            result: function (response, error, http) {
                 if (!error) {
-                    if (response.Result && response.Result.EffectRows === "1") {
+                    if (response.Result && parseInt(response.Result.EffectRows, 10) > 0) {
                         saveWi = true;
                         finish();
                     }
@@ -431,8 +454,8 @@ app.controller('MainCtrl', ['$scope', function($scope) {
         });
         $scope.connection.send({
             service: "default.SetStudentAdditional",
-            body:  requestAdditional,
-            result: function(response, error, http) {
+            body: requestAdditional,
+            result: function (response, error, http) {
                 if (!error) {
                     if (response.Result) {
                         saveSA = true;
@@ -449,9 +472,9 @@ app.controller('MainCtrl', ['$scope', function($scope) {
         $scope.connection.send({
             service: "default.SetStudentPublicist",
             body: requestPublicist,
-            result: function(response, error, http) {
+            result: function (response, error, http) {
                 if (!error) {
-                    if (response.Result && response.Result.EffectRows === "1") {
+                    if (response.Result && parseInt(response.Result.EffectRows, 10) > 0) {
                         saveSP = true;
                         finish();
                     }
@@ -564,18 +587,18 @@ app.controller('MainCtrl', ['$scope', function($scope) {
 
     // 學歷
     $scope.educations = {
-        load: function() {
+        load: function () {
             $scope.connection.send({
                 service: "default.GetEducationBackground",
                 body: {},
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     //console.log(response);
                     if (!error) {
                         $scope.educations.result = [].concat(response.Result.EducationBackground || []);
-                        angular.forEach($scope.educations.result, function(item) {
+                        angular.forEach($scope.educations.result, function (item) {
                             item.IsTop = (item.IsTop == 't') ? true : false;
                             item.IsSharing = (item.IsSharing == 't') ? true : false;
-                            item.edit = function() {
+                            item.edit = function () {
                                 $scope.educations.current = {
                                     saveing: false,
                                     confirm: false,
@@ -592,13 +615,13 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                 }
             });
         },
-        add: function() {
+        add: function () {
             var item = {
-                'SchoolName':'',
-                'Department':'',
-                'Degree':'',
-                'IsTop':false,
-                'IsSharing':false
+                'SchoolName': '',
+                'Department': '',
+                'Degree': '',
+                'IsTop': false,
+                'IsSharing': false
             }
             $scope.educations.current = {
                 saveing: false,
@@ -610,7 +633,7 @@ app.controller('MainCtrl', ['$scope', function($scope) {
             };
             $("#education").modal("show");
         },
-        save: function() {
+        save: function () {
             // 判斷是否正在處理中
             if ($scope.educations.current.saveing) return;
 
@@ -622,22 +645,25 @@ app.controller('MainCtrl', ['$scope', function($scope) {
             // 開始儲存
             $scope.educations.current.saveing = true;
             var service_name, body_content, action_type, action;
-            if ($scope.educations.current.type=='edit') {
+            if ($scope.educations.current.type == 'edit') {
                 service_name = "default.UpdateEducationBackground";
                 action_type = "更新";
-            }
-            else {
+            } else {
                 service_name = "default.AddEducationBackground";
                 action_type = "新增";
             }
             action = $scope.educations.current.action;
-            body_content = { Request: { EducationBackground: $scope.educations.current.result } };
+            body_content = {
+                Request: {
+                    EducationBackground: $scope.educations.current.result
+                }
+            };
             delete body_content.Request.EducationBackground.$$hashKey;
 
             $scope.connection.send({
                 service: service_name,
                 body: body_content,
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     if (!error) {
                         if ((response.Result != null) && parseInt(response.Result.EffectRows, 10) > 0) {
                             $scope.educations.load();
@@ -678,15 +704,20 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                         }
                     }
                 },
-                result: function(response, error, http) {
-                }
+                result: function (response, error, http) {}
             });
         },
-        del: function(item) {
+        del: function (item) {
             $scope.connection.send({
                 service: "default.RemoveEducationBackground",
-                body: { Request: { EducationBackground: { UID: item.UID } } },
-                result: function(response, error, http) {
+                body: {
+                    Request: {
+                        EducationBackground: {
+                            UID: item.UID
+                        }
+                    }
+                },
+                result: function (response, error, http) {
                     if ((response.Result != null) && parseInt(response.Result.EffectRows, 10) > 0) {
                         $scope.educations.load();
                         $("#education").modal("hide");
@@ -720,11 +751,10 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                         }
                     }
                 },
-                result: function(response, error, http) {
-                }
+                result: function (response, error, http) {}
             });
         },
-        reset: function() {
+        reset: function () {
             angular.copy($scope.educations.current.original, $scope.educations.current.result);
             $("#education").modal("hide");
         }
@@ -732,21 +762,21 @@ app.controller('MainCtrl', ['$scope', function($scope) {
 
     // 經歷
     $scope.experiences = {
-        load: function() {
+        load: function () {
             $scope.connection.send({
                 service: "default.GetExperience",
                 body: {},
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     //console.log(response);
                     if (!error) {
                         $scope.experiences.result = [].concat(response.Result.Experience || []);
-                        angular.forEach($scope.experiences.result, function(item) {
+                        angular.forEach($scope.experiences.result, function (item) {
                             item.IsSharing = (item.IsSharing == 't') ? true : false;
 
                             item.PostLevel = (item.PostLevel ? item.PostLevel.split(',') : []);
                             item.WorkPlace = (item.WorkPlace ? item.WorkPlace.split(',') : []);
 
-                            item.edit = function() {
+                            item.edit = function () {
                                 $scope.experiences.current = {
                                     saveing: false,
                                     confirm: false,
@@ -762,21 +792,21 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                 }
             });
         },
-        add: function() {
+        add: function () {
             var item = {
-                'CompanyName':'',
-                'Position':'',
-                'PostLevel':[],
-                'PostLevelOther':'',
-                'DepartmentCategory':'',
-                'DepartmentCategoryOther':'',
-                'Industry':'',
-                'IndustryOther':'',
-                'WorkPlace':[],
-                'WorkPlaceOther':'',
-                'WorkStatus':'',
-                'WorkStatusOther':'',
-                'IsSharing':false
+                'CompanyName': '',
+                'Position': '',
+                'PostLevel': [],
+                'PostLevelOther': '',
+                'DepartmentCategory': '',
+                'DepartmentCategoryOther': '',
+                'Industry': '',
+                'IndustryOther': '',
+                'WorkPlace': [],
+                'WorkPlaceOther': '',
+                'WorkStatus': '',
+                'WorkStatusOther': '',
+                'IsSharing': false
             };
             $scope.experiences.current = {
                 saveing: false,
@@ -787,7 +817,7 @@ app.controller('MainCtrl', ['$scope', function($scope) {
             };
             $("#experience").modal("show");
         },
-        save: function() {
+        save: function () {
             // 判斷是否正在處理中
             if ($scope.experiences.current.saveing) return;
 
@@ -800,7 +830,7 @@ app.controller('MainCtrl', ['$scope', function($scope) {
             if (request.Position == "其它" && !request.PositionOther) return;
 
             if (!request.PostLevel.length) return;
-            if (request.PostLevel.indexOf("其它")!=-1 && !request.PostLevelOther) return;
+            if (request.PostLevel.indexOf("其它") != -1 && !request.PostLevelOther) return;
             request.PostLevel = request.PostLevel.join(",");
 
             if (!request.DepartmentCategory) return;
@@ -810,7 +840,7 @@ app.controller('MainCtrl', ['$scope', function($scope) {
             if (request.Industry == "其它" && !request.IndustryOther) return;
 
             if (!request.WorkPlace.length) return;
-            if (request.WorkPlace.indexOf("其它")!=-1 && !request.WorkPlaceOther) return;
+            if (request.WorkPlace.indexOf("其它") != -1 && !request.WorkPlaceOther) return;
             request.WorkPlace = request.WorkPlace.join(',');
 
             if (!request.WorkStatus) return;
@@ -819,23 +849,26 @@ app.controller('MainCtrl', ['$scope', function($scope) {
             // 處理儲存的資料
             $scope.experiences.current.saveing = true;
             var service_name, body_content, action_type, action;
-            if ($scope.experiences.current.type=='edit') {
+            if ($scope.experiences.current.type == 'edit') {
                 service_name = "default.UpdateExperience";
                 action_type = "更新";
                 action = "更新經歷";
-            }
-            else {
+            } else {
                 service_name = "default.AddExperience";
                 action_type = "新增";
                 action = "新增經歷";
             }
-            body_content = { Request: { Experience: request } };
+            body_content = {
+                Request: {
+                    Experience: request
+                }
+            };
             delete body_content.Request.Experience.$$hashKey;
 
             $scope.connection.send({
                 service: service_name,
                 body: body_content,
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     if (error) {
                         $scope.experiences.current.saveing = false;
                     } else {
@@ -886,15 +919,20 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                         }
                     }
                 },
-                result: function(response, error, http) {
-                }
+                result: function (response, error, http) {}
             });
         },
-        del: function(item) {
+        del: function (item) {
             $scope.connection.send({
                 service: "default.RemoveExperience",
-                body: { Request: { Experience: { UID: item.UID } } },
-                result: function(response, error, http) {
+                body: {
+                    Request: {
+                        Experience: {
+                            UID: item.UID
+                        }
+                    }
+                },
+                result: function (response, error, http) {
                     if ((response.Result != null) && parseInt(response.Result.EffectRows, 10) > 0) {
                         $scope.experiences.load();
                         $("#experience").modal("hide");
@@ -932,11 +970,10 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                         }
                     }
                 },
-                result: function(response, error, http) {
-                }
+                result: function (response, error, http) {}
             });
         },
-        reset: function() {
+        reset: function () {
             angular.copy($scope.experiences.current.original, $scope.experiences.current.result);
             $("#experience").modal("hide");
         }
@@ -954,9 +991,9 @@ app.controller('MainCtrl', ['$scope', function($scope) {
     // ]
     $scope.stu_additionals = {
         // 選項組合成以「/」分層的字串
-        tree_desc: function(specie) {
+        tree_desc: function (specie) {
             var desc = [];
-            var formatAdditionals = function(item) {
+            var formatAdditionals = function (item) {
                 var ary = [];
                 if (item.Domain) {
                     ary.push(item.Domain);
@@ -970,61 +1007,61 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                 if (item.Description) ary.push(item.Description);
                 return ary.join('/');
             };
-            angular.forEach(specie.Domains, function(domain) {
-                if (specie['D_'+domain].Checked) {
-                    desc.push(formatAdditionals(specie['D_'+domain]));
+            angular.forEach(specie.Domains, function (domain) {
+                if (specie['D_' + domain].Checked) {
+                    desc.push(formatAdditionals(specie['D_' + domain]));
                 }
-                angular.forEach(specie['D_'+domain].Categorys, function(category) {
-                    if (specie['D_'+domain]['C_'+category].Checked) {
-                        desc.push(formatAdditionals(specie['D_'+domain]['C_'+category]));
+                angular.forEach(specie['D_' + domain].Categorys, function (category) {
+                    if (specie['D_' + domain]['C_' + category].Checked) {
+                        desc.push(formatAdditionals(specie['D_' + domain]['C_' + category]));
                     }
-                    angular.forEach(specie['D_'+domain]['C_'+category].Items, function(item) {
-                        if (specie['D_'+domain]['C_'+category]['I_'+item].Checked) {
-                            desc.push(formatAdditionals(specie['D_'+domain]['C_'+category]['I_'+item]));
+                    angular.forEach(specie['D_' + domain]['C_' + category].Items, function (item) {
+                        if (specie['D_' + domain]['C_' + category]['I_' + item].Checked) {
+                            desc.push(formatAdditionals(specie['D_' + domain]['C_' + category]['I_' + item]));
                         }
                     });
                 });
             });
             return desc.join(',');
         },
-        load: function() {
+        load: function () {
             $scope.stu_additionals.result = [];
             $scope.stu_additionals.original = [];
-            angular.forEach(_Additionals.Species, function(specie) {
-                $scope.AdditionalSetup['S_'+specie] = angular.copy(_Additionals['S_'+specie]);
+            angular.forEach(_Additionals.Species, function (specie) {
+                $scope.AdditionalSetup['S_' + specie] = angular.copy(_Additionals['S_' + specie]);
             });
             // console.log($scope.AdditionalSetup);
             $scope.connection.send({
                 service: "default.GetStudentAdditional",
                 body: {},
-                result: function(response, error, http) {
+                result: function (response, error, http) {
                     if (!error) {
                         if (response.Result) {
                             response.Result.StudentAdditional = [].concat(response.Result.StudentAdditional || []);
 
-                            angular.forEach(response.Result.StudentAdditional, function(item) {
-                                if (!$scope.stu_additionals.result['my_'+item.Specie]) {
-                                    $scope.stu_additionals.result['my_'+item.Specie] = [];
+                            angular.forEach(response.Result.StudentAdditional, function (item) {
+                                if (!$scope.stu_additionals.result['my_' + item.Specie]) {
+                                    $scope.stu_additionals.result['my_' + item.Specie] = [];
                                 }
-                                $scope.stu_additionals.result['my_'+item.Specie].push(item);
+                                $scope.stu_additionals.result['my_' + item.Specie].push(item);
 
                                 // 依目前學生資料庫中的值變更狀態
-                                if (item.Specie && $scope.AdditionalSetup['S_'+item.Specie]) {
+                                if (item.Specie && $scope.AdditionalSetup['S_' + item.Specie]) {
                                     if (item.Domain && !item.Category) {
-                                        if ($scope.AdditionalSetup['S_'+item.Specie]['D_'+item.Domain]) {
-                                            $scope.AdditionalSetup['S_'+item.Specie]['D_'+item.Domain].Checked = true;
-                                            $scope.AdditionalSetup['S_'+item.Specie]['D_'+item.Domain].Description = item.Description;;
+                                        if ($scope.AdditionalSetup['S_' + item.Specie]['D_' + item.Domain]) {
+                                            $scope.AdditionalSetup['S_' + item.Specie]['D_' + item.Domain].Checked = true;
+                                            $scope.AdditionalSetup['S_' + item.Specie]['D_' + item.Domain].Description = item.Description;;
                                         }
                                     } else {
                                         if (item.Category && !item.Item) {
-                                            if ($scope.AdditionalSetup['S_'+item.Specie]['D_'+item.Domain]['C_'+item.Category]) {
-                                                $scope.AdditionalSetup['S_'+item.Specie]['D_'+item.Domain]['C_'+item.Category].Checked = true;
-                                                $scope.AdditionalSetup['S_'+item.Specie]['D_'+item.Domain]['C_'+item.Category].Description = item.Description;;
+                                            if ($scope.AdditionalSetup['S_' + item.Specie]['D_' + item.Domain]['C_' + item.Category]) {
+                                                $scope.AdditionalSetup['S_' + item.Specie]['D_' + item.Domain]['C_' + item.Category].Checked = true;
+                                                $scope.AdditionalSetup['S_' + item.Specie]['D_' + item.Domain]['C_' + item.Category].Description = item.Description;;
                                             }
                                         } else {
-                                            if (item.Item && $scope.AdditionalSetup['S_'+item.Specie]['D_'+item.Domain]['C_'+item.Category]['I_'+item.Item]) {
-                                                $scope.AdditionalSetup['S_'+item.Specie]['D_'+item.Domain]['C_'+item.Category]['I_'+item.Item].Checked = true;
-                                                $scope.AdditionalSetup['S_'+item.Specie]['D_'+item.Domain]['C_'+item.Category]['I_'+item.Item].Description = item.Description;
+                                            if (item.Item && $scope.AdditionalSetup['S_' + item.Specie]['D_' + item.Domain]['C_' + item.Category]['I_' + item.Item]) {
+                                                $scope.AdditionalSetup['S_' + item.Specie]['D_' + item.Domain]['C_' + item.Category]['I_' + item.Item].Checked = true;
+                                                $scope.AdditionalSetup['S_' + item.Specie]['D_' + item.Domain]['C_' + item.Category]['I_' + item.Item].Description = item.Description;
                                             }
                                         }
                                     }
@@ -1032,10 +1069,10 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                             });
 
                             // 將所有的種類內容變成逗號分隔的字串
-                            angular.forEach(_Additionals.Species, function(specie) {
-                                var desc = $scope.stu_additionals.tree_desc($scope.AdditionalSetup['S_'+specie]);
-                                $scope.stu_additionals.result['my_'+specie+'_desc'] = desc;
-                                $scope.stu_additionals.original['my_'+specie+'_desc'] = desc;
+                            angular.forEach(_Additionals.Species, function (specie) {
+                                var desc = $scope.stu_additionals.tree_desc($scope.AdditionalSetup['S_' + specie]);
+                                $scope.stu_additionals.result['my_' + specie + '_desc'] = desc;
+                                $scope.stu_additionals.original['my_' + specie + '_desc'] = desc;
                             });
 
                             $scope.$apply();
@@ -1047,14 +1084,14 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                 }
             });
         },
-        edit: function(type, item) {
+        edit: function (type, item) {
             if (type == 'externalModal') {
                 $scope.AdditionalSetupCurr = {
                     type: type,
                     value: angular.copy(item)
                 }
             }
-            if (['Interest', 'EMBAGroups', 'ExternalOrganization'].indexOf(type)!==-1) {
+            if (['Interest', 'EMBAGroups', 'ExternalOrganization'].indexOf(type) !== -1) {
                 $scope.AdditionalSetup.current = {
                     type: type,
                     addition: angular.copy(item)
@@ -1064,34 +1101,34 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                 if (type == 'EMBAGroups') $("#EMBAGroupsModel").modal("show");
             }
         },
-        set: function() {
+        set: function () {
             var type = $scope.AdditionalSetup.current.type;
 
             $scope.AdditionalSetup['S_' + type] = $scope.AdditionalSetup.current.addition;
-            $scope.stu_additionals.result['my_'+type+'_desc'] = $scope.stu_additionals.tree_desc($scope.AdditionalSetup.current.addition);
+            $scope.stu_additionals.result['my_' + type + '_desc'] = $scope.stu_additionals.tree_desc($scope.AdditionalSetup.current.addition);
 
             if (type == 'ExternalOrganization') $("#externalModal").modal("hide");
             if (type == 'Interest') $("#interestModal").modal("hide");
             if (type == 'EMBAGroups') $("#EMBAGroupsModel").modal("hide");
             delete $scope.AdditionalSetup.current;
         },
-        valid: function(sname, specie) {
+        valid: function (sname, specie) {
             var stu_addition_valid = true;
-            $scope.stu_additionals.result['my_'+sname] = [];
-            angular.forEach(specie.Domains, function(domain) {
-                if (specie['D_'+domain].Checked) {
-                    if (domain == '其它' && !specie['D_'+domain].Description) stu_addition_valid = false;
-                    if (stu_addition_valid) $scope.stu_additionals.result['my_'+sname].push(specie['D_'+domain]);
+            $scope.stu_additionals.result['my_' + sname] = [];
+            angular.forEach(specie.Domains, function (domain) {
+                if (specie['D_' + domain].Checked) {
+                    if (domain == '其它' && !specie['D_' + domain].Description) stu_addition_valid = false;
+                    if (stu_addition_valid) $scope.stu_additionals.result['my_' + sname].push(specie['D_' + domain]);
                 }
-                angular.forEach(specie['D_'+domain].Categorys, function(category) {
-                    if (specie['D_'+domain]['C_'+category].Checked) {
-                        if (category == '其它' && !specie['D_'+domain]['C_'+category].Description) stu_addition_valid = false;
-                        if (stu_addition_valid) $scope.stu_additionals.result['my_'+sname].push(specie['D_'+domain]['C_'+category]);
+                angular.forEach(specie['D_' + domain].Categorys, function (category) {
+                    if (specie['D_' + domain]['C_' + category].Checked) {
+                        if (category == '其它' && !specie['D_' + domain]['C_' + category].Description) stu_addition_valid = false;
+                        if (stu_addition_valid) $scope.stu_additionals.result['my_' + sname].push(specie['D_' + domain]['C_' + category]);
                     }
-                    angular.forEach(specie['D_'+domain]['C_'+category].Items, function(item) {
-                        if (specie['D_'+domain]['C_'+category]['I_'+item].Checked) {
-                            if (item == '其它' && !specie['D_'+domain]['C_'+category]['I_'+item].Description) stu_addition_valid = false;
-                            if (stu_addition_valid) $scope.stu_additionals.result['my_'+sname].push(specie['D_'+domain]['C_'+category]['I_'+item]);
+                    angular.forEach(specie['D_' + domain]['C_' + category].Items, function (item) {
+                        if (specie['D_' + domain]['C_' + category]['I_' + item].Checked) {
+                            if (item == '其它' && !specie['D_' + domain]['C_' + category]['I_' + item].Description) stu_addition_valid = false;
+                            if (stu_addition_valid) $scope.stu_additionals.result['my_' + sname].push(specie['D_' + domain]['C_' + category]['I_' + item]);
                         }
                     });
                 });
@@ -1104,27 +1141,27 @@ app.controller('MainCtrl', ['$scope', function($scope) {
     // 產業別/部門類別/層級別/工作地點/工作狀態
     // 興趣/參加台大EMBA團體/參加校外組織
     var _Additionals = [];
-    $scope.getDataSource = function(callback) {
+    $scope.getDataSource = function (callback) {
         $scope.AdditionalSetup = {};
         $scope.ExperienceDataSource = [];
         $scope.connection.send({
             service: "default.GetUserDataSource",
             body: "",
-            result: function(response, error, http) {
+            result: function (response, error, http) {
                 if (!error) {
                     if (response.DataSource && response.DataSource.Additionals) {
                         response.DataSource.Additionals = [].concat(response.DataSource.Additionals || []);
                         _Additionals.Species = [];
-                        response.DataSource.Additionals.forEach(function(aii, index){
-                            if (!_Additionals['S_'+aii.specie]) {
+                        response.DataSource.Additionals.forEach(function (aii, index) {
+                            if (!_Additionals['S_' + aii.specie]) {
                                 _Additionals.Species.push(aii.specie);
-                                _Additionals['S_'+aii.specie] = {
+                                _Additionals['S_' + aii.specie] = {
                                     Domains: []
                                 };
                             }
-                            if (aii.domain && !_Additionals['S_'+aii.specie]['D_'+aii.domain]) {
-                                _Additionals['S_'+aii.specie].Domains.push(aii.domain);
-                                _Additionals['S_'+aii.specie]['D_'+aii.domain] = {
+                            if (aii.domain && !_Additionals['S_' + aii.specie]['D_' + aii.domain]) {
+                                _Additionals['S_' + aii.specie].Domains.push(aii.domain);
+                                _Additionals['S_' + aii.specie]['D_' + aii.domain] = {
                                     'Checked': false,
                                     'Specie': aii.specie,
                                     'Domain': aii.domain,
@@ -1134,9 +1171,9 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                                     'Categorys': []
                                 };
                             }
-                            if (aii.category && !_Additionals['S_'+aii.specie]['D_'+aii.domain]['C_'+aii.category]) {
-                                _Additionals['S_'+aii.specie]['D_'+aii.domain].Categorys.push(aii.category);
-                                _Additionals['S_'+aii.specie]['D_'+aii.domain]['C_'+aii.category] = {
+                            if (aii.category && !_Additionals['S_' + aii.specie]['D_' + aii.domain]['C_' + aii.category]) {
+                                _Additionals['S_' + aii.specie]['D_' + aii.domain].Categorys.push(aii.category);
+                                _Additionals['S_' + aii.specie]['D_' + aii.domain]['C_' + aii.category] = {
                                     'Checked': false,
                                     'Specie': aii.specie,
                                     'Domain': aii.domain,
@@ -1147,8 +1184,8 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                                 };
                             }
                             if (aii.item) {
-                                _Additionals['S_'+aii.specie]['D_'+aii.domain]['C_'+aii.category].Items.push(aii.item);
-                                _Additionals['S_'+aii.specie]['D_'+aii.domain]['C_'+aii.category]['I_'+aii.item] = {
+                                _Additionals['S_' + aii.specie]['D_' + aii.domain]['C_' + aii.category].Items.push(aii.item);
+                                _Additionals['S_' + aii.specie]['D_' + aii.domain]['C_' + aii.category]['I_' + aii.item] = {
                                     'Checked': false,
                                     'Specie': aii.specie,
                                     'Domain': aii.domain,
@@ -1162,8 +1199,8 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                         // console.log(_Additionals);
 
                         // 為每一層有內容的資料皆加上「其它」
-                        _Additionals.Species.forEach(function(specie) {
-                            _Additionals['S_'+specie].Domains.forEach(function(domain, idx) {
+                        _Additionals.Species.forEach(function (specie) {
+                            _Additionals['S_' + specie].Domains.forEach(function (domain, idx) {
                                 if (idx == 0) {
                                     var newItem = {
                                         'Checked': false,
@@ -1175,11 +1212,11 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                                         'Categorys': []
                                     };
 
-                                    _Additionals['S_'+specie].Domains.push('其它');
-                                    _Additionals['S_'+specie]['D_其它'] = newItem;
+                                    _Additionals['S_' + specie].Domains.push('其它');
+                                    _Additionals['S_' + specie]['D_其它'] = newItem;
                                 }
 
-                                _Additionals['S_'+specie]['D_'+domain].Categorys.forEach(function(category, idx) {
+                                _Additionals['S_' + specie]['D_' + domain].Categorys.forEach(function (category, idx) {
                                     if (idx == 0) {
                                         var newItem = {
                                             'Checked': false,
@@ -1190,11 +1227,11 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                                             'Description': '',
                                             'Items': []
                                         };
-                                        _Additionals['S_'+specie]['D_'+domain].Categorys.push('其它');
-                                        _Additionals['S_'+specie]['D_'+domain]['C_其它'] = newItem;
+                                        _Additionals['S_' + specie]['D_' + domain].Categorys.push('其它');
+                                        _Additionals['S_' + specie]['D_' + domain]['C_其它'] = newItem;
                                     }
 
-                                    _Additionals['S_'+specie]['D_'+domain]['C_'+category].Items.forEach(function(item, idx) {
+                                    _Additionals['S_' + specie]['D_' + domain]['C_' + category].Items.forEach(function (item, idx) {
                                         if (idx == 0) {
                                             var newItem = {
                                                 'Checked': false,
@@ -1204,8 +1241,8 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                                                 'Item': '其它',
                                                 'Description': ''
                                             };
-                                            _Additionals['S_'+specie]['D_'+domain]['C_'+category].Items.push('其它');
-                                            _Additionals['S_'+specie]['D_'+domain]['C_'+category]['I_其它'] = newItem;
+                                            _Additionals['S_' + specie]['D_' + domain]['C_' + category].Items.push('其它');
+                                            _Additionals['S_' + specie]['D_' + domain]['C_' + category]['I_其它'] = newItem;
                                         }
                                     });
                                 });
@@ -1217,12 +1254,12 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                     var experiences = [];
                     if (response.DataSource && response.DataSource.Experiences) {
                         response.DataSource.Experiences = [].concat(response.DataSource.Experiences || []);
-                        response.DataSource.Experiences.forEach(function(item, index){
-                            if (!experiences['C_'+item.item_category]) {
-                                experiences['C_'+item.item_category] = [];
+                        response.DataSource.Experiences.forEach(function (item, index) {
+                            if (!experiences['C_' + item.item_category]) {
+                                experiences['C_' + item.item_category] = [];
                             }
                             if (item.item) {
-                                experiences['C_'+item.item_category].push(item.item); // unshift
+                                experiences['C_' + item.item_category].push(item.item); // unshift
                             }
                         })
                     }
@@ -1239,7 +1276,7 @@ app.controller('MainCtrl', ['$scope', function($scope) {
     $scope.myInfo.load(); // 取得個人基本資料及分享設定
     $scope.educations.load(); // 學歷
     $scope.experiences.load(); // 經歷
-    $scope.getDataSource(function(){
+    $scope.getDataSource(function () {
         $scope.stu_additionals.load(); // 興趣/參加台大EMBA團體/參加校外組織
     }); // 取得選項內容
 
