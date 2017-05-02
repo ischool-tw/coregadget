@@ -25,7 +25,10 @@ angular.module('allsearch', [])
             service: "_.GetBlockConfig",
             result: function (response, error, http) {
                 $scope.$apply(function () {
-                    if (response && response.StartTime && response.EndTime && new Date() > new Date(response.StartTime) && new Date() < new Date(response.EndTime)) {
+                    if (
+						(response && response.IsBlock == 'true') ||
+						(response && response.StartTime && response.EndTime && new Date() > new Date(response.StartTime) && new Date() < new Date(response.EndTime))
+					) {
                         $scope.isBlocked = true;
                         $scope.blockMemo = response.Memo;
                     }
