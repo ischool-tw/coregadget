@@ -29,6 +29,56 @@
 
 <body ng-controller="MainCtrl">
     <div id="gadget" class="my-page">
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">層級別</h4>
+                    </div>
+                    <div class="modal-body row">
+                        <div class="col-sm-4" ng-repeat="item in ExperienceDataSource['C_層級別']">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" checklist-model="filter.additional.level" checklist-value="item"> {{item}}
+                            </label>
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" checklist-model="filter.additional.level" checklist-value="'其它'"> 其它
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">確定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="placeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">工作地點</h4>
+                    </div>
+                    <div class="modal-body row">
+                        <div class="col-sm-3" ng-repeat="item in ExperienceDataSource['C_工作地點']">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" checklist-model="filter.additional.place" checklist-value="item"> {{item}}
+                            </label>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" checklist-model="filter.additional.place" checklist-value="'其它'"> 其它
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">確定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="page-container">
             <!--
             <div class="header">
@@ -93,31 +143,7 @@
                                 <input type="text" class="form-control" placeholder="層級別" data-toggle="modal" data-target="#myModal" value="{{filter.additional.level.join(',')}}" readonly>
                             </div>
                         </div>
-                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        <h4 class="modal-title" id="myModalLabel">層級別</h4>
-                                    </div>
-                                    <div class="modal-body row">
-                                        <div class="col-sm-4" ng-repeat="item in ExperienceDataSource['C_層級別']">
-                                            <label class="checkbox-inline">
-                                                <input type="checkbox" checklist-model="filter.additional.level" checklist-value="item"> {{item}}
-                                            </label>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <label class="checkbox-inline">
-                                                <input type="checkbox" checklist-model="filter.additional.level" checklist-value="'其它'"> 其它
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">確定</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                         <div class="col-sm-3">
                             <div class="dropdown">
                                 <button class="btn btn-default dropdown-toggle" type="button" id="industryMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -149,31 +175,6 @@
                             <div class="input-group">
                                 <span class="input-group-addon">工作地點</span>
                                 <input type="text" class="form-control" placeholder="工作地點" data-toggle="modal" data-target="#placeModal" value="{{filter.additional.place.join(',')}}" readonly>
-                            </div>
-                        </div>
-                        <div class="modal fade" id="placeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        <h4 class="modal-title" id="myModalLabel">工作地點</h4>
-                                    </div>
-                                    <div class="modal-body row">
-                                        <div class="col-sm-3" ng-repeat="item in ExperienceDataSource['C_工作地點']">
-                                            <label class="checkbox-inline">
-                                                <input type="checkbox" checklist-model="filter.additional.place" checklist-value="item"> {{item}}
-                                            </label>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <label class="checkbox-inline">
-                                                <input type="checkbox" checklist-model="filter.additional.place" checklist-value="'其它'"> 其它
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">確定</button>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <div class="col-sm-3">
