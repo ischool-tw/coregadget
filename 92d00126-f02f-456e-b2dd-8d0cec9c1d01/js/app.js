@@ -761,6 +761,14 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
     };
 
     // 經歷
+    $("#level").on('hidden.bs.modal', function (event) {
+        if ($('.modal:visible').length)
+            $('body').addClass('modal-open');
+    });
+    $("#placeModal").on('hidden.bs.modal', function (event) {
+        if ($('.modal:visible').length)
+            $('body').addClass('modal-open');
+    });
     $scope.experiences = {
         load: function () {
             $scope.connection.send({
