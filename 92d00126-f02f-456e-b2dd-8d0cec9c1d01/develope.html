@@ -11,7 +11,7 @@
         oAuth: {
             clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
             clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
-            account: 'dodo@debug.ischool.com.tw',
+            account: 'bubu@debug.ischool.com.tw',
             password: '1234'
         }
     });
@@ -524,16 +524,20 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.CustodianName}">
-                                        <input type="text" class="form-control" target="custodian-name" name="custodian-name" placeholder="必填" ng-model="myInfo.StudentInfo.CustodianName">
+                                    <!--<div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.CustodianName}">-->
+                                    <div class="input-group">
+                                        <!--<input type="text" class="form-control" target="custodian-name" name="custodian-name" placeholder="必填" ng-model="myInfo.StudentInfo.CustodianName">-->
+                                        <input type="text" class="form-control" target="custodian-name" name="custodian-name" ng-model="myInfo.StudentInfo.CustodianName">
                                         <span class="input-group-addon" target="cannt-sharing">
                                             <span class="glyphicon glyphicon-remove" aria-hidden="true" target="share-custodian-name"></span>
                                         </span>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.CustodianOtherInfo.CustodianOtherInfo.Phone}">
-                                        <input type="text" class="form-control" target="custodian-phone" name="custodian-phone" placeholder="必填" ng-model="myInfo.StudentInfo.CustodianOtherInfo.CustodianOtherInfo.Phone">
+                                    <!--<div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.CustodianOtherInfo.CustodianOtherInfo.Phone}">-->
+                                    <div class="input-group">
+                                        <!--<input type="text" class="form-control" target="custodian-phone" name="custodian-phone" placeholder="必填" ng-model="myInfo.StudentInfo.CustodianOtherInfo.CustodianOtherInfo.Phone">-->
+                                        <input type="text" class="form-control" target="custodian-phone" name="custodian-phone" ng-model="myInfo.StudentInfo.CustodianOtherInfo.CustodianOtherInfo.Phone">
                                         <span class="input-group-addon" target="cannt-sharing">
                                             <span class="glyphicon glyphicon-remove" aria-hidden="true" target="share-custodian-phone"></span>
                                         </span>
@@ -561,8 +565,10 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.PermanentPhone}">
-                                        <input type="text" class="form-control" target="permanent-phone" name="permanent-phone" placeholder="必填" ng-model="myInfo.StudentInfo.PermanentPhone">
+                                    <!--<div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.PermanentPhone}">-->
+                                    <div class="input-group">
+                                        <!--<input type="text" class="form-control" target="permanent-phone" name="permanent-phone" placeholder="必填" ng-model="myInfo.StudentInfo.PermanentPhone">-->
+                                        <input type="text" class="form-control" target="permanent-phone" name="permanent-phone" ng-model="myInfo.StudentInfo.PermanentPhone">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.PermanentPhone=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.PermanentPhone)">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-permanent-phone" ng-class="{notshare: myInfo.DataSharing.DataSharing.PermanentPhone!='true'}"></span>
                                         </span>
@@ -585,8 +591,10 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.SMSPhone}">
-                                        <input type="text" class="form-control" target="sms-phone1" name="sms-phone1" placeholder="必填" ng-model="myInfo.StudentInfo.SMSPhone">
+                                    <!--<div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.SMSPhone}">-->
+                                    <div class="input-group">
+                                        <!--<input type="text" class="form-control" target="sms-phone1" name="sms-phone1" placeholder="必填" ng-model="myInfo.StudentInfo.SMSPhone">-->
+                                        <input type="text" class="form-control" target="sms-phone1" name="sms-phone1" ng-model="myInfo.StudentInfo.SMSPhone">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.SMSPhone=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.SMSPhone)">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-sms-phone1" ng-class="{notshare: myInfo.DataSharing.DataSharing.SMSPhone!='true'}"></span>
                                         </span>
@@ -622,8 +630,10 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <div class="input-group" ng-class="{'has-error': !myInfo.StudentBrief2.EmailList.email1 || !myInfo.validEmail(myInfo.StudentBrief2.EmailList.email1)}">
-                                        <input type="text" class="{email:true} form-control" target="email1" name="email1" placeholder="必填" ng-model="myInfo.StudentBrief2.EmailList.email1">
+                                    <!--<div class="input-group" ng-class="{'has-error': !myInfo.StudentBrief2.EmailList.email1 || !myInfo.validEmail(myInfo.StudentBrief2.EmailList.email1)}">-->
+                                    <div class="input-group" ng-class="{'has-error': !myInfo.validEmail(myInfo.StudentBrief2.EmailList.email1)}">
+                                        <!--<input type="text" class="{email:true} form-control" target="email1" name="email1" placeholder="必填" ng-model="myInfo.StudentBrief2.EmailList.email1">-->
+                                        <input type="text" class="{email:true} form-control" target="email1" name="email1" ng-model="myInfo.StudentBrief2.EmailList.email1">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.EmailList.Email1=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.EmailList.Email1)">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-email1" ng-class="{notshare: myInfo.DataSharing.DataSharing.EmailList.Email1!='true'}"></span>
                                         </span>
@@ -681,16 +691,20 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.MailingAddress_desc}">
-                                        <input type="text" class="form-control" target="contact-address" name="contact-address" placeholder="必填" value="{{myInfo.StudentInfo.MailingAddress_desc}}" readonly ng-click="myInfo.edit_address('MailingAddress', myInfo.StudentInfo.MailingAddress)">
+                                    <!--<div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.MailingAddress_desc}">-->
+                                    <div class="input-group">
+                                        <!--<input type="text" class="form-control" target="contact-address" name="contact-address" placeholder="必填" value="{{myInfo.StudentInfo.MailingAddress_desc}}" readonly ng-click="myInfo.edit_address('MailingAddress', myInfo.StudentInfo.MailingAddress)">-->
+                                        <input type="text" class="form-control" target="contact-address" name="contact-address" value="{{myInfo.StudentInfo.MailingAddress_desc}}" readonly ng-click="myInfo.edit_address('MailingAddress', myInfo.StudentInfo.MailingAddress)">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.ContactAddress=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.ContactAddress)">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-contact-address" ng-class="{notshare: myInfo.DataSharing.DataSharing.ContactAddress!='true'}"></span>
                                         </span>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.PermanentAddress_desc}">
-                                        <input type="text" class="form-control" target="permanent-address" name="permanent-address" placeholder="必填" value="{{myInfo.StudentInfo.PermanentAddress_desc}}" readonly ng-click="myInfo.edit_address('PermanentAddress', myInfo.StudentInfo.PermanentAddress)">
+                                    <!--<div class="input-group" ng-class="{'has-error': !myInfo.StudentInfo.PermanentAddress_desc}">-->
+                                    <div class="input-group">
+                                        <!--<input type="text" class="form-control" target="permanent-address" name="permanent-address" placeholder="必填" value="{{myInfo.StudentInfo.PermanentAddress_desc}}" readonly ng-click="myInfo.edit_address('PermanentAddress', myInfo.StudentInfo.PermanentAddress)">-->
+                                        <input type="text" class="form-control" target="permanent-address" name="permanent-address" value="{{myInfo.StudentInfo.PermanentAddress_desc}}" readonly ng-click="myInfo.edit_address('PermanentAddress', myInfo.StudentInfo.PermanentAddress)">
                                         <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.PermanentAddress=myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.PermanentAddress)">
                                             <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-permanent-address" ng-class="{notshare: myInfo.DataSharing.DataSharing.PermanentAddress!='true'}"></span>
                                         </span>
@@ -811,9 +825,11 @@
                             </div>
                         </li>
                         <li class="list-group-item" ng-if="myInfo.Willingness.IsSocialEnterprise">
-                            <div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionEnterprise}">
+                            <!--<div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionEnterprise}">-->
+                            <div class="input-group">
                                 <span class="input-group-addon">請註明</span>
-                                <input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionEnterprise">
+                                <!--<input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionEnterprise">-->
+                                <input type="text" class="form-control" target="" name="" ng-model="myInfo.Willingness.DescriptionEnterprise">
                                 <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingEnterprise=!(myInfo.Willingness.IsSharingEnterprise)">
                                     <span class="glyphicon glyphicon-ok" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingEnterprise}"></span>
                                 </span>
@@ -832,9 +848,11 @@
                             </div>
                         </li>
                         <li class="list-group-item" ng-if="myInfo.Willingness.IsNonProfitOrganizations">
-                            <div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionOrganizations}">
+                            <!--<div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionOrganizations}">-->
+                            <div class="input-group">
                                 <span class="input-group-addon">請註明</span>
-                                <input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionOrganizations">
+                                <!--<input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionOrganizations">-->
+                                <input type="text" class="form-control" target="" name="" ng-model="myInfo.Willingness.DescriptionOrganizations">
                                 <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingOrganizations=!(myInfo.Willingness.IsSharingOrganizations)">
                                     <span class="glyphicon glyphicon-ok" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingOrganizations}"></span>
                                 </span>
@@ -853,9 +871,11 @@
                             </div>
                         </li>
                         <li class="list-group-item" ng-if="myInfo.Willingness.IsCorporateSocialResponsibility">
-                            <div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionResponsibility}">
+                            <!--<div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionResponsibility}">-->
+                            <div class="input-group">
                                 <span class="input-group-addon">請註明</span>
-                                <input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionResponsibility">
+                                <!--<input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionResponsibility">-->
+                                <input type="text" class="form-control" target="" name="" ng-model="myInfo.Willingness.DescriptionResponsibility">
                                 <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingResponsibility=!(myInfo.Willingness.IsSharingResponsibility)">
                                     <span class="glyphicon glyphicon-ok" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingResponsibility}"></span>
                                 </span>
@@ -874,9 +894,11 @@
                             </div>
                         </li>
                         <li class="list-group-item" ng-if="myInfo.Willingness.IsVenture">
-                            <div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionVenture}">
+                            <!--<div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionVenture}">-->
+                            <div class="input-group">
                                 <span class="input-group-addon">請註明</span>
-                                <input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionVenture">
+                                <!--<input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionVenture">-->
+                                <input type="text" class="form-control" target="" name="" ng-model="myInfo.Willingness.DescriptionVenture">
                                 <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingVenture=!(myInfo.Willingness.IsSharingVenture)">
                                     <span class="glyphicon glyphicon-ok" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingVenture}"></span>
                                 </span>
@@ -903,9 +925,11 @@
                             </div>
                         </li>
                         <li class="list-group-item" ng-if="myInfo.Willingness.IsEntrepreneurialTeam">
-                            <div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionEntrpreneurial}">
+                            <!--<div class="input-group" ng-class="{'has-error': !myInfo.Willingness.DescriptionEntrpreneurial}">-->
+                            <div class="input-group">
                                 <span class="input-group-addon">可提供經驗分享內容為</span>
-                                <input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionEntrpreneurial">
+                                <!--<input type="text" class="form-control" target="" name="" placeholder="必填" ng-model="myInfo.Willingness.DescriptionEntrpreneurial">-->
+                                <input type="text" class="form-control" target="" name="" ng-model="myInfo.Willingness.DescriptionEntrpreneurial">
                                 <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingEntrpreneurial=!(myInfo.Willingness.IsSharingEntrpreneurial)">
                                     <span class="glyphicon glyphicon-ok" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingEntrpreneurial}"></span>
                                 </span>
@@ -919,8 +943,10 @@
                         <i class="fa fa-fw fa-group"></i> 參加校外團體
                     </div>
                     <div class="panel-body">
-                        <div class="input-group" ng-class="{'has-error': !stu_additionals.result['my_ExternalOrganization_desc'] || !stu_additionals.valid('ExternalOrganization', AdditionalSetup['S_ExternalOrganization'])}">
-                            <input type="text" class="form-control" placeholder="必填" readonly value="{{stu_additionals.result['my_ExternalOrganization_desc']}}" ng-click="stu_additionals.edit('ExternalOrganization', AdditionalSetup['S_ExternalOrganization'])">
+                        <!--<div class="input-group" ng-class="{'has-error': !stu_additionals.result['my_ExternalOrganization_desc'] || !stu_additionals.valid('ExternalOrganization', AdditionalSetup['S_ExternalOrganization'])}">-->
+                        <div class="input-group" ng-class="{'has-error': !stu_additionals.valid('ExternalOrganization', AdditionalSetup['S_ExternalOrganization'])}">
+                            <!--<input type="text" class="form-control" placeholder="必填" readonly value="{{stu_additionals.result['my_ExternalOrganization_desc']}}" ng-click="stu_additionals.edit('ExternalOrganization', AdditionalSetup['S_ExternalOrganization'])">-->
+                            <input type="text" class="form-control" readonly value="{{stu_additionals.result['my_ExternalOrganization_desc']}}" ng-click="stu_additionals.edit('ExternalOrganization', AdditionalSetup['S_ExternalOrganization'])">
                             <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingExternalOrganization=!(myInfo.Willingness.IsSharingExternalOrganization)">
                                 <span class="glyphicon glyphicon-ok notshare" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingExternalOrganization}"></span>
                             </span>
@@ -933,8 +959,10 @@
                         <i class="fa fa-fw fa-heart"></i> 興趣
                     </div>
                     <div class="panel-body">
-                        <div class="input-group" ng-class="{'has-error': !stu_additionals.result['my_Interest_desc'] || !stu_additionals.valid('Interest', AdditionalSetup['S_Interest'])}">
-                            <input type="text" class="form-control" placeholder="必填" readonly value="{{stu_additionals.result['my_Interest_desc']}}" ng-click="stu_additionals.edit('Interest', AdditionalSetup['S_Interest'])">
+                        <!--<div class="input-group" ng-class="{'has-error': !stu_additionals.result['my_Interest_desc'] || !stu_additionals.valid('Interest', AdditionalSetup['S_Interest'])}">-->
+                        <div class="input-group" ng-class="{'has-error': !stu_additionals.valid('Interest', AdditionalSetup['S_Interest'])}">
+                            <!--<input type="text" class="form-control" placeholder="必填" readonly value="{{stu_additionals.result['my_Interest_desc']}}" ng-click="stu_additionals.edit('Interest', AdditionalSetup['S_Interest'])">-->
+                            <input type="text" class="form-control" readonly value="{{stu_additionals.result['my_Interest_desc']}}" ng-click="stu_additionals.edit('Interest', AdditionalSetup['S_Interest'])">
                             <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingInterest=!(myInfo.Willingness.IsSharingInterest)">
                                 <span class="glyphicon glyphicon-ok" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingInterest}"></span>
                             </span>
@@ -947,8 +975,10 @@
                         <i class="fa fa-fw fa-group"></i> 參加台大EMBA團體
                     </div>
                     <div class="panel-body">
-                        <div class="input-group" ng-class="{'has-error': !stu_additionals.result['my_EMBAGroups_desc'] || !stu_additionals.valid('EMBAGroups', AdditionalSetup['S_EMBAGroups'])}">
-                            <input type="text" class="form-control" placeholder="必填" readonly value="{{stu_additionals.result['my_EMBAGroups_desc']}}" ng-click="stu_additionals.edit('EMBAGroups', AdditionalSetup['S_EMBAGroups'])">
+                        <!--<div class="input-group" ng-class="{'has-error': !stu_additionals.result['my_EMBAGroups_desc'] || !stu_additionals.valid('EMBAGroups', AdditionalSetup['S_EMBAGroups'])}">-->
+                        <div class="input-group" ng-class="{'has-error': !stu_additionals.valid('EMBAGroups', AdditionalSetup['S_EMBAGroups'])}">
+                            <!--<input type="text" class="form-control" placeholder="必填" readonly value="{{stu_additionals.result['my_EMBAGroups_desc']}}" ng-click="stu_additionals.edit('EMBAGroups', AdditionalSetup['S_EMBAGroups'])">-->
+                            <input type="text" class="form-control" readonly value="{{stu_additionals.result['my_EMBAGroups_desc']}}" ng-click="stu_additionals.edit('EMBAGroups', AdditionalSetup['S_EMBAGroups'])">
                             <span class="input-group-addon" target="data-sharing" ng-click="myInfo.Willingness.IsSharingEMBAGroups=!(myInfo.Willingness.IsSharingEMBAGroups)">
                                 <span class="glyphicon glyphicon-ok notshare" aria-hidden="true" ng-class="{notshare: !myInfo.Willingness.IsSharingEMBAGroups}"></span>
                             </span>

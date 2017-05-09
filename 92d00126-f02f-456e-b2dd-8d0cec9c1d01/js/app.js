@@ -313,18 +313,18 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
 
         // 判斷必填未填
         $('#main .has-error').first().find('input').focus();
-        if (!$scope.myInfo.StudentInfo.CustodianName) return;
-        if (!$scope.myInfo.StudentInfo.CustodianOtherInfo.CustodianOtherInfo.Phone) return;
-        if (!$scope.myInfo.StudentInfo.PermanentPhone) return;
-        if (!$scope.myInfo.StudentInfo.SMSPhone) return;
-        if (!$scope.myInfo.StudentBrief2.EmailList.email1) return;
-        if (!$scope.myInfo.StudentInfo.MailingAddress_desc) return;
-        if (!$scope.myInfo.StudentInfo.PermanentAddress_desc) return;
-        if ($scope.myInfo.Willingness.IsSocialEnterprise && !$scope.myInfo.Willingness.DescriptionEnterprise) return;
-        if ($scope.myInfo.Willingness.IsNonProfitOrganizations && !$scope.myInfo.Willingness.DescriptionOrganizations) return;
-        if ($scope.myInfo.Willingness.IsCorporateSocialResponsibility && !$scope.myInfo.Willingness.DescriptionResponsibility) return;
-        if ($scope.myInfo.Willingness.IsVenture && !$scope.myInfo.Willingness.DescriptionVenture) return;
-        if ($scope.myInfo.Willingness.IsEntrepreneurialTeam && !$scope.myInfo.Willingness.DescriptionEntrpreneurial) return;
+        // if (!$scope.myInfo.StudentInfo.CustodianName) return;
+        // if (!$scope.myInfo.StudentInfo.CustodianOtherInfo.CustodianOtherInfo.Phone) return;
+        // if (!$scope.myInfo.StudentInfo.PermanentPhone) return;
+        // if (!$scope.myInfo.StudentInfo.SMSPhone) return;
+        // if (!$scope.myInfo.StudentBrief2.EmailList.email1) return;
+        // if (!$scope.myInfo.StudentInfo.MailingAddress_desc) return;
+        // if (!$scope.myInfo.StudentInfo.PermanentAddress_desc) return;
+        // if ($scope.myInfo.Willingness.IsSocialEnterprise && !$scope.myInfo.Willingness.DescriptionEnterprise) return;
+        // if ($scope.myInfo.Willingness.IsNonProfitOrganizations && !$scope.myInfo.Willingness.DescriptionOrganizations) return;
+        // if ($scope.myInfo.Willingness.IsCorporateSocialResponsibility && !$scope.myInfo.Willingness.DescriptionResponsibility) return;
+        // if ($scope.myInfo.Willingness.IsVenture && !$scope.myInfo.Willingness.DescriptionVenture) return;
+        // if ($scope.myInfo.Willingness.IsEntrepreneurialTeam && !$scope.myInfo.Willingness.DescriptionEntrpreneurial) return;
 
         if ($scope.myInfo.validEmail($scope.myInfo.StudentBrief2.EmailList.email1) == false) return;
         if ($scope.myInfo.validEmail($scope.myInfo.StudentBrief2.EmailList.email2) == false) return;
@@ -333,9 +333,9 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
         if ($scope.myInfo.validEmail($scope.myInfo.StudentBrief2.EmailList.email5) == false) return;
         if ($scope.myInfo.validEmail($scope.myInfo.Publicist.PublicistEmail) == false) return;
 
-        if (!$scope.stu_additionals.result['my_ExternalOrganization_desc']) return;
-        if (!$scope.stu_additionals.result['my_Interest_desc']) return;
-        if (!$scope.stu_additionals.result['my_EMBAGroups_desc']) return;
+        // if (!$scope.stu_additionals.result['my_ExternalOrganization_desc']) return;
+        // if (!$scope.stu_additionals.result['my_Interest_desc']) return;
+        // if (!$scope.stu_additionals.result['my_EMBAGroups_desc']) return;
 
         // 驗證有無勾選其它，但未填
         var stu_additionals_content = [];
@@ -1123,26 +1123,29 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
         valid: function (sname, specie) {
             var stu_addition_valid = true;
             $scope.stu_additionals.result['my_' + sname] = [];
-            angular.forEach(specie.Domains, function (domain) {
-                if (specie['D_' + domain].Checked) {
-                    if (domain == '其它' && !specie['D_' + domain].Description) stu_addition_valid = false;
-                    if (stu_addition_valid) $scope.stu_additionals.result['my_' + sname].push(specie['D_' + domain]);
-                }
-                angular.forEach(specie['D_' + domain].Categorys, function (category) {
-                    if (specie['D_' + domain]['C_' + category].Checked) {
-                        if (category == '其它' && !specie['D_' + domain]['C_' + category].Description) stu_addition_valid = false;
-                        if (stu_addition_valid) $scope.stu_additionals.result['my_' + sname].push(specie['D_' + domain]['C_' + category]);
+            if (specie) {
+                angular.forEach(specie.Domains, function (domain) {
+                    if (specie['D_' + domain].Checked) {
+                        if (domain == '其它' && !specie['D_' + domain].Description) stu_addition_valid = false;
+                        if (stu_addition_valid) $scope.stu_additionals.result['my_' + sname].push(specie['D_' + domain]);
                     }
-                    angular.forEach(specie['D_' + domain]['C_' + category].Items, function (item) {
-                        if (specie['D_' + domain]['C_' + category]['I_' + item].Checked) {
-                            if (item == '其它' && !specie['D_' + domain]['C_' + category]['I_' + item].Description) stu_addition_valid = false;
-                            if (stu_addition_valid) $scope.stu_additionals.result['my_' + sname].push(specie['D_' + domain]['C_' + category]['I_' + item]);
+                    angular.forEach(specie['D_' + domain].Categorys, function (category) {
+                        if (specie['D_' + domain]['C_' + category].Checked) {
+                            if (category == '其它' && !specie['D_' + domain]['C_' + category].Description) stu_addition_valid = false;
+                            if (stu_addition_valid) $scope.stu_additionals.result['my_' + sname].push(specie['D_' + domain]['C_' + category]);
                         }
+                        angular.forEach(specie['D_' + domain]['C_' + category].Items, function (item) {
+                            if (specie['D_' + domain]['C_' + category]['I_' + item].Checked) {
+                                if (item == '其它' && !specie['D_' + domain]['C_' + category]['I_' + item].Description) stu_addition_valid = false;
+                                if (stu_addition_valid) $scope.stu_additionals.result['my_' + sname].push(specie['D_' + domain]['C_' + category]['I_' + item]);
+                            }
+                        });
                     });
                 });
-            });
+            }
             return stu_addition_valid;
-        }
+        },
+        result: {}
     };
 
     // 取得選項內容
