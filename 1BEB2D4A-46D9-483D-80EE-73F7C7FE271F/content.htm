@@ -366,28 +366,30 @@
                                                             {{item.Name}}：
                                                         </label>
                                                         <!--<input type="text"
-        class="form-control"
-        style="display: inline-block; height: 25px; width: auto; padding-bottom: 8px ;color: rgb(85, 85, 85);"
-        placeholder="" ng-model="item.Value" ng-disabled="IsNotInOpeningTime">-->
+            class="form-control"
+            style="display: inline-block; height: 25px; width: auto; padding-bottom: 8px ;color: rgb(85, 85, 85);"
+            placeholder="" ng-model="item.Value" ng-disabled="IsNotInOpeningTime">-->
                                                         <div>
                                                             <textarea class="form-control msd-elastic col-sm-9" id="" style="width: 400px; padding-left: 0px; padding-top: 10px; padding-right:0px " ng-model="item.Value" ng-disabled="IsNotInOpeningTime" placeholder="請輸入..." ng-change="panel.PanelChangeCheck()"></textarea>
                                                         </div>
-                                                    </div>                                                    
+                                                    </div>
+                                                </div>        
+                                                <div class="form-group" style="margin-top:0px">
                                                     <div class="col-sm-12" ng-if=" item.HasRemark">
-                                                                                                                                                                                                                                   
+
                                                         <label class=" control-label col-sm-3" style="color:black; width:45px; padding-top:10px; padding-left:0px; padding-right:0px; " ng-if=" item.HasRemark">
                                                             因為：
                                                         </label>
-                                                        
+
                                                         <!--<input type="text"
-        class="form-control"
-        style="display: inline-block; height: 25px; width: 150px; padding-bottom: 8px ;color: rgb(85, 85, 85);"
-        placeholder="" ng-if=" item.HasRemark" ng-model="item.ReasonValue" ng-disabled="IsNotInOpeningTime">-->
-                                                        
-                                                            
+            class="form-control"
+            style="display: inline-block; height: 25px; width: 150px; padding-bottom: 8px ;color: rgb(85, 85, 85);"
+            placeholder="" ng-if=" item.HasRemark" ng-model="item.ReasonValue" ng-disabled="IsNotInOpeningTime">-->
+
+
                                                         <textarea class="form-control msd-elastic col-sm-9" id="" style="width: 80%; padding-left: 0px; padding-top: 10px; " ng-model="item.ReasonValue" ng-disabled="IsNotInOpeningTime" placeholder="請輸入..." ng-change="panel.PanelChangeCheck()"></textarea>
-                                                        
-                                                    </div>                                                    
+
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>
