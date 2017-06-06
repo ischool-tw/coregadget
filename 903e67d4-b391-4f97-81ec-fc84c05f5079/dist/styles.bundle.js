@@ -85,7 +85,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "/*--- bootstrap ---*/\n\n* {\n  font-family: \"\\5FAE\\8EDF\\6B63\\9ED1\\9AD4\",\"Helvetica Neue\", Helvetica, Arial, sans-serif;\n}\n\n/*--- share ---*/\n*:hover {\n  transition:  background .50s ease-out;\n}\n\nbody {\n  margin: 0 auto;\n  background:url(/assets/images/page-bg.gif);\n}\n\n.my-page {\n  margin:20px;\n  background:#fff;\n  padding:10px;\n  border: 1px solid #eee;\n}\n\n.my-page h1:first-child {\n  font-size: 20px;\n  position: relative;\n  left: -10px;\n  border-left: 10px solid #B0CCC6;\n  border-bottom: 1px solid whiteSmoke;\n  padding: 10px 0 10px 20px;\n}\n", ""]);
+exports.push([module.i, "/*--- bootstrap ---*/\n\n* {\n  font-family: \"\\5FAE\\8EDF\\6B63\\9ED1\\9AD4\",\"Helvetica Neue\", Helvetica, Arial, sans-serif;\n}\n\n/*--- share ---*/\n*:hover {\n  transition:  background .50s ease-out;\n}\n\nbody {\n  margin: 0 auto;\n  background:url(" + __webpack_require__("./src/assets/images/page-bg.gif") + ");\n}\n\n.my-page {\n  margin:20px;\n  background:#fff;\n  padding:10px;\n  border: 1px solid #eee;\n}\n\n.my-page h1:first-child {\n  font-size: 20px;\n  position: relative;\n  left: -10px;\n  border-left: 10px solid #B0CCC6;\n  border-bottom: 1px solid whiteSmoke;\n  padding: 10px 0 10px 20px;\n}\n", ""]);
 
 // exports
 
@@ -425,6 +425,13 @@ function updateLink(linkElement, obj) {
 		URL.revokeObjectURL(oldSrc);
 }
 
+
+/***/ }),
+
+/***/ "./src/assets/images/page-bg.gif":
+/***/ (function(module, exports) {
+
+module.exports = "data:image/gif;base64,R0lGODlhCgAKAIAAAPn5+f///yH5BAAAAAAALAAAAAAKAAoAAAIUjANwaqyMTmzyTdogjHb5z2FXIhUAOw=="
 
 /***/ }),
 
