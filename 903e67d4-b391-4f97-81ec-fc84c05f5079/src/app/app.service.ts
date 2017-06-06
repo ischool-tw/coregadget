@@ -41,9 +41,12 @@ export class AppService {
       body: "",
       map: (rsp) => {
         let classes = new Array<Class>();
-        rsp.Class.forEach((item) => {
-          classes.push(new Class(item.ClassId, item.ClassName, item.GradeYear));
-        });
+        if (rsp.Class) {
+          rsp.Class = [].concat(rsp.Class || []);
+          rsp.Class.forEach((item) => {
+            classes.push(new Class(item.ClassId, item.ClassName, item.GradeYear));
+          });
+        }
         return classes;
       }
     }) as Rx.Observable<Class[]>;
@@ -58,19 +61,22 @@ export class AppService {
       body: { Name: '節次對照表' },
       map: (rsp) => {
         let periods = new Array<Period>();
-        rsp.List.Content.Periods.Period.forEach((item) => {
-          periods.push(new Period(item.Name, Number(item.Sort), item.Type));
-        });
-        // 排序
-        periods.sort((a, b) => {
-          if (a.sort > b.sort) {
-            return 1;
-          }
-          if (a.sort < b.sort) {
-            return -1;
-          }
-          return 0;
-        });
+        if (rsp.List && rsp.List.Content && rsp.List.Content.Periods && rsp.List.Content.Periods.Period) {
+          rsp.List.Content.Periods.Period = [].concat(rsp.List.Content.Periods.Period || []);
+          rsp.List.Content.Periods.Period.forEach((item) => {
+            periods.push(new Period(item.Name, Number(item.Sort), item.Type));
+          });
+          // 排序
+          periods.sort((a, b) => {
+            if (a.sort > b.sort) {
+              return 1;
+            }
+            if (a.sort < b.sort) {
+              return -1;
+            }
+            return 0;
+          });
+        }
         return periods;
       }
     }) as Rx.Observable<Period[]>;
@@ -85,9 +91,12 @@ export class AppService {
       body: { Name: '假別對照表' },
       map: (rsp) => {
         let absences = new Array<Absence>();
-        rsp.List.Content.AbsenceList.Absence.forEach((item) => {
-          absences.push(new Absence(item.Name, item.Abbreviation));
-        });
+        if (rsp.List && rsp.List.Content && rsp.List.Content.AbsenceList && rsp.List.Content.AbsenceList.Absence) {
+          rsp.List.Content.AbsenceList.Absence = [].concat(rsp.List.Content.AbsenceList.Absence || []);
+          rsp.List.Content.AbsenceList.Absence.forEach((item) => {
+            absences.push(new Absence(item.Name, item.Abbreviation));
+          });
+        }
         return absences;
       }
     }) as Rx.Observable<Absence[]>;

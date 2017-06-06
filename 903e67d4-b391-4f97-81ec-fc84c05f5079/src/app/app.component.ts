@@ -11,7 +11,7 @@ import * as rx from 'rxjs/Rx';
 export class AppComponent implements OnInit {
   selClass: Class;
   currAbs: Absence;
-  classes: Class[];
+  classes: Class[] = new Array<Class>();
   /**假別 */
   absences: Absence[] = new Array<Absence>();
   clearAbs: Absence = new Absence(null, null);

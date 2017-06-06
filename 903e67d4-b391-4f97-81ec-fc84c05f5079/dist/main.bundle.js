@@ -34,7 +34,7 @@ module.exports = module.exports.toString();
 /***/ "./src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n  <h1>線上點名</h1>\n  <div>\n  <form class=\"form-inline\">\n      <span>請選擇班級：</span>\n      <div class=\"form-group\">\n        <div class=\"dropdown\">\n          <button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"dropdowClass\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"true\">\n            {{selClass?.className || '班級'}}\n            <span class=\"caret\"></span>\n          </button>\n          <ul class=\"dropdown-menu\" aria-labelledby=\"dropdowClass\">\n            <li *ngFor=\"let item of classes\" (click)=\"selClass=item\"><a href=\"#\">{{item.className}}</a></li>\n          </ul>\n        </div>\n      </div>\n      <button (click)=\"toggleClassDate()\" type=\"submit\" class=\"btn btn-default\" style=\"margin-left:10px\">確定</button>\n      <span [ngClass]=\"{'text-success': completed=='t', 'text-warning': completed!='t'}\">\n        {{(completed=='t') ? '今日已點名' : '今日尚未點名'}}\n      </span>\n    </form>\n  </div>\n  <div style=\"margin-top:15px;\">\n    請選擇假別：\n    <button (click)=\"currAbs=clearAbs\" type=\"button\" class=\"btn\" [ngClass]=\"{'btn-primary': currAbs==clearAbs, 'btn-default': currAbs!=clearAbs}\">清除</button>\n    <div class=\"btn-group\" role=\"group\" aria-label=\"假別\">\n      <button *ngFor=\"let abs of absences\" (click)=\"currAbs=abs\" type=\"button\" class=\"btn\" [ngClass]=\"{'btn-primary': currAbs==abs, 'btn-default': currAbs!=abs}\">{{abs.name}}</button>\n    </div>\n  </div>\n\n  <table class=\"table table-bordered table-hover\" style=\"margin-top: 15px;\">\n    <thead>\n      <tr>\n        <th class=\"thBorder\" style=\"min-width:110px;\">\n          <button (click)=\"saveData()\" type=\"button\" class=\"btn\" [ngClass]=\"{'btn-success': completed=='t', 'btn-warning': completed!='t'}\">\n            {{(completed=='t') ? '再次儲存' : '點名完成'}}\n          </button>\n        </th>\n        <th *ngFor=\"let period of periods\" (click)=\"setAllStudentsAbs(period)\" class=\"setBtn thBorder\">\n          {{period.name}}\n        </th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr *ngFor=\"let stu of students\">\n        <td (click)=\"setStudentAllPeriodAbs(stu)\" class=\"setBtn\">\n          {{stu.seatNo}}. {{stu.name}}\n        </td>\n        <td *ngFor=\"let period of periods\" (click)=\"setStudentPeroidAbs(stu, period)\" class=\"setBtn\">\n          {{toShort(stu.leaveList.get(period.name)?.absName)}}\n        </td>\n      </tr>    \n    </tbody>\n  </table>\n  <p *ngIf=\"students.length==0\">目前無資料</p>\n</div>"
+module.exports = "<div>\n  <h1>線上點名</h1>\n  <div>\n  <form class=\"form-inline\">\n      <span>請選擇班級：</span>\n      <div class=\"form-group\">\n        <div class=\"dropdown\">\n          <button class=\"btn btn-primary dropdown-toggle\" type=\"button\" id=\"dropdowClass\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"true\">\n            {{selClass?.className || '班級'}}\n            <span class=\"caret\"></span>\n          </button>\n          <ul class=\"dropdown-menu\" aria-labelledby=\"dropdowClass\">\n            <li *ngFor=\"let item of classes\" (click)=\"selClass=item\"><a href=\"#\">{{item.className}}</a></li>\n          </ul>\n        </div>\n      </div>\n      <button *ngIf=\"classes.length > 0\" (click)=\"toggleClassDate()\" type=\"submit\" class=\"btn btn-default\" style=\"margin-left:10px\">確定</button>\n      <span *ngIf=\"selClass\" [ngClass]=\"{'text-success': completed=='t', 'text-warning': completed!='t'}\">\n        {{(completed=='t') ? '今日已點名' : '今日尚未點名'}}\n      </span>\n    </form>\n  </div>\n  <div *ngIf=\"selClass\">\n    <div style=\"margin-top:15px;\">\n      請選擇假別：\n      <button (click)=\"currAbs=clearAbs\" type=\"button\" class=\"btn\" [ngClass]=\"{'btn-primary': currAbs==clearAbs, 'btn-default': currAbs!=clearAbs}\">清除</button>\n      <div class=\"btn-group\" role=\"group\" aria-label=\"假別\">\n        <button *ngFor=\"let abs of absences\" (click)=\"currAbs=abs\" type=\"button\" class=\"btn\" [ngClass]=\"{'btn-primary': currAbs==abs, 'btn-default': currAbs!=abs}\">{{abs.name}}</button>\n      </div>\n    </div>\n\n    <table class=\"table table-bordered table-hover\" style=\"margin-top: 15px;\">\n      <thead>\n        <tr>\n          <th class=\"thBorder\" style=\"min-width:110px;\">\n            <button (click)=\"saveData()\" type=\"button\" class=\"btn\" [ngClass]=\"{'btn-success': completed=='t', 'btn-warning': completed!='t'}\">\n              {{(completed=='t') ? '再次儲存' : '點名完成'}}\n            </button>\n          </th>\n          <th *ngFor=\"let period of periods\" (click)=\"setAllStudentsAbs(period)\" class=\"setBtn thBorder\">\n            {{period.name}}\n          </th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr *ngFor=\"let stu of students\">\n          <td (click)=\"setStudentAllPeriodAbs(stu)\" class=\"setBtn\">\n            {{stu.seatNo}}. {{stu.name}}\n          </td>\n          <td *ngFor=\"let period of periods\" (click)=\"setStudentPeroidAbs(stu, period)\" class=\"setBtn\">\n            {{toShort(stu.leaveList.get(period.name)?.absName)}}\n          </td>\n        </tr>    \n      </tbody>\n    </table>\n    <p *ngIf=\"students.length==0\">目前無資料</p>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -65,6 +65,7 @@ var AppComponent = (function () {
     function AppComponent(appService, change) {
         this.appService = appService;
         this.change = change;
+        this.classes = new Array();
         /**假別 */
         this.absences = new Array();
         this.clearAbs = new __WEBPACK_IMPORTED_MODULE_1__help_class__["c" /* Absence */](null, null);
@@ -298,9 +299,12 @@ var AppService = (function () {
             body: "",
             map: function (rsp) {
                 var classes = new Array();
-                rsp.Class.forEach(function (item) {
-                    classes.push(new __WEBPACK_IMPORTED_MODULE_1__help_class__["a" /* Class */](item.ClassId, item.ClassName, item.GradeYear));
-                });
+                if (rsp.Class) {
+                    rsp.Class = [].concat(rsp.Class || []);
+                    rsp.Class.forEach(function (item) {
+                        classes.push(new __WEBPACK_IMPORTED_MODULE_1__help_class__["a" /* Class */](item.ClassId, item.ClassName, item.GradeYear));
+                    });
+                }
                 return classes;
             }
         });
@@ -313,19 +317,22 @@ var AppService = (function () {
             body: { Name: '節次對照表' },
             map: function (rsp) {
                 var periods = new Array();
-                rsp.List.Content.Periods.Period.forEach(function (item) {
-                    periods.push(new __WEBPACK_IMPORTED_MODULE_1__help_class__["b" /* Period */](item.Name, Number(item.Sort), item.Type));
-                });
-                // 排序
-                periods.sort(function (a, b) {
-                    if (a.sort > b.sort) {
-                        return 1;
-                    }
-                    if (a.sort < b.sort) {
-                        return -1;
-                    }
-                    return 0;
-                });
+                if (rsp.List && rsp.List.Content && rsp.List.Content.Periods && rsp.List.Content.Periods.Period) {
+                    rsp.List.Content.Periods.Period = [].concat(rsp.List.Content.Periods.Period || []);
+                    rsp.List.Content.Periods.Period.forEach(function (item) {
+                        periods.push(new __WEBPACK_IMPORTED_MODULE_1__help_class__["b" /* Period */](item.Name, Number(item.Sort), item.Type));
+                    });
+                    // 排序
+                    periods.sort(function (a, b) {
+                        if (a.sort > b.sort) {
+                            return 1;
+                        }
+                        if (a.sort < b.sort) {
+                            return -1;
+                        }
+                        return 0;
+                    });
+                }
                 return periods;
             }
         });
@@ -338,9 +345,12 @@ var AppService = (function () {
             body: { Name: '假別對照表' },
             map: function (rsp) {
                 var absences = new Array();
-                rsp.List.Content.AbsenceList.Absence.forEach(function (item) {
-                    absences.push(new __WEBPACK_IMPORTED_MODULE_1__help_class__["c" /* Absence */](item.Name, item.Abbreviation));
-                });
+                if (rsp.List && rsp.List.Content && rsp.List.Content.AbsenceList && rsp.List.Content.AbsenceList.Absence) {
+                    rsp.List.Content.AbsenceList.Absence = [].concat(rsp.List.Content.AbsenceList.Absence || []);
+                    rsp.List.Content.AbsenceList.Absence.forEach(function (item) {
+                        absences.push(new __WEBPACK_IMPORTED_MODULE_1__help_class__["c" /* Absence */](item.Name, item.Abbreviation));
+                    });
+                }
                 return absences;
             }
         });
