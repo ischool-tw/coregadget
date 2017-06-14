@@ -89,9 +89,13 @@
                                     if (part == '%TEXT%') {
                                         text += opt.Split[index];
                                     }
+                                    else if (part == '%RTEXT%') {
+                                        text += opt.Split[index];
+                                    }
                                     else {
                                         text += part;
                                     }
+                                    
                                 });
                                 qObj.Chose.push({
                                     Option: opt.Key,
@@ -194,28 +198,94 @@
                                             question.Option = [];
                                             options.forEach(function (optionString) {
                                                 //設定選項
-                                                var list = optionString.split("%TEXT%");
                                                 var optionItem = {
                                                     Key: optionString,
                                                     Checked: false,
                                                     Template: [],
                                                     Split: []
                                                 };
-                                                if (list.length > 1) {
+
+                                                var keyWord = [];
+                                                optionItem.keySize = {
+                                                    '%TEXT%': '100px',
+                                                    '%TEXT1%': '30px',
+                                                    '%TEXT2%': '60px',
+                                                    '%TEXT3%': '100px',
+                                                    '%TEXT4%': '150px',
+                                                    '%TEXT5%': '300px',
+                                                    '%RTEXT%': '100px',
+                                                    '%RTEXT1%': '30px',
+                                                    '%RTEXT2%': '60px',
+                                                    '%RTEXT3%': '100px',
+                                                    '%RTEXT4%': '150px',
+                                                    '%RTEXT5%': '300px'
+                                                };
+                                                optionItem.keyRequire = {
+                                                    '%RTEXT%': true,
+                                                    '%RTEXT1%': true,
+                                                    '%RTEXT2%': true,
+                                                    '%RTEXT3%': true,
+                                                    '%RTEXT4%': true,
+                                                    '%RTEXT5%': true
+                                                }
+                                                for(key in optionItem.keySize){
+                                                    keyWord.push(key);
+                                                }
+                                                keyWord.reverse();
+                                                
+                                                var keySplit = function (query, keyWord) {
+                                                    var key = keyWord.pop();
+                                                    var list = query.split(key);
+
                                                     list.forEach(function (item, index) {
-                                                        optionItem.Template.push(item);
-                                                        optionItem.Split.push(item);
+                                                        if (keyWord.length > 0) {
+                                                            keySplit(item, [].concat(keyWord));
+                                                        }
+                                                        else {
+                                                            optionItem.Template.push(item);
+                                                            optionItem.Split.push(item);
+                                                        }
                                                         if (index + 1 != list.length) {
-                                                            optionItem.Template.push("%TEXT%");
+                                                            optionItem.Template.push(key);
                                                             optionItem.Split.push("");
                                                         }
                                                     });
                                                 }
-                                                else {
-                                                    optionItem.Template = [optionString];
-                                                    optionItem.Split = [optionString];
-                                                }
+                                                keySplit(optionString, keyWord);
+
+                                                //var list = optionString.split("%TEXT%");
+                                                //list.forEach(function (item, index) {
+                                                //    var rlist = item.split("%RTEXT%");
+                                                //    if (rlist.length > 1) {
+                                                //        rlist.forEach(function (ritem, index) {
+                                                //            optionItem.Template.push(ritem);
+                                                //            optionItem.Split.push(ritem);
+                                                //            if (index + 1 != rlist.length) {
+                                                //                optionItem.Template.push("%RTEXT%");
+                                                //                optionItem.Split.push("");
+                                                //            }
+                                                //        });
+                                                //    }
+                                                //    else {
+                                                //        optionItem.Template.push(item);
+                                                //        optionItem.Split.push(item);
+                                                //    }
+                                                //    if (index + 1 != list.length) {
+                                                //        optionItem.Template.push("%TEXT%");
+                                                //        optionItem.Split.push("");
+                                                //    }
+                                                //});
                                                 question.Option.push(optionItem);
+                                                optionItem.Verify = function () {
+                                                    var result = true;
+                                                    optionItem.Template.forEach(function (item, index) {
+                                                        if (optionItem.keyRequire[item] && !optionItem.Split[index]) {
+                                                            result = false;
+                                                        }
+                                                    });
+                                                    return result;
+                                                }
+
                                                 //有回覆紀錄
                                                 var reply = replyMapping[section.Title + "&&^^&&" + question.Title + "&&^^&&" + optionString];
                                                 if (reply) {
@@ -228,7 +298,7 @@
                                             question.Verify = function () {
                                                 var count = 0;
                                                 question.Option.forEach(function (optionItem) {
-                                                    if (optionItem.Checked)
+                                                    if (optionItem.Checked && optionItem.Verify())
                                                         count++;
                                                 });
                                                 if (

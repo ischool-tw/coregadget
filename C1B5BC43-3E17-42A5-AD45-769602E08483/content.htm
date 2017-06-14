@@ -312,23 +312,30 @@
                                                         <div class="checkbox"
                                                              style="padding: 0px;margin-top: -5px;">
                                                             <label ng-repeat="opt in question.Option"
-                                                                   style="padding:0px 10px 10px 0px;display: inline-block;">
+                                                                   style="padding:0px 10px 10px 0px;display: inline;">
                                                                 <input type="checkbox" value="{{opt.Key}}" ng-model="opt.Checked" ng-change="CheckOpt(opt, question)">
                                                                 <span class="checkbox-material">
                                                                     <span class="check"></span>
                                                                 </span>
                                                                 <span ng-repeat="part in opt.Template track by $index"
-                                                                      ng-style="{color:opt.Checked?'#555':'#BFBFBF'}">
-                                                                    <span ng-if="part !== '%TEXT%'">
+                                                                      ng-style="{color:opt.Checked?(opt.Verify()?'#555':'red'):'#BFBFBF'}">
+                                                                    <span ng-if="!opt.keySize[part]"  >
                                                                         {{part}}
                                                                     </span>
-                                                                    <span ng-if="part === '%TEXT%'">
-                                                                        ：
-                                                                        <input ng-style="{color:opt.Checked?'':'#BFBFBF'}"
+                                                                    <span ng-if="opt.keySize[part] && !opt.keyRequire[part]">
+                                                                        <input ng-style="{color:opt.Checked?(opt.Verify()?'':'red'):'#BFBFBF', 'width':opt.keySize[part], 'background-image': opt.Checked?'linear-gradient(#009688, #009688), linear-gradient(#D2D2D2, #D2D2D2)':'linear-gradient(#D2D2D2, #D2D2D2), linear-gradient(#D2D2D2, #D2D2D2)'}"
                                                                                type="text"
                                                                                class="form-control"
-                                                                               style="display: inline-block;width:150px;"
+                                                                               style="display: inline-block;"
                                                                                placeholder=""
+                                                                               ng-model="opt.Split[$index]">
+                                                                    </span>                                                                    
+                                                                    <span ng-if="opt.keySize[part] && opt.keyRequire[part]">
+                                                                        <input ng-style="{color:opt.Checked?(opt.Verify()?'':'red'):'#BFBFBF', 'width':opt.keySize[part], 'background-image': opt.Checked?'linear-gradient(#009688, #009688), linear-gradient(#D2D2D2, #D2D2D2)':'linear-gradient(#D2D2D2, #D2D2D2), linear-gradient(#D2D2D2, #D2D2D2)'}"
+                                                                               type="text"
+                                                                               class="form-control"
+                                                                               style="display: inline-block;"
+                                                                               placeholder="必填"
                                                                                ng-model="opt.Split[$index]">
                                                                     </span>
                                                                 </span>
