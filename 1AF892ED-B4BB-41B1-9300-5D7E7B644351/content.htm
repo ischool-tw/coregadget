@@ -126,12 +126,11 @@
                 </ul>
             </div>
         </div>
-
         <div ng-if="studentList" class="hidden-xs" style="margin-top:10px;">
             <div style="position:relative;float:right;width:260px;">
                 <table class="table table-bordered table-striped"
                        style="width:260px;"
-                       data-offset-top="145" bs-affix>
+                       data-offset-top="145"  bs-affix>
                     <thead>
                         <tr>
                             <th colspan="2">成績輸入</th>
@@ -249,7 +248,16 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{current.Exam?current.Exam.SubName||current.Exam.Name:''}}</td>
+                            <td style="position:relative;">
+                                <span>{{current.Exam?current.Exam.SubName||current.Exam.Name:''}}</span>
+                                <div ng-if="current.Student&&current.Student.StudentScoreTag"
+                                     style="position: absolute;bottom: 0px;width: 260px;margin-bottom: -25px;"
+                                     >
+                                    <small class="text-muted" style="width: 260px;">
+                                        {{current.Student.StudentScoreTag}}
+                                    </small>
+                                </div>
+                            </td>
                             <td ng-if="current.Exam && current.Student">
                                 <div ng-if="current.Exam.Lock || !current.Student || current.Exam.Type == 'Program' || current.Exam.Permission !== 'Editor'"
                                      ng-class="{'text-danger':current.Student[current.Exam.Name] < 60}"
@@ -300,6 +308,7 @@
                                         {{option.Label}}
                                     </button>
                                 </div>
+                                
                             </td>
                             <td ng-if="!current.Exam || !current.Student"
                                 class="text-center">
@@ -307,9 +316,11 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
-
+                </table>      
             </div>
+            
+            
+
             <div style="margin-right:270px;">
                 <table class="table table-bordered table-striped table-hover text-center"
                        style="table-layout:fixed;">

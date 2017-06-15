@@ -10,7 +10,8 @@
                 Student: {
                     SeatNo: "5",
                     StudentName: "凱澤",
-                    StudentID: "3597"
+                    StudentID: "3597",
+                    StudentScoreTag :"成績身分:一般生"
                 },
                 Exam: {
                     Name: 'Midterm',
@@ -30,6 +31,7 @@
                     SeatNo: "5",
                     Final: "",
                     Midterm: "89",
+                    StudentScoreTag: "成績身分:一般生",
                     index: 0
                 }
             ],
@@ -725,6 +727,17 @@
                                         $scope.studentList = [];
                                         [].concat(response.Students.Student || []).forEach(function (studentRec, index) {
                                             studentRec.SeatNo = studentRec.SeatNumber;
+
+                                            //2017/6/15 穎驊新增，因應 [A09][06] 子成績輸入-顯示成績身分 項目 ，加入顯示身分類別 ，以利老師在輸入成績時作為判別資訊。
+                                            if (studentRec.Tags) {
+                                                [].concat(studentRec.Tags.Tag || []).forEach(function (tag) {
+
+                                                    if (tag.Name.includes("成績身分")) {
+                                                        studentRec.StudentScoreTag = tag.Name;
+                                                    }
+                                                });
+                                            }
+                                            
                                             studentRec.index = index;
                                             $scope.examList.forEach(function (examRec) {
                                                 studentRec["Exam" + examRec.ExamID] = '';
