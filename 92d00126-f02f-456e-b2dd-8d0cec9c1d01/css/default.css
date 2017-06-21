@@ -331,6 +331,8 @@ input[type=checkbox]:not(:disabled)~.lever:active:after {
     padding-bottom: 160px;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
+    padding: 20px;
+    background: #FFF;
 }
 
 @media (max-width: 767px) {
