@@ -112,6 +112,8 @@ input,
     -webkit-overflow-scrolling: touch;
     padding: 20px 20px 160px;
     background: #FFF;
+    max-width: 1024px;
+    margin: 0 auto;
 }
 
 @media (min-width: 1024px) {
