@@ -251,6 +251,21 @@
             $scope.Data_has_changed = true;
 
             $scope.current.Student["Exam" + $scope.current.Exam.ExamID] = $scope.current.Value;
+
+
+            var done = false;
+
+            $scope.effortPairList.forEach(function (effortItem) {
+
+                if (!done && $scope.current.Value >= effortItem.Score)
+                {
+                    $scope.current.Student["Exam" + $scope.current.Exam.Name + "_" + "努力程度"] = effortItem.Code;
+
+                    done = true;
+                }
+                
+            });
+            
             $scope.calc();
             var nextStudent =
                 $scope.studentList.length > ($scope.current.Student.index + 1) ?
@@ -274,6 +289,46 @@
         }
 
         $scope.saveAll = function () {
+
+            //  儲存文字評量 放這邊
+
+            // 文字評量的上傳物件
+            var text_body = {
+                Content:
+                {
+                    AttendExtension: []
+                }                                
+            };
+
+            [].concat($scope.current.Course.Scores.Score || []).forEach(function (examRec, index) {
+                if (!examRec.Lock) {
+
+
+                    [].concat($scope.studentList || []).forEach(function (studentRec, index) {
+
+                        var obj = {
+                            
+                            Extension: {
+                                Extension: {
+                                    Text: studentRec["Exam" + "文字評量"]                                       
+                                }
+                            },
+                            Condition: {
+                                StudentID: studentRec.StudentID,
+                                CourseID: $scope.current.Course.CourseID,                            
+                            }                                                        
+                        };
+
+                        text_body.Content.AttendExtension.push(obj);
+                    });
+
+                }
+            });
+
+
+
+
+
             var body = {
                 Content: {
                     '@CourseID': $scope.current.Course.CourseID,
@@ -292,9 +347,14 @@
 
                             // 2017/7/31 穎驊註解， 下列 為成績輸入2.0 的儲存格式，但其不與舊高雄 Flash 成績輸入相容， 因此更改其讀取成績結構位置，又另外由於serve端 Score 必輸入，因此一律補0。
                             //'@Score': studentRec["Exam" + examRec.ExamID],
+
+                            // 2017/7/31 穎驊註解， 新增努力程度儲存
                             '@Score': 0,
                             Extension: {
-                                Extension: { Score: studentRec["Exam" + examRec.ExamID] }
+                                Extension: {
+                                    Score: studentRec["Exam" + examRec.ExamID],
+                                    Effort: studentRec["Exam" + examRec.Name +"_"+"努力程度"]
+                                }
                             }
                         };
                         [].concat(examRec.SubExamList || []).forEach(function (subExamRec) {
@@ -307,6 +367,31 @@
                     body.Content.Exam.push(eItem);
                 }
             });
+
+            //  2017/8/4 穎驊新增 文字評量的儲存
+            $scope.connection.send({
+                service: "TeacherAccess.SetSCAttendExtensionKH",
+                autoRetry: true,
+                body: text_body,
+                result: function (response, error, http) {
+                    if (error) {
+                        alert("TeacherAccess.SetSCAttendExtensionKH Error");
+                    } else {
+
+                        $scope.$apply(function () {
+                            $scope.studentList.forEach(function (studentRec, index) {
+                                var rawStudentRec = angular.copy(studentRec);
+                                for (var key in rawStudentRec) {
+                                    if (!key.match(/(學期成績|Origin)$/gi))
+                                        studentRec[key + 'Origin'] = studentRec[key];
+                                }
+                            });
+                        });
+                    }
+                }
+            });
+
+
 
             $scope.connection.send({
                 service: "TeacherAccess.SetCourseExamScoreWithExtension",
@@ -381,7 +466,7 @@
                         }
                     }
                 }
-            });
+            });                        
         }
 
         $scope.isMobile = navigator.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/gi) ? true : false;
@@ -636,7 +721,7 @@
                     SubName: '努力程度',
                     Type: 'Number',
                     Permission: 'Editor',
-                    Lock: false,
+                    Lock: examRec.Lock,////2017/8/2 穎驊新增   若其母exam項目 為Lock，也跟著鎖上。
                     Group: examRec,
                     SubVisible : false,
                 };
@@ -672,6 +757,20 @@
                                 base += p;
                             }
                     });
+
+                    //2017/8/4 穎驊新增  固定 將平時評量納入 試算
+                    // 另外由於 高雄的 平時評量成績 與 定期評量的成績 比例為 6 : 4
+                    // 比值 為 1.5
+                    // 故直接 將 總加權母數base *1.5 作為 平時評量的加權數即可
+                    // 如此一來可以動到最少程式碼
+                    if (stu["Exam" + "平時評量"] != "缺"){
+
+                        if (stu["Exam" + "平時評量"] || stu["Exam" + "平時評量"] == "0") {
+                            total += seed * base * 1.5 * Number(stu["Exam" + "平時評量"]);
+                            base += base*1.5;
+                        }
+                    }
+
                     if (base) {
                         var round = Math.pow(10, $scope.params[finalScorePreview.Name + 'Round'] || $scope.params.DefaultRound);
                         stu["Exam" + finalScorePreview.ExamID] = Math.round((Math.floor(total / base) / seed) * round) / round;
@@ -690,7 +789,7 @@
 
 
             //2017/8/2 穎驊新增  平時評量
-            var usualScore = { ExamID: '平時評量', Name: '平時評量', Type: 'Number', Permission: 'Editor', Lock: false };
+            var usualScore = { ExamID: '平時評量', Name: '平時評量', Type: 'Number', Permission: 'Editor', Lock: true };
 
             //2017/8/2 穎驊新增  平時評量_努力程度 子成績項目
             var usualScoreEffort = {
@@ -699,7 +798,7 @@
                 SubName: '努力程度',
                 Type: 'Number',
                 Permission: 'Editor',
-                Lock: false,
+                Lock: true,
                 Group: usualScore,       
                 SubVisible: false,
             };
@@ -713,7 +812,13 @@
 
 
             //2017/8/2 穎驊新增  文字評量
-            var textScore = { ExamID: '文字評量', Name: '文字評量', Type: 'Text', Permission: 'Editor', Lock: false };
+            var textScore = {
+                ExamID: '文字評量',
+                Name: '文字評量',
+                Type: 'Text',
+                Permission: 'Editor',
+                Lock: !(new Date(course.TemplateExtension.Extension.TextStartTime) < new Date() && new Date() < new Date(course.TemplateExtension.Extension.TextEndTime)) //  文字評量的 輸入開放與否，依照系統 評量設定的 開放時間為基準。
+            };
 
             $scope.examList.push(textScore);
 
@@ -867,6 +972,10 @@
                                                                         studentMapping[examScoreRec.StudentID]["Exam" + subExamRec.ExamID] = examScoreRec.Extension.Extension[subExamRec.ExtName];
                                                                     }
                                                                 });
+
+                                                                // 2017/7/31 穎驊註解， 新增努力程度取得
+                                                                studentMapping[examScoreRec.StudentID]["Exam" + examRec.Name + "_" + "努力程度"] = examScoreRec.Extension.Extension.Effort;
+
                                                             }
                                                         });
                                                     });
@@ -929,6 +1038,52 @@
                                             }
                                         }
                                     });
+
+                                    //2017/8/4 穎驊新增
+                                    //抓課程 文字評量、 平時評量 平時努力程度
+                                    $scope.connection.send({
+                                        service: "TeacherAccess.GetSCAttendExtension",
+                                        autoRetry: true,
+                                        body: {
+                                            Content: {
+                                                Field: {
+                                                    All: ''
+                                                },
+                                                Condition: {
+                                                    CourseID: course.CourseID
+                                                }                                               
+                                            }
+                                        },
+                                        result: function (response, error, http) {
+                                            if (error) {
+                                                alert("TeacherAccess.GetSCAttendExtension Error");
+                                            } else {
+
+                                                $scope.$apply(function () {
+                                                    [].concat(response.AttendExtensionList.AttendExtension || []).forEach(function (AttendExtensionRec, index) {
+
+                                                        if (AttendExtensionRec.Extension.Extension) {
+
+                                                            studentMapping[AttendExtensionRec.StudentID]["Exam" + "文字評量"] = AttendExtensionRec.Extension.Extension.Text;
+
+                                                            studentMapping[AttendExtensionRec.StudentID]["Exam" + "平時評量"] = AttendExtensionRec.Extension.Extension.OrdinarilyScore;
+                                                            studentMapping[AttendExtensionRec.StudentID]["Exam" + "平時評量" + "_" + "努力程度"] = AttendExtensionRec.Extension.Extension.OrdinarilyEffort;
+                                                        }                                                        
+                                                    });
+                                                    
+                                                    $scope.studentList.forEach(function (studentRec, index) {
+
+                                                        var rawStudentRec = angular.copy(studentRec);
+                                                        for (var key in rawStudentRec) {
+                                                            if (!key.match(/Origin$/gi))
+                                                                studentRec[key + 'Origin'] = studentRec[key];
+                                                        }
+                                                    });
+                                                    $scope.setupCurrent();                                                    
+                                                });
+                                            }
+                                        }
+                                    });
                                 }
                             }
                         });
@@ -936,6 +1091,45 @@
                 }
             });
         }
+
+
+        //2017/8/3  穎驊新增 抓努力程度對照表
+        $scope.connection.send({
+            service: "TeacherAccess.GetEffortDegreeMappingTable",
+            autoRetry: true,
+            body: {
+                Content: {}
+            },
+            result: function (response, error, http) {
+                if (error) {
+                    alert("TeacherAccess.GetEffortDegreeMappingTable Error");
+                } else {
+
+                    $scope.$apply(function () {
+
+                        $scope.effortPairList = [];
+
+                        if (response.Response.EffortList) {
+                            if (response.Response.EffortList.Effort) {
+
+                                response.Response.EffortList.Effort.forEach(function (effortRec) {
+
+                                    var effortItem ={
+                                        Code: effortRec.Code,
+                                        Score: effortRec.Score,
+                                        Name: effortRec.Name
+                                        }
+                                    $scope.effortPairList.push(effortItem);
+                                });
+
+                                // 把分數區間 由高遞減， 避免後續輸入完成績後自動帶入 努力程度 出錯
+                                $scope.effortPairList.sort(function (a, b) { return b.Score - a.Score });
+                            }
+                        }
+                    });
+                }
+            }
+        });
 
         $scope.checkAllTable = function () {
             var pass = true;

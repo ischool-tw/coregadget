@@ -128,6 +128,8 @@
         </div>
         <div ng-if="studentList" class="hidden-xs" style="margin-top:10px;">
             <div style="position:relative;float:right;width:260px;">
+
+                <!-- 成績輸入 -->
                 <table class="table table-bordered table-striped"
                        style="width:260px;"
                        data-offset-top="145"  bs-affix>
@@ -317,6 +319,54 @@
                         </tr>
                     </tbody>
                 </table>      
+
+
+                <!-- 2017/8/3 穎驊新增 努力程度對照表 -->
+                <table class="table table-bordered table-striped"
+                       style="width:260px;"
+                       data-offset-top="145" bs-affix>
+                    <thead>
+                        <tr>
+                            <th class="text-center" colspan="3">努力程度對照表</th>
+                        </tr>
+                        <tr>
+                            <th class="text-center" style="width:50px;" >分數</th>
+                            <th class="text-center" style="width:50px;">努力程度</th>
+                            <th class="text-center">文字描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="effortItem in effortPairList">
+                            <td class="text-center" style="padding:0px;" >{{effortItem.Score}} </td>
+                            <td class="text-center" style="padding:0px;">{{effortItem.Code}}</td>
+                            <td class="text-center" style="padding:0px;">{{effortItem.Name}}</td>
+                            
+                        </tr>                                                
+                    </tbody>                    
+                </table>      
+
+                <!-- 文字評量代碼對照表  2017/8/3 穎驊註解，恩正說這部分先不要做，等日後回饋-->
+                <!--<table class="table table-bordered table-striped"
+                       style="width:260px;"
+                       data-offset-top="145" bs-affix>
+                    <thead>
+                        <tr>
+                            <th class="text-center" colspan="3">文字評量代碼</th>
+                        </tr>
+                        <tr>
+                            <th class="text-center" style="width:50px;">分類</th>
+                            <th class="text-center" style="width:50px;">代碼</th>
+                            <th class="text-center">文字描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center" style="padding:0px;"></td>
+                            <td class="text-center" style="padding:0px;"></td>
+                            <td class="text-center" style="padding:0px;"></td>                            
+                        </tr>
+                    </tbody>
+                </table>-->
             </div>
             
             
