@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+
+<head>
+  <meta charset="utf-8">
+  <title>惠文高中學雜費減免</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="assets/js/gadget.js"></script> 
+  <script>
+  init({
+    application: "test.h.hwsh.tc.edu.tw",
+    oAuth: {
+      clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+      clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
+      account: 'bubu@debug.ischool.com.tw',
+      password: '1234'
+    },
+    paramValues: {}
+  });
+  </script>
+  <script type="text/javascript" src="assets/js/vue.js"></script>
+  <script type="text/javascript" src="node_modules/core-js/client/shim.min.js"></script>
+  <script type="text/javascript" src="assets/js/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="assets/bootstrap/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-theme.min.css">
+  <link href="styles.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="gadget" class="my-page" style="min-height: 95vh">
+    <h1>學雜費減免</h1>
+    <div v-show="!ready" style="display:none">
+      載入中...
+    </div>
+    <div v-show="ready" style="display:none">
+      <div>
+        <div v-if="startDate && endDate" style="font-size:18px">
+          <span> {{schoolYear}}學年度 {{convertSemester}}學期 </span>
+          <span class="text-danger">輸入期間: {{startDate | date}} ~ {{endDate | date}} </span>
+        </div>
+        <div v-else>
+          無資料
+        </div>
+      </div>
+      <div style="margin-top: 15px">
+        <div v-if="changeableItems.length==0">
+          您沒有可管理的異動標準
+        </div>
+        <div v-if="currentView=='tuition-fees'" style="display:flex">
+          <div class="dropdown" style="flex:1">
+            <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdowClass" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              {{selItem || '異動標準名稱'}}
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdowClass">
+              <li v-for="item of changeableItems" @click="selItem=item"><a href="#">{{item}}</a></li>
+            </ul>
+          </div>
+          <div style="flex:1;text-align:right">
+            <button v-show="currentView=='tuition-fees'" @click="toggleView('import-fees')" :disabled="!selItem" type="button" class="btn btn-sm btn-primary">新增</button>
+          </div>
+        </div>
+        <div v-if="currentView=='import-fees'" style="display:flex">
+          <h4 style="flex:1">新增：{{selItem}}</h4>
+          <div style="flex:1;text-align:right">
+            <button v-show="currentView=='import-fees'" @click="toggleView('tuition-fees')" type="button" class="btn btn-sm btn-info">返回主頁</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-show="selItem" style="margin-top: 10px;">
+      <tuition-fees v-if="currentView=='tuition-fees'" :sel-item="selItem" :school-year="schoolYear" :semester="semester"></tuition-fees>
+      <import-fees v-if="currentView=='import-fees'" :sel-item="selItem" :school-year="schoolYear" :semester="semester" @finish="createSuccess"></import-fees> 
+    </div>
+  </div>
+
+  <!-- template for the modal component -->
+  <script type="text/x-template" id="modal-template">
+    <div :id="modalId" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <slot name="modal-header"></slot>
+          </div>
+          <div class="modal-body">
+            <slot name="modal-body"></slot>
+          </div>
+          <div class="modal-footer">
+            <slot name="modal-footer"></slot>
+          </div>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/x-template" id="tuition-fees-template">
+    <div :ready="watchSelItem">
+      <div v-if="loading">載入中...</div>
+      <div v-if="!loading">
+        <div v-if="students && students.length">
+          <table class="table table-bordered table-striped table-hover">
+            <thead>
+              <tr>
+                <th style="width:70px">
+                  <div class="checkbox" style="margin-bottom:0">
+                    <label for="checkAll">
+                      <input :checked="checkAll" @click="checkAll=!checkAll;setCheckedAll()" type="checkbox" id="checkAll">
+                      全選
+                    </label>
+                  </div>
+                </th>
+                <th>班級</th>
+                <th>座號</th>
+                <th>學號</th>
+                <th>姓名</th>
+                <th>收費標準</th>
+                <th>金額</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="stu of students" track-by="uuid">
+                <td>
+                  <input type="checkbox" v-model="stu.checked">
+                </td>
+                <td>{{stu['班級']}}</td>
+                <td>{{stu['座號']}}</td>
+                <td>{{stu['學號']}}</td>
+                <td>{{stu['姓名']}}</td>
+                <td>{{stu['收費標準名稱']}}</td>
+                <td>{{stu['異動金額']}}</td>
+              </tr>    
+            </tbody>
+          </table> 
+          <div class="text-danger pull-right">實際金額以後台結算之後為主</div>
+          <div>
+            <button @click="showDeleteModel" :disabled="!filterFlag" type="button" class="btn btn-sm btn-danger">刪除</button>
+            <button @click="showChangeFeeModel" :disabled="!filterFlag" type="button" class="btn btn-sm btn-warning">修改金額</button> 
+          </div> 
+        </div> 
+        <div v-if="students && students.length==0">目前無資料</div>
+      </div>
+      <delete-modal :modal-id="deleteModalId">
+        <h4 slot="modal-header" class="modal-title">刪除</h4>
+        <div slot="modal-body">
+          <p>您確定要刪除嗎？</p>
+          <div v-show="errMsg" class="text-danger">{{errMsg}}</div>
+        </div>
+        <div slot="modal-footer">
+          <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">取消</button>
+          <button v-show="!saving" @click="deleteStu" type="button" class="btn btn-sm btn-danger pull-right">確定</button>
+          <span v-show="saving">刪除中，請稍候...</span>
+        </div>
+      </delete-modal>  
+      <change-fee-modal :modal-id="changeFeeModalId">
+        <h4 slot="modal-header" class="modal-title">修改金額</h4>
+        <div slot="modal-body">
+          <input @keyup.enter="changeFee" v-model="newFee" id="tuitionNewFee" type="number" style="width:100%"></input>
+          <div v-show="errMsg" class="text-danger">{{errMsg}}</div>
+        </div>
+        <div slot="modal-footer">
+          <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">取消</button>
+          <button v-show="!setting" @click="changeFee" type="button" class="btn btn-sm btn-primary pull-right">確定</button>
+          <span v-show="setting">修改中，請稍候...</span>
+        </div>
+      </change-fee-modal>
+      <component :is="currentModal"></component>
+    </div>
+  </script>
+
+  <script type="text/x-template" id="import-fees-template">
+    <div>
+      <div style="margin: 0 25%">
+        <div class="stepwizard" style="width:100%">
+          <div class="stepwizard-row setup-panel">
+            <div class="stepwizard-step">
+              <div @click="toStep(1)" class="btn btn-circle" :class="[step==1 ? 'btn-primary' : 'btn-default']">1</div>
+              <p>步驟 1</p>
+            </div>
+            <div class="stepwizard-step">
+              <div v-if="step==1">
+                <div disabled="disabled" class="btn btn-circle btn-default">2</div>
+              </div>
+              <div v-if="step!=1">
+                <div @click="toStep(2)" class="btn btn-circle" :class="[step==2 ? 'btn-primary' : 'btn-default']">2</div>
+              </div>
+              <p>步驟 2</p>
+            </div>
+            <div class="stepwizard-step">
+              <div :disabled="[1,2].indexOf(step)!=-1" class="btn btn-circle glyphicon glyphicon-ok" :class="[step==3 ? 'btn-success' : 'btn-default']"></div>
+              <p>完成</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row setup-content">
+        <div class="col-md-offset-1 col-md-10 col-xs-12">
+          <div v-if="step==1">
+            <h4> 步驟1. 輸入學號 </h4>
+            <div>
+              <div v-show="errMsg" class="text-danger">{{errMsg}}</div>
+              <textarea
+                v-bind:class="{ disabled: parsing }"
+                v-model="sourceData"
+                :placeholder="placeHolder"
+                id="sourceData"
+                style="width:100%" rows="15">
+              </textarea>
+            </div>
+            <div style="text-align: right">
+              <button v-show="!parsing" @click="imports" :disabled="!sourceData" type="button" class="btn btn-sm btn-primary">確定</button>
+              <span v-show="parsing">處理中，請稍候...</span>
+            </div>
+          </div>
+          <div v-if="step==2">
+            <h4> 步驟2. 確認名單及調整金額 </h4>
+            <div style="text-align: right">
+              <button @click="showReviseFeeModel" type="button" class="btn btn-sm btn-warning">調整金額</button> 
+            </div>
+            <div v-show="errMsg" class="text-danger">{{errMsg}}</div>
+            <table class="table table-bordered table-striped table-hover" style="margin-top: 15px;">
+              <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>班級</th>
+                  <th>座號</th>
+                  <th>學號</th>
+                  <th>姓名</th>
+                  <th>收費標準</th>
+                  <th>金額</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(stu, index) of students">
+                  <td>{{index + 1}}</td>
+                  <td>{{stu['班級']}}</td>
+                  <td>{{stu['座號']}}</td>
+                  <td>{{stu['學號']}}</td>
+                  <td>{{stu['姓名']}}</td>
+                  <td>{{stu['收費標準名稱']}}</td>
+                  <td>{{stu['異動金額']}}</td>
+                </tr>    
+              </tbody>
+            </table>
+            <div style="text-align: right">
+              <button @click="toStep(1)" type="button" class="btn btn-sm btn-info">上一步</button>
+              <button v-show="!saving" @click="doCreate" type="button" class="btn btn-sm btn-primary">確定</button>
+              <span v-show="saving">處理中，請稍候...</span>
+            </div>
+            <modal :modal-id="reviseFeeModalId">
+              <h4 slot="modal-header" class="modal-title">調整金額</h4>
+              <div slot="modal-body">
+                <div v-show="errMsg" class="text-danger">{{errMsg}}</div>
+                <input @keyup.enter="reviseFee" v-model="newFee" id="importStusNewFee" type="number" style="width:100%"></input>
+              </div>
+              <div slot="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">取消</button>
+                <button v-show="!setting" @click="reviseFee" type="button" class="btn btn-sm btn-primary pull-right">確定</button>
+                <span v-show="setting">調整中，請稍候...</span>
+              </div>
+            </modal>
+          </div>
+           <div v-if="step==3">
+            <h4>完成</h4>
+            <div style="text-align: center">
+              <div>共調整了 {{students.length}} 筆資料。</div>
+              <div class="glyphicon glyphicon-ok-sign text-success" style="font-size:10vw" aria-hidden="true"></div>
+              <div style="margin-top: 30px">
+                <button @click="sourceData=null;toStep(1)" type="button" class="btn btn-sm btn-info">繼續新增</button>
+                <button @click="$emit('finish')" type="button" class="btn btn-sm btn-info">返回主頁</button></div>
+              </div>
+            </div>
+          </div> 
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/javascript" src="main.js"></script>
+</body>
+
+</html>
