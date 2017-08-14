@@ -19,7 +19,6 @@
   });
   </script>
   <script type="text/javascript" src="assets/js/vue.js"></script>
-  <script type="text/javascript" src="node_modules/core-js/client/shim.min.js"></script>
   <script type="text/javascript" src="assets/js/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="assets/bootstrap/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
@@ -50,11 +49,11 @@
         <div v-if="currentView=='tuition-fees'" style="display:flex">
           <div class="dropdown" style="flex:1">
             <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdowClass" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              {{selItem || '異動標準名稱'}}
+              {{selItem['異動標準名稱'] || '異動標準名稱'}}
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdowClass">
-              <li v-for="item of changeableItems" @click="selItem=item"><a href="#">{{item}}</a></li>
+              <li v-for="item of changeableItems" @click="selItem=item"><a href="#">{{item['異動標準名稱']}}</a></li>
             </ul>
           </div>
           <div style="flex:1;text-align:right">
@@ -62,7 +61,7 @@
           </div>
         </div>
         <div v-if="currentView=='import-fees'" style="display:flex">
-          <h4 style="flex:1">新增：{{selItem}}</h4>
+          <h4 style="flex:1">新增：{{selItem['異動標準名稱']}}</h4>
           <div style="flex:1;text-align:right">
             <button v-show="currentView=='import-fees'" @click="toggleView('tuition-fees')" type="button" class="btn btn-sm btn-info">返回主頁</button>
           </div>
@@ -133,10 +132,10 @@
               </tr>    
             </tbody>
           </table> 
-          <div class="text-danger pull-right">實際金額以後台結算之後為主</div>
+          <div v-if="selItem.type=='百分比'" class="text-danger pull-right">{{selItem['類別']}} {{selItem['百分比']}}% 實際金額以後台結算之後為主</div>
           <div>
             <button @click="showDeleteModel" :disabled="!filterFlag" type="button" class="btn btn-sm btn-danger">刪除</button>
-            <button @click="showChangeFeeModel" :disabled="!filterFlag" type="button" class="btn btn-sm btn-warning">修改金額</button> 
+            <button v-if="selItem.type=='金額'" @click="showChangeFeeModel" :disabled="!filterFlag" type="button" class="btn btn-sm btn-warning">修改金額</button> 
           </div> 
         </div> 
         <div v-if="students && students.length==0">目前無資料</div>
@@ -188,14 +187,16 @@
               <p>步驟 2</p>
             </div>
             <div class="stepwizard-step">
-              <div :disabled="[1,2].indexOf(step)!=-1" class="btn btn-circle glyphicon glyphicon-ok" :class="[step==3 ? 'btn-success' : 'btn-default']"></div>
-              <p>完成</p>
+              <div>
+                <div :disabled="[1,2].indexOf(step)!=-1" class="btn btn-circle glyphicon glyphicon-ok" :class="[step==3 ? 'btn-success' : 'btn-default']"></div>
+              </div>
+              <p>完成了</p>
             </div>
           </div>
         </div>
       </div>
       <div class="row setup-content">
-        <div class="col-md-offset-1 col-md-10 col-xs-12">
+       <div style="margin: 0 10%">
           <div v-if="step==1">
             <h4> 步驟1. 輸入學號 </h4>
             <div>
@@ -215,7 +216,7 @@
           </div>
           <div v-if="step==2">
             <h4> 步驟2. 確認名單及調整金額 </h4>
-            <div style="text-align: right">
+            <div v-if="selItem.type=='金額'" style="text-align: right">
               <button @click="showReviseFeeModel" type="button" class="btn btn-sm btn-warning">調整金額</button> 
             </div>
             <div v-show="errMsg" class="text-danger">{{errMsg}}</div>
@@ -248,6 +249,7 @@
               <button v-show="!saving" @click="doCreate" type="button" class="btn btn-sm btn-primary">確定</button>
               <span v-show="saving">處理中，請稍候...</span>
             </div>
+            <div v-if="selItem.type=='百分比'" class="text-danger pull-right">{{selItem['類別']}} {{selItem['百分比']}}% 實際金額以後台結算之後為主</div>
             <modal :modal-id="reviseFeeModalId">
               <h4 slot="modal-header" class="modal-title">調整金額</h4>
               <div slot="modal-body">
@@ -264,8 +266,8 @@
            <div v-if="step==3">
             <h4>完成</h4>
             <div style="text-align: center">
-              <div>共調整了 {{students.length}} 筆資料。</div>
               <div class="glyphicon glyphicon-ok-sign text-success" style="font-size:10vw" aria-hidden="true"></div>
+              <div>共調整了 {{students.length}} 筆資料。</div>
               <div style="margin-top: 30px">
                 <button @click="sourceData=null;toStep(1)" type="button" class="btn btn-sm btn-info">繼續新增</button>
                 <button @click="$emit('finish')" type="button" class="btn btn-sm btn-info">返回主頁</button></div>

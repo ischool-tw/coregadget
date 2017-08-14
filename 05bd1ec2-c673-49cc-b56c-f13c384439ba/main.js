@@ -51,7 +51,7 @@ Vue.component('tuition-fees', {
 						Request: {
 							'學年度': self.schoolYear,
 							'學期': self.semester,
-							'異動標準名稱': self.selItem
+							'異動標準名稱': self.selItem['異動標準名稱']
 						}
 					},
 					result: function(response, error) {
@@ -69,7 +69,7 @@ Vue.component('tuition-fees', {
 		},
 		showChangeFeeModel: function() {
 			this.errMsg = null;
-			this.newFee = 0;
+			this.newFee = this.selItem['金額'];
 			this.setting = false;
 			
 			$('#'+this.changeFeeModalId).one('shown.bs.modal', function() {
@@ -97,7 +97,7 @@ Vue.component('tuition-fees', {
 					body: {
 						'學年度': self.schoolYear,
 						'學期': self.semester,
-						'異動標準名稱': self.selItem,
+						'異動標準名稱': self.selItem['異動標準名稱'],
 						'異動': data
 					},
 					result: function(response, error) {
@@ -126,7 +126,6 @@ Vue.component('tuition-fees', {
 		},
 		showDeleteModel: function() {
 			this.errMsg = null;
-			this.newFee = 0;
 			this.saving = false;
 			$('#'+this.deleteModalId).modal('show');
 			this.currentModal = 'delete-modal';
@@ -150,7 +149,7 @@ Vue.component('tuition-fees', {
 							Condition1: {
 								'學年度': self.schoolYear,
 								'學期': self.semester,
-								'異動標準名稱': self.selItem,
+								'異動標準名稱': self.selItem['異動標準名稱'],
 							},
 							Condition2: {
 								'收費表': delData
@@ -248,7 +247,7 @@ Vue.component('import-fees', {
 								'學期': self.semester
 							},
 							Condition2: {
-								'異動標準名稱': self.selItem
+								'異動標準名稱': self.selItem['異動標準名稱']
 							},
 							Condition3: {
 								'學號': tmpStudentNumbers
@@ -257,10 +256,17 @@ Vue.component('import-fees', {
 					},
 					result: function(response, error) {
 						if (!error) {
-							self.students = [].concat(response.Response['收費表異動明細'] || []);
-							self.students.map(function(item){
-								self.$set(item, 'checked', false);
+							let tmp = [].concat(response.Response['收費表異動明細'] || []);
+							tmp.map(function(item) {
+								if (self.selItem.type == '百分比') {
+									item['異動金額'] = 0;
+								}
+								else {
+									item['異動金額'] = item['異動金額'] || 0;
+								}
 							});
+
+							self.students = tmp;
 							
 							if (self.students.length) {
 								self.toStep(2);
@@ -284,7 +290,7 @@ Vue.component('import-fees', {
 		},
 		showReviseFeeModel: function() {
 			this.errMsg = null;
-			this.newFee = 0;
+			this.newFee = this.selItem['金額'];
 			this.setting = false;
 			$('#'+this.reviseFeeModalId).one('shown.bs.modal', function() {
 				$('#importStusNewFee').focus().select();
@@ -322,7 +328,7 @@ Vue.component('import-fees', {
 				body: {
 					'學年度': self.schoolYear,
 					'學期': self.semester,
-					'異動標準名稱': self.selItem,
+					'異動標準名稱': self.selItem['異動標準名稱'],
 					'異動': data
 				},
 				result: function(response, error) {
@@ -397,9 +403,14 @@ let vm = new Vue({
 									result: function(response, error) {
 										if (!error) {
 											let items = [].concat(response.Response['異動標準'] || []);
+											let keys = [];
 											
 											items.forEach(function(item) {
-												self.changeableItems.push(item['異動標準名稱']);
+												if (keys.indexOf(item['異動標準名稱']) == -1) {
+													keys.push(item['異動標準名稱']);
+													item.type = (item['百分比'] && item['百分比'] != '0' ? '百分比' : '金額');
+													self.changeableItems.push(item);
+												}
 											});
 
 											if (self.changeableItems.length > 0) self.selItem = self.changeableItems[0];
