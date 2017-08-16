@@ -19,6 +19,9 @@ Vue.component('tuition-fees', {
 			flag: 0,
 			currentModal: null,
 			saving: false,
+			keyword: null,
+			filterKey: null,
+			matchCount: 0,
 		}
 	},
 	computed: {
@@ -34,7 +37,7 @@ Vue.component('tuition-fees', {
 				this.getTuitionFees();
 			}
 			return;
-		}
+		},
 	},
 	methods: {
 		getTuitionFees: function() {
@@ -59,6 +62,7 @@ Vue.component('tuition-fees', {
 							self.students = [].concat(response.Response['Student'] || []);
 							self.students.map(function(item){
 								self.$set(item, 'checked', false);
+								self.$set(item, 'enabled', true)
 							});
 							
 							self.loading = false;
@@ -173,6 +177,17 @@ Vue.component('tuition-fees', {
 					}
 				}
 			});					
+		},
+		filterStuNumber: function() {
+			let self = this;
+			self.filterKey = self.keyword;
+			self.matchCount = 0;
+			[].concat(self.students || []).forEach(function(stu) {
+				let value = (self.keyword ? stu['學號'].indexOf(self.filterKey)!=-1 : true);
+				self.matchCount += (value ? 1 : 0);
+				self.$set(stu, 'enabled', value);
+			});
+			
 		},
 	},
 	components: {

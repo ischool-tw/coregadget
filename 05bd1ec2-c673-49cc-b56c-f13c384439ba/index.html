@@ -58,11 +58,11 @@
               </ul>
             </div>
             <div style="flex:1;text-align:right">
-              <button v-show="currentView=='tuition-fees'" @click="toggleView('import-fees')" :disabled="!selItem" type="button" class="btn btn-sm btn-primary">新增</button>
+              <button v-show="currentView=='tuition-fees'" @click="toggleView('import-fees')" :disabled="!selItem" type="button" class="btn btn-sm btn-primary">新增 / 修改</button>
             </div>
           </div>
           <div v-if="currentView=='import-fees'" style="display:flex">
-            <h4 style="flex:1">新增：{{selItem['異動標準名稱']}}</h4>
+            <h4 style="flex:1">異動標準名稱：{{selItem['異動標準名稱']}}</h4>
             <div style="flex:1;text-align:right">
               <button v-show="currentView=='import-fees'" @click="toggleView('tuition-fees')" type="button" class="btn btn-sm btn-info">返回主頁</button>
             </div>
@@ -101,39 +101,55 @@
       <div v-if="loading">載入中...</div>
       <div v-if="!loading">
         <div v-if="students && students.length">
-          <table class="table table-bordered table-striped table-hover">
-            <thead>
-              <tr>
-                <th style="width:70px">
-                  <div class="checkbox" style="margin-bottom:0">
-                    <label for="checkAll">
-                      <input :checked="checkAll" @click="checkAll=!checkAll;setCheckedAll()" type="checkbox" id="checkAll">
-                      全選
-                    </label>
-                  </div>
-                </th>
-                <th>班級</th>
-                <th>座號</th>
-                <th>學號</th>
-                <th>姓名</th>
-                <th>收費標準</th>
-                <th>金額</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="stu of students" track-by="uuid">
-                <td>
-                  <input type="checkbox" v-model="stu.checked">
-                </td>
-                <td>{{stu['班級']}}</td>
-                <td>{{stu['座號']}}</td>
-                <td>{{stu['學號']}}</td>
-                <td>{{stu['姓名']}}</td>
-                <td>{{stu['收費標準名稱']}}</td>
-                <td>{{stu['異動金額']}}</td>
-              </tr>    
-            </tbody>
-          </table> 
+          <div>
+            <div class="input-group" style="width:265px">
+              <input @keyup.enter="filterStuNumber" v-model="keyword" type="text" class="form-control" placeholder="輸入學號...">
+                <span class="input-group-btn">
+                <button @click="filterStuNumber" class="btn btn-default" type="button">
+                  <span class="glyphicon glyphicon-filter"></span>
+                </button>
+                <button v-show="filterKey" @click="keyword=null;filterStuNumber()" class="btn btn-default" type="button">
+                  <span class="glyphicon glyphicon-remove"></span>
+                </button>
+              </span>  
+            </div>
+            <span v-show="filterKey">篩選學號：{{filterKey}}，有 {{matchCount}} 項結果</span>
+          </div>
+          <div style="margin-top:10px">
+            <table class="table table-bordered table-striped table-hover">
+              <thead>
+                <tr>
+                  <th style="width:70px">
+                    <div class="checkbox" style="margin-bottom:0">
+                      <label for="checkAll">
+                        <input :checked="checkAll" @click="checkAll=!checkAll;setCheckedAll()" type="checkbox" id="checkAll">
+                        全選
+                      </label>
+                    </div>
+                  </th>
+                  <th>班級</th>
+                  <th>座號</th>
+                  <th>學號</th>
+                  <th>姓名</th>
+                  <th>收費標準</th>
+                  <th>金額</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="stu of students" track-by="uuid" v-show="stu.enabled">
+                  <td>
+                    <input type="checkbox" v-model="stu.checked">
+                  </td>
+                  <td>{{stu['班級']}}</td>
+                  <td>{{stu['座號']}}</td>
+                  <td>{{stu['學號']}}</td>
+                  <td>{{stu['姓名']}}</td>
+                  <td>{{stu['收費標準名稱']}}</td>
+                  <td>{{stu['異動金額']}}</td>
+                </tr>    
+              </tbody>
+            </table>
+          </div>
           <div v-if="selItem.type=='百分比'" class="text-danger pull-right">{{selItem['類別']}} {{selItem['百分比']}}% 實際金額以後台結算之後為主</div>
           <div>
             <button @click="showDeleteModel" :disabled="!filterFlag" type="button" class="btn btn-sm btn-danger">刪除</button>
@@ -271,7 +287,7 @@
               <div class="glyphicon glyphicon-ok-sign text-success" style="font-size:10vw" aria-hidden="true"></div>
               <div>共調整了 {{students.length}} 筆資料。</div>
               <div style="margin-top: 30px">
-                <button @click="sourceData=null;toStep(1)" type="button" class="btn btn-sm btn-info">繼續新增</button>
+                <button @click="sourceData=null;toStep(1)" type="button" class="btn btn-sm btn-info">繼續新增 / 修改</button>
                 <button @click="$emit('finish')" type="button" class="btn btn-sm btn-info">返回主頁</button></div>
               </div>
             </div>
