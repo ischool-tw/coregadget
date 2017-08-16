@@ -46,25 +46,27 @@
         <div v-if="changeableItems.length==0">
           您沒有可管理的異動標準
         </div>
-        <div v-if="currentView=='tuition-fees'" style="display:flex">
-          <div class="dropdown" style="flex:1">
-            <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdowClass" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              {{selItem['異動標準名稱'] || '異動標準名稱'}}
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdowClass">
-              <li v-for="item of changeableItems" @click="selItem=item"><a href="#">{{item['異動標準名稱']}}</a></li>
-            </ul>
+        <div v-if="changeableItems.length">
+          <div v-if="currentView=='tuition-fees'" style="display:flex">
+            <div class="dropdown" style="flex:1">
+              <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdowClass" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                {{selItem['異動標準名稱'] || '異動標準名稱'}}
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdowClass">
+                <li v-for="item of changeableItems" @click="selItem=item"><a href="#">{{item['異動標準名稱']}}</a></li>
+              </ul>
+            </div>
+            <div style="flex:1;text-align:right">
+              <button v-show="currentView=='tuition-fees'" @click="toggleView('import-fees')" :disabled="!selItem" type="button" class="btn btn-sm btn-primary">新增</button>
+            </div>
           </div>
-          <div style="flex:1;text-align:right">
-            <button v-show="currentView=='tuition-fees'" @click="toggleView('import-fees')" :disabled="!selItem" type="button" class="btn btn-sm btn-primary">新增</button>
-          </div>
-        </div>
-        <div v-if="currentView=='import-fees'" style="display:flex">
-          <h4 style="flex:1">新增：{{selItem['異動標準名稱']}}</h4>
-          <div style="flex:1;text-align:right">
-            <button v-show="currentView=='import-fees'" @click="toggleView('tuition-fees')" type="button" class="btn btn-sm btn-info">返回主頁</button>
-          </div>
+          <div v-if="currentView=='import-fees'" style="display:flex">
+            <h4 style="flex:1">新增：{{selItem['異動標準名稱']}}</h4>
+            <div style="flex:1;text-align:right">
+              <button v-show="currentView=='import-fees'" @click="toggleView('tuition-fees')" type="button" class="btn btn-sm btn-info">返回主頁</button>
+            </div>
+          </div> 
         </div>
       </div>
     </div>
