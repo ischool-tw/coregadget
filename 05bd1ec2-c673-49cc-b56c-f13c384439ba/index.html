@@ -145,12 +145,12 @@
                   <td>{{stu['學號']}}</td>
                   <td>{{stu['姓名']}}</td>
                   <td>{{stu['收費標準名稱']}}</td>
-                  <td>{{stu['異動金額']}}</td>
+                  <td>{{stu['異動金額'] | toAbs}}</td>
                 </tr>    
               </tbody>
             </table>
           </div>
-          <div v-if="selItem.type=='百分比'" class="text-danger pull-right">{{selItem['類別']}} {{selItem['百分比']}}% 實際金額以後台結算之後為主</div>
+          <div v-if="selItem.type=='百分比'" class="text-danger pull-right">實際金額以後台結算之後為主</div>
           <div>
             <button @click="showDeleteModel" :disabled="!filterFlag" type="button" class="btn btn-sm btn-danger">刪除</button>
             <button v-if="selItem.type=='金額'" @click="showChangeFeeModel" :disabled="!filterFlag" type="button" class="btn btn-sm btn-warning">修改金額</button> 
@@ -258,7 +258,7 @@
                   <td>{{stu['學號']}}</td>
                   <td>{{stu['姓名']}}</td>
                   <td>{{stu['收費標準名稱']}}</td>
-                  <td>{{stu['異動金額']}}</td>
+                  <td>{{stu['異動金額'] | toAbs}}</td>
                 </tr>    
               </tbody>
             </table>
@@ -267,7 +267,7 @@
               <button v-show="!saving" @click="doCreate" type="button" class="btn btn-sm btn-primary">確定</button>
               <span v-show="saving">處理中，請稍候...</span>
             </div>
-            <div v-if="selItem.type=='百分比'" class="text-danger pull-right">{{selItem['類別']}} {{selItem['百分比']}}% 實際金額以後台結算之後為主</div>
+            <div v-if="selItem.type=='百分比'" class="text-danger pull-right">實際金額以後台結算之後為主</div>
             <modal :modal-id="reviseFeeModalId">
               <h4 slot="modal-header" class="modal-title">調整金額</h4>
               <div slot="modal-body">

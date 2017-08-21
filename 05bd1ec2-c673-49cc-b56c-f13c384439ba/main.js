@@ -64,6 +64,8 @@ Vue.component('tuition-fees', {
 								self.$set(item, 'checked', false);
 								self.$set(item, 'enabled', true)
 							});
+
+							if (self.filterKey) self.filterStuNumber();
 							
 							self.loading = false;
 						}
@@ -187,7 +189,6 @@ Vue.component('tuition-fees', {
 				self.matchCount += (value ? 1 : 0);
 				self.$set(stu, 'enabled', value);
 			});
-			
 		},
 	},
 	components: {
@@ -424,6 +425,7 @@ let vm = new Vue({
 												if (keys.indexOf(item['異動標準名稱']) == -1) {
 													keys.push(item['異動標準名稱']);
 													item.type = (item['百分比'] && item['百分比'] != '0' ? '百分比' : '金額');
+													item['金額'] = (item['類別']=='－' ? ('-' + item['金額']) : item['金額']);
 													self.changeableItems.push(item);
 												}
 											});
@@ -457,7 +459,7 @@ let vm = new Vue({
 			if (!value) return ''
 			let dt = new Date(value);
 			return dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
-		}
+		},
 	},
 	methods: {
 		toggleView: function(type) {
@@ -467,4 +469,8 @@ let vm = new Vue({
 			this.toggleView('tuition-fees');
 		}
 	},
+});
+
+Vue.filter('toAbs', function (value) {
+	return Math.abs(value);
 });
