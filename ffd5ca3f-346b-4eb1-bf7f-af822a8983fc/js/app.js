@@ -345,6 +345,30 @@ app.controller('MainCtrl', ['$scope', function($scope) {
             "CustodianPhone": "false",
             "ContactPhone": "false",
             "PermanentPhone": "false",
+            'OtherPhoneList': {
+                'PhoneNumber': [{
+                        '@text': 'false',
+                        '@': [
+                            'title'
+                        ],
+                        'title': '公司電話'
+                    },
+                    {
+                        '@text': 'false',
+                        '@': [
+                            'title'
+                        ],
+                        'title': '行動電話2'
+                    },
+                    {
+                        '@text': 'false',
+                        '@': [
+                            'title'
+                        ],
+                        'title': '秘書電話'
+                    }
+                ]
+            },
             "公司電話": "false",
             "行動電話2": "false",
             "秘書電話": "false",
@@ -362,7 +386,13 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                 Address: "true",
                 Address: "true",
                 Address: "true" 
-            }
+            },
+            // 其它聯絡資訊
+            "Line": "false",
+            "Facebook": "false",
+            "LinkedIn": "false",
+            "WhatsApp": "false",
+            "WeChat": "false"
         };
         $scope.connection.send({
             service: "public.QueryStudentBrief",

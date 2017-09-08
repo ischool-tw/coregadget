@@ -638,6 +638,38 @@
                         </span>
                     </div>
                 </div>
+                <div class="panel panel-info">
+                    <div class="panel-heading"><i class="fa fa-fw fa-coffee"></i> 其它聯絡資訊</div>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th data-field="Line">Line</th>
+                                <td ng-show="currStudent.shareInfo.Line=='true'">{{currStudent.Line || '&nbsp;'}}</td>
+                                <td ng-show="currStudent.shareInfo.Line!='true'">不分享</td>
+                            </tr>
+                            <tr>
+                                <th data-field="Facebook">Facebook</th>
+                                <td ng-show="currStudent.shareInfo.Facebook=='true'">{{currStudent.Facebook || '&nbsp;'}}</td>
+                                <td ng-show="currStudent.shareInfo.Facebook!='true'">不分享</td>
+                            </tr>
+                            <tr>
+                                <th data-field="LinkedIn">LinkedIn</th>
+                                <td ng-show="currStudent.shareInfo.LinkedIn=='true'">{{currStudent.LinkedIn || '&nbsp;'}}</td>
+                                <td ng-show="currStudent.shareInfo.LinkedIn!='true'">不分享</td>
+                            </tr>
+                            <tr>
+                                <th data-field="WhatsApp">WhatsApp</th>
+                                <td ng-show="currStudent.shareInfo.WhatsApp=='true'">{{currStudent.WhatsApp || '&nbsp;'}}</td>
+                                <td ng-show="currStudent.shareInfo.WhatsApp!='true'">不分享</td>
+                            </tr>
+                            <tr>
+                                <th data-field="WeChat">WeChat</th>
+                                <td ng-show="currStudent.shareInfo.WeChat=='true'">{{currStudent.WeChat || '&nbsp;'}}</td>
+                                <td ng-show="currStudent.shareInfo.WeChat!='true'">不分享</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="footer-space"></div>
             <div class="footer">
