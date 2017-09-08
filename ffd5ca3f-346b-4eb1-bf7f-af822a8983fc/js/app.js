@@ -311,11 +311,14 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                     if (!error) {
                         $scope.$apply(function() {
                             $scope.students = [].concat(response.Result.Student || []);
+                            $scope.isLoadComplete = true;
+                            $scope.isLoading = false;
                             $scope.panel = "result"; // 呈現查詢結果
                         });
                     }
                 }
             });
+            // 第六階段第二期需求變更，需要顯示更多統計內容
             $scope.connection.send({
                 service: "public.QueryExperienceCount",
                 body: { },
@@ -323,8 +326,6 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                     if (!error) {
                         $scope.experienceCount = response.Response;
                         console.log(response);
-                        $scope.isLoadComplete = true;
-                        $scope.isLoading = false;
                     }
                 }
             });
@@ -401,6 +402,9 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                 if (!error) {
                     if (response.Result.DataSharing && response.Result.DataSharing.DataSharing) {
                         $scope.currStudent.shareInfo = response.Result.DataSharing.DataSharing;
+                        $scope.currStudent.shareInfo.OtherPhoneList.PhoneNumber.forEach(function(item) {
+                            $scope.currStudent.shareInfo[item.title] = item['@text'];
+                        });
                         $scope.$apply();
                     }
                 }
