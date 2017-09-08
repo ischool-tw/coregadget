@@ -986,7 +986,7 @@
                     </div>
                 </div>
                 <!--其它聯絡窗口-->
-                <div class="panel panel-info">
+                <!-- <div class="panel panel-info">
                     <div class="panel-heading">
                         <i class="fa fa-fw fa-coffee"></i> 其它聯絡窗口
                     </div>
@@ -1039,6 +1039,67 @@
                                         <input type="text" class="form-control" ng-model="myInfo.Publicist.CompanyWebsite">
                                         <span class="input-group-addon" target="cannt-sharing">
                                             <span class="glyphicon glyphicon-remove notshare" aria-hidden="true" target="share-custodian-phone"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> -->
+                <!--其它聯絡資訊-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <i class="fa fa-fw fa-coffee"></i> 其它聯絡資訊
+                    </div>
+                    <table class="table table-bordered responsive-table">
+                        <thead>
+                            <tr>
+                                <th>Line</th>
+                                <th>Facebook</th>
+                                <th>LinkedIn</th>
+                                <th>WhatsApp</th>
+                                <th>WeChat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" target="line" name="line" ng-model="myInfo.StudentInfo.Line">
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.Line = myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.Line)">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-Line" ng-class="{notshare: myInfo.DataSharing.DataSharing.Line!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" target="facebook" name="facebook" ng-model="myInfo.StudentInfo.Facebook">
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.Facebook = myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.Facebook)">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-Facebook" ng-class="{notshare: myInfo.DataSharing.DataSharing.Facebook!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" target="linkedIn" name="linkedIn" ng-model="myInfo.StudentInfo.LinkedIn">
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.LinkedIn = myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.LinkedIn)">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-LinkedIn" ng-class="{notshare: myInfo.DataSharing.DataSharing.LinkedIn!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" target="whatsApp" name="whatsApp" ng-model="myInfo.StudentInfo.WhatsApp">
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.WhatsApp = myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.WhatsApp)">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-WhatsApp" ng-class="{notshare: myInfo.DataSharing.DataSharing.WhatsApp!='true'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" target="weChat" name="weChat" ng-model="myInfo.StudentInfo.WeChat">
+                                        <span class="input-group-addon" target="data-sharing" ng-click="myInfo.DataSharing.DataSharing.WeChat = myInfo.toggleSLTF(myInfo.DataSharing.DataSharing.WeChat)">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" target="share-WeChat" ng-class="{notshare: myInfo.DataSharing.DataSharing.WeChat!='true'}"></span>
                                         </span>
                                     </div>
                                 </td>

@@ -80,7 +80,13 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
                     'DetailAddress': ''
                 }
             }
-        }
+        },
+        // 其它聯絡資訊
+        'Line': '',
+        'Facebook': '',
+        'LinkedIn': '',
+        'WhatsApp': '',
+        'WeChat': ''
     };
     // StudentBrief2
     var _StudentBrief2 = {
@@ -183,7 +189,13 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
                     'false',
                     'false'
                 ]
-            }
+            },
+            // 其它聯絡資訊
+            'Line': 'false',
+            'Facebook': 'false',
+            'LinkedIn': 'false',
+            'WhatsApp': 'false',
+            'WeChat': 'false'
         }
     };
     // Publicist
@@ -308,6 +320,7 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
     };
 
     $scope.myInfo.save = function () {
+
         // 判斷是否正在處理中
         if ($scope.myInfo.StudentInfo.saveing) return;
 
@@ -378,18 +391,31 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
             studentAdditional: {
                 Content: stu_additionals_content
             }
+        };
+        var requestCommunity = {
+            Request: {
+                Content: {
+                    Line: $scope.myInfo.StudentInfo.Line,
+                    Facebook: $scope.myInfo.StudentInfo.Facebook,
+                    LinkedIn: $scope.myInfo.StudentInfo.LinkedIn,
+                    WhatsApp: $scope.myInfo.StudentInfo.WhatsApp,
+                    WeChat: $scope.myInfo.StudentInfo.WeChat,
         }
+            }
+        };
+
 
         // 儲存內容
         var saveStu = false,
             saveSB = false,
             saveWi = false,
             saveSA = false,
-            saveSP = false;
+            // saveSP = false;
+            saveSC = false;
         var count = 5;
         var finish = function () {
             count--;
-            if (saveStu && saveSB && saveWi && saveSA && saveSP) {
+            if (saveStu && saveSB && saveWi && saveSA && saveSC) {
                 //alert("儲存成功");
                 $('#messageContent').html("儲存成功");
                 $('#messageBox').modal();
@@ -469,18 +495,37 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
                 }
             }
         });
+        // 第六階段第二期取消公關資料填寫
+        // $scope.connection.send({
+        //     service: "default.SetStudentPublicist",
+        //     body: requestPublicist,
+        //     result: function (response, error, http) {
+        //         if (!error) {
+        //             if (response.Result && parseInt(response.Result.EffectRows, 10) > 0) {
+        //                 saveSP = true;
+        //                 finish();
+        //             }
+        //         } else {
+        //             //alert("更新失敗. 005");
+        //             $('#messageContent').html("公關資料.更新失敗. 005");
+        //             $('#messageBox').modal();
+        //             $scope.myInfo.StudentInfo.saveing = false;
+        //         }
+        //     }
+        // });
+        // 第六階段第二期增加其它聯絡資訊填寫
         $scope.connection.send({
-            service: "default.SetStudentPublicist",
-            body: requestPublicist,
+            service: "default.SetStudentCommunity",
+            body: requestCommunity,
             result: function (response, error, http) {
                 if (!error) {
                     if (response.Result && parseInt(response.Result.EffectRows, 10) > 0) {
-                        saveSP = true;
+                        saveSC = true;
                         finish();
                     }
                 } else {
-                    //alert("更新失敗. 005");
-                    $('#messageContent').html("公關資料.更新失敗. 005");
+                    //alert("更新失敗. 006");
+                    $('#messageContent').html("其它聯絡資訊.更新失敗. 006");
                     $('#messageBox').modal();
                     $scope.myInfo.StudentInfo.saveing = false;
                 }
@@ -557,11 +602,17 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
             "\n興趣： ", (ori_StudentAdditional.my_Interest_desc), " -> ", (res_StudentAdditional.my_Interest_desc),
             "\n參加台大EMBA團體： ", (ori_StudentAdditional.my_ExternalOrganization_desc), " -> ", (res_StudentAdditional.my_ExternalOrganization_desc),
             "\n參加校外團體： ", (ori_StudentAdditional.my_EMBAGroups_desc), " -> ", (res_StudentAdditional.my_EMBAGroups_desc),
-            "\n公關姓名： ", (ori_Publicist.PublicistName), " -> ", (res_Publicist.PublicistName),
-            "\n公關室電話： ", (ori_Publicist.PublicRelationsOfficeTelephone), " -> ", (res_Publicist.PublicRelationsOfficeTelephone),
-            "\n公室傳真： ", (ori_Publicist.PublicRelationsOfficeFax), " -> ", (res_Publicist.PublicRelationsOfficeFax),
-            "\n公關室e-amil： ", (ori_Publicist.PublicistEmail), " -> ", (res_Publicist.PublicistEmail),
-            "\n公司網址： ", (ori_Publicist.CompanyWebsite), " -> ", (res_Publicist.CompanyWebsite),
+            // 第六階段第二期取消公關資料填寫
+            // "\n公關姓名： ", (ori_Publicist.PublicistName), " -> ", (res_Publicist.PublicistName),
+            // "\n公關室電話： ", (ori_Publicist.PublicRelationsOfficeTelephone), " -> ", (res_Publicist.PublicRelationsOfficeTelephone),
+            // "\n公室傳真： ", (ori_Publicist.PublicRelationsOfficeFax), " -> ", (res_Publicist.PublicRelationsOfficeFax),
+            // "\n公關室e-amil： ", (ori_Publicist.PublicistEmail), " -> ", (res_Publicist.PublicistEmail),
+            // "\n公司網址： ", (ori_Publicist.CompanyWebsite), " -> ", (res_Publicist.CompanyWebsite),
+            "\nLine： ", (ori_StudentInfo.Line), " -> ", (res_StudentInfo.Line),
+            "\nFacebook： ", (ori_StudentInfo.Facebook), " -> ", (res_StudentInfo.Facebook),
+            "\nLinkedIn： ", (ori_StudentInfo.LinkedIn), " -> ", (res_StudentInfo.LinkedIn),
+            "\nWhatsApp： ", (ori_StudentInfo.WhatsApp), " -> ", (res_StudentInfo.WhatsApp),
+            "\nWeChat： ", (ori_StudentInfo.WeChat), " -> ", (res_StudentInfo.WeChat)
         ].join('');
         // console.log(log_desc);
 
