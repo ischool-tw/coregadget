@@ -338,7 +338,8 @@
                 </div>
                 <div class="panel panel-info">
                     <div class="panel-heading"><i class="fa fa-fw fa-suitcase"></i> 經歷查詢</div>
-                    <div class="panel-body row">
+                    <div class="panel-body">
+                        <div class="row">
                         <div class="col-sm-3">
                             <div class="input-group">
                                 <span class="input-group-addon">公司名稱</span>
@@ -351,34 +352,58 @@
                                 <input type="text" class="form-control" placeholder="層級別" data-toggle="modal" data-target="#myModal" value="{{filter.additional.level.join(',')}}" readonly>
                             </div>
                         </div>
-                        
                         <div class="col-sm-3">
                             <div class="dropdown">
-                                <button class="btn btn-default dropdown-toggle" type="button" id="industryMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <span target="industry">{{filter.additional.industry || '產業別'}}</span>
+                                    <button class="btn btn-default dropdown-toggle" type="button" id="branchMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        <span target="branch" ng-bind="filter.additional.department || '部門'"></span>
                                     <span class="caret"></span>
                                 </button>
-                                <ul class="dropdown-menu" aria-labelledby="industryMenu" target="industry-options">
-                                    <li ng-click="filter.additional.industry=null"><a href="javascript:;">不選擇</a></li>
-                                    <li ng-repeat="item in ExperienceDataSource['C_產業別']" ng-click="filter.additional.industry=item"><a href="javascript:;">{{item}}</a></li>
-                                    <li ng-click="filter.additional.industry='其它'"><a href="javascript:;">其它</a></li>
+                                    <ul class="dropdown-menu" aria-labelledby="branchMenu" target="branch-options">
+                                        <li ng-click="filter.additional.department=null"><a href="javascript:;">不選擇</a></li>
+                                        <li ng-repeat="item in ExperienceDataSource['C_部門類別']" ng-click="filter.additional.department=item"><a href="javascript:;">{{item}}</a></li>
+                                        <li ng-click="filter.additional.department='其它'"><a href="javascript:;">其它</a></li>
                                 </ul>
                             </div>
                         </div>
+                        </div>
+                        <div class="row" style="margin-top: 10px;">
                         <div class="col-sm-3">
                             <div class="dropdown">
-                                <button class="btn btn-default dropdown-toggle" type="button" id="branchMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <span target="branch">{{filter.additional.department || '部門'}}</span>
+                                    <button class="btn btn-default dropdown-toggle" type="button" id="industry" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        <span target="industry" ng-bind="filter.additional.menu.Domain.name || '產業別'"></span>
                                     <span class="caret"></span>
                                 </button>
-                                <ul class="dropdown-menu" aria-labelledby="branchMenu" target="branch-options">
-                                    <li ng-click="filter.additional.department=null"><a href="javascript:;">不選擇</a></li>
-                                    <li ng-repeat="item in ExperienceDataSource['C_部門類別']" ng-click="filter.additional.department=item"><a href="javascript:;">{{item}}</a></li>
-                                    <li ng-click="filter.additional.department='其它'"><a href="javascript:;">其它</a></li>
+                                    <ul class="dropdown-menu" aria-labelledby="industry" target="industry-options">
+                                        <li ng-click="experiences.setEmpty()"><a href="javascript:;">不選擇</a></li>
+                                        <li ng-repeat="domain in AdditionalSetup['S_Industry'].Domains" ng-click="experiences.toggleExperienceDomain(domain)">
+                                        <a href="javascript:;">{{domain.name}}</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-sm-3" ng-if="filter.additional.menu.objDomain.Categorys.length">
+                                <div class="dropdown">
+                                    <button class="btn btn-default dropdown-toggle" type="button" id="industryC" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        <span target="branch" ng-bind="filter.additional.menu.Category.name || '產業子類別'"></span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="industryC" target="industry-options">
+                                        <li ng-repeat="category in filter.additional.menu.objDomain.Categorys" ng-click="experiences.toggleExperienceCategory(category)">{{category.name}}</li>
                                 </ul>
                             </div>
                         </div>
-                        <hr>
+                            <div class="col-sm-3" ng-if="filter.additional.menu.objCategory.Items.length">
+                                <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" id="industryI" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <span target="branch" ng-bind="filter.additional.menu.Item.name || '產業子項目'"></span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="industryI" target="industry-options">
+                                            <li ng-repeat="item in filter.additional.menu.objCategory.Items" ng-click="experiences.toggleExperienceItem(item)">{{item.name}}</li>
+                                        </ul>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 10px;">
                         <div class="col-sm-3">
                             <div class="input-group">
                                 <span class="input-group-addon">工作地點</span>
@@ -400,6 +425,7 @@
                         </div>
                     </div>
                 </div>
+                </div>
                 <div class="panel panel-info">
                     <div class="panel-heading"><i class="fa fa-fw fa-heart"></i> 興趣查詢</div>
                     <div class="panel-body row">
@@ -411,7 +437,7 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="fieldMenu">
                                     <li ng-click="filter.experience.interest.domain=null;filter.experience.interest.category=null;filter.experience.interest.item=null;"><a href="javascript:;">不選擇</a></li>
-                                    <li ng-repeat="item in AdditionalSetup['S_Interest'].Domain" ng-click="filter.experience.interest.domain=item;filter.experience.interest.category=null;filter.experience.interest.item=null;"><a href="javascript:;">{{item}}</a></li>
+                                    <li ng-repeat="item in AdditionalSetup['S_Interest'].Domains" ng-click="filter.experience.interest.domain=item.name;filter.experience.interest.category=null;filter.experience.interest.item=null;"><a href="javascript:;">{{item.name}}</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -423,7 +449,7 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="categoryMenu" target="category-options" ng-show="filter.experience.interest.domain">
                                     <li ng-click="filter.experience.interest.category=null;filter.experience.interest.item=null;"><a href="javascript:;">不選擇</a></li>
-                                    <li ng-repeat="item in AdditionalSetup['S_Interest']['D_'+filter.experience.interest.domain].Category" ng-click="filter.experience.interest.category=item;filter.experience.interest.item=null;"><a href="javascript:;">{{item}}</a></li>
+                                    <li ng-repeat="item in AdditionalSetup['S_Interest']['D_'+filter.experience.interest.domain].Categorys" ng-click="filter.experience.interest.category=item.name;filter.experience.interest.item=null;"><a href="javascript:;">{{item.name}}</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -435,7 +461,7 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="projectMenu" target="project-options" ng-show="filter.experience.interest.category">
                                     <li ng-click="filter.experience.interest.item=null"><a href="javascript:;">不選擇</a></li>
-                                    <li ng-repeat="item in AdditionalSetup['S_Interest']['D_'+filter.experience.interest.domain]['C_'+filter.experience.interest.category].Item" ng-click="filter.experience.interest.item=item"><a href="javascript:;">{{item}}</a></li>
+                                    <li ng-repeat="item in AdditionalSetup['S_Interest']['D_'+filter.experience.interest.domain]['C_'+filter.experience.interest.category].Items" ng-click="filter.experience.interest.item=item.name"><a href="javascript:;">{{item.name}}</a></li>
                                     <li ng-click="filter.experience.interest.item='其它'"><a href="javascript:;">其它</a></li>
                                 </ul>
                             </div>
@@ -453,7 +479,7 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="groupMenu" target="group-options">
                                     <li ng-click="filter.experience.emba_groups.domain=null;filter.experience.emba_groups.category=null;"><a href="javascript:;">不選擇</a></li>
-                                    <li ng-repeat="item in AdditionalSetup['S_EMBAGroups'].Domain" ng-click="filter.experience.emba_groups.domain=item;filter.experience.emba_groups.category=null;"><a href="javascript:;">{{item}}</a></li>
+                                    <li ng-repeat="item in AdditionalSetup['S_EMBAGroups'].Domains" ng-click="filter.experience.emba_groups.domain=item.name;filter.experience.emba_groups.category=null;"><a href="javascript:;">{{item.name}}</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -465,7 +491,7 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="group2Menu" target="group2-options" ng-show="filter.experience.emba_groups.domain">
                                     <li ng-click="filter.experience.emba_groups.category=null"><a href="javascript:;">不選擇</a></li>
-                                    <li ng-repeat="item in AdditionalSetup['S_EMBAGroups']['D_'+filter.experience.emba_groups.domain].Category" ng-click="filter.experience.emba_groups.category=item"><a href="javascript:;">{{item}}</a></li>
+                                    <li ng-repeat="item in AdditionalSetup['S_EMBAGroups']['D_'+filter.experience.emba_groups.domain].Categorys" ng-click="filter.experience.emba_groups.category=item.name"><a href="javascript:;">{{item.name}}</a></li>
                                     <li ng-click="filter.experience.emba_groups.category='其它'"><a href="javascript:;">其它</a></li>
                                 </ul>
                             </div>
@@ -483,7 +509,7 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="group4Menu" target="group4-options">
                                     <li ng-click="filter.experience.external_organization.domain=null;filter.experience.external_organization.category=null;"><a href="javascript:;">不選擇</a></li>
-                                    <li ng-repeat="item in AdditionalSetup['S_ExternalOrganization'].Domain" ng-click="filter.experience.external_organization.domain=item;filter.experience.external_organization.category=null;"><a href="javascript:;">{{item}}</a></li>
+                                    <li ng-repeat="item in AdditionalSetup['S_ExternalOrganization'].Domains" ng-click="filter.experience.external_organization.domain=item.name;filter.experience.external_organization.category=null;"><a href="javascript:;">{{item.name}}</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -495,7 +521,7 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="group5Menu" target="group5-options" ng-show="filter.experience.external_organization.domain">
                                     <li ng-click="filter.experience.external_organization.category=null"><a href="javascript:;">不選擇</a></li>
-                                    <li ng-repeat="item in AdditionalSetup['S_ExternalOrganization']['D_'+filter.experience.external_organization.domain].Category" ng-click="filter.experience.external_organization.category=item"><a href="javascript:;">{{item}}</a></li>
+                                    <li ng-repeat="item in AdditionalSetup['S_ExternalOrganization']['D_'+filter.experience.external_organization.domain].Categorys" ng-click="filter.experience.external_organization.category=item.name"><a href="javascript:;">{{item.name}}</a></li>
                                     <li ng-click="filter.experience.external_organization.category='其它'"><a href="javascript:;">其它</a></li>
                                 </ul>
                             </div>
@@ -737,7 +763,7 @@
                             </tr>
                             <tr>
                                 <th data-field="Industry">產業別</th>
-                                <td>{{['其他','其它'].indexOf(item.Industry) !== -1 ? item.IndustryOther || '&nbsp;' : item.Industry || '&nbsp;'}}</td>
+                                <td>{{['其他','其它'].indexOf(item.Industry) !== -1 ? item.IndustryOther || '&nbsp;' : filterExperiences(item.UID) || '&nbsp;'}}</td>
                             </tr>
                             <tr>
                                 <th data-field="WorkPlace">工作地點</th>

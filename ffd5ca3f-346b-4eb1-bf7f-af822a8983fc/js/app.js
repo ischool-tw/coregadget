@@ -51,40 +51,54 @@ app.controller('MainCtrl', ['$scope', function($scope) {
     $scope.getDataSource = function() {
         $scope.AdditionalSetup = [];
         $scope.ExperienceDataSource = [];
+        $scope.AdditionalIndustry = []; // 產業別對照表
         $scope.connection.send({
             service: "default.GetUserDataSource",
             body: "",
             result: function(response, error, http) {
                 if (!error) {
+                    // 第六階段產業別由文字改為ref_id(經由此處取資料)
+                    // "EMBAGroups" 參加台大EMBA團體, "ExternalOrganization" 參加校外組織, "Industry" 產業別, "Interest" 興趣
                     var additionals = [];
                     if (response.DataSource && response.DataSource.Additionals) {
                         response.DataSource.Additionals = [].concat(response.DataSource.Additionals || []);
                         response.DataSource.Additionals.forEach(function(item, index) {
+                            if (item.specie == 'Industry') $scope.AdditionalIndustry.push(item);
                             if (!additionals['S_' + item.specie]) {
                                 additionals['S_' + item.specie] = {
-                                    Domain: []
+                                    Domains: []
                                 };
                             }
                             if (item.domain && !additionals['S_' + item.specie]['D_' + item.domain]) {
-                                additionals['S_' + item.specie].Domain.push(item.domain);
+                                additionals['S_' + item.specie].Domains.push({
+                                    id: item.uid,
+                                    name: item.domain
+                                });
                                 additionals['S_' + item.specie]['D_' + item.domain] = {
-                                    Category: []
+                                    Categorys: []
                                 };
                             }
                             if (item.category && !additionals['S_' + item.specie]['D_' + item.domain]['C_' + item.category]) {
-                                additionals['S_' + item.specie]['D_' + item.domain].Category.push(item.category);
+                                additionals['S_' + item.specie]['D_' + item.domain].Categorys.push({
+                                    id: item.uid,
+                                    name: item.category
+                                });
                                 additionals['S_' + item.specie]['D_' + item.domain]['C_' + item.category] = {
-                                    Item: []
+                                    Items: []
                                 };
                             }
-                            if (item.item) {
-                                additionals['S_' + item.specie]['D_' + item.domain]['C_' + item.category].Item.push(item.item);
+                            if (item.item && additionals['S_' + item.specie]['D_' + item.domain]['C_' + item.category]) {
+                                additionals['S_' + item.specie]['D_' + item.domain]['C_' + item.category].Items.push({
+                                    id: item.uid,
+                                    name: item.item
+                                });
                             }
                         });
                     }
                     $scope.AdditionalSetup = additionals;
                     // console.log($scope.AdditionalSetup);
 
+                    // 第六階段產業別由文字改為ref_id(不由此處取資料)
                     var experiences = [];
                     if (response.DataSource && response.DataSource.Experiences) {
                         response.DataSource.Experiences = [].concat(response.DataSource.Experiences || []);
@@ -99,6 +113,7 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                     }
                     $scope.ExperienceDataSource = experiences;
                     // console.log($scope.ExperienceDataSource);
+                    // console.log($scope.AdditionalIndustry);
                     $scope.$apply();
                 }
             }
@@ -114,10 +129,18 @@ app.controller('MainCtrl', ['$scope', function($scope) {
             additional: {
                 company_name: null, // 公司名稱
                 level: [], // 層級別
-                industry: null, // 產業別
+                industry: null, // 產業別名稱
+                industry_id: null, // 產業別編號
                 department: null, // 部門
                 place: [], // 工作地點
                 status: null, // 工作狀態
+                menu: {
+                    Domain: null,
+                    Category: null,
+                    Item: null,
+                    objDomain: null,
+                    objCategory: null
+                }
             },
             experience: {
                 interest: { // 興趣
@@ -189,10 +212,10 @@ app.controller('MainCtrl', ['$scope', function($scope) {
             body_obj.additional.level = flt.additional.level;
             cdt.push(flt.additional.level.join(','));
         }
-        if (flt.additional.industry) { // 產業別
+        if (flt.additional.industry_id) { // 產業別
             if (!body_obj.additional) body_obj.additional = {};
             body_obj.additional.company_sharing = true;
-            body_obj.additional.industry = flt.additional.industry;
+            body_obj.additional.industry_id = flt.additional.industry_id;
             cdt.push(flt.additional.industry);
         }
         if (flt.additional.department) { // 部門
@@ -531,6 +554,75 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                 }
             }
         });
+    };
+
+    $scope.experiences = {
+        toggleExperienceDomain: function(domain) {
+            var tmp = $scope.AdditionalSetup['S_Industry']['D_'+domain.name];
+            $scope.filter.additional.industry_id = null;
+
+            $scope.filter.additional.menu.Domain = domain;
+            $scope.filter.additional.menu.objDomain = tmp;
+            $scope.filter.additional.menu.Category = null;
+            $scope.filter.additional.menu.objCategory = null;
+            $scope.filter.additional.menu.Item = null;
+            
+            if (tmp.Categorys.length == 0) {
+                $scope.filter.additional.industry_id = domain.id;
+                $scope.filter.additional.industry = domain.name;
+            }
+        },
+        toggleExperienceCategory: function(category) {
+            var tmp = $scope.filter.additional.menu.objDomain['C_'+category.name];
+            $scope.filter.additional.industry_id = null;
+
+            $scope.filter.additional.menu.Category = category;
+            $scope.filter.additional.menu.objCategory = tmp;
+            $scope.filter.additional.menu.Item = null;
+            
+            if (tmp.Items.length == 0) {
+                $scope.filter.additional.industry_id = category.id;
+                $scope.filter.additional.industry = [
+                    $scope.filter.additional.menu.Domain.name,
+                    category.name
+                ].join('_');
+            }
+        },
+        toggleExperienceItem: function(item) {
+            var tmp = $scope.filter.additional.menu.objCategory['I_'+item.name];
+            $scope.filter.additional.menu.Item = item;
+
+            $scope.filter.additional.industry_id = item.id;
+            $scope.filter.additional.industry = [
+                $scope.filter.additional.menu.Domain.name,
+                $scope.filter.additional.menu.Category.name,
+                item.name
+            ].join('_');
+        },
+        setEmpty: function() {
+            $scope.filter.additional.menu.Domain = null;
+            $scope.filter.additional.menu.objDomain = null;
+            $scope.filter.additional.menu.Category = null;
+            $scope.filter.additional.menu.objCategory = null;
+            $scope.filter.additional.menu.Item = null;
+
+            $scope.filter.additional.industry = null;
+            $scope.filter.additional.industry_id = null;
+        }
+    };
+
+    $scope.filterExperiences = function(uid) {
+        var ret = [];
+        $scope.AdditionalIndustry.forEach(function(data) {
+            if (ret.length == 0) {
+                if (data.UID == uid) {
+                   if (data.domain) ret.push(data.domain);
+                   if (data.category) ret.push(data.category);
+                   if (data.item) ret.push(data.item);
+                }
+    }
+        });
+        return ret.join('_');
     };
 
     $scope.resetFilter();
