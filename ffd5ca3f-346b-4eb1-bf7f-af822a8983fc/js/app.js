@@ -318,17 +318,17 @@ app.controller('MainCtrl', ['$scope', function($scope) {
                     }
                 }
             });
-            // 第六階段第二期需求變更，需要顯示更多統計內容
-            $scope.connection.send({
-                service: "public.QueryExperienceCount",
-                body: { },
-                result: function(response, error, http) {
-                    if (!error) {
-                        $scope.experienceCount = response.Response;
-                        console.log(response);
-                    }
-                }
-            });
+            // 第六階段第二期需求變更，需要顯示更多統計內容，此段不使用
+            // $scope.connection.send({
+            //     service: "public.QueryExperienceCount",
+            //     body: { },
+            //     result: function(response, error, http) {
+            //         if (!error) {
+            //             $scope.experienceCount = response.Response;
+            //             console.log(response);
+            //         }
+            //     }
+            // });
         }
     };
 
@@ -502,6 +502,21 @@ app.controller('MainCtrl', ['$scope', function($scope) {
         });
 
         $scope.panel = "detail"; // 呈現個人資料
+    };
+
+    // 取得公開總覽數
+    $scope.showPublicCountModal = function() {
+        $('#publicCountModal').modal('show');
+        $scope.connection.send({
+            service: 'default.GetAllSharingCount',
+            body: '',
+            result: function(response, error, http) {
+                if (!error) {
+                    if (response.data) $scope.publicCountData = response.data;
+                    $scope.$apply();
+                }
+            }
+        });
     };
 
     $scope.resetFilter();

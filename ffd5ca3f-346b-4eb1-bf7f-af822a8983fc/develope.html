@@ -79,6 +79,198 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="publicCountModal" tabindex="-1" role="dialog" aria-labelledby="publicCountModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="publicCountModalLabel">公開總覽數</h4>
+                    </div>
+                    <div class="modal-body row">
+                        <ol>
+                            <li>
+                                <span>
+                                    <a href="javascript:;" ng-click="openPersonal=!openPersonal">個人基本資料</a>
+                                    <i ng-show="openPersonal" class="fa fa-angle-up"></i>
+                                    <i ng-show="!openPersonal" class="fa fa-angle-down"></i>
+                                </span>
+                                <ul ng-show="openPersonal">
+                                    <li>
+                                        <span>姓名</span>：
+                                        <span>
+                                            共計 {{publicCountData.TotalStudentName}} 筆 / 
+                                            公開分享 共 {{publicCountData.TotalStudentName}} 筆
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span>出生日期</span>：
+                                        <span>
+                                            共計 {{publicCountData.TotalBirthdate}} 筆 / 
+                                            公開分享 共 {{publicCountData.ShareBirthdate}} 筆
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span>電話號碼</span>
+                                        <ul>
+                                            <li>
+                                                <span>住家電話</span>：
+                                                <span>共計 {{publicCountData.TotalPermanentPhone}} 筆 /
+                                                公開分享 共 {{publicCountData.SharePermanentPhone}} 筆</span>
+                                            </li>
+                                            <li>
+                                                <span>公司電話</span>：
+                                                <span>共計 {{publicCountData.TotalPhoneNumber1}} 筆 /
+                                                公開分享 共 {{publicCountData.SharePhoneNumber1}} 筆</span>
+                                            </li>
+                                            <li>
+                                                <span>秘書電話</span>：
+                                                <span>共計 {{publicCountData.TotalPhoneNumber3}} 筆 /
+                                                公開分享 共 {{publicCountData.SharePhoneNumber3}} 筆</span>
+                                            </li>
+                                            <li>
+                                                <span>行動電話 1</span>：
+                                                <span>共計 {{publicCountData.TotalSMSPhone}} 筆 /
+                                                公開分享 共 {{publicCountData.ShareSMSPhone}} 筆</span>
+                                            </li>
+                                            <li>
+                                                <span>行動電話 2</span>：
+                                                <span>共計 {{publicCountData.TotalPhoneNumber2}} 筆 /
+                                                公開分享 共 {{publicCountData.SharePhoneNumber2}} 筆</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <span>電子信箱</span>
+                                        <ul>
+                                            <li><span>Email 1</span>：
+                                                <span>共計 {{publicCountData.TotalMail1}} 筆 /
+                                                公開分享 共 {{publicCountData.ShareMail1}} 筆</span>
+                                            </li>
+                                            <li><span>Email 2</span>：
+                                                <span>共計 {{publicCountData.TotalMail2}} 筆 /
+                                                公開分享 共 {{publicCountData.ShareMail2}} 筆</span>
+                                            </li>
+                                            <li><span>Email 3</span>：
+                                                <span>共計 {{publicCountData.TotalMail3}} 筆 /
+                                                公開分享 共 {{publicCountData.ShareMail3}} 筆</span>
+                                            </li>
+                                            <li><span>Email 4</span>：
+                                                <span>共計 {{publicCountData.TotalMail4}} 筆 /
+                                                公開分享 共 {{publicCountData.ShareMail4}} 筆</span>
+                                            </li>
+                                            <li><span>Email 5</span>：
+                                                <span>共計 {{publicCountData.TotalMail5}} 筆 /
+                                                公開分享 共 {{publicCountData.ShareMail5}} 筆</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <span>地址</span>
+                                        <ul>
+                                            <li><span>聯絡地址</span>：
+                                                <span>共計 {{publicCountData.TotalMailingAddress}} 筆 /
+                                                公開分享 共 {{publicCountData.ShareMailingAddress}} 筆</span>
+                                            </li>
+                                            <li><span>住家地址</span>：
+                                                <span>共計 {{publicCountData.TotalPermanentAddress}} 筆 /
+                                                公開分享 共 {{publicCountData.SharePermanentAddress}} 筆</span>
+                                            </li>
+                                            <li><span>公司地址</span>：
+                                                <span>共計 {{publicCountData.TotalOtherAddresses}} 筆 /
+                                                公開分享 共 {{publicCountData.ShareOtherAddresses}} 筆</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <span>其它聯絡資訊</span>
+                                        <ul>
+                                            <li><span>Line</span>：
+                                                <span>共計 {{publicCountData.TotalLine}} 筆 /
+                                                公開分享 共 {{publicCountData.ShareLine}} 筆</span>
+                                            </li>
+                                            <li><span>Facebook</span>：
+                                                <span>共計 {{publicCountData.TotalFacebook}} 筆 /
+                                                公開分享 共 {{publicCountData.ShareFacebook}} 筆</span>
+                                            </li>
+                                            <li><span>LinkedIn</span>：
+                                                <span>共計 {{publicCountData.TotalLinkedIn}} 筆 /
+                                                公開分享 共 {{publicCountData.ShareLinkedIn}} 筆</span>
+                                            </li>
+                                            <li><span>WhatsApp</span>：
+                                                <span>共計 {{publicCountData.TotalWhatsApp}} 筆 /
+                                                公開分享 共 {{publicCountData.ShareWhatsApp}} 筆</span>
+                                            </li>
+                                            <li><span>WeChat</span>：
+                                                <span>共計 {{publicCountData.TotalWeChat}} 筆 /
+                                                公開分享 共 {{publicCountData.ShareWeChat}} 筆</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <span>學歷</span>：
+                                <span>共計 {{publicCountData.TotalEducationBackground}} 筆 /
+                                公開分享 共 {{publicCountData.SharelEducationBackground}} 筆</span>
+                            </li>
+                            <li>
+                                <span>經歷</span>：
+                                <span>共計 {{publicCountData.TotalExperiencet}} 筆 /
+                                公開分享 共 {{publicCountData.SharelExperiencet}} 筆</span>
+                            </li>
+                            <li>
+                                <span>興趣</span>：
+                                <span>共計 {{publicCountData.TotalInterest}} 筆 /
+                                公開分享 共 {{publicCountData.ShareInterest}} 筆</span>
+                            </li>
+                            <li>
+                                <span>參加台大EMBA團體</span>：
+                                <span>共計 {{publicCountData.TotalEMBAGroups}} 筆 /
+                                公開分享 共 {{publicCountData.ShareEMBAGroups}} 筆</span>
+                            </li>
+                            <li>
+                                <span>參加校外團體</span>：
+                                <span>共計 {{publicCountData.TotalExternalOrganization}} 筆 /
+                                公開分享 共 {{publicCountData.ShareExternalOrganization}} 筆</span>
+                            </li>
+                            <li>
+                                <span>
+                                    <a href="javascript:;" ng-click="openActivity=!openActivity">參與相關活動經驗</a>
+                                    <i ng-show="openActivity" class="fa fa-angle-up"></i>
+                                    <i ng-show="!openActivity" class="fa fa-angle-down"></i>
+                                </span>
+                                <ul ng-show="openActivity">
+                                    <li><span>社會企業</span>：
+                                        <span>共計 {{publicCountData.TotalEnterprise}} 筆 /
+                                        公開分享 共 {{publicCountData.ShareEnterprise}} 筆</span>
+                                    </li>
+                                    <li><span>非營利組織</span>：
+                                        <span>共計 {{publicCountData.TotalOrganizations}} 筆 /
+                                        公開分享 共 {{publicCountData.ShareOrganizations}} 筆</span>
+                                    </li>
+                                    <li><span>企業社會責任</span>：
+                                        <span>共計 {{publicCountData.TotalResponsibility}} 筆 /
+                                        公開分享 共 {{publicCountData.ShareResponsibility}} 筆</span>
+                                    </li>
+                                    <li><span>創業</span>：
+                                        <span>共計 {{publicCountData.TotalVenture}} 筆 /
+                                        公開分享 共 {{publicCountData.ShareVenture}} 筆</span>
+                                    </li>
+                                </ul>
+                            </li>
+                             <li>
+                                <span>擔任業師意願</span>：
+                                <span>共計 {{publicCountData.TotalEntrpreneurial}} 筆 /
+                                公開分享 共 {{publicCountData.ShareEntrpreneurial}} 筆</span>
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">關閉</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="page-container">
             <!--
             <div class="header">
@@ -91,6 +283,10 @@
             <!-- 查詢 -->
             <a href="javascript:;" class="btn btn-danger btn-floating btn-large" ng-click="queryStudent();" ng-show="panel=='filter'"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
             <div class="content" ng-show="panel=='filter'">
+                <!-- 公開總覽數 -->
+                <div style="margin-bottom: 10px">
+                    <a href="javascript:;" class="btn btn-info" ng-click="showPublicCountModal()">顯示公開總覽數</a>
+                </div>
                 <div class="panel panel-info">
                     <div class="panel-heading"><i class="fa fa-fw fa-user"></i> 基本查詢</div>
                     <div class="panel-body row">
@@ -351,7 +547,7 @@
                     <div class="col-sm-10">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查詢條件：
                         <li ng-repeat="condition in conditions">{{condition}}</li>
-                        <span style="margin-left:40px;">{{ "(產業別資料 共計 " + experienceCount.TotalCount + " 筆 / 公開分享 共 " + experienceCount.ShareCount +" 筆)"}} </span>
+                        <!-- <span style="margin-left:40px;">{{ "(產業別資料 共計 " + experienceCount.TotalCount + " 筆 / 公開分享 共 " + experienceCount.ShareCount +" 筆)"}} </span> -->
                     </div>
                     <div class="col-sm-2">
                         <a class="btn btn-primary btn-block" ng-click="resetFilter()"><span class="glyphicon glyphicon-repeat"></span> 重新查詢</a>
@@ -390,7 +586,7 @@
                     <div class="col-sm-9">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查詢條件：
                         <li ng-repeat="condition in conditions">{{condition}}</li>
-                        <span style="margin-left:40px;">{{ "(產業別資料 共計 " + experienceCount.TotalCount + " 筆 / 公開分享 共 " + experienceCount.ShareCount +" 筆)"}} </span>
+                        <!-- <span style="margin-left:40px;">{{ "(產業別資料 共計 " + experienceCount.TotalCount + " 筆 / 公開分享 共 " + experienceCount.ShareCount +" 筆)"}} </span> -->
                     </div>
                     <div class="col-sm-3 text-right">
                         <a class="btn btn-primary" ng-click="resetFilter()"><span class="glyphicon glyphicon-repeat"></span> 重新查詢</a>
