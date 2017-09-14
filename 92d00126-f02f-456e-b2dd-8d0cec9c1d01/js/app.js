@@ -621,7 +621,7 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
             body: {
                 Request: {
                     Log: {
-                        Actor: gadget.getContract("emba.student").getUserInfo().UserName,
+                        Actor: $scope.connection.getUserInfo().UserName,
                         ActionType: "更新",
                         Action: "更新個人資料",
                         TargetCategory: "student, ischool.emba.student_brief2",
@@ -743,7 +743,7 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
                 body: {
                     Request: {
                         Log: {
-                            Actor: gadget.getContract("emba.student").getUserInfo().UserName,
+                            Actor: $scope.connection.getUserInfo().UserName,
                             ActionType: action_type,
                             Action: action,
                             TargetCategory: "ischool.emba.education_background",
@@ -790,7 +790,7 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
                 body: {
                     Request: {
                         Log: {
-                            Actor: gadget.getContract("emba.student").getUserInfo().UserName,
+                            Actor: $scope.connection.getUserInfo().UserName,
                             ActionType: "刪除",
                             Action: "刪除學歷",
                             TargetCategory: "ischool.emba.education_background",
@@ -966,7 +966,7 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
                 body: {
                     Request: {
                         Log: {
-                            Actor: gadget.getContract("emba.student").getUserInfo().UserName,
+                            Actor: $scope.connection.getUserInfo().UserName,
                             ActionType: action_type,
                             Action: action,
                             TargetCategory: "ischool.emba.experience",
@@ -1017,7 +1017,7 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
                 body: {
                     Request: {
                         Log: {
-                            Actor: gadget.getContract("emba.student").getUserInfo().UserName,
+                            Actor: $scope.connection.getUserInfo().UserName,
                             ActionType: "刪除",
                             Action: "刪除經歷",
                             TargetCategory: "ischool.emba.experience",
