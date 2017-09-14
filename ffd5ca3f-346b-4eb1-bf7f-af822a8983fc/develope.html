@@ -54,12 +54,12 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="placeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade" id="placeModal" tabindex="-1" role="dialog" aria-labelledby="placeModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">工作地點</h4>
+                        <h4 class="modal-title" id="placeModalLabel">工作地點</h4>
                     </div>
                     <div class="modal-body row">
                         <div class="col-sm-3" ng-repeat="item in ExperienceDataSource['C_工作地點']">
@@ -323,7 +323,7 @@
                         <div class="col-sm-3">
                             <div class="dropdown">
                                 <button class="btn btn-default dropdown-toggle" type="button" id="departmentMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <span target="department">{{filter.dept.Name || '系所組別'}}</span>
+                                    <span target="department" ng-bind="filter.dept.Name || '系所組別'"></span>
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="departmentMenu">
@@ -340,39 +340,39 @@
                     <div class="panel-heading"><i class="fa fa-fw fa-suitcase"></i> 經歷查詢</div>
                     <div class="panel-body">
                         <div class="row">
-                        <div class="col-sm-3">
-                            <div class="input-group">
-                                <span class="input-group-addon">公司名稱</span>
-                                <input type="text" class="form-control" placeholder="公司名稱" ng-model="filter.additional.company_name">
+                            <div class="col-sm-3">
+                                <div class="input-group">
+                                    <span class="input-group-addon">公司名稱</span>
+                                    <input type="text" class="form-control" placeholder="公司名稱" ng-model="filter.additional.company_name">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="input-group">
-                                <span class="input-group-addon">層級別</span>
-                                <input type="text" class="form-control" placeholder="層級別" data-toggle="modal" data-target="#myModal" value="{{filter.additional.level.join(',')}}" readonly>
+                            <div class="col-sm-3">
+                                <div class="input-group">
+                                    <span class="input-group-addon">層級別</span>
+                                    <input type="text" class="form-control" placeholder="層級別" data-toggle="modal" data-target="#myModal" value="{{filter.additional.level.join(',')}}" readonly>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="dropdown">
+                            <div class="col-sm-3">
+                                <div class="dropdown">
                                     <button class="btn btn-default dropdown-toggle" type="button" id="branchMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                         <span target="branch" ng-bind="filter.additional.department || '部門'"></span>
-                                    <span class="caret"></span>
-                                </button>
+                                        <span class="caret"></span>
+                                    </button>
                                     <ul class="dropdown-menu" aria-labelledby="branchMenu" target="branch-options">
                                         <li ng-click="filter.additional.department=null"><a href="javascript:;">不選擇</a></li>
                                         <li ng-repeat="item in ExperienceDataSource['C_部門類別']" ng-click="filter.additional.department=item"><a href="javascript:;">{{item}}</a></li>
                                         <li ng-click="filter.additional.department='其它'"><a href="javascript:;">其它</a></li>
-                                </ul>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                        </div>
                         <div class="row" style="margin-top: 10px;">
-                        <div class="col-sm-3">
-                            <div class="dropdown">
+                            <div class="col-sm-3">
+                                <div class="dropdown">
                                     <button class="btn btn-default dropdown-toggle" type="button" id="industry" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                         <span target="industry" ng-bind="filter.additional.menu.Domain.name || '產業別'"></span>
-                                    <span class="caret"></span>
-                                </button>
+                                        <span class="caret"></span>
+                                    </button>
                                     <ul class="dropdown-menu" aria-labelledby="industry" target="industry-options">
                                         <li ng-click="experiences.setEmpty()"><a href="javascript:;">不選擇</a></li>
                                         <li ng-repeat="domain in AdditionalSetup['S_Industry'].Domains" ng-click="experiences.toggleExperienceDomain(domain)">
@@ -388,9 +388,9 @@
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="industryC" target="industry-options">
                                         <li ng-repeat="category in filter.additional.menu.objDomain.Categorys" ng-click="experiences.toggleExperienceCategory(category)">{{category.name}}</li>
-                                </ul>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
                             <div class="col-sm-3" ng-if="filter.additional.menu.objCategory.Items.length">
                                 <div class="dropdown">
                                         <button class="btn btn-default dropdown-toggle" type="button" id="industryI" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -404,27 +404,27 @@
                             </div>
                         </div>
                         <div class="row" style="margin-top: 10px;">
-                        <div class="col-sm-3">
-                            <div class="input-group">
-                                <span class="input-group-addon">工作地點</span>
-                                <input type="text" class="form-control" placeholder="工作地點" data-toggle="modal" data-target="#placeModal" value="{{filter.additional.place.join(',')}}" readonly>
+                            <div class="col-sm-3">
+                                <div class="input-group">
+                                    <span class="input-group-addon">工作地點</span>
+                                    <input type="text" class="form-control" placeholder="工作地點" data-toggle="modal" data-target="#placeModal" value="{{filter.additional.place.join(',')}}" readonly>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="dropdown">
-                                <button class="btn btn-default dropdown-toggle" type="button" id="statusMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <span target="status">{{filter.additional.status || '工作狀態'}}</span>
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="statusMenu" target="status-options">
-                                    <li ng-click="filter.additional.status=null"><a href="javascript:;">不選擇</a></li>
-                                    <li ng-repeat="item in ExperienceDataSource['C_工作狀態']" ng-click="filter.additional.status=item"><a href="javascript:;">{{item}}</a></li>
-                                    <li ng-click="filter.additional.status='其它'"><a href="javascript:;">其它</a></li>
-                                </ul>
+                            <div class="col-sm-3">
+                                <div class="dropdown">
+                                    <button class="btn btn-default dropdown-toggle" type="button" id="statusMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        <span target="status" ng-bind="filter.additional.status || '工作狀態'"></span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="statusMenu" target="status-options">
+                                        <li ng-click="filter.additional.status=null"><a href="javascript:;">不選擇</a></li>
+                                        <li ng-repeat="item in ExperienceDataSource['C_工作狀態']" ng-click="filter.additional.status=item"><a href="javascript:;">{{item}}</a></li>
+                                        <li ng-click="filter.additional.status='其它'"><a href="javascript:;">其它</a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 </div>
                 <div class="panel panel-info">
                     <div class="panel-heading"><i class="fa fa-fw fa-heart"></i> 興趣查詢</div>
@@ -432,7 +432,7 @@
                         <div class="col-sm-3">
                             <div class="dropdown">
                                 <button class="btn btn-default dropdown-toggle" type="button" id="bfieldMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <span target="field">{{filter.experience.interest.domain || '領域'}}</span>
+                                    <span target="field" ng-bind="filter.experience.interest.domain || '領域'"></span>
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="fieldMenu">
@@ -444,7 +444,7 @@
                         <div class="col-sm-3">
                             <div class="dropdown">
                                 <button class="btn btn-default dropdown-toggle" type="button" id="categoryMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <span target="category">{{filter.experience.interest.category || '類別'}}</span>
+                                    <span target="category" ng-bind="filter.experience.interest.category || '類別'"></span>
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="categoryMenu" target="category-options" ng-show="filter.experience.interest.domain">
@@ -456,7 +456,7 @@
                         <div class="col-sm-3">
                             <div class="dropdown">
                                 <button class="btn btn-default dropdown-toggle" type="button" id="projectMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <span target="project">{{filter.experience.interest.item || '項目'}}</span>
+                                    <span target="project" ng-bind="filter.experience.interest.item || '項目'"></span>
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="projectMenu" target="project-options" ng-show="filter.experience.interest.category">
@@ -474,7 +474,7 @@
                         <div class="col-sm-3">
                             <div class="dropdown">
                                 <button class="btn btn-default dropdown-toggle" type="button" id="groupMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <span target="group">{{filter.experience.emba_groups.domain || '領域'}}</span>
+                                    <span target="group" ng-bind="filter.experience.emba_groups.domain || '領域'"></span>
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="groupMenu" target="group-options">
@@ -486,7 +486,7 @@
                         <div class="col-sm-3">
                             <div class="dropdown">
                                 <button class="btn btn-default dropdown-toggle" type="button" id="group2Menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <span target="group2">{{filter.experience.emba_groups.category || '類別'}}</span>
+                                    <span target="group2" ng-bind="filter.experience.emba_groups.category || '類別'"></span>
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="group2Menu" target="group2-options" ng-show="filter.experience.emba_groups.domain">
@@ -504,7 +504,7 @@
                         <div class="col-sm-3">
                             <div class="dropdown">
                                 <button class="btn btn-default dropdown-toggle" type="button" id="group4Menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <span target="group4">{{filter.experience.external_organization.domain || '領域'}}</span>
+                                    <span target="group4" ng-bind="filter.experience.external_organization.domain || '領域'"></span>
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="group4Menu" target="group4-options">
@@ -516,7 +516,7 @@
                         <div class="col-sm-3">
                             <div class="dropdown">
                                 <button class="btn btn-default dropdown-toggle" type="button" id="group5Menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <span target="group5">{{filter.experience.external_organization.category || '類別'}}</span>
+                                    <span target="group5" ng-bind="filter.experience.external_organization.category || '類別'"></span>
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="group5Menu" target="group5-options" ng-show="filter.experience.external_organization.domain">
@@ -533,7 +533,7 @@
                     <div class="panel-body row">
                         <div class="col-sm-3">
                             <label class="input-group">
-                                <span class="input-group-addon">
+                                <span class="input-group-addon" ng-class="{'nochecked': !filter.willingness.is_social_enterprise}">
                                     <input type="checkbox" ng-model="filter.willingness.is_social_enterprise"> 社會企業
                                 </span>
                                 <input type="text" ng-show="filter.willingness.is_social_enterprise" class="form-control" placeholder="關鍵字" ng-model="filter.willingness.description_enterprise">
@@ -541,7 +541,7 @@
                         </div>
                         <div class="col-sm-3">
                             <label class="input-group">
-                                <span class="input-group-addon">
+                                <span class="input-group-addon" ng-class="{'nochecked': !filter.willingness.is_non_porfit_organizations}">
                                     <input type="checkbox" ng-model="filter.willingness.is_non_porfit_organizations"> 非營利組織
                                 </span>
                                 <input type="text" ng-show="filter.willingness.is_non_porfit_organizations" class="form-control" placeholder="關鍵字" ng-model="filter.willingness.description_organizations">
@@ -549,7 +549,7 @@
                         </div>
                         <div class="col-sm-3">
                             <label class="input-group">
-                                <span class="input-group-addon">
+                                <span class="input-group-addon" ng-class="{'nochecked': !filter.willingness.is_corporate_social_responsibility}">
                                     <input type="checkbox" ng-model="filter.willingness.is_corporate_social_responsibility"> 企業社會責任
                                 </span>
                                 <input type="text" ng-show="filter.willingness.is_corporate_social_responsibility" class="form-control" placeholder="關鍵字" ng-model="filter.willingness.description_responsibility">
@@ -557,7 +557,7 @@
                         </div>
                         <div class="col-sm-3">
                             <label class="input-group">
-                                <span class="input-group-addon">
+                                <span class="input-group-addon" ng-class="{'nochecked': !filter.willingness.is_venture}">
                                     <input type="checkbox" ng-model="filter.willingness.is_venture"> 創業
                                 </span>
                                 <input type="text" ng-show="filter.willingness.is_venture" class="form-control" placeholder="關鍵字" ng-model="filter.willingness.description_venture">
@@ -570,7 +570,7 @@
                     <div class="panel-body row"> 
                         <div class="col-sm-3">
                             <label class="input-group">
-                                <span class="input-group-addon">
+                                <span class="input-group-addon" ng-class="{'nochecked': !filter.willingness.is_entrpreneurial_team}">
                                     <input type="checkbox" ng-model="filter.willingness.is_entrpreneurial_team"> 擔任業師意願
                                 </span>
                                 <input type="text" ng-show="filter.willingness.is_entrpreneurial_team" class="form-control" placeholder="經驗分享" ng-model="filter.willingness.description_entrpreneurial">
@@ -718,7 +718,7 @@
                 </div>
                 <div class="panel panel-info">
                     <div class="panel-heading"><i class="fa fa-fw fa-graduation-cap"></i> 學歷</div>
-                    <div ng-if="currStudent.eduBackground.length==0">不分享</div>
+                    <div ng-if="currStudent.eduBackground.length==0" style="padding: 15px">不分享</div>
                     <table class="table table-bordered">
                         <tbody ng-repeat="item in currStudent.eduBackground">
                             <tr>
@@ -742,7 +742,7 @@
                 </div>
                 <div class="panel panel-info">
                     <div class="panel-heading"><i class="fa fa-fw fa-suitcase"></i> 經歷</div>
-                    <div ng-if="currStudent.experience.length==0">不分享</div>
+                    <div ng-if="currStudent.experience.length==0" style="padding: 15px">不分享</div>
                     <table class="table table-bordered">
                         <tbody ng-repeat="item in currStudent.experience">
                             <tr>
