@@ -2,6 +2,8 @@
 .panel-body .checkbox-inline,
 .panel .dropdown-menu {
     width: 100%;
+    max-height: 300px;
+    overflow: auto;
 }
 
 .panel .form-control[readonly] {

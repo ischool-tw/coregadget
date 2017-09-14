@@ -31,6 +31,20 @@ app.controller('MainCtrl', ['$scope', function($scope) {
         });
     };
 
+    // 取得入學年度清單
+    $scope.getEnrollYear = function() {
+        $scope.connection.send({
+            service: 'default.GetEnrollYear',
+            body: '',
+            result: function(response, error, http) {
+                if (!error) {
+                    if (response.Result) $scope.EnrollYears = [].concat(response.Result.EnrollYears || []);
+                    $scope.$apply();
+                }
+            }
+        });
+    };
+
     // 取得選項內容
     // 產業別/部門類別/層級別/工作地點/工作狀態
     // 興趣/參加台大EMBA團體/參加校外組織
@@ -522,4 +536,5 @@ app.controller('MainCtrl', ['$scope', function($scope) {
     $scope.resetFilter();
     $scope.getDept();
     $scope.getDataSource();
+    $scope.getEnrollYear();
 }]);

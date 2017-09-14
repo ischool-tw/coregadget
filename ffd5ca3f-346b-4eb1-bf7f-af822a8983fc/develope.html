@@ -291,9 +291,21 @@
                     <div class="panel-heading"><i class="fa fa-fw fa-user"></i> 基本查詢</div>
                     <div class="panel-body row">
                         <div class="col-sm-3">
-                            <div class="input-group">
-                                <span class="input-group-addon">入學年度</span>
-                                <input type="text" class="form-control" placeholder="入學年度" ng-model="filter.enroll_year" ng-change="getDept(filter.enroll_year)">
+                            <div class="dropdown">
+                                <!-- <span class="input-group-addon">入學年度</span>
+                                EnrollYears
+                                <input type="text" class="form-control" placeholder="入學年度" ng-model="filter.enroll_year" ng-change="getDept(filter.enroll_year)"> -->
+
+                                <button class="btn btn-default dropdown-toggle" type="button" id="departmentMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span target="department" ng-bind="filter.enroll_year || '入學年度'"></span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="departmentMenu2">
+                                    <li ng-click="filter.enroll_year=null"><a herf="javascript:;">入學年度</a></li>
+                                    <li ng-repeat="item in EnrollYears" ng-click="filter.enroll_year=item.EnrollYear">
+                                        <a herf="javascript:;">{{item.EnrollYear}}</a>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                         <div class="col-sm-3">
