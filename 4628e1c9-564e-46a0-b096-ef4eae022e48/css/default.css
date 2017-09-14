@@ -244,3 +244,12 @@ select {
   width: inherit;
 }
 */
+
+.my-dropdown-menu {
+  max-height: 220px;
+  overflow: auto;
+}
+
+#syllabus {
+  min-height: 300px;
+}
