@@ -172,16 +172,38 @@
                                 <input type="text" class="form-control" placeholder="必填" target="" name="" ng-model="experiences.current.result.DepartmentCategoryOther">
                             </div>
                         </div>
-                        <div class="dropdown" ng-class="{'has-error': !experiences.current.result.Industry}">
+                        <div class="dropdown" ng-class="{'has-error': !experiences.current.result.IndustryID}">
                             <button class="btn btn-default dropdown-toggle" type="button" id="industry" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                <span target="branch">{{experiences.current.result.Industry || '產業別'}}</span>
+                                <span target="branch">{{experiences.current.menu.Domain.Domain || '產業別'}}</span>
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="industry" target="industry-options">
+                                <li ng-click="experiences.setEmpty()">...請選擇產業別...</li>
+                                <li ng-repeat="domain in AdditionalSetup['S_Industry'].Domains" ng-click="experiences.toggleExperienceDomain(domain)">{{domain}}</li>
+                            </ul>
+                            <div ng-if="experiences.current.menu.Domain.Categorys.length" class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="industryC" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span target="branch">{{experiences.current.menu.Category.Category || '...請選擇子類別...'}}</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="industryC" target="industry-options">
+                                    <li ng-repeat="category in experiences.current.menu.Domain.Categorys" ng-click="experiences.toggleExperienceCategory(category)">{{category}}</li>
+                                </ul>
+                                <div ng-if="experiences.current.menu.Category.Items.length" class="dropdown">
+                                    <button class="btn btn-default dropdown-toggle" type="button" id="industryI" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        <span target="branch">{{experiences.current.menu.Item.Item || '...請選擇子項目...'}}</span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="industryI" target="industry-options">
+                                        <li ng-repeat="item in experiences.current.menu.Category.Items" ng-click="experiences.toggleExperienceItem(item)">{{item}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- <ul class="dropdown-menu" aria-labelledby="industry" target="industry-options">
                                 <li ng-click="experiences.current.result.Industry=''">...請選擇產業別...</li>
                                 <li ng-repeat="item in ExperienceDataSource['C_產業別']" ng-click="experiences.current.result.Industry=item">{{item}}</li>
                                 <li ng-click="experiences.current.result.Industry='其它'">其它</li>
-                            </ul>
+                            </ul> -->
                             <div ng-show="experiences.current.result.Industry=='其它'" class="input-group" ng-class="{'has-error': !experiences.current.result.IndustryOther}">
                                 <span class="input-group-addon">請註明</span>
                                 <input type="text" class="form-control" placeholder="必填" target="" name="" ng-model="experiences.current.result.IndustryOther">
@@ -296,7 +318,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="mygroup4">參加校外團體</h4>
                     </div>
-                    <div class="modal-body">
+                    <div ng-if="AdditionalSetup.current.type=='ExternalOrganization'" class="modal-body">
                         <div class="panel panel-default">
                             <div class="panel-heading" ng-repeat-start="domain in AdditionalSetup.current.addition.Domains">
                                 <label>
@@ -354,7 +376,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="myinterest">編輯興趣</h4>
                     </div>
-                    <div class="modal-body">
+                    <div ng-if="AdditionalSetup.current.type=='Interest'" class="modal-body">
                         <div class="panel panel-default">
                             <div class="panel-heading" ng-repeat-start="domain in AdditionalSetup.current.addition.Domains">
                                 <label>
@@ -412,7 +434,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="mygroup1">參加台大EMBA團體</h4>
                     </div>
-                    <div class="modal-body">
+                    <div ng-if="AdditionalSetup.current.type=='EMBAGroups'" class="modal-body">
                         <div class="panel panel-default">
                             <div class="panel-heading" ng-repeat-start="domain in AdditionalSetup.current.addition.Domains">
                                 <label>
@@ -792,7 +814,7 @@
                         </thead>
                         <tbody ng-repeat-end>
                             <tr>
-                                <td data-title="產業別">{{exp.Industry || '&nbsp;'}} <span ng-show="exp.IndustryOther">({{exp.IndustryOther}})</span></td>
+                                <td data-title="產業別">{{exp.IndustryDesc || '&nbsp;'}} <span ng-show="exp.IndustryOther">({{exp.IndustryOther}})</span></td>
                                 <td data-title="工作地點">{{exp.WorkPlace.join(',') || '&nbsp;'}} <span ng-show="exp.WorkPlaceOther">({{exp.WorkPlaceOther}})</span></td>
                                 <td data-title="工作狀態">{{exp.WorkStatus || '&nbsp;'}} <span ng-show="exp.WorkStatusOther">({{exp.WorkStatusOther}})</span></td>
                                 <td data-title="" class="text-right">

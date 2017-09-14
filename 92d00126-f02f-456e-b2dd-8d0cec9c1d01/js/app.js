@@ -400,7 +400,7 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
                     LinkedIn: $scope.myInfo.StudentInfo.LinkedIn,
                     WhatsApp: $scope.myInfo.StudentInfo.WhatsApp,
                     WeChat: $scope.myInfo.StudentInfo.WeChat,
-        }
+                }
             }
         };
 
@@ -615,7 +615,6 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
             "\nWeChat： ", (ori_StudentInfo.WeChat), " -> ", (res_StudentInfo.WeChat)
         ].join('');
         // console.log(log_desc);
-
         $scope.connection.send({
             service: "public.AddLog",
             body: {
@@ -826,22 +825,74 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
                 service: "default.GetExperience",
                 body: {},
                 result: function (response, error, http) {
-                    //console.log(response);
+                    // console.log(response);
                     if (!error) {
                         $scope.experiences.result = [].concat(response.Result.Experience || []);
-                        angular.forEach($scope.experiences.result, function (item) {
-                            item.IsSharing = (item.IsSharing == 't') ? true : false;
+                        angular.forEach($scope.experiences.result, function (exp) {
+                            exp.IsSharing = (exp.IsSharing == 't') ? true : false;
 
-                            item.PostLevel = (item.PostLevel ? item.PostLevel.split(',') : []);
-                            item.WorkPlace = (item.WorkPlace ? item.WorkPlace.split(',') : []);
+                            exp.PostLevel = (exp.PostLevel ? exp.PostLevel.split(',') : []);
+                            exp.WorkPlace = (exp.WorkPlace ? exp.WorkPlace.split(',') : []);
 
-                            item.edit = function () {
+                            // 依目前學生資料庫中的值變更狀態
+                            var compare = false;
+                            var menuDomain = null, menuCategory = null, menuItem = null;
+                            var specieIndustry = $scope.AdditionalSetup['S_Industry'];
+                            if (exp.IndustryID && specieIndustry) {
+                                specieIndustry.Domains.forEach(function(domain){
+                                    if (!compare) {
+                                        var tmpD = specieIndustry['D_' + domain];
+                                        if (tmpD && tmpD.Categorys.length == 0 && tmpD.UID == exp.IndustryID) {
+                                            menuDomain = tmpD;
+                                            exp.Industry = domain;
+                                            exp.IndustryDesc = domain;
+                                            compare = true;
+                                        }
+                                        if (!compare) {
+                                            tmpD.Categorys.forEach(function(category){
+                                                if (!compare) {
+                                                    var tmpC = specieIndustry['D_' + domain]['C_' + category];
+                                                    if (tmpC && tmpC.Items.length == 0 && tmpC.UID == exp.IndustryID) {
+                                                        menuDomain = tmpD;
+                                                        menuCategory = tmpC;
+                                                        exp.Industry = category;
+                                                        exp.IndustryDesc = [domain, category].join('_');
+                                                        compare = true;
+                                                    }
+                                                    if (!compare) {
+                                                        tmpC.Items.forEach(function(item){
+                                                            if (!compare) {
+                                                                var tmpI = specieIndustry['D_' + domain]['C_' + category]['I_' + item];
+                                                                if (tmpI && tmpI.UID == exp.IndustryID) {
+                                                                    menuDomain = tmpD;
+                                                                    menuCategory = tmpC;
+                                                                    menuItem = tmpI;
+                                                                    exp.Industry = item;
+                                                                    exp.IndustryDesc = [domain, category, item].join('_');
+                                                                    compare = true;
+                                                                }
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+
+                            exp.edit = function () {
                                 $scope.experiences.current = {
                                     saveing: false,
                                     confirm: false,
                                     type: 'edit',
-                                    original: angular.copy(item),
-                                    result: item
+                                    original: angular.copy(exp),
+                                    result: exp,
+                                    menu: {
+                                        Domain: menuDomain,
+                                        Category: menuCategory,
+                                        Item: menuItem
+                                    }
                                 };
                                 $("#experience").modal("show");
                             };
@@ -860,6 +911,7 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
                 'DepartmentCategory': '',
                 'DepartmentCategoryOther': '',
                 'Industry': '',
+                'IndustryID': '',
                 'IndustryOther': '',
                 'WorkPlace': [],
                 'WorkPlaceOther': '',
@@ -872,7 +924,12 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
                 confirm: false,
                 type: 'add',
                 original: angular.copy(item),
-                result: angular.copy(item)
+                result: angular.copy(item),
+                menu: {
+                    Domain: null,
+                    Category: null,
+                    Item: null
+                }
             };
             $("#experience").modal("show");
         },
@@ -895,7 +952,7 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
             if (!request.DepartmentCategory) return;
             if (request.DepartmentCategory == "其它" && !request.DepartmentCategoryOther) return;
 
-            if (!request.Industry) return;
+            if (!request.IndustryID) return;
             if (request.Industry == "其它" && !request.IndustryOther) return;
 
             if (!request.WorkPlace.length) return;
@@ -951,6 +1008,7 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
                 "\n部門： ", (ori_Experience.DepartmentCategory), " -> ", (res_Experience.DepartmentCategory),
                 "\n部門_其它： ", (ori_Experience.DepartmentCategoryOther), " -> ", (res_Experience.DepartmentCategoryOther),
                 "\n產業別： ", (ori_Experience.Industry), " -> ", (res_Experience.Industry),
+                "\n產業別編號： ", (ori_Experience.IndustryID), " -> ", (res_Experience.IndustryID),
                 "\n產業別_其它： ", (ori_Experience.IndustryOther), " -> ", (res_Experience.IndustryOther),
                 "\n工作地點： ", (ori_Experience.WorkPlace), " -> ", (res_Experience.WorkPlace),
                 "\n工作地點_其它： ", (ori_Experience.WorkPlaceOther), " -> ", (res_Experience.WorkPlaceOther),
@@ -1035,10 +1093,61 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
         reset: function () {
             angular.copy($scope.experiences.current.original, $scope.experiences.current.result);
             $("#experience").modal("hide");
+        },
+        toggleExperienceDomain: function(domain) {
+            var tmp = $scope.AdditionalSetup['S_Industry']['D_'+domain];
+            $scope.experiences.current.menu.Domain = tmp;
+            $scope.experiences.current.menu.Category = null;
+            $scope.experiences.current.menu.Item = null;
+            
+            $scope.experiences.current.result.IndustryID = null;
+            $scope.experiences.current.result.Industry = null;
+            $scope.experiences.current.result.IndustryDesc = null;
+            $scope.experiences.current.result.IndustryOther = null;
+
+            if (tmp.Categorys.length == 0) {
+                $scope.experiences.current.result.Industry = tmp.Domain;
+                $scope.experiences.current.result.IndustryID = tmp.UID;
+                $scope.experiences.current.result.IndustryDesc = tmp.Domain;
+            }
+        },
+        toggleExperienceCategory: function(category) {
+            var tmp = $scope.experiences.current.menu.Domain['C_'+category];
+            $scope.experiences.current.menu.Category = tmp;
+            $scope.experiences.current.menu.Item = null;
+            
+            $scope.experiences.current.result.IndustryID = null;
+            $scope.experiences.current.result.Industry = null;
+            $scope.experiences.current.result.IndustryDesc = null;
+            $scope.experiences.current.result.IndustryOther = null;
+            
+            if (tmp.Items.length == 0) {
+                $scope.experiences.current.result.Industry = tmp.Category;
+                $scope.experiences.current.result.IndustryID = tmp.UID;
+                $scope.experiences.current.result.IndustryDesc = [tmp.Domain, tmp.Category].join('_');
+            }
+        },
+        toggleExperienceItem: function(item) {
+            var tmp = $scope.experiences.current.menu.Category['I_'+item];
+            $scope.experiences.current.menu.Item = tmp;
+            $scope.experiences.current.result.Industry = tmp.item;
+            $scope.experiences.current.result.IndustryID = tmp.UID;
+            $scope.experiences.current.result.IndustryDesc = [tmp.Domain, tmp.Category, tmp.Item].join('_');
+        },
+        setEmpty: function() {
+            $scope.experiences.current.menu.Domain = null;
+            $scope.experiences.current.menu.Category = null;
+            $scope.experiences.current.menu.Item = null;
+
+            $scope.experiences.current.result.IndustryID = null;
+            $scope.experiences.current.result.Industry = null;
+            $scope.experiences.current.result.IndustryDesc = null;
+            $scope.experiences.current.result.IndustryOther = null;
         }
     };
 
-    // 興趣(Interest) / 參加台大EMBA團體(EMBAGroups) / 參加校外組織(ExternalOrganization)
+
+    // 興趣(Interest) / 參加台大EMBA團體(EMBAGroups) / 參加校外組織(ExternalOrganization) / 產業別(Industry)
     // 'StudentAdditional':[
     //     {
     //         'Specie':'Interest',
@@ -1211,6 +1320,8 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
             body: "",
             result: function (response, error, http) {
                 if (!error) {
+                    // 第六階段產業別由文字改為ref_id(經由此處取資料)
+                    // "EMBAGroups" 參加台大EMBA團體, "ExternalOrganization" 參加校外組織, "Industry" 產業別, "Interest" 興趣
                     if (response.DataSource && response.DataSource.Additionals) {
                         response.DataSource.Additionals = [].concat(response.DataSource.Additionals || []);
                         _Additionals.Species = [];
@@ -1230,7 +1341,8 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
                                     'Category': aii.category,
                                     'Item': aii.item,
                                     'Description': '',
-                                    'Categorys': []
+                                    'Categorys': [],
+                                    'UID': aii.uid
                                 };
                             }
                             if (aii.category && !_Additionals['S_' + aii.specie]['D_' + aii.domain]['C_' + aii.category]) {
@@ -1242,10 +1354,11 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
                                     'Category': aii.category,
                                     'Item': aii.item,
                                     'Description': '',
-                                    'Items': []
+                                    'Items': [],
+                                    'UID': aii.uid
                                 };
                             }
-                            if (aii.item) {
+                            if (aii.item && _Additionals['S_' + aii.specie]['D_' + aii.domain]['C_' + aii.category]) {
                                 _Additionals['S_' + aii.specie]['D_' + aii.domain]['C_' + aii.category].Items.push(aii.item);
                                 _Additionals['S_' + aii.specie]['D_' + aii.domain]['C_' + aii.category]['I_' + aii.item] = {
                                     'Checked': false,
@@ -1253,66 +1366,74 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
                                     'Domain': aii.domain,
                                     'Category': aii.category,
                                     'Item': aii.item,
-                                    'Description': ''
+                                    'Description': '',
+                                    'UID': aii.uid
                                 };
                             }
                         });
-
                         // console.log(_Additionals);
+                        // debugger
 
-                        // 為每一層有內容的資料皆加上「其它」
+                        // 除了產業別，為每一層有內容的資料皆加上「其它」
                         _Additionals.Species.forEach(function (specie) {
-                            _Additionals['S_' + specie].Domains.forEach(function (domain, idx) {
-                                if (idx == 0) {
-                                    var newItem = {
-                                        'Checked': false,
-                                        'Specie': specie,
-                                        'Domain': '其它',
-                                        'Category': '',
-                                        'Item': '',
-                                        'Description': '',
-                                        'Categorys': []
-                                    };
-
-                                    _Additionals['S_' + specie].Domains.push('其它');
-                                    _Additionals['S_' + specie]['D_其它'] = newItem;
-                                }
-
-                                _Additionals['S_' + specie]['D_' + domain].Categorys.forEach(function (category, idx) {
-                                    if (idx == 0) {
-                                        var newItem = {
+                            if (specie != 'Industry') {
+                                _Additionals['S_' + specie].Domains.forEach(function (domain, idx) {
+                                    if (idx == 0 && !_Additionals['S_' + specie]['D_其它']) {
+                                        var newItemS = {
                                             'Checked': false,
                                             'Specie': specie,
-                                            'Domain': domain,
-                                            'Category': '其它',
+                                            'Domain': '其它',
+                                            'Category': '',
                                             'Item': '',
                                             'Description': '',
-                                            'Items': []
+                                            'Categorys': [],
+                                            'UID': 's-' + randomId('xxxxxxx')
                                         };
-                                        _Additionals['S_' + specie]['D_' + domain].Categorys.push('其它');
-                                        _Additionals['S_' + specie]['D_' + domain]['C_其它'] = newItem;
+
+                                        _Additionals['S_' + specie].Domains.push('其它');
+                                        _Additionals['S_' + specie]['D_其它'] = newItemS;
                                     }
 
-                                    _Additionals['S_' + specie]['D_' + domain]['C_' + category].Items.forEach(function (item, idx) {
-                                        if (idx == 0) {
-                                            var newItem = {
+                                    _Additionals['S_' + specie]['D_' + domain].Categorys.forEach(function (category, idx) {
+                                        if (idx == 0 && !_Additionals['S_' + specie]['D_' + domain]['C_其它']) {
+                                            var newItemC = {
                                                 'Checked': false,
                                                 'Specie': specie,
                                                 'Domain': domain,
-                                                'Category': category,
-                                                'Item': '其它',
-                                                'Description': ''
+                                                'Category': '其它',
+                                                'Item': '',
+                                                'Description': '',
+                                                'Items': [],
+                                                'UID': 'd-' + randomId('xxxxxxx')
                                             };
-                                            _Additionals['S_' + specie]['D_' + domain]['C_' + category].Items.push('其它');
-                                            _Additionals['S_' + specie]['D_' + domain]['C_' + category]['I_其它'] = newItem;
+                                            _Additionals['S_' + specie]['D_' + domain].Categorys.push('其它');
+                                            _Additionals['S_' + specie]['D_' + domain]['C_其它'] = newItemC;
                                         }
+
+                                        _Additionals['S_' + specie]['D_' + domain]['C_' + category].Items.forEach(function (item, idx) {
+                                            if (idx == 0 && !_Additionals['S_' + specie]['D_' + domain]['C_' + category]['I_其它']) {
+                                                var newItemI = {
+                                                    'Checked': false,
+                                                    'Specie': specie,
+                                                    'Domain': domain,
+                                                    'Category': category,
+                                                    'Item': '其它',
+                                                    'Description': '',
+                                                    'UID': 'i-' + randomId('xxxxxxx')
+                                                };
+                                                _Additionals['S_' + specie]['D_' + domain]['C_' + category].Items.push('其它');
+                                                _Additionals['S_' + specie]['D_' + domain]['C_' + category]['I_其它'] = newItemI;
+                                            }
+                                        });
                                     });
                                 });
-                            });
+                            }
                         });
+                        // console.log(_Additionals);
+                        // debugger
                     }
-                    // console.log(_Additionals);
 
+                    // 第六階段產業別由文字改為ref_id(不由此處取資料)
                     var experiences = [];
                     if (response.DataSource && response.DataSource.Experiences) {
                         response.DataSource.Experiences = [].concat(response.DataSource.Experiences || []);
@@ -1335,11 +1456,22 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
         });
     };
 
-    $scope.myInfo.load(); // 取得個人基本資料及分享設定
-    $scope.educations.load(); // 學歷
-    $scope.experiences.load(); // 經歷
-    $scope.getDataSource(function () {
-        $scope.stu_additionals.load(); // 興趣/參加台大EMBA團體/參加校外組織
-    }); // 取得選項內容
+    // 產生亂數(以 x 表示，xxxxx 表示5個數字組成的字串)
+    var randomId = function(content) {
+      return content.replace(/x/g, function(c) {
+        var r = Math.random() * 10 | 0, v = r;
+        return v.toString();
+      });
+    };
 
+    $scope.connection.ready(function() {
+        $scope.myInfo.load(); // 取得個人基本資料及分享設定
+        $scope.educations.load(); // 學歷
+
+        // 取得選項內容
+        $scope.getDataSource(function () {
+            $scope.stu_additionals.load(); // 興趣/參加台大EMBA團體/參加校外組織
+            $scope.experiences.load(); // 經歷
+        }); 
+    });
 }]);
