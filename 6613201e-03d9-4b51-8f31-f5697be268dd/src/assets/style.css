@@ -1,0 +1,30 @@
+.footer {
+  border-top: 1px solid #ccc;
+  padding-top: 4px;
+  height: 70px;
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: 0px;
+  background: #fff;
+}
+
+.footer img {
+  margin: 5px 10px 0px 0px;
+  display: inline;
+  zoom: 1;
+  border: 0;
+}
+
+.footer .text {
+  text-align: left;
+  color: #999999;
+}
+
+.table-bordered thead:first-child tr:first-child th:last-child, .table-bordered tbody:first-child tr:first-child td:last-child {
+  border-top-right-radius: 4px;
+}
+
+.table-bordered thead:first-child tr:first-child th:first-child, .table-bordered tbody:first-child tr:first-child td:first-child {
+  border-top-left-radius: 4px;
+}
