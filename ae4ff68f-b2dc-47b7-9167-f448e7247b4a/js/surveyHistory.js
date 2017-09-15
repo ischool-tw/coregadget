@@ -124,8 +124,10 @@ var GetCanSeeCurriculumEvaluation = function() {
                     <answerRate>100</answerRate>
                     <ansRateStandard>70</ansRateStandard>
                     <canSee>true</canSee>
+                    <masterSwitch>true</masterSwitch>
                 */
-                console.log(response);
+                // console.log(response);
+                if (response.masterSwitch && response.masterSwitch == "true") {
                     if (response.canSee && response.canSee == "true") {
                         var msg =  [ 
                                     "<div style='color:red;'>",
@@ -171,6 +173,8 @@ var GetCanSeeCurriculumEvaluation = function() {
                                   //"% 才可以查看選課課程之評鑑值</div>"].join("");
                         $('#show_course_evaluation').html(msg).show();
                     }
+                    $('#course_evaluation_panel').show();
+                }
             }
 
             CallbackQueue_History.JobFinished();
