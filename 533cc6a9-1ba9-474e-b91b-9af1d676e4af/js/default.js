@@ -543,19 +543,18 @@ angular.module("app", ["checklist-model", "ngSanitize"])
             .find('span[data-type=preview]').remove();
     };
 
-    var contractForLog = gadget.getContract("emba.student");
     var writeLog = function(actionType, action, description) {
-        contractForLog.getUserInfo().Property.forEach(function(item){
+        $scope.contractForLog.getUserInfo().Property.forEach(function(item){
             var patt = new RegExp('@'+item.Name+'@', 'g');
             description = description.replace(patt, item['@text']);
         })
 
-        contractForLog.send({
+        $scope.contractForLog.send({
             service: "public.AddLog",
             body: {
                 Request: {
                     Log: {
-                        Actor: contractForLog.getUserInfo().UserName,
+                        Actor: $scope.contractForLog.getUserInfo().UserName,
                         ActionType: actionType,
                         Action: action,
                         TargetCategory: 'student',
@@ -569,8 +568,11 @@ angular.module("app", ["checklist-model", "ngSanitize"])
     }
 
     $scope.init = function() {
-        $scope.getActivitys();
-        $scope.getHistorys();
+        $scope.contractForLog = gadget.getContract("emba.student");
+        $scope.contractForLog.ready(function() {
+            $scope.getActivitys();
+            $scope.getHistorys();
+        });
     };
 })
 .filter('newlines', function () {
