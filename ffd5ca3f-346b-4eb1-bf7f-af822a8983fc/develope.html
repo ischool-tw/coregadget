@@ -778,7 +778,8 @@
                 </div>
                 <div class="panel panel-info">
                     <div class="panel-heading"><i class="fa fa-fw fa-tasks"></i> 經驗調查</div>
-                    <table class="table table-bordered">
+                    <div ng-show="currStudent.willingness.IsInexperience=='t'" style="padding: 15px">無經驗</div>
+                    <table ng-show="currStudent.willingness.IsInexperience=='f'" class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>
@@ -843,7 +844,8 @@
                 </div>
                 <div class="panel panel-info">
                     <div class="panel-heading"><i class="fa fa-fw fa-tasks"></i> 意願調查</div>
-                    <table class="table table-bordered">
+                    <div ng-show="currStudent.willingness.IsNoSurvey=='t'" style="padding: 15px">無意願</div>
+                    <table ng-show="currStudent.willingness.IsNoSurvey=='f'" class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>
