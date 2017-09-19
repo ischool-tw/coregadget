@@ -837,6 +837,20 @@
                         <li class="list-group-item switch">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-10">
+                                    無經驗
+                                </div>
+                                <label class="col-xs-12 col-sm-2 text-right">
+                                    否
+                                    <input type="checkbox" ng-model="myInfo.Willingness.IsInexperience" ng-click="toggleIsInexperience">
+                                    <span class="lever"></span> 是
+                                </label>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="list-group" ng-show="!myInfo.Willingness.IsInexperience">
+                        <li class="list-group-item switch">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-10">
                                     你個人或所屬組織，是否參與「社會企業」相關活動？
                                 </div>
                                 <label class="col-xs-12 col-sm-2 text-right">
@@ -934,6 +948,20 @@
                         <i class="fa fa-fw fa-tasks"></i> 意願調查
                     </div>
                     <ul class="list-group">
+                        <li class="list-group-item switch">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-10">
+                                    無意願
+                                </div>
+                                <label class="col-xs-12 col-sm-2 text-right">
+                                    否
+                                    <input type="checkbox" ng-model="myInfo.Willingness.IsNoSurvey" ng-click="toggleIsNoSurvey()">
+                                    <span class="lever"></span> 是
+                                </label>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="list-group" ng-show="!myInfo.Willingness.IsNoSurvey">
                         <li class="list-group-item switch">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-10">

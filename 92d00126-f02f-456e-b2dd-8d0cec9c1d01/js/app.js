@@ -125,12 +125,16 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
         'IsSharingVenture': '',
         // 經驗調查-簡述你個人或所屬組織，是否參與「創業」相關活動
         'DescriptionVenture': '',
+        // 無經驗
+        'IsInexperience': '',
         // 意願調查-是否擔任台大管理學院相關課程「業師」意願
         'IsEntrepreneurialTeam': '',
         // 意願調查-分享是否擔任台大管理學院相關課程「業師」意願
         'IsSharingEntrpreneurial': '',
         // 意願調查-簡述是否擔任台大管理學院相關課程「業師」意願
         'DescriptionEntrpreneurial': '',
+        // 無意願
+        'IsNoSurvey': '',
         // 分享興趣
         'IsSharingInterest': '',
         // 分享EMBA社團
@@ -284,6 +288,8 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
                         $scope.myInfo.Willingness.IsSharingInterest = ($scope.myInfo.Willingness.IsSharingInterest == 't') ? true : false;
                         $scope.myInfo.Willingness.IsSharingEMBAGroups = ($scope.myInfo.Willingness.IsSharingEMBAGroups == 't') ? true : false;
                         $scope.myInfo.Willingness.IsSharingExternalOrganization = ($scope.myInfo.Willingness.IsSharingExternalOrganization == 't') ? true : false;
+                        $scope.myInfo.Willingness.IsInexperience = ($scope.myInfo.Willingness.IsInexperience == 't') ? true : false;
+                        $scope.myInfo.Willingness.IsNoSurvey = ($scope.myInfo.Willingness.IsNoSurvey == 't') ? true : false;
 
                         // 記錄log用
                         $scope.myInfo.oriStudentInfo = angular.copy($scope.myInfo.StudentInfo);
@@ -566,9 +572,9 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
             "\n住家地址： ", (ori_DataSharing.PermanentAddress), " -> ", (res_DataSharing.PermanentAddress),
             "\n公司地址： ", (ori_DataSharing.OtherAddressList.Address[0]), " -> ", (res_DataSharing.OtherAddressList.Address[0]),
             "\n經驗調查-分享「社會企業」相關活動： ", (ori_Willingness.IsSharingEnterprise), " -> ", (res_Willingness.IsSharingEnterprise),
-            "\n經驗調查-分享「非營利組織」相關活動 ", (ori_Willingness.IsSharingOrganizations), " -> ", (res_Willingness.IsSharingOrganizations),
-            "\n經驗調查-分享「企業社會責任(CSR)」相關活動 ", (ori_Willingness.IsSharingResponsibility), " -> ", (res_Willingness.IsSharingResponsibility),
-            "\n經驗調查-分享「創業」相關活動 ", (ori_Willingness.IsSharingVenture), " -> ", (res_Willingness.IsSharingVenture),
+            "\n經驗調查-分享「非營利組織」相關活動： ", (ori_Willingness.IsSharingOrganizations), " -> ", (res_Willingness.IsSharingOrganizations),
+            "\n經驗調查-分享「企業社會責任(CSR)」相關活動： ", (ori_Willingness.IsSharingResponsibility), " -> ", (res_Willingness.IsSharingResponsibility),
+            "\n經驗調查-分享「創業」相關活動： ", (ori_Willingness.IsSharingVenture), " -> ", (res_Willingness.IsSharingVenture),
             "\n意願調查-分享「業師」意願： ", (ori_Willingness.IsSharingEntrpreneurial), " -> ", (res_Willingness.IsSharingEntrpreneurial),
             "\n參加校外團體： ", (ori_Willingness.IsSharingEntrpreneurial), " -> ", (res_Willingness.IsSharingEntrpreneurial),
             "\n興趣： ", (ori_Willingness.IsSharingInterest), " -> ", (res_Willingness.IsSharingInterest),
@@ -589,14 +595,16 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
             "\n聯絡地址： ", (ori_StudentInfo.MailingAddress_desc), " -> ", (res_StudentInfo.MailingAddress_desc),
             "\n住家地址： ", (ori_StudentInfo.PermanentAddress_desc), " -> ", (res_StudentInfo.PermanentAddress_desc),
             "\n公司地址： ", (ori_StudentInfo.OtherAddresses_desc), " -> ", (res_StudentInfo.OtherAddresses_desc),
+            "\n經驗調查-無經驗： ", (ori_Willingness.IsInexperience), " -> ", (res_Willingness.IsInexperience),
             "\n經驗調查-分享「社會企業」相關活動： ", (ori_Willingness.IsSocialEnterprise), " -> ", (res_Willingness.IsSocialEnterprise),
             "\n經驗調查-簡述「社會企業」相關活動： ", (ori_Willingness.DescriptionEnterprise), " -> ", (res_Willingness.DescriptionEnterprise),
-            "\n經驗調查-分享「非營利組織」相關活動 ", (ori_Willingness.IsNonProfitOrganizations), " -> ", (res_Willingness.IsNonProfitOrganizations),
-            "\n經驗調查-簡述「非營利組織」相關活動 ", (ori_Willingness.DescriptionOrganizations), " -> ", (res_Willingness.DescriptionOrganizations),
-            "\n經驗調查-分享「企業社會責任(CSR)」相關活動 ", (ori_Willingness.IsCorporateSocialResponsibility), " -> ", (res_Willingness.IsCorporateSocialResponsibility),
-            "\n經驗調查-簡述「企業社會責任(CSR)」相關活動 ", (ori_Willingness.DescriptionResponsibility), " -> ", (res_Willingness.DescriptionResponsibility),
-            "\n經驗調查-分享「創業」相關活動 ", (ori_Willingness.IsVenture), " -> ", (res_Willingness.IsVenture),
-            "\n經驗調查-簡述「創業」相關活動 ", (ori_Willingness.DescriptionVenture), " -> ", (res_Willingness.DescriptionVenture),
+            "\n經驗調查-分享「非營利組織」相關活動： ", (ori_Willingness.IsNonProfitOrganizations), " -> ", (res_Willingness.IsNonProfitOrganizations),
+            "\n經驗調查-簡述「非營利組織」相關活動： ", (ori_Willingness.DescriptionOrganizations), " -> ", (res_Willingness.DescriptionOrganizations),
+            "\n經驗調查-分享「企業社會責任(CSR)」相關活動： ", (ori_Willingness.IsCorporateSocialResponsibility), " -> ", (res_Willingness.IsCorporateSocialResponsibility),
+            "\n經驗調查-簡述「企業社會責任(CSR)」相關活動： ", (ori_Willingness.DescriptionResponsibility), " -> ", (res_Willingness.DescriptionResponsibility),
+            "\n經驗調查-分享「創業」相關活動： ", (ori_Willingness.IsVenture), " -> ", (res_Willingness.IsVenture),
+            "\n經驗調查-簡述「創業」相關活動： ", (ori_Willingness.DescriptionVenture), " -> ", (res_Willingness.DescriptionVenture),
+            "\n經驗調查-無意願： ", (ori_Willingness.IsNoSurvey), " -> ", (res_Willingness.IsNoSurvey),
             "\n意願調查-分享「業師」意願： ", (ori_Willingness.IsEntrepreneurialTeam), " -> ", (res_Willingness.IsEntrepreneurialTeam),
             "\n意願調查-簡述「業師」意願： ", (ori_Willingness.DescriptionEntrpreneurial), " -> ", (res_Willingness.DescriptionEntrpreneurial),
             "\n興趣： ", (ori_StudentAdditional.my_Interest_desc), " -> ", (res_StudentAdditional.my_Interest_desc),
@@ -1462,6 +1470,35 @@ app.controller('MainCtrl', ['$scope', function ($scope) {
         var r = Math.random() * 10 | 0, v = r;
         return v.toString();
       });
+    };
+
+    // 設定為「無經驗」時清除所有設定內容
+    $scope.toggleIsInexperience = function() {
+        if ($scope.myInfo.Willingness.IsInexperience) {
+            // 經驗調查-你個人或所屬組織，是否參與「社會企業」相關活動?
+            $scope.myInfo.Willingness.IsSocialEnterprise = false;
+            $scope.myInfo.Willingness.IsSharingEnterprise = false;
+            $scope.myInfo.Willingness.DescriptionEnterprise = null;
+            // 經驗調查-你個人或所屬組織，是否參與「非營利組織」相關活動?
+            $scope.myInfo.Willingness.IsNonProfitOrganizations = false;
+            $scope.myInfo.Willingness.IsSharingOrganizations = false;
+            $scope.myInfo.Willingness.DescriptionOrganizations = null;
+            // 經驗調查-你個人或所屬組織，是否參與「企業社會責任(CSR)」相關活動?
+            $scope.myInfo.Willingness.IsCorporateSocialResponsibility = false;
+            $scope.myInfo.Willingness.IsSharingResponsibility = false;
+            $scope.myInfo.Willingness.DescriptionResponsibility = null;
+            // 經驗調查-你個人或所屬組織，是否參與「創業」相關活動?
+            $scope.myInfo.Willingness.IsVenture = false;
+            $scope.myInfo.Willingness.IsSharingVenture = false;
+            $scope.myInfo.Willingness.DescriptionVenture = null;
+        }
+    };
+
+    // 設定「無意願」」時清除所有設定內容
+    $scope.toggleIsNoSurvey = function() {
+        $scope.myInfo.Willingness.IsEntrepreneurialTeam = false;
+        $scope.myInfo.Willingness.IsSharingEntrpreneurial = false;
+        $scope.myInfo.Willingness.DescriptionEntrpreneurial = null;
     };
 
     $scope.connection.ready(function() {
