@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Academic5 from './components/academic';
+import Academic from './components/academic';
 import CourseSemesterScore from './components/course_semester_score';
 import GraduationRequirement from './components/graduation_requirement';
 import './assets/base.css';
@@ -19,7 +19,7 @@ ReactDOM.render(
             <div className="tabbable">
                 <div className="tab-content">
                     <div className="tab-pane active">
-                        <Academic5></Academic5>
+                        <Academic></Academic>
                         <CourseSemesterScore></CourseSemesterScore>
                         <GraduationRequirement></GraduationRequirement>
                         <div className="row">

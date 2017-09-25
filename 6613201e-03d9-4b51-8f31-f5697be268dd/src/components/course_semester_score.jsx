@@ -38,7 +38,9 @@ export default class CourseSemesterScore extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {this.state.list}
+                            {
+                                (this.state.list.length) ? this.state.list : <tr><td colSpan="10">目前無資料</td></tr>
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -58,10 +60,12 @@ export default class CourseSemesterScore extends Component {
                             let semester = response.Result.SystemConfig.DefaultSemester;
                             resolve({schoolYear: schoolYear, semester: semester})
                         } else {
-                            reject(() => console.log('response.Result is null'));
+                            console.log('default.GetSemester 查無學年期');
+                            reject();
                         }
                     } else {
-                        reject(() => console.log(error));
+                        console.log(error);
+                        reject();
                     }
                 }
             });
@@ -124,7 +128,9 @@ export default class CourseSemesterScore extends Component {
                     return { list: items };
                 });
             })
-        });
+            .catch((err) => {});
+        })
+        .catch((err) => {});
     };
 
 }

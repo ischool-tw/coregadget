@@ -42,7 +42,7 @@ export default class GraduationRequirement extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {this.state.list}
+                            {(this.state.list.length) ? this.state.list : <tr><td colSpan="6">目前無資料</td></tr> }
                         </tbody>
                     </table>
                 </div>
@@ -84,10 +84,11 @@ export default class GraduationRequirement extends Component {
                         if (response.Result) {
                             resolve([].concat(response.Result.Subject || []));
                         } else {
-                            reject(() => console.log('response.Result is null'));
+                            resolve([]);
                         }
                     } else {
-                        reject(() => console.log(error));
+                        console.log(error)
+                        reject();
                     }
                 }
             });
@@ -114,10 +115,10 @@ export default class GraduationRequirement extends Component {
                             });
                             resolve(scoreTexts);
                         } else {
-                            reject(() => console.log('response.Result is null'));
+                            resolve({});
                         }
                     } else {
-                        reject(() => console.log(error));
+                        reject();
                     }
                 }
             });
@@ -153,7 +154,7 @@ export default class GraduationRequirement extends Component {
             });
 
         },(err) => {
-            console.log(err);
+            // console.log(err);
         });
     }
 }

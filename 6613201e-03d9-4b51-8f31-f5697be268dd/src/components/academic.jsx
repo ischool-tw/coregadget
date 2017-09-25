@@ -37,7 +37,9 @@ export default class Academic extends Component {
                                 <th>成績</th>
                             </tr>
                         </thead>
-                        <tbody>{this.state.currentData}</tbody>
+                        <tbody>
+                            {(this.state.currentData.length) ? this.state.currentData : <tr><td colSpan="11">目前無資料</td></tr>}
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -56,10 +58,12 @@ export default class Academic extends Component {
                             let semester = response.Result.SystemConfig.DefaultSemester;
                             resolve({schoolYear: schoolYear, semester: semester})
                         } else {
-                            reject(() => console.log('response.Result is null'));
+                            console.log('default.GetSemester 查無學年期');
+                            reject();
                         }
                     } else {
-                        reject(() => console.log(error));
+                        console.log(error);
+                        reject();
                     }
                 }
             });
@@ -83,15 +87,16 @@ export default class Academic extends Component {
                         if (response.Result) {
                             resolve([].concat(response.Result.Course || []));
                         } else {
-                            reject(() => console.log('response.Result is null'));
+                            resolve([]);
                         }
                     } else {
-                        reject(() => console.log(error));
+                        console.log(error);
+                        reject();
                     }
                 }
             });
         });
-    }
+    };
 
     componentWillMount() {
         let self = this;
@@ -123,6 +128,8 @@ export default class Academic extends Component {
                     return { currentData: items };
                 });
             })
-        });
+            .catch((err) => {});
+        })
+        .catch((err) => {});
     };
 }
