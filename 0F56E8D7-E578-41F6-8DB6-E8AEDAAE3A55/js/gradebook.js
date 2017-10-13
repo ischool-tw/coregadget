@@ -72,7 +72,8 @@
             ],
             process: [{
 
-            }]
+            }],
+            haveNoCourse: true
         };
 
         $scope.params = gadget.params;
@@ -577,7 +578,17 @@
                                             $scope.courseList.push(courseRec);
                                         }
                                     });
-                                    $scope.setCurrentCourse($scope.courseList[0]);
+
+                                    $scope.haveNoCourse = false;
+
+                                    if ($scope.courseList[0]) {
+                                        $scope.setCurrentCourse($scope.courseList[0]);
+                                    }
+                                    else
+                                    {
+                                        $scope.haveNoCourse = true;
+                                    }
+                                    
                                 });
                             }
                         }
@@ -603,7 +614,39 @@
                             alert('學期成績已代入');
                         },
                         Disabled: $scope.examList[0].Lock
-                    }
+                    },
+                    //{
+                    //    //2017/10/12 穎驊新增 自動計算努力程度 ，恩正說 調成分每次段考計算
+                    //    Name: '努力程度',
+                    //    Type: 'Header'
+                    //},
+                    //{
+                    //    Name: '批次自動帶入努力程度',
+                    //    Type: 'Function',
+                    //    Fn: function () {
+
+                    //        [].concat($scope.current.Course.Scores.Score || []).forEach(function (examRec, index) {
+                                                                  
+                    //            [].concat($scope.studentList || []).forEach(function (studentRec, index) {
+
+                    //                var done = false;
+
+                    //                // 以努力程度對照表 查出現在的分數對應的努力程度
+                    //                $scope.effortPairList.forEach(function (effortItem) {
+
+                    //                    if (!done && studentRec["Exam" + examRec.ExamID]!="" && studentRec["Exam" + examRec.ExamID] >= effortItem.Score) {
+
+                    //                        studentRec["Exam" + examRec.Name + "_" + "努力程度"] = effortItem.Code;    
+
+                    //                        done = true;
+                    //                    }
+                    //                });                                                                                                                                                                                                                                                         
+                    //            });                                
+                    //        });
+                    //        alert('努力程度已代入。');
+                    //    },
+                        
+                    //}
                 ];
 
                 //#region 匯入
@@ -672,8 +715,35 @@
                             },
                             Disabled: examRec.Lock
                         };
-
+                        
                         importProcesses.push(importProcess);
+
+                        //2017/10/12 穎驊新增 自動計算努力程度 ，恩正說 調成分每次段考計算
+                        if (!examRec.Name.includes("努力程度") && !examRec.Name.includes("學期成績") )
+                        {
+                            var autoEffort = {
+                                Name: '計算' + examRec.Name + "努力程度",
+                                Type: 'Function_Effort',
+                                Fn: function () {
+                                    [].concat($scope.studentList || []).forEach(function (studentRec, index) {
+                                        var done = false;
+                                        // 以努力程度對照表 查出現在的分數對應的努力程度
+                                        $scope.effortPairList.forEach(function (effortItem) {
+
+                                            if (!done && studentRec["Exam" + examRec.ExamID] != "" && studentRec["Exam" + examRec.ExamID] >= effortItem.Score) {
+
+                                                studentRec["Exam" + examRec.Name + "_" + "努力程度"] = effortItem.Code;
+
+                                                done = true;
+                                            }
+                                        });
+                                    });  
+                                    alert('努力程度已計算。');
+                                },
+                                Disabled: examRec.Lock
+                            }
+                            importProcesses.push(autoEffort);
+                        }                        
                     }
                 });
                 if (importProcesses.length > 0) {
@@ -789,7 +859,10 @@
 
 
             //2017/8/2 穎驊新增  平時評量
-            var usualScore = { ExamID: '平時評量', Name: '平時評量', Type: 'Number', Permission: 'Editor', Lock: true };
+            var usualScore = {
+                ExamID: '平時評量', Name: '平時評量', Type: 'Number', Permission: 'Editor', Lock: course.TemplateExtension == "" ? true : !(new Date(course.TemplateExtension.Extension.OrdinarilyStartTime) < new Date() && new Date() < new Date(course.TemplateExtension.Extension.OrdinarilyEndTime)) //  平時評量的 輸入開放與否，依照系統 評量設定的 開放時間為基準。
+
+            };
 
             //2017/8/2 穎驊新增  平時評量_努力程度 子成績項目
             var usualScoreEffort = {
@@ -798,7 +871,7 @@
                 SubName: '努力程度',
                 Type: 'Number',
                 Permission: 'Editor',
-                Lock: true,
+                Lock: course.TemplateExtension == "" ? true : !(new Date(course.TemplateExtension.Extension.OrdinarilyStartTime) < new Date() && new Date() < new Date(course.TemplateExtension.Extension.OrdinarilyEndTime)),
                 Group: usualScore,       
                 SubVisible: false,
             };
@@ -817,7 +890,7 @@
                 Name: '文字評量',
                 Type: 'Text',
                 Permission: 'Editor',
-                Lock: !(new Date(course.TemplateExtension.Extension.TextStartTime) < new Date() && new Date() < new Date(course.TemplateExtension.Extension.TextEndTime)) //  文字評量的 輸入開放與否，依照系統 評量設定的 開放時間為基準。
+                Lock: course.TemplateExtension == "" ? true :!(new Date(course.TemplateExtension.Extension.TextStartTime) < new Date() && new Date() < new Date(course.TemplateExtension.Extension.TextEndTime)) //  文字評量的 輸入開放與否，依照系統 評量設定的 開放時間為基準。
             };
 
             $scope.examList.push(textScore);
