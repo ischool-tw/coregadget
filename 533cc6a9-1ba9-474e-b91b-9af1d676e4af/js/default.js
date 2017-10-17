@@ -203,7 +203,7 @@ angular.module("app", ["checklist-model", "ngSanitize"])
             $scope.contract.send({
                 service: "default.GetReplyCount",
                 body: {
-                    Request: { Condition: { RefEventTemplateId: activity.RefEventTemplateId || 0 } }
+                    Request: { Condition: { RefEventRecordId: activity.Uid || 0 } }
                 },
                 result: function (response, error, http) {
                     if (!error) {
