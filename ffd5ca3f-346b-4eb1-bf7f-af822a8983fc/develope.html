@@ -90,52 +90,43 @@
                         <ol>
                             <li>
                                 <span>
-                                    <a href="javascript:;" ng-click="openPersonal=!openPersonal">個人基本資料</a>
-                                    <i ng-show="openPersonal" class="fa fa-angle-up"></i>
-                                    <i ng-show="!openPersonal" class="fa fa-angle-down"></i>
+                                    <a href="javascript:;" ng-click="openPersonal=!openPersonal">
+                                        個人基本資料 (學生共 {{publicCountData.TotalStudents}} 名)
+                                        <i ng-show="openPersonal" class="fa fa-angle-up"></i>
+                                        <i ng-show="!openPersonal" class="fa fa-angle-down"></i>
+                                    </a>
                                 </span>
                                 <ul ng-show="openPersonal">
                                     <li>
                                         <span>姓名</span>：
-                                        <span>
-                                            共計 {{publicCountData.TotalStudentName}} 筆 / 
-                                            公開分享 共 {{publicCountData.TotalStudentName}} 筆
-                                        </span>
+                                        <span>公開分享 共 {{publicCountData.TotalStudentName}} 筆</span>
                                     </li>
                                     <li>
                                         <span>出生日期</span>：
-                                        <span>
-                                            共計 {{publicCountData.TotalBirthdate}} 筆 / 
-                                            公開分享 共 {{publicCountData.ShareBirthdate}} 筆
-                                        </span>
+                                        <span>公開分享 共 {{publicCountData.ShareBirthdate}} 筆</span>
                                     </li>
                                     <li>
                                         <span>電話號碼</span>
                                         <ul>
                                             <li>
                                                 <span>住家電話</span>：
-                                                <span>共計 {{publicCountData.TotalPermanentPhone}} 筆 /
-                                                公開分享 共 {{publicCountData.SharePermanentPhone}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.SharePermanentPhone}} 筆</span>
                                             </li>
                                             <li>
                                                 <span>公司電話</span>：
-                                                <span>共計 {{publicCountData.TotalPhoneNumber1}} 筆 /
-                                                公開分享 共 {{publicCountData.SharePhoneNumber1}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.SharePhoneNumber1}} 筆</span>
                                             </li>
                                             <li>
                                                 <span>秘書電話</span>：
-                                                <span>共計 {{publicCountData.TotalPhoneNumber3}} 筆 /
-                                                公開分享 共 {{publicCountData.SharePhoneNumber3}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.SharePhoneNumber3}} 筆</span>
                                             </li>
                                             <li>
                                                 <span>行動電話 1</span>：
-                                                <span>共計 {{publicCountData.TotalSMSPhone}} 筆 /
-                                                公開分享 共 {{publicCountData.ShareSMSPhone}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.ShareSMSPhone}} 筆</span>
                                             </li>
                                             <li>
                                                 <span>行動電話 2</span>：
-                                                <span>共計 {{publicCountData.TotalPhoneNumber2}} 筆 /
-                                                公開分享 共 {{publicCountData.SharePhoneNumber2}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.SharePhoneNumber2}} 筆</span>
                                             </li>
                                         </ul>
                                     </li>
@@ -143,24 +134,19 @@
                                         <span>電子信箱</span>
                                         <ul>
                                             <li><span>Email 1</span>：
-                                                <span>共計 {{publicCountData.TotalMail1}} 筆 /
-                                                公開分享 共 {{publicCountData.ShareMail1}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.ShareMail1}} 筆</span>
                                             </li>
                                             <li><span>Email 2</span>：
-                                                <span>共計 {{publicCountData.TotalMail2}} 筆 /
-                                                公開分享 共 {{publicCountData.ShareMail2}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.ShareMail2}} 筆</span>
                                             </li>
                                             <li><span>Email 3</span>：
-                                                <span>共計 {{publicCountData.TotalMail3}} 筆 /
-                                                公開分享 共 {{publicCountData.ShareMail3}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.ShareMail3}} 筆</span>
                                             </li>
                                             <li><span>Email 4</span>：
-                                                <span>共計 {{publicCountData.TotalMail4}} 筆 /
-                                                公開分享 共 {{publicCountData.ShareMail4}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.ShareMail4}} 筆</span>
                                             </li>
                                             <li><span>Email 5</span>：
-                                                <span>共計 {{publicCountData.TotalMail5}} 筆 /
-                                                公開分享 共 {{publicCountData.ShareMail5}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.ShareMail5}} 筆</span>
                                             </li>
                                         </ul>
                                     </li>
@@ -168,16 +154,13 @@
                                         <span>地址</span>
                                         <ul>
                                             <li><span>聯絡地址</span>：
-                                                <span>共計 {{publicCountData.TotalMailingAddress}} 筆 /
-                                                公開分享 共 {{publicCountData.ShareMailingAddress}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.ShareMailingAddress}} 筆</span>
                                             </li>
                                             <li><span>住家地址</span>：
-                                                <span>共計 {{publicCountData.TotalPermanentAddress}} 筆 /
-                                                公開分享 共 {{publicCountData.SharePermanentAddress}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.SharePermanentAddress}} 筆</span>
                                             </li>
                                             <li><span>公司地址</span>：
-                                                <span>共計 {{publicCountData.TotalOtherAddresses}} 筆 /
-                                                公開分享 共 {{publicCountData.ShareOtherAddresses}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.ShareOtherAddresses}} 筆</span>
                                             </li>
                                         </ul>
                                     </li>
@@ -185,24 +168,19 @@
                                         <span>其它聯絡資訊</span>
                                         <ul>
                                             <li><span>Line</span>：
-                                                <span>共計 {{publicCountData.TotalLine}} 筆 /
-                                                公開分享 共 {{publicCountData.ShareLine}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.ShareLine}} 筆</span>
                                             </li>
                                             <li><span>Facebook</span>：
-                                                <span>共計 {{publicCountData.TotalFacebook}} 筆 /
-                                                公開分享 共 {{publicCountData.ShareFacebook}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.ShareFacebook}} 筆</span>
                                             </li>
                                             <li><span>LinkedIn</span>：
-                                                <span>共計 {{publicCountData.TotalLinkedIn}} 筆 /
-                                                公開分享 共 {{publicCountData.ShareLinkedIn}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.ShareLinkedIn}} 筆</span>
                                             </li>
                                             <li><span>WhatsApp</span>：
-                                                <span>共計 {{publicCountData.TotalWhatsApp}} 筆 /
-                                                公開分享 共 {{publicCountData.ShareWhatsApp}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.ShareWhatsApp}} 筆</span>
                                             </li>
                                             <li><span>WeChat</span>：
-                                                <span>共計 {{publicCountData.TotalWeChat}} 筆 /
-                                                公開分享 共 {{publicCountData.ShareWeChat}} 筆</span>
+                                                <span>公開分享 共 {{publicCountData.ShareWeChat}} 筆</span>
                                             </li>
                                         </ul>
                                     </li>
@@ -235,9 +213,11 @@
                             </li>
                             <li>
                                 <span>
-                                    <a href="javascript:;" ng-click="openActivity=!openActivity">參與相關活動經驗</a>
-                                    <i ng-show="openActivity" class="fa fa-angle-up"></i>
-                                    <i ng-show="!openActivity" class="fa fa-angle-down"></i>
+                                    <a href="javascript:;" ng-click="openActivity=!openActivity">
+                                        參與相關活動經驗
+                                        <i ng-show="openActivity" class="fa fa-angle-up"></i>
+                                        <i ng-show="!openActivity" class="fa fa-angle-down"></i>
+                                    </a>
                                 </span>
                                 <ul ng-show="openActivity">
                                     <li><span>社會企業</span>：
