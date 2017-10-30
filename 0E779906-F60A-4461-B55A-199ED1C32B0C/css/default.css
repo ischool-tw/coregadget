@@ -148,3 +148,13 @@ div.modal div.my-Msg div {
   font-size: 14px; 
   line-height: 20px;
 }
+
+
+.my-admission {
+  background: #bbe6e2;
+  color: #145240;
+}
+.my-waiting {
+  background: #fffdc5;
+  color: #7e631e;
+}

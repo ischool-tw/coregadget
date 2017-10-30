@@ -26,8 +26,11 @@
   <script src="js/choose-course.js"></script>
   <script src="js/react/react.js"></script>
   <script src="js/react/react-dom.js"></script>
-  <!-- <script src="js/react/app.js"></script> -->
   <script src="js/react/babel.min.js"></script>
+  <script type="text/babel" src="js/react/repo-list.jsx"></script>
+  <script type="text/babel" src="js/react/payment.jsx"></script>
+  <script type="text/babel" src="js/react/my-admission-list.jsx"></script>
+  <script type="text/babel" src="js/react/payment-form.jsx"></script>
   <script type="text/babel" src="js/react/app.jsx"></script>
 </head>
 <body>
@@ -47,7 +50,6 @@
         </div>
       </script>
 
-
       <!--<script type="text/html" id="Item1Tmp2">
           <div class="my-sure" >
               <p style="font-size:160%;">您目前並無選課權限</p>
@@ -57,24 +59,23 @@
       </script>-->
 
 
-
       <div class="row-fluid">
         <div class="span12">
             <h1>
               <span data-bind="text: currentData.SchoolYear"></span> 學年度 <span data-bind="text: currentData.FullSemester"></span>
                 <ul id="myTab" class="nav nav-tabs my-navtabs">
-
-                    
                     <li data-bind="if: currentData.Item() === '1' || currentData.Item() === '2' || currentData.Item() === 's1' || currentData.Item() === 's2' || currentData.Item() === 's5'"><a href="#sa01" data-toggle="tab">可選課程</a></li>
                     <!-- <li data-bind="if: currentData.Item() === '0' || currentData.Item() === 's3' || currentData.Item() === 's4'"><a href="#sa06" data-toggle="tab">選課結果</a></li> -->
                     <li data-bind="if: currentData.Item() === '0' || currentData.Item() === 's3' || currentData.Item() === 's4'"><a href="#sa07" data-toggle="tab">選課結果</a></li>
                     <li><a href="#sa02" data-toggle="tab">課程總表</a></li>
-                    <!-- <li><a href="#sa03" data-toggle="tab">衝堂與限制複選課程</a></li> -->
+                    <li><a href="#sa03" data-toggle="tab">衝堂與限制複選課程</a></li>
                     <li><a href="#sa04" data-toggle="tab">選課注意事項</a></li>
                     <li><a href="#sa05" data-toggle="tab">選課問答集</a></li>
                     <!-- <li><a data-bind="attr: { href: weburl }" target="_blank">課程計劃</a></li> -->
+                    <li data-bind="if: currentData.Item() === 's4'"><a href="#sa08" data-toggle="tab">保證金</a></li>
                 </ul>
             </h1>
+
             <div id="myTabContent" class="tab-content">
               <div class="tab-pane fade" id="sa01">
                   <div class="alert alert-info2" data-bind="html: course_opening_info.Item1"></div>
@@ -241,8 +242,7 @@
                       <tbody data-bind="visible: all_course().length === 0"><tr><td colspan="8">目前無資料</td></tbody>
                   </table>
               </div>
-              <div class="tab-pane fade" id="sa03">
-              </div>
+              <div class="tab-pane fade" id="sa03"></div>
               <div class="tab-pane fade" id="sa04">
                   <div class="accordion" id="accordion2" data-bind="foreach: faq.A">
                         <div class="accordion-group">
@@ -310,8 +310,8 @@
                     </table>
                     <div data-bind="template: { name: 'Item0Tmpl'}" class='memb-list'></div>
               </div>
-              <div class="tab-pane fade" id="sa07">
-              </div>
+              <div class="tab-pane fade" id="sa07"></div>
+              <div class="tab-pane fade" id="sa08"></div>
             </div>
         </div>
       </div>

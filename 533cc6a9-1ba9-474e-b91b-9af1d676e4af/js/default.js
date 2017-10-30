@@ -271,12 +271,24 @@ angular.module("app", ["checklist-model", "ngSanitize"])
     };
 
     // 取消報名
-    $scope.setDelete = function() {
-        var log_actionType = '刪除';
-        var log_description = ['學生「@StudentName@」點選「取消報名」。',
-            '活動編號「' + $scope.curr.Uid + '」，',
-            '活動名稱「' + $scope.curr.ActivityName + '」。',
-            '使用者電腦時間「' + $filter('date')(new Date(), 'yyyy/MM/dd HH:mm:ss:sss') + '」。'].join('');
+    $scope.setDelete = function(type) {
+        var log_actionType, log_description;
+        if (type == 'manual') {
+            log_actionType = '刪除';
+            log_description = ['學生「@StudentName@」點選「取消報名」。',
+                '活動編號「' + $scope.curr.Uid + '」，',
+                '活動名稱「' + $scope.curr.ActivityName + '」。',
+                '使用者電腦時間「' + $filter('date')(new Date(), 'yyyy/MM/dd HH:mm:ss:sss') + '」。'].join('\n');
+
+        } else {
+            // type == rollbackRegisterActivity
+            // type == rollbackReply
+            log_actionType = 'Rollback';
+            log_description = ['學生「@StudentName@」報名失敗Rollback',
+                '活動編號「' + $scope.curr.Uid + '」，',
+                '活動名稱「' + $scope.curr.ActivityName + '」。',
+                '使用者電腦時間「' + $filter('date')(new Date(), 'yyyy/MM/dd HH:mm:ss:sss') + '」。'].join('\n');
+        }
 
         $('#btnSignOut').button('loading');
 
@@ -287,7 +299,7 @@ angular.module("app", ["checklist-model", "ngSanitize"])
             },
             result: function (response, error, http) {
                 if (!error) {
-                    writeLog(log_actionType, '刪除報名表單資料成功', log_description);
+                    writeLog(log_actionType, (type == 'manual'?'刪除':'Rollback')+'報名表單資料成功', log_description);
                     $scope.contract.send({
                         service: "default.DeleteRegisterActivity",
                         body: {
@@ -300,12 +312,12 @@ angular.module("app", ["checklist-model", "ngSanitize"])
                             if (!error) {
                                 $scope.getActivitys();
                                 $scope.$apply();
-                                writeLog(log_actionType, '刪除報名記錄成功', log_description);
+                                if (type == 'manual')writeLog(log_actionType, (type == 'manual'?'刪除':'Rollback')+'報名記錄成功', log_description);
                             }
                             else
                             {
                                 set_error_message("#mainMsg", "UpdateRegisterActivity", error);
-                                writeLog(log_actionType, '刪除報名記錄失敗', log_description);
+                                if (type == 'manual')writeLog(log_actionType, (type == 'manual'?'刪除':'Rollback')+'報名記錄失敗', log_description);
                             }
                         }
                     });
@@ -316,7 +328,7 @@ angular.module("app", ["checklist-model", "ngSanitize"])
                     $('#signOutModal').modal('hide');
                     $('#btnSignOut').button('reset');
 
-                    writeLog(log_actionType, '刪除報名表單資料發生失敗', log_description);
+                    writeLog(log_actionType, (type == 'manual'?'刪除':'Rollback')+'報名表單資料發生失敗', log_description);
                 }
             }
         });
@@ -347,105 +359,82 @@ angular.module("app", ["checklist-model", "ngSanitize"])
             $('#alertRequiredModal').modal('show');
             $('#btnReg').button('reset');
         } else {
-            var question_queue = $scope.questions.length;
-            var reg_queue = false;
-            var has_error = false; // 報名過程發生錯誤
             var log_actionType = '新增';
 
-            var finish = function() {
-                if (question_queue == 0 && reg_queue == true) {
-                    // 發生錯誤，報名記錄、回答內容要全部刪除
-                    if (has_error) {
-                        $scope.setDelete();
-                    } else {
-                        $scope.getActivitys();
-                        $scope.set_activity_panel('list');
-                    }
-                    $('#btnReg').button('reset');
-                }
-            };
-
             // 送出每題的答案
+            var log_question = [];
+            var replys = [];
             $scope.questions.forEach(function(question) {
                 var my_answer = (question.Type=='複選題' ? [].concat(question.Answer || []).join(',') : question.Answer || '');
-                $scope.contract.send({
-                    service: "default.InsertReply",
-                    body: {
-                        Request: { Reply: {
-                            Answer: my_answer,
-                            RefEventTemplateId: $scope.curr.RefEventTemplateId,
-                            RefEventRecordId: $scope.curr.Uid,
-                            RefQuestionId: question.Uid
-                        } }
-                    },
-                    result: function (response, error, http) {
-                        if (!error) {
-                            var log_description = ['學生「@StudentName@」點選「我要報名」。',
-                                '活動編號「' + $scope.curr.Uid + '」，',
-                                '活動名稱「' + $scope.curr.ActivityName + '」。',
-                                '題項編號「' + question.Uid + '」',
-                                '回答「' + my_answer + '」',
-                                '使用者電腦時間「' + $filter('date')(new Date(), 'yyyy/MM/dd HH:mm:ss:sss') + '」。'].join('');
-                            writeLog(log_actionType, '報名表單新增回答成功', log_description);
-                        }
-                        else
-                        {
-                            has_error = true;
-                            set_error_message("#mainMsg", "InsertReply", error);
-
-                            var log_description = ['學生「@StudentName@」點選「我要報名」。',
-                                '活動編號「' + $scope.curr.Uid + '」，',
-                                '活動名稱「' + $scope.curr.ActivityName + '」。',
-                                '題項編號「' + question.Uid + '」',
-                                '回答「' + my_answer + '」',
-                                '使用者電腦時間「' + $filter('date')(new Date(), 'yyyy/MM/dd HH:mm:ss:sss') + '」。'].join('');
-                            writeLog(log_actionType, '報名表單新增回答失敗', log_description);
-                        }
-                        question_queue--;
-                        if (question_queue == 0) finish();
-                    }
+                log_question.push('題項「' + question.Uid + '」作答結果「' + my_answer + '」');
+                replys.push({
+                    Answer: my_answer,
+                    RefEventTemplateId: $scope.curr.RefEventTemplateId,
+                    RefEventRecordId: $scope.curr.Uid,
+                    RefQuestionId: question.Uid
                 });
             });
 
-            // 送出報名記錄
             $scope.contract.send({
-                service: "default.InsertRegisterActivity",
+                service: "default.InsertReply",
                 body: {
-                    Request: { RegisterActivity: {
-                        RefEventId: $scope.curr.Uid || '',
-                        WhetherPublic: $scope.curr.WhetherPublic || false,
-                        IsSuccessful: false,
-                        IsCancel: false,
-                        IsPayment: false,
-                        IsSignIn: false,
-                        IsLock: false
-                    } }
+                    Request: { Reply: replys }
                 },
                 result: function (response, error, http) {
-                    var log_description = ['學生「@StudentName@」點選「我要報名」。',
-                        '活動編號「' + $scope.curr.Uid + '」，',
-                        '活動名稱「' + $scope.curr.ActivityName + '」。',
-                        '公開姓名「' + ($scope.curr.WhetherPublic ? '同意' : '不同意') + '」。',
-                        '使用者電腦時間「' + $filter('date')(new Date(), 'yyyy/MM/dd HH:mm:ss:sss') + '」。'].join('');
-
                     if (!error) {
-                        reg_queue = true;
-                        writeLog(log_actionType, '新增報名記錄成功', log_description);
+                        // 送出報名記錄
+                        $scope.contract.send({
+                            service: "default.InsertRegisterActivity",
+                            body: {
+                                Request: { 
+                                    RegisterActivity: {
+                                        RefEventId: $scope.curr.Uid || '',
+                                        WhetherPublic: $scope.curr.WhetherPublic || false,
+                                        IsSuccessful: false,
+                                        IsCancel: false,
+                                        IsPayment: false,
+                                        IsSignIn: false,
+                                        IsLock: false
+                                    }
+                                }
+                            },
+                            result: function (response, error, http) {
+                                var log_description = ['學生「@StudentName@」點選「我要報名」。',
+                                    '活動編號「' + $scope.curr.Uid + '」，',
+                                    '活動名稱「' + $scope.curr.ActivityName + '」。',
+                                    '公開姓名「' + ($scope.curr.WhetherPublic ? '同意' : '不同意') + '」。',
+                                    '使用者電腦時間「' + $filter('date')(new Date(), 'yyyy/MM/dd HH:mm:ss:sss') + '」。'];
+                                log_description = (log_description.concat(['------------'], log_question)).join('\n');
+
+                                if (!error) {
+                                    writeLog(log_actionType, '新增報名記錄成功', log_description);
+                                    $scope.getActivitys();
+                                    $scope.set_activity_panel('list');
+                                }
+                                else
+                                {
+                                    $scope.setDelete('rollbackRegisterActivity');
+                                    set_error_message("#mainMsg", "InsertRegisterActivity", error);
+
+                                    var log_action = '新增報名記錄失敗';
+                                    // 判斷是否已截止
+                                    if (error && error.dsaError && error.dsaError.status === "504" && error.dsaError.message == "502") {
+                                        $scope.getActivitys(); // 重新取回活動列表
+                                        log_action += '(時間已截止)';
+                                    }
+                                    writeLog(log_actionType, log_action, log_description);
+                                }
+                                $('#btnReg').button('reset');     
+                            }
+                        });
+                        
                     }
                     else
                     {
-                        has_error = true;
-                        set_error_message("#mainMsg", "InsertRegisterActivity", error);
-
-                        var log_action = '新增報名記錄失敗';
-                        // 判斷是否已截止
-                        if (error && error.dsaError && error.dsaError.status === "504" && error.dsaError.message == "502") {
-                            $scope.getActivitys(); // 重新取回活動列表
-                            log_action += '(時間已截止)';
-                        }
-                        writeLog(log_actionType, log_action, log_description);
+                        $('#btnReg').button('reset');
+                        $scope.setDelete('rollbackReply');
+                        set_error_message("#mainMsg", "InsertReply", error);
                     }
-                    finish();
                 }
             });
         }

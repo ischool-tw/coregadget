@@ -92,7 +92,7 @@ jQuery(function () {
                     //html_txt = "YO 你選課了歐~";
 
                 } else if (vm.currentData.Item() === '2') {
-                    html_txt = vm.configuration.cs_cancel2_content_template();
+                    // html_txt = vm.configuration.cs_cancel2_content_template();
                 }
                 html_txt += '<p><font size="4" color="red">退出課程</font>：' + (quit_txt || '無') + '</p><p><font size="4" color="red">加選課程</font>：' + (add_txt || '無') + '</p>';
 
@@ -282,7 +282,7 @@ jQuery(function () {
                                 }
                                 // 第一、第二階段選課
                                 else if (self.currentData.Item() === '1' || self.currentData.Item() === '2') {
-                                    //self.get_conflict_course();
+                                    self.get_conflict_course();
                                     self.get_attend(self.get_can_choose_course);
 
                                     // 2016/11/10 穎驊筆記，把 self.get_can_choose_course()包在 self.get_attend()內處理了，避免不同步引起畫面錯亂的問題 ;
@@ -294,17 +294,18 @@ jQuery(function () {
                                 // 非畢業校友請至一般學生選課功能。
                                 // s3 尚未公告選課最終結果
                                 else if (self.currentData.Item() === 's2' || self.currentData.Item() === 's3') {
-                                    // self.get_conflict_course();
+                                    self.get_conflict_course();
                                 }
                                 // s4 本學期選課已結束，目前尚未開放下一學期選課
                                 else if (self.currentData.Item() === 's4') {
                                     //2016/11/9 穎驊筆記  因應校友選課目前格式，一階段完後直接接s4，顯示選課結果
                                     // self.get_registration_confirm();
                                     self.get_sc_attend();
+                                    self.get_conflict_course();
                                 }
                                 // s5 目前尚未開放選課
                                 else if (self.currentData.Item() === 's5') {
-                                    // self.get_conflict_course();
+                                    self.get_conflict_course();
                                 }
                             }
                         }
@@ -315,16 +316,16 @@ jQuery(function () {
 
             // 退選訊息、Mail樣版
             configuration: {
-                email_content1_template: ko.observable(),
-                email_content2_template: ko.observable(),
-                cs_cancel1_content_template: ko.observable(),
-                cs_cancel2_content_template: ko.observable(),
-                cs_final_message: ko.observable(),
-                cs_content1_template: ko.observable(),
-                cs_content2_template: ko.observable(),
-                email_content1_template_subject: ko.observable(),
-                email_content2_template_subject: ko.observable(),
-                retreat_notices_word: ko.observable(),
+                // email_content1_template: ko.observable(),
+                // email_content2_template: ko.observable(),
+                // cs_cancel1_content_template: ko.observable(),
+                // cs_cancel2_content_template: ko.observable(),
+                // cs_final_message: ko.observable(),
+                // cs_content1_template: ko.observable(),
+                // cs_content2_template: ko.observable(),
+                // email_content1_template_subject: ko.observable(),
+                // email_content2_template_subject: ko.observable(),
+                // retreat_notices_word: ko.observable(),
                 emba_alumnicoursemodule_course_description_temp: ko.observable()
             },
             get_configuration: function () {
@@ -332,13 +333,21 @@ jQuery(function () {
 
                 _gg.connection.send({
                     service: "_.GetConfiguration",
-                    body: {},
+                    body: {
+                        Request: {
+                            Condition: {
+                                ConfName: [
+                                    'emba_alumnicoursemodule_course_description_temp'
+                                ]
+                            }
+                        }
+                    },
                     result: function (response, error, http) {
                         if (error !== null) {
                             _gg.set_error_message('#mainMsg', 'GetConfiguration', error);
                         } else {
-                            if (response.Configuration) {
-                                $(response.Configuration).each(function (index, item) {
+                            if (response.Response && response.Response.Configuration) {
+                                $(response.Response.Configuration).each(function (index, item) {
                                     self.configuration[item.ConfName](item.ConfContent);
                                 });
                             }
@@ -689,7 +698,7 @@ jQuery(function () {
             //                             });
 
             //                             $('#myModal').modal('hide');
-            //                             $('body').scrollTop(0);
+            //                             window.scrollTo(0, 0);
             //                             $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
             //                             setTimeout("$('#mainMsg').html('')", 5000);
             //                         }
@@ -702,88 +711,88 @@ jQuery(function () {
 
             // 衝堂課程
             conflict_col_course: {},
-            // get_conflict_course: function () {
-            //     //var self = MyViewModel;
+            get_conflict_course: function () {
+                var self = MyViewModel;
 
-            //     //_gg.connection.send({
-            //     //    service: "_.GetConflictCourse",
-            //     //    body: {
-            //     //        Request: {
-            //     //            Condition: {
-            //     //                SchoolYear: self.currentData.SchoolYear() || '',
-            //     //                Semester: self.currentData.Semester() || ''
-            //     //            }
-            //     //        }
-            //     //    },
-            //     //    result: function (response, error, http) {
-            //     //        if (error !== null) {
-            //     //            _gg.set_error_message('#mainMsg', 'GetConflictCourse', error);
-            //     //        } else {
-            //     //            var items = {};
-            //     //            if (response.Response && response.Response.ConflictCourse) {
-            //     //                $(response.Response.ConflictCourse).each(function (index, item) {
-            //     //                    if (!items[item.CourseIDA]) {
-            //     //                        items[item.CourseIDA] = [];
-            //     //                    }
-            //     //                    items[item.CourseIDA].push(item.CourseIDB);
-            //     //                });
-            //     //            }
-            //     //            self.conflict_col_course = items;
-            //     //            self.show_conflict_course();
-            //     //        }
-            //     //    }
-            //     //});
-            // },
-            // show_conflict_course: function () {
-            //     var self = MyViewModel;
-            //     var _txt = [];
-            //     $.each(self.conflict_col_course, function (CourseIDA, B) {
-            //         var _courseA = self.all_col_course[CourseIDA];
-            //         var _conflict_txt = '';
+                _gg.connection.send({
+                   service: "_.GetConflictAlumniCourse",
+                   body: {
+                       Request: {
+                           Condition: {
+                               SchoolYear: self.currentData.SchoolYear() || '',
+                               Semester: self.currentData.Semester() || ''
+                           }
+                       }
+                   },
+                   result: function (response, error, http) {
+                       if (error !== null) {
+                           _gg.set_error_message('#mainMsg', 'GetConflictAlumniCourse', error);
+                       } else {
+                           var items = {};
+                           if (response.Response && response.Response.ConflictCourse) {
+                               $(response.Response.ConflictCourse).each(function (index, item) {
+                                   if (!items[item.CourseIDA]) {
+                                       items[item.CourseIDA] = [];
+                                   }
+                                   items[item.CourseIDA].push(item.CourseIDB);
+                               });
+                           }
+                           self.conflict_col_course = items;
+                           self.show_conflict_course();
+                       }
+                   }
+                });
+            },
+            show_conflict_course: function () {
+                var self = MyViewModel;
+                var _txt = [];
+                $.each(self.conflict_col_course, function (CourseIDA, B) {
+                    var _courseA = self.all_col_course[CourseIDA];
+                    var _conflict_txt = '';
 
-            //         $(B).each(function (index, item) {
-            //             var _courseB = self.all_col_course[item];
-            //             if (_courseB) {
-            //                 _conflict_txt += '<span class="my-conflict">' +
-            //                         _gg.getCourseType(_courseB.CourseType || '') +
-            //                         ' <span>' + (_courseB.CourseName || '') + '</span>' +
-            //                     '</span>';
-            //             }
-            //         });
+                    $(B).each(function (index, item) {
+                        var _courseB = self.all_col_course[item];
+                        if (_courseB) {
+                            _conflict_txt += '<span class="my-conflict">' +
+                                    _gg.getCourseType(_courseB.CourseType || '') +
+                                    ' <span>' + (_courseB.CourseName || '') + '</span>' +
+                                '</span>';
+                        }
+                    });
 
-            //         if (_courseA) {
-            //             _txt.push(
-            //                 '<table class="table table-bordered table-striped">' +
-            //                 '  <thead>' +
-            //                 '    <tr>' +
-            //                 '      <th>衝堂（必/選修）課程名稱</th>' +
-            //                 '    </tr>' +
-            //                 '  </thead>' +
-            //                 '  <tbody>' +
-            //                 '    <tr>' +
-            //                 '      <td>' +
-            //                 _gg.getCourseType(_courseA.CourseType || '') +
-            //                 '        <span>' + (_courseA.CourseName || '') + '</span>' +
-            //                 '      </td>' +
-            //                 '    </tr>' +
-            //                 '    <tr>' +
-            //                 '      <td>' +
-            //                 _conflict_txt +
-            //                 '      </td>' +
-            //                 '    </tr>' +
-            //                 '  </tbody>' +
-            //                 '</table>'
-            //             );
-            //         }
-            //     });
+                    if (_courseA) {
+                        _txt.push(
+                            '<table class="table table-bordered table-striped">' +
+                            '  <thead>' +
+                            '    <tr>' +
+                            '      <th>衝堂課程名稱</th>' +
+                            '    </tr>' +
+                            '  </thead>' +
+                            '  <tbody>' +
+                            '    <tr>' +
+                            '      <td>' +
+                            _gg.getCourseType(_courseA.CourseType || '') +
+                            '        <span>' + (_courseA.CourseName || '') + '</span>' +
+                            '      </td>' +
+                            '    </tr>' +
+                            '    <tr>' +
+                            '      <td>' +
+                            _conflict_txt +
+                            '      </td>' +
+                            '    </tr>' +
+                            '  </tbody>' +
+                            '</table>'
+                        );
+                    }
+                });
 
-            //     var _html = _txt.join('');
-            //     if (_html) {
-            //         $('#sa03').html(_html);
-            //     } else {
-            //         $('#sa03').html('<div>目前無資料</div>');
-            //     }
-            // },
+                var _html = _txt.join('');
+                if (_html) {
+                    $('#sa03').html(_html);
+                } else {
+                    $('#sa03').html('<div>目前無資料</div>');
+                }
+            },
 
             // 選課注意事項, 選課問答集
             faq: {
@@ -951,11 +960,11 @@ jQuery(function () {
                 var tmp = $(content);
                 // $(tmp).find('#printEndTime').append(self.currentData.EndTime() || '');
                 // 要判斷2次是因為jquery會自動變陣列，沒規則
-                if (tmp.find('#noteInfo').length) {
-                    tmp.find('#noteInfo').append(self.configuration['retreat_notices_word']() || '');
-                } else if (tmp.filter('#noteInfo').length) {
-                    tmp.filter('#noteInfo').append(self.configuration['retreat_notices_word']() || '');
-                }
+                // if (tmp.find('#noteInfo').length) {
+                //     tmp.find('#noteInfo').append(self.configuration['retreat_notices_word']() || '');
+                // } else if (tmp.filter('#noteInfo').length) {
+                //     tmp.filter('#noteInfo').append(self.configuration['retreat_notices_word']() || '');
+                // }
 
                 content = $('<div>').append(tmp).html();
 
@@ -1082,7 +1091,7 @@ jQuery(function () {
                 var complete_process = function() {
                     if (add_complete && quit_complete) {
                         $('#myModal').modal('hide');
-                        $('body').scrollTop(0);
+                        window.scrollTo(0, 0);
                         $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
                         setTimeout("$('#mainMsg').html('')", 5000);
                         // 送出Email
@@ -1483,7 +1492,7 @@ jQuery(function () {
             //         // 確保加入選課、刪除選課都已經完畢後，在執行。
             //         if (add_complete && quit_complete) {
             //             $('#myModal').modal('hide');
-            //             $('body').scrollTop(0);
+            //             window.scrollTo(0, 0);
             //             $('#mainMsg').html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
             //             setTimeout("$('#mainMsg').html('')", 5000);
 
@@ -1561,7 +1570,7 @@ jQuery(function () {
                             //$("#cs_content_template").html(self.configuration.cs_content1_template());
                         };
                         if (MyViewModel.currentData.Item() === '2') {
-                            $("#cs_content_template").html(self.configuration.cs_content2_template());
+                            // $("#cs_content_template").html(self.configuration.cs_content2_template());
                         };
 
                         $('#sa01 button[ac-type=save1]').tooltip({
