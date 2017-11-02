@@ -139,6 +139,12 @@ _gg.col_Question = {
             { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_二年級_我目前最需要的協助是', Alias: '自我的心聲_二年級_我目前最需要的協助是' },
             { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_三年級_我目前遇到最大的困難是', Alias: '自我的心聲_三年級_我目前遇到最大的困難是' },
             { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_三年級_我目前最需要的協助是', Alias: '自我的心聲_三年級_我目前最需要的協助是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_四年級_我目前遇到最大的困難是', Alias: '自我的心聲_四年級_我目前遇到最大的困難是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_四年級_我目前最需要的協助是', Alias: '自我的心聲_四年級_我目前最需要的協助是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_五年級_我目前遇到最大的困難是', Alias: '自我的心聲_五年級_我目前遇到最大的困難是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_五年級_我目前最需要的協助是', Alias: '自我的心聲_五年級_我目前最需要的協助是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_六年級_我目前遇到最大的困難是', Alias: '自我的心聲_六年級_我目前遇到最大的困難是' },
+            { ID: 'D1', GroupName: '自傳', Name: '自我的心聲_六年級_我目前最需要的協助是', Alias: '自我的心聲_六年級_我目前最需要的協助是' },
             { ID: 'D1', GroupName: '自傳', Name: '填寫日期', Alias: '填寫日期' }
         ],
         'E1' :[],
@@ -193,7 +199,10 @@ _gg.loadCounselData = function () {
                     }
 
                     if (contrast.SchoolYear) {
-                        items.push('<button class="btn btn-large" grade="' +index+ '">' +contrast.TrueGradeYear+ '年級(' +contrast.SchoolYear+ ')</button>');
+                        for(var i=0; i< index; i++) {
+                            items.push('<button class="btn btn-large" grade="' + (index - i) + '">' + (index - i) + '年級(' + (contrast.SchoolYear-i)+ ')</button>');
+                        }
+                        // items.push('<button class="btn btn-large" grade="' +index+ '">' +contrast.TrueGradeYear+ '年級(' +contrast.SchoolYear+ ')</button>');
                     }
                 });
 
