@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-    <ModulePrefs title="成績輸入"  preload="true">
+    <ModulePrefs title="成績輸入+課程大綱"  preload="true">
         <Icon>src/icon.png</Icon>
     </ModulePrefs>
 </Module>
