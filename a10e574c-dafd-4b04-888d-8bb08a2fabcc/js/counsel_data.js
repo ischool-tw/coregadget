@@ -418,7 +418,10 @@ _gg.loadCounselData = function () {
                         }
 
                         if (contrast.SchoolYear) {
-                            items.push('<button class="btn btn-large" grade="' +index+ '">' +contrast.TrueGradeYear+ '年級(' +contrast.SchoolYear+ ')</button>');
+                            for(var i=0; i< index; i++) {
+                                items.push('<button class="btn btn-large" grade="' + (index - i) + '">' + ( index - i ) + '年級(' + (contrast.SchoolYear-i)+ ')</button>');
+                            }
+                            //items.push('<button class="btn btn-large" grade="' +index+ '">' +contrast.TrueGradeYear+ '年級(' +contrast.SchoolYear+ ')</button>');
                         }
                     });
 
