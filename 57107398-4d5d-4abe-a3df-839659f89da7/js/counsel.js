@@ -738,8 +738,12 @@ jQuery(function () {
                 var tmp_items = {};
                 tmp_list.push('<table class="table my-lineheight">' +
                     '<tr>' +
-                      '<th width="20%">晤談對象</th>' +
-                      '<th width="10%">晤談日期</th>' +
+                      '<th width="10%">日期</th>' +
+                      '<th width="10%">對象</th>' +
+                      '<th width="15%">晤談老師</th>' +
+                      '<th width="10%">方式</th>' +
+                      '<th width="15%">事由</th>' +
+                      
                       '<th>內容要點</th>' +
                       '<th width="10%">瀏覽</th>' +
                     '</tr>'
@@ -748,9 +752,13 @@ jQuery(function () {
                     var date1 = (item.InterviewDate) ? $.formatDate(new Date(item.InterviewDate), "yyyyMMdd") : '';
                     tmp_list.push(
                         '<tr class="my-interview-item" id="interview-' + item.UID + '">' +
-                          '<td>' + (item.IntervieweeType || '') + '</td>' +
-                          '<td>' + date1 + '</td>' +
-                          '<td><div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; width:420px;">' + (item.ContentDigest || '') + '</div></td>' +
+                            '<td>' + date1 + '</td>' +
+                            '<td>' + (item.IntervieweeType || '') + '</td>' +
+                            '<td>' + (item.TeacherName || '') + '</td>' +
+                            '<td>' + (item.InterviewType|| '') + '</td>' +
+                            '<td>' + (item.Cause || '') + '</td>' +
+                            '<td><div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:300px;">' + (item.ContentDigest || '') + '</div></td>' +
+                          //'<td><div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; width:420px;">' + (item.ContentDigest || '') + '</div></td>' +
                           '<td><a javscript:; class="btn" data-interview-id="' + item.UID + '">瀏覽</a></td>' +
                         '</tr>'
                     );

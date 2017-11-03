@@ -245,3 +245,7 @@ body {
 .my-well-table-striped tbody tr:nth-child(odd) th {
   background-color: #f9f9f9;
 }
+
+.my-interview-item {
+  font-size: 14px;
+}
