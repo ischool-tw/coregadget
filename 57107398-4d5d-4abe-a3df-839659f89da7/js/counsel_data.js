@@ -199,6 +199,7 @@ _gg.loadCounselData = function () {
                     }
 
                     if (contrast.SchoolYear) {
+                        items = []; //clear all
                         for(var i=0; i< index; i++) {
                             items.push('<button class="btn btn-large" grade="' + (index - i) + '">' + (index - i) + '年級(' + (contrast.SchoolYear-i)+ ')</button>');
                         }
