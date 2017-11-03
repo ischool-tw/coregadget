@@ -297,6 +297,13 @@ jQuery(function () {
                     $('#A5 [data-type=' + tmp_key + 'S2b]').html(tmp_data.S2b || '');
                     $('#A5 [data-type=' + tmp_key + 'S3a]').html(tmp_data.S3a || '');
                     $('#A5 [data-type=' + tmp_key + 'S3b]').html(tmp_data.S3b || '');
+                    $('#A5 [data-type=' + tmp_key + 'S4a]').html(tmp_data.S4a || '');
+                    $('#A5 [data-type=' + tmp_key + 'S4b]').html(tmp_data.S4b || '');
+                    $('#A5 [data-type=' + tmp_key + 'S5a]').html(tmp_data.S5a || '');
+                    $('#A5 [data-type=' + tmp_key + 'S5b]').html(tmp_data.S5b || '');
+                    $('#A5 [data-type=' + tmp_key + 'S6a]').html(tmp_data.S6a || '');
+                    $('#A5 [data-type=' + tmp_key + 'S6b]').html(tmp_data.S6b || '');
+
                 }
             });
         };

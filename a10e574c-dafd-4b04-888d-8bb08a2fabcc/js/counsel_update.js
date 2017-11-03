@@ -457,6 +457,13 @@ _gg.SetModifyData = function () {
                     $('#' + data_scope + ' [data-type=' + tmp_key + 'S2b]').val(tmp_data.S2b);
                     $('#' + data_scope + ' [data-type=' + tmp_key + 'S3a]').val(tmp_data.S3a);
                     $('#' + data_scope + ' [data-type=' + tmp_key + 'S3b]').val(tmp_data.S3b);
+                    $('#' + data_scope + ' [data-type=' + tmp_key + 'S4a]').val(tmp_data.S4a);
+                    $('#' + data_scope + ' [data-type=' + tmp_key + 'S4b]').val(tmp_data.S4b);
+                    $('#' + data_scope + ' [data-type=' + tmp_key + 'S5a]').val(tmp_data.S5a);
+                    $('#' + data_scope + ' [data-type=' + tmp_key + 'S5b]').val(tmp_data.S5b);
+                    $('#' + data_scope + ' [data-type=' + tmp_key + 'S6a]').val(tmp_data.S6a);
+                    $('#' + data_scope + ' [data-type=' + tmp_key + 'S6b]').val(tmp_data.S6b);
+
                 }
             }
         });

@@ -296,6 +296,13 @@ _gg.SetSaveData = function (data_scope) {
                 tmp_semesterData.push('<S2b>' + ($('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S2b]').val() || '') + '</S2b>');
                 tmp_semesterData.push('<S3a>' + ($('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S3a]').val() || '') + '</S3a>');
                 tmp_semesterData.push('<S3b>' + ($('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S3b]').val() || '') + '</S3b>');
+                tmp_semesterData.push('<S4a>' + ($('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S4a]').val() || '') + '</S4a>');
+                tmp_semesterData.push('<S4b>' + ($('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S4b]').val() || '') + '</S4b>');
+                tmp_semesterData.push('<S5a>' + ($('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S5a]').val() || '') + '</S5a>');
+                tmp_semesterData.push('<S5b>' + ($('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S5b]').val() || '') + '</S5b>');
+                tmp_semesterData.push('<S6a>' + ($('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S6a]').val() || '') + '</S6a>');
+                tmp_semesterData.push('<S6b>' + ($('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S6b]').val() || '') + '</S6b>');
+
                 tmp_semesterData.push('</SemesterData>');
 
                 tmp_reset_data[value.Name] = {
@@ -304,7 +311,14 @@ _gg.SetSaveData = function (data_scope) {
                     S2a : $('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S2a]').val() || '',
                     S2b : $('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S2b]').val() || '',
                     S3a : $('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S3a]').val() || '',
-                    S3b : $('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S3b]').val() || ''
+                    S3b : $('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S3b]').val() || '',
+                    S3b : $('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S3b]').val() || '',
+                    S4a : $('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S4a]').val() || '',
+                    S4b : $('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S4b]').val() || '',
+                    S5a : $('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S5a]').val() || '',
+                    S5b : $('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S5b]').val() || '',
+                    S6a : $('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S6a]').val() || '',
+                    S6b : $('#' + data_scope + ' .controls [data-type=' + tmp_key + 'S6b]').val() || ''
                 };
             }
         });
