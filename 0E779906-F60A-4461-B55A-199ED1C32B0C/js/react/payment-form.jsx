@@ -17,6 +17,14 @@ class PaymentForm extends React.Component {
 
     $(this.refs.myPaymentModal).modal('show')
     $(this.refs.myPaymentModal).on('hidden.bs.modal', handleHideModal);
+    $(this.refs.inputPaymentDate).datetimepicker({
+      showMonthAfterYear: true,
+      dateFormat: 'yy-mm-dd',
+      timeFormat: 'HH:mm',
+      showSecond: false,
+      showButtonPanel: true,
+      showTime: true 
+    });
   }
 
   handleSubmit = (event) => {
@@ -33,7 +41,7 @@ class PaymentForm extends React.Component {
      * 驗證資料
      * inputBankCode 不為空
      * inputDigitsAfter5Number 長度一定為 5
-     * inputPaymentDate 日期不大於今天
+     * inputPaymentDate 日期不大於今天(可以預約轉帳)
      * inputPaymentAmount 金額不小於 0
      */
     let formErrors = {
@@ -47,9 +55,10 @@ class PaymentForm extends React.Component {
     if (inputDigitsAfter5Number.length != 5) formErrors.inputDigitsAfter5Number = '請填入末5碼！';
     if (isNaN(Date.parse(inputPaymentDate))) {
       formErrors.inputPaymentDate = '日期不正確！';
-    } else {
-      if (new Date().getTime() < new Date(inputPaymentDate).getTime()) formErrors.inputPaymentDate = '日期不應大於今天！';
-    }
+    } 
+    // else {
+    //   if (new Date().getTime() < new Date(inputPaymentDate).getTime()) formErrors.inputPaymentDate = '日期不應大於今天！';
+    // }
     if (!((/^(\+|-)?\d+$/.test(inputPaymentAmount))&&inputPaymentAmount>=0)) formErrors.inputPaymentAmount = '請填入正整數！';
 
 
@@ -95,32 +104,16 @@ class PaymentForm extends React.Component {
   }
 
   render() {
-    const { checkedCourses, allColCourses, handleHideModal, saveMyPaymentData } = this.props;
+    const { checkedCourses, allColCourses, handleHideModal, saveMyPaymentData, lastBankCode, lastDigitsAfter5Number } = this.props;
 
-    // 取得今天日期，為繳款日期的最大值
+    // 取得今天日期，為繳款日期的預設值
     const dtToday = new Date();
     const year = dtToday.getFullYear();
     let month = dtToday.getMonth() + 1;
     let day = dtToday.getDate();
     if(month < 10) month = '0' + month.toString();
     if(day < 10) day = '0' + day.toString();
-    const maxDate = `${year}-${month}-${day}`;
-
-    // 轉換繳款日期為格式： yyyy-MM-dd
-    const dateFormat = (date) => {
-      if (date) {
-        let dtDate = new Date(date);
-        let year = dtDate.getFullYear();
-        let month = dtDate.getMonth() + 1;
-        let day = dtDate.getDate();
-        if(month < 10) month = '0' + month.toString();
-        if(day < 10) day = '0' + day.toString();
-        return `${year}-${month}-${day}`;
-      }
-      else {
-        return null;
-      }
-    }
+    const maxDate = `${year}-${month}-${day} 23:59`;
 
     let defPaymentAmount = 0;
     if (checkedCourses.length) {
@@ -150,6 +143,7 @@ class PaymentForm extends React.Component {
                 <select
                   id="inputBankCode"
                   ref="inputBankCode"
+                  defaultValue={lastBankCode}
                   required="true">
                   <option value="">請選擇</option>
                   <option value="004">004 - 臺灣銀行</option>
@@ -328,25 +322,26 @@ class PaymentForm extends React.Component {
                   ref="inputDigitsAfter5Number"
                   placeholder="帳號末5碼"
                   maxLength="5"
+                  defaultValue={lastDigitsAfter5Number}
                   required="true" />
                 <div className="help-inline">{this.state.formErrors.inputDigitsAfter5Number}</div>
               </div>
             </div>
             <div className={`control-group ${this.errorClass(this.state.formErrors.inputPaymentDate)}`}>
               <label className="control-label" htmlFor="inputPaymentDate">
-                <span className="text-error">*</span>繳款日期
+                <span className="text-error">*</span>繳款時間
               </label>
               <div className="controls">
                 <input
-                  type="date"
+                  type="text"
                   id="inputPaymentDate"
                   ref="inputPaymentDate"
-                  placeholder="YYYY-MM-DD"
-                  pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                  placeholder="YYYY-MM-DD HH:mm"
+                  pattern="[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}"
                   max={maxDate}
                   defaultValue={maxDate}
                   required="true" />
-                <div>(格式：YYYY-MM-DD)</div>
+                <div>(格式：YYYY-MM-DD HH:mm)</div>
                 <div className="help-inline">{this.state.formErrors.inputPaymentDate}</div>
               </div>
             </div>

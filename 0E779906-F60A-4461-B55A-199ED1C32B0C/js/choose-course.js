@@ -326,7 +326,9 @@ jQuery(function () {
                 // email_content1_template_subject: ko.observable(),
                 // email_content2_template_subject: ko.observable(),
                 // retreat_notices_word: ko.observable(),
-                emba_alumnicoursemodule_course_description_temp: ko.observable()
+                emba_alumnicoursemodule_course_description_temp: ko.observable(),
+                emba_alumnicoursemodule_newly_elected_courses: ko.observable(),
+                '寄發新選課程與退選課程通知Email_subject': ko.observable()
             },
             get_configuration: function () {
                 var self = MyViewModel;
@@ -337,7 +339,9 @@ jQuery(function () {
                         Request: {
                             Condition: {
                                 ConfName: [
-                                    'emba_alumnicoursemodule_course_description_temp'
+                                    'emba_alumnicoursemodule_course_description_temp',
+                                    'emba_alumnicoursemodule_newly_elected_courses',
+                                    '寄發新選課程與退選課程通知Email_subject'
                                 ]
                             }
                         }
@@ -1139,6 +1143,9 @@ jQuery(function () {
                                 //     mail_content = self.configuration['email_content2_template']();
                                 //     period = '第二階段';
                                 // }
+                                
+                                mail_subject = self.configuration['寄發新選課程與退選課程通知Email_subject']() || '';
+                                mail_content = self.configuration['emba_alumnicoursemodule_newly_elected_courses']() || '';
 
                                 //  加選課程清單
                                 //course_add_html
@@ -1152,7 +1159,7 @@ jQuery(function () {
                                 if (quit_list_backup.length > 0)
                                     status += '退';
                                 status += '選';
-
+debugger
                                 mail_subject = mail_subject.replace(/\[\[學年度\]\]/g, self.currentData.SchoolYear());
                                 mail_subject = mail_subject.replace(/\[\[學期\]\]/g, self.currentData.FullSemester());
                                 // mail_subject = mail_subject.replace(/\[\[階段別\]\]/g, period);
@@ -1174,6 +1181,10 @@ jQuery(function () {
                                 mail_content = mail_content.replace(/\[\[加選課程\]\]/g, (add_list_backup.length > 0) ? '<p>加選課程：</p>' + course_add_html_backup : '');
                                 mail_content = mail_content.replace(/\[\[退選課程\]\]/g, (quit_list_backup.length > 0) ? '<p>退選課程：</p>' + course_quit_html_backup : '');
                                 mail_content = mail_content.replace(/\[\[選課結果\]\]/g, '<p>選課結果：</p>' + get_course_html(self.curr_attend()));
+
+                                console.log(mail_subject);
+                                console.log(mail_content);
+                                debugger
                                 _gg.connection.send({
                                     service: "_.SendMail",
                                     body: {
@@ -1274,10 +1285,10 @@ jQuery(function () {
                         //  3、get_attend
                         self.CallbackQueue.Push(self.get_attend_no_callback);
 
-                        //  4、send_Mail TODO: 樣版未開發，暫時不寄信 2017/09/22 elvira
-                        // self.CallbackQueue.Push(function() {
-                        //     send_Mail(add_list_backup, quit_list_backup, course_add_html_backup, course_quit_html_backup);
-                        // });
+                        //  4、send_Mail
+                        self.CallbackQueue.Push(function() {
+                            send_Mail(add_list_backup, quit_list_backup, course_add_html_backup, course_quit_html_backup);
+                        });
 
                         //  5、get_can_choose_course
                         self.CallbackQueue.Push(function() {

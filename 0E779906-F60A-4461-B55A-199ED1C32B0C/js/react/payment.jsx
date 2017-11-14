@@ -10,6 +10,8 @@ class Payment extends React.Component {
       showModal: false,
       disabledBtn: false,
       checkedCourses: [],
+      lastBankCode: '',
+      lastDigitsAfter5Number: '',
     };
   }
 
@@ -43,10 +45,14 @@ class Payment extends React.Component {
       // console.dir(electives);
       // console.dir(allColCourses);
 
-      // 整理繳款單及正備取
+      // 整理繳款單及正備取遞補名單
       let data1 = [];
       let data2 = [];
-      let checkedCourses = [];
+      let checkedCourses = []; // 依階段，正取或遞補的打勾清單，排除 Cancel
+      let checkedCourses1 = [];
+      let checkedCourses2 = [];
+      let lastBankCode = '';
+      let lastDigitsAfter5Number = '';
 
       electives.forEach((elective) => {
         let repo = allColCourses['c' + elective.AlumniID];
@@ -56,18 +62,27 @@ class Payment extends React.Component {
           elective.CourseName = repo.CourseName;
           elective.TuitionFees = repo.TuitionFees;
           elective.Margin = repo.Margin;
-          elective.checked = true;
+          elective.Checked = (elective.Cancel == 't') ? false : true;
 
+          // IsAdmitted == 't' 正取, 否則為備取
           if (elective.IsAdmitted == 't') {
             data1.push(elective);
+            if (elective.Cancel != 't') checkedCourses1.push(elective);
           } else {
             data2.push(elective);
+            if (elective.Cancel != 't') checkedCourses2.push(elective);
           };
+
+          // 取得銀行最後記錄
+          if (elective.BankCode) {
+            lastBankCode = elective.BankCode;
+            lastDigitsAfter5Number = elective.DigitsAfter5Number;
+          }
         }
       });
 
-      if (this.stage == 'announcement') checkedCourses = data1;
-      if (this.stage == 'increment') checkedCourses = data2;
+      if (this.stage == 'announcement') checkedCourses = checkedCourses1;
+      if (this.stage == 'increment') checkedCourses = checkedCourses2;
 
       this.setState((prevState, props) => {
         return {
@@ -76,11 +91,13 @@ class Payment extends React.Component {
           waitings: data2,
           checkedCourses: checkedCourses,
           disabledBtn: (checkedCourses.length == 0),
+          lastBankCode: lastBankCode,
+          lastDigitsAfter5Number: lastDigitsAfter5Number,
         };
       });
     })
     .catch((err) => {
-      console.error(err);
+      // console.error(err);
       (typeof err === 'function') ? err() : _gg.set_error_message('#mainMsg', null, '內部發生錯誤 101');
     });
   }
@@ -153,10 +170,12 @@ class Payment extends React.Component {
     });
   }
 
+  // 隱藏填表 modal
   handleHideModal = () => {
     this.setState({showModal: false});
   }
 
+  // 顯示填表 modal
   handleShowModal = () => {
     if (this.state.disabledBtn) return;
     this.setState({showModal: true});
@@ -179,9 +198,13 @@ class Payment extends React.Component {
     }
 
     const newData = data.map((item) => {
-      if (name == 'checkAll') item.checked = value;
-      if (name == item.AlumniID) item.checked = value;
-      if (item.checked) checkedCourses.push(item);
+      if (item.Cancel == 't') {
+        item.Checked = false;
+      } else {
+        if (name == 'checkAll') item.Checked = value;
+        if (name == item.AlumniID) item.Checked = value;
+        if (item.Checked) checkedCourses.push(item);
+      }
       return item;
     });
 
@@ -195,6 +218,7 @@ class Payment extends React.Component {
     });
   }
 
+  // 按鈕「填寫匯款通知」及「請先勾選」的提示訊息
   btnDom = (courses = [], checkedCourses = []) => {
     let ret1, ret2;
     let style1 = 'btn btn-info';
@@ -216,6 +240,7 @@ class Payment extends React.Component {
     return <div>{ret1}{ret2}</div>;
   }
 
+  // 繳款注意事項
   noteDom = () => {
     if (!this.configuration) return;
 
@@ -250,7 +275,7 @@ class Payment extends React.Component {
         this.getPaymentList(this.props);
 
         // 顯示成功訊息
-        elemErr.html("<div class='alert alert-success'>\n  儲存成功！\n</div>");
+        elemErr.html("<div class='alert alert-success'>\n  儲存成功！ (5秒後自動關閉)\n</div>");
         setTimeout(() => { 
           elemErr.html('');
           elemModal.modal('hide');
@@ -258,7 +283,7 @@ class Payment extends React.Component {
         }, 5000);
       })
       .catch((err) => {
-        console.error(err);
+        // console.error(err);
         (typeof err === 'function') ? err() : elemErr.html("<div class='alert alert-error'>\n  發生錯誤！\n</div>");;
       });
     }
@@ -278,7 +303,26 @@ class Payment extends React.Component {
         },
         result: (response, error, http) => {
           if (error !== null) {
-            reject(() => { elemErr.html("<div class='alert alert-error'>\n  儲存失敗了！\n</div>"); });
+            let tmp_msg = '';
+            if (error.dsaError) {
+                if (error.dsaError.status === "504") {
+                    switch (error.dsaError.message) {
+                        case '501':
+                            tmp_msg = '<strong>現在非繳費期間！</strong>';
+                            break;
+                    }
+                } else if (error.dsaError.message) {
+                    tmp_msg = error.dsaError.message;
+                }
+            } else if (error.loginError.message) {
+                tmp_msg = error.loginError.message;
+            } else if (error.message) {
+                tmp_msg = error.message;
+            }
+
+            reject(() => { 
+              elemErr.html(`<div class='alert alert-error'>${tmp_msg}</div>`); 
+            });
           } else {
             if (parseInt(response.Result && response.Result.EffectRows, 10) > 0) {
               const today = new Date();
@@ -310,7 +354,7 @@ class Payment extends React.Component {
                 選課系統編號：${logMessage.refStudentSelectId.join(',')}
                 銀行代號：${logMessage.bankCode}
                 帳號末5碼：${logMessage.digitsAfter5Number}
-                繳款日期：${logMessage.paymentDate}
+                繳款時間：${logMessage.paymentDate}
                 繳款金額：${logMessage.paymentAmount}
                 繳款說明：${logMessage.description}
                 寄送副本：${(sendMail)?'是':'否'}
@@ -377,14 +421,14 @@ class Payment extends React.Component {
       });
       let mail_content = `
         <p>
-          ${myInfo.StudentName} 同學，您好:<br />
+          同學，您好:<br />
           您於${self.props.schoolYear}學年度${(self.props.semester == '0')?'夏季':'第'+self.props.semester}學期 校友選課匯款內容如下：
         </p>
         <p>
           課程名稱：${courseNames.join(', ')}<br />
           銀行代號：${data[0].BankCode}<br />
           帳號末5碼：${data[0].DigitsAfter5Number}<br />
-          繳款日期：${data[0].PaymentDate}<br />
+          繳款時間：${data[0].PaymentDate}<br />
           繳款金額：${data[0].PaymentAmount}<br />
           繳款說明：<br />
           ${(data[0].Description || '無').replace(/\n/g, '<br />')}
@@ -441,12 +485,22 @@ class Payment extends React.Component {
       return <div>載入中...</div>;
     } 
     else {
-      if (this.stage == 'afterChoose') {
-        return (<div>目前尚無資料</div>)
+      if (['beforeChoose', 'choose', 'afterChoose'].indexOf(this.stage) !== -1) {
+        return (<div>現在非繳費期間</div>)
       } 
       else {
-        // 第一階段公告中
-        if (this.stage == 'announcement') {
+        // 沒有值
+        if (this.state.admitteds.length == 0 && this.state.waitings.length == 0) {
+          return (<div>您無可顯示資料</div>)
+        }
+
+        // 第一階段公告中且沒有值
+        if (this.stage == 'announcement' && this.state.admitteds.length == 0) {
+          return (<div>您沒有可顯示的資料</div>)
+        }
+
+        // 第一階段公告中且有值
+        else if (this.stage == 'announcement') {
           return (
             <div>
               {/* Block Comments */}
@@ -467,6 +521,8 @@ class Payment extends React.Component {
                 this.state.showModal ? 
                   <PaymentForm
                     stage={this.stage}
+                    lastBankCode={this.state.lastBankCode}
+                    lastDigitsAfter5Number={this.state.lastDigitsAfter5Number}
                     checkedCourses={this.state.checkedCourses}
                     allColCourses={allColCourses}
                     handleHideModal={this.handleHideModal}
@@ -477,7 +533,7 @@ class Payment extends React.Component {
           )
         }
 
-        // 第二階段遞補中
+        // 第二階段遞補中且有值
         else if (this.stage == 'increment') {
           return (
             <div>
@@ -506,6 +562,8 @@ class Payment extends React.Component {
                 this.state.showModal ? 
                   <PaymentForm
                     stage={this.stage}
+                    lastBankCode={this.state.lastBankCode}
+                    lastDigitsAfter5Number={this.state.lastDigitsAfter5Number}
                     checkedCourses={this.state.checkedCourses}
                     allColCourses={allColCourses}
                     handleHideModal={this.handleHideModal}
@@ -516,6 +574,10 @@ class Payment extends React.Component {
           )
         }
 
+
+        // 其他階段
+        // 'afterAnnouncement': 第一階段公告結束~第二階段尚未公告
+        // 'afterIncrement': 第二階段遞補結束
         // 其他
         else {
           return (

@@ -40,18 +40,19 @@ class ReactApp extends React.Component {
             schoolYear: openingDate.SchoolYear,
             semester: openingDate.Semester,
             status: openingDate.Status,
+            // status: 'increment', // 開發用
             openingDate: openingDate,
             allColCourses: courses.allColCourses,
           };
         });
       })
       .catch((err) => {
-        console.error(err);
+        // console.error(err);
         (typeof err === 'function') ? err() : _gg.set_error_message('#mainMsg', null, '內部發生錯誤 001');
       });
     })
     .catch((err) => {
-      console.error(err);
+      // console.error(err);
       (typeof err === 'function') ? err() : _gg.set_error_message('#mainMsg', null, '內部發生錯誤 002');
     });
   }

@@ -44,8 +44,9 @@ class MyAdmissionList extends React.Component {
               <input
                 name={item.AlumniID}
                 type="checkbox"
-                checked={item.checked}
-                onChange={handleInputChange} />
+                checked={item.Checked}
+                onChange={handleInputChange} 
+                disabled={item.Cancel == 't'}/>
             </td>
             :
             null
@@ -56,13 +57,13 @@ class MyAdmissionList extends React.Component {
           <td>{repo.Margin}</td>
           <td>
             {(item.VerifyAccounting == 'f' ? '否' : '是')}
-            {item.Cancel == 't' && '(取消資格)'}
+            {item.Cancel == 't' && '(放棄)'}
           </td>
           <td>
             <ul>
               <li style={liStyle}>銀行代號: {item.BankCode || '未填寫'}</li>
               <li style={liStyle}>帳號末5碼: {item.DigitsAfter5Number || '未填寫'}</li>
-              <li style={liStyle}>繳款日期: {item.PaymentDate || '未填寫'}</li>
+              <li style={liStyle}>繳款時間: {item.PaymentDate || '未填寫'}</li>
               <li style={liStyle}>繳款金額: {item.PaymentAmount || '未填寫'}</li>
             </ul>
           </td>
