@@ -17,14 +17,15 @@ class PaymentForm extends React.Component {
 
     $(this.refs.myPaymentModal).modal('show')
     $(this.refs.myPaymentModal).on('hidden.bs.modal', handleHideModal);
-    $(this.refs.inputPaymentDate).datetimepicker({
-      showMonthAfterYear: true,
-      dateFormat: 'yy-mm-dd',
-      timeFormat: 'HH:mm',
-      showSecond: false,
-      showButtonPanel: true,
-      showTime: true 
-    });
+    // $(this.refs.inputPaymentDate).datetimepicker({
+    //   showMonthAfterYear: true,
+    //   dateFormat: 'yy-mm-dd',
+    //   // timeFormat: 'HH:mm',
+    //   showSecond: false,
+    //   showButtonPanel: true,
+    //   showTime: false 
+    // });
+    $(this.refs.inputPaymentDate).datepicker({ dateFormat: "yy-mm-dd" });
   }
 
   handleSubmit = (event) => {
@@ -113,7 +114,7 @@ class PaymentForm extends React.Component {
     let day = dtToday.getDate();
     if(month < 10) month = '0' + month.toString();
     if(day < 10) day = '0' + day.toString();
-    const maxDate = `${year}-${month}-${day} 23:59`;
+    const maxDate = `${year}-${month}-${day}`;
 
     let defPaymentAmount = 0;
     if (checkedCourses.length) {
@@ -336,12 +337,12 @@ class PaymentForm extends React.Component {
                   type="text"
                   id="inputPaymentDate"
                   ref="inputPaymentDate"
-                  placeholder="YYYY-MM-DD HH:mm"
-                  pattern="[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}"
+                  placeholder="YYYY-MM-DD"
+                  pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
                   max={maxDate}
                   defaultValue={maxDate}
                   required="true" />
-                <div>(格式：YYYY-MM-DD HH:mm)</div>
+                <div>(格式：YYYY-MM-DD)</div>
                 <div className="help-inline">{this.state.formErrors.inputPaymentDate}</div>
               </div>
             </div>
@@ -368,8 +369,10 @@ class PaymentForm extends React.Component {
                 <textarea
                   id="inputDescription"
                   ref="inputDescription" />
+                <p>※如需收據請於繳款說明中備註。</p>
               </div>
             </div>
+            
             <div className="control-group">
               <div className="controls">
                 <label className="checkbox" htmlFor="sendMail">
