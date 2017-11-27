@@ -78,10 +78,10 @@
                         <a ng-if="item.Url" href="{{item.Url}}" target="_blank">{{item.ActivityName}}</a>
                         <span ng-if="!item.Url">{{item.ActivityName}}</span>
                       </td>
-                      <td>{{item.ActivityTime | date:'yyyy/MM/dd'}}</td>
-                      <td>{{item.EndTime | date:'yyyy/MM/dd'}}</td>
+                      <td>{{item.ActivityTime | date:'yyyy/MM/dd HH:mm'}}</td>
+                      <td>{{item.EndTime | date:'yyyy/MM/dd HH:mm'}}</td>
                       <td>{{item.MaximumNumber || '無限制'}}</td>
-                      <td>{{item.AnnouncementTime | date:'yyyy/MM/dd'}}</td>
+                      <td>{{item.AnnouncementTime | date:'yyyy/MM/dd HH:mm'}}</td>
                       <td>
                         <a ng-hide="item.Register" href="javascript:;" class="btn btn-danger" ng-click="getActivity(item);set_activity_panel('detail');">我要報名</a>
                         <a ng-show="item.Register" href="javascript:;" class="btn btn-success" ng-click="showCheckSignOut(item);">我要取消</a>
@@ -119,10 +119,10 @@
                   <tbody>
                     <tr ng-repeat="item in historys">
                       <td>{{item.ActivityName}}</td>
-                      <td>{{item.ActivityTime | date:'yyyy/MM/dd'}}</td>
+                      <td>{{item.ActivityTime | date:'yyyy/MM/dd HH:mm'}}</td>
                       <td>
                         <span ng-if="item.AnnouncementTime > Date">
-                          <i class="icon-bullhorn"></i> {{item.AnnouncementTime | date:'yyyy/MM/dd'}} 公告
+                          <i class="icon-bullhorn"></i> {{item.AnnouncementTime | date:'yyyy/MM/dd HH:mm'}} 公告
                         </span>
                         <span ng-if="item.AnnouncementTime <= Date && item.IsSuccessful == 't'">
                           <i class="icon-ok"></i> 入選
@@ -190,7 +190,7 @@
     <tbody>
       <tr>
         <td colspan="2">{{curr.ActivityName}}</td>
-        <td>{{curr.ActivityTime | date:'yyyy/MM/dd'}}</td>
+        <td>{{curr.ActivityTime | date:'yyyy/MM/dd HH:mm'}}</td>
         <td>
           <a href="javascript:;" style="display:inline;" ng-click="showPublicMember()">{{curr.Count || 0}}</a>
           / {{curr.MaximumNumber || '無限制'}}</td>
@@ -206,12 +206,12 @@
     </thead>
     <tbody>
       <tr>
-        <td>{{curr.OpeningTime | date:'yyyy/MM/dd'}} ~ {{curr.EndTime | date:'yyyy/MM/dd'}}</td>
+        <td>{{curr.OpeningTime | date:'yyyy/MM/dd HH:mm'}} ~ {{curr.EndTime | date:'yyyy/MM/dd HH:mm'}}</td>
         <td>
           <span ng-if="curr.IsNeedToPay=='t'">是</span>
           <span ng-if="curr.IsNeedToPay=='f'">否</span>
         </td>
-        <td>{{curr.AnnouncementTime | date:'yyyy/MM/dd'}}</td>
+        <td>{{curr.AnnouncementTime | date:'yyyy/MM/dd HH:mm'}}</td>
         <td>
           <a ng-if="curr.Url" href="{{curr.Url}}" target="_blank">檢視</a>
           <span ng-if="!curr.Url">無</span>
