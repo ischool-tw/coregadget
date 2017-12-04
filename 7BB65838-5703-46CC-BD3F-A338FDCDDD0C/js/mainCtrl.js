@@ -97,8 +97,8 @@
         $scope.InterviewDateOption = [];
         var d = new Date();
         for (var i = 5; i > 0; i--) {
-            $scope.HomeVisitDateOption.push(d.toLocaleDateString());
-            $scope.InterviewDateOption.push(d.toLocaleDateString());
+            $scope.HomeVisitDateOption.push(d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate());
+            $scope.InterviewDateOption.push(d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate());
             d.setDate(d.getDate() - 1);
         }
         $scope.InterviewTimeOption = ['早休', '第一節', '第二節', '第三節', '第四節', '午休', '第五節', '第六節', '第七節', '第八節'];
@@ -161,6 +161,15 @@
             delete $scope.CurrentStudent;
         }
 
+		$scope.SingleChecked = function(list, opt){
+			if(opt.Checked){
+				[].concat(list || []).forEach(function(item){
+					if(opt !== item && item.Checked){
+						item.Checked = false;
+					}
+				});
+			}
+		}
 
         //2017/2/6  穎驊新增
         //讀取心理測驗
@@ -232,7 +241,8 @@
                             stuRec.HomeVisitRecord = [].concat(response.HomeVisitRecord || []);
                             [].concat(response.HomeVisitRecord || []).forEach(function (rec) {
                                 rec.IsPublic = (rec.IsPublic == 'true');
-                                rec.HomeVisitDate = new Date(parseInt(rec.HomeVisitDate)).toLocaleDateString();
+                                rec.HomeVisitDate = new Date(parseInt(rec.HomeVisitDate));
+								rec.HomeVisitDate = rec.HomeVisitDate.getFullYear() + "/" + (rec.HomeVisitDate.getMonth() + 1) + "/" + rec.HomeVisitDate.getDate();
                                 rec.Attendees = [].concat(rec.Attendees || []);
                                 rec.Contact = [].concat(rec.Contact || []);
                                 rec.CounselTypeKind = [].concat(rec.CounselTypeKind || []);
@@ -469,7 +479,8 @@
                             stuRec.InterviewRecord = [].concat(response.InterviewRecord || []);
                             [].concat(response.InterviewRecord || []).forEach(function (rec) {
                                 rec.IsPublic = (rec.IsPublic == 'true');
-                                rec.InterviewDate = new Date(parseInt(rec.InterviewDate)).toLocaleDateString();
+                                rec.InterviewDate = new Date(parseInt(rec.InterviewDate));
+								rec.InterviewDate = rec.InterviewDate.getFullYear() + "/" + (rec.InterviewDate.getMonth() + 1) + "/" + rec.InterviewDate.getDate();
                                 rec.Attendees = [].concat(rec.Attendees || []);
                                 rec.CounselType = [].concat(rec.CounselType || []);
                                 rec.CounselTypeKind = [].concat(rec.CounselTypeKind || []);
@@ -522,7 +533,7 @@
                         remove = val;
                     }
                 });
-                if (remove) list.splice(list.indexOf(remove));
+                if (remove) list.splice(list.indexOf(remove), 1);
                 $scope.InterviewDetial.AttendeesOption.push(item);
             });
             //差異新增不在清單中的項目
@@ -550,7 +561,7 @@
                         remove = val;
                     }
                 });
-                if (remove) list.splice(list.indexOf(remove));
+                if (remove) list.splice(list.indexOf(remove), 1);
                 $scope.InterviewDetial.CounselTypeOption.push(item);
             });
             //差異新增不在清單中的項目
@@ -583,7 +594,7 @@
                         remove = val;
                     }
                 });
-                if (remove) list.splice(list.indexOf(remove));
+                if (remove) list.splice(list.indexOf(remove), 1);
                 $scope.InterviewDetial.CounselTypeKindOption.push(item);
             });
             //差異新增不在清單中的項目

@@ -12,10 +12,10 @@
             oAuth: {
                 clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
                 clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
-                //account: 'teacher01.whsh@1campus.net',
+                account: 'teacher01.whsh@1campus.net',
                 //account: 'teacher02.whsh@1campus.net',
-                account: 'teacher02.whsh@1campus.net',
-                password: window.prompt('password:1234')
+                //account: 'teacher03.whsh@1campus.net',
+                password: '1234'//window.prompt('password:1234')
             }
         });
     </script>
@@ -665,7 +665,8 @@
                                                     <div class="checkbox"
                                                          style="padding: 0px;margin-top: -5px;">
                                                         <label ng-repeat="opt in HomeVisitDetial.CounselTypeKindOption"
-                                                               style="padding:0px 10px 10px 0px;display: inline-block;">
+                                                               style="padding:0px 10px 10px 0px;display: inline-block;"
+															   ng-click="SingleChecked(HomeVisitDetial.CounselTypeKindOption, opt)">
                                                             <input type="checkbox" value="{{opt.Name}}" ng-model="opt.Checked"><span class="checkbox-material"><span class="check"></span></span>
                                                             <span ng-style="{color:opt.Checked?'#555':'#BFBFBF'}">
                                                                 {{opt.Name}}
@@ -1096,7 +1097,8 @@
                                                     <div class="checkbox"
                                                          style="padding: 0px;margin-top: -5px;">
                                                         <label ng-repeat="opt in InterviewDetial.CounselTypeOption"
-                                                               style="padding:0px 10px 10px 0px;display: inline-block;">
+                                                               style="padding:0px 10px 10px 0px;display: inline-block;"
+															   ng-click="SingleChecked(InterviewDetial.CounselTypeOption, opt)">
                                                             <input type="checkbox" value="{{opt.Name}}" ng-model="opt.Checked"><span class="checkbox-material"><span class="check"></span></span>
                                                             <span ng-style="{color:opt.Checked?'#555':'#BFBFBF'}">
                                                                 {{opt.Name}}
@@ -1123,7 +1125,9 @@
                                                     <div class="checkbox"
                                                          style="padding: 0px;margin-top: -5px;">
                                                         <label ng-repeat="opt in InterviewDetial.CounselTypeKindOption"
-                                                               style="padding:0px 10px 10px 0px;display: inline-block;">
+                                                               style="padding:0px 10px 10px 0px;display: inline-block;"
+															   ng-click="SingleChecked(InterviewDetial.CounselTypeKindOption, opt)"
+															   >
                                                             <input type="checkbox" value="{{opt.Name}}" ng-model="opt.Checked"><span class="checkbox-material"><span class="check"></span></span>
                                                             <span ng-style="{color:opt.Checked?'#555':'#BFBFBF'}">
                                                                 {{opt.Name}}
