@@ -672,18 +672,28 @@
                                     if (!isNaN(temp)
                                         && (!$scope.current.Exam.Range || (!$scope.current.Exam.Range.Max && $scope.current.Exam.Range.Max !== 0) || temp <= $scope.current.Exam.Range.Max)
                                         && (!$scope.current.Exam.Range || (!$scope.current.Exam.Range.Min && $scope.current.Exam.Range.Min !== 0) || temp >= $scope.current.Exam.Range.Min)) {
-                                        flag = true;
+
+                                        if (importProcess.ParseValues[i] != '') {
+                                            flag = true;    
+                                        }
+                                        
                                         if (!$scope.current.Exam.Group) {
                                             var round = Math.pow(10, $scope.params[$scope.current.Exam.Name + 'Round'] || $scope.params.DefaultRound);
                                             temp = Math.round(temp * round) / round;
                                         }
                                     }
-                                    if (importProcess.ParseValues[i] == "缺")
+                                    // 使用者若知道其學生沒有資料，請在其欄位內輸入 - ，程式碼會將其填上空值 
+                                    if (importProcess.ParseValues[i] == '-')
+                                    {
                                         flag = true;
+                                        importProcess.ParseValues[i] = '';
+                                    }                                   
                                     if (flag) {
-                                        if (!isNaN(temp) && importProcess.ParseValues[i] != "")
+                                        if (!isNaN(temp) && importProcess.ParseValues[i] != '')
+                                        {
                                             importProcess.ParseValues[i] = temp;
-                                    }
+                                        }                                                                                
+                                    }                                     
                                     else {
                                         importProcess.ParseValues[i] = '錯誤';
                                         importProcess.HasError = true;
@@ -710,6 +720,23 @@
                                     else
                                         stuRec['Exam' + examRec.ExamID] = importProcess.ParseValues[index];
                                 });
+
+                                // 2017/11/29 穎驊因應 高雄小組項目  [04-02A1][03] web2的flash問題 2017/11 的進度 修改
+                                // 提供使用者再匯入成績後，自動帶出努力程度。
+                                [].concat($scope.studentList || []).forEach(function (studentRec, index) {
+                                    var done = false;
+                                    // 以努力程度對照表 查出現在的分數對應的努力程度
+                                    $scope.effortPairList.forEach(function (effortItem) {
+
+                                        if (!done && studentRec["Exam" + examRec.ExamID] != "" && studentRec["Exam" + examRec.ExamID] >= effortItem.Score) {
+
+                                            studentRec["Exam" + examRec.Name + "_" + "努力程度"] = effortItem.Code;
+
+                                            done = true;
+                                        }
+                                    });
+                                }); 
+
                                 $scope.calc();
                                 $('#importModal').modal('hide');
                             },
@@ -745,6 +772,120 @@
                             importProcesses.push(autoEffort);
                         }                        
                     }
+
+                    // 2017/11/29 穎驊因應 高雄小組項目  [04-02A1][03] web2的flash問題 2017/11 的進度 修改
+                    // 提供使用者匯入文字評量
+
+                    if (examRec.Type == 'Text' && examRec.Permission == "Editor") {
+                        var importProcess = {
+                            Name: '匯入' + examRec.Name,
+                            Type: 'Function',
+                            Fn: function () {
+                                delete importProcess.ParseString;
+                                delete importProcess.ParseValues;
+                                $scope.importProcess = importProcess;
+                                $('#importModal').modal('show');
+                            },
+                            Parse: function () {
+                                importProcess.ParseString = importProcess.ParseString || '';
+                                //importProcess.ParseValues = importProcess.ParseString.split("\n");
+
+                                // 2017/11/30穎驊註解，由於Excel 格子內文字若輸入" 其複製到 Web 後，會變成"" ，在此將其移除，避免後續的儲存處理問題
+                                //var text_trimmed = importProcess.ParseString.replace('""', '')
+                                var text_trimmed = importProcess.ParseString.replace(/""/g, "")
+
+                                // 2017/12/1，穎驊註解， 為了要處理原始來自Excel 來源的資料會有跨行(自動換行Excel 貼出來的字會有幫前後字串加綴雙引號")
+                                //、還有原始的資料會有直接輸入雙引號"等會造成parser 的讀取轉換問題，
+                                //穎驊參考 java 轉CSV的檔案解法: https://stackoverflow.com/questions/8493195/how-can-i-parse-a-csv-string-with-javascript-which-contains-comma-in-data
+                                
+                                // Return array of string values, or NULL if CSV string not well formed.
+                                function CSVtoArray(text) {
+                                    //var re_valid = /^\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*(?:,\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*)*$/;
+                                    var re_value = /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:\n|$)/g;
+
+                                    // 本案不需要驗證
+                                    // Return NULL if input string is not well formed CSV string.
+                                    //if (!re_valid.test(text)) return null;
+                                    
+                                    var a = [];                     // Initialize array to receive values.
+                                    text.replace(re_value, // "Walk" the string using replace with callback.
+                                        function (m0, m1, m2, m3) {
+                                            // Remove backslash from \' in single quoted values.
+                                            if (m1 !== undefined) a.push(m1.replace(/\\'/g, "'"));
+                                            // Remove backslash from \" in double quoted values.
+                                            else if (m2 !== undefined) a.push(m2.replace(/\\"/g, '"'));
+                                            else if (m3 !== undefined)
+                                            {
+                                                var list_1 = [];
+
+                                                list_1 = m3.split("\n")
+
+                                                list_1.forEach(function (text, index) {
+
+                                                    a.push(text);
+                                                });                                                
+                                            }
+                                            return ''; // Return empty string.
+                                        });
+                                    // Handle special case of empty last value.
+                                    if (/,\s*$/.test(text)) a.push('');
+                                    return a;
+                                };
+
+                                
+                                var a = CSVtoArray(text_trimmed);
+
+                                importProcess.ParseValues = a;
+
+
+                                importProcess.HasError = false;
+                                for (var i = 0; i < importProcess.ParseValues.length; i++) {
+                                    var flag = false;
+                                    var temp = importProcess.ParseValues[i];
+                                    if (!temp == '' && temp !='-'){
+                                        
+                                        temp = importProcess.ParseValues[i];
+                                    }     
+                                    // 使用者若知道其學生沒有資料，請在其欄位內輸入 - ，程式碼會將其填上空值 
+                                    else if (temp =='-') {
+                                        importProcess.ParseValues[i] = '';
+                                        //importProcess.HasError = true;
+                                    }
+                                    else {
+                                        importProcess.ParseValues[i] = '錯誤';
+                                        importProcess.HasError = true;
+                                    }
+                                }
+
+                                $scope.studentList.forEach(function (stuRec, index) {
+                                    if (index >= importProcess.ParseValues.length) {
+                                        importProcess.ParseValues.push('錯誤');
+                                        importProcess.HasError = true;
+                                    }
+                                });
+
+                            },
+                            Clear: function () {
+                                delete importProcess.ParseValues;
+                            },
+                            Import: function () {
+                                if (importProcess.HasError == true)
+                                    return;
+                                $scope.studentList.forEach(function (stuRec, index) {
+                                    if (!importProcess.ParseValues[index] && importProcess.ParseValues[index] !== '')
+                                        stuRec['Exam' + examRec.ExamID] = '';
+                                    else
+                                        stuRec['Exam' + examRec.ExamID] = importProcess.ParseValues[index];
+                                });
+
+                                $('#importModal').modal('hide');
+                            },
+                            Disabled: examRec.Lock
+                        };
+
+                        importProcesses.push(importProcess);
+                    }
+
                 });
                 if (importProcesses.length > 0) {
                     process = process.concat({

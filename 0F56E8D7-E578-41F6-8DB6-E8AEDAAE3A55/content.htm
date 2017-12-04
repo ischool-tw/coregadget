@@ -433,13 +433,15 @@
                                 </div>
                                 <h6 ng-if="exam.Group" style="margin:0px;display:inline-block;">
                                     <small>
-                                        <span>
+                                        <span style="overflow:hidden;width:100%;display:inline-block;white-space:nowrap">
                                             {{stuRec['Exam'+exam.ExamID]}}
                                         </span>
                                     </small>
                                 </h6>
                                 <span ng-if="!exam.Group"
-                                      ng-class="{'text-danger':stuRec['Exam'+exam.ExamID] < 60}">
+                                      ng-class="{'text-danger':stuRec['Exam'+exam.ExamID] < 60}"
+                                      style="overflow:hidden;width:100%;display:inline-block;white-space:nowrap"
+                                      >
                                     {{stuRec['Exam'+exam.ExamID]}}
                                 </span>
                             </td>
@@ -466,6 +468,7 @@
                                 <ul>
                                     <li class="text-danger">請先確認excel中學生的人數及順序皆與系統相符</li>
                                     <li class="text-danger">複製成績時，僅需圈選成績的部分，不含學生姓名及表頭</li>
+                                    <li class="text-danger">如有學生沒有成績資料，請輸入"-"，表示無資料，否則系統將認定錯誤</li>
                                 </ul>
                             </li>
                             <li>於下方文字方塊中貼上</li>
@@ -493,7 +496,7 @@
                                  ng-repeat="col in [1,2,3,4]">
                                 <div ng-repeat="stuRec in studentList"
                                      ng-if="$index < studentList.length*col/4 && $index >= studentList.length*(col-1)/4">
-                                    <div class="importStudentPreview">
+                                    <div class="importStudentPreview" style="display:flex">
                                         <span class="studentInfo">
                                             <span ng-if="stuRec.SeatNo"
                                                   style="min-width:24px;display:inline-block;">{{stuRec.SeatNo}}.&nbsp;</span>
@@ -506,7 +509,8 @@
                                              class="pull-right text-danger">--</div>
                                         <div ng-if="importProcess.ParseValues[$index]!='錯誤'&&importProcess.ParseValues[$index]!=''"
                                              class="pull-right"
-                                             ng-class="{'text-danger':importProcess.ParseValues[$index] < 60}">{{importProcess.ParseValues[$index]}}</div>
+                                             ng-class="{'text-danger':importProcess.ParseValues[$index] < 60}"
+                                             >{{importProcess.ParseValues[$index]}}</div>
                                     </div>
                                 </div>
                             </div>

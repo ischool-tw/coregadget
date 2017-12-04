@@ -152,19 +152,42 @@ _gg.SetScoreData = function () {
                 if (domainName === '無領域') {
                     itemNoDoamin.push('<thead><tr><td colspan="6">以下為彈性課程</td></tr></thead>');
                 } else {
-                    items.push(
-                        '<thead>' +
-                        '    <tr>' +
-                        '        <td><i class="icon-book"></i> ' + (domainItem.領域 || '') + '</td>' +
-                        '        <td>&nbsp;</td>' +
-                        '        <td>' + domainPeriod_Weight + '</td>' +
-                        domainScore +
-                        '        <td>' + domainLevel + '</td>' +
-                        '        <td>' + (domainItem.文字描述 || '') + '</td>' +
-                        '        <td>' + domainPass + '</td>' +
-                        '    </tr>' +
-                        '</thead>'
-                    );
+
+                    var show_grade = gadget.params.show_grade || "true";
+
+                    //2017/12/1 由於康橋要求國小部不要顯示成績數值，穎驊在此新增邏輯，
+                    //會依據發佈時  paramValues: { "show_grade": "false",}的設定，動態改變成績顯示與否
+                    if (show_grade == 'true') {
+                        items.push(
+                            '<thead>' +
+                            '    <tr>' +
+                            '        <td><i class="icon-book"></i> ' + (domainItem.領域 || '') + '</td>' +
+                            '        <td>&nbsp;</td>' +
+                            '        <td>' + domainPeriod_Weight + '</td>' +
+                            domainScore +
+                            '        <td>' + domainLevel + '</td>' +
+                            '        <td>' + (domainItem.文字描述 || '') + '</td>' +
+                            '        <td>' + domainPass + '</td>' +
+                            '    </tr>' +
+                            '</thead>'
+                        );
+                    }
+                    else
+                    {
+                        items.push(
+                            '<thead>' +
+                            '    <tr>' +
+                            '        <td><i class="icon-book"></i> ' + (domainItem.領域 || '') + '</td>' +
+                            '        <td>&nbsp;</td>' +
+                            '        <td>' + domainPeriod_Weight + '</td>' +
+                            //domainScore +
+                            '        <td>' + domainLevel + '</td>' +
+                            '        <td>' + (domainItem.文字描述 || '') + '</td>' +
+                            '        <td>' + domainPass + '</td>' +
+                            '    </tr>' +
+                            '</thead>'
+                        );
+                    }                    
                 }
 
 
@@ -203,12 +226,21 @@ _gg.SetScoreData = function () {
                         period_Weight += '/' + tmp_semsSubjScore.Weight;
                     }
 
+                    var show_grade = gadget.params.show_grade || "true";
+
                     tmp_item.push('<tbody>');
                     tmp_item.push('<tr>');
                     tmp_item.push('<td>&nbsp;</td>');
                     tmp_item.push('<td>' + (tmp_semsSubjScore.SubjectName || '') + '</td>');
                     tmp_item.push('<td>' + period_Weight + '</td>');
-                    tmp_item.push(score);
+
+                    //2017/12/1 由於康橋要求國小部不要顯示成績數值，穎驊在此新增邏輯，
+                    //會依據發佈時  paramValues: { "show_grade": "false",}的設定，動態改變成績顯示與否
+                    if (show_grade =='true')
+                    {
+                        tmp_item.push(score);
+                    }
+                    
                     tmp_item.push('<td>' + level + '</td>');
                     tmp_item.push('<td>' + (tmp_semsSubjScore.Description || '') + '</td>');
                     tmp_item.push('<td>' + pass + '</td>');
@@ -254,18 +286,42 @@ _gg.SetScoreData = function () {
         }
     });
 
-    var main_thead = '<thead>' +
-        '  <tr>' +
-        '    <th width="20%"><span>領域</span></th>' +
-        '    <th width="20%"><span>科目</span></th>' +
-        '    <th width="10%"><span>節/權數</span></th>' +
-        '    <th width="10%"><span>成績</span></th>' +
-        '    <th width="10%"><span>等第</span></th>' +
-        '    <th><span>文字描述</span></th>' +
-        '    <th width="7%"><span>及格</span></th>' +
-        '  </tr>' +
-        '</thead>';
 
+    //2017/12/1 由於康橋要求國小部不要顯示成績數值，穎驊在此新增邏輯，
+    //會依據發佈時  paramValues: { "show_grade": "false",}的設定，動態改變成績顯示與否
+
+    var main_thead = '';
+
+    var show_grade = gadget.params.show_grade || "true";
+
+    if (show_grade == 'true') {
+        main_thead = '<thead>' +
+            '  <tr>' +
+            '    <th width="20%"><span>領域</span></th>' +
+            '    <th width="20%"><span>科目</span></th>' +
+            '    <th width="10%"><span>節/權數</span></th>' +
+            '    <th width="10%"><span>成績</span></th>' +
+            '    <th width="10%"><span>等第</span></th>' +
+            '    <th><span>文字描述</span></th>' +
+            '    <th width="7%"><span>及格</span></th>' +
+            '  </tr>' +
+            '</thead>';
+    }
+    else
+    {
+       main_thead = '<thead>' +
+            '  <tr>' +
+            '    <th width="20%"><span>領域</span></th>' +
+            '    <th width="20%"><span>科目</span></th>' +
+            '    <th width="10%"><span>節/權數</span></th>' +
+            //'    <th width="10%"><span>成績</span></th>' +
+            '    <th width="10%"><span>等第</span></th>' +
+            '    <th><span>文字描述</span></th>' +
+            '    <th width="7%"><span>及格</span></th>' +
+            '  </tr>' +
+            '</thead>';
+    }
+   
     var html = items.join('') + itemNoDoamin.join('');
 
     if (html) {
@@ -275,7 +331,17 @@ _gg.SetScoreData = function () {
     }
 
     $("#SubjectScore table").html(html);
-    $("#SubjectTotalScore").html(totalscore.join(''));
+
+    //2017/12/1 由於康橋要求國小部不要顯示成績數值，穎驊在此新增邏輯，
+    //會依據發佈時  paramValues: { "show_grade": "false",}的設定，動態改變成績顯示與否
+    if (show_grade == 'true') {
+        $("#SubjectTotalScore").html(totalscore.join(''));
+    }
+    else
+    {
+        $("#MakeUpText").hide();
+    }
+    
 };
 
 
