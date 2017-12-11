@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
   <ModulePrefs
-      title="EMBA行事曆" popupURL="https://sites.google.com/a/emba.ntu.edu.tw/student/emba-xing-shi-li">
+      title="EMBA行事曆" popupURL="https://sites.google.com/emba.ntu.edu.tw/embacalendar">
     <Icon>src/icon.png</Icon>
   </ModulePrefs>
 </Module>
