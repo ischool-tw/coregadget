@@ -192,8 +192,12 @@
                                                 $scope.$apply(function () {
                                                     [].concat(response.Scores.Item || []).forEach(function (examScoreRec, index) {
                                                         if (examScoreRec.Extension && examScoreRec.Extension.Extension) {
-                                                            studentMapping[examScoreRec.StudentID]["Exam" + examScoreRec.ExamID + "///^///" + "分數評量"] = examScoreRec.Extension.Extension.Score;
+
+                                                            //2017/12/15 穎驊因應高雄小組項目 [09-02][02] 課程歷年成績查詢 調整，新增四捨五入至小數第二位邏輯
+                                                            studentMapping[examScoreRec.StudentID]["Exam" + examScoreRec.ExamID + "///^///" + "分數評量"] = Math.round(examScoreRec.Extension.Extension.Score * 100) / 100 ;
+
                                                             studentMapping[examScoreRec.StudentID]["Exam" + examScoreRec.ExamID + "///^///" + "努力程度"] = examScoreRec.Extension.Extension.Effort;
+
                                                         }
                                                     });
                                                     //$scope.setupCurrent();
@@ -227,7 +231,8 @@
 
                                                             [].concat(Objects.Extension.Exam.Item || []).forEach(function (Item, index) {
 
-                                                                studentMapping[Objects.StudentID][gradeItemID[Item.SubExamID]] = Item.Score;
+                                                                //2017/12/15 穎驊因應高雄小組項目 [09-02][02] 課程歷年成績查詢 調整，新增四捨五入至小數第二位邏輯
+                                                                studentMapping[Objects.StudentID][gradeItemID[Item.SubExamID]] = Math.round(Item.Score * 100) / 100 ;
 
                                                             });
 
@@ -265,12 +270,13 @@
                                                 $scope.$apply(function () {
                                                     [].concat(response.Scores.Item || []).forEach(function (finalScoreRec, index) {
 
-                                                        studentMapping[finalScoreRec.StudentID]["Exam" + "平時評量" + "///^///" + "分數評量"] = finalScoreRec.Extension.Extension.OrdinarilyScore;
+                                                        //2017/12/15 穎驊因應高雄小組項目 [09-02][02] 課程歷年成績查詢 調整，新增四捨五入至小數第二位邏輯
+                                                        studentMapping[finalScoreRec.StudentID]["Exam" + "平時評量" + "///^///" + "分數評量"] = Math.round(finalScoreRec.Extension.Extension.OrdinarilyScore * 100) / 100;
 
                                                         studentMapping[finalScoreRec.StudentID]["Exam" + "平時評量" + "///^///" + "努力程度"] = finalScoreRec.Extension.Extension.OrdinarilyEffort
 
-
-                                                        studentMapping[finalScoreRec.StudentID]["Exam" + "課程總成績" + "///^///" + "分數評量"] = finalScoreRec.Score;
+                                                        //2017/12/15 穎驊因應高雄小組項目 [09-02][02] 課程歷年成績查詢 調整，新增四捨五入至小數第二位邏輯
+                                                        studentMapping[finalScoreRec.StudentID]["Exam" + "課程總成績" + "///^///" + "分數評量"] = Math.round(finalScoreRec.Score * 100) / 100;
 
                                                         studentMapping[finalScoreRec.StudentID]["Exam" + "課程總成績" + "///^///" + "努力程度"] = finalScoreRec.Extension.Extension.Effort;
 
