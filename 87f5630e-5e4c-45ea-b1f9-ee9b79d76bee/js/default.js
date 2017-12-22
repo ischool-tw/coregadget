@@ -1,6 +1,6 @@
 $(function(){
     $('input:text').hide();
-    $("span[data-type=Opening]").after('<p>參考文件：<a href="http://topic.parenting.com.tw/issue/12yearseducation/criteria/09.pdf" target="_blank">12年國教完全指南</a></p>')
+    //$("span[data-type=Opening]").after('<p>參考文件：<a href="http://topic.parenting.com.tw/issue/12yearseducation/criteria/09.pdf" target="_blank">12年國教完全指南</a></p>')
     gadget.onLeave(function() {
         if (!CreditsManager.getSaveStatus()) {
             return '您尚未儲存，確認要離開此網頁嗎?';
