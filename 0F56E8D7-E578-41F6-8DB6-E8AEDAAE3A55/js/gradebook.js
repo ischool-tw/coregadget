@@ -292,6 +292,7 @@
         $scope.saveAll = function () {
 
             //  儲存文字評量 放這邊
+            //2018/1/11 穎驊發現平時評量的分數也是該放這邊
 
             // 文字評量的上傳物件
             var text_body = {
@@ -311,7 +312,10 @@
                             
                             Extension: {
                                 Extension: {
-                                    Text: studentRec["Exam" + "文字評量"]                                       
+                                    Text: studentRec["Exam" + "文字評量"],
+                                    //2018/1/11 穎驊新增，平時評量 上傳邏輯
+                                    OrdinarilyEffort: studentRec["Exam" + "平時評量" + "_" + "努力程度"],
+                                    OrdinarilyScore: studentRec["Exam" + "平時評量"],
                                 }
                             },
                             Condition: {
