@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
   <ModulePrefs
-      title="討論小間借用申請" popupURL="https://sites.google.com/a/emba.ntu.edu.tw/student/tao-lun-xiao-jian-shen-qing">
+      title="討論小間借用申請" popupURL="https://sites.google.com/emba.ntu.edu.tw/discussion">
     <Icon>src/icon.png</Icon>
   </ModulePrefs>
 </Module>

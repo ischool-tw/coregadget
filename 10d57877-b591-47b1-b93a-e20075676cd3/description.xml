@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
   <ModulePrefs
-      title="常用表單下載" popupURL="https://sites.google.com/a/emba.ntu.edu.tw/student/chang-yong-biao-dan-xia-zai">
+      title="常用表單下載" popupURL="https://sites.google.com/emba.ntu.edu.tw/application">
     <Icon>src/icon.png</Icon>
   </ModulePrefs>
 </Module>
