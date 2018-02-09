@@ -10,7 +10,7 @@
             oAuth: {
                 clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
                 clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
-                // account: 'bubu@debug.ischool.com.tw',
+                // account: 'dodo@debug.ischool.com.tw',
                 // password: '1234'
             }
         });
@@ -547,7 +547,7 @@
                 </div>
                 <div class="panel panel-info">
                     <div class="panel-heading"><i class="fa fa-fw fa-tasks"></i> 意願查詢</div>
-                    <div class="panel-body row"> 
+                    <div class="panel-body row">
                         <div class="col-sm-3">
                             <label class="input-group">
                                 <span class="input-group-addon" ng-class="{'nochecked': !filter.willingness.is_entrpreneurial_team}">
@@ -577,6 +577,7 @@
                             <th>級別</th>
                             <th>班別</th>
                             <th>學生姓名</th>
+                            <th>學號</th>
                             <th>性別</th>
                             <th>系所組別</th>
                         </tr>
@@ -586,14 +587,15 @@
                             <td>{{stu.EnrollYear}}</td>
                             <td>{{stu.ClassName}}</td>
                             <td>{{stu.Name}}</td>
+                            <td>{{stu.StudentNumber}}</td>
                             <td>{{stu.Gender}}</td>
                             <td>{{stu.DepartmentName}}</td>
                         </tr>
                         <tr ng-show="(isLoadComplete && students.length==0)">
-                            <td colspan="5">無符合的資料</td>
+                            <td colspan="6">無符合的資料</td>
                         </tr>
                         <tr ng-show="(isLoading)">
-                            <td colspan="5">讀取資料中</td>
+                            <td colspan="6">讀取資料中</td>
                         </tr>
                     </tbody>
                 </table>
@@ -618,6 +620,10 @@
                             <tr>
                                 <th data-field="Name">姓名</th>
                                 <td>{{currStudent.Name || '&nbsp;'}}</td>
+                            </tr>
+                            <tr>
+                                <th data-field="Gender">學號</th>
+                                <td>{{currStudent.StudentNumber || '&nbsp;'}}</td>
                             </tr>
                             <tr>
                                 <th data-field="Gender">性別</th>
@@ -851,7 +857,7 @@
                             <span ng-show="$index!=0">, </span>
                             <span>【{{item.Domain}}】{{['其他','其它'].indexOf(item.Category) == -1 ? item.Category : item.Description}}</sapn>
                         </span>
-                        
+
                     </div>
                 </div>
                 <div class="panel panel-info">
