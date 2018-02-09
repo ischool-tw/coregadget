@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
   <ModulePrefs
-      title="校園生活資訊" popupURL="https://sites.google.com/a/emba.ntu.edu.tw/student/xiao-yuan-sheng-huo-xiang-guan-zi-xun">
+      title="校園生活資訊" popupURL="https://sites.google.com/emba.ntu.edu.tw/info">
     <Icon>src/icon.png</Icon>
   </ModulePrefs>
 </Module>
