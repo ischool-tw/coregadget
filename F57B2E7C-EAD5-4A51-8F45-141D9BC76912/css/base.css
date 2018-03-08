@@ -1,0 +1,367 @@
+/*--- bootstrap ---*/
+
+* {
+  font-family: "微軟正黑體","Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/*html, body {
+  height: 100%;
+  background: #fdfdfd;
+}*/
+
+.navbar {
+  border: 1px dashed transparent;
+}
+
+.panel, .form-control, .modal-content, .nav-pills>li>a, .btn, .input-group-addon {
+  border-radius: 2px;
+}
+
+.panel, .nav-pills>li>a {
+  border: 1px solid #eee;
+}
+
+.nav-stacked>li+li {
+  margin-top: -1px;
+}
+
+.nav-pills>li.active>a, .nav-pills>li.active>a:hover, .nav-pills>li.active>a:focus {
+  color: #08c;
+  background: #f3f5f7;
+}
+
+/*.btn-default {
+  background: #f5f5f5;
+}
+*/
+hr {
+  border-top: none;
+}
+
+@media (min-width: 768px) {
+  .navbar {
+    border-radius: 0;
+  }
+}
+
+/*--- share ---*/
+
+*:hover {
+  -o-transition: background .50s ease-out;
+    -webkit-transition: background .50s ease-out;
+    -moz-transition: background .50s ease-out;
+    transition:  background .50s ease-out;
+}
+
+/* 固定寬度 */
+body {
+  max-width: 1024px;
+  margin: 0 auto;
+  background:url(images/page-bg.gif);
+}
+/* 基礎框架 */
+.container-fluid {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+/* 基礎2欄框架 */
+#container-nav,
+#container-main {
+  overflow: hidden;
+}
+#container-nav:hover,
+#container-main:hover {
+  overflow: auto;
+}
+/* well */
+.well {
+  background: #F8F8F8;
+}
+/* 深色的well */
+.my-well-deepcolor {
+  background-color: #f0ffee;
+}
+/* 次項標題 */
+.my-label-title {
+  color: #336600;
+}
+/* HR */
+.my-hr {
+  height: 1px;
+  margin: 8px 1px;
+  overflow: hidden;
+  background-color: #E5E5E5;
+  border-bottom: 1px solid white;
+}
+/* 特殊的well */
+.my-well {
+  background: #F8F8F8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -moz-box-shadow: 1px 1px 3px 1px rgba(186, 186, 186, 0.4);
+  -webkit-box-shadow: 1px 1px 3px 1px rgba(186, 186, 186, 0.4);
+  box-shadow: 1px 1px 3px 1px rgba(186, 186, 186, 0.4);
+  padding: 10px 20px;
+  border: 2px solid white;
+  margin: 2px 2px 20px;
+}
+/*自動完成*/
+.my-roster-search-widget {
+  padding-bottom: 5px;
+}
+.my-roster-search-widget .my-entry-search-div {
+  position: relative;
+  padding: 0 0 2px;
+  width: 100%;
+}
+.my-roster-search-widget .my-entry-search-hint {
+  position: absolute;
+  top: 9px;
+  left: 9px;
+}
+.my-roster-search-widget .my-entry-search {
+  position: static;
+  width: 100%;
+  height: 36px;
+  padding: 4px 8px 4px 25px;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 0;
+  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+/* 一般搜尋 */
+.my-search-input {
+  height: 36px;
+  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+/* 學生列表 */
+.my-student-list-widget .accordion-heading {
+  letter-spacing: 2px;
+  background: #eeeeee;
+  /* Old browsers */
+
+  background: -moz-linear-gradient(top, #eeeeee 0%, #cccccc 100%);
+  /* FF3.6+ */
+
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #eeeeee), color-stop(100%, #cccccc));
+  /* Chrome,Safari4+ */
+
+  background: -webkit-linear-gradient(top, #eeeeee 0%, #cccccc 100%);
+  /* Chrome10+,Safari5.1+ */
+
+  background: -o-linear-gradient(top, #eeeeee 0%, #cccccc 100%);
+  /* Opera 11.10+ */
+
+  background: -ms-linear-gradient(top, #eeeeee 0%, #cccccc 100%);
+  /* IE10+ */
+
+  background: linear-gradient(to bottom, #eeeeee 0%, #cccccc 100%);
+  /* W3C */
+
+  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#eeeeee', endColorstr='#cccccc', GradientType=0);
+  /* IE6-9 */
+
+}
+.my-student-list-widget .accordion-heading i {
+  margin-right: 3px;
+}
+.my-student-list-widget .nav {
+  margin-bottom: 2px;
+}
+.my-student-list-widget .accordion {
+  height: 530px;
+  margin-bottom: 0px;
+  overflow: hidden;
+}
+.my-student-list-widget .accordion:hover {
+  overflow: auto;
+}
+.my-student-list-widget .accordion i {
+  margin-top: 2px;
+}
+.my-student-list-widget .accordion .accordion-inner {
+  padding: 1px 3px;
+}
+.my-student-list-widget .accordion .my-seat-no {
+  font-size: 16px;
+  text-align: center;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  padding: 4px 3px 1px;
+}
+/* 選擇學年度學期 */
+.my-schoolyear-semester-widget {
+  padding: 9px 0;
+  background-color: #ffffff;
+}
+/* 自訂表格，無 hover */
+.my-table {
+  width: 100%;
+  margin-bottom: 18px;
+}
+.my-table th,
+.my-table td {
+  padding: 8px;
+  line-height: 18px;
+  text-align: left;
+  vertical-align: top;
+  border-top: 1px solid #dddddd;
+}
+.my-table th {
+  font-weight: bold;
+}
+.my-table thead th {
+  vertical-align: bottom;
+}
+.my-table caption + thead tr:first-child th,
+.my-table caption + thead tr:first-child td,
+.my-table colgroup + thead tr:first-child th,
+.my-table colgroup + thead tr:first-child td,
+.my-table thead:first-child tr:first-child th,
+.my-table thead:first-child tr:first-child td {
+  border-top: 0;
+}
+.my-table tbody + tbody {
+  border-top: 2px solid #dddddd;
+}
+.my-table-condensed th,
+.my-table-condensed td {
+  padding: 4px 5px;
+}
+.my-table-bordered {
+  border: 1px solid #dddddd;
+  border-collapse: separate;
+  *border-collapse: collapsed;
+  border-left: 0;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.my-table-bordered th,
+.my-table-bordered td {
+  border-left: 1px solid #dddddd;
+}
+.my-table-bordered caption + thead tr:first-child th,
+.my-table-bordered caption + tbody tr:first-child th,
+.my-table-bordered caption + tbody tr:first-child td,
+.my-table-bordered colgroup + thead tr:first-child th,
+.my-table-bordered colgroup + tbody tr:first-child th,
+.my-table-bordered colgroup + tbody tr:first-child td,
+.my-table-bordered thead:first-child tr:first-child th,
+.my-table-bordered tbody:first-child tr:first-child th,
+.my-table-bordered tbody:first-child tr:first-child td {
+  border-top: 0;
+}
+.my-table-bordered thead:first-child tr:first-child th:first-child,
+.my-table-bordered tbody:first-child tr:first-child td:first-child {
+  -webkit-border-top-left-radius: 4px;
+  border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+}
+.my-table-bordered thead:first-child tr:first-child th:last-child,
+.my-table-bordered tbody:first-child tr:first-child td:last-child {
+  -webkit-border-top-right-radius: 4px;
+  border-top-right-radius: 4px;
+  -moz-border-radius-topright: 4px;
+}
+.my-table-bordered thead:last-child tr:last-child th:first-child,
+.my-table-bordered tbody:last-child tr:last-child td:first-child {
+  -webkit-border-radius: 0 0 0 4px;
+  -moz-border-radius: 0 0 0 4px;
+  border-radius: 0 0 0 4px;
+  -webkit-border-bottom-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+}
+.my-table-bordered thead:last-child tr:last-child th:last-child,
+.my-table-bordered tbody:last-child tr:last-child td:last-child {
+  -webkit-border-bottom-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+}
+.my-table-striped tbody tr:nth-child(odd) td,
+.my-table-striped tbody tr:nth-child(odd) th {
+  background-color: #f9f9f9;
+}
+.my-well-table-striped thead td,
+.my-well-table-striped thead th,
+.my-well-table-striped tbody td,
+.my-well-table-striped tbody th {
+  background-color: #ffffff;
+}
+.my-well-table-striped tbody tr:nth-child(odd) td,
+.my-well-table-striped tbody tr:nth-child(odd) th {
+  background-color: #f9f9f9;
+}
+
+.my-page {
+  max-width:1000px;
+  margin:20px auto;
+  background:#fff;
+  padding:10px;
+  /*box-shadow:0 0 2px rgba(0, 0, 0, 0.2), 0 0 2px rgba(0, 0, 0, 0.2), 0 1px 1px rgba(0, 0, 0, .2), 3px 3px 0 white,4px 4px 0 gba(0, 0, 0, .2),6px 6px 0 white,7px 7px 0 rgba(0, 0, 0, .2);*/
+  border: 1px solid #eee;
+}
+
+.my-page h1:first-child {
+  /*font-size: 1.2rem;*/
+  font-size: 20px;
+  position: relative;
+  left: -10px;
+  border-left: 10px solid #B0CCC6;
+  border-bottom: 1px solid whiteSmoke;
+  padding: 10px 0 10px 20px;
+}
+
+.my-page h1 a {
+  color:#333;
+}
+
+.my-page h1 .caret {
+  vertical-align:middle;
+}
+
+.my-page h1 li {
+  font-size:1rem;
+}
+
+.my-table2 {
+  background:#fff;
+  border: 1px solid #CCC;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+}
+
+.my-table2 th {
+  background:#f1f1f1;
+  width:80px;
+}
+
+.table th, .table td {
+  vertical-align:middle !important;
+}
+
+.my-sure {
+  text-align: center;
+}
+
+.my-trash {
+  background:url(../img/trash.png) no-repeat;
+  width:11px;
+  height:13px;
+  display:block;
+  overflow:hidden;
+  line-height:999px;
+}
+
+table thead th {
+  background: #eee;
+  border-bottom: 1px solid #ACACAC;
+}

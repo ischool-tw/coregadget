@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs title="Gradebook" description="ESL成績輸入">
+    <Title lang="zh-TW">Gradebook</Title>
+    <Icon>icon.png</Icon>
+    <Title lang="zh-CN">Gradebook
+    </Title>
+    <Title lang="en-US">Gradebook
+    </Title>
+  </ModulePrefs>
+</Module>
