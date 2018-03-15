@@ -73,9 +73,9 @@
 
 
 <body ng-controller="MainCtrl">
-    <div ng-if="!(current && studentList && examList || haveNoCourse) " style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
-    <div ng-if="(haveNoCourse)" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">本學期沒有設定任何課程，請洽教務處行政人員</div>
-    <div id="gadget" class="my-page" ng-if="current && studentList && examList">
+    <!--<div ng-if="test" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+    <div ng-if="(haveNoCourse)" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">本學期沒有設定任何課程，請洽教務處行政人員</div>-->
+    <div id="gadget" class="my-page" ng-if="true">
         <h1 class="hidden-xs">成績管理</h1>
         <div>
             <div class="btn-group pull-right"
@@ -124,16 +124,34 @@
                 </a>
             </div>
             <div class="btn-group">
-                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{current.Course.CourseName}}&nbsp;<span class="caret"></span> </a>
+                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{currentFilterItem.currentCourseName}}&nbsp;<span class="caret"></span> </a>
                 <ul class="dropdown-menu">
-                    <li ng-repeat="course in courseList"
-                        ng-class="{active:course==current.Course}">
+                    <li ng-repeat="course in CourseList"
+                        ng-class="{active:course.CourseName==currentFilterItem.currentCourseName}">
                         <a href="javascript:;" ng-click="setCurrentCourse(course)">{{course.CourseName}}</a>
                     </li>
                 </ul>
             </div>
+            <div class="btn-group">
+                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{currentFilterItem.currentTermName}}&nbsp;<span class="caret"></span> </a>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="term in TermList"
+                        ng-class="{active:term==currentFilterItem.currentTermName}">
+                        <a href="javascript:;" ng-click="setCurrentTerm(term)">{{term.TermName}}</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{currentFilterItem.currentSubjectName}}&nbsp;<span class="caret"></span> </a>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="subject in SubjectList"
+                        ng-class="{active:subject==currentFilterItem.currentSubjectName}">
+                        <a href="javascript:;" ng-click="setCurrentSubject(subject)">{{subject.SubjectName}}</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div ng-if="studentList" class="hidden-xs" style="margin-top:10px;">
+        <div ng-if="test" class="hidden-xs" style="margin-top:10px;">
             <div style="position:relative;float:right;width:260px;"  >
                 <div data-offset-top="145"  bs-affix>
                     <!-- 成績輸入 -->
@@ -389,61 +407,39 @@
                                 rowspan="2">
                                 學生
                             </th>
-                            <th ng-repeat="exam in examList | filter: filterPermission"
+                            <th ng-repeat="Assessment in AssessmentList | filter: filterPermission"
                                 class="text-center"
                                 ng-if="!exam.Group || exam.SubVisible"
                                 style="{{exam.Group?'padding: 8px 2px;border: none':'padding: 8px 2px;'}}"
                                 rowspan="{{exam.Group?1:2}}">
-                                <span ng-if="!exam.Group"
-                                      style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
-                                    {{exam.Name}}
-                                </span>
-                                <span ng-if="exam.Group"></span>                                
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{Assessment.AssessmentName}}
+                                </span>                                                              
                             </th>                            
-                        </tr>
-                        <tr>
-                            <th ng-repeat="exam in examList | filter: filterPermission"
-                                ng-if="exam.Group&& exam.SubVisible"
-                                class="text-center"
-                                style="padding: 8px 2px;">
-                                <h6 style="max-height:40px;display:inline-block;overflow:hidden;text-overflow:ellipsis;margin: 0px;">
-                                    {{exam.SubName}}
-                                </h6>
-                            </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="stuRec in studentList"
+                        <tr ng-repeat="stuRec in StudentList"
                             ng-class="{'warning':stuRec.StudentID==current.Student.StudentID}"
                             style="cursor:pointer;">
                             <td class="text-left"
                                 ng-click="setCurrent(stuRec, current.Exam, true, true)">
-                                <span ng-if="stuRec.SeatNo"
-                                      style="min-width:24px;display:inline-block;">{{stuRec.SeatNo}}.&nbsp;</span>
-                                <span>{{stuRec.StudentName}}</span>
+                                <span ng-if="stuRec.StudentNumber"
+                                      style="min-width:24px;display:inline-block;">{{stuRec.StudentNumber}}.&nbsp;</span>
+                                <span>{{stuRec.StudentEnglishName}}</span>
                             </td>
-                            <td ng-repeat="exam in examList | filter: filterPermission"
+                            <td ng-repeat="Assessment in AssessmentList | filter: filterPermission"
                                 class="text-center"
-                                style="position:relative;"
-                                ng-if="!exam.Group || exam.SubVisible"
+                                style="position:relative;"                                
                                 ng-click="setCurrent(stuRec, exam, true, true)">
-                                <div ng-if="!checkOneCell(stuRec, 'Exam'+exam.ExamID)"
+                                <!--<div ng-if="!checkOneCell(stuRec, 'Exam'+exam.ExamID)"
                                      ng-attr-title="{{stuRec['Exam'+exam.ExamID+'Origin']?'原值為：'+stuRec['Exam'+exam.ExamID+'Origin']:''}}"
                                      style="display:inline-block;background-color:red;position:absolute;left:3px;top:3px;width:5px;height:6px;border-radius:5px;">
-                                </div>
-                                <h6 ng-if="exam.Group" style="margin:0px;display:inline-block;">
-                                    <small>
-                                        <span style="overflow:hidden;width:100%;display:inline-block;white-space:nowrap">
-                                            {{stuRec['Exam'+exam.ExamID]}}
-                                        </span>
-                                    </small>
-                                </h6>
-                                <span ng-if="!exam.Group"
-                                      ng-class="{'text-danger':stuRec['Exam'+exam.ExamID] < 60}"
-                                      style="overflow:hidden;width:100%;display:inline-block;white-space:nowrap"
-                                      >
-                                    {{stuRec['Exam'+exam.ExamID]}}
-                                </span>
+                                </div>-->
+                                <span ng-class="{'text-danger':stuRec[stuRec.StudentID+'_'+currentFilterItem.currentTermName+'_'+currentFilterItem.currentSubjectName+'_'+Assessment.AssessmentName+'_'] < 60}"
+                                      style="overflow:hidden;width:100%;display:inline-block;white-space:nowrap">
+                                    {{stuRec[stuRec.StudentID+'_'+currentFilterItem.currentTermName+'_'+currentFilterItem.currentSubjectName+'_'+Assessment.AssessmentName+'_']}}                                                                        
+                                </span>                              
                             </td>
                         </tr>
                     </tbody>
