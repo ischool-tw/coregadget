@@ -15,10 +15,10 @@
                 //account: 'teacher01.whsh@1campus.net',
                 //account: 'teacher02.whsh@1campus.net',
                 //account: 'teacher03.whsh@1campus.net',
-                account: 'student02.whsh',
                 //account: 'student03.whsh@1campus.net',
+                account: 'student05.whsh@1campus.net',
 
-                password: 1234//window.prompt('password:')
+                password: window.prompt('password:')
             }
         });
     </script>
@@ -202,7 +202,7 @@
          class="my-switch "
          ng-class="{'my-switch-detial':CurrentView}">
         <div class="my-list">
-            <div style="height:100%;padding-top:50px; display:flex ; flex-direction:column;" >
+            <div style="height:100%;padding-top:50px; display:flex ; flex-direction:column;">
                 <nav class="navbar navbar-default"
                      style="position: absolute; margin-top: -50px; margin-bottom: 0px; z-index: 1; left: 0px; right: 0px;">
                     <div style="padding-left:10px;padding-right:10px;">
@@ -223,12 +223,26 @@
                         </div>
                     </div>
                 </nav>
-                <div style="margin:8px;">
-                    <span style="display:inline-block; margin-top: 16px">{{OpenTime}}</span>
-                    <span style="display:inline-block; margin-top: 16px">{{StageMode}}</span>
+                <div style="margin:8px;"
+                     ng-if="OpenTime || StageMode">
+                    <span ng-if="OpenTime"
+                          style="display:inline-block; margin-top: 16px">{{OpenTime}}</span>
+                    <span ng-if="StageMode"
+                          style="display:inline-block; margin-top: 16px">{{StageMode}}</span>
                 </div>
-                <div style="margin:8px;">
-                    <a href="javascript:void(0);"  ng-if="Stage!=3 && StageMode =='模式:志願序'" ng-click="SetCurrentView('Choose_Club')">
+                <div style="margin:8px;margin-top: 16px" 
+                     ng-if="student.ClubID">
+                    <span>已選社團：</span>
+                    <br />
+                    <strong style="margin-left:5px;">
+                        <span>{{student.ClubName}}</span>
+                        <span class="fa fa-check" aria-hidden="true" style="color:green;"> </span>
+                        <span ng-if="ClubRec.ClubID== student.ClubID && Stage==3 && StageMode =='目前身分為鎖社狀態，不開放選社'" class="fa fa-lock" aria-hidden="true" style=""></span>
+                    </strong>
+                </div>
+                <div style="margin:8px;" 
+                     ng-if="Stage!=3 && StageMode =='模式:志願序'">
+                    <a href="javascript:void(0);" ng-click="SetCurrentView('Choose_Club')">
                         <strong>選社志願表 <span class="fa fa-list-alt" aria-hidden="true"> </span></strong>
                     </a>
                 </div>
@@ -527,10 +541,7 @@
                                         <span>性別：</span>
                                         <span>{{CurrentClub_info.GenderRestrict}}</span>
                                     </div>
-                                    <div class="col-xs-12  col-sm-4" style="word-wrap:break-word; display:inline-block">
-                                        <span>科別：</span>
-                                        <span>{{CurrentClub_info.DeptRestrict_detail}}</span>
-                                    </div>
+                                    <div class="col-xs-12"></div>
                                     <div class="col-xs-12  col-sm-4">
                                         <span>一年級名額：</span>
                                         <span>{{CurrentClub_info.Grade1Limit}}</span>
@@ -543,6 +554,10 @@
                                         <span>三年級名額：</span>
                                         <span>{{CurrentClub_info.Grade3Limit}}</span>
                                     </div>
+                                    <div class="col-xs-12" style="word-wrap:break-word; display:inline-block">
+                                        <span>科別：</span>
+                                        <span>{{CurrentClub_info.DeptRestrict_detail}}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -552,15 +567,18 @@
                                     <div class="col-xs-12 col-sm-12">
                                         <strong>社團簡介</strong>
                                     </div>
-                                    <div class="col-xs-12 col-sm-12" style="word-wrap:break-word; display:inline-block">
-                                        <span>{{CurrentClub_info.About}}</span>
-                                    </div>
+                                    <div class="col-xs-12 col-sm-12" style="word-wrap:break-word;white-space:pre-line; display:inline-block;">{{CurrentClub_info.About}}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!--Club_Detail End-->
+
+                <div ng-if="student&&!(CurrentClub&&CurrentView=='Club_Detail')&&!(CurrentView=='Choose_Club')"
+                     style="height: 100%; overflow: auto;">
+                    <div ng-if="!CurrentClub_info" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">請選擇...</div>
+                </div>
             </div>
         </div>
     </div>

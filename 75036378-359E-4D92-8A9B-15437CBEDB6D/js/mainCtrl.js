@@ -382,53 +382,31 @@
             if ($scope.student.ClubID == CurrentClub_info.ClubID) {
                 IsNewClub = false;
             }
-            if ($scope.student.ClubID) {
-                if (confirm("目前已經加入:" + $scope.student.ClubName + "，確定要轉加入:" + CurrentClub_info.ClubName + "嗎? 將會刪除原本社團選社紀錄")) {
-                    if (CurrentClub_info.ClubID && IsNewClub) {
-                        gadget.getContract('ischool.universal_club_v2.student').send({
-                            service: "_.SetMyClub",
-                            body: '<Request><SCJoin><ClubID>' + CurrentClub_info.ClubID + '</ClubID></SCJoin></Request>',
-                            result: function (response, error, http) {
-                                if (error !== null) {
-                                    //alert('SetMyClub' + JSON.stringify(error));
-                                    alert('錯誤:' + error.dsaError.message);
-                                } else {
-                                    //alert("已從" + $scope.student.ClubName + "轉加入" + CurrentClub_info.ClubName + "成功");
-                                    $scope.init();
-                                }
-                            }
-                        });
-                    } else {
-                        if (!IsNewClub) {
-                            alert('本社團已加入，請勿重覆加入');
-                        }
-                        else {
-                            alert('加入社團的資料不正確，請重新操作!' + JSON.stringify(error));
-                        }
-                    }
-                }
-            }
-            else {
-                if (CurrentClub_info.ClubID && IsNewClub) {
+            if (CurrentClub_info.ClubID && IsNewClub) {
+                if (!!!$scope.student.ClubID || confirm("目前已經加入:" + $scope.student.ClubName + "，確定要轉加入:" + CurrentClub_info.ClubName + "嗎? 將會刪除原本社團選社紀錄")) {
                     gadget.getContract('ischool.universal_club_v2.student').send({
                         service: "_.SetMyClub",
                         body: '<Request><SCJoin><ClubID>' + CurrentClub_info.ClubID + '</ClubID></SCJoin></Request>',
                         result: function (response, error, http) {
                             if (error !== null) {
-                                alert('SetMyClub' + JSON.stringify(error));
+                                //alert('SetMyClub' + JSON.stringify(error));
+                                alert('無法加入社團!!!\n錯誤:' + error.dsaError.message);
                             } else {
-                                //alert("加入" + CurrentClub_info.ClubName + "成功");
+                                //alert("已從" + $scope.student.ClubName + "轉加入" + CurrentClub_info.ClubName + "成功");
+                                if (response.status != 'success') {
+                                    alert("無法加入社團!!!\n原因："+response.message);
+                                }
                                 $scope.init();
                             }
                         }
                     });
-                } else {
-                    if (!IsNewClub) {
-                        alert('本社團已加入，請勿重覆加入');
-                    }
-                    else {
-                        alert('加入社團的資料不正確，請重新操作!' + JSON.stringify(error));
-                    }
+                }
+            } else {
+                if (!IsNewClub) {
+                    alert('本社團已加入，請勿重覆加入');
+                }
+                else {
+                    alert('加入社團的資料不正確，請重新操作!' + JSON.stringify(error));
                 }
             }
         }
