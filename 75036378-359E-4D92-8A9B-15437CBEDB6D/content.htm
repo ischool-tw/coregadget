@@ -230,7 +230,7 @@
                     <span ng-if="StageMode"
                           style="display:inline-block; margin-top: 16px">{{StageMode}}</span>
                 </div>
-                <div style="margin:8px;margin-top: 16px" 
+                <div style="margin:8px;margin-top: 16px"
                      ng-if="student.ClubID">
                     <span>已選社團：</span>
                     <br />
@@ -240,7 +240,7 @@
                         <span ng-if="ClubRec.ClubID== student.ClubID && Stage==3 && StageMode =='目前身分為鎖社狀態，不開放選社'" class="fa fa-lock" aria-hidden="true" style=""></span>
                     </strong>
                 </div>
-                <div style="margin:8px;" 
+                <div style="margin:8px;"
                      ng-if="Stage!=3 && StageMode =='模式:志願序'">
                     <a href="javascript:void(0);" ng-click="SetCurrentView('Choose_Club')">
                         <strong>選社志願表 <span class="fa fa-list-alt" aria-hidden="true"> </span></strong>
@@ -254,7 +254,8 @@
                     <small class="fa fa-lock" aria-hidden="true" style="margin-left:5px;">已鎖定</small>
                 </div>
                 <div style="height: 100%; overflow: auto; flex:1">
-                    <table class="table table-hover table-striped">
+                    <table ng-if="FilterClub"
+                           class="table table-hover table-striped">
                         <tr ng-repeat="ClubRec in FilterClub" ng-click="BeforeSetCurrent(ClubRec); " ng-class="{active:ClubRec==CurrentClub}">
                             <td class="text-left ">
                                 {{ClubRec.ClubName}}
@@ -263,6 +264,14 @@
                                 <span ng-if="ClubRec.ClubID== student.ClubID && Stage==3 && StageMode =='目前身分為鎖社狀態，不開放選社' " class="fa fa-lock" aria-hidden="true"> </span>
                             </td>
                             <td class="text-right">{{ClubRec.TotalCount}}/{{ClubRec.Limit}}</td>
+                        </tr>
+                    </table>
+                    <table ng-if="!FilterClub"
+                           class="table table-hover table-striped">
+                        <tr>
+                            <td class="text-center text-muted" style="padding: 100px 0px;">
+                                沒有可選社團
+                            </td>
                         </tr>
                     </table>
                 </div>
