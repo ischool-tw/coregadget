@@ -73,9 +73,18 @@
         body {
             max-width: 1280px;
         }
+
         .disabled {
-            pointer-events: none;                        
-            opacity:0.6;            
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        tr .visible-tr-hover {
+            display: none;
+        }
+
+        tr:hover .visible-tr-hover {
+            display: inherit;
         }
     </style>
 </head>
@@ -85,7 +94,10 @@
     <!--<div ng-if="test" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
     <div ng-if="(haveNoCourse)" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">本學期沒有設定任何課程，請洽教務處行政人員</div>-->
     <div id="gadget" class="my-page" ng-if="true">
-        <h1 class="hidden-xs"><a href="javascript:void(0)"  style="text-decoration:none;" ng-click="refresh()">GradeBook</a></h1>
+        <h1 class="hidden-xs">
+            <a href="javascript:void(0)"
+               style="text-decoration:none;">GradeBook</a>
+        </h1>
         <div>
             <div class="btn-group pull-right"
                  ng-init="getProcess()">
@@ -109,7 +121,7 @@
                                 {{item.Name}}
                             </a>
                             <a ng-if="item.Type=='Function_Effort'"
-                               href="javascript:;" 
+                               href="javascript:;"
                                style="font-size:smaller; padding-left:40px"
                                ng-click="(item.Type!='Function_Effort'||item.Disabled)?'':item.Fn()">
                                 {{item.Name}}
@@ -117,7 +129,7 @@
                         </li>
                     </ul>
                 </div>
-                <a ng-if="current.currentAssessment.AssessmentName!='All' && current.currentAssessment.AssessmentName!=''" ng-click="setSubItemConfig()" class="btn btn-default" >
+                <a ng-if="current.currentAssessment.AssessmentName!='All' && current.currentAssessment.AssessmentName!=''" ng-click="setSubItemConfig()" class="btn btn-default">
                     <i class="fa fa-cog"></i>
                     Config
                 </a>
@@ -131,14 +143,12 @@
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li ng-repeat="Assessment in current.currentAssessmentList">                            
-                        <span >
+                    <li ng-repeat="Assessment in current.currentAssessmentList">
+                        <span>
                             {{Assessment.AssessmentName}}
                         </span>
-                        <a 
-                           href="javascript:;"
-                           style="font-size:smaller; padding-left:40px"
-                         >
+                        <a href="javascript:;"
+                           style="font-size:smaller; padding-left:40px">
                             Import
                         </a>
                         <a ng-if="Assessment.AllowCostumSubItems"
@@ -146,26 +156,6 @@
                            style="font-size:smaller; padding-left:40px">
                             Calculation
                         </a>
-
-                        <!--<span ng-if="item.Type=='Header'">
-                            {{item.Name}}
-                        </span>
-                        <!--<span ng-if="item.Type=='Header'">
-                            {{item.Name}}
-                        </span>
-                        <!--<span ng-if="item.Type=='Header'">
-                            {{item.Name}}
-                        </span>
-                        <a ng-if="item.Type=='Function'"
-                           href="javascript:;" ng-click="(item.Type!='Function'||item.Disabled)?'':item.Fn()">
-                            {{item.Name}}
-                        </a>
-                        <a ng-if="item.Type=='Function_Effort'"
-                           href="javascript:;"
-                           style="font-size:smaller; padding-left:40px"
-                           ng-click="(item.Type!='Function_Effort'||item.Disabled)?'':item.Fn()">
-                            {{item.Name}}
-                        </a>-->
                     </li>
                 </ul>
                 <a ng-if="current.currentAssessment.AssessmentName=='All' " ng-click="saveAll()" class="btn btn-default" ng-class="{'btn-danger':!checkAllTable()}">
@@ -214,103 +204,133 @@
                 <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{current.currentAssessment.AssessmentName}}&nbsp;<span class="caret"></span> </a>
                 <ul class="dropdown-menu">
                     <li ng-repeat="assessment in dropdownAssessmentList"
-                        ng-class="{'disabled': assessment.AllowCostumSubItems == false,active:assessment.AssessmentName==current.currentAssessment.AssessmentName}"
-                        >
-                        <a href="javascript:;"  ng-click="setCurrentAssessmentName(assessment);setSubItemList(assessment)">{{assessment.AssessmentName}}</a>
+                        ng-class="{'disabled': assessment.AllowCostumSubItems == false,active:assessment.AssessmentName==current.currentAssessment.AssessmentName}">
+                        <a href="javascript:;" ng-click="setCurrentAssessment(assessment);setSubItemList(assessment)">{{assessment.AssessmentName}}</a>
                     </li>
                 </ul>
             </div>
-            <div class="btn-group">
-                <a  ng-click="Print()" class="btn btn-default" >
-                    <i class="fa fa-print"></i>
-                    Print
-                </a>
-            </div>            
         </div>
-        <div ng-if="test" class="hidden-xs" style="margin-top:10px;">
-            <div style="position:relative;float:right;width:260px;"  >
-                <div data-offset-top="145"  bs-affix>
-                    
-                    <!-- 成績輸入 -->
+        <div class="hidden-xs" style="margin-top:10px;">
+            <div style="position:relative;float:right;width:260px;">
+                <div data-offset-top="145"
+                     bs-affix>
                     <table class="table table-bordered table-striped"
                            style="width:260px;">
+                        <!-- 切換學生 -->
                         <thead>
                             <tr>
-                                <th colspan="2">ScoreInput</th>
-                            </tr>
-                            <tr>
-                                <th colspan="2"  >
-                                    <img style="height:150px;width:150px"  src=" data:image/png;base64,{{current.Student.StudentPhotoBase64Code}}" />
-                                </th>
-                            </tr>   
-                            <tr>
-                                <th colspan="2" style="position:relative;">                                    
-                                    <div style="margin-left:35px;white-space: nowrap;overflow: hidden;">
-                                        <span>{{current.Student.StudentEnglishName}}</span>   
+                                <th colspan="2">
+                                    <img class="hidden-xs"
+                                         style="height:120px;width:120px;margin:8px auto;display:block"
+                                         src="data:image/png;base64,{{current.Student.StudentPhotoBase64Code}}" />
+
+                                    <div style="white-space: nowrap;overflow: hidden;">
+                                        <span>{{current.Student.StudentEnglishName}}</span>
                                     </div>
-                                    <div 
-                                         class="btn-group btn-group-sm">
-                                        <a class="btn btn-default"
-                                           ng-click="goPrev()">
-                                            &nbsp;&nbsp;&nbsp; << &nbsp;&nbsp;&nbsp;
-                                        </a>
-                                        <a class="btn btn-default"
-                                           ng-click="goNext()">
-                                            &nbsp;&nbsp;&nbsp; >> &nbsp;&nbsp;&nbsp;
-                                        </a>
-                                        <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                        </a>
+                                    <div class="btn-group btn-group-xs pull-right">
                                         <ul class="dropdown-menu">
                                             <li ng-repeat="stuRec in StudentList">
                                                 <a href="javascript:;" ng-click="setCurrent(stuRec, current.Exam, true, true)">{{stuRec.StudentNumber}}     {{stuRec.StudentEnglishName}}  </a>
                                             </li>
                                         </ul>
+                                        <a class="btn btn-default"
+                                           ng-click="goPrev()">
+                                            <<
+                                        </a>
+                                        <a class="btn btn-default"
+                                           ng-click="goNext()">
+                                            >>
+                                        </a>
+                                        <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                        </a>
                                     </div>
-                                    <small class="text-muted" style="position:absolute;left:0px;top:-3px;">{{current.Student.StudentNumber}}</small>                                    
+                                    <div class="pull-left">
+                                        <span class="text-muted">{{current.Student.StudentNumber}}</span>
+                                    </div>
                                 </th>
                             </tr>
-                        </thead>
-                        <tbody>
+                        </thead>                       
+                        <!-- 成績輸入 -->
+                        <tbody ng-if="current.currentAssessment.AssessmentName=='All'">
                             <tr ng-repeat="Assessment in current.currentSubItemList | filter: filterPermission"
-                                    class="text-center"
-                                    ng-if="current.currentAssessment.AssessmentName=='All' ">
-                                <td>
-                                    <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
-                                        {{Assessment.AssessmentName}} {{Assessment.AssessmentRatio}} %
-                                    </span>
+                                class="text-center">
+                                <td ng-if="Assessment.InputType=='Score'">
+                                    <div class="text-left"
+                                         style="width:180px;max-height:60px;overflow:hidden;text-overflow:ellipsis;">
+                                        {{Assessment.AssessmentName}}
+                                    </div>
                                 </td>
-                                <td class="text-center"
-                                    style="position:relative; padding:0px;width:200px;">
+                                <td ng-if="Assessment.InputType=='Score'"
+                                    class="text-center"
+                                    style="position:relative; padding:0px;">
                                     <div style="white-space: nowrap;overflow: hidden;">
                                         <input ng-model="current.Student[current.Student.StudentID+'_'+current.currentTerm.TermName+'_'+current.currentSubject.SubjectName+'_'+Assessment.AssessmentName+'_']"
                                                style="border: 0"
                                                type="text"
                                                class="form-control pg-grade-textbox"
-                                               select-on-click />                                        
+                                               select-on-click />
                                     </div>
                                 </td>
+                                <td ng-if="Assessment.InputType=='Indicator'"
+                                    style="position:relative;">
+                                    <div class="text-left"
+                                         style="width:180px;max-height:60px;overflow:hidden;text-overflow:ellipsis;">
+                                        {{Assessment.AssessmentName}}
+                                    </div>
+                                    <div style="position:absolute;right:2px;bottom:2px;bottom:-12px;z-index:1;"
+                                         class="btn-group btn-group-xs visible-tr-hover">
+                                        <a 
+                                            ng-repeat="val in Assessment.InputItem"
+                                            class="btn btn-default"
+                                            ng-class="{'btn-danger':current.Student[current.Student.StudentID+'_'+current.currentTerm.TermName+'_'+current.currentSubject.SubjectName+'_'+Assessment.AssessmentName+'_'] == val}"
+                                            ng-click="setIndicatorVal(current.Student, current.Student.StudentID+'_'+current.currentTerm.TermName+'_'+current.currentSubject.SubjectName+'_'+Assessment.AssessmentName+'_', val)">
+                                            {{val}}
+                                        </a>
+                                    </div>
+                                </td>
+                                <td ng-if="Assessment.InputType=='Indicator'"
+                                    class="text-center"
+                                    style="position:relative; padding:0px;">
+                                    <div style="white-space: nowrap;overflow: hidden;">
+                                        <input ng-model="current.Student[current.Student.StudentID+'_'+current.currentTerm.TermName+'_'+current.currentSubject.SubjectName+'_'+Assessment.AssessmentName+'_']"
+                                               style="border: 0"
+                                               type="text"
+                                               class="form-control pg-grade-textbox"
+                                               select-on-click />
+                                    </div>
+                                </td>
+                                <td ng-if="Assessment.InputType=='Text'"
+                                    colspan="2">
+                                    <div class="text-left"
+                                         style="width:180px;max-height:60px;overflow:hidden;text-overflow:ellipsis;">
+                                        {{Assessment.AssessmentName}}
+                                    </div>
+                                    <textarea ng-model="current.Student[current.Student.StudentID+'_'+current.currentTerm.TermName+'_'+current.currentSubject.SubjectName+'_'+Assessment.AssessmentName+'_']"
+                                              style="min-height: 120px;"
+                                              type="text"
+                                              class="form-control pg-grade-textbox"
+                                              select-on-click></textarea>
+                                </td>
                             </tr>
-                            <tr class="text-left"
-                                ng-if="current.currentAssessment.AssessmentName!='All' && current.currentAssessment.AssessmentName!=''"
-                                >
+                        </tbody>
+                        <tbody ng-if="current.currentAssessment.AssessmentName!='All'&&current.currentAssessment.AssessmentName!=''">
+                            <tr class="text-left">
                                 <td colspan="2">
                                     <div class="btn-group btn-block">
                                         <a href="javascript:void(0)"
                                            class="btn btn-link btn-block dropdown-toggle"
                                            data-toggle="dropdown"
-                                           style="padding:0; color:#333; text-align:left;">                                            
-                                            <i 
-                                               style="min-width: 14px;"
+                                           style="padding:0; color:#333; text-align:left;">
+                                            <i style="min-width: 14px;"
                                                class="fa fa-edit"></i>
                                             {{current.currentSubItem? current.currentSubItem.SubItemName:'Choose'}}
                                             <span class="caret"></span>
                                         </a>
                                         <ul class="dropdown-menu" style="width:100%;">
-                                            <li ng-repeat="Assessment in current.currentSubItemList" >
+                                            <li ng-repeat="Assessment in current.currentSubItemList">
                                                 <a href="javascript:;" ng-click="setCurrentsubItem(Assessment)">
-                                                    <i 
-                                                       style="min-width: 14px;"
+                                                    <i style="min-width: 14px;"
                                                        class="fa fa-edit"></i>
                                                     {{Assessment.SubItemName}}
                                                 </a>
@@ -324,63 +344,47 @@
                                     style="position:relative; padding:0px;width:200px;">
                                     <div style="white-space: nowrap;overflow: hidden;">
                                         <input ng-model="current.Student[current.Student.StudentID+'_'+current.currentTerm.TermName+'_'+current.currentSubject.SubjectName+'_'+current.currentAssessment.AssessmentName+'_'+current.currentSubItem.SubItemName]"
+                                               ng-keydown="enterGrade($event)"
+                                               placeholder="Press Enter"
                                                style="border: 0"
                                                type="text"
                                                class="form-control pg-grade-textbox"
-                                               select-on-click />                                        
-                                    </div>                                    
+                                               select-on-click />
+                                    </div>
                                 </td>
                             </tr>
-                            <!--<tr ng-repeat="Assessment in current.currentSubItemList | filter: filterPermission"
-                                class="text-center"
-                                ng-if="current.currentAssessment.AssessmentName!='All' && current.currentAssessment.AssessmentName!=''">
-                                <td>
-                                    <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
-                                        {{Assessment.SubItemName}} {{Assessment.CostumSubItemRatio}} %
-                                    </span>
-                                </td>
-                                <td>
-                                    <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
-                                        99
-                                    </span>
-                                </td>
-                            </tr>-->
                         </tbody>
                     </table>
-
-
                 </div>
-                
             </div>
-            
             <div style="margin-right:270px;">
                 <table class="table table-bordered table-striped table-hover text-center"
                        style="table-layout:fixed;">
                     <thead>
                         <tr>
                             <th class="text-center"
-                                style="padding: 8px 2px;width: 210px;"
+                                style="padding: 8px 2px;width: 170px;"
                                 rowspan="2">
                                 Student
                             </th>
-                            <th ng-repeat="Assessment in current.currentSubItemList | filter: filterPermission"
+                            <th ng-if="current.currentAssessment.AssessmentName=='All' "
+                                ng-repeat="Assessment in current.currentSubItemList | filter: filterPermission"
                                 class="text-center"
-                                ng-if="current.currentAssessment.AssessmentName=='All' "
                                 style="{{exam.Group?'padding: 8px 2px;border: none':'padding: 8px 2px;'}}"
                                 rowspan="{{exam.Group?1:2}}">
                                 <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
                                     {{Assessment.AssessmentName}}
-                                </span>                                                              
-                            </th>                            
-                            <th ng-repeat="Assessment in current.currentSubItemList | filter: filterPermission"
+                                </span>
+                            </th>
+                            <th ng-if="current.currentAssessment.AssessmentName!='All' && current.currentAssessment.AssessmentName!=''"
+                                ng-repeat="Assessment in current.currentSubItemList | filter: filterPermission"
                                 class="text-center"
-                                ng-if="current.currentAssessment.AssessmentName!='All' && current.currentAssessment.AssessmentName!=''"
                                 style="{{exam.Group?'padding: 8px 2px;border: none':'padding: 8px 2px;'}}"
                                 rowspan="{{exam.Group?1:2}}">
                                 <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
                                     {{Assessment.SubItemName}}
                                 </span>
-                            </th> 
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -389,41 +393,30 @@
                             style="cursor:pointer;">
                             <td class="text-left"
                                 ng-click="setCurrent(stuRec, current.Exam, true, true)"
-                                style="position:relative;">
-                                <!--<span ng-if="stuRec.StudentNumber"
-                                      style="min-width:24px;display:inline-block;">{{stuRec.StudentNumber}}.&nbsp;</span>-->
-                                <div style="margin-left:35px;white-space: nowrap;overflow: hidden;">
+                                style="position:relative;overflow:hidden;text-overflow:ellipsis;">
+                                <div style="white-space: nowrap;overflow: hidden;">
                                     <span>{{stuRec.StudentEnglishName}}</span>
                                 </div>
-                                <small class="text-muted" style="position:absolute;left:0px;top:-3px;">{{stuRec.StudentNumber}}</small>
+                                <small class="text-muted" style="position:absolute;bottom:2px;right:2px;">{{stuRec.StudentNumber}}</small>
                             </td>
-                            <td ng-repeat="Assessment in current.currentSubItemList | filter: filterPermission"
+                            <td ng-if="current.currentAssessment.AssessmentName=='All' "
+                                ng-repeat="Assessment in current.currentSubItemList | filter: filterPermission"
                                 class="text-center"
-                                style="position:relative;"                                
-                                ng-click="setCurrent(stuRec, exam, true, true)"
-                                ng-if="current.currentAssessment.AssessmentName=='All' "
-                                >
-                                <!--<div ng-if="!checkOneCell(stuRec, 'Exam'+exam.ExamID)"
-                                     ng-attr-title="{{stuRec['Exam'+exam.ExamID+'Origin']?'原值為：'+stuRec['Exam'+exam.ExamID+'Origin']:''}}"
-                                     style="display:inline-block;background-color:red;position:absolute;left:3px;top:3px;width:5px;height:6px;border-radius:5px;">
-                                </div>-->
+                                style="position:relative;overflow:hidden;text-overflow:ellipsis;"
+                                ng-click="setCurrent(stuRec, exam, true, true)">
                                 <span ng-class="{'text-danger':stuRec[stuRec.StudentID+'_'+current.currentTerm.TermName+'_'+current.currentSubject.SubjectName+'_'+Assessment.AssessmentName+'_'] < 60}"
-                                      style="overflow:hidden;width:100%;display:inline-block;white-space:nowrap">
-                                    {{stuRec[stuRec.StudentID+'_'+current.currentTerm.TermName+'_'+current.currentSubject.SubjectName+'_'+Assessment.AssessmentName+'_']}}                                                                        
-                                </span>                              
+                                      style="overflow:hidden;width:100%;white-space:nowrap">
+                                    {{stuRec[stuRec.StudentID+'_'+current.currentTerm.TermName+'_'+current.currentSubject.SubjectName+'_'+Assessment.AssessmentName+'_']}}
+                                </span>
                             </td>
-                            <td ng-repeat="Assessment in current.currentSubItemList | filter: filterPermission"
+                            <td ng-if="current.currentAssessment.AssessmentName!='All'&& current.currentAssessment.AssessmentName!='' "
+                                ng-repeat="Assessment in current.currentSubItemList | filter: filterPermission"
                                 class="text-center"
-                                style="position:relative;"
-                                ng-click="setCurrent(stuRec, exam, true, true)"
-                                ng-if="current.currentAssessment.AssessmentName!='All'&& current.currentAssessment.AssessmentName!='' ">
-                                <!--<div ng-if="!checkOneCell(stuRec, 'Exam'+exam.ExamID)"
-             ng-attr-title="{{stuRec['Exam'+exam.ExamID+'Origin']?'原值為：'+stuRec['Exam'+exam.ExamID+'Origin']:''}}"
-             style="display:inline-block;background-color:red;position:absolute;left:3px;top:3px;width:5px;height:6px;border-radius:5px;">
-        </div>-->
+                                style="position:relative;overflow:hidden;text-overflow:ellipsis;"
+                                ng-click="setCurrent(stuRec, exam, true, true);setCurrentsubItem(Assessment);">
                                 <span ng-class="{'text-danger':stuRec[stuRec.StudentID+'_'+current.currentTerm.TermName+'_'+current.currentSubject.SubjectName+'_'+current.currentAssessment.AssessmentName+'_'+Assessment.SubItemName]< 60}"
-                                      style="overflow:hidden;width:100%;display:inline-block;white-space:nowrap">
-                                    {{stuRec[stuRec.StudentID+'_'+current.currentTerm.TermName+'_'+current.currentSubject.SubjectName+'_'+current.currentAssessment.AssessmentName+'_'+Assessment.SubItemName]}}                                                                        
+                                      style="overflow:hidden;width:100%;white-space:nowrap">
+                                    {{stuRec[stuRec.StudentID+'_'+current.currentTerm.TermName+'_'+current.currentSubject.SubjectName+'_'+current.currentAssessment.AssessmentName+'_'+Assessment.SubItemName]}}
                                 </span>
                             </td>
                         </tr>
@@ -438,9 +431,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <!--<h4 class="modal-title">{{importProcess.Name}}</h4>-->
-                    <h1 class="hidden-xs">GradeBook SubItem Config</h1>
-                    <h4 class="hidden-xs">{{current.currentCourse.CourseName}} /{{current.currentTerm.TermName}} / {{current.currentSubject.SubjectName}} / {{current.currentAssessment.AssessmentName}}</h4>
+                    <h4 class="modal-title
+                    ">
+                        {{importProcess.Name}}
+                    </h4>-->
+                    <h1 class="hidden-xs">
+                        Grad
+                        <h1 class="hidden-xs">GradeBook SubItem Config</h1>
+                        <h4 class="hidden-xs">{{current.currentCourse.CourseName}} /{{current.currentTerm.TermName}} / {{current.currentSubject.SubjectName}} / {{current.currentAssessment.AssessmentName}}</h4>
                 </div>
                 <div class="modal-body">
                     <table class="table table-bordered table-striped table-hover text-center"
@@ -451,25 +449,21 @@
                                     style="padding: 8px 2px;width: 210px;"
                                     rowspan="2">
                                     Name
-                                </th>                                
+                                </th>
                                 <th class="text-center"
-                                    style="padding: 8px 2px;"
-                                    >
+                                    style="padding: 8px 2px;">
                                     Date
                                 </th>
                                 <th class="text-center"
-                                    style="padding: 8px 2px;"
-                                    >
+                                    style="padding: 8px 2px;">
                                     Weight
                                 </th>
                                 <th class="text-center"
-                                    style="padding: 8px 2px;"
-                                    >
+                                    style="padding: 8px 2px;">
                                     Limit
                                 </th>
                                 <th class="text-center"
-                                    style="padding: 8px 2px;"
-                                    >
+                                    style="padding: 8px 2px;">
                                     Description
                                 </th>
                                 <th class="text-center"
@@ -479,22 +473,22 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="SubItem in current.currentSubItemList_Config"                                
+                            <tr ng-repeat="SubItem in current.currentSubItemList_Config"
                                 style="cursor:pointer;">
-                                <td class="text-center"                                    
+                                <td class="text-center"
                                     style="position:relative; padding:0px">
                                     <!--<span ng-if="stuRec.StudentNumber"
-                          style="min-width:24px;display:inline-block;">{{stuRec.StudentNumber}}.&nbsp;</span>-->
+                                    style="min-width:24px;display:inline-block;">{{stuRec.StudentNumber}}.&nbsp;</span>-->
                                     <div style="white-space: nowrap;overflow: hidden;">
-                                        <input ng-model="SubItem.SubItemName"                                               
+                                        <input ng-model="SubItem.SubItemName"
                                                type="text"
-                                               class="form-control pg-grade-textbox"                                               
+                                               class="form-control pg-grade-textbox"
                                                select-on-click />
                                         <!--<span>{{SubItem.SubItemName}}</span>-->
-                                    </div>                                    
+                                    </div>
                                 </td>
-                                <td class="text-center"                                    
-                                    style="position:relative; padding:0px">                                  
+                                <td class="text-center"
+                                    style="position:relative; padding:0px">
                                     <div style="white-space: nowrap;overflow: hidden;">
                                         <input ng-model="SubItem.Date"
                                                type="text"
@@ -538,7 +532,7 @@
                                         <a style="height:100%;width: 100%"
                                            ng-click="deleteSubItem(SubItem.SubItemName)" class="btn btn-default">
                                             <i class="fa fa-minus-square"></i>
-                                            Remove 
+                                            Remove
                                         </a>
                                     </div>
                                 </td>
@@ -557,11 +551,11 @@
                         </tbody>
                     </table>
                 </div>
-                
+
                 <div class="modal-footer">
                     <!--<button type="button" class="btn btn-default btn-sm" ng-if="!importProcess.ParseValues" data-dismiss="modal">取消</button>-->
                     <!--<button type="button" class="btn btn-primary btn-sm" ng-if="!importProcess.ParseValues" ng-click="importProcess.Parse()">解析</button>-->
-                    <a  class="btn btn-default" data-dismiss="modal">                        
+                    <a class="btn btn-default" data-dismiss="modal">
                         Cancel
                     </a>
                     <a ng-click="saveSubItemConfig()" class="btn btn-default" ng-class="{'btn-danger':!checkAllTable()}">
