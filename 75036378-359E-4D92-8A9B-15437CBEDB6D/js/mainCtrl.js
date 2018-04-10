@@ -502,17 +502,29 @@
                                 if ($scope.CurrentClub_info.Limit == "") {
                                     $scope.CurrentClub_info.Limit = "無限制";
                                 }
+                                else {
+                                    $scope.CurrentClub_info.Limit = ($scope.CurrentClub_info.TotalCount || 0) + " / " + $scope.CurrentClub_info.Limit;
+                                }
                                 if ($scope.CurrentClub_info.GenderRestrict == "") {
                                     $scope.CurrentClub_info.GenderRestrict = "無限制";
                                 }
                                 if ($scope.CurrentClub_info.Grade1Limit == "") {
                                     $scope.CurrentClub_info.Grade1Limit = "無限制";
                                 }
+                                else {
+                                    $scope.CurrentClub_info.Grade1Limit = ( $scope.CurrentClub_info.Grade1Count || 0 )+ " / " + $scope.CurrentClub_info.Grade1Limit;
+                                }
                                 if ($scope.CurrentClub_info.Grade2Limit == "") {
                                     $scope.CurrentClub_info.Grade2Limit = "無限制";
                                 }
+                                else {
+                                    $scope.CurrentClub_info.Grade2Limit = ( $scope.CurrentClub_info.Grade2Count || 0 ) + " / " + $scope.CurrentClub_info.Grade2Limit;
+                                }
                                 if ($scope.CurrentClub_info.Grade3Limit == "") {
                                     $scope.CurrentClub_info.Grade3Limit = "無限制";
+                                }
+                                else {
+                                    $scope.CurrentClub_info.Grade3Limit = ($scope.CurrentClub_info.Grade3Count || 0) + " / " + $scope.CurrentClub_info.Grade3Limit;
                                 }
                                 $scope.CurrentClub_info.DeptRestrict_detail = "";
                                 $(response.Response.ClubRecord.DeptRestrict.Department.Dept).each(function (index, item) {
@@ -684,7 +696,7 @@
                         }
                     });
 
-                    // TODO: 目前學年度學期社團資料(已過濾性別、總人數=0、科別條件，未過濾年級人數)
+                    // TODO: 目前學年度學期社團資料(已過濾性別、總人數=0、各年級人數=0、科別條件)
                     gadget.getContract('ischool.universal_club_v2.student').send({
                         service: "_.GetAllClubs",
                         body: '<Request><SchoolYear>' + SchoolYear + '</SchoolYear><Semester>' + Semester + '</Semester></Request>',
@@ -693,11 +705,6 @@
                                 alert('GetAllClubs' + JSON.stringify(error));
                             } else {
                                 $scope.$apply(function () {
-                                    $(response.Response.ClubRecord).each(function (index, item) {
-                                        item.FilterKey = item.ClubName;
-                                        dicClub[item.ClubName] = item;
-                                        dicClub_Log[item.ClubName] = item;
-                                    });
                                     $(response.Response.ClubRecord).each(function (index, item) {
                                         item.FilterKey = item.ClubName;
                                         dicClub[item.ClubName] = item;
