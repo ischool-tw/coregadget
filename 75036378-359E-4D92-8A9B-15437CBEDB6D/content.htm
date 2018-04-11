@@ -223,15 +223,15 @@
                         </div>
                     </div>
                 </nav>
-                <div style="margin:8px;"
-                     ng-if="OpenTime || StageMode">
+                <div ng-if="OpenTime || StageMode"
+                     style="margin:8px;">
                     <span ng-if="OpenTime"
                           style="display:inline-block; margin-top: 16px">{{OpenTime}}</span>
                     <span ng-if="StageMode"
                           style="display:inline-block; margin-top: 16px">{{StageMode}}</span>
                 </div>
-                <div style="margin:8px;margin-top: 16px"
-                     ng-if="student.ClubID">
+                <div ng-if="student.ClubID"
+                     style="margin:8px;margin-top: 16px">
                     <span>已選社團：</span>
                     <br />
                     <strong style="margin-left:5px;">
@@ -240,13 +240,14 @@
                         <span ng-if="ClubRec.ClubID== student.ClubID && Stage==3 && StageMode =='目前身分為鎖社狀態，不開放選社'" class="fa fa-lock" aria-hidden="true" style=""></span>
                     </strong>
                 </div>
-                <div style="margin:8px;"
-                     ng-if="Stage!=3 && StageMode =='模式:志願序'">
+                <div ng-if="Stage!=3 && StageMode =='模式:志願序'"
+                     style="margin:8px;">
                     <a href="javascript:void(0);" ng-click="SetCurrentView('Choose_Club')">
                         <strong>選社志願表 <span class="fa fa-list-alt" aria-hidden="true"> </span></strong>
                     </a>
                 </div>
-                <div style="margin:8px;">
+                <div ng-if="student"
+                     style="margin:8px;">
                     <small>圖例：</small>
                     <br />
                     <small class="fa fa-check" aria-hidden="true" style="margin-left:5px;color:green">
@@ -268,15 +269,16 @@
                     <table ng-if="FilterClub"
                            class="table table-hover table-striped">
                         <tr ng-repeat="clubRec in FilterClub" ng-click="BeforeSetCurrent(clubRec); " ng-class="{active:clubRec==CurrentClub}">
-                            <td class="text-left ">
+                            <td class="text-left" style="width:100%;">
                                 {{clubRec.ClubName}}
+                            </td>
+                            <td class="text-right" style="padding-left:0px;padding-right:0px;">
+                                <span ng-if="Stage!=3 && StageMode =='模式:志願序' && AlreadyInVolunteer(clubRec)" class="fa fa-star" aria-hidden="true" style="color:#F59F00;"> </span>
+                                <span ng-if="Stage!=3 && StageMode =='模式:先搶先贏' && clubRec.IsFull=='true'" class="fa fa-user-times" aria-hidden="true" style="color:#b72a20"> </span>
                                 <span ng-if="clubRec.ClubID== student.ClubID" class="fa fa-check" aria-hidden="true" style="color:green;"> </span>
-                                <span ng-if="AlreadyInVolunteer(clubRec) && Stage!=3 && StageMode =='模式:志願序' " class="fa fa-star" aria-hidden="true" style="color:#F59F00;"> </span>
                                 <span ng-if="clubRec.ClubID== student.ClubID && Stage==3 && StageMode =='目前身分為鎖社狀態，不開放選社' " class="fa fa-lock" aria-hidden="true"> </span>
                             </td>
-                            <td ng-if="Stage!=3 && StageMode =='模式:先搶先贏'"
-                                class="text-right">
-                                <span ng-if="clubRec.IsFull=='true'" class="fa fa-user-times" aria-hidden="true" style="color:#b72a20"> </span>
+                            <td ng-if="Stage!=3 && StageMode =='模式:先搶先贏'" class="text-right">
                                 <span>{{clubRec.TotalCount||0}}/{{clubRec.Limit}}</span>
                             </td>
                         </tr>
