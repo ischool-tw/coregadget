@@ -44,7 +44,7 @@
                                             }
                                             var weight = Number(assessmentRec.Weight);
                                             if (weight || weight == 0) {
-                                                assessmentRec.Percentage = Math.floor(10000 * weight / (totalWeight || 1)) / 100;
+                                                assessmentRec.Percentage = Math.round(10000 * weight / (totalWeight || 1)) / 100;
                                             }
 
                                             assessmentRec.TermName = termRec.Name
@@ -140,6 +140,23 @@
                                     $scope.studentList = response.Student;
                                     $scope.setCurrent($scope.studentList[0], null, true, true);
                                 });
+
+                                $scope.connection.send({
+                                    service: "DS.Base.Connect",
+                                    autoRetry: true,
+                                    body: { RequestSessionID: "" },
+                                    result: function (response, error, http) {
+                                        if (error) {
+
+                                        } else {
+                                            $scope.$apply(function () {
+                                                $scope.studentList.forEach(function (stuRec) {
+                                                    stuRec.PhotoUrl = $scope.connection.getAccessPoint() + "/gradebook.GetStudentPhoto?stt=Session&sessionid=" + response.SessionID + "&parser=spliter&content=StudentID:" + stuRec.StudentID;
+                                                });
+                                            });
+                                        }
+                                    }
+                                });
                             }
                         }
                     });
@@ -173,7 +190,7 @@
                         var jumpAssessment;
                         if ($scope.current.Assessment) {
                             subject.Assessment.forEach(function (assRec) {
-                                if (assRec.Name == $scope.current.Assessment.Name)
+                                if (assRec.TeacherSequence == $scope.current.Course.MySequence && assRec.Name == $scope.current.Assessment.Name)
                                     jumpAssessment = assRec;
                             });
                         }
@@ -189,7 +206,33 @@
                 if (mode == "ReportCard") {
                     $scope.current.Assessment = null;
                     $scope.current.AssessmentMode = "ReportCard";
-                    $scope.AssessmentItem = [].concat($scope.current.Subject.Assessment || []);
+                    var assessmentAvg = {
+                        Name: "Avg."
+                        , Key: $scope.current.Term.Name + "^_^" + $scope.current.Subject.Name + "^_^Avg.^_^"
+                        , Type: "Program"
+                        , Editable: false
+                        , Percentage: 0
+                        , Calc: function () {
+                            [].concat($scope.studentList || []).forEach(function (stuRec) {
+                                var totalWeight = 0;
+                                var weightSum = 0;
+                                $scope.AssessmentItem.forEach(function (assessmentRec) {
+                                    if (assessmentRec != assessmentAvg) {
+                                        var weight = Number(assessmentRec.Weight);
+                                        var score = Number(stuRec["Val_" + assessmentRec.Key]);
+                                        if (weight && score) {
+                                            totalWeight += weight;
+                                            weightSum += score * weight;
+                                        }
+                                    }
+                                });
+                                if (totalWeight) {
+                                    stuRec["Val_" + assessmentAvg.Key] = stuRec["Origin_" + assessmentAvg.Key] = Math.round(100 * weightSum / (totalWeight || 1)) / 100;
+                                }
+                            });
+                        }
+                    }
+                    $scope.AssessmentItem = [assessmentAvg].concat($scope.current.Subject.Assessment || []);
                     if ($scope.studentList) {
                         $scope.AssessmentItem.forEach(function (assessmentItem) {
                             $scope.studentList.forEach(function (stuRec) {
@@ -202,8 +245,15 @@
                     }
                     if ($scope.current.AssessmentItem && $scope.current.Subject.Assessment.indexOf($scope.current.AssessmentItem) > 0)
                         $scope.setCurrent(null, $scope.current.AssessmentItem, true, true);
-                    else
-                        $scope.setCurrent(null, $scope.AssessmentItem[0], true, true);
+                    else {
+                        var index = 0;
+                        [].concat($scope.AssessmentItem || []).forEach(function (item, i) {
+                            if (!index && item.Editable)
+                                index = i;
+                        });
+                        $scope.setCurrent(null, $scope.AssessmentItem[index], true, true);
+                    }   
+                    $scope.calc();
                 }
                 if (mode == "CustomAssessment" && $scope.current.Subject.Assessment.indexOf(assessment) >= 0 && assessment.TeacherSequence == $scope.current.Course.MySequence) {
                     $scope.current.Assessment = assessment;
@@ -227,7 +277,36 @@
                                 alert("gradebook.GetCustomAssessment Error");
                             } else {
                                 $scope.$apply(function () {
-                                    assessment.CustomAssessmen = [].concat(response.CustomAssessmentItem || []);
+                                    var assessmentAvg = {
+                                        TermName: $scope.current.Term.Name
+                                        , SubjectName: $scope.current.Subject.Name
+                                        , AssessmentName: $scope.current.Assessment.Name
+                                        , CustomAssessmentName: "Avg."
+                                        , Type: "Program"
+                                        , Editable: false
+                                        , Percentage: 0
+                                        , Calc: function () {
+                                            [].concat($scope.studentList || []).forEach(function (stuRec) {
+                                                var totalWeight = 0;
+                                                var weightSum = 0;
+                                                $scope.AssessmentItem.forEach(function (assessmentRec) {
+                                                    if (assessmentRec != assessmentAvg) {
+                                                        var weight = Number(assessmentRec.Weight);
+                                                        var score = Number(stuRec["Val_" + assessmentRec.Key]);
+                                                        if (weight && score) {
+                                                            totalWeight += weight;
+                                                            weightSum += score * weight;
+                                                        }
+                                                    }
+                                                });
+                                                if (totalWeight) {
+                                                    stuRec["Val_" + assessmentAvg.Key] = stuRec["Origin_" + assessmentAvg.Key] = Math.round(100 * weightSum / (totalWeight || 1)) / 100;
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                    assessment.CustomAssessmen = [assessmentAvg].concat(response.CustomAssessmentItem || []);
                                     var totalWeight = 0;
                                     assessment.CustomAssessmen.forEach(function (assessmentRec) {
                                         var weight = Number(assessmentRec.Weight);
@@ -238,36 +317,43 @@
                                     assessment.CustomAssessmen.forEach(function (assessmentRec) {
                                         assessmentRec.Name = assessmentRec.CustomAssessmentName;
                                         assessmentRec.Key = assessmentRec.TermName + "^_^" + assessmentRec.SubjectName + "^_^" + assessmentRec.AssessmentName + "^_^" + assessmentRec.CustomAssessmentName;
-                                        assessmentRec.Editable = true;
+                                        if (assessmentRec.Type != "Program")
+                                            assessmentRec.Editable = true;
                                         var weight = Number(assessmentRec.Weight);
                                         if (weight || weight == 0) {
-                                            assessmentRec.Percentage = Math.floor(10000 * weight / (totalWeight || 1)) / 100;
+                                            assessmentRec.Percentage = Math.round(10000 * weight / (totalWeight || 1)) / 100;
                                         }
                                     });
-                                    if (assessment == $scope.current.Assessment) {
-                                        $scope.AssessmentItem = [].concat(assessment.CustomAssessmen || []);
-                                        if ($scope.studentList) {
-                                            $scope.AssessmentItem.forEach(function (assessmentItem) {
-                                                $scope.studentList.forEach(function (stuRec) {
-                                                    stuRec["Val_" + assessmentItem.Key] = stuRec["Origin_" + assessmentItem.Key];
-                                                });
+                                    $scope.AssessmentItem = [].concat(assessment.CustomAssessmen || []);
+                                    if ($scope.studentList) {
+                                        $scope.AssessmentItem.forEach(function (assessmentItem) {
+                                            $scope.studentList.forEach(function (stuRec) {
+                                                stuRec["Val_" + assessmentItem.Key] = stuRec["Origin_" + assessmentItem.Key];
                                             });
-                                        }
-                                        while ($scope.AssessmentItem.length < 8) {
-                                            $scope.AssessmentItem.push({});
-                                        }
-                                        var jumpAssessmentItem = null
-                                        if ($scope.current.AssessmentItem) {
-                                            $scope.AssessmentItem.forEach(function (assessmentItem) {
-                                                if (assessmentItem.Key == $scope.current.AssessmentItem.Key)
-                                                    jumpAssessmentItem = assessmentItem;
-                                            });
-                                        }
-                                        if (jumpAssessmentItem)
-                                            $scope.setCurrent(null, jumpAssessmentItem, true, true);
-                                        else
-                                            $scope.setCurrent(null, $scope.AssessmentItem[0], true, true);
+                                        });
                                     }
+                                    while ($scope.AssessmentItem.length < 8) {
+                                        $scope.AssessmentItem.push({});
+                                    }
+                                    var jumpAssessmentItem = null
+                                    if ($scope.current.AssessmentItem) {
+                                        $scope.AssessmentItem.forEach(function (assessmentItem) {
+                                            if (assessmentItem.Key == $scope.current.AssessmentItem.Key)
+                                                jumpAssessmentItem = assessmentItem;
+                                        });
+                                    }
+                                    if (jumpAssessmentItem)
+                                        $scope.setCurrent(null, jumpAssessmentItem, true, true);
+                                    else {
+                                        var index = 0;
+                                        [].concat($scope.AssessmentItem || []).forEach(function (item, i) {
+                                            if (!index && item.Editable)
+                                                index = i;
+                                        });
+                                        $scope.setCurrent(null, $scope.AssessmentItem[index], true, true);
+                                    }   
+
+                                    $scope.calc();
                                 });
                             }
                         }
@@ -364,8 +450,17 @@
 
             $scope.submitGrade = function (matchNext) {
                 $scope.current.Student["Val_" + $scope.current.AssessmentItem.Key] = $scope.current.Value;
-                //$scope.calc();
+                $scope.calc();
                 $scope.goNext();
+            };
+
+            $scope.calc = function () {
+                var list = [].concat($scope.AssessmentItem || []).reverse();
+                list.forEach(function (assessmentItem) {
+                    if (assessmentItem.Type == "Program") {
+                        assessmentItem.Calc();
+                    }
+                });
             };
 
             $scope.save = function () {
@@ -405,10 +500,52 @@
                 });
             };
 
+            $scope.calcAssessmentAvg = function (assessmentRec) {
+                if (assessmentRec.Type == "Score" || assessmentRec.Type == "Program") {
+                    var sum = 0;
+                    var count = 0;
+                    [].concat($scope.studentList || []).forEach(function (stuRec) {
+                        var value = Number(stuRec["Val_" + assessmentRec.Key]);
+                        if (value || stuRec["Val_" + assessmentRec.Key] === "0" || stuRec["Val_" + assessmentRec.Key] === 0) {
+                            count++;
+                            sum += value;
+                        }
+                    });
+                    return (Math.round(100 * sum / (count || 1)) / 100) || "";
+                }
+                else
+                    return "";
+            };
+
+            $scope.countAssessmentRange = function (assessmentRec, min, max) {
+                if (assessmentRec.Type == "Score" || assessmentRec.Type == "Program") {
+                    var count = 0;
+                    [].concat($scope.studentList || []).forEach(function (stuRec) {
+                        var value = Number(stuRec["Val_" + assessmentRec.Key]);
+                        if (value || stuRec["Val_" + assessmentRec.Key] === "0" || stuRec["Val_" + assessmentRec.Key] === 0) {
+                            if (min && max) {
+                                if (min <= value && value < max)
+                                    count++;
+                            }
+                            else if (min) {
+                                if (min <= value) count++;
+                            }
+                            else if (max) {
+                                if (value < max)
+                                    count++;
+                            }
+                        }
+                    });
+                    return count || "";
+                }
+                else
+                    return "";
+            };
+
             $scope.showCustomAssessmentConfig = function () {
                 $scope.current.ConfigCustomAssessmentItem = [];
                 $scope.AssessmentItem.forEach(function (item) {
-                    if (item.Name)
+                    if (item.Name && item.Type != "Program")
                         $scope.current.ConfigCustomAssessmentItem.push(angular.copy(item));
                 });
                 $scope.current.ConfigCustomAssessmentItem.DeleteItem = function (item) {
@@ -726,4 +863,13 @@
                 });
             }
         };
-    });
+    }).directive('fallbackSrc', function () {
+        var fallbackSrc = {
+            link: function postLink(scope, iElement, iAttrs) {
+                iElement.bind('error', function () {
+                    angular.element(this).attr("src", iAttrs.fallbackSrc);
+                });
+            }
+        }
+        return fallbackSrc;
+    });;

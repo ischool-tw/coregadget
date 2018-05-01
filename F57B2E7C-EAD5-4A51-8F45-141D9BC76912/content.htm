@@ -83,7 +83,7 @@
         <div ng-if="courseList">
             <div ng-if="current.AssessmentMode == 'CustomAssessment'"
                  class="pull-right">
-                <div class="btn-group">
+                <div class="btn-group hidden-xs">
                     <a ng-click="showCustomAssessmentConfig()" class="btn btn-default">
                         <i class="fa fa-cog"></i>
                         Config
@@ -98,7 +98,7 @@
             </div>
             <div ng-if="current.AssessmentMode == 'ReportCard'"
                  class="pull-right">
-                <div class="btn-group">
+                <div class="btn-group  hidden-xs">
                     <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-wrench" aria-hidden="true"></i>
                         <span>Tools</span>
@@ -189,12 +189,17 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <img class="hidden-xs"
-                                         style="height:120px;width:120px;margin:8px auto;display:block"
-                                         src="{{current.Student.PhotoUrl}}" />
-
+                                    <div style="max-height:120px">
+                                        <img class="hidden-xs"
+                                             style="height:120px;margin:0px auto;display:block"
+                                             ng-src="{{current.Student.PhotoUrl || 'css/images/no_photo.png'}}"
+                                             fallback-src="css/images/no_photo.png" />
+                                    </div>
                                     <div style="white-space: nowrap;overflow: hidden;">
                                         <span>{{current.Student.EnglishName}}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted">{{current.Student.StudentNumber}}</span>
                                     </div>
                                     <div class="btn-group btn-group-xs pull-right">
                                         <ul class="dropdown-menu">
@@ -215,7 +220,7 @@
                                         </a>
                                     </div>
                                     <div class="pull-left">
-                                        <span class="text-muted">{{current.Student.StudentNumber}}</span>
+                                        <span class="text-muted">{{current.Student.ClassName}} {{current.Student.SeatNo}} {{current.Student.Name}}</span>
                                     </div>
                                 </th>
                             </tr>
@@ -229,16 +234,16 @@
                                            class="btn btn-link btn-block dropdown-toggle"
                                            data-toggle="dropdown"
                                            style="padding:0; color:#333; text-align:left;">
-                                            <i style="min-width: 14px;"
-                                               class="fa fa-edit"></i>
+                                            <!--<i style="min-width: 14px;"
+                                               class="fa fa-edit"></i>-->
                                             {{current.AssessmentItem? current.AssessmentItem.Name:'Choose'}}
                                             <span class="caret"></span>
                                         </a>
                                         <ul class="dropdown-menu" style="width:100%;">
                                             <li ng-repeat="assessmentRec in AssessmentItem | filter : {'Key' : '_'}">
                                                 <a href="javascript:void(0)" ng-click="setCurrent(null, assessmentRec, true, true)">
-                                                    <i style="min-width: 14px;"
-                                                       class="fa fa-edit"></i>
+                                                    <!--<i style="min-width: 14px;"
+                                                       class="fa fa-edit"></i>-->
                                                     {{assessmentRec.Name}}
                                                 </a>
                                             </li>
@@ -253,13 +258,22 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr ng-if="current.AssessmentItem.Type=='Program'">
+                                <td class="text-center"
+                                    style="">
+                                    <div ng-class="{'text-danger':current.Value < 60}"
+                                         class="text-center">
+                                        {{current.Value=='0'?('0'):(current.Value||'--')}}
+                                    </div>
+                                </td>
+                            </tr>
                             <tr ng-if="current.AssessmentItem.Type=='Score'">
                                 <td class="text-center"
                                     style="">
                                     <div ng-if="current.AssessmentItem.Editable==false"
                                          ng-class="{'text-danger':current.Value < 60}"
                                          class="text-center">
-                                        {{current.Value=='0'?('0'):(current.Value||'&nbsp;')}}
+                                        {{current.Value=='0'?('0'):(current.Value||'--')}}
                                     </div>
                                     <div ng-if="current.AssessmentItem.Editable==true"
                                          class="input-group">
@@ -281,7 +295,7 @@
                                 <td class="text-left">
                                     <div ng-if="current.AssessmentItem.Editable==false"
                                          style="word-break: break-word;">
-                                        {{current.Value}}
+                                        {{current.Value=='0'?('0'):(current.Value||'&nbsp;')}}
                                     </div>
                                     <textarea ng-if="current.AssessmentItem.Editable==true"
                                               ng-model="current.Value"
@@ -305,7 +319,7 @@
                                     <div ng-if="current.AssessmentItem.Editable==false"
                                          ng-class="{'text-danger':current.Value < 60}"
                                          class="text-center">
-                                        {{current.Value=='0'?('0'):(current.Value||'&nbsp;')}}
+                                        {{current.Value=='0'?('0'):(current.Value||'--')}}
                                     </div>
                                     <div ng-if="current.AssessmentItem.Editable==true"
                                          class="input-group">
@@ -334,6 +348,36 @@
                             </tr>
                         </tbody>
                     </table>
+                    <!-- 說明 -->
+                    <div ng-if="current.AssessmentItem && current.AssessmentItem.Type!='Program'">
+                        <div ng-if="current.AssessmentMode == 'ReportCard'">
+                            <strong>{{current.AssessmentItem.Name}}</strong>
+                            <div ng-if="current.AssessmentItem.Editable==true">
+                                <strong>Deadline：</strong>
+                                <span>{{current.Term.InputEndTime}}</span>
+                            </div>
+                            <div ng-if="current.AssessmentItem.TeacherSequence !== current.Course.MySequence">
+                                <strong>Teacher：</strong>
+                                <span>{{current.Course["Teacher"+current.AssessmentItem.TeacherSequence]}}</span>
+                            </div>
+                        </div>
+                        <div ng-if="current.AssessmentMode == 'CustomAssessment'">
+                            <strong>{{current.AssessmentItem.Name}}</strong>
+                            <div>
+                                <strong>Date：</strong>
+                                <sapn>{{current.AssessmentItem.Date}}</sapn>
+                            </div>
+                            <div ng-if="current.AssessmentItem.Percentage">
+                                <strong>Percentage：</strong>
+                                <sapn ng-if="current.AssessmentItem.Percentage">{{current.AssessmentItem.Percentage}}%</sapn>
+                                <sapn ng-if="current.AssessmentItem.Percentage==0">--</sapn>
+                                <sapn ng-if="current.AssessmentItem.Percentage==undefined">&nbsp;</sapn>
+                            </div>
+                            <div>
+                                <strong>Description：</strong><sapn>{{current.AssessmentItem.Description}}</sapn>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div style="margin-right:270px;">
@@ -388,6 +432,117 @@
                                 </div>
                                 <span>
                                     {{stuRec['Val_'+assessmentRec.Key]}}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered table-striped table-hover text-center"
+                       style="table-layout:fixed;">
+                    <thead>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 170px;">
+                                Analysis
+                            </th>
+                            <th ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{assessmentRec.Name}}
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 170px;">
+                                Avg.
+                            </th>
+                            <td ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{calcAssessmentAvg(assessmentRec)}}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 170px;">
+                                100
+                            </th>
+                            <td ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{countAssessmentRange(assessmentRec,100)}}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 170px;">
+                                90
+                            </th>
+                            <td ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{countAssessmentRange(assessmentRec,90,100)}}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 170px;">
+                                80
+                            </th>
+                            <td ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{countAssessmentRange(assessmentRec,80,90)}}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 170px;">
+                                70
+                            </th>
+                            <td ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{countAssessmentRange(assessmentRec,70,80)}}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 170px;">
+                                60
+                            </th>
+                            <td ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{countAssessmentRange(assessmentRec,60,70)}}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 170px;">
+                                Lower
+                            </th>
+                            <td ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{countAssessmentRange(assessmentRec,null,60)}}
                                 </span>
                             </td>
                         </tr>
@@ -496,7 +651,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td style="padding: 0px" colspan="6">
+                                <td style="padding: 0px" colspan="5">
                                     <div style="white-space: nowrap;overflow: hidden;">
                                         <a style="height:100%;width: 100%"
                                            ng-click="current.ConfigCustomAssessmentItem.AddItem()" class="btn btn-default">
