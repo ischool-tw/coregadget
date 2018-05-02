@@ -1,0 +1,700 @@
+﻿<!DOCTYPE html>
+<html ng-app="gradebook">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/gadget.js"></script>
+    <script>
+        init({
+            application: "test.p.kcbs.hc.edu.tw",
+            paramValues: {
+                "DefaultRound": "2" //預設小數點位數
+                //"第一次期中考Round": "1",
+                //"第二次期中考Round": "2",
+                //"期末考Round": "7",
+                //"試算Round": "1", //指定評量項目小數點位數
+                //"學期成績Round": "2"
+            },
+            oAuth: {
+                clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
+                clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
+                account: 'bubu@debug.ischool.com.tw',
+                password: '1234'
+            }
+        });
+    </script>
+
+
+    <title>GradeBook</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <link href="css/base.css" rel="stylesheet" />
+
+    <style>
+        .dropdown-header {
+            padding: 3px 10px;
+            font-size: 14px;
+        }
+
+        .importStudentPreview {
+            padding: 5px 10px;
+            border-radius: .25em;
+            border: solid 1px lightgray;
+            margin: 3px 0px;
+        }
+
+            .importStudentPreview .studentInfo {
+            }
+
+        .my-page {
+            max-width: initial;
+        }
+
+        body {
+            max-width: 1280px;
+        }
+
+        .disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        tr .visible-tr-hover {
+            display: none;
+        }
+
+        tr:hover .visible-tr-hover {
+            display: inherit;
+        }
+    </style>
+</head>
+
+
+<body ng-controller="MainCtrl">
+    <div ng-if="!(courseList && studentList)"
+         style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
+    <div ng-if="haveNoCourse" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Have no course.</div>
+    <div id="gadget" class="my-page" ng-if="true">
+        <h1 class="hidden-xs">
+            <a href="javascript:void(0)"
+               style="text-decoration:none;">GradeBook</a>
+        </h1>
+        <div ng-if="courseList">
+            <div ng-if="current.AssessmentMode == 'CustomAssessment'"
+                 class="pull-right">
+                <div class="btn-group hidden-xs">
+                    <a ng-click="showCustomAssessmentConfig()" class="btn btn-default">
+                        <i class="fa fa-cog"></i>
+                        Config
+                    </a>
+                </div>
+                <div class="btn-group">
+                    <a ng-click="save()" class="btn btn-default" ng-class="{'btn-danger':!checkAllTable()}">
+                        <i class="fa fa-floppy-o"></i>
+                        Save
+                    </a>
+                </div>
+            </div>
+            <div ng-if="current.AssessmentMode == 'ReportCard'"
+                 class="pull-right">
+                <div class="btn-group  hidden-xs">
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-wrench" aria-hidden="true"></i>
+                        <span>Tools</span>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-header">Calculation</li>
+                        <li ng-repeat="assessmentRec in current.Subject.Assessment">
+                            <a ng-class="{'disabled': assessment.AllowCustomAssessment !== 'true' || assessment.TeacherSequence !== current.Course.MySequence || assessment.Editable !== 'true'}">
+                                {{assessmentRec.Name}}
+                            </a>
+                        </li>
+                        <li class="dropdown-header">Import</li>
+                        <li ng-repeat="assessmentRec in current.Subject.Assessment">
+                            <a ng-class="{'disabled': assessment.AllowCustomAssessment !== 'true' || assessment.TeacherSequence !== current.Course.MySequence || assessment.Editable !== 'true'}">
+                                {{assessmentRec.Name}}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="btn-group">
+                    <a ng-click="save()" class="btn btn-default" ng-class="{'btn-danger':!checkAllTable()}">
+                        <i class="fa fa-floppy-o"></i>
+                        Save
+                    </a>
+                </div>
+            </div>
+            <div class="btn-group">
+                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    {{current.Course.CourseName}}
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="course in courseList"
+                        ng-class="{active:course==current.Course}">
+                        <a href="javascript:void(0)" ng-click="setCurrentCourse(course)">{{course.CourseName}}</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    {{current.Term.Name}}
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="term in current.Course.Term"
+                        ng-class="{active:term==current.Term}">
+                        <a href="javascript:void(0)" ng-click="setCurrentTerm(term)">{{term.Name}}</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    {{current.Subject.Name}}
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="subject in current.Term.Subject"
+                        ng-class="{active:subject==current.Subject}">
+                        <a href="javascript:void(0)" ng-click="setCurrentSubject(subject)">{{subject.Name}}</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    {{current.AssessmentMode == "ReportCard"?"Report Card":current.Assessment.Name}}
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li ng-class="{active:current.AssessmentMode == 'ReportCard'}">
+                        <a href="javascript:void(0)" ng-click="setAssessment('ReportCard')">Report Card</a>
+                    </li>
+                    <li ng-if="(current.Subject.Assessment).length> 0" class="divider"></li>
+                    <li ng-repeat="assessment in current.Subject.Assessment"
+                        ng-class="{'disabled': assessment.AllowCustomAssessment !== 'true' || assessment.TeacherSequence !== current.Course.MySequence, active:assessment==current.Assessment}">
+                        <a href="javascript:void(0)" ng-click="setAssessment('CustomAssessment', assessment);">{{assessment.Name}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div ng-if="studentList" class="hidden-xs" style="margin-top:10px;">
+            <div style="position:relative;float:right;width:260px;">
+                <div data-offset-top="145"
+                     bs-affix>
+                    <table class="table table-bordered table-striped"
+                           style="width:260px;">
+                        <!-- 切換學生 -->
+                        <thead>
+                            <tr>
+                                <th>
+                                    <div style="max-height:120px">
+                                        <img class="hidden-xs"
+                                             style="height:120px;margin:0px auto;display:block"
+                                             ng-src="{{current.Student.PhotoUrl || 'css/images/no_photo.png'}}"
+                                             fallback-src="css/images/no_photo.png" />
+                                    </div>
+                                    <div style="white-space: nowrap;overflow: hidden;">
+                                        <span>{{current.Student.EnglishName}}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted">{{current.Student.StudentNumber}}</span>
+                                    </div>
+                                    <div class="btn-group btn-group-xs pull-right">
+                                        <ul class="dropdown-menu">
+                                            <li ng-repeat="stuRec in studentList">
+                                                <a href="javascript:void(0)" ng-click="setCurrent(stuRec, null, true, true)">{{stuRec.StudentNumber}}&nbsp;{{stuRec.EnglishName}}</a>
+                                            </li>
+                                        </ul>
+                                        <a class="btn btn-default"
+                                           ng-click="goPrev()">
+                                            <<
+                                        </a>
+                                        <a class="btn btn-default"
+                                           ng-click="goNext()">
+                                            >>
+                                        </a>
+                                        <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                        </a>
+                                    </div>
+                                    <div class="pull-left">
+                                        <span class="text-muted">{{current.Student.ClassName}} {{current.Student.SeatNo}} {{current.Student.Name}}</span>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <!-- 成績輸入 -->
+                        <tbody>
+                            <tr class="text-left">
+                                <td>
+                                    <div class="btn-group btn-block">
+                                        <a href="javascript:void(0)"
+                                           class="btn btn-link btn-block dropdown-toggle"
+                                           data-toggle="dropdown"
+                                           style="padding:0; color:#333; text-align:left;">
+                                            <!--<i style="min-width: 14px;"
+                                               class="fa fa-edit"></i>-->
+                                            {{current.AssessmentItem? current.AssessmentItem.Name:'Choose'}}
+                                            <span class="caret"></span>
+                                        </a>
+                                        <ul class="dropdown-menu" style="width:100%;">
+                                            <li ng-repeat="assessmentRec in AssessmentItem | filter : {'Key' : '_'}">
+                                                <a href="javascript:void(0)" ng-click="setCurrent(null, assessmentRec, true, true)">
+                                                    <!--<i style="min-width: 14px;"
+                                                       class="fa fa-edit"></i>-->
+                                                    {{assessmentRec.Name}}
+                                                </a>
+                                            </li>
+                                            <li ng-if="current.AssessmentMode == 'CustomAssessment'&& (AssessmentItem | filter : {'Key' : '_'}).length>0" class="divider"></li>
+                                            <li ng-if="current.AssessmentMode == 'CustomAssessment'">
+                                                <a href="javascript:void(0)" ng-click="showCustomAssessmentConfig()">
+                                                    <i class="fa fa-cog"></i>
+                                                    Config
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr ng-if="current.AssessmentItem.Type=='Program'">
+                                <td class="text-center"
+                                    style="">
+                                    <div ng-class="{'text-danger':current.Value < 60}"
+                                         class="text-center">
+                                        {{current.Value=='0'?('0'):(current.Value||'--')}}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr ng-if="current.AssessmentItem.Type=='Score'">
+                                <td class="text-center"
+                                    style="">
+                                    <div ng-if="current.AssessmentItem.Editable==false"
+                                         ng-class="{'text-danger':current.Value < 60}"
+                                         class="text-center">
+                                        {{current.Value=='0'?('0'):(current.Value||'--')}}
+                                    </div>
+                                    <div ng-if="current.AssessmentItem.Editable==true"
+                                         class="input-group">
+                                        <input ng-model="current.Value"
+                                               ng-keydown="enterGrade($event)"
+                                               placeholder="Press Enter To Submit"
+                                               type="text"
+                                               class="form-control pg-grade-textbox"
+                                               select-on-click />
+                                        <span class="input-group-btn">
+                                            <a ng-click="enterGrade()" class="btn btn-default">
+                                                Submit
+                                            </a>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr ng-if="current.AssessmentItem.Type=='Comment'">
+                                <td class="text-left">
+                                    <div ng-if="current.AssessmentItem.Editable==false"
+                                         style="word-break: break-word;">
+                                        {{current.Value=='0'?('0'):(current.Value||'&nbsp;')}}
+                                    </div>
+                                    <textarea ng-if="current.AssessmentItem.Editable==true"
+                                              ng-model="current.Value"
+                                              ng-keydown="enterGrade($event)"
+                                              placeholder="Press Enter To Submit"
+                                              style="min-height: 120px;height:120px;resize: vertical;"
+                                              type="text"
+                                              class="form-control pg-grade-textbox"
+                                              select-on-click></textarea>
+                                    <div ng-if="current.AssessmentItem.Editable==true"
+                                         class="pull-right">
+                                        <a ng-click="enterGrade()" class="btn btn-default">
+                                            Submit
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr ng-if="current.AssessmentItem.Type=='Indicator'">
+                                <td class="text-left"
+                                    style="position:relative;">
+                                    <div ng-if="current.AssessmentItem.Editable==false"
+                                         ng-class="{'text-danger':current.Value < 60}"
+                                         class="text-center">
+                                        {{current.Value=='0'?('0'):(current.Value||'--')}}
+                                    </div>
+                                    <div ng-if="current.AssessmentItem.Editable==true"
+                                         class="input-group">
+                                        <input ng-model="current.Value"
+                                               ng-keydown="enterGrade($event)"
+                                               placeholder="Press Enter To Submit"
+                                               type="text"
+                                               class="form-control pg-grade-textbox"
+                                               select-on-click />
+                                        <span class="input-group-btn">
+                                            <a ng-click="enterGrade()" class="btn btn-default">
+                                                Submit
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <div ng-if="current.AssessmentItem.Editable==true"
+                                         class="btn-group btn-group-sm">
+                                        <a ng-repeat="val in current.AssessmentItem.Indicators.Indicator"
+                                           class="btn btn-default"
+                                           ng-class="{'btn-danger':current.Value.toLowerCase() == val.toLowerCase()}"
+                                           ng-click="selectValue(val)">
+                                            {{val}}
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- 說明 -->
+                    <div ng-if="current.AssessmentItem && current.AssessmentItem.Type!='Program'">
+                        <div ng-if="current.AssessmentMode == 'ReportCard'">
+                            <strong>{{current.AssessmentItem.Name}}</strong>
+                            <div ng-if="current.AssessmentItem.Editable==true">
+                                <strong>Deadline：</strong>
+                                <span>{{current.Term.InputEndTime}}</span>
+                            </div>
+                            <div ng-if="current.AssessmentItem.TeacherSequence !== current.Course.MySequence">
+                                <strong>Teacher：</strong>
+                                <span>{{current.Course["Teacher"+current.AssessmentItem.TeacherSequence]}}</span>
+                            </div>
+                        </div>
+                        <div ng-if="current.AssessmentMode == 'CustomAssessment'">
+                            <strong>{{current.AssessmentItem.Name}}</strong>
+                            <div>
+                                <strong>Date：</strong>
+                                <sapn>{{current.AssessmentItem.Date}}</sapn>
+                            </div>
+                            <div ng-if="current.AssessmentItem.Percentage">
+                                <strong>Percentage：</strong>
+                                <sapn ng-if="current.AssessmentItem.Percentage">{{current.AssessmentItem.Percentage}}%</sapn>
+                                <sapn ng-if="current.AssessmentItem.Percentage==0">--</sapn>
+                                <sapn ng-if="current.AssessmentItem.Percentage==undefined">&nbsp;</sapn>
+                            </div>
+                            <div>
+                                <strong>Description：</strong><sapn>{{current.AssessmentItem.Description}}</sapn>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-right:270px;">
+                <table class="table table-bordered table-striped table-hover text-center"
+                       style="table-layout:fixed;">
+                    <thead>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 170px;"
+                                rowspan="2">
+                                Student
+                            </th>
+                            <th ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{assessmentRec.Name}}
+                                </span>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 1px;">
+                                <small ng-if="assessmentRec.Percentage">{{assessmentRec.Percentage}}%</small>
+                                <small ng-if="assessmentRec.Percentage==0">--</small>
+                                <small ng-if="assessmentRec.Percentage==undefined">&nbsp;</small>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="stuRec in studentList"
+                            ng-class="{'warning':stuRec==current.Student}"
+                            style="cursor:pointer;">
+                            <td class="text-left"
+                                ng-click="setCurrent(stuRec, current.AssessmentItem, true, true)"
+                                style="position:relative;overflow:hidden;text-overflow:ellipsis;">
+                                <div style="white-space: nowrap;overflow: hidden;">
+                                    <span>{{stuRec.EnglishName}}</span>
+                                </div>
+                                <small class="text-muted" style="position:absolute;bottom:2px;right:2px;">{{stuRec.StudentNumber}}</small>
+                            </td>
+                            <td ng-repeat="assessmentRec in AssessmentItem"
+                                ng-class="{'text-left': assessmentRec.Type=='Comment', 'text-center':assessmentRec.Type!='Comment'}"
+                                ng-style="{'border-bottom-color':(assessmentRec==current.AssessmentItem && stuRec==current.Student)?'darkgray':''}"
+                                ng-click="setCurrent(stuRec, assessmentRec.Key?assessmentRec:null, true, true)"
+                                ng-attr-title="{{(assessmentRec.Type=='Comment'&&stuRec['Val_'+assessmentRec.Key])?stuRec['Val_'+assessmentRec.Key]:''}}"
+                                style="position:relative;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                                <div ng-if="!checkOneCell(stuRec, assessmentRec.Key)"
+                                     ng-attr-title="{{stuRec['Origin_'+assessmentRec.Key]?'Origin：'+stuRec['Origin_'+assessmentRec.Key]:''}}"
+                                     style="display:inline-block;background-color:red;position:absolute;left:3px;top:3px;width:5px;height:6px;border-radius:5px;">
+                                </div>
+                                <span>
+                                    {{stuRec['Val_'+assessmentRec.Key]}}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered table-striped table-hover text-center"
+                       style="table-layout:fixed;">
+                    <thead>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 170px;">
+                                Analysis
+                            </th>
+                            <th ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{assessmentRec.Name}}
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 170px;">
+                                Avg.
+                            </th>
+                            <td ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{calcAssessmentAvg(assessmentRec)}}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 170px;">
+                                100
+                            </th>
+                            <td ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{countAssessmentRange(assessmentRec,100)}}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 170px;">
+                                90
+                            </th>
+                            <td ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{countAssessmentRange(assessmentRec,90,100)}}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 170px;">
+                                80
+                            </th>
+                            <td ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{countAssessmentRange(assessmentRec,80,90)}}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 170px;">
+                                70
+                            </th>
+                            <td ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{countAssessmentRange(assessmentRec,70,80)}}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 170px;">
+                                60
+                            </th>
+                            <td ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{countAssessmentRange(assessmentRec,60,70)}}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-center"
+                                style="padding: 8px 2px;width: 170px;">
+                                Lower
+                            </th>
+                            <td ng-repeat="assessmentRec in AssessmentItem"
+                                class="text-center"
+                                style="padding: 8px 2px;">
+                                <span style="max-height:60px;display:inline-block;overflow:hidden;text-overflow:ellipsis;">
+                                    {{countAssessmentRange(assessmentRec,null,60)}}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="customAssessmentConfigModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="customAssessmentConfigModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h1 class="hidden-xs">GradeBook CustomAssessment Config</h1>
+                    <h4 class="hidden-xs">{{current.Course.CourseName}} /{{current.Term.Name}} / {{current.Subject.Name}} / {{current.Assessment.Name}}</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered table-striped table-hover text-center"
+                           style="table-layout:fixed;">
+                        <thead>
+                            <tr>
+                                <th class="text-center"
+                                    style="padding: 8px 2px;width: 210px;"
+                                    rowspan="2">
+                                    Name
+                                </th>
+                                <th class="text-center"
+                                    style="padding: 8px 2px;">
+                                    Date
+                                </th>
+                                <th class="text-center"
+                                    style="padding: 8px 2px;">
+                                    Weight
+                                </th>
+                                <!--<th class="text-center"
+                                    style="padding: 8px 2px;">
+                                    Limit
+                                </th>-->
+                                <th class="text-center"
+                                    style="padding: 8px 2px;">
+                                    Description
+                                </th>
+                                <th class="text-center"
+                                    style="padding: 8px 2px;">
+                                    Remove
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in current.ConfigCustomAssessmentItem"
+                                style="cursor:pointer;">
+                                <td class="text-center"
+                                    style="position:relative; padding:0px">
+                                    <div style="white-space: nowrap;overflow: hidden;">
+                                        <input ng-model="item.Name"
+                                               type="text"
+                                               class="form-control pg-grade-textbox"
+                                               select-on-click />
+                                    </div>
+                                </td>
+                                <td class="text-center"
+                                    style="position:relative; padding:0px">
+                                    <div style="white-space: nowrap;overflow: hidden;">
+                                        <input ng-model="item.Date"
+                                               type="text"
+                                               class="form-control pg-grade-textbox"
+                                               select-on-click />
+                                    </div>
+                                </td>
+                                <td class="text-center"
+                                    style="position:relative; padding:0px">
+                                    <div style="white-space: nowrap;overflow: hidden;">
+                                        <input ng-model="item.Weight"
+                                               type="text"
+                                               class="form-control pg-grade-textbox"
+                                               select-on-click />
+                                    </div>
+                                </td>
+                                <!--<td class="text-center"
+                                    style="position:relative; padding:0px">
+                                    <div style="white-space: nowrap;overflow: hidden;">
+                                        <input ng-model="item.Limit"
+                                               type="text"
+                                               class="form-control pg-grade-textbox"
+                                               select-on-click />
+                                    </div>
+                                </td>-->
+                                <td class="text-left"
+                                    style="position:relative; padding:0px">
+                                    <div style="white-space: nowrap;overflow: hidden;">
+                                        <input ng-model="item.Description"
+                                               type="text"
+                                               class="form-control pg-grade-textbox"
+                                               select-on-click />
+                                    </div>
+                                </td>
+                                <td style="padding: 0px">
+                                    <div style="white-space: nowrap;overflow: hidden;">
+                                        <a style="height:100%;width: 100%"
+                                           ng-click="current.ConfigCustomAssessmentItem.DeleteItem(item)" class="btn btn-default">
+                                            <i class="fa fa-minus-square"></i>
+                                            Remove
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0px" colspan="5">
+                                    <div style="white-space: nowrap;overflow: hidden;">
+                                        <a style="height:100%;width: 100%"
+                                           ng-click="current.ConfigCustomAssessmentItem.AddItem()" class="btn btn-default">
+                                            <i class="fa fa-plus-square"></i>
+                                            Add
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal">
+                        Cancel
+                    </a>
+                    <a ng-click="saveCustomAssessmentConfig()" class="btn btn-default" ng-class="{'btn-danger':!checkAllTable()}">
+                        <i class="fa fa-floppy-o"></i>
+                        SaveConfig
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script>
+        var newEditor = $("#gadget .hidden-xs").find("div").eq(0).clone();
+        newEditor.css({ position: "", float: "", width: "" }).addClass('visible-xs');
+        newEditor.find("table").eq(0).removeAttr("bs-affix").removeAttr("data-offset-top").removeAttr("style");
+        //newEditor.find("table").eq(0).find("tbody").eq(0).prepend(newEditor.find("table").eq(0).find("tbody").eq(0).find("tr").eq(1));
+        $("#gadget").append(newEditor);
+    </script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/sortable.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/xml2json.js"></script>
+    <script src="js/angular-strap.min.js"></script>
+    <script src="js/angular-strap.tpl.min.js"></script>
+
+    <script src="js/gradebook.js"></script>
+</body>
+
+</html>
