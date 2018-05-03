@@ -257,7 +257,7 @@
                                 index = i;
                         });
                         $scope.setCurrent(null, $scope.AssessmentItem[index], true, true);
-                    }   
+                    }
                     $scope.calc();
                 }
                 if (mode == "CustomAssessment" && $scope.current.Subject.Assessment.indexOf(assessment) >= 0 && assessment.TeacherSequence == $scope.current.Course.MySequence) {
@@ -360,7 +360,7 @@
                                                 index = i;
                                         });
                                         $scope.setCurrent(null, $scope.AssessmentItem[index], true, true);
-                                    }   
+                                    }
 
                                     $scope.calc();
                                 });
@@ -409,8 +409,124 @@
                         }
                     });
 
-                }                    
+                }
             }
+
+            $scope.showImport = function (assessmentRec) {
+                var importProcess = {
+                    Name: 'Import ' + assessmentRec.Name,
+                    Parse: function () {
+                        importProcess.ParseString = importProcess.ParseString || '';
+                        // 2017/11/30穎驊註解，由於Excel 格子內文字若輸入" 其複製到 Web 後，會變成"" ，在此將其移除，避免後續的儲存處理問題
+                        //var text_trimmed = importProcess.ParseString.replace('""', '')
+                        var text_trimmed = importProcess.ParseString.replace(/""/g, "");
+                        function CSVtoArray(text) {
+                            //var re_valid = /^\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*(?:,\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*)*$/;
+                            var re_value = /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:\n|$)/g;
+
+                            // 本案不需要驗證
+                            // Return NULL if input string is not well formed CSV string.
+                            //if (!re_valid.test(text)) return null;
+
+                            var a = [];                     // Initialize array to receive values.
+                            text.replace(re_value, // "Walk" the string using replace with callback.
+                                function (m0, m1, m2, m3) {
+                                    // Remove backslash from \' in single quoted values.
+                                    if (m1 !== undefined) a.push(m1.replace(/\\'/g, "'"));
+                                    // Remove backslash from \" in double quoted values.
+                                    else if (m2 !== undefined) a.push(m2.replace(/\\"/g, '"'));
+                                    else if (m3 !== undefined) {
+                                        var list_1 = [];
+
+                                        list_1 = m3.split("\n")
+
+                                        list_1.forEach(function (text, index) {
+
+                                            a.push(text);
+                                        });
+                                    }
+                                    return ''; // Return empty string.
+                                });
+                            // Handle special case of empty last value.
+                            if (/,\s*$/.test(text)) a.push('');
+                            return a;
+                        };
+                        importProcess.ParseValues = CSVtoArray(text_trimmed);
+                        importProcess.HasError = false;
+                        for (var i = 0; i < importProcess.ParseValues.length; i++) {
+                            var flag = false;
+                            if (assessmentRec.Type == 'Score') {
+                                var temp = Number(importProcess.ParseValues[i]);
+                                if (!isNaN(temp)
+                                    && (!$scope.current.AssessmentItem.Range || (!$scope.current.AssessmentItem.Range.Max && $scope.current.AssessmentItem.Range.Max !== 0) || temp <= $scope.current.AssessmentItem.Range.Max)
+                                    && (!$scope.current.AssessmentItem.Range || (!$scope.current.AssessmentItem.Range.Min && $scope.current.AssessmentItem.Range.Min !== 0) || temp >= $scope.current.AssessmentItem.Range.Min)) {
+                                    flag = true;
+                                    var round = Math.pow(10, $scope.params.DefaultRound);
+                                    temp = Math.round(temp * round) / round;
+                                }
+                                // 使用者若知道其學生沒有資料，請在其欄位內輸入 - ，程式碼會將其填上空值 
+                                if (importProcess.ParseValues[i] == '-') {
+                                    flag = true;
+                                    importProcess.ParseValues[i] = '';
+                                }
+                                if (flag) {
+                                    if (!isNaN(temp) && importProcess.ParseValues[i] != '') {
+                                        importProcess.ParseValues[i] = temp;
+                                    }
+                                }
+                                else {
+                                    importProcess.ParseValues[i] = '錯誤';
+                                    importProcess.HasError = true;
+                                }
+                            }
+                            else if (assessmentRec.Type == 'Indicator') {
+                                assessmentRec.Indicators.Indicator.forEach(function (val) {
+                                    if (val.Name.toLowerCase() == importProcess.ParseValues[i].replace(/^\s+|\s+$/g, '').toLowerCase()) {
+                                        importProcess.ParseValues[i] = val.Name;
+                                        flag = true;
+                                    }
+                                });
+                                if (flag) {
+                                }
+                                else {
+                                    importProcess.ParseValues[i] = '錯誤';
+                                    importProcess.HasError = true;
+                                }
+                            }
+                            else {
+                                flag = true;
+                            }
+                        }
+
+                        $scope.studentList.forEach(function (stuRec, index) {
+                            if (index >= importProcess.ParseValues.length) {
+                                importProcess.ParseValues.push('錯誤');
+                                importProcess.HasError = true;
+                            }
+                        });
+
+                    },
+                    Clear: function () {
+                        delete importProcess.ParseValues;
+                    },
+                    Import: function () {
+                        if (importProcess.HasError == true)
+                            return;
+                        $scope.studentList.forEach(function (stuRec, index) {
+                            if (!importProcess.ParseValues[index] && importProcess.ParseValues[index] !== 0)
+                                stuRec['Val_' + assessmentRec.Key] = '';
+                            else
+                                stuRec['Val_' + assessmentRec.Key] = importProcess.ParseValues[index];
+                        });
+
+                        $scope.calc();
+                        $('#importModal').modal('hide');
+                    }
+                };
+
+                $scope.importProcess = importProcess;
+                $('#importModal').modal('show');
+            };
 
             $scope.setCurrent = function (stuRec, assessmentItem, setCondition, setFocus) {
                 if ($scope.studentList && $scope.studentList.indexOf(stuRec) >= 0)
@@ -608,7 +724,7 @@
                 $scope.current.ConfigCustomAssessmentItem.AddItem = function () {
                     $scope.current.ConfigCustomAssessmentItem.push({
                         Name: ""
-                        , Date: ""
+                        , Date: "" + (new Date().getFullYear()) + "/" + (new Date().getMonth()) + "/" + (new Date().getDate())
                         , Weight: "100"
                         , Limit: "100"
                         , Description: ""
