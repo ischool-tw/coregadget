@@ -107,13 +107,16 @@
                     <ul class="dropdown-menu">
                         <li class="dropdown-header">Calculation</li>
                         <li ng-repeat="assessmentRec in current.Subject.Assessment">
-                            <a ng-class="{'disabled': assessment.AllowCustomAssessment !== 'true' || assessment.TeacherSequence !== current.Course.MySequence || assessment.Editable !== 'true'}">
+                            <a ng-class="{'disabled': assessmentRec.AllowCustomAssessment !== 'true' || assessmentRec.TeacherSequence != current.Course.MySequence}"
+                               ng-click="calcCustomAssessment(assessmentRec)"
+                               href="javascript:void(0)">
                                 {{assessmentRec.Name}}
                             </a>
                         </li>
                         <li class="dropdown-header">Import</li>
                         <li ng-repeat="assessmentRec in current.Subject.Assessment">
-                            <a ng-class="{'disabled': assessment.AllowCustomAssessment !== 'true' || assessment.TeacherSequence !== current.Course.MySequence || assessment.Editable !== 'true'}">
+                            <a ng-class="{'disabled': true || assessmentRec.AllowCustomAssessment !== 'true' || assessmentRec.TeacherSequence != current.Course.MySequence || assessmentRec.Editable !== 'true'}"
+                               href="javascript:void(0)">
                                 {{assessmentRec.Name}}
                             </a>
                         </li>
@@ -134,7 +137,7 @@
                 <ul class="dropdown-menu">
                     <li ng-repeat="course in courseList"
                         ng-class="{active:course==current.Course}">
-                        <a href="javascript:void(0)" ng-click="setCurrentCourse(course)">{{course.CourseName}}</a>
+                        <a href="javascript:void(0)" ng-click="checkChange()?setCurrentCourse(course):null">{{course.CourseName}}</a>
                     </li>
                 </ul>
             </div>
@@ -146,7 +149,7 @@
                 <ul class="dropdown-menu">
                     <li ng-repeat="term in current.Course.Term"
                         ng-class="{active:term==current.Term}">
-                        <a href="javascript:void(0)" ng-click="setCurrentTerm(term)">{{term.Name}}</a>
+                        <a href="javascript:void(0)" ng-click="checkChange()?setCurrentTerm(term):null">{{term.Name}}</a>
                     </li>
                 </ul>
             </div>
@@ -158,7 +161,7 @@
                 <ul class="dropdown-menu">
                     <li ng-repeat="subject in current.Term.Subject"
                         ng-class="{active:subject==current.Subject}">
-                        <a href="javascript:void(0)" ng-click="setCurrentSubject(subject)">{{subject.Name}}</a>
+                        <a href="javascript:void(0)" ng-click="checkChange()?setCurrentSubject(subject):null">{{subject.Name}}</a>
                     </li>
                 </ul>
             </div>
@@ -169,12 +172,12 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li ng-class="{active:current.AssessmentMode == 'ReportCard'}">
-                        <a href="javascript:void(0)" ng-click="setAssessment('ReportCard')">Report Card</a>
+                        <a href="javascript:void(0)" ng-click="checkChange()?setAssessment('ReportCard'):null">Report Card</a>
                     </li>
                     <li ng-if="(current.Subject.Assessment).length> 0" class="divider"></li>
                     <li ng-repeat="assessment in current.Subject.Assessment"
                         ng-class="{'disabled': assessment.AllowCustomAssessment !== 'true' || assessment.TeacherSequence !== current.Course.MySequence, active:assessment==current.Assessment}">
-                        <a href="javascript:void(0)" ng-click="setAssessment('CustomAssessment', assessment);">{{assessment.Name}}</a>
+                        <a href="javascript:void(0)" ng-click="checkChange()?setAssessment('CustomAssessment', assessment):null">{{assessment.Name}}</a>
                     </li>
                 </ul>
             </div>
@@ -340,8 +343,8 @@
                                         <a ng-repeat="val in current.AssessmentItem.Indicators.Indicator"
                                            class="btn btn-default"
                                            ng-class="{'btn-danger':current.Value.toLowerCase() == val.toLowerCase()}"
-                                           ng-click="selectValue(val)">
-                                            {{val}}
+                                           ng-click="selectValue(val.Name)">
+                                            {{val.Name}}
                                         </a>
                                     </div>
                                 </td>
@@ -359,6 +362,11 @@
                             <div ng-if="current.AssessmentItem.TeacherSequence !== current.Course.MySequence">
                                 <strong>Teacher：</strong>
                                 <span>{{current.Course["Teacher"+current.AssessmentItem.TeacherSequence]}}</span>
+                            </div>
+                            <div ng-if="current.AssessmentItem.Type=='Indicator'"
+                                 ng-repeat="val in current.AssessmentItem.Indicators.Indicator">
+                                <strong>{{val.Name}}：</strong>
+                                <span>{{val.Description}}</span>
                             </div>
                         </div>
                         <div ng-if="current.AssessmentMode == 'CustomAssessment'">

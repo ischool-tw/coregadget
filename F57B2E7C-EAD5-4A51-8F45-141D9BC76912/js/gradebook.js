@@ -65,7 +65,7 @@
                                             }
                                             if (assessmentRec.Type == "Indicator") {
                                                 assessmentRec.Indicators = assessmentRec.Indicators || { Indicator: [] };
-                                                assessmentRec.Indicators.Indicator = ['a', 'b', 'c'].concat(assessmentRec.Indicators.Indicator || []);
+                                                //assessmentRec.Indicators.Indicator = ['a', 'b', 'c'].concat(assessmentRec.Indicators.Indicator || []);
                                             }
                                         });
                                     });
@@ -139,6 +139,7 @@
                                     });
                                     $scope.studentList = response.Student;
                                     $scope.setCurrent($scope.studentList[0], null, true, true);
+                                    $scope.calc();
                                 });
 
                                 $scope.connection.send({
@@ -229,6 +230,10 @@
                                 if (totalWeight) {
                                     stuRec["Val_" + assessmentAvg.Key] = stuRec["Origin_" + assessmentAvg.Key] = Math.round(100 * weightSum / (totalWeight || 1)) / 100;
                                 }
+                                else {
+                                    delete stuRec["Val_" + assessmentAvg.Key];
+                                    delete stuRec["Origin_" + assessmentAvg.Key];
+                                }
                             });
                         }
                     }
@@ -302,6 +307,10 @@
                                                 if (totalWeight) {
                                                     stuRec["Val_" + assessmentAvg.Key] = stuRec["Origin_" + assessmentAvg.Key] = Math.round(100 * weightSum / (totalWeight || 1)) / 100;
                                                 }
+                                                else {
+                                                    delete stuRec["Val_" + assessmentAvg.Key];
+                                                    delete stuRec["Origin_" + assessmentAvg.Key];
+                                                }
                                             });
                                         }
                                     }
@@ -360,6 +369,48 @@
                     });
                 }
             };
+
+            $scope.calcCustomAssessment = function (assessment) {
+                if ($scope.current.Subject.Assessment.indexOf(assessment) >= 0 && assessment.TeacherSequence == $scope.current.Course.MySequence) {
+
+                    $scope.connection.send({
+                        service: "gradebook.GetCustomAssessment",
+                        autoRetry: true,
+                        body: {
+                            CourseID: $scope.current.Course.CourseID
+                            , TermName: $scope.current.Term.Name
+                            , SubjectName: $scope.current.Subject.Name
+                            , AssessmentName: assessment.Name
+                        },
+                        result: function (response, error, http) {
+                            if (error) {
+                                alert("gradebook.GetCustomAssessment Error");
+                            } else {
+                                $scope.$apply(function () {
+                                    var totalWeight = 0;
+                                    [].concat($scope.studentList || []).forEach(function (stuRec) {
+                                        var totalWeight = 0;
+                                        var weightSum = 0;
+                                        [].concat(response.CustomAssessmentItem || []).forEach(function (assessmentRec) {
+                                            assessmentRec.Key = assessmentRec.TermName + "^_^" + assessmentRec.SubjectName + "^_^" + assessmentRec.AssessmentName + "^_^" + assessmentRec.CustomAssessmentName;
+                                            var weight = Number(assessmentRec.Weight);
+                                            var score = Number(stuRec["Origin_" + assessmentRec.Key]);
+                                            if (weight && score) {
+                                                totalWeight += weight;
+                                                weightSum += score * weight;
+                                            }
+                                        });
+                                        if (totalWeight) {
+                                            stuRec["Val_" + assessment.Key] = Math.round(100 * weightSum / (totalWeight || 1)) / 100;
+                                        }
+                                    });
+                                });
+                            }
+                        }
+                    });
+
+                }                    
+            }
 
             $scope.setCurrent = function (stuRec, assessmentItem, setCondition, setFocus) {
                 if ($scope.studentList && $scope.studentList.indexOf(stuRec) >= 0)
@@ -429,8 +480,8 @@
                 }
                 else if ($scope.current.AssessmentItem.Type == 'Indicator') {
                     $scope.current.AssessmentItem.Indicators.Indicator.forEach(function (val) {
-                        if (val.toLowerCase() == $scope.current.Value.replace(/^\s+|\s+$/g, '').toLowerCase()) {
-                            $scope.current.Value = val;
+                        if (val.Name.toLowerCase() == $scope.current.Value.replace(/^\s+|\s+$/g, '').toLowerCase()) {
+                            $scope.current.Value = val.Name;
                             flag = true;
                         }
                     });
@@ -605,11 +656,20 @@
                 });
             }
 
+            $scope.checkChange = function (next) {
+                if (!$scope.checkAllTable()) {
+                    return window.confirm("Changes will be lost without saving.");
+                }
+                else {
+                    return true;
+                }
+            }
+
             gadget.onLeave(function () {
                 var data_changed = !$scope.checkAllTable();
 
                 if (data_changed) {
-                    return "尚未儲存資料，現在離開視窗將不會儲存本次更動";
+                    return "Changes will be lost without saving.";
                 }
                 else {
                     return "";
