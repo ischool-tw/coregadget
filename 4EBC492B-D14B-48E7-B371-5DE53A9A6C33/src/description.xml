@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+	<ModulePrefs title="IEP--教師IEP填報" description="IEP--教師IEP填報">
+		<Title lang="zh-TW">IEP--教師IEP填報</Title>
+		<Icon>icon.png</Icon>
+		<Title lang="zh-CN"></Title>
+		<Title lang="en-US"></Title>
+	</ModulePrefs>
+</Module>
