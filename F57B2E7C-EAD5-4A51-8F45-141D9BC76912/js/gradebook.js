@@ -412,6 +412,30 @@
                 }
             }
 
+            $scope.copyView = function () {
+                $("#viewTable").show();
+                var range = document.createRange();
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                try {
+                    try {
+                        range.selectNodeContents($("#viewTable")[0]);
+                        sel.addRange(range);
+                    } catch (e) {
+                        range.selectNode($("#viewTable")[0]);
+                        sel.addRange(range);
+                    }
+                    document.execCommand("Copy");
+                }
+                catch (exc) {
+                    alert("Browser not support!!");
+                }
+                finally {
+                    $("#viewTable").hide();
+                    alert("table coy");
+                }
+            }
+
             $scope.showImport = function (assessmentRec) {
                 var importProcess = {
                     Name: 'Import ' + assessmentRec.Name,
@@ -529,8 +553,10 @@
             };
 
             $scope.setCurrent = function (stuRec, assessmentItem, setCondition, setFocus) {
-                if ($scope.studentList && $scope.studentList.indexOf(stuRec) >= 0)
+                if ($scope.studentList && $scope.studentList.indexOf(stuRec) >= 0) {
+                    $("#stuPhoto").attr("src","");
                     $scope.current.Student = stuRec;
+                }
                 if ($scope.AssessmentItem && $scope.AssessmentItem.indexOf(assessmentItem) >= 0)
                     $scope.current.AssessmentItem = assessmentItem;
                 if ($scope.current.Student && $scope.current.AssessmentItem)

@@ -185,6 +185,7 @@
             </div>
         </div>
         <div ng-if="studentList" class="hidden-xs" style="margin-top:10px;">
+            <!--輸入Panel-->
             <div style="position:relative;float:right;width:260px;">
                 <div data-offset-top="145"
                      bs-affix>
@@ -195,7 +196,8 @@
                             <tr>
                                 <th>
                                     <div style="max-height:120px">
-                                        <img class="hidden-xs"
+                                        <img id="stuPhoto"
+                                             class="hidden-xs"
                                              style="height:120px;margin:0px auto;display:block"
                                              ng-src="{{current.Student.PhotoUrl || 'css/images/no_photo.png'}}"
                                              fallback-src="css/images/no_photo.png" />
@@ -241,7 +243,7 @@
                                            data-toggle="dropdown"
                                            style="padding:0; color:#333; text-align:left;">
                                             <!--<i style="min-width: 14px;"
-                                               class="fa fa-edit"></i>-->
+                                            class="fa fa-edit"></i>-->
                                             {{current.AssessmentItem? current.AssessmentItem.Name:'Choose'}}
                                             <span class="caret"></span>
                                         </a>
@@ -249,7 +251,7 @@
                                             <li ng-repeat="assessmentRec in AssessmentItem | filter : {'Key' : '_'}">
                                                 <a href="javascript:void(0)" ng-click="setCurrent(null, assessmentRec, true, true)">
                                                     <!--<i style="min-width: 14px;"
-                                                       class="fa fa-edit"></i>-->
+                                                    class="fa fa-edit"></i>-->
                                                     {{assessmentRec.Name}}
                                                 </a>
                                             </li>
@@ -391,7 +393,13 @@
                     </div>
                 </div>
             </div>
-            <div style="margin-right:270px;">
+            <!--檢視區-->
+            <div style="margin-right:270px;position:relative;">
+                <a style="position:absolute;z-index:1;"
+                   ng-click="copyView()"
+                   class="btn btn-xs btn-link">
+                    copy
+                </a>
                 <!--檢視table-->
                 <table class="table table-bordered table-striped table-hover text-center"
                        style="table-layout:fixed;">
@@ -442,6 +450,43 @@
                                      ng-attr-title="{{stuRec['Origin_'+assessmentRec.Key]?'Origin：'+stuRec['Origin_'+assessmentRec.Key]:''}}"
                                      style="display:inline-block;background-color:red;position:absolute;left:3px;top:3px;width:5px;height:6px;border-radius:5px;">
                                 </div>
+                                <span>
+                                    {{stuRec['Val_'+assessmentRec.Key]}}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- 複製專用 -->
+                <table class="table table-bordered table-striped"
+                       style="display: none; "
+                       id="viewTable">
+                    <thead>
+                        <tr>
+                            <!--<th rowspan="2">ClassName</th>-->
+                            <!--<th rowspan="2">SeatNo</th>-->
+                            <th rowspan="2">StudentNumber</th>
+                            <t<!--h rowspan="2">Name</th>-->
+                            <th rowspan="2">EnglishName</th>
+                            <th ng-repeat="assessmentRec in AssessmentItem">
+                                {{assessmentRec.Name}}
+                            </th>
+                        </tr>
+                        <tr>
+                            <th ng-repeat="assessmentRec in AssessmentItem">
+                                <small ng-if="assessmentRec.Percentage">{{assessmentRec.Percentage}}%</small>
+                                <small ng-if="assessmentRec.Percentage==0">--</small>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="stuRec in studentList">
+                            <!--<td>{{stuRec.ClassName}}</td>-->
+                            <!--<td>{{stuRec.SeatNo}}</td>-->
+                            <td>{{stuRec.StudentNumber}}</td>
+                            <!--<td>{{stuRec.Name}}</td>-->
+                            <td>{{stuRec.EnglishName}}</td>
+                            <td ng-repeat="assessmentRec in AssessmentItem">
                                 <span>
                                     {{stuRec['Val_'+assessmentRec.Key]}}
                                 </span>
@@ -700,23 +745,23 @@
                 </div>
                 <div class="modal-body" ng-if="!importProcess.ParseValues">
                     <div style="margin:15px 0px;">
-                        <span>使用說明</span>
+                        <span>Directions</span>
                         <ol class="">
                             <li>
-                                <span>從excel中複製成績</span>
+                                <span>Copy the grades from Excel</span>
                                 <ul>
-                                    <li class="text-danger">請先確認excel中學生的人數及順序皆與系統相符</li>
-                                    <li class="text-danger">複製成績時，僅需圈選成績的部分，不含學生姓名及表頭</li>
-                                    <li class="text-danger">如有學生沒有成績資料，請輸入"-"，表示無資料，否則系統將認定錯誤</li>
+                                    <li class="text-danger">Please check the list of students is in the same order as the system's</li>
+                                    <li class="text-danger">Don't include the names and title when copying the grades</li>
+                                    <li class="text-danger">If students who haven't had grades yet, please input “-” as no data, or the system will analyst as an error</li>
                                 </ul>
                             </li>
-                            <li>於下方文字方塊中貼上</li>
-                            <li>使用"解析"按鈕，進行解析</li>
-                            <li>預覽資料確認成績正確</li>
+                            <li>Please paste the grades in the textbox below</li>
+                            <li>Press “Parse” to read out the data</li>
+                            <li>Preview the result and confirm</li>
                             <li>
-                                <span>使用"匯入"按鈕，進行匯入</span>
+                                <span>Press “Import” to import the data</span>
                                 <ul>
-                                    <li class="text-danger">如果輸入資料有錯誤，將無法匯入</li>
+                                    <li class="text-danger">The data won't be able to import if there's an error</li>
                                 </ul>
                             </li>
                         </ol>
