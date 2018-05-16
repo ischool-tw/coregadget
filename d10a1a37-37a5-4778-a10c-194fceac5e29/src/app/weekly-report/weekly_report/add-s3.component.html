@@ -13,68 +13,48 @@
         </ol>
     </nav>
     <div class="row">
-        <div class="col-sm-3 col-md-2 text-right order-sm-2 align-self-center">
-            <button type="button" class="btn btn-lg btn-info" disabled={{checkButtonEnable}} (click)="send()">SEND</button>
-        </div>
-        <div class="col-sm-9 col-md-10">
-            <dl class="row">
-                <dt class="col-sm-3 col-lg-2 text-md-right">Teacher</dt>
-                <dd class="col-sm-9 col-lg-10">{{teacherName}}</dd>
-                <dt class="col-sm-3 col-lg-2 text-md-right">Date</dt>
-                <dd class="col-sm-9 col-lg-10">{{beginDate}} - {{endDate}}</dd>
-                <!-- <dt class="col-sm-3 col-lg-2 text-md-right">Description</dt>
-              <dd class="col-sm-9 col-lg-10">{{weeklyReportS3.GeneralComment}}</dd> -->
-            </dl>
-        </div>
-    </div>
-    <div class="row">
         <div class="col-sm-6 col-lg-4" *ngFor="let stud of studentWeeklyDataS3List">
             <div class="card mb-3">
-                <div class="card-header">
-                    <h3 class="mb-0">{{stud.Name}}</h3>
-                    <span class="text-gray">{{stud.StudentNumber}}</span>
+                <div class="card-header bg-light pt-3 pb-1 px-3 border-top border-bottom">
+                        <h3 class="mb-0">{{stud.Name}}</h3>
+                        <span class="text-gray">{{stud.StudentNumber}}</span>
+                    </div>
+                <div class="p-3 px-3">
+                    <h5>Teacher</h5>
+                    <p class=" ml-3 mb-1">{{teacherName}}</p>
+                    <h5>Date</h5>
+                    <p class=" ml-3 mb-1">{{beginDate}} - {{endDate}}</p>
+                    <h5>General Comment</h5>
+                    <p class=" ml-3 mb-1">{{weeklyReportS3.GeneralComment}}</p>
                 </div>
-                <ul class="list-group list-group-flush">
-                    <!-- Teacher Comment Style -->
-                    <li class="list-group-item list-group-item-light font-weight-bold">General Comment</li>
-                    <li class="list-group-item">{{weeklyReportS3.GeneralComment}}</li>
-                    <li class="list-group-item list-group-item-light font-weight-bold">Personal Comment</li>
-                    <li class="list-group-item">{{stud.PersonalComment}}</li>
-
-                    <div *ngIf="stud.displayGradebook">
-                            <li class="list-group-item list-group-item-light font-weight-bold">Gradebook</li>
-
-                            <div class="p-3 d-flex" *ngFor="let s1 of stud.GradeBookList">
-                                    <div class="gb">{{s1.Value}}</div>
-                                    <div class="ml-3">
-                                      <h6 class="mb-1">{{s1.Date}} {{s1.CustomAssessment}}</h6>
-                                      {{s1.Description}}
-                                    </div>
-                                  </div>
-                        <!-- Gradebook Style -->
-                        <!-- <li class="list-group-item list-group-item-light font-weight-bold">Gradebook</li>
-                        <li class="list-group-item" *ngFor="let gg of stud.GradeBookList">
-                            <div class="d-flex font-weight-bold mb-2">
-                                <div>{{gg.Date}}</div>
-                                <div class="mx-2">{{gg.CustomAssessment}}</div>
-                                <div class="ml-auto">
-                                    <span class="text-nowrap badge badge-secondary">{{gg.Value}}</span>
-                                </div>
-                            </div>
-                            <span class="text-gray">{{gg.Description}}</span>
-                        </li> -->
+                <div class="bg-light pt-3 pb-1 px-3 border-top border-bottom" *ngIf="stud.PersonalComment">
+                    Teacher Comment
+                </div>
+                <div class="p-3 ml-3" *ngIf="stud.PersonalComment">
+                    {{stud.PersonalComment}}
+                </div>
+                <div class="bg-light pt-3 pb-1 px-3 border-top border-bottom" *ngIf="stud.GradeBookList">
+                    Gradebook
+                </div>
+                <div class="p-3 d-flex" *ngFor="let s1 of stud.GradeBookList">
+                    <div class="gb">{{s1.Value}}</div>
+                    <div class="ml-3 mb-1 w-100">
+                        <h6 class="float-right font-weight-light">{{s1.Date}}</h6>
+                        <h5 class="mb-1">{{s1.CustomAssessment}}</h5>
+                        <p class="mb-1">
+                            {{s1.Description}}
+                        </p>
                     </div>
-
-                    <div *ngIf="stud.displayBehavior">
-                        <!-- Behavior Style -->
-                        <li class="list-group-item list-group-item-light font-weight-bold">Behavior</li>
-                        <li class="list-group-item d-flex" *ngFor="let bb of stud.BehaviorList">
-                            <div class="mr-2">{{bb.CreateDate2}}</div>
-                            <div>{{bb.Comment}}</div>
-                        </li>
+                </div>
+                <div class="bg-light pt-3 pb-1 px-3 border-top border-bottom" *ngIf="stud.displayBehavior">
+                    Behavior
+                </div>
+                <div class="p-3">
+                    <div *ngFor="let b1 of stud.BehaviorList">
+                        <h6 class="float-right font-weight-light">{{b1.CreateDate2}}</h6>
+                        <h5 class="mb-1">{{b1.Comment}}</h5>
                     </div>
-
-                </ul>
+                </div>
             </div>
         </div>
     </div>

@@ -166,17 +166,17 @@ export class AddComponent implements OnInit {
 
       if (!this.currentDateString) {
         checkCanSend = false;
-        checkCanSendError = "沒有輸入日期";
+        checkCanSendError = "Please select the date.";
       }
 
       if (!this.addText) {
         checkCanSend = false;
-        checkCanSendError += "沒有輸入 Comment";
+        checkCanSendError += "Please enter comment.";
       }
 
       if (this.checkCount === 0) {
         checkCanSend = false;
-        checkCanSendError += "沒有選學生";
+        checkCanSendError += "No students selected.";
       }
 
       if (checkCanSend === true) {
@@ -222,7 +222,7 @@ export class AddComponent implements OnInit {
         // console.log(rsp);
 
 
-        alert('儲存完成！');
+        alert('Saved！');
 
 
         // 清空暫存值
@@ -242,6 +242,5 @@ export class AddComponent implements OnInit {
     } finally {
       this.loading = false;
     }
-
   }
 }
