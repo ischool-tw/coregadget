@@ -432,7 +432,7 @@
                 }
                 finally {
                     $("#viewTable").hide();
-                    alert("table coy");
+                    alert("The table is copied, you can parse to Excel now.");
                 }
             }
 
