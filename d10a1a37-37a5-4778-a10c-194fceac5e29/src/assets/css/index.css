@@ -1,0 +1,21 @@
+/* ---------------------------------------------------
+    只給 index.html 使用的 class
+----------------------------------------------------- */
+
+.main-menu {
+	margin-top: 6rem;
+}
+
+.main-menu > div {
+	cursor: pointer;
+	padding: 0 3rem;
+	text-align: center;
+	width: 235px;
+}
+
+.main-menu > div > div {
+	text-align: center;
+	padding: 1.5rem 0.5rem;
+	font-size: 1.15rem;
+	font-weight: 500;
+}

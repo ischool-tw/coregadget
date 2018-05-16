@@ -1,0 +1,63 @@
+<!-- 新增 Stpe 1.（Basic & Gradebook Setting） -->
+<div id="weekly-report-add">
+    <nav aria-label="breadcrumb text-nowrap text-truncate">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="index.html">Home</a>
+            </li>
+            <li class="breadcrumb-item" [routerLink]="['../../../main']">Weekly Report</li>
+            <li class="breadcrumb-item">{{weeklyDataMain.CourseName}}</li>
+            <li class="breadcrumb-item">Add</li>
+            <li class="breadcrumb-item active" aria-current="page">Basic Settings</li>
+        </ol>
+    </nav>
+
+    <!-- <h3 class="my-3">Basic Settings</h3> -->
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label for="exampleFormControlInput1">Beginning Date</label>
+            <input type="date" class="form-control" placeholder="ex : 2018/03/06" #startDate [(ngModel)]="weeklyDataMain.BeginDate" (change)="startDateChange(startDate.value)">
+        </div>
+        <div class="form-group col-sm-6">
+            <label for="exampleFormControlInput1">End Date</label>
+            <input type="date" class="form-control" placeholder="ex : 2018/03/06" #endDate [(ngModel)]="weeklyDataMain.EndDate" (change)="endDateChange(endDate.value)">
+        </div>
+        <div class="form-group col-12">
+            <label for="exampleFormControlTextarea1">General Comment</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" #generalComment [(ngModel)]="weeklyDataMain.GeneralComment"
+                (keyup)="generalCommentChange(generalComment.value)"></textarea>
+        </div>
+    </div>
+    <div *ngIf="displayGradebook">
+        <h3 class="my-3">Choose Gradebook</h3>
+        <!-- 未輸入日期 Style
+      <p class="text-gray">Please set the Beginning and End Dates first.</p>
+      <div class="text-right">
+          <button type="button" class="btn btn-lg btn-info" disabled>NEXT（Behavior Settings）<i class="material-icons ml-1">chevron_right</i></button>
+      </div> -->
+
+        <!-- 已輸入日期 Style -->
+        <div class="row">
+            <div class="col-md-6" *ngFor="let gg of gradeBookList">
+                <div class="gb-check custom-control custom-checkbox mb-3 pl-0">
+                    <input type="checkbox" class="custom-control-input" id="gradebookCheck{{gg.UID}}" [(ngModel)]="gg.checked">
+                    <label class="card custom-control-label point" for="gradebookCheck{{gg.UID}}">
+                        <h5 class="card-header ml-2 pl-5 pb-2">
+                            {{gg.Date}} {{gg.CustomAssessment}}
+                        </h5>
+                        <div class="card-body text-gray ml-2 pl-5">
+                            {{gg.Description}}
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="text-right">
+        <button type="button" class="btn btn-lg btn-info " disabled={{checkNextButton}} (click)="save()">NEXT（Behavior Settings）
+            <i class="material-icons ml-1">chevron_right</i>
+        </button>
+    </div>
+</div>

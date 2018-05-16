@@ -1,0 +1,60 @@
+<div id="behavior" page>
+    <nav aria-label="breadcrumb text-nowrap text-truncate">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="index.html">Home</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page"> Behavior</li>
+            <button class="ml-auto btn btn-dark" [routerLink]="['../comment']">Comment Template</button>
+        </ol>
+    </nav>
+    <ul class="list-group mb-3 point" [routerLink]="['../list', data.ID,data.Name]" *ngFor="let data of courseDataList">
+        <li class="list-group-item active d-flex align-items-center py-2 ">
+            {{data.Name}}
+            <button class="ml-auto btn btn-info" [routerLink]="['../add', data.ID,data.Name]">
+                <i class="material-icons mr-1">add</i>ADD</button>
+        </li>
+        <div *ngIf="data.DisplayItem;else NoData">
+            <li class="list-group-item " *ngFor="let cdata of data.bDataList">
+                <div class="row">
+                    <div class="col-md-4 col-lg-3 text-nowrap">
+                        <span class="pr-3">{{cdata.CreateDate2}}</span>
+                        <span class="">{{cdata.StudentName}}</span>
+                    </div>
+                    <div class="col-md-8 col-lg-9">{{cdata.Comment}}</div>
+                </div>
+            </li>
+        </div>
+
+        <ng-template #NoData>
+            <li class="list-group-item ">
+                <div class="row">
+                    <div class="col-md-4 col-lg-3 text-nowrap">
+                        <span class="pr-3">沒有資料</span>
+                        <span class=""></span>
+                    </div>
+                    <div class="col-md-8 col-lg-9"></div>
+                </div>
+            </li>
+            <li class="list-group-item ">
+                <div class="row">
+                    <div class="col-md-4 col-lg-3 text-nowrap">
+                        <span class="pr-3"></span>
+                        <span class=""></span>
+                    </div>
+                    <div class="col-md-8 col-lg-9"></div>
+                </div>
+            </li>
+            <li class="list-group-item ">
+                <div class="row">
+                    <div class="col-md-4 col-lg-3 text-nowrap">
+                        <span class="pr-3"></span>
+                        <span class=""></span>
+                    </div>
+                    <div class="col-md-8 col-lg-9"></div>
+                </div>
+            </li>
+        </ng-template>
+    </ul>
+
+</div>

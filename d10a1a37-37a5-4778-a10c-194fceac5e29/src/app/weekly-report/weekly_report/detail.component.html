@@ -1,0 +1,71 @@
+<!-- 內容 -->
+<div id="weekly-report-page">
+    <nav aria-label="breadcrumb text-nowrap text-truncate">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="index.html">Home</a>
+            </li>
+            <li class="breadcrumb-item">Weekly Report</li>
+            <li class="breadcrumb-item">{{courseName}}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{beginDate}} - {{endDate}}</li>
+        </ol>
+    </nav>
+    <dl class="row">
+        <dt class="col-sm-3 col-lg-2 text-md-right">Teacher</dt>
+        <dd class="col-sm-9 col-lg-10">{{teacherName}}</dd>
+        <dt class="col-sm-3 col-lg-2 text-md-right">Date</dt>
+        <dd class="col-sm-9 col-lg-10">{{beginDate}} - {{endDate}}</dd>
+        <!-- <dt class="col-sm-3 col-lg-2 text-md-right">Description</dt>
+              <dd class="col-sm-9 col-lg-10">{{generalComment}}</dd> -->
+    </dl>
+    <div class="row">
+        <div class="col-sm-6 col-lg-4" *ngFor="let data of weeklyDataList">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3 class="mb-0">{{data.StudentName}}</h3>
+                    <span class="text-gray">{{data.StudentNumber}}</span>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <!-- Teacher Comment Style -->
+                    <li class="list-group-item list-group-item-light font-weight-bold">General Comment</li>
+                    <li class="list-group-item">{{generalComment}}</li>
+                    <li class="list-group-item list-group-item-light font-weight-bold">Personal Comment</li>
+                    <li class="list-group-item">{{data.PersonalComment}}</li>
+
+                    <div *ngIf="data.displayGradebook">
+                        <!-- Gradebook Style -->
+                        <li class="list-group-item list-group-item-light font-weight-bold">Gradebook</li>
+
+                        <!-- <li class="list-group-item" > -->
+                        <div class="p-3 d-flex" *ngFor="let s1 of data.gradeBookDataList">
+                            <div class="gb">{{s1.Value}}</div>
+                            <div class="ml-3">
+                                <h6 class="mb-1">{{s1.Date}} {{s1.CustomAssessment}}</h6>
+                                {{s1.Description}}
+                            </div>
+                        </div>
+                        <!-- <div class="d-flex font-weight-bold mb-2">
+                                <div>{{s1.Date}}</div>
+                                <div class="mx-2">{{s1.CustomAssessment}}</div>
+                                <div class="ml-auto">
+                                    <span class="text-nowrap badge badge-secondary">{{s1.Value}}</span>
+                                </div>
+                            </div>
+                            <span class="text-gray">{{s1.Description}}</span> -->
+                        <!-- </li> -->
+                    </div>
+                    <div *ngIf="data.displayBehavior">
+                        <!-- Behavior Style -->
+                        <li class="list-group-item list-group-item-light font-weight-bold">Behavior</li>
+                        <li class="list-group-item d-flex" *ngFor="let b1 of data.behaviorDataList">
+                            <div class="mr-2">{{b1.CreateDate2}}</div>
+                            <div>{{b1.Comment}}</div>
+                        </li>
+                    </div>
+
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>

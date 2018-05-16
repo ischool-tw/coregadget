@@ -1,0 +1,28 @@
+<!-- 單一課程列表 -->
+<div id="behavior-list" >
+  <nav aria-label="breadcrumb text-nowrap text-truncate">
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item" [routerLink]="['../../../main']">Home</li>
+          <li class="breadcrumb-item" [routerLink]="['../../../main']">Behavior</li>
+          <li class="breadcrumb-item active" aria-current="page">{{courseName}}</li>
+          <button class="ml-auto btn btn-dark" [routerLink]="['../../../comment']">Comment Template</button>
+      </ol>
+  </nav>
+  <ul class="list-group mb-3">
+      <li class="list-group-item active d-flex align-items-center py-2" >
+        {{courseName}}
+       
+          <button class="ml-auto btn btn-info" [routerLink]="['../../../add', courseID,courseName]" ><i class="material-icons mr-1">add</i>ADD</button>
+      </li>
+      <li class="list-group-item" *ngFor="let data of behaviorDataList">
+          <div class="row">
+              <div class="col-md-4 col-lg-3 text-nowrap">
+                  <span class="pr-3">{{data.CreateDate2}}</span>
+                  <span class="">{{data.Name}}</span>
+              </div>
+              <div class="col-md-8 col-lg-9">{{data.Comment}}</div>
+          </div>
+      </li>      
+      
+  </ul>
+</div>

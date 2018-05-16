@@ -1,0 +1,46 @@
+<!-- 新增 Step 2.（Comment） -->
+<div id="weekly-report-add-comment">
+    <nav aria-label="breadcrumb text-nowrap text-truncate">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="index.html">Home</a>
+            </li>
+            <li class="breadcrumb-item">Weekly Report</li>
+            <li class="breadcrumb-item">{{weeklyReportS2.CourseName}}</li>
+            <li class="breadcrumb-item">Add</li>
+            <li class="breadcrumb-item active" aria-current="page">Behavior Settings</li>
+        </ol>
+    </nav>
+    <div class="row">
+        <div class="col-sm-6 col-lg-4" *ngFor="let stud of studentWeeklyDataS2List">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3 class="mb-0">{{stud.Name}}</h3>
+                    <span class="text-gray">{{stud.StudentNumber}}</span>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="behaviorComment">Personal Comment</label>
+                        <textarea class="form-control" id="behaviorComment" rows="2" [(ngModel)]="stud.PersonalComment"></textarea>
+                    </div>
+                </div>
+                <!-- Behavior Style -->
+                <ul class="list-group list-group-flush b-check">
+                    <li class="list-group-item custom-control custom-checkbox mb-0" *ngFor="let bb of stud.BehaviorList">
+                        <input type="checkbox" class="custom-control-input" id="behaviorCheck{{bb.UID}}" [(ngModel)]="bb.checked">
+                        <label class="custom-control-label d-flex pl-4 ml-2" for="behaviorCheck{{bb.UID}}">
+                            <div class="mr-2">{{bb.CreateDate2}}</div>
+                            <div>{{bb.Comment}}</div>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    <div class="text-right">
+        <button type="button" class="btn btn-lg btn-info" (click)="save()">NEXT（Preview）
+            <i class="material-icons ml-1">chevron_right</i>
+        </button>
+    </div>
+</div>

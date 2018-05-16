@@ -1,0 +1,50 @@
+/* ---------------------------------------------------
+    只給 attendence.html 使用，變更或新增 style
+----------------------------------------------------- */
+
+.dropdown-menu::before {
+	box-shadow: none;
+}
+
+.dropdown-menu.show {
+	background: #FFF;
+	height: auto;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 3px rgba(0, 0, 0, 0.12), 0 4px 15px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* ---------------------------------------------------
+    自訂 Class Style
+----------------------------------------------------- */
+
+.st-list .card {
+	line-height: normal;
+	cursor: pointer;
+}
+
+.ad-status {
+	border: 1px solid rgba(0,0,0,.12);
+	text-align: center;
+	padding: 0.5rem;
+	color: rgba(0,0,0,.12);
+	margin-bottom: 0.5rem;
+}
+
+.late {
+	color: #ff9800;
+}
+
+.ad-status.late {
+	background: #ff9800;
+	color: #fff;
+}
+
+.sick {
+	color: #f44336;
+}
+
+.ad-status.sick {
+	background: #f44336;
+	color: #fff;
+}
