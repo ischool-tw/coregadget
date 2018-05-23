@@ -20,7 +20,7 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="behaviorComment">Personal Comment</label>
+                        <label for="behaviorComment">Teacher Comment</label>
                         <textarea class="form-control" id="behaviorComment" rows="2" [(ngModel)]="stud.PersonalComment"></textarea>
                     </div>
                 </div>
@@ -29,8 +29,12 @@
                     <li class="list-group-item custom-control custom-checkbox mb-0" *ngFor="let bb of stud.BehaviorList">
                         <input type="checkbox" class="custom-control-input" id="behaviorCheck{{bb.UID}}" [(ngModel)]="bb.checked">
                         <label class="custom-control-label d-flex pl-4 ml-2" for="behaviorCheck{{bb.UID}}">
-                            <div class="mr-2">{{bb.CreateDate2}}</div>
-                            <div>{{bb.Comment}}</div>
+                            <!-- <div class="mr-2">{{bb.CreateDate2}}</div>
+                            <div>{{bb.Comment}}</div> -->
+                            <div class="w-100">
+                                <h6 class="float-right font-weight-light">{{bb.CreateDate2}}</h6>
+                                <h5 class="mb-1">{{bb.Comment}}</h5>
+                            </div>
                         </label>
                     </li>
                 </ul>

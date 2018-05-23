@@ -64,6 +64,7 @@ export class AddS1Component implements OnInit {
       // let dd = moment('2018/5/3', "YYYY-MM-DD");
       //  alert(dd.isBetween(dateB, dateE, null, '[]'));
       for (const dd of this.canSelectGradeBookList) {
+        dd.checked = true;
         let chkDate = moment(dd.Date, "YYYY-MM-DD");
         if (dateB && dateE) {
           if (chkDate.isBetween(dateB, dateE, null, '[]')) {
@@ -102,7 +103,7 @@ export class AddS1Component implements OnInit {
   async generalCommentChange(v) {
     this.setNetButtonEnable(false);
     if (v.length === 0) {
-      alert("Please set the General Comment first.");
+      // alert("Please set the General Comment first.");
     } else {
       if (this.weeklyDataMain.BeginDate.length > 0 && this.weeklyDataMain.EndDate.length > 0) {
         this.setNetButtonEnable(true);
@@ -171,9 +172,9 @@ export class AddS1Component implements OnInit {
       })
       this.weeklyData.addGradebookList = Utils.array(rsp2_1, "Response/GradebookAssessmentScore");;
 
-      for (const gg of this.gradeBookList) {
-        gg.checked = true;
-      }
+      // for (const gg of this.gradeBookList) {
+      //   gg.checked = true;
+      // }
 
       // 取得評語
       const rsp3 = await this.contract.send('weekly.GetBehaviorByCourseID', {
