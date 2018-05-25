@@ -11,8 +11,8 @@
             oAuth: {
                 clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
                 clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
-                account: 'student07.whsh@1campus.net',
-                password: 1234//window.prompt('password:')
+                account: 'student03.whsh@1campus.net',
+                password: window.prompt('password:')
             }
         });
     </script>
@@ -94,6 +94,9 @@
                                         重修/補修
                                     </th>
                                     <th class="text-center col-sm-1">
+                                        必修/選修
+                                    </th>
+                                    <th class="text-center col-sm-1">
                                         學期
                                     </th>
                                     <th class="text-center col-sm-6">
@@ -112,6 +115,7 @@
                                         <input type="checkbox" ng-model="subjRec.Selected">
                                     </td>
                                     <td class="text-center">{{subjRec.Type}}</td>
+                                    <td class="text-center">{{subjRec.Required}}</td>
                                     <td class="text-center">{{subjRec.FailSemester}}</td>
                                     <td class="text-left">{{subjRec.FullName}}</td>
                                     <td class="text-center">{{subjRec.Credit}}</td>
