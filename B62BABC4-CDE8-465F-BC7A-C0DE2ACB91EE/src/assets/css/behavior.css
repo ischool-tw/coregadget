@@ -1,0 +1,126 @@
+/* ---------------------------------------------------
+    只給 behavior.html 使用，變更或新增 style
+----------------------------------------------------- */
+
+.dropdown-menu::before {
+	box-shadow: none;
+}
+
+.dropdown-menu.show {
+	background: #FFF;
+	height: auto;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 3px rgba(0, 0, 0, 0.12), 0 4px 15px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* ---------------------------------------------------
+    自訂 Class Style
+----------------------------------------------------- */
+
+.st-list .card {
+	width: calc(16.66% - 8px);
+	margin-right: 8px;
+	margin-bottom: 1rem;
+}
+
+.st-list label {
+	display: block;
+	font-size: 1rem;
+	color: rgba(0, 0, 0, 0.87);
+	line-height: 1.428572;
+}
+
+.st-list img, #stCheck img {
+	width: 100%;
+	height: auto;
+}
+
+.st-check {
+	position: relative;
+    display: inline-block;
+}
+
+.st-check input[type="checkbox"] {
+    display: none;
+}
+
+.st-check input[type="checkbox"] + label {
+    cursor: pointer;
+}
+
+.st-check input[type="checkbox"]:checked + label {
+    background: #fff;
+}
+.st-check input[type="checkbox"]:checked + label:before {
+    position:absolute;
+    width: 100%;
+    height: calc(100% - 60px);
+	font-size: 3rem;
+    font-family: 'Material Icons';
+    content: "check_circle";
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    background: rgba(0,0,0,.38);
+    padding-top: 50%;
+}
+
+
+/* ---------------------------------------------------
+    Responsive
+----------------------------------------------------- */
+
+@media screen and (max-width: 575px) {
+	.st-list .card {
+		width: calc(50% - 8px);
+	}
+}
+
+@media screen and (min-width: 576px) {
+	.st-list .card {
+		width: calc(33% - 8px);
+	}
+}
+
+@media screen and (min-width: 768px) {
+	.st-list .card {
+		width: calc(25% - 8px);
+	}
+	.t-list > div {
+		width: calc(50% - 4px);
+	}
+}
+
+@media screen and (min-width: 960px) {
+	.st-list .card {
+		width: calc(20% - 8px);
+	}
+}
+
+@media screen and (min-width: 1280px) {
+	.st-list .card {
+		width: calc(16.66% - 8px);
+	}
+}
+
+@media screen and (min-width: 1440px) {
+	.st-list .card {
+		width: calc(14.28% - 8px);
+	}
+}
+
+@media screen and (min-width: 1600px) {
+	.st-list .card {
+		width: calc(12.5% - 8px);
+	}
+}
+
+@media screen and (min-width: 1920px) {
+	.st-list .card {
+		width: calc(10% - 8px);
+	}
+}
+
+
+

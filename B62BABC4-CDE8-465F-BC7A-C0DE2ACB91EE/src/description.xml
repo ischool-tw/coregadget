@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <ModulePrefs title="線上選課" description="選課系統V2.5">
+    <Title lang="zh-TW">線上選課</Title>
+    <Icon>icon.png</Icon>
+    <Title lang="zh-CN">
+    </Title>
+    <Title lang="en-US">
+    </Title>
+  </ModulePrefs>
+</Module>
