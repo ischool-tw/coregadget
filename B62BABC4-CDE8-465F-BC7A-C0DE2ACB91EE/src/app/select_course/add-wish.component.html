@@ -6,6 +6,9 @@
     </div>
 
     <ng-template #noloading>
+        <div *ngIf="saving">
+            <div style="position: absolute;top: 50%;left: 50%;margin-top: -20px;margin-left: -50px;z-index: 100; ">Saving ...</div>
+        </div>
         <nav aria-label="breadcrumb text-nowrap text-truncate">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"
@@ -44,12 +47,12 @@
                     </div>
                     <div class="text-right">
                         <button class="btn btn-link text-green bt-auto"
-                                (_click)="moveUp(subject)">
+                                (click)="moveUp(subject)">
                             <i class="material-icons">arrow_upward</i>
                             <span class="d-none d-sm-inline-block">上移</span>
                         </button>
                         <button class="btn btn-link text-green bt-auto"
-                                (_click)="moveDown(subject)">
+                                (click)="moveDown(subject)">
                             <i class="material-icons">arrow_downward</i>
                             <span class="d-none d-sm-inline-block">下移</span>
                         </button>

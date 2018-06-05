@@ -16,6 +16,7 @@ import { Subject } from 'rxjs';
 })
 export class AddWishComponent implements OnInit {
   loading: boolean = true;
+  saving: boolean = false;
   subjectType: string;
   currentStatus: any;
 
@@ -43,21 +44,75 @@ export class AddWishComponent implements OnInit {
     }
   }
 
-  async setData(){
+  async setData() {
     try {
-      this.loading = true;
-      this.currentStatus = await this.contract.send('SetWish', { SubjectType: this.subjectType, Wish: this.currentStatus.Wish });
+      this.saving = true;
+      await this.contract.send('SetWish', { SubjectType: this.subjectType, Wish: this.currentStatus.Wish });
+
     } catch (err) {
-      console.log(err);
+      alert(err);
     } finally {
-      this.loading = false;
-      this.getData();
+      var self = this;
+      this.saving = false;
+      self.currentStatus.Subject.forEach(function(subject){
+        subject.WishOrder = "";
+        self.currentStatus.Wish.forEach(function(wish){
+          if (subject.SubjectID == wish.SubjectID)
+          {
+            subject.WishOrder = wish.WishOrder;
+          }
+        });
+      });
+      // this.getData();
     }
   }
   removeItem(subject) {
+    if (this.saving)
+      return;
+
     var index = this.currentStatus.Wish.indexOf(subject);
     if (index >= 0) {
       this.currentStatus.Wish.splice(index, 1);
+      this.currentStatus.Wish.forEach(function (wish, order) {
+        wish.WishOrder = order + 1;
+      });
+     
+      this.setData();
+    }
+  }
+
+  moveDown(subject) {
+    if (this.saving)
+      return;
+    subject.WishOrder += 1.5;
+    this.currentStatus.Wish.sort(function (a, b) {
+      return a.WishOrder - b.WishOrder;
+    });
+    this.currentStatus.Wish.forEach(function (wish, order) {
+      wish.WishOrder = order + 1;
+    });
+    this.setData();
+  }
+
+  moveUp(subject) {
+    if (this.saving)
+      return;
+    subject.WishOrder -= 1.5;
+    this.currentStatus.Wish.sort(function (a, b) {
+      return a.WishOrder - b.WishOrder;
+    });
+    this.currentStatus.Wish.forEach(function (wish, order) {
+      wish.WishOrder = order + 1;
+    });
+    this.setData();
+  }
+
+  joinCourse(subject) {
+    if (this.saving)
+      return;
+    var index = this.currentStatus.Wish.indexOf(subject);
+    if (index < 0 && this.currentStatus.Wish.length < 5) 
+      this.currentStatus.Wish.push({...subject});
       this.currentStatus.Wish.forEach(function (wish, order) {
         wish.WishOrder = order + 1;
       });
