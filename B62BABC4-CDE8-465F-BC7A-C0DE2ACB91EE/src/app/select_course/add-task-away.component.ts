@@ -38,10 +38,10 @@ export class AddTaskAwayComponent implements OnInit {
 
       // this.currentStatus.Attend = [].concat(this.currentStatus.Attend || []);
       this.currentStatus.Subject = [].concat(this.currentStatus.Subject || []);
-     
+
     } catch (err) {
       // console.log(err);
-      alert("addTakeAway error:\n"+JSON.stringify(err));
+      alert("addTakeAway error:\n" + JSON.stringify(err));
     } finally {
       this.loading = false;
     }
@@ -51,43 +51,64 @@ export class AddTaskAwayComponent implements OnInit {
     if (this.saving)
       return;
 
-      this.setData({...subject});
-    
+    this.setData({ ...subject });
+
   }
 
   async setData(subject) {
     try {
       this.saving = true;
-      
-      let rsp = await this.contract.send('SetTakeAway', { SubjectType: this.subjectType, SubjectID:subject.SubjectID });
+
+      let rsp = await this.contract.send('SetTakeAway', { SubjectType: this.subjectType, SubjectID: subject.SubjectID });
       console.log(rsp);
-      if (rsp.message != "")
-      {
+      if (rsp.message != "") {
         alert(rsp.message);
       }
     } catch (err) {
-      
-      alert("SetTakeAway error:\n"+JSON.stringify(err));
+
+      alert("SetTakeAway error:\n" + JSON.stringify(err));
     } finally {
       // var self = this;
       this.saving = false;
-     
-       this.getData();
+
+      this.getData();
     }
   }
 
-  showDialog(subject) {
+  showDialog(subject, mode) {
     // console.log(JSON.stringify(subject));
     const dig = this.dialog.open(AddDialogComponent, {
-      data: { subject: subject, mode: '先搶先贏' }
+      data: { subject: subject, mode: mode , countMode:'先搶先贏'}
     });
 
     dig.afterClosed().subscribe((v) => {
-    //  alert(JSON.stringify(v.subject));
-      if (v.subject) {
+      //  alert(JSON.stringify(v.subject));
+      if (v && v.subject) {
         this.joinCourse(v.subject);
       }
     });
+  }
+  getLevel(subject) {
+    switch (subject.Level) {
+      case "":
+        return "";
+      case "1":
+        return " I";
+      case "2":
+        return " II";
+      case "3":
+        return " III";
+      case "4":
+        return " IV";
+      case "5":
+        return " V";
+      case "6":
+        return " VI";
+      case "7":
+        return " VII";
+      case "8":
+        return " VIII";
+    }
   }
 
 }

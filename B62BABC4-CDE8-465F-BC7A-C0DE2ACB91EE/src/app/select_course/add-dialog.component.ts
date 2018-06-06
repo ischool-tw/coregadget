@@ -19,7 +19,7 @@ export class AddDialogComponent implements OnInit {
   // 取得 contract 連線。
   contract: Contract;
   buttonText: string = "";
-  
+
   async ngOnInit() {
 
     this.getData();
@@ -37,14 +37,12 @@ export class AddDialogComponent implements OnInit {
   }
 
   async getData() {
-    if (this.data.mode === "") {
-      this.buttonText = "";      
-    } else {
+    if (this.data.mode == "志願序") {
       this.buttonText = "加入志願";
-      if (this.data.mode !== "志願序") {
-        this.buttonText = "選課";
-      }    
+    } else if (this.data.mode == "先搶先贏") {
+      this.buttonText = "選課";
+    } else {
+      this.buttonText = "";
     }
-    // console.log(JSON.stringify(this.data.subject));
   }
 }

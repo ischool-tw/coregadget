@@ -18,7 +18,7 @@ export class AddWishComponent implements OnInit {
   saving: boolean = false;
   subjectType: string;
   currentStatus: any;
-  Tooltip = "設為第一志願人數 / 課程人數上限 1. 代表熱程熱門程度 2. 可自行評估選上的機率 3. 請避免在第二志願選填第一志願分發必定額滿的課程";
+  Tooltip = "可推算第一輪志願分發狀況\n 1. 自行評估選上的機率\n 2. 避免後面志願選填必定額滿的課程";
   constructor(private route: ActivatedRoute, private gadget: GadgetService, private router: Router, private dialog: MatDialog) { }
   // 取得 contract 連線。
   contract: Contract;
@@ -37,7 +37,7 @@ export class AddWishComponent implements OnInit {
       this.currentStatus.Subject = [].concat(this.currentStatus.Subject || []);
     } catch (err) {
       console.log(err);
-      alert("addWish error:\n"+JSON.stringify(err));
+      alert("addWish error:\n" + JSON.stringify(err));
     } finally {
       this.loading = false;
     }
@@ -119,17 +119,39 @@ export class AddWishComponent implements OnInit {
 
   }
 
-  showDialog(subject) {
+  showDialog(subject, mode) {
     // console.log(JSON.stringify(subject));
     const dig = this.dialog.open(AddDialogComponent, {
-      data: { subject: subject, mode: '志願序' }
+      data: { subject: subject, mode: mode, countMode:'志願序' }
     });
 
     dig.afterClosed().subscribe((v) => {
-    //  alert(JSON.stringify(v.subject));
-      if (v.subject) {
+      //  alert(JSON.stringify(v.subject));
+      if (v && v.subject) {
         this.joinCourse(v.subject);
       }
     });
+  }
+  getLevel(subject) {
+    switch (subject.Level) {
+      case "":
+        return "";
+      case "1":
+        return " I";
+      case "2":
+        return " II";
+      case "3":
+        return " III";
+      case "4":
+        return " IV";
+      case "5":
+        return " V";
+      case "6":
+        return " VI";
+      case "7":
+        return " VII";
+      case "8":
+        return " VIII";
+    }
   }
 }

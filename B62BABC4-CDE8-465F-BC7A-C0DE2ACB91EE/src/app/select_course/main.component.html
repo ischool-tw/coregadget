@@ -17,16 +17,26 @@
                 <li class="list-group-item active">
                     {{currentStatus.SchoolYear}} 學年度 {{currentStatus.Semester}} 學期
                 </li>
-                <li class="list-group-item">
+                <li *ngIf="currentStatus.PS"
+                    class="list-group-item">
+                    選課時間：{{currentStatus.PS}}
+                </li>
+                <li *ngIf="currentStatus.P1"
+                    class="list-group-item">
                     第一階段：{{currentStatus.P1}}
                 </li>
-                <li class="list-group-item">
+                <li *ngIf="currentStatus.P2"
+                    class="list-group-item">
                     第二階段：{{currentStatus.P2}}
                 </li>
-                <li class="list-group-item">
+                <li *ngIf="currentStatus.Memo"
+                    class="list-group-item active">
                     選課說明：
-                    <br>
-                    <pre style="font-size: 100%">{{currentStatus.Memo}}</pre>
+                </li>
+                <li *ngIf="currentStatus.Memo"
+                    class="list-group-item">
+                    <pre style="font-size: 100%"
+                         class="my-0">{{currentStatus.Memo}}</pre>
                 </li>
             </ul>
         </div>
@@ -36,7 +46,7 @@
                 <li class="list-group-item active d-flex flex-column flex-md-row align-items-md-center py-2">
                     <span class="mr-auto">
                         <span>{{subjectType.SubjectType}}</span>
-                        <span *ngIf="currentStatus.CurrentMode == '志願序' && !subjectType.Attend">（已選志願數：{{subjectType.Wish.length}}/5）</span>
+                        <span *ngIf="currentStatus.CurrentMode == '志願序' && !subjectType.Attend">（已選志願數：{{subjectType.Wish.length}} / 5）</span>
                     </span>
 
                     <div *ngIf="currentStatus.CurrentMode == '先搶先贏'">
@@ -53,14 +63,14 @@
                 <!-- 顯示選課結果 -->
                 <ng-container *ngIf="subjectType.Attend">
                     <li class="list-group-item list-group-item-action d-flex flex-column flex-md-row align-items-md-center py-2 point"
-                        (click)="showDialog(subjectType.Attend)">
+                        (click)="showDialog(subjectType.Attend, '', '先搶先贏')">
                         <!-- 指定選課才有這 icon -->
                         <i class="material-icons mr-2"
                            data-toggle="tooltip"
                            data-placement="top"
                            title="指定修課"
                            *ngIf="subjectType.Attend.Lock=='true'">lock_outline</i>
-                        {{subjectType.Attend.SubjectName}}
+                        {{subjectType.Attend.SubjectName}}{{getLevel(subjectType.Attend)}}
                     </li>
                 </ng-container>
                 <!-- 顯示尚未選課 -->
@@ -71,22 +81,25 @@
                 </ng-container>
                 <!-- 顯示選填志願 -->
                 <ng-container *ngIf="!subjectType.Attend&&currentStatus.CurrentMode != '先搶先贏'&&subjectType.Wish.length>0">
-                    <li class="list-group-item list-group-item-action d-flex flex-column flex-md-row align-items-md-center py-2 point"
+                    <li *ngFor="let subject of subjectType.Wish"
+                        class="list-group-item list-group-item-action d-flex flex-column flex-md-row align-items-md-center py-0 point"
+                
                         data-toggle="modal"
-                        data-target="#crouseInfo"
-                        (click)="showDialog(subject)"
-                        *ngFor="let subject of subjectType.Wish">
-                        <!-- 指定選課才有這 icon -->
-                        <i class="material-icons mr-2"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="指定修課"
-                           *ngIf="subject.isLock">lock_outline</i>
-                        <div class="mr-auto">
-                            <span class="pr-2">{{subject.WishOrder}}</span>{{subject.SubjectName}}
-                        </div>
-                        <div>
-                            <span class="badge badge-light mt-2 mt-md-0 mr-md-3">人數：已選 {{subject.FirstWishCount}} / 上限 {{subject.Limit}}</span>
+                        data-target="#crouseInfo">
+                        <div (click)="showDialog(subject, '', '志願序')"
+                             style="flex: 1"
+                             class="d-flex flex-md-row justify-content-md-between py-3">
+                            <div class="mr-auto">
+                                <span class="pr-2">{{subject.WishOrder}}</span>
+                                <span>&nbsp;{{subject.SubjectName}}{{getLevel(subject)}}</span>
+                            </div>
+                            <div>
+                                <span class="badge badge-light mt-2 mt-md-0 mr-md-3"
+                                      [matTooltip]="Tooltip">
+                                    <span>設為第一志願人數 / 名額：</span>
+                                    <span>{{subject.FirstWishCount}} / {{subject.Limit}}</span>
+                                </span>
+                            </div>
                         </div>
                     </li>
                 </ng-container>

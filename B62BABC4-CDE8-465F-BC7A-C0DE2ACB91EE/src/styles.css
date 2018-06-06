@@ -17,7 +17,9 @@ router-outlet{ display: none;}
   .mat-dialog-container {
     padding: 0px !important;
   }
-  
+  .mat-tooltip {
+    white-space: pre-wrap;
+  }
   
 /* .no-padding-dialog .mat-dialog-container {
     padding: 0;

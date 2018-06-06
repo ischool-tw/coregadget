@@ -17,6 +17,7 @@ import { AddDialogComponent } from './add-dialog.component';
 export class MainComponent implements OnInit {
   loading: boolean = true;
   currentStatus: any;
+  Tooltip = "可推算第一輪志願分發狀況\n 1. 自行評估選上的機率\n 2. 避免後面志願選填必定額滿的課程";
 
   constructor(private route: ActivatedRoute, private gadget: GadgetService, private router: Router, private dialog: MatDialog) { }
   // 取得 contract 連線。
@@ -38,9 +39,20 @@ export class MainComponent implements OnInit {
       this.currentStatus.P2StartTime = moment(parseInt(this.currentStatus.P2StartTime));
       this.currentStatus.P2EndTime = moment(parseInt(this.currentStatus.P2EndTime));
 
-      this.currentStatus.P1 = "" + this.currentStatus.P1StartTime.format("YYYY/MM/DD HH:mm:ss") + " ~ " + this.currentStatus.P2EndTime.format("YYYY/MM/DD HH:mm:ss") + " (" + this.currentStatus.P1Mode + ")";
-      this.currentStatus.P2 = "" + this.currentStatus.P2StartTime.format("YYYY/MM/DD HH:mm:ss") + " ~ " + this.currentStatus.P2EndTime.format("YYYY/MM/DD HH:mm:ss") + " (" + this.currentStatus.P2Mode + ")";
-
+      if ((this.currentStatus.P1Mode == "先搶先贏" || this.currentStatus.P1Mode == "志願序")
+        && (this.currentStatus.P2Mode == "先搶先贏" || this.currentStatus.P2Mode == "志願序")) {
+        this.currentStatus.P1 = "" + this.currentStatus.P1StartTime.format("YYYY/MM/DD HH:mm:ss") + " ~ " + this.currentStatus.P2EndTime.format("YYYY/MM/DD HH:mm:ss") + " (" + this.currentStatus.P1Mode + ")";
+        this.currentStatus.P2 = "" + this.currentStatus.P2StartTime.format("YYYY/MM/DD HH:mm:ss") + " ~ " + this.currentStatus.P2EndTime.format("YYYY/MM/DD HH:mm:ss") + " (" + this.currentStatus.P2Mode + ")";
+      }
+      else if (this.currentStatus.P1Mode == "先搶先贏" || this.currentStatus.P1Mode == "志願序") {
+        this.currentStatus.PS = "" + this.currentStatus.P1StartTime.format("YYYY/MM/DD HH:mm:ss") + " ~ " + this.currentStatus.P2EndTime.format("YYYY/MM/DD HH:mm:ss") + " (" + this.currentStatus.P1Mode + ")";
+      }
+      else if (this.currentStatus.P2Mode == "先搶先贏" || this.currentStatus.P2Mode == "志願序") {
+        this.currentStatus.PS = "" + this.currentStatus.P2StartTime.format("YYYY/MM/DD HH:mm:ss") + " ~ " + this.currentStatus.P2EndTime.format("YYYY/MM/DD HH:mm:ss") + " (" + this.currentStatus.P2Mode + ")";
+      }
+      else {
+        this.currentStatus.PS = "尚未設定選課時間";
+      }
       this.currentStatus.SubjectType = [].concat(this.currentStatus.SubjectType || []);
       this.currentStatus.Wish = [].concat(this.currentStatus.Wish || []);
 
@@ -51,11 +63,11 @@ export class MainComponent implements OnInit {
     }
   }
 
-  showDialog(subject) {
+  showDialog(subject, mode, countMode) {
     // console.log(JSON.stringify(subject));
     const dig = this.dialog.open(AddDialogComponent, {
-      data: { subject: subject, mode: '' }
-    });   
+      data: { subject: subject, mode: mode, countMode: countMode }
+    });
   }
 
   // 先搶先贏
@@ -72,5 +84,27 @@ export class MainComponent implements OnInit {
     this.router.navigate(['../add-wish', subjectType], {
       relativeTo: this.route
     });
+  }
+  getLevel(subject) {
+    switch (subject.Level) {
+      case "":
+        return "";
+      case "1":
+        return " I";
+      case "2":
+        return " II";
+      case "3":
+        return " III";
+      case "4":
+        return " IV";
+      case "5":
+        return " V";
+      case "6":
+        return " VI";
+      case "7":
+        return " VII";
+      case "8":
+        return " VIII";
+    }
   }
 }
