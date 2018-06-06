@@ -13,12 +13,12 @@ import { Inject } from '@angular/core';
   styles: []
 })
 export class AddDialogComponent implements OnInit {
- 
+
   constructor(private route: ActivatedRoute, private gadget: GadgetService, private router: Router, public dialogRef: MatDialogRef<AddDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
   // 取得 contract 連線。
   contract: Contract;
-  buttonText:string = "";
+  buttonText: string = "";
   
   async ngOnInit() {
 
@@ -27,8 +27,8 @@ export class AddDialogComponent implements OnInit {
 
   async join() {
     this.dialogRef.close({
-      subjectID: this.data.subjectID,
-      mode: this.data.mode
+      // 回傳 subject
+      subject: this.data.subject,
     })
   }
 
@@ -37,12 +37,14 @@ export class AddDialogComponent implements OnInit {
   }
 
   async getData() {
-    this.buttonText = "加入志願";
-    if (this.data.mode !== "志願序") {
-      this.buttonText = "選課";
+    if (this.data.mode === "") {
+      this.buttonText = "";      
+    } else {
+      this.buttonText = "加入志願";
+      if (this.data.mode !== "志願序") {
+        this.buttonText = "選課";
+      }    
     }
-    console.log(JSON.stringify(this.data.subject));
-    
+    // console.log(JSON.stringify(this.data.subject));
   }
-
 }

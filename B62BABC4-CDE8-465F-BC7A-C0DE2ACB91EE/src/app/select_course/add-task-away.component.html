@@ -53,11 +53,11 @@
         
                 data-toggle="modal"
                 data-target="#crouseInfo"
-                *ngFor="let subject of currentStatus.Subject">
-                <!-- (click)="showDialog(data)" -->
+                *ngFor="let subject of currentStatus.Subject">               
                 <div style="flex: 1"
-                     class="d-flex flex-md-row justify-content-md-between"
-                     matTooltip="課程介紹內容">
+                     class="d-flex flex-md-row justify-content-md-between" 
+                     (click)="showDialog(subject)"
+                     >
                     <div class="mr-auto">{{subject.SubjectName}}
 
                         <i class="material-icons mr-2"

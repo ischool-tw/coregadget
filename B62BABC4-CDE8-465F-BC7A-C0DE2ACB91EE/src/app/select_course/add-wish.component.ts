@@ -3,7 +3,6 @@ import { GadgetService, Contract } from '../gadget.service';
 import { Utils } from '../util';
 import { subjectInfo } from './subjectInfo';
 import { courseInfo } from './courseInfo';
-import { SelectCourseDataService } from '../select-course-data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { AddDialogComponent } from './add-dialog.component';
@@ -19,11 +18,10 @@ export class AddWishComponent implements OnInit {
   saving: boolean = false;
   subjectType: string;
   currentStatus: any;
-
-  constructor(private route: ActivatedRoute, private gadget: GadgetService, private selectCourseData: SelectCourseDataService, private router: Router, private dialog: MatDialog) { }
+  Tooltip = "設為第一志願人數 / 課程人數上限 1. 代表熱程熱門程度 2. 可自行評估選上的機率 3. 請避免在第二志願選填第一志願分發必定額滿的課程";
+  constructor(private route: ActivatedRoute, private gadget: GadgetService, private router: Router, private dialog: MatDialog) { }
   // 取得 contract 連線。
   contract: Contract;
-
 
   async ngOnInit() {
     this.contract = await this.gadget.getContract('ischool.course_selection');
@@ -39,6 +37,7 @@ export class AddWishComponent implements OnInit {
       this.currentStatus.Subject = [].concat(this.currentStatus.Subject || []);
     } catch (err) {
       console.log(err);
+      alert("addWish error:\n"+JSON.stringify(err));
     } finally {
       this.loading = false;
     }
@@ -54,16 +53,15 @@ export class AddWishComponent implements OnInit {
     } finally {
       var self = this;
       this.saving = false;
-      self.currentStatus.Subject.forEach(function(subject){
+      self.currentStatus.Subject.forEach(function (subject) {
         subject.WishOrder = "";
-        self.currentStatus.Wish.forEach(function(wish){
-          if (subject.SubjectID == wish.SubjectID)
-          {
+        self.currentStatus.Wish.forEach(function (wish) {
+          if (subject.SubjectID == wish.SubjectID) {
             subject.WishOrder = wish.WishOrder;
           }
         });
       });
-      // this.getData();
+      this.getData();
     }
   }
   removeItem(subject) {
@@ -76,7 +74,7 @@ export class AddWishComponent implements OnInit {
       this.currentStatus.Wish.forEach(function (wish, order) {
         wish.WishOrder = order + 1;
       });
-     
+
       this.setData();
     }
   }
@@ -111,27 +109,27 @@ export class AddWishComponent implements OnInit {
     if (this.saving)
       return;
     var index = this.currentStatus.Wish.indexOf(subject);
-    if (index < 0 && this.currentStatus.Wish.length < 5)
-    { 
-      this.currentStatus.Wish.push({...subject});
+    if (index < 0 && this.currentStatus.Wish.length < 5) {
+      this.currentStatus.Wish.push({ ...subject });
       this.currentStatus.Wish.forEach(function (wish, order) {
         wish.WishOrder = order + 1;
       });
       this.setData();
     }
-    
-  }
-  
-  showDialog(subject){
 
-    console.log(JSON.stringify(subject));
+  }
+
+  showDialog(subject) {
+    // console.log(JSON.stringify(subject));
     const dig = this.dialog.open(AddDialogComponent, {
       data: { subject: subject, mode: '志願序' }
     });
 
     dig.afterClosed().subscribe((v) => {
-      // alert(JSON.stringify(v));
-
+    //  alert(JSON.stringify(v.subject));
+      if (v.subject) {
+        this.joinCourse(v.subject);
+      }
     });
   }
 }

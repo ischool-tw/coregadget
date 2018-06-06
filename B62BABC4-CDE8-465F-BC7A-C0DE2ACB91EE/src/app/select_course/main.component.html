@@ -42,17 +42,18 @@
                     <div *ngIf="currentStatus.CurrentMode == '先搶先贏'">
                         <button class="btn btn-info mt-2 mt-md-0"
                                 (click)="selectTakeAwayCourse(subjectType.SubjectType)"
-                                [ngClass]="{'disabled':subjectType.Attend.Lock=='true'}">進入選課</button>
+                                [disabled]="subjectType.Attend.Lock==='true'">進入選課</button>
                     </div>
                     <div *ngIf="currentStatus.CurrentMode == '志願序'">
                         <button class="btn btn-info mt-2 mt-md-0"
                                 (click)="selectWishCourse(subjectType.SubjectType)"
-                                [ngClass]="{'disabled':subjectType.Attend.Lock=='true'}">選填志願</button>
+                                [disabled]="subjectType.Attend.Lock==='true'">選填志願</button>
                     </div>
                 </li>
                 <!-- 顯示選課結果 -->
                 <ng-container *ngIf="subjectType.Attend">
-                    <li class="list-group-item list-group-item-action d-flex flex-column flex-md-row align-items-md-center py-2 point">
+                    <li class="list-group-item list-group-item-action d-flex flex-column flex-md-row align-items-md-center py-2 point"
+                        (click)="showDialog(subjectType.Attend)">
                         <!-- 指定選課才有這 icon -->
                         <i class="material-icons mr-2"
                            data-toggle="tooltip"
@@ -73,6 +74,7 @@
                     <li class="list-group-item list-group-item-action d-flex flex-column flex-md-row align-items-md-center py-2 point"
                         data-toggle="modal"
                         data-target="#crouseInfo"
+                        (click)="showDialog(subject)"
                         *ngFor="let subject of subjectType.Wish">
                         <!-- 指定選課才有這 icon -->
                         <i class="material-icons mr-2"

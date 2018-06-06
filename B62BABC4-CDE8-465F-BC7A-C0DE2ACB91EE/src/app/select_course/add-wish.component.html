@@ -43,7 +43,7 @@
                         <span class="pr-2">{{subject.WishOrder}}</span> {{subject.SubjectName}}
                     </div>
                     <div>
-                        <span class="badge badge-light mt-2 mt-md-0 mr-md-3">人數：已選 {{subject.FirstWishCount}} / 上限 {{subject.Limit}}</span>
+                        <span class="badge badge-light mt-2 mt-md-0 mr-md-3" [matTooltip]="Tooltip">已選 {{subject.FirstWishCount}} / 上限 {{subject.Limit}}</span>
                     </div>
                     <div class="text-right">
                         <button class="btn btn-link text-green bt-auto"
@@ -73,11 +73,12 @@
                 class="list-group-item list-group-item-action d-flex flex-column flex-md-row align-items-md-center py-2 point"
         
                 data-toggle="modal"
-                data-target="#crouseInfo" (click)="showDialog(subject)">
-                
-                <div matTooltip="課程介紹內容"
+                data-target="#crouseInfo">
+
+                <div 
                      style="flex: 1"
-                     class="d-flex flex-md-row justify-content-md-between">
+                     class="d-flex flex-md-row justify-content-md-between"
+                     (click)="showDialog(subject)">
                     <div class="mr-auto">{{subject.SubjectName}}
                         <i class="material-icons mr-2"
                            data-toggle="tooltip"
@@ -94,63 +95,4 @@
             </li>
         </ul>
     </ng-template>
-</div>
-
-<!-- 課程介紹內容 -->
-<div class="modal fade show"
-     id="crouseInfo"
-     tabindex="-1"
-     role="dialog"
-     aria-labelledby="crouseInfoTitle"
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered"
-         role="document">
-        <div class="modal-content">
-
-            <div *ngIf="loading;else noloading">
-                <div style="position: absolute;top: 50%;left: 50%;margin-top: -20px;margin-left: -50px;">Loading ...</div>
-            </div>
-
-            <ng-template #noloading>
-                <div class="modal-header">
-                    <h5 class="modal-title"
-                        id="crouseInfoTitle">
-                        {{data.subject.SubjectName}}
-                    </h5>
-                    <button type="button"
-                            class="close"
-                            data-dismiss="modal"
-                            aria-label="Close"
-                            (click)="close()">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <ul class="list-group">
-                    <li class="list-group-item list-group-item-light font-weight-bold">課程目標</li>
-                    <li class="list-group-item">
-                        <pre>{{data.subject.Goal}}</pre>
-                    </li>
-                    <li class="list-group-item list-group-item-light font-weight-bold">上課內容</li>
-                    <li class="list-group-item">
-                        <pre>{{data.subject.Content}}</pre>
-                    </li>
-                    <li class="list-group-item list-group-item-light font-weight-bold">備註</li>
-                    <li class="list-group-item">
-                        <pre>{{data.subject.Memo}}</pre>
-                    </li>
-                    <li class="list-group-item d-flex flex-column flex-md-row align-items-md-center py-2">
-                        <div class="mr-auto">
-                            <span class="badge badge-primary">科目級別：{{data.subject.Level}}</span>
-                            <span class="badge badge-secondary">學分數：{{data.subject.Credit}}</span>
-                            <span class="badge badge-light my-2 my-md-0 mr-md-3">人數：已選 {{data.subject.AttendCount}} / 上限 {{data.subject.Limit}}</span>
-                        </div>
-                        <button class="btn btn-info"
-                                (click)="join()">{{buttonText}}</button>
-                    </li>
-                </ul>
-            </ng-template>
-
-        </div>
-    </div>
 </div>

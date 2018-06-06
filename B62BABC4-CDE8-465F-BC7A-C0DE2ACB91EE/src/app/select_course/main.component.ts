@@ -1,12 +1,13 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { GadgetService, Contract } from '../gadget.service';
 import { Utils } from '../util';
-import { SelectCourseDataService } from '../select-course-data.service';
 import { selCourseBasicInfo } from './selCourseBasicInfo';
 import * as moment from 'moment';
 import { subjectInfo } from './subjectInfo';
 import { courseInfo } from './courseInfo';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material';
+import { AddDialogComponent } from './add-dialog.component';
 
 @Component({
   selector: 'app-main',
@@ -17,7 +18,7 @@ export class MainComponent implements OnInit {
   loading: boolean = true;
   currentStatus: any;
 
-  constructor(private route: ActivatedRoute, private gadget: GadgetService, private selectCourseData: SelectCourseDataService, private router: Router) { }
+  constructor(private route: ActivatedRoute, private gadget: GadgetService, private router: Router, private dialog: MatDialog) { }
   // 取得 contract 連線。
   contract: Contract;
 
@@ -48,6 +49,13 @@ export class MainComponent implements OnInit {
     } finally {
       this.loading = false;
     }
+  }
+
+  showDialog(subject) {
+    // console.log(JSON.stringify(subject));
+    const dig = this.dialog.open(AddDialogComponent, {
+      data: { subject: subject, mode: '' }
+    });   
   }
 
   // 先搶先贏
