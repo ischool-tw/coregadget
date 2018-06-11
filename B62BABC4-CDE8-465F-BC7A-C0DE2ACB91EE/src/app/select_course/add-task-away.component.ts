@@ -41,7 +41,7 @@ export class AddTaskAwayComponent implements OnInit {
 
     } catch (err) {
       // console.log(err);
-      alert("addTakeAway error:\n" + JSON.stringify(err));
+      alert("GetSubjectList error:\n" + JSON.stringify(err));
     } finally {
       this.loading = false;
     }

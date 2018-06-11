@@ -37,7 +37,7 @@ export class AddWishComponent implements OnInit {
       this.currentStatus.Subject = [].concat(this.currentStatus.Subject || []);
     } catch (err) {
       console.log(err);
-      alert("addWish error:\n" + JSON.stringify(err));
+      alert("GetSubjectList error:\n" + JSON.stringify(err));
     } finally {
       this.loading = false;
     }
@@ -49,7 +49,7 @@ export class AddWishComponent implements OnInit {
       await this.contract.send('SetWish', { SubjectType: this.subjectType, Wish: this.currentStatus.Wish });
 
     } catch (err) {
-      alert(err);
+      alert("SetWish error:\n" + JSON.stringify(err));
     } finally {
       var self = this;
       this.saving = false;
@@ -108,7 +108,11 @@ export class AddWishComponent implements OnInit {
   joinCourse(subject) {
     if (this.saving)
       return;
-    var index = this.currentStatus.Wish.indexOf(subject);
+    var index = -1;
+    [].concat(this.currentStatus.Wish || []).forEach(function (wish, i) {
+      if (wish.SubjectID == subject.SubjectID)
+        index = i;
+    });
     if (index < 0 && this.currentStatus.Wish.length < 5) {
       this.currentStatus.Wish.push({ ...subject });
       this.currentStatus.Wish.forEach(function (wish, order) {
@@ -116,13 +120,12 @@ export class AddWishComponent implements OnInit {
       });
       this.setData();
     }
-
   }
 
   showDialog(subject, mode) {
     // console.log(JSON.stringify(subject));
     const dig = this.dialog.open(AddDialogComponent, {
-      data: { subject: subject, mode: mode, countMode:'志願序' }
+      data: { subject: subject, mode: mode, countMode: '志願序' }
     });
 
     dig.afterClosed().subscribe((v) => {

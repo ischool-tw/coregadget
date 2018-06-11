@@ -41,11 +41,11 @@ export class MainComponent implements OnInit {
 
       if ((this.currentStatus.P1Mode == "先搶先贏" || this.currentStatus.P1Mode == "志願序")
         && (this.currentStatus.P2Mode == "先搶先贏" || this.currentStatus.P2Mode == "志願序")) {
-        this.currentStatus.P1 = "" + this.currentStatus.P1StartTime.format("YYYY/MM/DD HH:mm:ss") + " ~ " + this.currentStatus.P2EndTime.format("YYYY/MM/DD HH:mm:ss") + " (" + this.currentStatus.P1Mode + ")";
+        this.currentStatus.P1 = "" + this.currentStatus.P1StartTime.format("YYYY/MM/DD HH:mm:ss") + " ~ " + this.currentStatus.P1EndTime.format("YYYY/MM/DD HH:mm:ss") + " (" + this.currentStatus.P1Mode + ")";
         this.currentStatus.P2 = "" + this.currentStatus.P2StartTime.format("YYYY/MM/DD HH:mm:ss") + " ~ " + this.currentStatus.P2EndTime.format("YYYY/MM/DD HH:mm:ss") + " (" + this.currentStatus.P2Mode + ")";
       }
       else if (this.currentStatus.P1Mode == "先搶先贏" || this.currentStatus.P1Mode == "志願序") {
-        this.currentStatus.PS = "" + this.currentStatus.P1StartTime.format("YYYY/MM/DD HH:mm:ss") + " ~ " + this.currentStatus.P2EndTime.format("YYYY/MM/DD HH:mm:ss") + " (" + this.currentStatus.P1Mode + ")";
+        this.currentStatus.PS = "" + this.currentStatus.P1StartTime.format("YYYY/MM/DD HH:mm:ss") + " ~ " + this.currentStatus.P1EndTime.format("YYYY/MM/DD HH:mm:ss") + " (" + this.currentStatus.P1Mode + ")";
       }
       else if (this.currentStatus.P2Mode == "先搶先贏" || this.currentStatus.P2Mode == "志願序") {
         this.currentStatus.PS = "" + this.currentStatus.P2StartTime.format("YYYY/MM/DD HH:mm:ss") + " ~ " + this.currentStatus.P2EndTime.format("YYYY/MM/DD HH:mm:ss") + " (" + this.currentStatus.P2Mode + ")";
@@ -56,8 +56,13 @@ export class MainComponent implements OnInit {
       this.currentStatus.SubjectType = [].concat(this.currentStatus.SubjectType || []);
       this.currentStatus.Wish = [].concat(this.currentStatus.Wish || []);
 
+      this.currentStatus.SubjectType.forEach(function (subjectType) {
+        subjectType.Wish = [].concat(subjectType.Wish || []);
+      });
+
     } catch (err) {
       console.log(err);
+      alert("GetCurrentStatus error:\n" + JSON.stringify(err));
     } finally {
       this.loading = false;
     }
