@@ -1,86 +1,186 @@
 ﻿angular.module('gradebook', ['ui.sortable', 'mgcrea.ngStrap.helpers.dimensions', 'mgcrea.ngStrap.helpers.debounce'])
     .controller('MainCtrl', ['$scope', '$timeout',
         function ($scope, $timeout) {
-            $scope.params = gadget.params;
-            $scope.params.DefaultRound = gadget.params.DefaultRound || '2';
 
-            $scope.connection = gadget.getContract("kcis");
-            $scope.connection.send({
-                service: "gradebook.GetMyCourse",
-                autoRetry: true,
-                body: {},
-                result: function (response, error, http) {
-                    if (error) {
-                        alert("gradebook.GetMyCourse Error");
-                    } else {
-                        $scope.$apply(function () {
-                            var jumpCourse;
-                            var jumpTerm;
-                            var jumpSubject;
-                            var jumpAssessment;
+            if (!window.gadget) {
 
-                            $scope.courseList = [].concat(response.Course || []);
-                            $scope.courseList.forEach(function (courseRec) {
-                                courseRec.Term = [].concat(courseRec.Term || []);
-                                courseRec.Term.forEach(function (termRec) {
-                                    termRec.InputStartTimeDate = new Date(parseInt(termRec.InputStartTimeTick));
-                                    termRec.InputEndTimeDate = new Date(parseInt(termRec.InputEndTimeTick));
-                                    termRec.Subject = [].concat(termRec.Subject || []);
-                                    termRec.Subject.forEach(function (subjRec) {
-                                        var totalWeight = 0;
-                                        subjRec.Assessment = [].concat(subjRec.Assessment || []);
-                                        subjRec.Assessment.forEach(function (assessmentRec) {
-                                            var weight = Number(assessmentRec.Weight);
-                                            if (weight)
-                                                totalWeight += weight;
-                                        });
-                                        subjRec.Assessment.forEach(function (assessmentRec) {
-                                            if (assessmentRec.TeacherSequence == courseRec.MySequence && !!!jumpCourse && termRec.InputEndTimeDate >= new Date()) {
-                                                jumpCourse = courseRec;
-                                                jumpTerm = termRec;
-                                                jumpSubject = subjRec;
-                                                if (termRec.InputStartTimeDate > new Date())
-                                                    jumpAssessment = assessmentRec;
-                                            }
-                                            var weight = Number(assessmentRec.Weight);
-                                            if (weight || weight == 0) {
-                                                assessmentRec.Percentage = Math.round(10000 * weight / (totalWeight || 1)) / 100;
-                                            }
+                var clientID = "7165f90a1118a04c40870d31f64e03bb";
+                var application = "test.p.kcbs.hc.edu.tw";
+                var redirect_uri = location.href.lastIndexOf('#') >= 0 ? location.href.substr(0, location.href.lastIndexOf('#')) : location.href;
 
-                                            assessmentRec.TermName = termRec.Name
-                                            assessmentRec.SubjectName = subjRec.Name
-                                            assessmentRec.AssessmentName = assessmentRec.Name
-                                            assessmentRec.CustomAssessmentName = ""
-                                            assessmentRec.Key = assessmentRec.TermName + "^_^" + assessmentRec.SubjectName + "^_^" + assessmentRec.AssessmentName + "^_^" + assessmentRec.CustomAssessmentName;
+                var missingDSNS = false;
+                var requireSignIn = false;
+                if (location.href.lastIndexOf('#') >= 0) {
+                    var bookmark = location.href.substr(location.href.lastIndexOf('#') + 1);
 
-                                            assessmentRec.Editable = false;
-                                            //if (assessmentRec.TeacherSequence == courseRec.MySequence) {
-                                            //    assessmentRec.Editable = true;
-                                            //}
-                                            if (assessmentRec.TeacherSequence == courseRec.MySequence && termRec.InputEndTimeDate >= new Date() && termRec.InputStartTimeDate <= new Date()) {
-                                                assessmentRec.Editable = true;
-                                            }
-                                            if (assessmentRec.Type == 'Score') {
-                                                assessmentRec.Range = { Max: 100, Min: 0 };
-                                            }
-                                            if (assessmentRec.Type == "Indicator") {
-                                                assessmentRec.Indicators = assessmentRec.Indicators || { Indicator: [] };
-                                                //assessmentRec.Indicators.Indicator = ['a', 'b', 'c'].concat(assessmentRec.Indicators.Indicator || []);
-                                            }
+                    var vars = [], hashes = bookmark.split('&');
+                    for (var i = 0; i < hashes.length; i++) {
+                        hash = decodeURIComponent(hashes[i]);
+                        var key = hash.substring(0, hash.indexOf("="));
+                        vars.push(key);
+                        vars[key] = hash.substring(hash.indexOf("=") + 1);
+                    }
+                    if (vars.dsns) {
+                        application = vars.dsns;
+                        redirect_uri = redirect_uri + encodeURIComponent("#dsns=" + application);
+                    }
+                    else {
+                        missingDSNS = true;
+                    }
+                    if (vars.access_token) {
+                        $scope.connection = dsutil.creatConnection(application + "/kcis", {
+                            "@": ['Type'],
+                            Type: 'PassportAccessToken',
+                            AccessToken: vars.access_token
+                        });
+                        $scope.connection.OnLoginError(function (err) {
+                            $scope.loginProgress = false;
+                            //if (err.XMLHttpRequest.responseText.indexOf("User doesn't exist") > 0) {
+                            //    alert(err.XMLHttpRequest.responseText);
+                            //    window.location.assign("https://auth.ischool.com.tw/logout.php?next=" + encodeURIComponent("oauth/authorize.php?client_id=" + clientID + "&response_type=token&redirect_uri=" + redirect_uri + "&scope=" + application + ":kcis"));
+
+                            //}
+                            alert(err.XMLHttpRequest.responseText);
+                            window.location.assign("https://auth.ischool.com.tw/logout.php?next=" + encodeURIComponent("oauth/authorize.php?client_id=" + clientID + "&response_type=token&redirect_uri=" + redirect_uri + "&application=" + application + "&scope=" + application + ":kcis"));
+
+                        });
+                    }
+                    else {
+                        requireSignIn = true;
+                    }
+                }
+                else {
+                    missingDSNS = true;
+                    requireSignIn = true;
+                }
+
+                //missingDSNS = false;
+                if (missingDSNS) {
+                    alert("Param lost (dsns) ");
+                    return;
+                }
+                else {
+                    if (requireSignIn) {
+                        window.location.assign("https://auth.ischool.com.tw/oauth/authorize.php?client_id=" + clientID + "&response_type=token&redirect_uri=" + redirect_uri + "&application=" + application + "&scope=" + application + ":kcis");
+                        return;
+                    }
+                }
+                $scope.params = { DefaultRound: '2' };
+
+                window.onbeforeunload = function () {
+                    var data_changed = !$scope.checkAllTable();
+
+                    if (data_changed) {
+                        event.returnValue = "Changes will be lost without saving.";
+                    }
+                }
+            }
+            else {
+                $scope.params = gadget.params;
+                $scope.params.DefaultRound = gadget.params.DefaultRound || '2';
+
+                $scope.connection = gadget.getContract("kcis");
+
+                gadget.onLeave(function () {
+                    var data_changed = !$scope.checkAllTable();
+
+                    if (data_changed) {
+                        return "Changes will be lost without saving.";
+                    }
+                    else {
+                        return "";
+                    }
+
+                });
+            }
+            $scope.connection.ready(function () {
+                $scope.connection.send({
+                    service: "gradebook.GetMyCourse",
+                    autoRetry: true,
+                    body: {},
+                    result: function (response, error, http) {
+                        if (error) {
+                            alert("gradebook.GetMyCourse Error");
+                        } else {
+                            $scope.$apply(function () {
+                                var jumpCourse;
+                                var jumpTerm;
+                                var jumpSubject;
+                                var jumpAssessment;
+
+                                $scope.courseList = [].concat(response.Course || []);
+                                $scope.courseList.forEach(function (courseRec) {
+                                    courseRec.Term = [].concat(courseRec.Term || []);
+                                    courseRec.Term.forEach(function (termRec) {
+                                        termRec.InputStartTimeDate = new Date(parseInt(termRec.InputStartTimeTick));
+                                        termRec.InputEndTimeDate = new Date(parseInt(termRec.InputEndTimeTick));
+                                        if (new Date() < termRec.InputStartTimeDate)
+                                            termRec.InputSession = "before";
+                                        else if (new Date() <= termRec.InputEndTimeDate)
+                                            termRec.InputSession = "input";
+                                        else if (termRec.InputEndTimeDate < new Date())
+                                            termRec.InputSession = "after";
+
+                                        termRec.Subject = [].concat(termRec.Subject || []);
+                                        termRec.Subject.forEach(function (subjRec) {
+                                            var totalWeight = 0;
+                                            subjRec.Assessment = [].concat(subjRec.Assessment || []);
+                                            subjRec.Assessment.forEach(function (assessmentRec) {
+                                                var weight = Number(assessmentRec.Weight);
+                                                if (weight)
+                                                    totalWeight += weight;
+                                            });
+                                            subjRec.Assessment.forEach(function (assessmentRec) {
+                                                if (assessmentRec.TeacherSequence == courseRec.MySequence && !!!jumpCourse && termRec.InputEndTimeDate >= new Date()) {
+                                                    jumpCourse = courseRec;
+                                                    jumpTerm = termRec;
+                                                    jumpSubject = subjRec;
+                                                    if (termRec.InputStartTimeDate > new Date())
+                                                        jumpAssessment = assessmentRec;
+                                                }
+                                                var weight = Number(assessmentRec.Weight);
+                                                if (weight || weight == 0) {
+                                                    assessmentRec.Percentage = Math.round(10000 * weight / (totalWeight || 1)) / 100;
+                                                }
+
+                                                assessmentRec.TermName = termRec.Name
+                                                assessmentRec.SubjectName = subjRec.Name
+                                                assessmentRec.AssessmentName = assessmentRec.Name
+                                                assessmentRec.CustomAssessmentName = ""
+                                                assessmentRec.Key = assessmentRec.TermName + "^_^" + assessmentRec.SubjectName + "^_^" + assessmentRec.AssessmentName + "^_^" + assessmentRec.CustomAssessmentName;
+
+                                                assessmentRec.Editable = false;
+                                                //if (assessmentRec.TeacherSequence == courseRec.MySequence) {
+                                                //    assessmentRec.Editable = true;
+                                                //}
+                                                if (assessmentRec.TeacherSequence == courseRec.MySequence && termRec.InputEndTimeDate >= new Date() && termRec.InputStartTimeDate <= new Date()) {
+                                                    assessmentRec.Editable = true;
+                                                }
+                                                if (assessmentRec.Type == 'Score') {
+                                                    assessmentRec.Range = { Max: 100, Min: 0 };
+                                                }
+                                                if (assessmentRec.Type == "Indicator") {
+                                                    assessmentRec.Indicators = assessmentRec.Indicators || { Indicator: [] };
+                                                    //assessmentRec.Indicators.Indicator = ['a', 'b', 'c'].concat(assessmentRec.Indicators.Indicator || []);
+                                                }
+                                                if (assessmentRec.Type == "Comment") {
+                                                    assessmentRec.InputLimit = parseInt(assessmentRec.InputLimit) || 200;
+                                                }
+                                            });
                                         });
                                     });
                                 });
+                                if (jumpCourse)
+                                    $scope.setCurrentCourse(jumpCourse, jumpTerm, jumpSubject, jumpAssessment);
+                                else if ($scope.courseList.length > 0)
+                                    $scope.setCurrentCourse($scope.courseList[0]);
+                                else {
+                                    $scope.haveNoCourse = true;
+                                }
                             });
-                            if (jumpCourse)
-                                $scope.setCurrentCourse(jumpCourse, jumpTerm, jumpSubject, jumpAssessment);
-                            else if ($scope.courseList.length > 0)
-                                $scope.setCurrentCourse($scope.courseList[0]);
-                            else {
-                                $scope.haveNoCourse = true;
-                            }
-                        });
+                        }
                     }
-                }
+                });
             });
 
             $scope.setCurrentCourse = function (course, term, subject, assessment) {
@@ -208,7 +308,7 @@
                     $scope.current.Assessment = null;
                     $scope.current.AssessmentMode = "ReportCard";
                     var assessmentAvg = {
-                        Name: "Avg."
+                        Name: "Term Score"
                         , Key: $scope.current.Term.Name + "^_^" + $scope.current.Subject.Name + "^_^Avg.^_^"
                         , Type: "Program"
                         , Editable: false
@@ -286,7 +386,7 @@
                                         TermName: $scope.current.Term.Name
                                         , SubjectName: $scope.current.Subject.Name
                                         , AssessmentName: $scope.current.Assessment.Name
-                                        , CustomAssessmentName: "Avg."
+                                        , CustomAssessmentName: "" + $scope.current.Assessment.Name
                                         , Type: "Program"
                                         , Editable: false
                                         , Percentage: 0
@@ -554,7 +654,7 @@
 
             $scope.setCurrent = function (stuRec, assessmentItem, setCondition, setFocus) {
                 if ($scope.studentList && $scope.studentList.indexOf(stuRec) >= 0) {
-                    $("#stuPhoto").attr("src","");
+                    $("#stuPhoto").attr("src", "");
                     $scope.current.Student = stuRec;
                 }
                 if ($scope.AssessmentItem && $scope.AssessmentItem.indexOf(assessmentItem) >= 0)
@@ -627,6 +727,9 @@
                             flag = true;
                         }
                     });
+                }
+                else if ($scope.current.AssessmentItem.Type == 'Comment') {
+                    flag = true;
                 }
                 else {
                     flag = true;
@@ -806,18 +909,6 @@
                     return true;
                 }
             }
-
-            gadget.onLeave(function () {
-                var data_changed = !$scope.checkAllTable();
-
-                if (data_changed) {
-                    return "Changes will be lost without saving.";
-                }
-                else {
-                    return "";
-                }
-
-            });
 
             $scope.checkAllTable = function () {
                 var pass = true;

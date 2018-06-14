@@ -4,7 +4,13 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="js/gadget.js"></script>
+
+    <script src="js/xmlWriter.js"></script>
+    <script src="js/parseXml.js"></script>
+    <script src="js/xml2json.js"></script>
+    <script src="js/dsutil.js"></script>
+    <script src="js/dsnsLookup.js"></script>
+    <!--<script src="js/gadget.js"></script>
     <script>
         init({
             //application: "1admin_debug5",
@@ -24,8 +30,7 @@
                 password: window.prompt('password:')
             }
         });
-    </script>
-
+    </script>-->
 
     <title>Gradebook</title>
     <link href="css/bootstrap.min.css" rel="stylesheet" />
@@ -107,7 +112,8 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li class="dropdown-header">Calculation</li>
-                        <li ng-repeat="assessmentRec in current.Subject.Assessment">
+                        <li ng-repeat="assessmentRec in current.Subject.Assessment"
+                            ng-if="assessmentRec.AllowCustomAssessment == 'true'">
                             <a ng-class="{'disabled': assessmentRec.AllowCustomAssessment !== 'true' || assessmentRec.TeacherSequence != current.Course.MySequence || assessmentRec.Editable != true}"
                                ng-click="calcCustomAssessment(assessmentRec)"
                                href="javascript:void(0)">
@@ -115,8 +121,9 @@
                             </a>
                         </li>
                         <li class="dropdown-header">Import</li>
-                        <li ng-repeat="assessmentRec in current.Subject.Assessment">
-                            <a ng-class="{'disabled': assessmentRec.TeacherSequence != current.Course.MySequence || assessmentRec.Editable != true}"
+                        <li ng-repeat="assessmentRec in current.Subject.Assessment"
+                            ng-if="assessmentRec.AllowCustomAssessment !== 'true'">
+                            <a ng-class="{'disabled': assessmentRec.AllowCustomAssessment == 'true' || assessmentRec.TeacherSequence != current.Course.MySequence || assessmentRec.Editable != true}"
                                ng-click="showImport(assessmentRec)"
                                href="javascript:void(0)">
                                 {{assessmentRec.Name}}
@@ -242,16 +249,12 @@
                                            class="btn btn-link btn-block dropdown-toggle"
                                            data-toggle="dropdown"
                                            style="padding:0; color:#333; text-align:left;">
-                                            <!--<i style="min-width: 14px;"
-                                            class="fa fa-edit"></i>-->
                                             {{current.AssessmentItem? current.AssessmentItem.Name:'Choose'}}
                                             <span class="caret"></span>
                                         </a>
                                         <ul class="dropdown-menu" style="width:100%;">
                                             <li ng-repeat="assessmentRec in AssessmentItem | filter : {'Key' : '_'}">
                                                 <a href="javascript:void(0)" ng-click="setCurrent(null, assessmentRec, true, true)">
-                                                    <!--<i style="min-width: 14px;"
-                                                    class="fa fa-edit"></i>-->
                                                     {{assessmentRec.Name}}
                                                 </a>
                                             </li>
@@ -266,7 +269,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr ng-if="current.AssessmentItem.Type=='Program'">
+                            <tr ng-if="current.AssessmentItem.Type=='Program' || current.AssessmentItem.AllowCustomAssessment == 'true'">
                                 <td class="text-center"
                                     style="">
                                     <div ng-class="{'text-danger':current.Value < 60}"
@@ -275,7 +278,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr ng-if="current.AssessmentItem.Type=='Score'">
+                            <tr ng-if="current.AssessmentItem.Type=='Score' && current.AssessmentItem.AllowCustomAssessment !== 'true'">
                                 <td class="text-center"
                                     style="">
                                     <div ng-if="current.AssessmentItem.Editable==false"
@@ -308,6 +311,7 @@
                                     <textarea ng-if="current.AssessmentItem.Editable==true"
                                               ng-model="current.Value"
                                               ng-keydown="enterGrade($event)"
+                                              maxlength="{{current.AssessmentItem.InputLimit}}"
                                               placeholder="Press Enter To Submit"
                                               style="min-height: 120px;height:120px;resize: vertical;"
                                               type="text"
@@ -319,6 +323,9 @@
                                             Submit
                                         </a>
                                     </div>
+                                    <div ng-if="current.AssessmentItem.Editable==true"
+                                         style="margin-top: 8px;"
+                                         class="text-muted">{{current.Value.length}}/{{current.AssessmentItem.InputLimit}}</div>
                                 </td>
                             </tr>
                             <tr ng-if="current.AssessmentItem.Type=='Indicator'">
@@ -361,8 +368,19 @@
                         <div ng-if="current.AssessmentMode == 'ReportCard'">
                             <strong>{{current.AssessmentItem.Name}}</strong>
                             <div ng-if="current.AssessmentItem.Editable==true">
-                                <strong>Deadline：</strong>
+                                <strong>Due time：</strong>
                                 <span>{{current.Term.InputEndTime}}</span>
+                            </div>
+                            <div ng-if="current.AssessmentItem.Editable!==true && current.AssessmentItem.TeacherSequence == current.Course.MySequence && current.Term.InputSession=='before'">
+                                <strong>Input time：</strong>
+                                <span>{{current.Term.InputStartTime}}</span>
+                            </div>
+                            <div ng-if="current.AssessmentItem.Editable!==true && current.AssessmentItem.TeacherSequence == current.Course.MySequence && current.Term.InputSession=='after'">
+                                <strong>Due time：</strong>
+                                <span>{{current.Term.InputEndTime}}</span>
+                            </div>
+                            <div ng-if="current.AssessmentItem.Editable==true && current.AssessmentItem.AllowCustomAssessment == 'true'">
+                                <strong class="text-danger">Calculation Only</strong>
                             </div>
                             <div ng-if="current.AssessmentItem.TeacherSequence !== current.Course.MySequence">
                                 <strong>Teacher：</strong>
@@ -398,7 +416,7 @@
                 <a style="position:absolute;z-index:1;"
                    ng-click="copyView()"
                    class="btn btn-xs btn-link">
-                    copy
+                    <span class="text-muted">Copy</span>
                 </a>
                 <!--檢視table-->
                 <table class="table table-bordered table-striped table-hover text-center"
