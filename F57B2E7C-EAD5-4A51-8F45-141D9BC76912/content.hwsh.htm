@@ -4,10 +4,17 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="js/gadget.js"></script>
+
+    <script src="js/xmlWriter.js"></script>
+    <script src="js/parseXml.js"></script>
+    <script src="js/xml2json.js"></script>
+    <script src="js/dsutil.js"></script>
+    <script src="js/dsnsLookup.js"></script>
+    <!--<script src="js/gadget.js"></script>
     <script>
         init({
-            application: "1admin_debug5",
+            //application: "1admin_debug5",
+            application: "test.p.kcbs.hc.edu.tw",
             paramValues: {
                 "DefaultRound": "2" //預設小數點位數
                 //"第一次期中考Round": "1",
@@ -20,11 +27,10 @@
                 clientID: 'b88fbfbbaa848c5b5b01ce51853eac7f',
                 clientSecret: '0911245ae08323086790244cd319c1c3bbde1096520154f0cbcb71f0ff76e311',
                 account: 'bubu@debug.ischool.com.tw',
-                password: '1234'
+                password: window.prompt('password:')
             }
         });
-    </script>
-
+    </script>-->
 
     <title>Gradebook</title>
     <link href="css/bootstrap.min.css" rel="stylesheet" />
@@ -106,7 +112,8 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li class="dropdown-header">Calculation</li>
-                        <li ng-repeat="assessmentRec in current.Subject.Assessment">
+                        <li ng-repeat="assessmentRec in current.Subject.Assessment"
+                            ng-if="assessmentRec.AllowCustomAssessment == 'true'">
                             <a ng-class="{'disabled': assessmentRec.AllowCustomAssessment !== 'true' || assessmentRec.TeacherSequence != current.Course.MySequence || assessmentRec.Editable != true}"
                                ng-click="calcCustomAssessment(assessmentRec)"
                                href="javascript:void(0)">
@@ -114,8 +121,9 @@
                             </a>
                         </li>
                         <li class="dropdown-header">Import</li>
-                        <li ng-repeat="assessmentRec in current.Subject.Assessment">
-                            <a ng-class="{'disabled': assessmentRec.TeacherSequence != current.Course.MySequence || assessmentRec.Editable != true}"
+                        <li ng-repeat="assessmentRec in current.Subject.Assessment"
+                            ng-if="assessmentRec.AllowCustomAssessment !== 'true'">
+                            <a ng-class="{'disabled': assessmentRec.AllowCustomAssessment == 'true' || assessmentRec.TeacherSequence != current.Course.MySequence || assessmentRec.Editable != true}"
                                ng-click="showImport(assessmentRec)"
                                href="javascript:void(0)">
                                 {{assessmentRec.Name}}
@@ -184,6 +192,7 @@
             </div>
         </div>
         <div ng-if="studentList" class="hidden-xs" style="margin-top:10px;">
+            <!--輸入Panel-->
             <div style="position:relative;float:right;width:260px;">
                 <div data-offset-top="145"
                      bs-affix>
@@ -194,7 +203,8 @@
                             <tr>
                                 <th>
                                     <div style="max-height:120px">
-                                        <img class="hidden-xs"
+                                        <img id="stuPhoto"
+                                             class="hidden-xs"
                                              style="height:120px;margin:0px auto;display:block"
                                              ng-src="{{current.Student.PhotoUrl || 'css/images/no_photo.png'}}"
                                              fallback-src="css/images/no_photo.png" />
@@ -239,16 +249,12 @@
                                            class="btn btn-link btn-block dropdown-toggle"
                                            data-toggle="dropdown"
                                            style="padding:0; color:#333; text-align:left;">
-                                            <!--<i style="min-width: 14px;"
-                                               class="fa fa-edit"></i>-->
                                             {{current.AssessmentItem? current.AssessmentItem.Name:'Choose'}}
                                             <span class="caret"></span>
                                         </a>
                                         <ul class="dropdown-menu" style="width:100%;">
                                             <li ng-repeat="assessmentRec in AssessmentItem | filter : {'Key' : '_'}">
                                                 <a href="javascript:void(0)" ng-click="setCurrent(null, assessmentRec, true, true)">
-                                                    <!--<i style="min-width: 14px;"
-                                                       class="fa fa-edit"></i>-->
                                                     {{assessmentRec.Name}}
                                                 </a>
                                             </li>
@@ -263,7 +269,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr ng-if="current.AssessmentItem.Type=='Program'">
+                            <tr ng-if="current.AssessmentItem.Type=='Program' || current.AssessmentItem.AllowCustomAssessment == 'true'">
                                 <td class="text-center"
                                     style="">
                                     <div ng-class="{'text-danger':current.Value < 60}"
@@ -272,7 +278,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr ng-if="current.AssessmentItem.Type=='Score'">
+                            <tr ng-if="current.AssessmentItem.Type=='Score' && current.AssessmentItem.AllowCustomAssessment !== 'true'">
                                 <td class="text-center"
                                     style="">
                                     <div ng-if="current.AssessmentItem.Editable==false"
@@ -305,6 +311,7 @@
                                     <textarea ng-if="current.AssessmentItem.Editable==true"
                                               ng-model="current.Value"
                                               ng-keydown="enterGrade($event)"
+                                              maxlength="{{current.AssessmentItem.InputLimit}}"
                                               placeholder="Press Enter To Submit"
                                               style="min-height: 120px;height:120px;resize: vertical;"
                                               type="text"
@@ -316,6 +323,9 @@
                                             Submit
                                         </a>
                                     </div>
+                                    <div ng-if="current.AssessmentItem.Editable==true"
+                                         style="margin-top: 8px;"
+                                         class="text-muted">{{current.Value.length}}/{{current.AssessmentItem.InputLimit}}</div>
                                 </td>
                             </tr>
                             <tr ng-if="current.AssessmentItem.Type=='Indicator'">
@@ -358,8 +368,19 @@
                         <div ng-if="current.AssessmentMode == 'ReportCard'">
                             <strong>{{current.AssessmentItem.Name}}</strong>
                             <div ng-if="current.AssessmentItem.Editable==true">
-                                <strong>Deadline：</strong>
+                                <strong>Due time：</strong>
                                 <span>{{current.Term.InputEndTime}}</span>
+                            </div>
+                            <div ng-if="current.AssessmentItem.Editable!==true && current.AssessmentItem.TeacherSequence == current.Course.MySequence && current.Term.InputSession=='before'">
+                                <strong>Input time：</strong>
+                                <span>{{current.Term.InputStartTime}}</span>
+                            </div>
+                            <div ng-if="current.AssessmentItem.Editable!==true && current.AssessmentItem.TeacherSequence == current.Course.MySequence && current.Term.InputSession=='after'">
+                                <strong>Due time：</strong>
+                                <span>{{current.Term.InputEndTime}}</span>
+                            </div>
+                            <div ng-if="current.AssessmentItem.Editable==true && current.AssessmentItem.AllowCustomAssessment == 'true'">
+                                <strong class="text-danger">Calculation Only</strong>
                             </div>
                             <div ng-if="current.AssessmentItem.TeacherSequence !== current.Course.MySequence">
                                 <strong>Teacher：</strong>
@@ -390,7 +411,13 @@
                     </div>
                 </div>
             </div>
-            <div style="margin-right:270px;">
+            <!--檢視區-->
+            <div style="margin-right:270px;position:relative;">
+                <a style="position:absolute;z-index:1;"
+                   ng-click="copyView()"
+                   class="btn btn-xs btn-link">
+                    <span class="text-muted">Copy</span>
+                </a>
                 <!--檢視table-->
                 <table class="table table-bordered table-striped table-hover text-center"
                        style="table-layout:fixed;">
@@ -441,6 +468,43 @@
                                      ng-attr-title="{{stuRec['Origin_'+assessmentRec.Key]?'Origin：'+stuRec['Origin_'+assessmentRec.Key]:''}}"
                                      style="display:inline-block;background-color:red;position:absolute;left:3px;top:3px;width:5px;height:6px;border-radius:5px;">
                                 </div>
+                                <span>
+                                    {{stuRec['Val_'+assessmentRec.Key]}}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- 複製專用 -->
+                <table class="table table-bordered table-striped"
+                       style="display: none; "
+                       id="viewTable">
+                    <thead>
+                        <tr>
+                            <!--<th rowspan="2">ClassName</th>-->
+                            <!--<th rowspan="2">SeatNo</th>-->
+                            <th rowspan="2">StudentNumber</th>
+                            <!--<th rowspan="2">Name</th>-->
+                            <th rowspan="2">Name</th>
+                            <th ng-repeat="assessmentRec in AssessmentItem">
+                                {{assessmentRec.Name}}
+                            </th>
+                        </tr>
+                        <tr>
+                            <th ng-repeat="assessmentRec in AssessmentItem">
+                                <small ng-if="assessmentRec.Percentage">{{assessmentRec.Percentage}}%</small>
+                                <small ng-if="assessmentRec.Percentage==0">--</small>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="stuRec in studentList">
+                            <!--<td>{{stuRec.ClassName}}</td>-->
+                            <!--<td>{{stuRec.SeatNo}}</td>-->
+                            <td>{{stuRec.StudentNumber}}</td>
+                            <!--<td>{{stuRec.Name}}</td>-->
+                            <td>{{stuRec.EnglishName}}</td>
+                            <td ng-repeat="assessmentRec in AssessmentItem">
                                 <span>
                                     {{stuRec['Val_'+assessmentRec.Key]}}
                                 </span>
@@ -699,23 +763,23 @@
                 </div>
                 <div class="modal-body" ng-if="!importProcess.ParseValues">
                     <div style="margin:15px 0px;">
-                        <span>使用說明</span>
+                        <span>Directions</span>
                         <ol class="">
                             <li>
-                                <span>從excel中複製成績</span>
+                                <span>Copy the grades from Excel</span>
                                 <ul>
-                                    <li class="text-danger">請先確認excel中學生的人數及順序皆與系統相符</li>
-                                    <li class="text-danger">複製成績時，僅需圈選成績的部分，不含學生姓名及表頭</li>
-                                    <li class="text-danger">如有學生沒有成績資料，請輸入"-"，表示無資料，否則系統將認定錯誤</li>
+                                    <li class="text-danger">Please check the list of students is in the same order as the system's</li>
+                                    <li class="text-danger">Don't include the names and title when copying the grades</li>
+                                    <li class="text-danger">If students who haven't had grades yet, please input “-” as no data, or the system will analyst as an error</li>
                                 </ul>
                             </li>
-                            <li>於下方文字方塊中貼上</li>
-                            <li>使用"解析"按鈕，進行解析</li>
-                            <li>預覽資料確認成績正確</li>
+                            <li>Please paste the grades in the textbox below</li>
+                            <li>Press “Parse” to read out the data</li>
+                            <li>Preview the result and confirm</li>
                             <li>
-                                <span>使用"匯入"按鈕，進行匯入</span>
+                                <span>Press “Import” to import the data</span>
                                 <ul>
-                                    <li class="text-danger">如果輸入資料有錯誤，將無法匯入</li>
+                                    <li class="text-danger">The data won't be able to import if there's an error</li>
                                 </ul>
                             </li>
                         </ol>
