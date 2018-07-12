@@ -1,0 +1,151 @@
+<!-- 本日預約 -->
+<div *ngIf="isLoading;else notloading">
+    <div style="position: absolute;top: 50%;left: 50%;margin-top: -20px;margin-left: -50px;">Loading ...</div>
+</div>
+<ng-template #notloading>
+    <div class="d-flex flex-column flex-md-row mb-3">
+        <div class="input-group mb-3 mb-sm-0">
+            <mat-form-field class="mr-md-3">
+                <mat-select placeholder="請選擇單位" [(ngModel)]="selectedUnitName" name="un" (valueChange)="unitNameValueChange($event)">
+                    <mat-option *ngFor="let un of unitNameList" [value]="un">
+                        {{un}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="mr-md-3">
+                <mat-select placeholder="請選擇類型" [(ngModel)]="selectedCategory" name="cate" (valueChange)="categoryValueChange($event)">
+                    <mat-option *ngFor="let cate of categoryList" [value]="cate">
+                        {{cate}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field style="flex: 1">
+                <input matInput placeholder="請輸入財產編號、申請人、設備名稱、或預約單編號" [(ngModel)]="searchKeyWord" (keyup.enter)="searchButtonClick()">
+            </mat-form-field>
+            <div class="input-group-append mr-sm-5 mr-md-0">
+                <button class="btn btn-outline-info" type="button" (click)="searchButtonClick()">搜尋</button>
+            </div>
+        </div>
+    </div>
+    <div class="rwd-list mb-3">
+        <ul>
+            <li class="rwd-w-1">預約單</li>
+            <li class="rwd-w-3">預約時段</li>
+            <li class="rwd-w-1">財產編號</li>
+            <li class="rwd-w-3">設備名稱</li>
+            <li class="rwd-w-2">歸還時間</li>
+            <li class="rwd-w-1">申請人</li>
+            <li class="rwd-w-1">狀態</li>
+        </ul>
+        <ng-container *ngIf="detailList.length&&!isSearching">
+            <ul *ngFor="let item of detailList" class="list-group-item list-group-item-action point"
+                (click)="showCurrentInfo(item)"
+                [ngClass]="{
+                    'text-success': (item.current_status == '已還'),
+                    'text-black-50': (item.current_status == '取消'),
+                    'text-danger': (item.current_status === '未還'),
+                    'bg-info text-white': (item.current_status == '已領待還' || item.current_status === '待領')
+                }">
+                <li class="rwd-w-1" data-label="預約單">{{item.applications_uid}}</li>
+                <li class="rwd-w-3" data-label="預約時段">
+                    起：{{item.detail_start_time | date: 'yyyy-MM-dd HH:mm'}}<br>迄：{{item.detail_end_time | date: 'yyyy-MM-dd HH:mm'}}</li>
+                <li class="rwd-w-1" data-label="財產編號">{{item.equipment_property_no}}</li>
+                <!-- 設備名稱<br>（廠牌 型號） -->
+                <li class="rwd-w-3" data-label="設備名稱">{{item.equipment_name}}
+                    <br>（{{item.equipment_company}} {{item.equipment_model_no}}）</li>
+                <li class="rwd-w-2" data-label="歸還時間">{{item.io_history_return_time | date: 'yyyy-MM-dd HH:mm'}}</li>
+                <li class="rwd-w-1" data-label="申請人">{{item.applications_applicant_name}}</li>
+                <li class="rwd-w-1" data-label="狀態">{{item.current_status}}</li>
+            </ul>
+        </ng-container>
+    </div>
+    <div *ngIf="!detailList.length&&!isSearching" style="text-align: center;">目前無資料</div>
+    <div *ngIf="isSearching" style="text-align: center;">搜尋中...</div>
+
+</ng-template>
+
+<!-- 預約管理 -->
+<ng-template #currInfo>
+    <div *ngIf="currDetail">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="setBorrowTitle">
+                    預約管理 - {{currDetail.applications_uid}}
+                </h5>
+                <button type="button" class="close" mat-dialog-close>
+                    <span>&times;</span>
+                </button>
+            </div>
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-light font-weight-bold">預約時段</li>
+                <li class="list-group-item">
+                    {{currDetail.detail_start_time | date: 'yyyy-MM-dd HH:mm'}} ~ {{currDetail.detail_end_time | date: 'yyyy-MM-dd HH:mm'}}
+                </li>
+                <div class="row">
+                    <div class="col-sm-6 p-0">
+                        <li class="list-group-item list-group-item-light font-weight-bold">設備名稱</li>
+                        <li class="list-group-item">{{currDetail.equipment_name}}</li>
+                    </div>
+                    <div class="col-sm-6 p-0">
+                        <li class="list-group-item list-group-item-light font-weight-bold">財產編號</li>
+                        <li class="list-group-item">{{currDetail.equipment_property_no}}</li>
+                    </div>
+                    <div class="col-sm-6 p-0">
+                        <li class="list-group-item list-group-item-light font-weight-bold">廠牌</li>
+                        <li class="list-group-item">{{currDetail.equipment_company}}</li>
+                    </div>
+                    <div class="col-sm-6 p-0">
+                        <li class="list-group-item list-group-item-light font-weight-bold">型號</li>
+                        <li class="list-group-item">{{currDetail.equipment_model_no}}</li>
+                    </div>
+                    <div class="col-sm-6 p-0">
+                        <li class="list-group-item list-group-item-light font-weight-bold">類型</li>
+                        <li class="list-group-item">{{currDetail.equipment_category}}</li>
+                    </div>
+                    <div class="col-sm-6 p-0">
+                        <li class="list-group-item list-group-item-light font-weight-bold">放置位置</li>
+                        <li class="list-group-item">{{currDetail.equipment_place}}</li>
+                    </div>
+                    <div class="col-sm-6 p-0">
+                        <li class="list-group-item list-group-item-light font-weight-bold">申請人</li>
+                        <li class="list-group-item">{{currDetail.applications_applicant_name}}</li>
+                    </div>
+                    <div class="col-sm-6 p-0">
+                        <li class="list-group-item list-group-item-light font-weight-bold">歸還時間</li>
+                        <li class="list-group-item">{{currDetail.io_history_return_time | date: 'yyyy-MM-dd HH:mm'}}</li>
+                    </div>
+                </div>
+                <li class="list-group-item list-group-item-light font-weight-bold">預約狀態</li>
+                <li class="list-group-item" [ngClass]="{
+                    'text-success': (currDetail.current_status == '已還'),
+                    'text-black-50': (currDetail.current_status == '取消'),
+                    'text-danger': (currDetail.current_status === '未還'),
+                    'text-info': (currDetail.current_status == '已領待還' || currDetail.current_status === '待領')
+                }">
+                    <span>{{currDetail.current_status}}</span>
+                    <span *ngIf="currDetail.current_status==='已領待還'">
+                        ({{currDetail.io_history_borrow_time | date: 'yyyy-MM-dd HH:mm'}})
+                    </span>
+                    <span *ngIf="currDetail.current_status==='已還'">
+                        ({{currDetail.io_history_return_time | date: 'yyyy-MM-dd HH:mm'}})
+                    </span>
+                    <span *ngIf="currDetail.current_status==='取消'">
+                        ({{currDetail.detail_canceled_time | date: 'yyyy-MM-dd HH:mm'}} {{currDetail.detail_canceled_name}})
+                    </span>
+                </li>
+            </ul>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light text-black-50" mat-dialog-close>關閉</button>
+                <button *ngIf="['待領', '未還', '時間未到'].indexOf(currDetail.current_status) !== -1"
+                    type="button" class="btn btn-danger"
+                    (click)="doCancel()">取消預約</button>
+                <button *ngIf="currDetail.equipment_status === '良好' && currDetail.current_status === '待領'"
+                    type="button" class="btn btn-info"
+                    (click)="doEquipmentOut()">確認借出</button>
+                <button *ngIf="['已領待還', '未還'].indexOf(currDetail.current_status) !== -1"
+                    type="button" class="btn btn-info"
+                    (click)="doEquipmentIn()">確認歸還</button>
+            </div>
+        </div>
+    </div>
+</ng-template>

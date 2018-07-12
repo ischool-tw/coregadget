@@ -1,0 +1,25 @@
+.example-container-full {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .example-container-full > * {
+    width: 100%;
+  }
+
+  .example-container-50 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-bottom: 20px;
+  }
+
+  .example-container-50 > * {
+    width: 40%;
+  }
+
+  .example-radio-group{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }

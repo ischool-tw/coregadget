@@ -1,0 +1,33 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* bootstrap */
+/* @import "~bootstrap/dist/css/bootstrap.min.css"; */
+
+/* @import "~font-awesome/css/font-awesome.css"; */
+
+/* @import "assets/css/base.css"; */
+/* @import "assets/css/default.css"; */
+
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+router-outlet{ display: none;}
+
+  
+  /** 調整 angular material 的 padding，使其更符合 bootstrap 樣式。 */
+  .mat-dialog-container {
+    padding: 0px !important;
+  }
+  
+  
+/* .no-padding-dialog .mat-dialog-container {
+    padding: 0;
+} */
+
+
+.modal-backdrop {
+  z-index: 999 !important;
+  }
+  
+  .modal {
+  z-index: 1000 !important;
+  }

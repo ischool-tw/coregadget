@@ -1,0 +1,63 @@
+﻿
+<nav>
+    <div class="nav nav-tabs mb-3"
+         role="tablist">
+        <a *ngIf="isAdmin||isUnitAdmin" class="nav-item nav-link"
+           id="borrow-tab"
+           data-toggle="tab"
+           href="#m-manage"
+           role="tab"
+           aria-controls="borrow"
+           aria-selected="false">本日預約</a>
+        <a class="nav-item nav-link active"
+           id="reserve-tab"
+           data-toggle="tab"
+           href="#m-reserve"
+           role="tab"
+           aria-controls="reserve"
+           aria-selected="true">
+            <ng-container *ngIf="isTeacher">
+                預約設備
+            </ng-container>
+            <ng-container *ngIf="!isTeacher">
+                預約設備資訊
+            </ng-container>
+        </a>
+        <a *ngIf="isTeacher"
+           class="nav-item nav-link"
+           id="index-tab"
+           data-toggle="tab"
+           href="#index"
+           role="tab"
+           aria-controls="index"
+           aria-selected="false">
+            我的預約
+        </a>
+    </div>
+</nav>
+
+<div class="tab-content"
+     style="flex:1;">
+     <!-- 預約管理 -->
+    <div class="tab-pane fade "
+        id="m-manage"
+        aria-labelledby="manage-tab"
+        style="height:100%;">
+        <app-manage  style="height:100%;"></app-manage>
+    </div>
+
+    <!-- 預約設備 -->
+    <div class="tab-pane fade show active"
+         id="m-reserve"
+         aria-labelledby="reserve-tab"
+         style="height:100%;">
+        <app-equip-booking  style="height:100%;"></app-equip-booking>
+    </div>
+
+    <!-- 我的預約 -->
+    <div class="tab-pane fade "
+         id="index"
+         aria-labelledby="index-tab">
+        <app-my-reservation #myReservation></app-my-reservation>
+    </div>
+</div>
