@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>場地預約系統</title>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/material.min.js"></script>
+    <script src="https://cdn3.devexpress.com/jslib/17.2.7/js/dx.all.js"></script>
+    <script src="./js/calendar.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link href="./css/material.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.spa.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.common.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.light.css" rel="stylesheet" type="text/css">
+    <link href="./css/default.css" rel="stylesheet" type="text/css">
+    <link href="./css/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div class="container-fluid cbs d-flex justify-content-between flex-column">
+
+        <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+            當使用者身份是教職員工／一般使用者（只有場地預約／查詢
+            功能可以用）時，此 div 加入 hidden Element ，將其
+            隱藏。
+        ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+        <nav>
+            <div class="nav nav-tabs mb-3" role="tablist">
+                <a class="nav-item nav-link" id="admin-tab" data-toggle="tab" href="#m-admin" role="tab" aria-controls="admin" aria-selected="true">系統管理員設定</a>
+                <a class="nav-item nav-link" id="department-tab" data-toggle="tab" href="#m-department" role="tab" aria-controls="department"
+                    aria-selected="false">單位管理</a>
+                <a class="nav-item nav-link" id="site-tab" data-toggle="tab" href="#m-site" role="tab" aria-controls="site" aria-selected="false">場地管理</a>
+                <a class="nav-item nav-link" id="reserve-tab" data-toggle="tab" href="#m-reserve" role="tab" aria-controls="reserve" aria-selected="false">預約管理</a>
+                <a class="nav-item nav-link active" id="index-tab" data-toggle="tab" href="#index" role="tab" aria-controls="index" aria-selected="false">預約場地</a>
+            </div>
+        </nav>
+
+        <div class="tab-content">
+            <!-- 系統管理員設定 -->
+            <div class="tab-pane fade" id="m-admin" aria-labelledby="admin-tab">
+                <div class="input-group mb-3">
+                    <!-- 點到此頁，請預設此 input 是 focus 狀態 -->
+                    <input type="text" class="form-control" placeholder="系統管理員名稱（例：王小明）">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-info" type="button">加入</button>
+                    </div>
+                </div>
+                <div class="d-md-flex flex-wrap">
+                    <div class="alert alert-light border alert-dismissible fade show mr-1 mb-2">
+                        陳銘煌
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="alert alert-light border alert-dismissible fade show mr-1 mb-2">
+                        徐如玉
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 單位管理 -->
+            <div class="tab-pane fade" id="m-department" aria-labelledby="department-tab">
+                <button class="btn btn-info d-block mb-3" data-toggle="modal" data-backdrop="static" data-target="#setDepartmentManager">
+                    <i class="material-icons">add</i>
+                    新增單位與主管
+                </button>
+                <button class="btn btn-light btn-lg mr-1 mb-2" data-toggle="modal" data-backdrop="static" data-target="#setDepartmentManager">校長室（蕭瑛星）</button>
+                <button class="btn btn-light btn-lg mr-1 mb-2" data-toggle="modal" data-backdrop="static" data-target="#setDepartmentManager">教務處（林全財）</button>
+                <button class="btn btn-light btn-lg mr-1 mb-2" data-toggle="modal" data-backdrop="static" data-target="#setDepartmentManager">學務處（吳建鋒）</button>
+                <button class="btn btn-light btn-lg mr-1 mb-2" data-toggle="modal" data-backdrop="static" data-target="#setDepartmentManager">總務處（施汶祺）</button>
+                <button class="btn btn-light btn-lg mr-1 mb-2" data-toggle="modal" data-backdrop="static" data-target="#setDepartmentManager">實習處（龍智毫）</button>
+                <button class="btn btn-light btn-lg mr-1 mb-2" data-toggle="modal" data-backdrop="static" data-target="#setDepartmentManager">圖書館（吳德清）</button>
+                <button class="btn btn-light btn-lg mr-1 mb-2" data-toggle="modal" data-backdrop="static" data-target="#setDepartmentManager">輔導室（曾秋萍）</button>
+                <button class="btn btn-light btn-lg mr-1 mb-2" data-toggle="modal" data-backdrop="static" data-target="#setDepartmentManager">教務處（林全財）</button>
+                <button class="btn btn-light btn-lg mr-1 mb-2" data-toggle="modal" data-backdrop="static" data-target="#setDepartmentManager">進修部（柯寶鵬）</button>
+                <button class="btn btn-light btn-lg mr-1 mb-2" data-toggle="modal" data-backdrop="static" data-target="#setDepartmentManager">人事室（洪武詮）</button>
+                <button class="btn btn-light btn-lg mr-1 mb-2" data-toggle="modal" data-backdrop="static" data-target="#setDepartmentManager">主計處（李光朗）</button>
+                <button class="btn btn-light btn-lg mr-1 mb-2" data-toggle="modal" data-backdrop="static" data-target="#setDepartmentManager">教官室（何政衛）</button>
+            </div>
+
+            <!-- 場地管理 -->
+            <div class="tab-pane fade" id="m-site" aria-labelledby="site-tab">
+                <div class="d-flex flex-column flex-md-row align-items-md-center mb-3">
+
+                    <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                        此 dropdown div 選單只顯示自己帳號有的單位，如果只
+                        被分配到一個單位，此 div 加入 hidden Element，將
+                        其隱藏。
+                    ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                    <div class="dropdown mb-2 mb-sm-0">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            全部單位
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">全部單位</a>
+                            <a class="dropdown-item" href="#">總務處</a>
+                            <a class="dropdown-item" href="#">進修部</a>
+                        </div>
+                    </div>
+
+                    <div class="ml-sm-auto d-flex flex-column flex-sm-row">
+
+                        <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                            只有單位主管會顯示此「單位管理員設定」 button。
+                            若無單位主管身份，此 button 加入 hidden Element，
+                            將其隱藏。
+                        ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                        <button class="btn btn-success mb-2 mb-sm-0 mr-auto mr-sm-1" data-toggle="modal" data-backdrop="static" data-target="#setDepartmentAdmin">
+                            <i class="material-icons">person_add</i>
+                            單位管理員設定
+                        </button>
+                        <div class="d-flex justify-content-between">
+                            <div class="mr-1">
+                                <button class="btn btn-info" data-toggle="modal" data-backdrop="static" data-target="#setSite">
+                                    <i class="material-icons">add</i>
+                                    新增
+                                </button>
+                                <button class="btn btn-info">
+                                    <i class="material-icons">description</i>
+                                    上傳
+                                </button>
+                            </div>
+                            <button class="btn btn-light">
+                                <i class="material-icons">insert_chart</i>
+                                統計
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                    場地判斷：
+                    一般場地時，class 使用 border-light text-light
+                    特定場地時，class 使用 border-secondary text-secondary
+
+                    設備狀況清單判斷：
+                    若無設備，將設備狀況清單 button 加上 disabled Element
+                ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                <div class="card mb-3">
+                    <div class="row">
+                        <div class="col-sm-4 col-md-3 p-3">
+                            <img class="w-100 rounded" src="./img/sample.jpg">
+                        </div>
+                        <div class="col-sm-8 col-md-9 p-3">
+                            <!-- 大樓／名稱 -->
+                            <h5 class="mb-3">學生活動中心（禮堂）／1F 第一視聽教室</h5>
+                            <p>人　數：2000</p>
+                            <p>開放日：一，二，三，四，五，六，日</p>
+                            <div class="mt-3">
+                                <div class="d-flex flex-column flex-md-row align-items-md-center">
+                                    <p class="border border-secondary text-secondary px-3 mt-1 mr-auto mb-2 mb-md-0">特定場地</p>
+                                    <button class="btn btn-light d-block d-sm-inline-block mb-2 mb-sm-0 mr-sm-1" data-toggle="collapse" data-target="#collapseExample"
+                                        aria-expanded="false" aria-controls="collapseExample">
+                                        <i class="material-icons">list</i>
+                                        設備狀況清單
+                                    </button>
+                                    <div class="mb-2 mb-sm-0">
+                                        <button class="btn btn-danger">刪除</button>
+                                        <button class="btn btn-info" data-toggle="modal" data-backdrop="static" data-target="#setSite">編輯</button>
+                                    </div>
+                                </div>
+                                <div class="collapse" id="collapseExample">
+                                    <ul class="list-group">
+                                        <li class="list-group-item list-group-item-action d-flex justify-content-between">
+                                            <span>冷氣</span>
+                                            <span>良好</span>
+                                        </li>
+                                        <li class="list-group-item list-group-item-action d-flex justify-content-between">
+                                            <span>擴音設備</span>
+                                            <span>良好</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="row">
+                        <div class="col-sm-4 col-md-3 p-3">
+                            <img class="w-100 rounded" src="./img/sample.jpg">
+                        </div>
+                        <div class="col-sm-8 col-md-9 p-3">
+                            <!-- 大樓／名稱 -->
+                            <h5 class="mb-3">學生活動中心（禮堂）／1F 第一視聽教室</h5>
+                            <p>人　數：2000</p>
+                            <p>開放日：一，二，三，四，五，六，日</p>
+                            <div class="mt-3">
+                                <div class="d-flex flex-column flex-md-row align-items-md-center">
+                                    <p class="border border-light text-light px-3 mt-1 mr-auto mb-2 mb-md-0">特定場地</p>
+                                    <button class="btn btn-light d-block d-sm-inline-block mb-2 mb-sm-0 mr-1" data-toggle="collapse" data-target="#collapseExample"
+                                        aria-expanded="false" aria-controls="collapseExample" disabled>
+                                        <i class="material-icons">list</i>
+                                        設備狀況清單
+                                    </button>
+                                    <div class="mb-2 mb-sm-0">
+                                        <button class="btn btn-danger">刪除</button>
+                                        <button class="btn btn-info" data-toggle="modal" data-backdrop="static" data-target="#setSite">編輯</button>
+                                    </div>
+                                </div>
+                                <div class="collapse" id="collapseExample">
+                                    <ul class="list-group">
+                                        <li class="list-group-item list-group-item-action d-flex justify-content-between">
+                                            <span>冷氣</span>
+                                            <span>良好</span>
+                                        </li>
+                                        <li class="list-group-item list-group-item-action d-flex justify-content-between">
+                                            <span>擴音設備</span>
+                                            <span>良好</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 預約管理 -->
+            <div class="tab-pane fade" id="m-reserve" aria-labelledby="reserve-tab">
+                <div class="d-flex flex-column flex-md-row mb-3">
+                    <div class="dropdown mr-md-2 mb-2 mb-md-0">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            所有預約
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">所有預約</a>
+                            <a class="dropdown-item" href="#">特約場地（未審核）</a>
+                            <a class="dropdown-item" href="#">特約場地（已審核）</a>
+                            <a class="dropdown-item" href="#">一般場地</a>
+                        </div>
+                    </div>
+
+                    <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                        此 dropdown div 選單只顯示自己單位有的場地，如果只
+                        有一個場地，此 div 加入 hidden Element，將其隱藏。
+                    ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                    <div class="dropdown">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            全部場地
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">全部場地</a>
+                            <a class="dropdown-item" href="#">學生活動中心（禮堂）</a>
+                            <a class="dropdown-item" href="#">教資館國際會議廳</a>
+                            <a class="dropdown-item" href="#">教資館聯誼室</a>
+                            <a class="dropdown-item" href="#">活動中心第一視聽教室</a>
+                            <a class="dropdown-item" href="#">教學行政大樓二樓會議室</a>
+                            <a class="dropdown-item" href="#">教學行政大樓六樓會議室</a>
+                            <a class="dropdown-item" href="#">運動場</a>
+                            <a class="dropdown-item" href="#">實習工場</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                    以下四個 card div 為特定場地四種型態判斷
+                    第一個（未審核）：
+                    預約時段 class 的外框與文字使用 border-danger text-danger
+                    審核狀態的文字顯示為「未審合」，class 使用 text-danger
+                    在取消預約前增加一個審核通過的 button
+                    <button class="btn btn-success mr-2">審核通過</button>
+                    
+                    第二個（已通過）：
+                    預約時段 class 的外框與文字使用 border-success text-sucess
+                    審核狀態的文字顯示為「已審合」，class 使用 text-black-50
+                    
+                    第三個（未通過）：
+                    預約時段 class 的外框與文字使用 border-light text-black-50
+                    審核狀態的文字顯示為「未通過」，class 使用 text-black-50
+                    取消預約加上 disabled Element
+
+                    第四個（已通過＋時間已過）：
+                    預約時段 class 的外框與文字使用 border-light text-black-50
+                    審核狀態的文字顯示為「已通過」，class 使用 text-black-50
+                    取消預約加上 disabled Element
+                ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                <div class="card mb-3">
+                    <div class="card-header d-flex flex-column flex-md-row align-items-md-center py-2">
+                        <div class="mr-md-auto d-flex flex-column flex-md-row">
+                            <span class="mr-3 mb-2 mb-md-0">學生活動中心（禮堂）</span>
+                            <span class="mb-2 mb-md-0 px-3 border border-danger text-danger">
+                                2018-05-07 9:00 AM - 11:00 AM
+                            </span>
+                        </div>
+                        <span class="mr-3 text-danger mb-2 mb-md-0">未審核</span>
+                        <button class="btn btn-success mr-md-2 mb-2 mb-md-0">審核通過</button>
+                        <button class="btn btn-info">取消預約</button>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">申請日期</h5>
+                            2018-05-01 11:00:30
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">申請人</h5>
+                            王郁如
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">主持人</h5>
+                            王郁如
+                        </div>
+                        <div class="col-6 col-sm-3 px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">負責人</h5>
+                            王郁如
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header d-flex flex-column flex-md-row align-items-md-center py-2">
+                        <div class="mr-md-auto d-flex flex-column flex-md-row">
+                            <span class="mr-3 mb-2 mb-md-0">學生活動中心（禮堂）</span>
+                            <span class="mb-2 mb-md-0 px-3 border border-success text-success">
+                                2018-05-07 9:00 AM - 11:00 AM
+                            </span>
+                        </div>
+                        <span class="mr-3 text-black-50 mb-2 mb-md-0">已通過</span>
+                        <button class="btn btn-info">取消預約</button>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">申請日期</h5>
+                            2018-05-01 11:00:30
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">申請人</h5>
+                            王郁如
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">主持人</h5>
+                            王郁如
+                        </div>
+                        <div class="col-6 col-sm-3 px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">負責人</h5>
+                            王郁如
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header d-flex flex-column flex-md-row align-items-md-center py-2">
+                        <div class="mr-md-auto d-flex flex-column flex-md-row">
+                            <span class="mr-3 mb-2 mb-md-0">學生活動中心（禮堂）</span>
+                            <span class="mb-2 mb-md-0 px-3 border border-light text-black-50">
+                                2018-05-07 9:00 AM - 11:00 AM
+                            </span>
+                        </div>
+                        <span class="mr-3 text-black-50 mb-2 mb-md-0">未通過</span>
+                        <button class="btn btn-info" disabled>取消預約</button>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">申請日期</h5>
+                            2018-05-01 11:00:30
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">申請人</h5>
+                            王郁如
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">主持人</h5>
+                            王郁如
+                        </div>
+                        <div class="col-6 col-sm-3 px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">負責人</h5>
+                            王郁如
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header d-flex flex-column flex-md-row align-items-md-center py-2">
+                        <div class="mr-md-auto d-flex flex-column flex-md-row">
+                            <span class="mr-3 mb-2 mb-md-0">學生活動中心（禮堂）</span>
+                            <span class="mb-2 mb-md-0 px-3 border border-light text-black-50">
+                                2018-05-02 9:00 AM - 11:00 AM
+                            </span>
+                        </div>
+                        <span class="mr-3 text-black-50 mb-2 mb-md-0">已通過</span>
+                        <button class="btn btn-info" disabled>取消預約</button>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">申請日期</h5>
+                            2018-05-01 11:00:30
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">申請人</h5>
+                            王郁如
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">主持人</h5>
+                            王郁如
+                        </div>
+                        <div class="col-6 col-sm-3 px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">負責人</h5>
+                            王郁如
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                    以下兩個 card div 為一般場地兩種型態判斷
+                    第一個（時間未到）：
+                    預約時段 class 的外框與文字使用 border-success text-success
+                    審核狀態的文字顯示為「已預約」，class 使用 text-black-50 
+                    
+                    第二個（時間已過）：
+                    預約時段 class 的外框與文字使用 border-light text-black-50
+                    審核狀態的文字顯示為「已預約」，class 使用 text-black-50
+                    取消預約加上 disabled Element
+                ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                <div class="card mb-3">
+                    <div class="card-header d-flex flex-column flex-md-row align-items-md-center py-2">
+                        <div class="mr-md-auto d-flex flex-column flex-md-row">
+                            <span class="mr-3 mb-2 mb-md-0">學生活動中心（禮堂）</span>
+                            <span class="mb-2 mb-md-0 px-3 border border-success text-success">
+                                2018-05-07 9:00 AM - 11:00 AM
+                            </span>
+                        </div>
+                        <span class="mr-3 text-black-50 mb-2 mb-md-0">已預約</span>
+                        <button class="btn btn-info">取消預約</button>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">申請日期</h5>
+                            2018-05-01 11:00:30
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">申請人</h5>
+                            王郁如
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">主持人</h5>
+                            王郁如
+                        </div>
+                        <div class="col-6 col-sm-3 px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">負責人</h5>
+                            王郁如
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header d-flex flex-column flex-md-row align-items-md-center py-2">
+                        <div class="mr-md-auto d-flex flex-column flex-md-row">
+                            <span class="mr-3 mb-2 mb-md-0">教學行政大樓二樓會議室</span>
+                            <span class="mb-2 mb-md-0 px-3 border border-light text-black-50">
+                                2018-05-02 9:00 AM - 11:00 AM
+                            </span>
+                        </div>
+                        <span class="mr-3 text-black-50 mb-2 mb-md-0">已預約</span>
+                        <button class="btn btn-info" disabled>取消預約</button>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">申請日期</h5>
+                            2018-05-01 11:00:30
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">申請人</h5>
+                            王郁如
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">主持人</h5>
+                            王郁如
+                        </div>
+                        <div class="col-6 col-sm-3 px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">負責人</h5>
+                            王郁如
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                    （一般／特定）場地取消後樣式：
+                    預約時段 class 的外框與文字使用 border-light text-black-50
+                    審核狀態的文字顯示為「已取消（取消時間與取消人姓名）」，class 使用 text-black-50
+                    取消預約加上 disabled Element
+                ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                <div class="card mb-3">
+                    <div class="card-header d-flex flex-column flex-md-row align-items-md-center py-2">
+                        <div class="mr-md-auto d-flex flex-column flex-md-row">
+                            <span class="mr-3 mb-2 mb-md-0">教學行政大樓二樓會議室</span>
+                            <span class="mb-2 mb-md-0 px-3 border border-light text-black-50">
+                                2018-05-06 9:00 AM - 11:00 AM
+                            </span>
+                        </div>
+                        <span class="mr-3 text-black-50 mb-2 mb-md-0">已取消（2018-05-01 12:30:23 王宇翔）</span>
+                        <button class="btn btn-info" disabled>取消預約</button>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">申請日期</h5>
+                            2018-05-01 11:00:30
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">申請人</h5>
+                            王郁如
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">主持人</h5>
+                            王郁如
+                        </div>
+                        <div class="col-6 col-sm-3 px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">負責人</h5>
+                            王郁如
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 預約場地 -->
+            <div class="tab-pane fade show active" id="index" aria-labelledby="index-tab">
+                <div class="d-flex flex-column flex-md-row mb-3">
+                    <div class="d-flex flex-column flex-md-row mr-auto">
+                        <div class="dropdown mb-3 mb-md-0">
+                            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                全部
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">全部</a>
+                                <a class="dropdown-item" href="#">學生活動中心（禮堂）</a>
+                                <a class="dropdown-item" href="#">教資館國際會議廳</a>
+                                <a class="dropdown-item" href="#">教資館聯誼室</a>
+                                <a class="dropdown-item" href="#">活動中心第一視聽教室</a>
+                                <a class="dropdown-item" href="#">教學行政大樓二樓會議室</a>
+                                <a class="dropdown-item" href="#">教學行政大樓六樓會議室</a>
+                                <a class="dropdown-item" href="#">運動場</a>
+                                <a class="dropdown-item" href="#">實習工場</a>
+                            </div>
+                        </div>
+
+                        <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                            當選擇到全部時，此 button 加入 hidden Element
+                            ，將其隱藏。
+                        ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                        <button type="button" class="btn btn-link text-dark ml-md-2 mb-3 mb-md-0" data-toggle="modal" data-target="#siteInfo">
+                            <i class="material-icons">description</i>
+                            基本資料
+                        </button>
+                    </div>
+
+                    <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                        當使用者身份為一般使用者時，此 div 加入 hidden Element
+                        ，將其隱藏。
+                    ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-info mr-1" data-toggle="modal" data-target="#reserveSite">
+                            <i class="material-icons">add</i>
+                            預約場地
+                        </button>
+                        <button type="button" class="btn btn-light" data-toggle="modal" data-target="#reserveInfo">
+                            <i class="material-icons">timer</i>
+                            我的預約
+                        </button>
+                    </div>
+                </div>
+                <div class="dx-viewport demo-container">
+                    <div id="scheduler"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 單位主管設定 -->
+        <div class="modal fade" id="setDepartmentManager" tabindex="-1" role="dialog" aria-labelledby="setDepartmentManagerTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="setDepartmentManagerTitle">
+                            單位主管設定
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="text-dark font-weight-bold">單位名稱</label>
+                                <input type="text" class="form-control" placeholder="例：總務處">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="text-dark font-weight-bold">單位主管</label>
+                                <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                                    此 input 請使用 autocomplete
+                                ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                                <input type="text" class="form-control" placeholder="例：王小明">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                        此為修改／編輯樣式，如果是新增時，請將：
+                        刪除 button 加入 hidden Element，將其隱藏。
+                        儲存 button 可改名為 加入。
+                    ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light text-dark" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-danger">刪除</button>
+                        <button type="button" class="btn btn-info">儲存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 單位管理員設定 -->
+        <div class="modal fade" id="setDepartmentAdmin" tabindex="-1" role="dialog" aria-labelledby="setDepartmentAdminTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="setDepartmentAdminTitle">
+                            單位管理員設定
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="d-flex align-items-center mb-2">
+                                <label class="mb-2 mr-auto text-dark font-weight-bold">總務處</label>
+                            </div>
+                            <div class="input-group mb-3">
+                                <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                                    此 input 請使用 autocomplete
+                                ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                                <input type="text" class="form-control" placeholder="例：王小明">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info" type="button">加入</button>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-wrap">
+                                <div class="alert alert-success alert-dismissible fade show mr-1 mb-2">
+                                    王詠茹
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="alert alert-success alert-dismissible fade show mr-1 mb-2">
+                                    陳毓祥
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="alert alert-success alert-dismissible fade show mr-1 mb-2">
+                                    曾凱莉
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="alert alert-success alert-dismissible fade show mr-1 mb-2">
+                                    陳育明
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="alert alert-success alert-dismissible fade show mr-1 mb-2">
+                                    陳育明
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="d-flex align-items-center mb-2">
+                                <label class="mb-2 mr-auto text-dark font-weight-bold">進修部</label>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="例：王小明">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info" type="button">加入</button>
+                                </div>
+                            </div>
+                            <div class="t-list d-flex flex-wrap">
+                                <div class="alert alert-success alert-dismissible fade show mr-1 mb-2">
+                                    陳茗莉
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="alert alert-success alert-dismissible fade show mr-1 mb-2">
+                                    張富泰
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新增／編輯場地 -->
+        <div class="modal fade" id="setSite" tabindex="-1" role="dialog" aria-labelledby="setSiteTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="setSiteTitle">
+                            新增／編輯場地
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group custom-file">
+                            <label class="custom-file-label" for="customFile">上傳照片</label>
+                            <input type="file" class="custom-file-input" id="customFile">
+                        </div>
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">大樓</label>
+                            <input type="text" class="form-control" placeholder="例：教學暨行政大樓">
+                        </div>
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">場地名稱</label>
+                            <input type="text" class="form-control" placeholder="例：第一視聽教室">
+                        </div>
+                        <div class="form-row">
+                            <div class="col-sm-8">
+                                <label class="text-dark font-weight-bold">容納人數</label>
+                                <input type="text" class="form-control" placeholder="例：2000">
+                            </div>
+                            <div class="col-sm-4 mt-3 mt-sm-0">
+                                <label class="mb-2 text-dark font-weight-bold">特定場地</label>
+                                <div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="specialYes" name="special" class="custom-control-input">
+                                        <label class="custom-control-label" for="specialYes">是</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="specialNo" name="special" class="custom-control-input" checked>
+                                        <label class="custom-control-label" for="specialNo">否</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label class="mb-2 text-dark font-weight-bold">開放日</label>
+                            <div class="d-flex flex-wrap">
+                                <div class="custom-control custom-checkbox mr-3">
+                                    <input type="checkbox" class="custom-control-input" id="monday">
+                                    <label class="custom-control-label" for="monday">星期一</label>
+                                </div>
+                                <div class="custom-control custom-checkbox mr-3">
+                                    <input type="checkbox" class="custom-control-input" id="tuesday">
+                                    <label class="custom-control-label" for="tuesday">星期二</label>
+                                </div>
+                                <div class="custom-control custom-checkbox mr-3">
+                                    <input type="checkbox" class="custom-control-input" id="wednesday">
+                                    <label class="custom-control-label" for="wednesday">星期三</label>
+                                </div>
+                                <div class="custom-control custom-checkbox mr-3">
+                                    <input type="checkbox" class="custom-control-input" id="thursday">
+                                    <label class="custom-control-label" for="thursday">星期四</label>
+                                </div>
+                                <div class="custom-control custom-checkbox mr-3">
+                                    <input type="checkbox" class="custom-control-input" id="friday">
+                                    <label class="custom-control-label" for="friday">星期五</label>
+                                </div>
+                                <div class="custom-control custom-checkbox mr-3">
+                                    <input type="checkbox" class="custom-control-input" id="saturday">
+                                    <label class="custom-control-label" for="saturday">星期六</label>
+                                </div>
+                                <div class="custom-control custom-checkbox mr-3">
+                                    <input type="checkbox" class="custom-control-input" id="sunday">
+                                    <label class="custom-control-label" for="sunday">星期日</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="d-flex align-items-center mb-2">
+                                <label class="mb-2 mr-auto text-dark font-weight-bold">設備狀況</label>
+                                <button class="btn btn-light">
+                                    <i class="material-icons">add</i>
+                                    更多設備
+                                </button>
+                            </div>
+
+                            <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                                當使用者按更多設備時，系統會複製一塊下方 div 內容
+                            ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                            <div class="form-row border rounded pt-3 mb-1">
+                                <div class="form-group col-md-6">
+                                    <label>設備名稱</label>
+                                    <input type="text" class="form-control" placeholder="例：冷氣">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>狀況狀況</label>
+                                    <input type="text" class="form-control" placeholder="例：良好">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light text-dark" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-info">儲存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 場地資訊 -->
+        <div class="modal fade" id="siteInfo" tabindex="-1" role="dialog" aria-labelledby="siteInfoTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="siteInfoTitle">
+                            學生活動中心（禮堂）
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <img class="w-100 img-thumbnail p-1" src="./img/sample.jpg">
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-light font-weight-bold">大樓</li>
+                        <li class="list-group-item">活動中心</li>
+                        <li class="list-group-item list-group-item-light font-weight-bold">設備狀況</li>
+                        <li class="list-group-item list-group-item-action d-flex justify-content-between">
+                            <span>冷氣</span>
+                            <span>良好</span>
+                        </li>
+                        <li class="list-group-item list-group-item-action d-flex justify-content-between">
+                            <span>擴音設備</span>
+                            <span>良好</span>
+                        </li>
+                        <li class="list-group-item d-flex flex-column flex-md-row align-items-md-center py-2">
+                            <div class="mr-auto">
+                                <span class="badge badge-secondary">特定場地</span>
+                                <span class="badge badge-info">可容納 2000 人</span>
+                                <span class="badge badge-primary mt-2 mt-md-0 text-left text-initial">本週開放日：一，二，三，四，五，六，日</span>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light text-dark" data-dismiss="modal">關閉</button>
+                        <button type="button" class="btn btn-info">場地預約</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 我的預約 -->
+        <div class="modal fade" id="reserveInfo" tabindex="-1" role="dialog" aria-labelledby="reserveInfoTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reserveInfoTitle">
+                            我的預約
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-action d-flex flex-column flex-md-row align-items-center">
+                            <div class="mr-auto">
+                                <div>2018-05-11 9:00 AM - 11:00 AM</div>
+                                <div>學生活動中心（禮堂）</div>
+                            </div>
+                            <div class="ml-auto mt-2 mt-md-0">
+                                <span class="mr-3 text-danger">待審核</span>
+                                <button class="btn btn-info">取消預約</button>
+                            </div>
+                        </li>
+                        <li class="list-group-item list-group-item-action d-flex flex-column flex-md-row align-items-center">
+                            <div class="mr-auto">
+                                <div>2018-05-09 9:00 AM - 11:00 AM</div>
+                                <div>學生活動中心（禮堂）</div>
+                            </div>
+                            <div class="ml-auto mt-2 mt-md-0">
+                                <span class="mr-3 text-danger">待審核</span>
+                                <button class="btn btn-info">取消預約</button>
+                            </div>
+                        </li>
+                        <li class="list-group-item list-group-item-action d-flex flex-column flex-md-row align-items-center">
+                            <div class="mr-auto">
+                                <div>2018-05-07 9:00 AM - 11:00 AM</div>
+                                <div>學生活動中心（禮堂）</div>
+                            </div>
+                            <div class="ml-auto mt-2 mt-md-0">
+                                <span class="mr-3 text-black-50">已預約</span>
+                                <button class="btn btn-info">取消預約</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 預約場地 -->
+        <div class="modal fade" id="reserveSite" tabindex="-1" role="dialog" aria-labelledby="reserveSiteTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reserveSiteTitle">
+                            預約場地
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">場地名稱</label>
+                            <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                                此 input 請使用 autocomplete
+                                若輸入的場地是特定場地，則出現 small 內文字。
+                            ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                            <input type="text" class="form-control" placeholder="例：活動中心／第一視聽教室">
+                            <small class="form-text text-danger">※ 您申請的場地為「特定場地」，須待「核准」方能預約成功。</small>
+                        </div>
+                        <!-- ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                            時間是否需要 repeat 選項，再請斟酌。（目前沒放上）
+                        ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">開始時間</label>
+                            <input type="date" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">結束時間</label>
+                            <input type="date" class="form-control">
+                        </div>
+                        <div class="form-group">
+                                <label class="text-dark font-weight-bold">使用單位</label>
+                                <input type="text" class="form-control" placeholder="例：綜合三忠">
+                            </div>
+                        <div class="form-row">
+                            <div class="col-sm-6">
+                                <label class="text-dark font-weight-bold">主持人</label>
+                                <input type="text" class="form-control" placeholder="例：王小明">
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="text-dark font-weight-bold">負責人</label>
+                                <input type="text" class="form-control" placeholder="例：王小明">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light text-dark" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-info">儲存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="text-center p-2 mt-auto">
+            Powered By ischool
+        </footer>
+    </div>
+
+    <!-- <script type="text/javascript">
+        function toggle(event, page) {
+            event.preventDefault();
+            event.stopPropagation();
+            $('[page]').hide();
+            $(`#${page}`).show();
+
+            window.scrollTo(0, 0);
+        }
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script> -->
+</body>
+
+</html>

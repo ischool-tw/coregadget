@@ -1,0 +1,90 @@
+<div *ngIf="!meetingroomApplications.length">目前無資料</div>
+
+<ng-container *ngIf="meetingroomApplications.length">
+    <div class="card mb-3" *ngFor="let item of meetingroomApplications">
+        <div class="card-header d-flex flex-column flex-md-row align-items-md-center py-2">
+            <div class="mr-md-auto d-flex flex-column flex-md-row">
+                <span class="mr-3 mb-2 mb-md-0">{{item.meetingroom_name}}（{{item.meetingroom_building}}）</span>
+                <div class="mb-2 mb-md-0 px-3 border"
+                    [ngClass]="{
+                        'border-success text-success': (item.is_approved == 't'),
+                        'border-light text-black-50': (item.is_canceled == 't'),
+                        'border-danger text-danger': (item.is_approved != 't' && item.is_canceled != 't'),
+                        'd-flex flex-column flex-md-row': item.repeat_type
+                    }">
+                    <ng-container *ngIf="!item.repeat_type">
+                        {{item.apply_start_date_desc}} {{item.start_time_desc}} - {{item.end_time_desc}}
+                    </ng-container>
+                    <ng-container *ngIf="item.repeat_type">
+                        <div>{{item.apply_start_date_desc}} ~ {{item.repeat_end_date_desc}}</div>
+                        <div class="ml-0 ml-md-2">{{item.repeat_type}} {{item.start_time_desc}} - {{item.end_time_desc}}</div>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="ml-auto mt-2 mt-md-0">
+                <ng-container *ngIf="item.meetingroom_is_special == 't' && item.is_canceled != 't'">
+                    <span class="mr-3 text-danger mb-2 mb-md-0" *ngIf="item.is_approved != 't'">待審核</span>
+                    <span class="mr-3 text-success mb-2 mb-md-0" *ngIf="item.is_approved == 't'">審核通過</span>
+                </ng-container>
+                <span *ngIf="item.is_canceled == 't'"
+                    class="mr-3 text-black-50">已取消</span>
+                <button *ngIf="item.is_canceled != 't'"
+                    class="btn btn-info"
+                    (click)="confirmCancel(item)"
+                    data-target="#reserveInfo">取消預約</button>
+            </div>
+
+        </div>
+        <div class="row text-center">
+            <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">申請日期</h5>
+                {{item.apply_date_desc}}
+            </div>
+            <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">申請人</h5>
+                {{item.applicant_name}}
+            </div>
+            <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">主持人</h5>
+                {{item.teacher_name}}
+            </div>
+            <div class="col-6 col-sm-3 px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">取消日期</h5>
+                {{item.canceled_time_desc}}
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-12 col-md-6 border-right px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">申請事由</h5>
+                {{item.apply_reason || '未填寫'}}
+            </div>
+            <div class="col-12 col-md-6 border-right px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">預約日期</h5>
+                <span *ngFor="let detail of item.detail" class="mr-3">
+                    {{detail.date_desc}}
+                </span>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #cancelTemp>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">
+                取消預約
+            </h5>
+        </div>
+        <div class="modal-body">
+            您確定要取消嗎？
+        </div>
+        <div class="modal-footer">
+            <button type="button"
+                    class="btn btn-light text-dark"
+                    [mat-dialog-close]="false">取消</button>
+            <button type="button"
+                    class="btn btn-light text-danger"
+                    [mat-dialog-close]="true">確定</button>
+        </div>
+    </div>
+</ng-template>

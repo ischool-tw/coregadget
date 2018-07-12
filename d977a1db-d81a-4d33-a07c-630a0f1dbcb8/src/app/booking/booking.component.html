@@ -1,0 +1,133 @@
+
+    <div style="background-color:white;">
+        <div *ngIf="loading;else noloading">
+            <div style="position: absolute;top: 50%;left: 50%;margin-top: -20px;margin-left: -50px;">Loading ...</div>
+        </div>
+        <ng-template #noloading>
+            <ng-container *ngIf="!currentMeetingroomID">
+                <div style="position: absolute;top: 50%;left: 50%;margin-top: -20px;margin-left: -50px;">
+                    <H3>請先選擇場地</H3>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="currentMeetingroomID">
+                <!-- (onAppointmentClick)="onAppointmentClick($event)" -->
+                <!-- (onCellContextMenu)="onCellContextMenu($event)" -->
+                <!-- (onAppointmentContextMenu)="onAppointmentContextMenu($event)" -->
+                <!-- appointmentTooltipTemplate="tooltip-template" -->
+                <dx-scheduler id="scheduler"
+                    [views]="['week', 'month']"
+                    currentView="week"
+                    [firstDayOfWeek]="1"
+                    [showAllDayPanel]="false"
+                    [startDayHour]="startDayHour"
+                    [endDayHour]="endDayHour"
+                    [cellDuration]="60"
+                    [dataSource]="appointments"
+                    [currentDate]="current_date"
+                    textExpr="teacher_name"
+                    startDateExpr="start_time"
+                    endDateExpr="end_time"
+                    (onAppointmentAdding)="onAppointmentAdding($event)"
+                    (onAppointmentAdded)="onAppointmentAdded($event)"
+                    (onAppointmentUpdating)="onAppointmentUpdating($event)"
+                    (onAppointmentUpdated)="onAppointmentUpdated($event)"
+                    (onAppointmentDeleting)="onAppointmentDeleting($event)"
+                    (onAppointmentDeleted)="onAppointmentDeleted($event)"
+                    (onAppointmentFormCreated)="onAppointmentFormCreated($event)"
+                    (onOptionChanged)="onOptionChanged($event)"
+                    (onAppointmentDblClick)="onAppointmentDblClick($event)"
+                    appointmentTemplate="week-appointment-template"
+                    appointmentTooltipTemplate="tooltip-template"
+                    dropDownAppointmentTemplate="tooltip-template"
+                    (onCellClick)="onCellClick($event)"
+                >
+
+                    <dxo-editing
+                        [allowAdding]="canAdd"
+                        [allowUpdating]="canUpdate"
+                        [allowDeleting]="canDelete"
+                        [allowResizing]="false"
+                        [allowDragging]="false">
+                    </dxo-editing>
+
+                    <!-- 週約會顯示樣式 -->
+                    <div *dxTemplate="let showtime of 'week-appointment-template'" [style.background-color]= "showtime.is_approved?'#337ab7':'#777'">
+                        <div>
+                            <div class="d-flex justify-content-between" >
+                                <strong>{{showtime.teacher_name}}</strong>
+                                <span class="dx-icon-repeat" [hidden]="!showtime.is_repeat"></span>
+                            </div>
+                            <div>
+                                {{(showtime.start_time | date:'HH: mm') + ' - ' + (showtime.end_time | date:'HH: mm')}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 月約會顯示樣式 -->
+                    <div *dxTemplate="let showtime of 'month-appointment-template'" [style.background-color]= "showtime.is_approved?'#337ab7':'#777'">
+                        <div>
+                            <div class="d-flex justify-content-between" >
+                                <strong>{{showtime.teacher_name}}</strong>
+                                <span class="dx-icon-repeat" [hidden]="!showtime.is_repeat"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 點擊後，或月約會點更多時 tooltip 樣式 -->
+                    <div *dxTemplate="let showtime of 'tooltip-template'">
+                        <div class="appointment-content">
+                            <div class="mr-2" style="width: 0.5rem;" [style.background-color]= "showtime.is_approved?'#337ab7':'#777'"></div>
+                            <div class="mr-3" style="flex: 1;">
+                                <div class="appointment-text">{{showtime.teacher_name}}</div>
+                                <div class="appointment-dates">
+                                    {{ (showtime.start_time | date: 'MM-dd') + ' , ' + (showtime.start_time | date:'shortTime') + ' - ' + (showtime.end_time | date:'shortTime')}}
+                                </div>
+                                <div class="appointment-reason">事由：{{showtime.apply_reason || '無'}}</div>
+                            </div>
+                            <div class="d-flex">
+                                <button *ngIf="showtime.apply_by === myTeacherID" type="button" class="btn btn-danger appointment-btn mr-3" (click)="deleteAppointment(showtime)">
+                                    <i class="material-icons">delete</i>
+                                </button>
+                                <button type="button" class="btn appointment-btn" (click)='showAppointment(showtime, false)'>瀏覽</button>
+                            </div>
+                        </div>
+                    </div>
+                </dx-scheduler>
+
+                <!-- 已有預約，按右鍵的選單 -->
+                <!-- <dx-context-menu #appointmentMenu
+                    [dataSource]="appointmentContextMenuItems"
+                    target=".dx-scheduler-appointment"
+                    (onItemClick)="onContextMenuItemClick($event)"
+                    [width]="200">
+                    <div *dxTemplate="let e of 'item'">
+                        <div *ngIf="e.color">
+                            <div class="item-badge" [ngStyle]="{ backgroundColor: e.color}"></div>
+                        </div>
+                        <div class="item-text">{{e.text}}</div>
+                    </div>
+                </dx-context-menu> -->
+
+                <!-- 空白時段，按右鍵的選單 -->
+                <!-- <dx-context-menu #cellMenu
+                    [dataSource]="cellContextMenuItems"
+                    target=".dx-scheduler-date-table-cell"
+                    (onItemClick)="onContextMenuItemClick($event)"
+                    [width]="200">
+                </dx-context-menu> -->
+            </ng-container>
+        </ng-template>
+    </div>
+
+<ng-template #cancelTemp>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">取消預約</h5>
+        </div>
+        <div class="modal-body">您確定要取消嗎？</div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light text-dark" [mat-dialog-close]="false">取消</button>
+            <button type="button" class="btn btn-light text-danger" [mat-dialog-close]="true">確定</button>
+        </div>
+    </div>
+</ng-template>

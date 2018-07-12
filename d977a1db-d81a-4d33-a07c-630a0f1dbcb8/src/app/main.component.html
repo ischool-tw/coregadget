@@ -1,0 +1,25 @@
+﻿<nav>
+    <div class="nav nav-tabs mb-3" role="tablist">
+        <a class="nav-item nav-link active" id="reserve-tab" data-toggle="tab" href="#m-reserve" role="tab" aria-controls="reserve"
+            aria-selected="true" >
+            {{ isTeacher ? '預約場地' : '場地預約資訊' }}
+        </a>
+        <a *ngIf="isTeacher" class="nav-item nav-link" id="index-tab" data-toggle="tab" href="#index" role="tab" aria-controls="index"
+            aria-selected="false" >
+            我的預約
+        </a>
+    </div>
+</nav>
+
+<div class="tab-content">
+    <!-- 預約管理 -->
+    <div class="tab-pane fade show active" id="m-reserve" aria-labelledby="reserve-tab">
+        <app-booking-main></app-booking-main>
+    </div>
+
+    <!-- 我的預約 -->
+    <div class="tab-pane fade" id="index" aria-labelledby="index-tab">
+        <app-my-reservation #myReservation></app-my-reservation>
+    </div>
+</div>
+

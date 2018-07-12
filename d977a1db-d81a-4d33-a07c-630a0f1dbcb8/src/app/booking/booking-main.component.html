@@ -1,0 +1,77 @@
+<div *ngIf="!meetingRooms.length">目前無場地</div>
+<div *ngIf="meetingRooms.length" class="d-flex flex-row flex-md-row mr-auto justify-content-between">
+	<div>
+		<mat-form-field>
+			<mat-select placeholder="請選擇場地" [(ngModel)]="currentMeetingroom" name="room">
+				<mat-optgroup *ngFor="let building of buildings" [label]="building" [disabled]="false">
+					<mat-option *ngFor="let room of dicRoomsByBuilding[building]" [value]="room">
+						{{ room.name }}
+					</mat-option>
+				</mat-optgroup>
+			</mat-select>
+		</mat-form-field>
+		<button type="button" class="btn btn-link text-dark ml-md-2 mb-3 mb-md-0" data-toggle="modal" data-target="#siteInfo">
+			<i class="material-icons">description</i>
+			查看場地
+		</button>
+	</div>
+	<div></div>
+	<div *ngIf="isTeacher" class="nav nav-tabs mb-3">
+
+		<button type="button" [disabled]="currentMeetingroom.status!='開放'" class="btn btn-info mr-1" (click)="appBooking.showCreateAppointment()">
+			<i class="material-icons">add</i>
+			預約場地
+		</button>
+
+	</div>
+</div>
+
+<app-booking *ngIf="currentMeetingroom.uid" #appBooking [meetingRoomID]="currentMeetingroom.uid" #appBooking [meetingRoomStatus]="currentMeetingroom.status"></app-booking>
+
+<!-- 場地資訊 -->
+<div class="modal fade" id="siteInfo" tabindex="-1" role="dialog" aria-labelledby="siteInfoTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+
+				<h5 class="modal-title" id="siteInfoTitle">
+					{{currentMeetingroom.name}}
+				</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<ul class="list-group">
+				<div class="list-group-item" style="text-align: center;">
+					<img class="rounded" [ngClass]="{'w-100' : currentMeetingroom.picture}" src="{{currentMeetingroom.picture || './assets/img/empty.png'}}">
+				</div>
+				<li class="list-group-item list-group-item-light font-weight-bold">大樓</li>
+				<li class="list-group-item d-flex flex-column flex-md-row align-items-md-center py-2">
+					<span class="mr-3">{{currentMeetingroom.building}}</span>
+					<span class="badge badge-secondary mr-3">{{ currentMeetingroom.is_special == 't' ? '需審核' : '' }}</span>
+					<span class="badge badge-info mr-3">可容納 {{currentMeetingroom.capacity}} 人</span>
+					<span class="badge badge-primary mr-3">場地 {{currentMeetingroom.status == '開放' ? '開放' : '不開放' }} </span>
+				</li>
+				<li class="list-group-item list-group-item-light font-weight-bold">
+					<a href="javascript:;" class="d-flex justify-content-between text-dark" (click)="showEquipment=!showEquipment">
+						<span>設備狀況</span>
+						<i class="material-icons">{{showEquipment ? 'arrow_drop_up' : 'arrow_drop_down'}}</i>
+					</a>
+				</li>
+				<ng-container *ngIf="showEquipment">
+					<li class="list-group-item list-group-item-action d-flex justify-content-between" *ngFor="let item of currentMeetingroom.MeetingroomEquipment">
+						<div style="flex:1;text-align: left">{{item.name}}</div>
+						<div style="flex:1;text-align: center">{{item.status}}</div>
+						<div style="flex:1;text-align: right">數量：{{item.count}}</div>
+					</li>
+					<li class="list-group-item list-group-item-action" *ngIf="!currentMeetingroom.MeetingroomEquipment.length">
+						無設備
+					</li>
+				</ng-container>
+			</ul>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-light text-dark" data-dismiss="modal">關閉</button>
+			</div>
+		</div>
+	</div>
+</div>
