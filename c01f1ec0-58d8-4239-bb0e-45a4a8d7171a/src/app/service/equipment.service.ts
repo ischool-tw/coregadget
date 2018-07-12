@@ -13,7 +13,7 @@ export class EquipmentService {
 
 
   async getContract() {
-    this.contract = await this.gadget.getContract("ischool.equipment");
+    this.contract = await this.gadget.getContract("ischool.public.equipment");
   }
 
   // 從 DSA 取得資料

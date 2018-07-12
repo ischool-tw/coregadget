@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <ModulePrefs title="場地預約" description="場地預約">
-    <Title lang="zh-TW">場地預約</Title>
+  <ModulePrefs title="會議室預約" description="會議室預約">
+    <Title lang="zh-TW">會議室預約</Title>
     <Icon>icon.png</Icon>
     <Title lang="zh-CN">
     </Title>

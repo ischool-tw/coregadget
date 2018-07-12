@@ -75,7 +75,8 @@
                         data-toggle="modal"
                         data-backdrop="static"
                         data-target="#reserveInfo"
-                        (click)="detailClick(equip)">
+                        (click)="detailClick(equip)"
+                        [disabled]="!isTeacher">
                     內容
                 </button>
             </li>
@@ -86,7 +87,7 @@
                         data-backdrop="static"
                         data-target="#reserveEquipment"
                         (click)="bookingClick(equip)"
-                        [disabled]="equip.status !='良好'">
+                        [disabled]="!isTeacher || equip.status !='良好'">
                     預約
                 </button>
             </li>

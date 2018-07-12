@@ -5,6 +5,7 @@ import { RRule } from 'rrule';
 import { MainComponent } from "../main.component";
 import * as moment from "moment";
 import { DialogService } from '../service/dialog.service';
+import { SakuraService } from '../service/sakura.service';
 @Component({
   selector: 'app-equip-booking',
   templateUrl: './equip-booking.component.html',
@@ -12,6 +13,7 @@ import { DialogService } from '../service/dialog.service';
 })
 export class EquipBookingComponent implements OnInit {
 
+  isTeacher = this.sakura.isTeacher();
   isLoading =true;
   isSaving = false;
   // 使用者選的單位
@@ -66,6 +68,7 @@ export class EquipBookingComponent implements OnInit {
     private equipmentService: EquipmentService,
     private equipApplicationService: EquipApplicationService,
     private dialogService: DialogService,
+    private sakura: SakuraService,
     @Optional() private rootMain: MainComponent
   ) {
 

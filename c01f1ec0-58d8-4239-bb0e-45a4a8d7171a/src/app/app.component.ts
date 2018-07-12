@@ -27,7 +27,11 @@ export class AppComponent implements OnInit {
     this.isTeacher = this.sakura.isTeacher();
 
     // 取得管理者
-    await this.teacherService.checkAdmin();
+    if(this.isTeacher)
+    {
+      await this.teacherService.checkAdmin();
+    }
+    
 
     this.loading = false;
   }
