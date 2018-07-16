@@ -5,7 +5,7 @@
 			<mat-select placeholder="請選擇場地" [(ngModel)]="currentMeetingroom" name="room">
 				<mat-optgroup *ngFor="let building of buildings" [label]="building" [disabled]="false">
 					<mat-option *ngFor="let room of dicRoomsByBuilding[building]" [value]="room">
-						{{ room.name }}
+						{{ room.name }}({{room.status == '開放' ? '開放' : '不開放'}})
 					</mat-option>
 				</mat-optgroup>
 			</mat-select>
