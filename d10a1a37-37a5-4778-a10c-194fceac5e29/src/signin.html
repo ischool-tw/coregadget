@@ -1,0 +1,32 @@
+<html>
+
+<head>
+    <script src="assets/js/xmlWriter.js"></script>
+    <script src="assets/js/parseXml.js"></script>
+    <script src="assets/js/xml2json.js"></script>
+    <script src="assets/js/dsutil.js"></script>
+    <script src="assets/js/dsnsLookup.js"></script>
+    <script>
+        var vars = {};
+        var hashes = window.location.hash.replace(/\#/, "").split('&');
+        var searchs = window.location.search.replace(/\?/, "").split('&');
+        for (var i = 0; i < hashes.length; i++) {
+            var hash = decodeURIComponent(hashes[i]);
+            var key = hash.substring(0, hash.indexOf("="));
+            vars[key] = hash.substring(hash.indexOf("=") + 1);
+        }
+        for (var i = 0; i < searchs.length; i++) {
+            var search = decodeURIComponent(searchs[i]);
+            var key = search.substring(0, search.indexOf("="));
+            vars[key] = search.substring(search.indexOf("=") + 1);
+        }
+        // alert(vars["source"] + "?token=" + vars["access_token"] + "#" + vars["route"]);
+        window.location.assign(vars["source"] + "?token=" + vars["access_token"] + "#" + vars["route"]);
+    </script>
+</head>
+
+<body>
+    <p style="position: absolute;text-align: center;left:0px;right:0px;top:45%;">loading...</p>
+</body>
+
+</html>
