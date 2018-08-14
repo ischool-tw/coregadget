@@ -86,9 +86,8 @@ export class AddS1Component implements OnInit {
     if (v.length === 0) {
       alert("Please set the Beginning and End Dates first.");
     } else {
-      if (this.weeklyDataMain.BeginDate.length === 0)
-      {
-        this.weeklyDataMain.BeginDate = moment(this.weeklyDataMain.EndDate).add(-7,'day').format("YYYY-MM-DD");
+      if (this.weeklyDataMain.BeginDate.length === 0) {
+        this.weeklyDataMain.BeginDate = moment(this.weeklyDataMain.EndDate).add(-7, 'day').format("YYYY-MM-DD");
         console.log(this.weeklyDataMain.BeginDate);
       }
 
@@ -207,8 +206,11 @@ export class AddS1Component implements OnInit {
     // 整理有勾有成績學生
     this.gradeBookList = this.gradeBookList.filter(v => v.checked === true);
     for (const g1 of this.gradeBookList) {
-
-      checkedGradeBookList = this.weeklyData.addGradebookList.filter(v => v.CustomAssessment === g1.CustomAssessment);
+      for (const sc of this.weeklyData.addGradebookList) {
+        if (sc.CustomAssessment === g1.CustomAssessment) {
+          checkedGradeBookList.push(sc);
+        }
+      }
 
     }
     // console.log(checkedGradeBookList);
