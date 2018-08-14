@@ -1,0 +1,128 @@
+<!-- 我的預約 -->
+<div *ngIf="isLoading;else notloading">
+    <div style="position: absolute;top: 50%;left: 50%;margin-top: -20px;margin-left: -50px;">Loading ...</div>
+</div>
+
+<ng-template #notloading>
+    <div class="card mb-3" *ngFor="let item of myEquipApplications">
+        <div class="card-header d-flex flex-column flex-md-row align-items-md-center py-2">
+            <div class="mr-md-auto d-flex flex-column flex-md-row justify-content-center justify-content-md-start">
+                <span class="badge badge-secondary mb-2 mb-md-0 mr-0 mr-md-2">{{item.equip_name}}</span>
+                <ng-container *ngIf="!item.repeat_type">
+                    <span>{{item.apply_start_date_desc}} {{item.start_hour_desc}} - {{item.end_hour_desc}}</span>
+                </ng-container>
+                <div *ngIf="item.repeat_type">
+                    <span>{{item.apply_start_date_desc}} ~ {{item.repeat_end_date_desc}}</span>
+                    <span class="ml-2">{{item.repeat_type_desc}} {{item.start_hour_desc}} - {{item.end_hour_desc}}</span>
+                </div>
+                <span class="ml-0 ml-md-2">未取期限 {{item.deadline}} 分鐘</span>
+            </div>
+            <button *ngIf="item.is_canceled != 't'" class="btn btn-info" (click)="confirmCancel(item)">取消預約</button>
+        </div>
+        <div class="row text-center">
+            <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">申請編號</h5>
+                {{item.uid}}
+            </div>
+            <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">申請日期</h5>
+                {{item.apply_date_desc}}
+            </div>
+            <div class="col-12 col-sm-2 border-right px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">申請事由</h5>
+                {{item.apply_reason}}
+            </div>
+            <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">設備狀態</h5>
+                {{item.status}}
+            </div>
+            <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">取消日期</h5>
+                {{item.canceled_time_desc || ''}}
+            </div>
+            <div class="col-12 col-sm-2 px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">取消原因</h5>
+                {{item.cancel_reason || ''}}
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">財產編號</h5>
+                {{item.property_no}}
+            </div>
+            <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">設備名稱</h5>
+                {{item.equip_name}}
+            </div>
+            <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">廠牌</h5>
+                {{item.company}}
+            </div>
+            <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">型號</h5>
+                {{item.model_no}}
+            </div>
+            <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">類型</h5>
+                {{item.category}}
+            </div>
+            <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">放置位置</h5>
+                {{item.place}}
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-12 px-0 pb-2">
+                <h5 class="border-bottom py-2 mb-2 bg-light">預約時段</h5>
+                <div class="d-flex flex-column flex-sm-row px-2">
+                    <!-- TODO: 改用 chips -->
+                    <mat-chip-list #chipList>
+                        <mat-chip *ngFor="let detail of item.detail" [selectable]="selectable"
+                        [removable]="removable" (removed)="detailCancel(detail)">
+                          {{detail.date_desc}}
+                        <span *ngIf="detail.borrow_time && detail.is_canceled != 't' && detail.return_time">(已還)</span>
+                        <span *ngIf="detail.borrow_time && detail.is_canceled != 't' && !detail.return_time" class="text-danger">(未還)</span>
+                        <!-- <button *ngIf="detail.is_canceled != 't'" (click)="detailCancel(detail)"> -->
+                            <mat-icon matChipRemove *ngIf="detail.is_canceled != 't'" >cancel</mat-icon>                            
+                        <!-- </button> -->
+                        
+                        </mat-chip>
+                        <input placeholder=""
+                               [matChipInputFor]="chipList"
+                               [matChipInputAddOnBlur]="true"
+                               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                               
+                               >
+                      </mat-chip-list>
+
+
+                    <!-- <div *ngFor="let detail of item.detail" class="mr-3">
+                        <button *ngIf="detail.is_canceled != 't'" (click)="detailCancel(detail)">
+                            <i class="material-icons">cancel</i>
+                        </button>
+                        {{detail.date_desc}}
+                        <span *ngIf="detail.borrow_time && detail.is_canceled != 't' && detail.return_time">(已還)</span>
+                        <span *ngIf="detail.borrow_time && detail.is_canceled != 't' && !detail.return_time" class="text-danger">(未還)</span>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #cancelTemp>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">
+                取消預約
+            </h5>
+        </div>
+        <div class="modal-body">
+            您確定要取消嗎？
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light text-dark" [mat-dialog-close]="false">取消</button>
+            <button type="button" class="btn btn-light text-danger" [mat-dialog-close]="true">確定</button>
+        </div>
+    </div>
+</ng-template>

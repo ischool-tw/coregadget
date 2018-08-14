@@ -1,0 +1,9 @@
+<div *ngIf="loading;else noloading">
+    <div style="position: absolute;top: 50%;left: 50%;margin-top: -20px;margin-left: -50px;">Loading ...</div>
+</div>
+<ng-template #noloading>
+    <div class="container-fluid cbs d-flex justify-content-between flex-column"
+         style="height:100%;">
+        <router-outlet></router-outlet>
+    </div>
+</ng-template>

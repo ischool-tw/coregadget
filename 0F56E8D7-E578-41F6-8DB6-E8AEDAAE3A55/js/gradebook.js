@@ -302,35 +302,28 @@
                 }                                
             };
 
-            [].concat($scope.current.Course.Scores.Score || []).forEach(function (examRec, index) {
-                if (!examRec.Lock) {
 
 
-                    [].concat($scope.studentList || []).forEach(function (studentRec, index) {
+            [].concat($scope.studentList || []).forEach(function (studentRec, index) {
 
-                        var obj = {
-                            
-                            Extension: {
-                                Extension: {
-                                    Text: studentRec["Exam" + "文字評量"],
-                                    //2018/1/11 穎驊新增，平時評量 上傳邏輯
-                                    OrdinarilyEffort: studentRec["Exam" + "平時評量" + "_" + "努力程度"],
-                                    OrdinarilyScore: studentRec["Exam" + "平時評量"],
-                                }
-                            },
-                            Condition: {
-                                StudentID: studentRec.StudentID,
-                                CourseID: $scope.current.Course.CourseID,                            
-                            }                                                        
-                        };
+                var obj = {
 
-                        text_body.Content.AttendExtension.push(obj);
-                    });
+                    Extension: {
+                        Extension: {
+                            Text: studentRec["Exam" + "文字評量"],
+                            //2018/1/11 穎驊新增，平時評量 上傳邏輯
+                            OrdinarilyEffort: studentRec["Exam" + "平時評量" + "_" + "努力程度"],
+                            OrdinarilyScore: studentRec["Exam" + "平時評量"],
+                        }
+                    },
+                    Condition: {
+                        StudentID: studentRec.StudentID,
+                        CourseID: $scope.current.Course.CourseID,
+                    }
+                };
 
-                }
+                text_body.Content.AttendExtension.push(obj);
             });
-
-
 
 
 
@@ -373,28 +366,7 @@
                 }
             });
 
-            //  2017/8/4 穎驊新增 文字評量的儲存
-            $scope.connection.send({
-                service: "TeacherAccess.SetSCAttendExtensionKH",
-                autoRetry: true,
-                body: text_body,
-                result: function (response, error, http) {
-                    if (error) {
-                        alert("TeacherAccess.SetSCAttendExtensionKH Error");
-                    } else {
 
-                        $scope.$apply(function () {
-                            $scope.studentList.forEach(function (studentRec, index) {
-                                var rawStudentRec = angular.copy(studentRec);
-                                for (var key in rawStudentRec) {
-                                    if (!key.match(/(學期成績|Origin)$/gi))
-                                        studentRec[key + 'Origin'] = studentRec[key];
-                                }
-                            });
-                        });
-                    }
-                }
-            });
 
 
 
@@ -406,73 +378,36 @@
                     if (error) {
                         alert("TeacherAccess.SetCourseExamScoreWithExtension Error");
                     } else {
-                        if ( new Date($scope.current.Course.InputStartTime) < new Date() && new Date() < new Date($scope.current.Course.InputEndTime)) {
-                            //#region 儲存學期成績
-                            var body = {
-                                Content: {
-                                    Course: {
-                                        '@CourseID': $scope.current.Course.CourseID,
-                                        Student: []
-                                    }
-                                }
-                            };
-                            [].concat($scope.studentList || []).forEach(function (studentRec, index) {
-                                var obj = {
-                                    '@StudentID': studentRec.StudentID,
+                        //  2017/8/4 穎驊新增 文字評量的儲存
+                        $scope.connection.send({
+                            service: "TeacherAccess.SetSCAttendExtensionKH",
+                            autoRetry: true,
+                            body: text_body,
+                            result: function (response, error, http) {
+                                if (error) {
+                                    alert("TeacherAccess.SetSCAttendExtensionKH Error");
+                                } else {
 
-                                    '@Score': studentRec["Exam" + '學期成績']
-                                };
-                                body.Content.Course.Student.push(obj);
-                            });
-                            $scope.connection.send({
-                                service: "TeacherAccess.SetCourseSemesterScore",
-                                autoRetry: true,
-                                body: body,
-                                result: function (response, error, http) {
-                                    if (error) {
-                                        //失敗但評量成績已儲存
-                                        $scope.$apply(function () {
-                                            $scope.studentList.forEach(function (studentRec, index) {
-                                                var rawStudentRec = angular.copy(studentRec);
-                                                for (var key in rawStudentRec) {
-                                                    if (!key.match(/(學期成績|Origin)$/gi))
-                                                        studentRec[key + 'Origin'] = studentRec[key];
-                                                }
-                                            });
+                                    $scope.$apply(function () {
+                                        $scope.studentList.forEach(function (studentRec, index) {
+                                            var rawStudentRec = angular.copy(studentRec);
+                                            for (var key in rawStudentRec) {
+                                                if (!key.match(/(學期成績|Origin)$/gi))
+                                                    studentRec[key + 'Origin'] = studentRec[key];
+                                            }
                                         });
-                                        alert("TeacherAccess.SetCourseSemesterScore Error");
-                                    } else {
-                                        $scope.$apply(function () {
-                                            $scope.studentList.forEach(function (studentRec, index) {
-                                                var rawStudentRec = angular.copy(studentRec);
-                                                for (var key in rawStudentRec) {
-                                                    if (!key.match(/Origin$/gi))
-                                                        studentRec[key + 'Origin'] = studentRec[key];
-                                                }
-                                            });
-                                        });
-                                        alert("儲存完成。");
-                                    }
+                                    });
+
+                                    alert("儲存完成。");
                                 }
-                            });
-                            //#endregion
-                        }
-                        else {
-                            $scope.$apply(function () {
-                                $scope.studentList.forEach(function (studentRec, index) {
-                                    var rawStudentRec = angular.copy(studentRec);
-                                    for (var key in rawStudentRec) {
-                                        if (!key.match(/(學期成績|Origin)$/gi))
-                                            studentRec[key + 'Origin'] = studentRec[key];
-                                    }
-                                });
-                            });
-                            alert("儲存完成。");
-                        }
+                            }
+                        });
                     }
                 }
             });                        
         }
+
+
 
         $scope.isMobile = navigator.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/gi) ? true : false;
 

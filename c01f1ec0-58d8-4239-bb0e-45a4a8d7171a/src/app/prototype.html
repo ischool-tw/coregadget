@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>設備預約系統</title>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/material.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link href="./css/material.css" rel="stylesheet" type="text/css">
+    <link href="./css/default.css" rel="stylesheet" type="text/css">
+    <link href="./css/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div class="container-fluid cbs d-flex justify-content-between flex-column">
+
+        <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+            當使用者身份是教職員工／一般使用者（只有設備預約／查詢
+            功能可以用）時，此 div 加入 hidden Element ，將其
+            隱藏。
+        ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+        <nav>
+            <div class="nav nav-tabs mb-3" role="tablist">
+                <a class="nav-item nav-link" id="admin-tab" data-toggle="tab" href="#m-admin" role="tab" aria-controls="admin" aria-selected="true">系統管理員設定</a>
+                <a class="nav-item nav-link" id="department-tab" data-toggle="tab" href="#m-department" role="tab" aria-controls="department"
+                    aria-selected="false">單位管理</a>
+                <a class="nav-item nav-link" id="equipment-tab" data-toggle="tab" href="#m-equipment" role="tab" aria-controls="equipment"
+                    aria-selected="false">設備管理</a>
+                <a class="nav-item nav-link" id="borrow-tab" data-toggle="tab" href="#m-borrow" role="tab" aria-controls="borrow" aria-selected="false">預約管理</a>
+                <a class="nav-item nav-link active" id="index-tab" data-toggle="tab" href="#index" role="tab" aria-controls="index" aria-selected="false">預約設備</a>
+                <a class="nav-item nav-link" id="my-tab" data-toggle="tab" href="#m-my" role="tab" aria-controls="my" aria-selected="false">我的預約</a>
+            </div>
+        </nav>
+
+        <div class="tab-content">
+            <!-- 系統管理員設定 -->
+            <div class="tab-pane fade" id="m-admin" aria-labelledby="admin-tab">
+                <div class="input-group mb-3">
+                    <!-- 點到此頁，請預設此 input 是 focus 狀態 -->
+                    <input type="text" class="form-control" placeholder="系統管理員名稱（例：王小明）">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-info" type="button">加入</button>
+                    </div>
+                </div>
+                <div class="d-md-flex flex-wrap">
+                    <div class="alert alert-light border alert-dismissible fade show mr-1 mb-2">
+                        陳銘煌
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="alert alert-light border alert-dismissible fade show mr-1 mb-2">
+                        徐如玉
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 單位管理 -->
+            <div class="tab-pane fade" id="m-department" aria-labelledby="department-tab">
+                <button class="btn btn-info float-right mb-3" data-toggle="modal" data-backdrop="static" data-target="#setDepartment">
+                    <i class="material-icons">add</i>
+                    新增單位
+                </button>
+                <div class="form-group mt-5">
+                    <div class="d-flex align-items-center mb-2" data-toggle="modal" data-backdrop="static" data-target="#setDepartment">
+                        <label class="h5 mb-2 mr-auto text-dark font-weight-bold">
+                            總務處
+                            <i class="material-icons f-1">edit</i>
+                        </label>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="例：王小明">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-info" type="button">加入</button>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap">
+                        <div class="alert alert-success alert-dismissible fade show mr-1 mb-2">
+                            王詠茹
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show mr-1 mb-2">
+                            陳毓祥
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show mr-1 mb-2">
+                            曾凱莉
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show mr-1 mb-2">
+                            陳育明
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show mr-1 mb-2">
+                            陳育明
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mt-5">
+                    <div class="d-flex align-items-center mb-2" data-toggle="modal" data-backdrop="static" data-target="#setDepartment">
+                        <label class="h5 mb-2 mr-auto text-dark font-weight-bold">
+                            設備組
+                            <i class="material-icons f-1">edit</i>
+                        </label>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="例：王小明">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-info" type="button">加入</button>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap">
+                        <div class="alert alert-success alert-dismissible fade show mr-1 mb-2">
+                            王詠茹
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show mr-1 mb-2">
+                            陳毓祥
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show mr-1 mb-2">
+                            曾凱莉
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show mr-1 mb-2">
+                            陳育明
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show mr-1 mb-2">
+                            陳育明
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 設備管理 -->
+            <div class="tab-pane fade" id="m-equipment" aria-labelledby="equipment-tab">
+                <div class="d-flex flex-column flex-md-row align-items-md-center mb-3">
+
+                    <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                        此 dropdown div 選單只顯示自己帳號有的單位，如果只
+                        被分配到一個單位，此 div 加入 hidden Element，將
+                        其隱藏。
+                    ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                    <div class="dropdown mb-2 mb-sm-0">
+                        <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            全部單位
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">全部單位</a>
+                            <a class="dropdown-item" href="#">總務處</a>
+                            <a class="dropdown-item" href="#">設備組</a>
+                        </div>
+                    </div>
+
+                    <div class="ml-sm-auto d-flex justify-content-between">
+                        <div class="mr-1">
+                            <button class="btn btn-info" data-toggle="modal" data-backdrop="static" data-target="#setEquipment">
+                                <i class="material-icons">add</i>
+                                新增
+                            </button>
+                            <button class="btn btn-info">
+                                <i class="material-icons">description</i>
+                                上傳
+                            </button>
+                        </div>
+                        <button class="btn btn-light">
+                            <i class="material-icons">insert_chart</i>
+                            統計
+                        </button>
+                    </div>
+                </div>
+
+                <div class="rwd-list">
+                    <ul>
+                        <li class="rwd-w-1">單位</li>
+                        <li class="rwd-w-2">設備名稱</li>
+                        <li class="rwd-w-2">財產編號</li>
+                        <li class="rwd-w-2">廠牌</li>
+                        <li class="rwd-w-2">型號</li>
+                        <li class="rwd-w-1">未取期限</li>
+                        <li class="rwd-w-1">歸還</li>
+                        <li class="rwd-w-1">狀態</li>
+                    </ul>
+                    <ul class="list-group-item list-group-item-action point" data-toggle="modal" data-backdrop="static" data-target="#setEquipment">
+                        <li class="rwd-w-1" data-label="單位">設備組</li>
+                        <li class="rwd-w-2" data-label="設備名稱">無線麥克風</li>
+                        <li class="rwd-w-2" data-label="財產編號">6080105-1</li>
+                        <li class="rwd-w-2" data-label="廠牌">KINYO</li>
+                        <li class="rwd-w-2" data-label="型號">無線麥克風</li>
+                        <li class="rwd-w-1" data-label="未取解約時間">一小時</li>
+                        <li class="rwd-w-1" data-label="歸還">當日</li>
+                        <li class="rwd-w-1" data-label="狀態">可預約</li>
+                    </ul>
+                    <ul class="list-group-item list-group-item-action point" data-toggle="modal" data-backdrop="static" data-target="#setEquipment">
+                        <li class="rwd-w-1" data-label="單位">設備組</li>
+                        <li class="rwd-w-2" data-label="設備名稱">地球儀</li>
+                        <li class="rwd-w-2" data-label="財產編號">60114-1858</li>
+                        <li class="rwd-w-2" data-label="廠牌">SkyGlobe</li>
+                        <li class="rwd-w-2" data-label="型號">ME-112AW</li>
+                        <li class="rwd-w-1" data-label="未取解約時間">一小時</li>
+                        <li class="rwd-w-1" data-label="歸還">當日</li>
+                        <li class="rwd-w-1" data-label="狀態">可預約</li>
+                    </ul>
+                    <ul class="list-group-item list-group-item-action point" data-toggle="modal" data-backdrop="static" data-target="#setEquipment">
+                        <li class="rwd-w-1" data-label="單位">設備組</li>
+                        <li class="rwd-w-2" data-label="設備名稱">礦物標本</li>
+                        <li class="rwd-w-2" data-label="財產編號">5040203-5</li>
+                        <li class="rwd-w-2" data-label="廠牌"></li>
+                        <li class="rwd-w-2" data-label="型號">化石標本</li>
+                        <li class="rwd-w-1" data-label="未取解約時間">一小時</li>
+                        <li class="rwd-w-1" data-label="歸還">當日</li>
+                        <li class="rwd-w-1" data-label="狀態">可預約</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- 預約管理 -->
+            <div class="tab-pane fade" id="m-borrow" aria-labelledby="borrow-tab">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                            此 dropdown button 選單只顯示自己單位有的設備，如果只
+                            有一個單位，此 dropdown button 加入 hidden Element
+                            ，將其隱藏。
+                        ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                        <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            全部單位
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">全部單位</a>
+                            <a class="dropdown-item" href="#">總務處</a>
+                            <a class="dropdown-item" href="#">設備組</a>
+                        </div>
+                    </div>
+                    <div class="input-group-prepend">
+                        <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            全部類型
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">類型</a>
+                            <a class="dropdown-item" href="#">電腦周邊</a>
+                            <a class="dropdown-item" href="#">擴音設備</a>
+                        </div>
+                    </div>
+                    <input type="text" class="form-control" placeholder="請輸入姓名、設備名稱或編號">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-info" type="button">搜尋</button>
+                    </div>
+                </div>
+                <div class="rwd-list">
+                    <ul>
+                        <li class="rwd-w-2">編號</li>
+                        <li class="rwd-w-3">預約時段</li>
+                        <li class="rwd-w-3">設備名稱</li>
+                        <li class="rwd-w-2">歸還時間</li>
+                        <li class="rwd-w-1">申請人</li>
+                        <li class="rwd-w-1">狀態</li>
+                    </ul>
+                    <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                        四種狀態：
+                        未領、已領、取消、逾時
+                        列表上省略時間，點進去看內容時在詳列。
+                    ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                    <ul class="list-group-item list-group-item-action point" data-toggle="modal" data-target="#setBorrow">
+                        <!-- 希望編碼就是申請日期時間 Date.now() -->
+                        <li class="rwd-w-2" data-label="編號">201805111230001</li>
+                        <li class="rwd-w-3" data-label="預約時段">起：2018-05-17 09:00<br>迄：2018-05-17 15:00</li>
+                        <!-- 設備名稱<br>（廠牌 型號） -->
+                        <li class="rwd-w-3" data-label="設備名稱">無線麥克風<br>（KINYO 6080105-1）</li>
+                        <li class="rwd-w-2" data-label="歸還時間">2018-05-17 16:00</li>
+                        <li class="rwd-w-1" data-label="申請人">徐玉如</li>
+                        <li class="rwd-w-1" data-label="管理">未領</li>
+                    </ul>
+                    <ul class="list-group-item list-group-item-action point" data-toggle="modal" data-target="#setBorrow">
+                        <!-- 希望編碼就是申請日期時間 Date.now() -->
+                        <li class="rwd-w-2" data-label="編號">201805111230001</li>
+                        <li class="rwd-w-3" data-label="預約時段">起：2018-05-17 09:00<br>迄：2018-05-17 15:00</li>
+                        <!-- 設備名稱<br>（廠牌 型號） -->
+                        <li class="rwd-w-3" data-label="設備名稱">無線麥克風<br>（KINYO 6080105-1）</li>
+                        <li class="rwd-w-2" data-label="歸還時間">2018-05-17 16:00</li>
+                        <li class="rwd-w-1" data-label="申請人">徐玉如</li>
+                        <li class="rwd-w-1" data-label="管理">已領</li>
+                    </ul>
+                    <ul class="list-group-item list-group-item-action point" data-toggle="modal" data-target="#setBorrow">
+                        <!-- 希望編碼就是申請日期時間 Date.now() -->
+                        <li class="rwd-w-2" data-label="編號">201805111230001</li>
+                        <li class="rwd-w-3" data-label="預約時段">起：2018-05-17 09:00<br>迄：2018-05-17 15:00</li>
+                        <!-- 設備名稱<br>（廠牌 型號） -->
+                        <li class="rwd-w-3" data-label="設備名稱">無線麥克風<br>（KINYO 6080105-1）</li>
+                        <li class="rwd-w-2" data-label="歸還時間">2018-05-17 16:00</li>
+                        <li class="rwd-w-1" data-label="申請人">徐玉如</li>
+                        <li class="rwd-w-1" data-label="管理">取消</li>
+                    </ul>
+                    <ul class="list-group-item list-group-item-action point" data-toggle="modal" data-target="#setBorrow">
+                        <!-- 希望編碼就是申請日期時間 Date.now() -->
+                        <li class="rwd-w-2" data-label="編號">201805111230001</li>
+                        <li class="rwd-w-3" data-label="預約時段">起：2018-05-17 09:00<br>迄：2018-05-17 15:00</li>
+                        <!-- 設備名稱<br>（廠牌 型號） -->
+                        <li class="rwd-w-3" data-label="設備名稱">無線麥克風<br>（KINYO 6080105-1）</li>
+                        <li class="rwd-w-2" data-label="歸還時間">2018-05-17 16:00</li>
+                        <li class="rwd-w-1" data-label="申請人">徐玉如</li>
+                        <li class="rwd-w-1" data-label="管理">逾時</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- 預約設備 -->
+            <div class="tab-pane fade show active" id="index" aria-labelledby="index-tab">
+                <div class="d-flex flex-column flex-md-row mb-3">
+                    <div class="input-group mb-3 mb-sm-0">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                全部單位
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">全部單位</a>
+                                <a class="dropdown-item" href="#">總務處</a>
+                                <a class="dropdown-item" href="#">設備組</a>
+                                <a class="dropdown-item" href="#">資訊組</a>
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                全部類型
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">類型</a>
+                                <a class="dropdown-item" href="#">電腦周邊</a>
+                                <a class="dropdown-item" href="#">擴音設備</a>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control" placeholder="請輸入關鍵字">
+                        <div class="input-group-append mr-sm-5">
+                            <button class="btn btn-outline-info" type="button">搜尋</button>
+                        </div>
+                    </div>
+
+                    <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                        當使用者身份為一般使用者時，此 div 加入 hidden Element
+                        ，將其隱藏。
+                    ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-info mr-1" data-toggle="modal" data-backdrop="static" data-target="#reserveEquipment">
+                            <i class="material-icons">add</i>
+                            預約設備
+                        </button>
+                    </div>
+                </div>
+
+                <div class="rwd-list">
+                    <ul>
+                        <li class="rwd-w-1">單位</li>
+                        <li class="rwd-w-1">類型</li>
+                        <li class="rwd-w-2">設備名稱</li>
+                        <li class="rwd-w-2">財產編號</li>
+                        <li class="rwd-w-1">廠牌</li>
+                        <li class="rwd-w-1">型號</li>
+                        <li class="rwd-w-1">未取期限</li>
+                        <li class="rwd-w-1">歸還</li>
+                        <li class="rwd-w-2">放置位置</li>
+                    </ul>
+                    <ul class="list-group-item list-group-item-action point" data-toggle="modal" data-target="#reserveInfo">
+                        <li class="rwd-w-1" data-label="單位">設備組</li>
+                        <li class="rwd-w-1" data-label="類型">擴音設備</li>
+                        <li class="rwd-w-2" data-label="設備名稱">無線麥克風</li>
+                        <li class="rwd-w-2" data-label="財產編號">6080105-1</li>
+                        <li class="rwd-w-1" data-label="廠牌">KINYO</li>
+                        <li class="rwd-w-1" data-label="型號">無線麥克風</li>
+                        <li class="rwd-w-1" data-label="未取解約時間">一小時</li>
+                        <li class="rwd-w-1" data-label="歸還">當日</li>
+                        <li class="rwd-w-2" data-label="放置位置">設備組</li>
+                    </ul>
+                    <ul class="list-group-item list-group-item-action point" data-toggle="modal" data-target="#reserveInfo">
+                        <li class="rwd-w-1" data-label="單位">設備組</li>
+                        <li class="rwd-w-1" data-label="類型">道具</li>
+                        <li class="rwd-w-2" data-label="設備名稱">地球儀</li>
+                        <li class="rwd-w-2" data-label="財產編號">60114-1858</li>
+                        <li class="rwd-w-1" data-label="廠牌">SkyGlobe</li>
+                        <li class="rwd-w-1" data-label="型號">ME-112AW</li>
+                        <li class="rwd-w-1" data-label="未取解約時間">一小時</li>
+                        <li class="rwd-w-1" data-label="歸還">當日</li>
+                        <li class="rwd-w-2" data-label="放置位置">設備組</li>
+                    </ul>
+                    <ul class="list-group-item list-group-item-action point" data-toggle="modal" data-target="#reserveInfo">
+                        <li class="rwd-w-1" data-label="單位">設備組</li>
+                        <li class="rwd-w-1" data-label="類型">道具</li>
+                        <li class="rwd-w-2" data-label="設備名稱">礦物標本</li>
+                        <li class="rwd-w-2" data-label="財產編號">5040203-5</li>
+                        <li class="rwd-w-1" data-label="廠牌"></li>
+                        <li class="rwd-w-1" data-label="型號">化石標本</li>
+                        <li class="rwd-w-1" data-label="未取解約時間">一小時</li>
+                        <li class="rwd-w-1" data-label="歸還">當日</li>
+                        <li class="rwd-w-2" data-label="放置位置">設備組</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 我的預約 -->
+            <div class="tab-pane fade" id="m-my" aria-labelledby="my-tab">
+                <div class="card mb-3">
+                    <div class="card-header d-flex flex-column flex-md-row align-items-md-center py-2">
+                        <div class="mr-md-auto d-flex flex-column flex-md-row">
+                            <span class="badge badge-secondary mb-2 mb-md-0">設備組</span>
+                            <span class="badge badge-light mb-2 mb-md-0">201805110900001</span>
+                        </div>
+                        <button class="btn btn-info">取消預約</button>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">設備名稱</h5>
+                            無線麥克風
+                        </div>
+                        <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">廠牌</h5>
+                            KINYO
+                        </div>
+                        <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">型號</h5>
+                            ME-112AW
+                        </div>
+                        <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">財產編號</h5>
+                            6080105-1
+                        </div>
+                        <div class="col-sm-4 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">預約時段</h5>
+                            2018-05-17 09:00 - 2018-05-17 15:00
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">類型</h5>
+                            擴音設備
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">放置位置</h5>
+                            設備組
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">未取期限</h5>
+                            一小時
+                        </div>
+                        <div class="col-6 col-sm-3 px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">歸還期限</h5>
+                            2018-05-17 16:00
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header d-flex flex-column flex-md-row align-items-md-center py-2">
+                        <div class="mr-md-auto d-flex flex-column flex-md-row">
+                            <span class="badge badge-secondary mb-2 mb-md-0">設備組</span>
+                            <span class="badge badge-light mb-2 mb-md-0">201805110900001</span>
+                        </div>
+                        <button class="btn btn-info">取消預約</button>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">設備名稱</h5>
+                            無線麥克風
+                        </div>
+                        <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">廠牌</h5>
+                            KINYO
+                        </div>
+                        <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">型號</h5>
+                            6080105-1
+                        </div>
+                        <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">財產編號</h5>
+                            6080105-1
+                        </div>
+                        <div class="col-sm-4 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">預約時段</h5>
+                            2018-05-17 09:00 - 2018-05-17 15:00
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">類型</h5>
+                            擴音設備
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">放置位置</h5>
+                            設備組
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">未取期限</h5>
+                            一小時
+                        </div>
+                        <div class="col-6 col-sm-3 px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">歸還期限</h5>
+                            2018-05-17 16:00
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header d-flex flex-column flex-md-row align-items-md-center py-2">
+                        <div class="mr-md-auto d-flex flex-column flex-md-row">
+                            <span class="badge badge-secondary mb-2 mb-md-0">設備組</span>
+                            <span class="badge badge-light mb-2 mb-md-0">201805110900001</span>
+                        </div>
+                        <button class="btn btn-info">取消預約</button>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">設備名稱</h5>
+                            無線麥克風
+                        </div>
+                        <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">廠牌</h5>
+                            KINYO
+                        </div>
+                        <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">型號</h5>
+                            6080105-1
+                        </div>
+                        <div class="col-6 col-sm-2 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">財產編號</h5>
+                            6080105-1
+                        </div>
+                        <div class="col-sm-4 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">預約時段</h5>
+                            2018-05-17 09:00 - 2018-05-17 15:00
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">類型</h5>
+                            擴音設備
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">放置位置</h5>
+                            設備組
+                        </div>
+                        <div class="col-6 col-sm-3 border-right px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">未取期限</h5>
+                            一小時
+                        </div>
+                        <div class="col-6 col-sm-3 px-0 pb-2">
+                            <h5 class="border-bottom py-2 mb-2 bg-light">歸還期限</h5>
+                            2018-05-17 16:00
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 單位設定 -->
+        <div class="modal fade" id="setDepartment" tabindex="-1" role="dialog" aria-labelledby="setDepartmentTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="setDepartmentTitle">
+                            單位設定
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">單位名稱</label>
+                            <input type="text" class="form-control" placeholder="例：總務處">
+                        </div>
+                    </div>
+                    <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                        此為修改／編輯樣式，如果是新增時，請將：
+                        刪除 button 加入 hidden Element，將其隱藏。
+                        儲存 button 可改名為 加入。
+                    ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light text-dark" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-danger">刪除</button>
+                        <button type="button" class="btn btn-info">儲存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新增／編輯設備 -->
+        <div class="modal fade bd-example-modal-lg" id="setEquipment" tabindex="-1" role="dialog" aria-labelledby="setEquipmentTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="setEquipmentTitle">
+                            新增／編輯設備
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-row mb-3">
+                            <div class="col-sm-6">
+                                <label class="text-dark font-weight-bold">單位名稱</label>
+                                <input type="text" class="form-control" placeholder="例：設備組">
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="text-dark font-weight-bold">設備名稱</label>
+                                <input type="text" class="form-control" placeholder="例：無線麥克風">
+                            </div>
+                        </div>
+                        <div class="form-row mb-3">
+                            <div class="col-sm-4">
+                                <label class="text-dark font-weight-bold">財產編號</label>
+                                <input type="text" class="form-control" placeholder="例：12345678">
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="text-dark font-weight-bold">廠牌</label>
+                                <input type="text" class="form-control" placeholder="例：ASUS">
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="text-dark font-weight-bold">型號</label>
+                                <input type="text" class="form-control" placeholder="例：XX-XXXX">
+                            </div>
+                        </div>
+                        <div class="form-row mb-3">
+                            <div class="col-sm-8">
+                                <label class="mb-2 text-dark font-weight-bold">未取解約時間</label>
+                                <div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="terminate1" name="terminate" class="custom-control-input" checked>
+                                        <label class="custom-control-label" for="terminate1">一小時</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="terminate2" name="terminate" class="custom-control-input">
+                                        <label class="custom-control-label" for="terminate2">兩小時</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="terminate3" name="terminate" class="custom-control-input">
+                                        <label class="custom-control-label" for="terminate3">半天</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="terminate4" name="terminate" class="custom-control-input">
+                                        <label class="custom-control-label" for="terminate4">一天</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 mt-3 mt-sm-0">
+                                <label class="mb-2 text-dark font-weight-bold">當天歸還</label>
+                                <div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="theDayYes" name="theDay" class="custom-control-input" checked>
+                                        <label class="custom-control-label" for="theDayYes">是</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="theDaylNo" name="theDay" class="custom-control-input">
+                                        <label class="custom-control-label" for="theDayNo">否</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="mb-2 text-dark font-weight-bold">設備狀態</label>
+                            <div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="state1" name="state" class="custom-control-input" checked>
+                                    <label class="custom-control-label" for="state1">可預約</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="state2" name="state" class="custom-control-input">
+                                    <label class="custom-control-label" for="state2">已借出</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="state3" name="state" class="custom-control-input">
+                                    <label class="custom-control-label" for="state3">維修中</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="state4" name="state" class="custom-control-input">
+                                    <label class="custom-control-label" for="state4">遺失</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="state5" name="state" class="custom-control-input">
+                                    <label class="custom-control-label" for="state5">報廢</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light text-dark" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-info">儲存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 預約管理 -->
+        <div class="modal fade" id="setBorrow" tabindex="-1" role="dialog" aria-labelledby="setBorrowTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="setBorrowTitle">
+                            <!-- 預約管理 - 預約單編碼 -->
+                            預約管理 - 201805111230001
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-light font-weight-bold">預約時段</li>
+                        <li class="list-group-item">2018-05-17 09:00 - 2018-05-17 15:00</li>
+                        <li class="list-group-item list-group-item-light font-weight-bold">設備名稱</li>
+                        <li class="list-group-item">無線麥克風</li>
+                        <div class="row">
+                            <div class="col-sm-6 p-0">
+                                <li class="list-group-item list-group-item-light font-weight-bold">廠牌</li>
+                                <li class="list-group-item">KINYO</li>
+                            </div>
+                            <div class="col-sm-6 p-0">
+                                <li class="list-group-item list-group-item-light font-weight-bold">型號</li>
+                                <li class="list-group-item">6080105-1</li>
+                            </div>
+                            <div class="col-sm-6 p-0">
+                                <li class="list-group-item list-group-item-light font-weight-bold">類型</li>
+                                <li class="list-group-item">麥克風</li>
+                            </div>
+                            <div class="col-sm-6 p-0">
+                                <li class="list-group-item list-group-item-light font-weight-bold">放置位置</li>
+                                <li class="list-group-item">設備組</li>
+                            </div>
+                            <div class="col-sm-6 p-0">
+                                <li class="list-group-item list-group-item-light font-weight-bold">申請人</li>
+                                <li class="list-group-item">徐玉如</li>
+                            </div>
+                            <div class="col-sm-6 p-0">
+                                <li class="list-group-item list-group-item-light font-weight-bold">歸還時間</li>
+                                <li class="list-group-item">2018-05-17 16:00</li>
+                            </div>
+                        </div>
+                        <!-- 判斷注意 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                            四種預約狀態：
+                            未領
+                            已領（2018-05-17 08:55） <<領取時間，是否要加上秒數由你判斷
+                            取消（2018-05-17 08:55 王某某） <<時間加上取消者姓名，是否要加上秒數由你判斷
+                            逾時
+                        ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                        <li class="list-group-item list-group-item-light font-weight-bold">預約狀態</li>
+                        <li class="list-group-item">已領（2018-05-17 08:55）</li>
+                    </ul>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light text-black-50" data-dismiss="modal">關閉</button>
+                        <button type="button" class="btn btn-danger">取消預約</button>
+                        <button type="button" class="btn btn-success">確認借出</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 預約資訊 -->
+        <div class="modal fade" id="reserveInfo" tabindex="-1" role="dialog" aria-labelledby="reserveInfoTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reserveInfoTitle">
+                            <span class="badge badge-secondary">設備組</span>
+                            無線麥克風（KINYO 6080105-1）
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                            <button type="button" class="btn btn-light px-1"><i class="material-icons">keyboard_arrow_left</i></button>
+                            <button type="button" class="btn btn-light">2018 年 5 月</button>
+                            <button type="button" class="btn btn-light px-1"><i class="material-icons">keyboard_arrow_right</i></button>
+                        </div>
+                        <div class="cal-day">
+                            <h3 class="font-weight-bold my-3">
+                                9
+                                <small>星期三</small>
+                            </h3>
+                            <div class="border rounded p-3 mb-3">09:00 - 15:00　徐玉如</div>
+                            <div class="border rounded p-3 mb-3">16:00 - 17:00　方若雅</div>
+                        </div>
+                        <div class="cal-day">
+                            <h3 class="font-weight-bold my-3">
+                                10
+                                <small>星期四</small>
+                            </h3>
+                            <div class="border rounded p-3 mb-3">09:00 - 12:00　陳永齡</div>
+                            <div class="border rounded p-3 mb-3">14:00 - 15:00　許茹葳</div>
+                            <div class="border rounded p-3 mb-3">15:00 - 16:00　吳曉翔</div>
+                        </div>
+                        <div class="cal-day">
+                            <h3 class="font-weight-bold my-3">
+                                11
+                                <small>星期五</small>
+                            </h3>
+                            <div class="border rounded p-3 mb-3">09:00 - 15:00　徐玉如</div>
+                            <div class="border rounded p-3 mb-3">16:00 - 17:00　方若雅</div>
+                        </div>
+                        <div class="cal-day">
+                            <h3 class="font-weight-bold my-3">
+                                17
+                                <small>星期四</small>
+                            </h3>
+                            <div class="border rounded p-3 mb-3">09:00 - 15:00　徐玉如</div>
+                            <div class="border rounded p-3 mb-3">16:00 - 17:00　方若雅</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 預約設備 -->
+        <div class="modal fade" id="reserveEquipment" tabindex="-1" role="dialog" aria-labelledby="reserveEquipmentTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reserveEquipmentTitle">
+                            預約設備
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">設備名稱</label>
+                            <input type="text" class="form-control" placeholder="例：設備組／無線麥克風">
+                        </div>
+                        <!-- ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                            時間是否需要 repeat 選項，再請斟酌。（目前沒放上）
+                        ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">開始時間</label>
+                            <input type="datetime-local" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">結束時間</label>
+                            <input type="datetime-local" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">歸還時間</label>
+                            <input type="datetime-local" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light text-dark" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-info">確定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 我的預約 -->
+        <div class="modal fade" id="myReserveInfo" tabindex="-1" role="dialog" aria-labelledby="myReserveInfoTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myReserveInfoTitle">
+                            我的預約
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-action d-flex flex-column flex-md-row align-items-center">
+                            <div class="mr-auto">
+                                <p class="mb-2">
+                                    <span class="badge badge-secondary">設備組</span>
+                                    <span class="badge badge-light">201805170900001</span>
+                                </p>
+                                <p>設備名稱：無線麥克風（KINYO 6080105-1）</p>
+                                <p>預約時段：2018-05-17 09:00 - 2018-05-17 15:00</p>
+                                <p>未取期限：一小時</p>
+                                <p>歸還期限：2018-05-17 16:00</p>
+                            </div>
+                            <button class="btn btn-info ml-auto mt-2 mt-md-0">取消預約</button>
+                        </li>
+                        <li class="list-group-item list-group-item-action d-flex flex-column flex-md-row align-items-center">
+                            <div class="mr-auto">
+                                <p class="mb-2">
+                                    <span class="badge badge-secondary">設備組</span>
+                                    <span class="badge badge-light">201805110900001</span>
+                                </p>
+                                <p>設備名稱：無線麥克風（KINYO 6080105-1）</p>
+                                <p>預約時段：2018-05-11 09:00 - 2018-05-11 15:00</p>
+                                <p>未取期限：一小時</p>
+                                <p>歸還期限：2018-05-11 16:00</p>
+                            </div>
+                            <button class="btn btn-info ml-auto mt-2 mt-md-0">取消預約</button>
+                        </li>
+                        <li class="list-group-item list-group-item-action d-flex flex-column flex-md-row align-items-center">
+                            <div class="mr-auto">
+                                <p class="mb-2">
+                                    <span class="badge badge-secondary">設備組</span>
+                                    <span class="badge badge-light">201805090900001</span>
+                                </p>
+                                <p>設備名稱：無線麥克風（KINYO 6080105-1）</p>
+                                <p>預約時段：2018-05-09 09:00 - 2018-05-09 15:00</p>
+                                <p>未取期限：一小時</p>
+                                <p>歸還期限：2018-05-09 16:00</p>
+                            </div>
+                            <button class="btn btn-info ml-auto mt-2 mt-md-0" disabled>取消預約</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer class="text-center p-2 mt-auto">
+            Powered By ischool
+        </footer>
+    </div>
+
+</body>
+
+</html>

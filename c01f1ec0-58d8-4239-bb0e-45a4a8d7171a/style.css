@@ -1,0 +1,168 @@
+/* ---------------------------------------------------
+    僅供此 Gadget使用，非 default 通用樣式。
+----------------------------------------------------- */
+
+.f-1 {
+  font-size: 1rem;
+  vertical-align: middle;
+}
+
+.cal-day small {
+  font-size: 60%;
+}
+
+.cal-day {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.cal-day:last-child {
+  border-bottom: none;
+}
+
+/* ---------------------------------------------------
+    Responsive List 樣式
+----------------------------------------------------- */
+
+.rwd-w-1 {
+  width: calc(100% / 12);
+}
+
+.rwd-w-2 {
+  width: calc(100% / 12 * 2);
+}
+
+.rwd-w-3 {
+  width: calc(100% / 12 * 3);
+}
+
+.rwd-w-4 {
+  width: calc(100% / 12 * 4);
+}
+
+@media screen and (min-width:600px) {
+  
+  .rwd-list {
+    display:table;
+    width: 100%;
+    text-align: center;
+  }
+ 
+  .rwd-list ul {
+    display:table-row;
+    box-shadow: 0 0 2px 0 rgba(0,0,0,.14), 0 2px 2px 0 rgba(0,0,0,.12), 0 1px 3px 0 rgba(0,0,0,.2);
+  }
+
+  .rwd-list ul.collapse {
+    display: none !important;
+  }
+
+  .rwd-list ul.collapse.show {
+    display: table-row !important;
+  }
+  
+  .rwd-list ul:first-child li {
+    background-color:#eee;
+  }
+  
+  .rwd-list ul > li {
+    display:table-cell;
+    padding: .830357rem .5rem;
+    vertical-align: middle;
+  }
+  
+}
+
+/* small */
+@media screen and (max-width:599px) {
+
+  .rwd-w-1 {
+    width: 100%;
+  }
+  
+  .rwd-w-2 {
+    width: 100%;
+  }
+
+  .rwd-w-3 {
+    width: 100%;
+  }
+
+  .rwd-w-4 {
+    width: 100%;
+  }
+  
+  .rwd-list ul {
+    display:block;
+    list-style:none;
+    margin-bottom: 1rem;
+  }
+  
+  .rwd-list ul:first-child {
+    display:none;
+  }
+  
+  .rwd-list ul > li {
+    display:block;
+    padding: .830357rem .5rem;
+  }
+  
+  .rwd-list ul > li + li {
+    border-top:solid 1px #eee;
+  }
+  
+  .rwd-list ul > li:before {
+    content:attr(data-label);
+    display:inline-block;
+    font-size:75%;
+    font-weight:bold;
+    text-transform:capitalize;
+    vertical-align:top;
+    width:50%;
+  }
+  
+  .rwd-list p {
+    margin:-1em 0 0 50%;
+  }
+  
+}
+
+/* tiny */
+@media screen and (max-width:349px) {
+    
+  .rwd-list ul > li:before {
+    display:block;
+  }
+  
+  .rwd-list p {
+    margin:0;
+  }
+  
+}
+
+
+/* ---------------------------------------------------
+    Calendar
+    https://js.devexpress.com/Demos/WidgetsGallery/Demo/Scheduler/Editing/jQuery/Light/
+----------------------------------------------------- */
+.options {
+  padding: 20px;
+  background-color: rgba(191, 191, 191, 0.15);
+  margin-top: 20px;
+}
+
+.caption {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.option {
+  margin-top: 10px;
+  display: inline-block;
+  width: 19%;
+}
+
+.dx-scheduler-appointment-content > *,
+.dx-scheduler-appointment-tooltip-date,
+.dx-scheduler-appointment-tooltip-title {
+  white-space: normal;
+}

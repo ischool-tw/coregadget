@@ -1,0 +1,49 @@
+/* :host() {
+    flex:1;
+} */
+
+div.selected {
+    background-color: lightyellow;
+}
+
+div.sidebar_border {
+    border: 1px solid lightgray;
+    border-right: 0px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.appointment-content {
+    display: flex;
+    max-width: 360px;
+    justify-content: space-between;
+}
+
+.appointment-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 270px;
+    font-size: 1rem;
+    text-align: left;
+}
+
+.appointment-dates {
+    color: #959595;
+    font-size: 0.8rem;
+    text-align: left;
+}
+
+.appointment-reason {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 270px;
+    font-size: 0.8rem;
+    text-align: left;
+}
+
+.appointment-btn {
+    min-width: auto !important;
+    white-space: nowrap;
+}

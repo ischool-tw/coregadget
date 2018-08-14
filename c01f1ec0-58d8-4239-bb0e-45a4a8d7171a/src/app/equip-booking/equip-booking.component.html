@@ -1,0 +1,311 @@
+<!-- 本日預約 -->
+<div *ngIf="isLoading;else notloading">
+    <div style="position: absolute;top: 50%;left: 50%;margin-top: -20px;margin-left: -50px;">Loading ...</div>
+</div>
+
+<ng-template #notloading>
+
+    <!-- 預約設備 -->
+
+    <!-- 功能選單-->
+    <div class="d-flex flex-column flex-md-row mb-3">
+        <div class="input-group mb-3 mb-sm-0">
+            <mat-form-field class="mr-md-3">
+                <mat-select placeholder="請選擇單位" [(ngModel)]="selectedUnitName" name="un" (valueChange)="unitNameValueChange($event)">
+                    <mat-option *ngFor="let un of unitNameList" [value]="un">
+                        {{un}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="mr-md-3">
+                <mat-select placeholder="請選擇類型" [(ngModel)]="selectedCategory" name="cate" (valueChange)="categoryValueChange($event)">
+                    <mat-option *ngFor="let cate of categoryList" [value]="cate">
+                        {{cate}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field style="flex: 1">
+                <input matInput placeholder="請輸入關鍵字" [(ngModel)]="searchKeyWord" (keyup.enter)="searchButtonClick()">
+            </mat-form-field>
+            <div class="input-group-append mr-sm-5 mr-md-0">
+                <button class="btn btn-outline-info" type="button" (click)="searchButtonClick()">搜尋</button>
+            </div>
+        </div>
+    </div>
+
+    <!--資料列-->
+    <div class="rwd-list">
+        <ul>
+            <li class="rwd-w-1">單位</li>
+            <li class="rwd-w-1">類型</li>
+            <li class="rwd-w-2">設備名稱</li>
+            <li class="rwd-w-1">財產編號</li>
+            <li class="rwd-w-1">廠牌</li>
+            <li class="rwd-w-1">型號</li>
+            <li class="rwd-w-1">未取期限</li>
+            <li class="rwd-w-1">設備狀態</li>
+            <li class="rwd-w-1">放置位置</li>
+            <li class="rwd-w-1">詳細內容</li>
+            <li class="rwd-w-1">預約設備</li>
+        </ul>
+        <ul class="list-group-item list-group-item-action point"
+            data-toggle="modal"
+            *ngFor="let equip of displayEquipments">
+            <li class="rwd-w-1"
+                data-label="單位">{{equip.equip_unit_name}}</li>
+            <li class="rwd-w-1"
+                data-label="類型">{{equip.category}}</li>
+            <li class="rwd-w-2"
+                data-label="設備名稱">{{equip.name}}</li>
+            <li class="rwd-w-1"
+                data-label="財產編號">{{equip.property_no}}</li>
+            <li class="rwd-w-1"
+                data-label="company">{{equip.company}}</li>
+            <li class="rwd-w-1"
+                data-label="型號">{{equip.model_no}}</li>
+            <li class="rwd-w-1"
+                data-label="未取解約時間">{{equip.deadline}}</li>
+            <li class="rwd-w-1"
+                data-label="設備狀態">{{equip.status}}</li>
+            <li class="rwd-w-1"
+                data-label="放置位置">{{equip.place}}</li>
+            <li class="rwd-w-1">
+                <button type="button"
+                        class="btn btn-info mr-1"
+                        data-toggle="modal"
+                        data-backdrop="static"
+                        data-target="#reserveInfo"
+                        (click)="detailClick(equip)"
+                        [disabled]="!isTeacher">
+                    內容
+                </button>
+            </li>
+            <li class="rwd-w-1">
+                <button type="button"
+                        class="btn btn-info mr-1"
+                        data-toggle="modal"
+                        data-backdrop="static"
+                        data-target="#reserveEquipment"
+                        (click)="bookingClick(equip)"
+                        [disabled]="!isTeacher || equip.status !='良好'">
+                    預約
+                </button>
+            </li>
+        </ul>
+
+    </div>
+
+    <!-- double click-->
+    <div class="modal fade"
+         id="reserveInfo"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="reserveInfoTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered"
+             role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"
+                        id="reserveInfoTitle">
+                        <span class="badge badge-secondary">{{selectedEquipment.equip_unit_name}}</span>
+                        {{selectedEquipment.name}} ({{selectedEquipment.company}} {{selectedEquipment.property_no}})
+                    </h5>
+                    <button type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="btn-group"
+                         role="group"
+                         aria-label="Button group with nested dropdown">
+                        <button type="button"
+                                class="btn btn-light px-1"
+                                (click)="lastMonthClick()">
+                            <i class="material-icons">keyboard_arrow_left</i>
+                        </button>
+                        <button type="button"
+                                class="btn btn-light" style="cursor: default">{{displayYear}} 年 {{displayMonth}} 月</button>
+                        <button type="button"
+                                class="btn btn-light px-1"
+                                (click)="nextMonthClick()">
+                            <i class="material-icons">keyboard_arrow_right</i>
+                        </button>
+                    </div>
+                    <ng-container *ngIf="detailLoading">
+                        <div class="my-3">loading...</div>
+                    </ng-container>
+                    <ng-container *ngIf="!detailLoading && displayEquipmentsDays.length > 0">
+                        <div class="cal-day"
+                             *ngFor="let item of displayEquipmentsDays">
+                            <h3 class="font-weight-bold my-3">
+                                {{item.day}}
+                                <small>{{item.weekday}}</small>
+                            </h3>
+                            <div class="border rounded p-3 mb-3"
+                                 *ngFor="let detail of displayEquipmentsDetail[item.day]">{{detail.start_time_h}} - {{detail.end_time_h}}　{{detail.applicant_name}}</div>
+
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="!detailLoading && displayEquipmentsDays.length === 0">
+                        <div class="my-3">沒有資料。</div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 預約設備 -->
+    <div class="modal fade"
+         id="reserveEquipment"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="reserveEquipmentTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered"
+             role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"
+                        id="reserveEquipmentTitle">
+                        預約設備
+                    </h5>
+                    <button type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold">設備名稱</label>
+                        <!-- <input type="text"
+                           class="form-control"
+                           placeholder="例：設備組／無線麥克風"> -->
+                        <div>{{selectedEquipment.name}}</div>
+                    </div>
+                    <!-- ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                            時間是否需要 repeat 選項，再請斟酌。（目前沒放上）
+                        ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+
+                    <div class="example-container-full">
+                        <mat-form-field>
+                            <textarea matInput
+                                      placeholder="申請事由"
+                                      [(ngModel)]="addApplyReason"></textarea>
+                        </mat-form-field>
+                    </div>
+                    <div class="example-container-full">
+                        <mat-form-field>
+                            <input required
+                                   matInput
+                                   [matDatepicker]="pickerStartDate"
+                                   placeholder="開始日期"
+                                   [(ngModel)]="addStartDate">
+                            <mat-datepicker-toggle matSuffix
+                                                   [for]="pickerStartDate"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerStartDate></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="example-container-50">
+                        <div>
+                            <span>開始時間(時)</span>
+                            <mat-select required
+                                        placeholder="開始時間(時)"
+                                        [(ngModel)]="addStartTimeH">
+                                <mat-option *ngFor="let hour of hours"
+                                            [value]="hour.value">
+                                    {{hour.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                        <div>
+                            <span>開始時間(分)</span>
+                            <mat-select required
+                                        placeholder="開始時間(分)"
+                                        [(ngModel)]="addStartTimeM">
+                                <mat-option *ngFor="let min of minutes"
+                                            [value]="min.value">
+                                    {{min.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+
+                    <div class="example-container-50">
+                        <div>
+                            <span>結束時間(時)</span>
+                            <mat-select required
+                                        placeholder="結束時間(時)"
+                                        [(ngModel)]="addEndTimeH">
+                                <mat-option *ngFor="let hour of hours"
+                                            [value]="hour.value">
+                                    {{hour.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                        <div>
+
+                            <span>結束時間(分)</span>
+                            <mat-select required
+                                        placeholder="結束時間(分)"
+                                        [(ngModel)]="addEndTimeM">
+                                <mat-option *ngFor="let min of minutes"
+                                            [value]="min.value">
+                                    {{min.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+
+                    <mat-form-field class="example-container-full">
+                        <input matInput
+                               [matDatepicker]="pickerEndDate"
+                               placeholder="結束日期"
+                               [(ngModel)]="addEndDate"
+                               required>
+                        <mat-datepicker-toggle matSuffix
+                                               [for]="pickerEndDate"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerEndDate></mat-datepicker>
+                    </mat-form-field>
+
+
+
+                    <div>
+                        <mat-slide-toggle [checked]="addIsRepeat"
+                                          (change)="addIsRepeatChange()">是否重複</mat-slide-toggle>
+                    </div>
+                    <ng-container *ngIf="addIsRepeat">
+                        <mat-radio-group class="example-radio-group"
+                                         [(ngModel)]="addRepeatType">
+                            <mat-radio-button class="example-radio-button"
+                                              *ngFor="let type of addRepeartTypeArray"
+                                              [value]="type.value">
+                                {{type.viewValue}}
+                            </mat-radio-button>
+                        </mat-radio-group>
+
+                    </ng-container>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-light text-dark"
+                            data-dismiss="modal">取消</button>
+                    <button type="button"
+                            class="btn btn-info"
+                            (click)="ok()"
+                            data-toggle="modal"
+                            [disabled]="okButtonDisable">確定</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ng-template>

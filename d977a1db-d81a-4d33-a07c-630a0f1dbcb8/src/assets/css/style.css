@@ -1,0 +1,41 @@
+/* ---------------------------------------------------
+    僅供此 Gadget使用，非 default 通用樣式。
+----------------------------------------------------- */
+
+
+/* ---------------------------------------------------
+    Calendar
+    https://js.devexpress.com/Demos/WidgetsGallery/Demo/Scheduler/Editing/jQuery/Light/
+----------------------------------------------------- */
+.options {
+  padding: 20px;
+  background-color: rgba(191, 191, 191, 0.15);
+  margin-top: 20px;
+}
+
+.caption {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.option {
+  margin-top: 10px;
+  display: inline-block;
+  width: 19%;
+}
+
+.dx-scheduler-appointment-content > *, .dx-scheduler-appointment-tooltip-date, .dx-scheduler-appointment-tooltip-title {
+  white-space: normal;
+}
+
+.dx-scheduler-view-switcher.dx-tabs {
+  font-size: 1rem !important;
+}
+
+.dx-scheduler-header-panel, .dx-scheduler-time-panel {
+  font-size: 0.8rem !important;
+}
+
+.dx-widget {
+  font-size: 0.8rem !important;
+}
