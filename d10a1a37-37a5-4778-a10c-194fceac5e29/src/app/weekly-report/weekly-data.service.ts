@@ -34,7 +34,10 @@ public teacherName:string = "Miranda";
   public addSelectdGradebook: any;
 
   // Add 畫面1 Button 是否可以使用
-  public addS1ButtonEnable = "disabled";
+  public addS1ButtonEnable:boolean = true;
   // Add 畫面2 Button 是否可以使用
-  public addS2ButtonEnable = "disabled";
+  public addS2ButtonEnable:boolean = true;
+
+  // 在編輯過程中存的uid
+  public selectWeeklyReportUID = "";
 }

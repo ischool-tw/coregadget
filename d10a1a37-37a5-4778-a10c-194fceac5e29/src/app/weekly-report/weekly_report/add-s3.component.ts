@@ -17,12 +17,13 @@ export class AddS3Component implements OnInit {
   loading: boolean;
   error: any;
 
-  checkButtonEnable: string = "disabled";
+  checkButtonEnable: boolean = true;
   studentWeeklyDataS3List: any;
   weeklyReportS3: WeeklyReportEntry;
-  beginDate:string = "";
-  endDate:string = "";
-  teacherName:string = "";
+  beginDate: string = "";
+  endDate: string = "";
+  teacherName: string = "";
+  modeString: string = "Add";
   constructor(private route: ActivatedRoute, private gadget: GadgetService, private weeklyData: WeeklyDataService, private router: Router) { }
   contract: Contract;
 
@@ -30,12 +31,16 @@ export class AddS3Component implements OnInit {
     this.weeklyReportS3 = new WeeklyReportEntry();
     this.teacherName = this.weeklyData.teacherName;
     this.contract = await this.gadget.getContract('kcis');
-
+    if (this.weeklyData.selectWeeklyReportUID === '') {
+      this.modeString = "Add";
+    } else {
+      this.modeString = "Edit";
+    }
     this.getData();
   }
 
   async getData() {
-    this.checkButtonEnable = "";
+    this.checkButtonEnable = false;
     this.weeklyReportS3 = this.weeklyData.addWeeklyReportEntry;
     this.studentWeeklyDataS3List = this.weeklyData.studentWeeklyDataList;
     this.beginDate = moment(this.weeklyReportS3.BeginDate, "YYYY-MM-DD").format("YYYY/MM/DD");
@@ -63,28 +68,61 @@ export class AddS3Component implements OnInit {
 
   }
 
-  async send() {
+  async save() {
     // console.log(this.studentWeeklyDataS3List);
-    this.checkButtonEnable = "disabled";
+    this.checkButtonEnable = true;
     // 回寫暫存
     this.weeklyData.studentWeeklyDataList = this.studentWeeklyDataS3List;
 
     let wkUids: any;
-    // 寫入 WeeklyReport
-    const rsp1 = await this.contract.send('weekly.AddWeeklyReport', {
-      Request: {
-        WeeklyReport: {
-          CourseID: this.weeklyData.addWeeklyReportEntry.CourseID,
+    let uid = '';
+    // 判斷是否有WeeklyReportUID，如果有當作更新，沒有當作新增
+    if (this.weeklyData.selectWeeklyReportUID === '') {
+      // 寫入 WeeklyReport
+      const rsp1 = await this.contract.send('weekly.AddWeeklyReport', {
+        Request: {
+          WeeklyReport: {
+            CourseID: this.weeklyData.addWeeklyReportEntry.CourseID,
+            BeginDate: this.weeklyData.addWeeklyReportEntry.BeginDate,
+            EndDate: this.weeklyData.addWeeklyReportEntry.EndDate,
+            GeneralComment: this.weeklyData.addWeeklyReportEntry.GeneralComment
+          }
+        }
+      })
+      wkUids = Utils.array(rsp1, "Response/id");
+      if (wkUids.length > 0) {
+        uid = wkUids[0].uid;
+      }
+
+    } else {
+      // 更新資料
+
+      //1. 呼叫更新 Service 更新資料
+      // 寫入 WeeklyReport
+      const rspUpdate1 = await this.contract.send('weekly.UpdateWeeklyReportByUID', {
+        Request: {
           BeginDate: this.weeklyData.addWeeklyReportEntry.BeginDate,
           EndDate: this.weeklyData.addWeeklyReportEntry.EndDate,
-          GeneralComment: this.weeklyData.addWeeklyReportEntry.GeneralComment
+          GeneralComment: this.weeklyData.addWeeklyReportEntry.GeneralComment,
+          UID: this.weeklyData.selectWeeklyReportUID
         }
+      })
+      wkUids = Utils.array(rspUpdate1, "Response/id");
+      if (wkUids.length > 0) {
+        uid = wkUids[0].uid;
       }
-    })
-    wkUids = Utils.array(rsp1, "Response/id");
-    // 有 uid 才寫入 WeeklyData
-    if (wkUids.length > 0) {
-      let uid = wkUids[0].uid;
+      //2. 透過 WeeklyReportUID 刪除舊WeeklyData資料
+      const rspDelWekData = await this.contract.send('weekly.DelWeeklyDataByWeeklyReportUID', {
+        Request: {
+          WeeklyReportUID: this.weeklyData.selectWeeklyReportUID
+        }
+      })
+      wkUids = Utils.array(rspDelWekData, "Response");
+    }
+
+    // 新增資料  // 有 uid 才寫入 WeeklyData
+    if (uid !== '') {
+
 
       let items: any = [];
       for (const stud of this.studentWeeklyDataS3List) {
@@ -108,8 +146,15 @@ export class AddS3Component implements OnInit {
       wkUids = Utils.array(rsp2, "Response/id");
     }
 
+
+
+
     let courseID = this.weeklyData.addWeeklyReportEntry.CourseID;
     let courseName = this.weeklyData.addWeeklyReportEntry.CourseName;
+
+
+
+
     // 清空暫存資料
     this.weeklyData.addWeeklyReportEntry.clear();
     this.weeklyData.studentWeeklyDataList = [];
@@ -120,6 +165,6 @@ export class AddS3Component implements OnInit {
     this.router.navigate(['../list', courseID, courseName], {
       relativeTo: this.route
     });
-  
+
   }
 }

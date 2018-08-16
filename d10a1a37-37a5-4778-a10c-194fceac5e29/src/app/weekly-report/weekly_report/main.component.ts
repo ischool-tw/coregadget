@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { WeeklyDataService } from '../weekly-data.service';
 import { GadgetService, Contract } from 'src/app/gadget.service';
 import { Utils } from 'src/app/util';
@@ -19,13 +20,21 @@ export class MainComponent implements OnInit {
   loading: boolean;
   error: any;
   addText: string;
-  constructor(private gadget: GadgetService, private weeklyData: WeeklyDataService) { }
+  constructor(private gadget: GadgetService, private weeklyData: WeeklyDataService, private router: Router, private route: ActivatedRoute ) { }
   // 取得 contract 連線。
   contract: Contract;
 
   async ngOnInit() {
     this.contract = await this.gadget.getContract('kcis');
     this.getData();
+  }
+
+  add(CourseID: string, CourseName: string, uid: string) {
+    this.weeklyData.selectWeeklyReportUID = '';
+    this.weeklyData.addWeeklyReportEntry = null;
+    this.router.navigate(['../add-s1', CourseID, CourseName, uid], {
+      relativeTo: this.route
+    });
   }
 
   async getData() {
@@ -67,6 +76,7 @@ export class MainComponent implements OnInit {
             }
           }
 
+          this.weeklyData.currentCousreWeeklyReportList = bDataList;
         }
         this.courseDataList.push({ ID: data.ID, Name: data.Name, DisplayItem: displayItem, bDataList });
       }

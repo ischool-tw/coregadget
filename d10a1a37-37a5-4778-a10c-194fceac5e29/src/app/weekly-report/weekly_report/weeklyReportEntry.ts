@@ -8,7 +8,7 @@ export class WeeklyReportEntry{
     BeginDate:string="";
     EndDate:string="";
     GeneralComment:String="";
-
+    uid:string = "";
     public clear()
     {
         this.CourseID = "";
@@ -16,6 +16,7 @@ export class WeeklyReportEntry{
         this.BeginDate = "";
         this.EndDate = "";
         this.GeneralComment = "";
+        this.uid = "";
     }
 
 }

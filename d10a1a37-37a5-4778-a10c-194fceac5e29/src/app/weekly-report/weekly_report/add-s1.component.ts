@@ -19,8 +19,9 @@ export class AddS1Component implements OnInit {
   loading: boolean;
   error: any;
   displayGradebook: boolean = false;
-  checkNextButton: string = "disabled";
-
+  //checkNextButton: string = "disabled";
+  checkNextButton:boolean = true;
+  modeString: string = "Add";
   weeklyDataMain: WeeklyReportEntry;
 
   // 使用者選擇
@@ -35,7 +36,14 @@ export class AddS1Component implements OnInit {
     this.weeklyDataMain = new WeeklyReportEntry();
     this.weeklyDataMain.CourseID = this.route.snapshot.paramMap.get("id");
     this.weeklyDataMain.CourseName = this.route.snapshot.paramMap.get("name");
+    this.weeklyDataMain.uid = this.route.snapshot.paramMap.get("uid");
+    this.weeklyData.selectWeeklyReportUID = this.weeklyDataMain.uid;
     this.contract = await this.gadget.getContract('kcis');
+    if (this.weeklyData.selectWeeklyReportUID === '') {
+      this.modeString = "Add";
+    } else {
+      this.modeString = "Edit";
+    }
 
     this.getData();
   }
@@ -110,12 +118,13 @@ export class AddS1Component implements OnInit {
     }
   }
 
-  async setNetButtonEnable(v: Boolean) {
-    if (v === true) {
-      this.checkNextButton = "";
-    } else {
-      this.checkNextButton = "disabled";
-    }
+  async setNetButtonEnable(v: boolean) {
+   this.checkNextButton = !v;
+    // if (v === true) {
+    //   this.checkNextButton = "";
+    // } else {
+    //   this.checkNextButton = "disabled";
+    // }
   }
 
   async getData() {
@@ -133,6 +142,18 @@ export class AddS1Component implements OnInit {
 
       this.loading = true;
 
+      // 如果可以編輯
+      if (this.weeklyData.selectWeeklyReportUID !== '') {
+        if (this.weeklyData.currentCousreWeeklyReportList.length > 0) {
+          for (const data of this.weeklyData.currentCousreWeeklyReportList) {
+            if (data.UID === this.weeklyData.selectWeeklyReportUID) {
+              this.weeklyData.addWeeklyReportEntry = data;
+              this.setNetButtonEnable(true);
+            }
+          }
+        }
+      }
+
       if (this.weeklyData.addWeeklyReportEntry.EndDate === "") {
         this.weeklyData.addWeeklyReportEntry.EndDate = moment().format("YYYY-MM-DD");
       }
@@ -140,13 +161,14 @@ export class AddS1Component implements OnInit {
       if (this.weeklyData.addWeeklyReportEntry.BeginDate === "") {
         this.weeklyData.addWeeklyReportEntry.BeginDate = moment().add(-7, 'day').format("YYYY-MM-DD");
       }
-      this.weeklyDataMain.BeginDate = this.weeklyData.addWeeklyReportEntry.BeginDate;
+      this.weeklyDataMain.BeginDate = moment(this.weeklyData.addWeeklyReportEntry.BeginDate).format("YYYY-MM-DD");
 
 
-      this.weeklyDataMain.EndDate = this.weeklyData.addWeeklyReportEntry.EndDate;
+      this.weeklyDataMain.EndDate = moment(this.weeklyData.addWeeklyReportEntry.EndDate).format("YYYY-MM-DD");
 
       this.weeklyDataMain.GeneralComment = this.weeklyData.addWeeklyReportEntry.GeneralComment;
       this.gradeBookList = [];
+
       // 呼叫 service。
       // 取得學生
       const rsp1 = await this.contract.send('weekly.GetCourseStudents', {
@@ -170,10 +192,6 @@ export class AddS1Component implements OnInit {
         }
       })
       this.weeklyData.addGradebookList = Utils.array(rsp2_1, "Response/GradebookAssessmentScore");;
-
-      // for (const gg of this.gradeBookList) {
-      //   gg.checked = true;
-      // }
 
       // 取得評語
       const rsp3 = await this.contract.send('weekly.GetBehaviorByCourseID', {
@@ -207,7 +225,7 @@ export class AddS1Component implements OnInit {
     this.gradeBookList = this.gradeBookList.filter(v => v.checked === true);
     for (const g1 of this.gradeBookList) {
       for (const sc of this.weeklyData.addGradebookList) {
-        if (sc.CustomAssessment === g1.CustomAssessment) {
+        if (sc.CustomAssessment === g1.CustomAssessment && sc.Subject === g1.Subject && sc.term === g1.term) {
           checkedGradeBookList.push(sc);
         }
       }
@@ -244,7 +262,7 @@ export class AddS1Component implements OnInit {
     this.weeklyData.addS1ButtonEnable = this.checkNextButton;
     // 到 s2 ['../../../add-s2']
 
-    this.router.navigate(['../../../add-s2'], {
+    this.router.navigate(['../../../../add-s2'], {
       relativeTo: this.route
     });
   }
