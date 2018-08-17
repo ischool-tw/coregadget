@@ -52,31 +52,7 @@ _gg.setAccount = function() {
                     _gg.set_error_message('#errorMessage', 'Join.AsParent', error);
                     $('#save-data').attr("multi-lang-text", "送出").removeClass("disabled");
                 } else {
-                    _gg.connection = gadget.getContract("campuslite.directory.parent");
-
-                    // TODO: 取得我的基本資料
-                    _gg.connection.send({
-                        service: "_.GetMyInfo",
-                        body: '',
-                        result: function (response, error, http) {
-                            if (error !== null) {
-                                _gg.set_error_message('#mainMsg', 'GetMyInfo', error);
-                            } else {
-                                _gg.myself = [];
-                                if (response.ParentInfo != null) {
-                                    $(response.ParentInfo).each(function(index, item) {
-                                        _gg.myself = item;
-                                    });
-                                    if (_gg.myself.ParentName) {
-                                        window.parent.appsLoader.reflashApplicationList(); // 重新整理選單
-                                    } else {
-                                        //$('#save-myself').removeClass('hide');
-                                    }
-                                }
-                            }
-                        }
-                    });
-                    $('#myModal').modal('hide');
+                    window.parent.appsLoader.reflashApplicationList(); // 重新整理選單
                 }
             }
         });
