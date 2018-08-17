@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { GadgetService, Contract } from 'src/app/gadget.service';
 import { Utils } from 'src/app/util';
-import {BehaviorDataService} from '../behavior-data.service';
+import { BehaviorDataService } from '../behavior-data.service';
 
 @Component({
   selector: 'app-add',
@@ -25,7 +25,7 @@ export class AddComponent implements OnInit {
   checkCount: Number;
   addText: string;
   checkButtonEnable: string = "disabled";
-  constructor(private route: ActivatedRoute, private gadget: GadgetService, private router: Router,private behaviorDataService:BehaviorDataService) { }
+  constructor(private route: ActivatedRoute, private gadget: GadgetService, private router: Router, private behaviorDataService: BehaviorDataService) { }
   contract: Contract;
 
   async ngOnInit() {
@@ -62,17 +62,14 @@ export class AddComponent implements OnInit {
       this.loading = true;
       this.currentDateString = moment().format("YYYY-MM-DD");
 
-      if (this.behaviorDataService.addDate !== "")
-      {
+      if (this.behaviorDataService.addDate !== "") {
         this.currentDateString = this.behaviorDataService.addDate;
       }
 
-      if(this.behaviorDataService.addComment !== "")
-      {
+      if (this.behaviorDataService.addComment !== "") {
         this.addText = this.behaviorDataService.addComment;
       }
 
-      // 呼叫 service。
       const rsp = await this.contract.send('behavior.GetCourseStudentsByCourseID', {
         Request: {
           CourseID: this.courseID
@@ -84,18 +81,18 @@ export class AddComponent implements OnInit {
       this.studentDataList = [];
       for (const data of this.studentDataInfo) {
         data.checked = false;
+
+        data.PhotoUrl = `${this.contract.getAccessPoint}/behavior.GetStudentPhoto?stt=Session&sessionid=${this.contract.getSessionID}&parser=spliter&content=StudentID:${data.ID}`;
+        // console.log(data.PhotoUrl);
         this.studentDataList.push(data);
       }
 
-      if(this.behaviorDataService.addCheckStudentList)
-      {
-        if (this.behaviorDataService.addCheckStudentList.length > 0)
-        {
+      if (this.behaviorDataService.addCheckStudentList) {
+        if (this.behaviorDataService.addCheckStudentList.length > 0) {
           this.studentDataList = this.behaviorDataService.addCheckStudentList;
 
-          let cot:number = 0;
-          for(const dd of this.studentDataList)
-          {
+          let cot: number = 0;
+          for (const dd of this.studentDataList) {
             if (dd.checked === true) {
               cot += 1;
             }
@@ -114,13 +111,11 @@ export class AddComponent implements OnInit {
     }
   }
 
-  async currentDateChange(value)
-  {
+  async currentDateChange(value) {
     this.behaviorDataService.addDate = this.currentDateString;
   }
 
-  async commentChange()
-  {
+  async commentChange() {
     this.behaviorDataService.addComment = this.addText;
   }
 
