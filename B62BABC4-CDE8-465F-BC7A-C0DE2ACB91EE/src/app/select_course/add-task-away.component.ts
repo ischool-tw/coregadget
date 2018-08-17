@@ -55,6 +55,33 @@ export class AddTaskAwayComponent implements OnInit {
 
   }
 
+  leaveCourse(subject){
+    if (this.saving)
+      return;
+
+    this.removeData({ ...subject });
+  }
+
+  async removeData(subject) {
+    try {
+      this.saving = true;
+
+      let rsp = await this.contract.send('LeaveTakeAway', { SubjectType: this.subjectType, SubjectID: subject.SubjectID });
+      console.log(rsp);
+      if (rsp.message != "") {
+        alert(rsp.message);
+      }
+    } catch (err) {
+
+      alert("LeaveTakeAway error:\n" + JSON.stringify(err));
+    } finally {
+      // var self = this;
+      this.saving = false;
+
+      this.getData();
+    }
+  }
+  
   async setData(subject) {
     try {
       this.saving = true;

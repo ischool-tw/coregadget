@@ -18,7 +18,7 @@ export class AddWishComponent implements OnInit {
   saving: boolean = false;
   subjectType: string;
   currentStatus: any;
-  Tooltip = "可推算第一輪志願分發狀況\n 1. 自行評估選上的機率\n 2. 避免後面志願選填必定額滿的課程";
+  Tooltip = "推算第一輪志願分發狀況\n 1. 自行評估選上的機率\n 2. 避免後面志願選填必定額滿的課程";
   constructor(private route: ActivatedRoute, private gadget: GadgetService, private router: Router, private dialog: MatDialog) { }
   // 取得 contract 連線。
   contract: Contract;

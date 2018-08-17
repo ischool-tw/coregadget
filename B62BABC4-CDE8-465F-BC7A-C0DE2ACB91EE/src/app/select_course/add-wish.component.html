@@ -9,9 +9,9 @@
     <ng-container *ngIf="currentStatus">
         <nav aria-label="breadcrumb text-nowrap text-truncate">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"
+                <li class="breadcrumb-item point"
                     [routerLink]="['../../main']">學生選課</li>
-                <li class="breadcrumb-item active"
+                <li class="breadcrumb-item point active"
                     aria-current="page">{{subjectType}}</li>
             </ol>
         </nav>
@@ -46,7 +46,7 @@
                         <div>
                             <span class="badge badge-light mt-2 mt-md-0 mr-md-3"
                                   [matTooltip]="Tooltip">
-                                <span>設為第一志願人數 / 名額：</span>
+                                <span>選為第一志願人數 / 名額：</span>
                                 <span>{{subject.FirstWishCount}} / {{subject.Limit}}</span>
                             </span>
                         </div>
@@ -94,7 +94,12 @@
                            style="color: darkgreen">check_circle_outline</i>
                     </div>
                     <div>
-                        <span class="badge badge-light mt-2 mt-md-0 mr-md-3"
+                        <span *ngIf="subject.BlockReason"
+                              class="badge badge-light mt-2 mt-md-0 mr-md-3">
+                            <span>{{subject.BlockReason}}</span>
+                        </span>
+                        <span *ngIf="!!!subject.BlockReason"
+                              class="badge badge-light mt-2 mt-md-0 mr-md-3"
                               [matTooltip]="Tooltip">
                             <span>第一志願 / 名額：</span>
                             <span>{{subject.FirstWishCount}} / {{subject.Limit}}</span>
@@ -103,6 +108,7 @@
                 </div>
                 <button (click)="joinCourse(subject)"
                         [matTooltip]="subject.SubjectName+getLevel(subject)"
+                        [disabled]="subject.BlockReason?'disabled':null"
                         class="btn btn-info">加入志願</button>
             </li>
         </ul>

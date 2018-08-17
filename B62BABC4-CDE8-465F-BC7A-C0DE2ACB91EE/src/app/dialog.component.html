@@ -1,25 +1,30 @@
-        <!-- 課程介紹內容 -->
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="crouseInfoTitle">
-                            戶外教育探索 {{data | json}}
-                        </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <ul class="list-group">
-                        <li class="list-group-item list-group-item-light font-weight-bold">課程目標</li>
-                        <li class="list-group-item">巴拉巴拉</li>
-                        <li class="list-group-item list-group-item-light font-weight-bold">上課內容</li>
-                        <li class="list-group-item">巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉～</li>
-                        <li class="list-group-item list-group-item-light font-weight-bold">備註</li>
-                        <li class="list-group-item">巴巴拉～</li>
-                        <li class="list-group-item d-flex flex-column flex-md-row align-items-md-center py-2">
-                            <div class="mr-auto">
-                                <span class="badge badge-primary">科目級別：1</span>
-                                <span class="badge badge-secondary">學分數：2</span>
-                                <span class="badge badge-light my-2 my-md-0 mr-md-3">人數：已選 30 / 上限 30</span>
-                            </div>
-                            <button class="btn btn-info" (click)="join()">加入志願</button>
-                        </li>
-                    </ul>
+<!-- 課程介紹內容 -->
+<div class="modal-header">
+    <h5 class="modal-title"
+        id="crouseInfoTitle">
+        戶外教育探索 {{data | json}}
+    </h5>
+    <button type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<ul class="list-group">
+    <li class="list-group-item list-group-item-light font-weight-bold">課程目標</li>
+    <li class="list-group-item">巴拉巴拉</li>
+    <li class="list-group-item list-group-item-light font-weight-bold">上課內容</li>
+    <li class="list-group-item">巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉～</li>
+    <li class="list-group-item list-group-item-light font-weight-bold">備註</li>
+    <li class="list-group-item">巴巴拉～</li>
+    <li class="list-group-item d-flex flex-column flex-md-row align-items-md-center py-2">
+        <div class="mr-auto">
+            <span class="badge badge-primary">科目級別：1</span>
+            <span class="badge badge-secondary">學分數：2</span>
+            <span class="badge badge-light my-2 my-md-0 mr-md-3">人數：已選 30 / 上限 30</span>
+        </div>
+        <button class="btn btn-info"
+                (click)="join()">加入志願</button>
+    </li>
+</ul>

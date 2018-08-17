@@ -9,11 +9,9 @@
     <ng-container *ngIf="currentStatus">
         <nav aria-label="breadcrumb text-nowrap text-truncate">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"
-                    [routerLink]="['../../main']">
-                    學生選課
-                </li>
-                <li class="breadcrumb-item active"
+                <li class="breadcrumb-item point"
+                    [routerLink]="['../../main']">學生選課</li>
+                <li class="breadcrumb-item point active"
                     aria-current="page">{{subjectType}}</li>
             </ol>
         </nav>
@@ -23,15 +21,25 @@
             </li>
             <!-- 顯示選課結果 -->
             <ng-container *ngIf="currentStatus.Attend">
-                <li class="list-group-item list-group-item-action d-flex flex-column flex-md-row align-items-md-center py-2 point"
-                    (click)="showDialog(subject, '')">
-                    <!-- 指定選課才有這 icon -->
-                    <i *ngIf="currentStatus.Attend.Lock=='true'"
-                       class="material-icons mr-2"
-                       data-toggle="tooltip"
-                       data-placement="top"
-                       title="指定修課">lock_outline</i>
-                    {{currentStatus.Attend.SubjectName}}{{getLevel(currentStatus.Attend)}}
+                <li class="list-group-item list-group-item-action d-flex flex-column flex-md-row align-items-md-center py-2 point">
+                    <div (click)="showDialog(currentStatus.Attend, '')"
+                         style="flex: 1"
+                         class="d-flex flex-md-row justify-content-md-between">
+                        <!-- 指定選課才有這 icon -->
+                        <i *ngIf="currentStatus.Attend.Lock=='true'"
+                           class="material-icons mr-2"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="指定修課">lock_outline</i>
+                        {{currentStatus.Attend.SubjectName}}{{getLevel(currentStatus.Attend)}}
+                    </div>
+                    <div class="text-right">
+                        <button class="btn btn-danger"
+                                [disabled]="currentStatus.Attend.Lock=='true'?'disabled':null"
+                                (click)="leaveCourse(currentStatus.Attend)">
+                            退選
+                        </button>
+                    </div>
                 </li>
             </ng-container>
             <!-- 顯示尚未選課 -->
@@ -62,13 +70,19 @@
                            title="已加選"
                            style="color:darkgreen">done</i>
                     </div>
-                    <span class="badge badge-light my-2 my-md-0 mr-md-3">
+                    <span *ngIf="subject.BlockReason"
+                          class="badge badge-light mt-2 mt-md-0 mr-md-3">
+                        <span>{{subject.BlockReason}}</span>
+                    </span>
+                    <span *ngIf="!!!subject.BlockReason"
+                          class="badge badge-light my-2 my-md-0 mr-md-3">
                         <span>已選 / 名額：</span>
                         <span>{{subject.AttendCount}} / {{subject.Limit}}</span>
                     </span>
                 </div>
                 <button (click)="joinCourse(subject)"
                         class="btn btn-info"
+                        [disabled]="subject.BlockReason?'disabled':null"
                         [matTooltip]="subject.SubjectName+getLevel(subject)">選課</button>
             </li>
         </ul>

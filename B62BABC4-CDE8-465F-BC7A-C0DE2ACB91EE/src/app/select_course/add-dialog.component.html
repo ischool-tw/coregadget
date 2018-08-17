@@ -71,6 +71,7 @@
                 </div>
                 <button *ngIf="buttonText"
                         class="btn btn-info"
+                        [disabled]="data.subject.BlockReason?'disabled':null"
                         (click)="join()">{{buttonText}}</button>
             </li>
         </ul>

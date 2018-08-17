@@ -27,7 +27,19 @@
                     else {
                         missingDSNS = true;
                     }
-                    if (vars.access_token) {
+                    if (vars.session_id) {
+                        $scope.connection = dsutil.creatConnection(application + "/kcis", vars.session_id);
+                        $scope.connection.OnLoginError(function (err) {
+                            $scope.loginProgress = false;
+                            //if (err.XMLHttpRequest.responseText.indexOf("User doesn't exist") > 0) {
+                            //    alert(err.XMLHttpRequest.responseText);
+                            //    window.location.assign("https://auth.ischool.com.tw/logout.php?next=" + encodeURIComponent("oauth/authorize.php?client_id=" + clientID + "&response_type=token&redirect_uri=" + redirect_uri + "&scope=" + application + ":kcis"));
+
+                            //}
+                            alert(err.XMLHttpRequest.responseText);
+                            window.location.assign("https://auth.ischool.com.tw/logout.php?next=" + encodeURIComponent("oauth/authorize.php?client_id=" + clientID + "&response_type=token&redirect_uri=" + redirect_uri + "&application=" + application + "&scope=" + application + ":kcis"));
+                        });
+                    } else if (vars.access_token) {
                         $scope.connection = dsutil.creatConnection(application + "/kcis", {
                             "@": ['Type'],
                             Type: 'PassportAccessToken',
