@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full' },
   { path: 'main', component: MainComponent },
   // { path: 'add/:id/:name', component: AddComponent },
-  {path:'add-s1/:id/:name',component:AddS1Component},
+  {path:'add-s1/:id/:name/:uid',component:AddS1Component},
   {path:'add-s2',component:AddS2Component},
   {path:'add-s3',component:AddS3Component},
   { path: 'list/:id/:name', component: ListComponent },

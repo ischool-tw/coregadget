@@ -35,7 +35,8 @@
           <input type="checkbox" id="stCheck{{data.ID}}" [(ngModel)]="data.checked" (change)="alert(data)">
           
           <label for="stCheck{{data.ID}}">
-                <img src="data:image/png;base64,{{data.StudentPhoto}}"/>
+                <!-- <img src="data:image/png;base64,{{data.StudentPhoto}}"/> -->
+                <img src="{{data.PhotoUrl}}"/>
               <!-- <img src="assets/img/sample01.png"> -->
               <div class="card-body py-2 text-truncate">
                   {{data.Name}}<br>

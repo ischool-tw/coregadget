@@ -16,6 +16,7 @@ export class AddS2Component implements OnInit {
   accessPoint: string;
   loading: boolean;
   error: any;
+  modeString: string = "Add";
 
   studentWeeklyDataS2List: any;
   weeklyReportS2: WeeklyReportEntry;
@@ -25,7 +26,11 @@ export class AddS2Component implements OnInit {
   async ngOnInit() {
     this.weeklyReportS2 = new WeeklyReportEntry();
     this.contract = await this.gadget.getContract('kcis');
-
+    if (this.weeklyData.selectWeeklyReportUID === '') {
+      this.modeString = "Add";
+    } else {
+      this.modeString = "Edit";
+    }
     this.getData();
   }
 

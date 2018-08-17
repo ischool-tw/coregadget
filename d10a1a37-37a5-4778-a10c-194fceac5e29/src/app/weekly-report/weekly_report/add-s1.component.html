@@ -5,9 +5,9 @@
             <li class="breadcrumb-item">
                 <a href="#">Home</a>
             </li>
-            <li class="breadcrumb-item" [routerLink]="['../../../main']">Weekly Report</li>
+            <li class="breadcrumb-item" [routerLink]="['../../../../main']">Weekly Report</li>
             <li class="breadcrumb-item">{{weeklyDataMain.CourseName}}</li>
-            <li class="breadcrumb-item">Add</li>
+            <li class="breadcrumb-item">{{modeString}}</li>
             <li class="breadcrumb-item active" aria-current="page">Basic Settings</li>
         </ol>
     </nav>
@@ -59,7 +59,7 @@
 
 
     <div class="text-right">
-        <button type="button" class="btn btn-lg btn-info " disabled={{checkNextButton}} (click)="save()">NEXT（Behavior Settings）
+        <button type="button" class="btn btn-lg btn-info " [disabled]="checkNextButton" (click)="save()">NEXT（Behavior Settings）
             <i class="material-icons ml-1">chevron_right</i>
         </button>
     </div>

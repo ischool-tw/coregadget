@@ -20,7 +20,7 @@ export class ListComponent implements OnInit {
   courseID: string;
   courseName: string;
 
-  constructor(private route: ActivatedRoute, private gadget: GadgetService,private weeklyData:WeeklyDataService) {
+  constructor(private route: ActivatedRoute, private gadget: GadgetService,private weeklyData:WeeklyDataService, private router: Router) {
     // 取得 contract 連線。
 
   }
@@ -37,6 +37,13 @@ export class ListComponent implements OnInit {
 
   }
 
+  add(CourseID:string,CourseName:string,uid:string){
+    this.weeklyData.selectWeeklyReportUID = '';
+    this.weeklyData.addWeeklyReportEntry = null;
+    this.router.navigate(['../../../add-s1', CourseID, CourseName,uid], {
+      relativeTo: this.route
+    });
+  }
   async getData() {
     try {
       this.loading = true;
