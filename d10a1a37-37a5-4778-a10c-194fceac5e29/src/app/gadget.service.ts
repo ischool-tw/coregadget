@@ -8,14 +8,30 @@ export class GadgetService {
   connection: any;
 
   constructor(private route: Router, private zone: NgZone) {
+
+    var url_var: any = {};
+    var hashes = window.location.hash.replace(/\#/, "").split('&');
+    var searchs = window.location.search.replace(/\?/, "").split('&');
+    for (var i = 0; i < hashes.length; i++) {
+      var hash = decodeURIComponent(hashes[i]);
+      var key = hash.substring(0, hash.indexOf("="));
+      url_var[key] = hash.substring(hash.indexOf("=") + 1);
+    }
+    for (var i = 0; i < searchs.length; i++) {
+      var search = decodeURIComponent(searchs[i]);
+      var key = search.substring(0, search.indexOf("="));
+      url_var[key] = search.substring(search.indexOf("=") + 1);
+    }
+
+
     var clientID = "7165f90a1118a04c40870d31f64e03bb";
-    var application = "test.p.kcbs.hc.edu.tw";
+    var application = url_var["dsns"] || "test.p.kcbs.hc.edu.tw";
 
     var routePath = location.href.lastIndexOf('#') >= 0 ? location.href.substr(location.href.lastIndexOf('#') + 1) : "";
     var source = location.href.lastIndexOf('#') >= 0 ? location.href.substr(0, location.href.lastIndexOf('#')) : location.href;
     source = source.lastIndexOf('?') >= 0 ? source.substr(0, source.lastIndexOf('?')) : source;
     var redirect_page = source.substr(0, source.lastIndexOf('/')) + "/signin.html";
-    var redirect_uri = encodeURIComponent(redirect_page + "?source=" + source + "&route=" + routePath);
+    var redirect_uri = encodeURIComponent(redirect_page + "?dsns=" + application + "&source=" + source + "&route=" + routePath);
 
     var missingDSNS = false;
     var requireSignIn = false;
