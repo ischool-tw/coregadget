@@ -27,7 +27,7 @@ jQuery(function () {
             if (!($('#inputCode').val())) {
                 $('#errorMessage').html("<div class='alert alert-error' multi-lang-text='請輸入代碼'>\n  <button class='close' data-dismiss='alert'>×</button></div>");
             } else {
-                $('#errorMessage').html("<div class='alert alert-error' multi-lang-text='請選擇稱謂'>\n  <button class='close' data-dismiss='alert'>×</button></div>");
+                $('#errorMessage').html("<div class='alert alert-error' multi-lang-text='請輸入稱謂'>\n  <button class='close' data-dismiss='alert'>×</button></div>");
             }
         }
     });
