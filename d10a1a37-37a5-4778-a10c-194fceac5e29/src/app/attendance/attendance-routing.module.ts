@@ -7,7 +7,7 @@ import { StudentComponent } from './attendance/student.component';
 const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full' },
   { path: 'main', component: MainComponent },
-  { path: 'student/:courseid/:coursename', component: StudentComponent }
+ 
 ];
 
 @NgModule({

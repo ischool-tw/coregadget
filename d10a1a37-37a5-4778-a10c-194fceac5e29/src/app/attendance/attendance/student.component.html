@@ -12,20 +12,53 @@
     </ol>
   </nav>
   <ul class="list-group point mb-3">
-    <li class="list-group-item active d-flex align-items-center py-2">
-      {{courseName}}
+    <div class="row">
+      <div class="form-group row">
+        <label for="dateLabel"
+               class="col-2 col-form-label">Date</label>
+        <div class="col-10">
+          <input type="date"
+                 class="form-control"
+                 id="dateLabel"
+                 #currentDate
+                 [(ngModel)]="currentDateString"
+                 >
+        </div>
+      </div>
+      <div class="input-group mb-3 col-md-8 col-lg-6">
+        <div class="input-group-prepend">
+          <button class="btn btn-outline-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false">SELECT PERIOD</button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item"
+               href="javascript:;"
+               *ngFor="let data of periodList"
+               (click)="selectItem(data)">{{data.period}}</a>
+          </div>
+        </div>
 
-    </li>
+      </div>
+      <div class="col-md-12 col-lg-3">
+        <button class="ml-auto btn btn-info btn-block"
+                disabled={{checkButtonEnable}}
+                [routerLink]="['../list']"
+                (click)="save()">SAVE （Checked : {{checkCount}}）</button>
+      </div>
+    </div>
     <ng-container *ngFor="let data of StudentDataList">
       <li class="list-group-item list-group-item-action d-flex">
         <img id="stuPhoto"
              class="hidden-xs"
              style="height:120px;margin:0px;display:block"
              src="{{data.PhotoUrl}}" />
-        <div class="text-nowrap">{{data.Name}}</div>
-        <div class="mx-3 text-nowrap text-truncate">學號：{{data.StudentNumber}}</div>
-        <div class="mx-3 text-nowrap text-truncate">班級：{{data.ClassName}} </div>
-        <div class="mx-3 text-nowrap text-truncate">座號：{{data.SeatNo}}</div>
+        <div class="text-nowrap">{{data.Name}}<br>
+          <div>
+            學號：{{data.StudentNumber}}<br></div>
+          班級：{{data.ClassName}}<br> 座號：{{data.SeatNo}}
+          <br></div>
       </li>
     </ng-container>
 

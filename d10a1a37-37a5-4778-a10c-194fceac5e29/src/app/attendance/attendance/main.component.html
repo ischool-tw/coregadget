@@ -13,10 +13,10 @@
     <li class="list-group-item active d-flex align-items-center py-2 ">
         今日點名       
     </li>
-    <li class="list-group-item " *ngFor="let data of todayCourseDataList" [routerLink]="['../student',data.ID,data.Name]">
+    <li class="list-group-item " *ngFor="let suggest of suggests" (click)="openSuggest(suggest)">
         <div class="row">
             <div class="col-md-4 col-lg-3 text-nowrap">
-                <span class="pr-3">{{data.CourseName}}</span>
+                <span class="pr-3">{{suggest.CourseName}}</span>
                 
             </div>
             <!-- <div class="col-md-8 col-lg-9">{{cdata.Comment}}</div> -->
@@ -26,10 +26,10 @@
     <li class="list-group-item active d-flex align-items-center py-2 ">
       課程       
   </li>
-  <li class="list-group-item " *ngFor="let data of courseDataList" [routerLink]="['../student',data.ID,data.Name]">
+  <li class="list-group-item " *ngFor="let course of courses" (click)="openPicker(course)">
     <div class="row">
         <div class="col-md-4 col-lg-3 text-nowrap">
-            <span class="pr-3">{{data.Name}}</span>
+            <span class="pr-3">{{course.Name}}</span>
             
         </div>
         <!-- <div class="col-md-8 col-lg-9">{{cdata.Comment}}</div> -->

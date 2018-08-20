@@ -14,6 +14,8 @@ export class StudentComponent implements OnInit {
   courseID: string = '';
   StudentDataList: any;
   loading: boolean = false;
+  periodList:any;
+  currentDateString:string = '';
   constructor(private gadget: GadgetService, private route: ActivatedRoute, private router: Router) { }
   contract: Contract;
   async ngOnInit() {
@@ -23,12 +25,18 @@ export class StudentComponent implements OnInit {
     this.getData();
   }
 
+  selectItem(data){
+
+  }
+
   async getData() {
     try {
-      this.loading = true;
-     
-      
+      this.loading = true;     
+      this.periodList = [];
+      this.periodList.push({period:'一'});
+
       let dt = moment().format("YYYY-MM-DD");
+      this.currentDateString = dt;
       // 呼叫 service。
       const rsp1 = await this.contract.send('attendance.GetCourseStudents', {
         Request:
