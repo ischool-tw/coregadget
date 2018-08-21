@@ -8,7 +8,7 @@ import { Utils } from 'src/app/util';
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
-  styles: []
+  styleUrls: ['../common.css']
 })
 export class DetailComponent implements OnInit {
   head: string;

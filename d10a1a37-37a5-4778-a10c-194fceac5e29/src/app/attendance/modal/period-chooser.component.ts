@@ -37,7 +37,7 @@ export class PeriodChooserComponent implements OnInit {
   }
 
   gotoPick(period) {
-    this.router.navigate(['../pick',this.data.course.Type, this.data.course.UID, period.Name], {
+    this.router.navigate(['/attendance/pick',this.data.course.Type, this.data.course.UID, period.Name], {
     // this.router.navigate(['/attendance/main'], {
       queryParams: { DisplayName: this.title },
       relativeTo: this.route

@@ -7,7 +7,7 @@ import { Utils } from 'src/app/util';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
-  styles: []
+  styleUrls: ['../common.css']
 })
 export class ListComponent implements OnInit {
   head: string;

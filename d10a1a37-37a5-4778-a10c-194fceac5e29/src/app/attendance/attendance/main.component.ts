@@ -61,7 +61,7 @@ export class MainComponent implements OnInit {
     //   .afterClosed()
     //   .toPromise();
 
-    this.router.navigate(['../pick', 'Course', suggest.CourseID, suggest.Period], {
+    this.router.navigate(['/attendance/pick', 'Course', suggest.CourseID, suggest.Period], {
       queryParams: { DisplayName: suggest.CourseName }
     });
   }

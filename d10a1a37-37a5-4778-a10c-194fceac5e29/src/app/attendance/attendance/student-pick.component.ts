@@ -5,6 +5,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MenuPositionX } from '@angular/material/menu';
 import { StudentCheck } from './student-check';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'gd-student-pick',
@@ -31,7 +32,8 @@ export class StudentPickComponent implements OnInit {
     private route: ActivatedRoute,
     private alert: AlertService,
     private config: ConfigService,
-    private change: ChangeDetectorRef
+    private change: ChangeDetectorRef,
+    private router: Router,
   ) {
     this.today = dsa.getToday();
   }
@@ -55,8 +57,8 @@ export class StudentPickComponent implements OnInit {
 
       // 可點節次。
       this.periodConf = this.config.getPeriod(period);
-
-      try {
+this.periodConf.Absence = [].concat(this.periodConf.Absence) || [];
+      try { 
         // 學生清單（含點名資料）。 
         await this.reloadStudentAttendances();
       } catch(error) {
@@ -167,6 +169,9 @@ export class StudentPickComponent implements OnInit {
     try {
       await this.dsa.setRollCall(this.groupInfo.type, this.groupInfo.id, this.periodConf.Name, items);
       await this.reloadStudentAttendances();
+
+      // 回到主畫面
+      this.router.navigate(['/attendance/main']);
     } catch (error) {
       this.alert.json(error);
     } finally {

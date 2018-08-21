@@ -5,7 +5,7 @@ import { Utils } from 'src/app/util';
 @Component({
   selector: 'app-comment',
   templateUrl: './comment.component.html',
-  styles: []
+  styleUrls: ['../common.css']
 })
 export class CommentComponent implements OnInit {
   head: string;

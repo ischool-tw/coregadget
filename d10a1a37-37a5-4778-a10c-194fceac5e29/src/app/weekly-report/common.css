@@ -1,0 +1,58 @@
+/* ---------------------------------------------------
+    只給 weekly-report.html 使用，變更或新增 style
+----------------------------------------------------- */
+
+.card {
+	height: calc(100% - 1rem);
+}
+
+.card.custom-control-label {
+	font-size: 1rem;
+}
+
+.gb-check.custom-checkbox .custom-control-label::after {
+	top: 1.3rem;
+    left: 1rem;
+}
+
+.gb-check .custom-control-label::before, .gb-check .custom-control-input.focus ~ .custom-control-label::before, .gb-check .custom-control-input:active ~ .custom-control-label::before {
+	top: 1.5rem;
+    left: 1.1rem;
+}
+
+.b-check .custom-checkbox .custom-control-label::after {
+	top: 0.65rem;
+    left: 1rem;
+}
+
+.b-check .custom-control-label::before, .b-check .custom-control-input.focus ~ .custom-control-label::before, .b-check .custom-control-input:active ~ .custom-control-label::before {
+	top: 0.8rem;
+    left: 1rem;
+}
+
+/* ---------------------------------------------------
+    自訂 Class Style
+----------------------------------------------------- */
+
+.gb-check {
+	height: 100%;
+}
+
+.b-check li, .b-check label {
+	cursor: pointer;
+}
+
+html, body {
+	height: 100%;
+}
+
+.gb {
+  min-width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #4db6ac;
+  color: #fff;
+}

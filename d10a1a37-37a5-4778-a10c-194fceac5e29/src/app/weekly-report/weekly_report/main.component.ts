@@ -7,7 +7,7 @@ import { Utils } from 'src/app/util';
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
-  styles: []
+  styleUrls: ['../common.css']
 })
 export class MainComponent implements OnInit {
 
