@@ -29,7 +29,7 @@ export class DSAService {
   public async getCCItems() {
     await this.ready; //等待 contract 準備完成。
 
-    const rsp = await this.contract.send('attendance.GetCourses');
+    const rsp = await this.contract.send('attendance.GetCCItems');
 
     return (rsp && rsp.Items.Item as RollCallRecord[]) || [];
   }
@@ -51,16 +51,20 @@ export class DSAService {
    * @param id 編號。
    * @param date 日期。
    */
-  public async getStudents(id, date) {
+  public async getStudents(type, id, date) {
     await this.ready;
 
     const req: any = {
       Request: {
+        Type: type,
         OccurDate: date,
       }
     }
 
-    const rsp = await this.contract.send('attendance.GetCourseStudents', req);
+    if (type === "Course") req.Request.CourseID = id;
+    if (type === "Class") req.Request.ClassID = id;
+
+    const rsp = await this.contract.send('attendance.GetStudents', req);
 
     return ((rsp && rsp.Students && rsp.Students.Student) || []) as Student[];
   }
@@ -117,7 +121,7 @@ export type GroupType = '' | 'Course' | 'Class'
  */
 export interface RollCallRecord {
 
-  ID: string;
+  UID: string;
 
   Name: string;
 
