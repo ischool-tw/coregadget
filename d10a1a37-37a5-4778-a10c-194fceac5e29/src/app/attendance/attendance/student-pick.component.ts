@@ -20,6 +20,7 @@ export class StudentPickComponent implements OnInit {
   periodConf: PeriodConf; // 節次設定，決定有哪些缺曠可以點。
 
   selectedAbsence: string; // 已選擇的缺曠類別。
+  selectedAbsence_eng: string;
 
   groupInfo: { type: GroupType, id: string, name: string } // 課程或班級。
 
@@ -38,9 +39,10 @@ export class StudentPickComponent implements OnInit {
     this.today = dsa.getToday();
   }
 
+
   async ngOnInit() {
-    
-    this.groupInfo = {type: '', id: '', name: ''};
+
+    this.groupInfo = { type: '', id: '', name: '' };
 
     await this.config.ready;
 
@@ -57,13 +59,33 @@ export class StudentPickComponent implements OnInit {
 
       // 可點節次。
       this.periodConf = this.config.getPeriod(period);
-this.periodConf.Absence = [].concat(this.periodConf.Absence) || [];
-      try { 
+      this.periodConf.Absence = [].concat(this.periodConf.Absence) || [];
+
+      let abs = this.config.getAbsences();
+      for (let ab of this.periodConf.Absence) {
+        for (let xx of abs) {
+          if (ab.Name === xx.Name) {
+            ab.english_name = xx.english_name;
+            ab.english_abbr = xx.english_abbr;
+          }
+        }
+      }
+
+
+
+      try {
         // 學生清單（含點名資料）。 
         await this.reloadStudentAttendances();
-      } catch(error) {
+      } catch (error) {
         this.alert.json(error);
       }
+
+      // 當有假別預設選第1個
+      if (this.periodConf.Absence.length > 0) {
+        this.selectedAbsence = this.periodConf.Absence[0].Name;
+        this.selectedAbsence_eng = this.periodConf.Absence[0].english_name;
+      }
+
     });
   }
 
@@ -72,22 +94,30 @@ this.periodConf.Absence = [].concat(this.periodConf.Absence) || [];
     const students = await this.dsa.getStudents(this.groupInfo.type, this.groupInfo.id, this.today);
     this.studentChecks = [];
     for (const stu of students) {
+
+      // 取得學生照片 url
+      stu.PhotoUrl = `${this.dsa.getAccessPoint()}/behavior.GetStudentPhoto?stt=Session&sessionid=${this.dsa.getSessionID()}&parser=spliter&content=StudentID:${stu.ID}`;
       const status = this.getSelectedAttendance(stu);
       this.studentChecks.push(new StudentCheck(stu, status, this.periodConf));
     }
     this.calcSummaryText();
 
-    if(msg) this.alert.snack(msg);
+    if (msg) this.alert.snack(msg);
+  }
+
+  selectedAbsenceItem(abb) {
+    this.selectedAbsence = abb.Name;
+    this.selectedAbsence_eng = abb.english_name;
   }
 
   changeAttendance(stu: StudentCheck) {
-    
-    if(!this.selectedAbsence) {
+
+    if (!this.selectedAbsence) {
       this.alert.snack('請選擇假別！');
       return;
     }
 
-    if(!stu.acceptChange()) {
+    if (!stu.acceptChange()) {
       this.alert.snack('此學生無法調整缺曠。');
       return;
     }
@@ -102,13 +132,13 @@ this.periodConf.Absence = [].concat(this.periodConf.Absence) || [];
 
   /** 計算統計值。 */
   calcSummaryText() {
-    const summary = new Map<string,number>();
-    for(const check of this.studentChecks) {
+    const summary = new Map<string, number>();
+    for (const check of this.studentChecks) {
 
-      if(!check.acceptChange()) continue;
-      if(!check.status) continue;
+      if (!check.acceptChange()) continue;
+      if (!check.status) continue;
 
-      if(!summary.has(check.status.AbsenceType)) {
+      if (!summary.has(check.status.AbsenceType)) {
         summary.set(check.status.AbsenceType, 0);
       }
 
@@ -116,18 +146,39 @@ this.periodConf.Absence = [].concat(this.periodConf.Absence) || [];
     }
 
     let text: string[] = [];
-    for(let k of Array.from(summary)) {
-      text.push(`${k[0]}: ${k[1]}`);
+    for (let k of Array.from(summary)) {
+// text.push(`${k[0]}: ${k[1]}`);
+      // 轉換
+      let key = k[0];
+      let value = k[1];
+
+      for (let ab of this.periodConf.Absence)
+      {
+        if (ab.Name === key)
+        {
+          key = ab.english_name;
+        }
+      }
+
+      text.push(`${key}: ${value}`);
     }
 
     this.checkSummary = text.join(', ');
   }
 
   getAttendanceText(stu: StudentCheck) {
-    return stu.status ? stu.status.AbsenceType : 'Check';
+    let value = stu.status ? stu.status.AbsenceType : 'Check';
+    for (let xx of this.periodConf.Absence)
+    {
+      if (xx.Name === value)
+      {
+        value = xx.english_name;
+      }
+    }
+    return value;
   }
 
-  getAttendanceStyle(stu: StudentCheck) {   
+  getAttendanceStyle(stu: StudentCheck) {
 
     let bgColor = 'white';
     let fgColor = 'rgba(0,0,0,.12)';
@@ -135,7 +186,10 @@ this.periodConf.Absence = [].concat(this.periodConf.Absence) || [];
     if (stu.status) {
       const absType = stu.status.AbsenceType;
       const absConf = this.config.getAbsence(absType);
-      bgColor = this.config.getAbsenceColor(absConf.Abbr);
+      if (absConf.Abbr) {
+        bgColor = this.config.getAbsenceColor(absConf.Abbr);
+      }
+
       fgColor = 'white';
     }
 
@@ -150,7 +204,7 @@ this.periodConf.Absence = [].concat(this.periodConf.Absence) || [];
    * @param stu 學生資料。
    */
   private getSelectedAttendance(stu: Student) {
-    if(!stu.Attendance) return;
+    if (!stu.Attendance) return;
     const period = this.periodConf.Name;
     const dateAtts = [].concat(stu.Attendance.Period) as PeriodStatus[];
     return dateAtts.find(v => v['@text'] === period);

@@ -1,63 +1,81 @@
 <!-- 開始點名 -->
-<div id="attendence-page" page>
-    <nav aria-label="breadcrumb text-nowrap text-truncate">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="#" [routerLink]="['../../../..']">課堂點名（{{today}}）</a>
-        </li>
-        <ng-container *ngIf="!studentChecks; else titleText">
-          <li class="breadcrumb-item active" aria-current="page">loading...</li>  
-        </ng-container>
-        <ng-template #titleText>
-          <li class="breadcrumb-item active" aria-current="page">{{groupInfo.name}}&nbsp;&nbsp;(節次：{{periodConf?.Name}})</li>
-        </ng-template>
-      </ol>
-    </nav>
-  
-    <ng-container *ngIf="!studentChecks; else elseTemplate">
-      <div>loading...</div>
-    </ng-container>
-    <ng-template #elseTemplate>
-      <div class="d-flex flex-column-reverse flex-sm-row">
-        <div class="btn-group dropdown mr-auto">
-          <button [matMenuTriggerFor]="menu" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false">
-            <span *ngIf="!selectedAbsence">選擇假別</span>
-            <span *ngIf="selectedAbsence">假別：{{selectedAbsence}}</span>
-          </button>
-          <mat-menu #menu="matMenu">
-            <div *ngIf="!periodConf">loading...</div>
-            <button mat-menu-item *ngFor="let abb of periodConf?.Absence" (click)="selectedAbsence = abb.Name">{{abb?.Name}}</button>
-          </mat-menu>
-        </div>
-        <ng-container [ngTemplateOutlet]="reload"></ng-container>
-        <ng-container [ngTemplateOutlet]="save"></ng-container>
+<div id="attendence-page"
+     page>
+  <nav aria-label="breadcrumb text-nowrap text-truncate">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="#"
+           [routerLink]="['../../../..']">Attendance（{{today}}）</a>
+      </li>
+      <ng-container *ngIf="!studentChecks; else titleText">
+        <li class="breadcrumb-item active"
+            aria-current="page">loading...</li>
+      </ng-container>
+      <ng-template #titleText>
+        <li class="breadcrumb-item active"
+            aria-current="page">{{groupInfo.name}}&nbsp;&nbsp;(Period：{{periodConf?.english_name}})</li>
+      </ng-template>
+    </ol>
+  </nav>
+
+  <ng-container *ngIf="!studentChecks; else elseTemplate">
+    <div>loading...</div>
+  </ng-container>
+  <ng-template #elseTemplate>
+    <div class="d-flex flex-column-reverse flex-sm-row">
+      <div class="btn-group dropdown mr-auto">
+        <button [matMenuTriggerFor]="menu"
+                type="button"
+                class="btn btn-dark dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">
+          <span *ngIf="!selectedAbsence">Type of leave</span>
+          <span *ngIf="selectedAbsence">Leave：{{selectedAbsence_eng}}</span>
+        </button>
+        <mat-menu #menu="matMenu">
+          <div *ngIf="!periodConf">loading...</div>
+          <button mat-menu-item
+                  *ngFor="let abb of periodConf?.Absence"
+                  (click)="selectedAbsenceItem(abb)">{{abb?.english_name}}</button>
+        </mat-menu>
       </div>
-  
-      <div class="row st-list mt-3">
-        <div *ngFor="let student of studentChecks" (click)="changeAttendance(student)" class="col-sm-4 col-md-3 mb-3" >
-          <div class="card p-3"> 
-            <div [ngStyle]="getAttendanceStyle(student)" class="ad-status text-truncate">{{getAttendanceText(student)}}</div>
-            <!-- <div class="ad-status text-truncate">{{student.ID}}</div> -->
-            <h5 class="mb-0 text-truncate">{{student.data?.Name}}</h5>
-            <div class="text-gray text-truncate d-flex">{{student.data?.StudentNumber}}
-              <span class="ml-auto">{{student.data?.ClassName}}&nbsp;&nbsp;{{student.data?.SeatNo}}</span>
-            </div>
+      <ng-container [ngTemplateOutlet]="reload"></ng-container>
+      <ng-container [ngTemplateOutlet]="save"></ng-container>
+    </div>
+
+    <div class="row st-list mt-3">
+      <div *ngFor="let student of studentChecks"
+           (click)="changeAttendance(student)"
+           class="col-sm-4 col-md-3 mb-3">
+        <div class="card p-3">
+          <img src="{{student.data.PhotoUrl}}" />
+          <div [ngStyle]="getAttendanceStyle(student)"
+               class="ad-status text-truncate">{{getAttendanceText(student)}}</div>
+          <!-- <div class="ad-status text-truncate">{{student.ID}}</div> -->
+          <h5 class="mb-0 text-truncate">{{student.data?.Name}}</h5>
+          <div class="text-gray text-truncate d-flex">{{student.data?.StudentNumber}}
+            <span class="ml-auto">{{student.data?.ClassName}}&nbsp;&nbsp;{{student.data?.SeatNo}}</span>
           </div>
         </div>
-  
       </div>
-      <div class="text-right">
-        <ng-container [ngTemplateOutlet]="reload"></ng-container>
-        <ng-container [ngTemplateOutlet]="save"></ng-container>
-      </div>
-    </ng-template>
-  
-    <ng-template #save>
-      <button (click)="saveRollCall()" type="button" class="btn btn-lg btn-info">{{checkSummary? '儲存 (' + checkSummary +')': '儲存'}}</button>
-    </ng-template>
-  
-    <ng-template #reload>
-      <button (click)="reloadStudentAttendances('重新載入完成！')" type="button" class="btn btn-lg btn-light mr-sm-1" >重新載入</button>
-    </ng-template>
-  </div>
+
+    </div>
+    <div class="text-right">
+      <ng-container [ngTemplateOutlet]="reload"></ng-container>
+      <ng-container [ngTemplateOutlet]="save"></ng-container>
+    </div>
+  </ng-template>
+
+  <ng-template #save>
+    <button (click)="saveRollCall()"
+            type="button"
+            class="btn btn-lg btn-info">{{checkSummary? 'Save (' + checkSummary +')': 'Save'}}</button>
+  </ng-template>
+
+  <ng-template #reload>
+    <button (click)="reloadStudentAttendances('重新載入完成！')"
+            type="button"
+            class="btn btn-lg btn-light mr-sm-1">Reload</button>
+  </ng-template>
+</div>

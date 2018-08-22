@@ -1,69 +1,89 @@
-<div id="behavior" page>
-  <nav aria-label="breadcrumb text-nowrap text-truncate">
-      <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-              <a href="index.html">Home</a>
-          </li>
-          <li class="breadcrumb-item active" aria-current="page"> Attendance</li>
-          
-      </ol>
-  </nav>
+<div id="behavior"
+     page>
+    <nav aria-label="breadcrumb text-nowrap text-truncate">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="index.html">Home</a>
+            </li>
+            <li class="breadcrumb-item active"
+                aria-current="page"> Attendance</li>
 
-  <ul class="list-group mb-3 point">
-    <li class="list-group-item active d-flex align-items-center py-2 ">
-        今日點名       
-    </li>
-    <li class="list-group-item " *ngFor="let suggest of suggests" (click)="openSuggest(suggest)">
-        <div class="row">
-            <div class="col-md-4 col-lg-3 text-nowrap">
-                <span class="pr-3">{{suggest.CourseName}}</span>
-                
-            </div>
-            <!-- <div class="col-md-8 col-lg-9">{{cdata.Comment}}</div> -->
-        </div>
-    </li>
+        </ol>
+    </nav>
 
-    <li class="list-group-item active d-flex align-items-center py-2 ">
-      課程       
-  </li>
-  <li class="list-group-item " *ngFor="let course of courses" (click)="openPicker(course)">
-    <div class="row">
-        <div class="col-md-4 col-lg-3 text-nowrap">
-            <span class="pr-3">{{course.Name}}</span>
-            
-        </div>
-        <!-- <div class="col-md-8 col-lg-9">{{cdata.Comment}}</div> -->
-    </div>
-</li>
-    <ng-template #NoData>
-        <li class="list-group-item ">
+    <ul class="list-group mb-3 point">
+        <li class="list-group-item active d-flex align-items-center py-2 ">
+            Today
+        </li>
+        <li class="list-group-item "
+            *ngFor="let suggest of suggests"
+            (click)="openSuggest(suggest)">
             <div class="row">
-                <div class="col-md-4 col-lg-3 text-nowrap">
-                    <span class="pr-3">No data</span>
-                    <span class=""></span>
+                <div class="col-md-9 col-lg-3 text-nowrap">
+                    <span class="pr-3">{{suggest.CourseName}}</span>
+
                 </div>
-                <div class="col-md-8 col-lg-9"></div>
+                <div class="col-md-2 col-lg-3 text-nowrap ml-auto">{{suggest.english_period}}</div>
+
+                <ng-container *ngIf="suggest.Checked">
+                    <i class="material-icons"
+                       style="color:#33691E">
+                        done
+                    </i>
+                </ng-container>
+                <ng-container *ngIf="!suggest.Checked">
+                    <i class="material-icons"
+                       style="color:#C9C9C9">
+                        done
+                    </i>
+                </ng-container>
+                <!-- <div class="col-md-8 col-lg-9">{{cdata.Comment}}</div> -->
             </div>
         </li>
-        <li class="list-group-item ">
+
+        <li class="list-group-item active d-flex align-items-center py-2 ">
+            Course
+        </li>
+        <li class="list-group-item "
+            *ngFor="let course of courses"
+            (click)="openPicker(course)">
             <div class="row">
                 <div class="col-md-4 col-lg-3 text-nowrap">
-                    <span class="pr-3"></span>
-                    <span class=""></span>
+                    <span class="pr-3">{{course.Name}}</span>
+
                 </div>
-                <div class="col-md-8 col-lg-9"></div>
+                <!-- <div class="col-md-8 col-lg-9">{{cdata.Comment}}</div> -->
             </div>
         </li>
-        <li class="list-group-item ">
-            <div class="row">
-                <div class="col-md-4 col-lg-3 text-nowrap">
-                    <span class="pr-3"></span>
-                    <span class=""></span>
+        <ng-template #NoData>
+            <li class="list-group-item ">
+                <div class="row">
+                    <div class="col-md-4 col-lg-3 text-nowrap">
+                        <span class="pr-3">No data</span>
+                        <span class=""></span>
+                    </div>
+                    <div class="col-md-8 col-lg-9"></div>
                 </div>
-                <div class="col-md-8 col-lg-9"></div>
-            </div>
-        </li>
-    </ng-template>
-</ul>
+            </li>
+            <li class="list-group-item ">
+                <div class="row">
+                    <div class="col-md-4 col-lg-3 text-nowrap">
+                        <span class="pr-3"></span>
+                        <span class=""></span>
+                    </div>
+                    <div class="col-md-8 col-lg-9"></div>
+                </div>
+            </li>
+            <li class="list-group-item ">
+                <div class="row">
+                    <div class="col-md-4 col-lg-3 text-nowrap">
+                        <span class="pr-3"></span>
+                        <span class=""></span>
+                    </div>
+                    <div class="col-md-8 col-lg-9"></div>
+                </div>
+            </li>
+        </ng-template>
+    </ul>
 
 </div>

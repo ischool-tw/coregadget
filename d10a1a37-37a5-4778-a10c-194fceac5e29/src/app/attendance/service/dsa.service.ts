@@ -42,6 +42,36 @@ export class DSAService {
 
     const rsp = await this.contract.send('attendance.GetConfig');
 
+    // 取得對照
+    let itemMap = await this.getAbsencePeriod();
+    // rsp.Config.Absences = [].concat(rsp.Config.Absences) || [];
+    // rsp.Config.Periods = [].concat(rsp.Config.Periods) || [];
+
+    // 比對缺曠
+    if (rsp.Config.Absences.Absence) {
+      for (const data of rsp.Config.Absences.Absence) {
+        for (const xx of itemMap.Absence) {
+          if (data.Name === xx.name) {
+            data.english_abbr = xx.english_abbreviation;
+            data.english_name = xx.english_name;
+          }
+        }
+
+      }
+    }
+    // 比對節次
+    if (rsp.Config.Periods.Period) {
+      for (let data of rsp.Config.Periods.Period) {
+        for (let xx of itemMap.Period) {
+          if (data.Name === xx.name && data.Type === xx.type) {
+            data.english_name = xx.english_name;
+            data.english_type = xx.english_type;
+            data.Sort = xx.sort;
+          }
+        }
+      }
+    }
+
     return rsp && rsp.Config;
   }
 
@@ -68,6 +98,22 @@ export class DSAService {
 
     return ((rsp && rsp.Students && rsp.Students.Student) || []) as Student[];
   }
+
+  // 取得缺曠節次英文對照
+  public async getAbsencePeriod() {
+    await this.ready;
+
+    const rsp = await this.contract.send('attendance.GetAbsencePeriod', {
+      Request: {
+      }
+    });
+
+    let Absence = [].concat((rsp && rsp.Response.Absence) || []) as AbsenceMapItem[];
+    let Period = [].concat((rsp && rsp.Response.Period) || []) as PeriodMapItem[];
+    let AbsencePeriod = { Absence, Period };
+    return AbsencePeriod;
+  }
+
 
   /**
    * 取得建議點名清單。
@@ -96,7 +142,7 @@ export class DSAService {
       Student: JSON.stringify(data),
     };
 
-    if(type === 'Course') {
+    if (type === 'Course') {
       req.CourseID = id;
     } else {
       req.ClassID = id;
@@ -105,6 +151,14 @@ export class DSAService {
     const rsp = await this.contract.send('attendance.SetRollCall', req);
 
     return rsp;
+  }
+
+  public getAccessPoint() {
+    return this.contract.getAccessPoint;
+  }
+
+  public getSessionID() {
+    return this.contract.getSessionID;
   }
 
   /**
@@ -128,6 +182,7 @@ export interface RollCallRecord {
   Type: GroupType;
 
   Students: string;
+  english_name: string;
 }
 
 export interface Config {
@@ -147,6 +202,8 @@ export interface SuggestRecord {
   CourseName: string;
 
   Period: string;
+
+  english_period: string;
 }
 
 export interface Student {
@@ -154,13 +211,27 @@ export interface Student {
   Name: string;
   SeatNo: string;
   StudentNumber: string;
-  Photo: string;
+  PhotoUrl: string;
   ClassName: string;
   Attendance: AttendanceItem;
 }
 
 export interface AttendanceItem {
   Period: PeriodStatus;
+}
+
+export interface AbsenceMapItem {
+  name: string;
+  english_name: string;
+  english_abbreviation: string;
+}
+
+export interface PeriodMapItem {
+  name: string;
+  type: string;
+  english_name: string;
+  english_type: string;
+  sort: number;
 }
 
 /**
