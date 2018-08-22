@@ -9,7 +9,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   selector: 'gd-period-chooser',
   templateUrl: './period-chooser.component.html',
   styleUrls: ['../common.css'],
-  encapsulation: ViewEncapsulation.None
+  // encapsulation: ViewEncapsulation.Emulated
 })
 export class PeriodChooserComponent implements OnInit {
 
