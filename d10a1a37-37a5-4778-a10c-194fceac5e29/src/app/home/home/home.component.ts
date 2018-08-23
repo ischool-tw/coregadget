@@ -15,6 +15,7 @@ export class HomeComponent implements OnInit {
     this.contract = await this.gadget.getContract('kcis');
   }
   goGradebook() {
-    location.assign("https://web2.ischool.com.tw/deployment/F57B2E7C-EAD5-4A51-8F45-141D9BC76912/content.kcis.htm#dsns=test.p.kcbs.hc.edu.tw&session_id=" + this.contract.getSessionID);
+    window.open("https://web2.ischool.com.tw/deployment/F57B2E7C-EAD5-4A51-8F45-141D9BC76912/content.kcis.htm#dsns=" + this.gadget.application + "&session_id=" + this.contract.getSessionID,"_gradebook");
+    // location.assign("https://web2.ischool.com.tw/deployment/F57B2E7C-EAD5-4A51-8F45-141D9BC76912/content.kcis.htm#dsns=" + this.gadget.application + "&session_id=" + this.contract.getSessionID);
   }
 }
