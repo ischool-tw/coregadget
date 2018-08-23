@@ -21,8 +21,8 @@ export class MainComponent implements OnInit {
 
   courses: RollCallRecord[]; //課程清單。
 
-
   loading: boolean = false;
+
   constructor(private dsa: DSAService,
     private alert: AlertService,
     private dialog: MatDialog,
@@ -30,7 +30,7 @@ export class MainComponent implements OnInit {
     private config: ConfigService) { }
   contract: Contract;
   async ngOnInit() {
-
+    this.loading = true;
     try {
       await this.config.ready;
 
@@ -39,24 +39,19 @@ export class MainComponent implements OnInit {
       this.courses = await this.dsa.getCCItems();
 
       this.suggests = await this.dsa.getSuggestRollCall(this.dsa.getToday());
+
       let Periods = this.config.getPeriods();
-    for(const su of this.suggests)
-    {
-      for(const pr of Periods)
-      {
-          if(su.Period === pr.Name)
-          {
+      for (const su of this.suggests) {
+        for (const pr of Periods) {
+          if (su.Period === pr.Name) {
             su.english_period = pr.english_name;
           }
-      } 
-    }   
-      
-
-
+        }
+      }
     } catch (error) {
       this.alert.json(error);
     } finally {
-
+      this.loading = false;
     }
   }
 

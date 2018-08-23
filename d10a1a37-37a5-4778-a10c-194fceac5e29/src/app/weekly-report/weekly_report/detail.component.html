@@ -3,20 +3,25 @@
     <nav aria-label="breadcrumb text-nowrap text-truncate">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="#">Home</a>
+                <span class="point"
+                      [routerLink]="['/']">Home</span>
             </li>
-            <li class="breadcrumb-item" [routerLink]="['../../../main']">Weekly Report</li>
-            <li class="breadcrumb-item">{{courseName}}</li>
-            <li class="breadcrumb-item active" aria-current="page">{{beginDate}} - {{endDate}}</li>
+            <li class="breadcrumb-item">
+                <span class="point"
+                      [routerLink]="['/weekly_report']">Weekly Report</span>
+            </li>
+            <li class="breadcrumb-item active"
+                aria-current="page">{{courseName}} ( {{beginDate}} - {{endDate}} )</li>
         </ol>
     </nav>
     <div class="row">
-        <div class="col-xs-6 col-md-4 col-xl-3" *ngFor="let data of weeklyDataList">
+        <div class="col-xs-6 col-md-4 col-xl-3"
+             *ngFor="let data of weeklyDataList">
             <div class="card mb-3">
                 <div class="card-header bg-light pt-3 pb-1 px-3 border-top border-bottom">
-                        <h3 class="mb-0">{{data.StudentName}}</h3>
-                        <span class="text-gray">{{data.StudentNumber}}</span>
-                    </div>
+                    <h3 class="mb-0">{{data.StudentName}}</h3>
+                    <span class="text-gray">{{data.StudentNumber}}</span>
+                </div>
                 <div class="p-3 px-3">
                     <h5>Teacher</h5>
                     <p class=" ml-3 mb-1">{{teacherName}}</p>
@@ -25,16 +30,20 @@
                     <h5>General Comment</h5>
                     <p class=" ml-3 mb-1">{{generalComment}}</p>
                 </div>
-                <div class="bg-light pt-3 pb-1 px-3 border-top border-bottom" *ngIf="data.PersonalComment">
+                <div class="bg-light pt-3 pb-1 px-3 border-top border-bottom"
+                     *ngIf="data.PersonalComment">
                     Teacher Comment
                 </div>
-                <div class="p-3 ml-3" *ngIf="data.PersonalComment">
+                <div class="p-3 ml-3"
+                     *ngIf="data.PersonalComment">
                     {{data.PersonalComment}}
                 </div>
-                <div class="bg-light pt-3 pb-1 px-3 border-top border-bottom" *ngIf="data.gradeBookDataList">
+                <div class="bg-light pt-3 pb-1 px-3 border-top border-bottom"
+                     *ngIf="data.gradeBookDataList">
                     Gradebook
                 </div>
-                <div class="p-3 d-flex" *ngFor="let s1 of data.gradeBookDataList">
+                <div class="p-3 d-flex"
+                     *ngFor="let s1 of data.gradeBookDataList">
                     <div class="gb">{{s1.Value}}</div>
                     <div class="ml-3 mb-1 w-100">
                         <h6 class="float-right font-weight-light">{{s1.Date}}</h6>
@@ -44,7 +53,8 @@
                         </p>
                     </div>
                 </div>
-                <div class="bg-light pt-3 pb-1 px-3 border-top border-bottom" *ngIf="data.displayBehavior">
+                <div class="bg-light pt-3 pb-1 px-3 border-top border-bottom"
+                     *ngIf="data.displayBehavior">
                     Behavior
                 </div>
                 <div class="p-3">

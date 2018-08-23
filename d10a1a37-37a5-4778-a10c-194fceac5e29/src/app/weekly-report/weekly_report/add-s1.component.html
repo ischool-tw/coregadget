@@ -3,12 +3,17 @@
     <nav aria-label="breadcrumb text-nowrap text-truncate">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="#">Home</a>
+                <span class="point"
+                      [routerLink]="['/']">Home</span>
             </li>
-            <li class="breadcrumb-item" [routerLink]="['../../../../main']">Weekly Report</li>
+            <li class="breadcrumb-item">
+                <span class="point"
+                      [routerLink]="['/weekly_report']">Weekly Report</span>
+            </li>
             <li class="breadcrumb-item">{{weeklyDataMain.CourseName}}</li>
             <li class="breadcrumb-item">{{modeString}}</li>
-            <li class="breadcrumb-item active" aria-current="page">Basic Settings</li>
+            <li class="breadcrumb-item active"
+                aria-current="page">Basic Settings</li>
         </ol>
     </nav>
 
@@ -16,16 +21,30 @@
     <div class="row">
         <div class="form-group col-sm-6">
             <label for="exampleFormControlInput1">Start Date</label>
-            <input type="date" class="form-control" placeholder="ex : 2018/03/06" #startDate [(ngModel)]="weeklyDataMain.BeginDate" (change)="startDateChange(startDate.value)">
+            <input type="date"
+                   class="form-control"
+                   placeholder="ex : 2018/03/06"
+                   #startDate
+                   [(ngModel)]="weeklyDataMain.BeginDate"
+                   (change)="startDateChange(startDate.value)">
         </div>
         <div class="form-group col-sm-6">
             <label for="exampleFormControlInput1">End Date</label>
-            <input type="date" class="form-control" placeholder="ex : 2018/03/06" #endDate [(ngModel)]="weeklyDataMain.EndDate" (change)="endDateChange(endDate.value)">
+            <input type="date"
+                   class="form-control"
+                   placeholder="ex : 2018/03/06"
+                   #endDate
+                   [(ngModel)]="weeklyDataMain.EndDate"
+                   (change)="endDateChange(endDate.value)">
         </div>
         <div class="form-group col-12">
             <label for="exampleFormControlTextarea1">General Comment</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" #generalComment [(ngModel)]="weeklyDataMain.GeneralComment"
-                (keyup)="generalCommentChange(generalComment.value)"></textarea>
+            <textarea class="form-control"
+                      id="exampleFormControlTextarea1"
+                      rows="3"
+                      #generalComment
+                      [(ngModel)]="weeklyDataMain.GeneralComment"
+                      (keyup)="generalCommentChange(generalComment.value)"></textarea>
         </div>
     </div>
     <div *ngIf="displayGradebook">
@@ -38,10 +57,15 @@
 
         <!-- 已輸入日期 Style -->
         <div class="row">
-            <div class="col-md-6" *ngFor="let gg of gradeBookList">
+            <div class="col-md-6"
+                 *ngFor="let gg of gradeBookList">
                 <div class="gb-check custom-control custom-checkbox mb-3 pl-0">
-                    <input type="checkbox" class="custom-control-input" id="gradebookCheck{{gg.UID}}" [(ngModel)]="gg.checked">
-                    <label class="card custom-control-label point" for="gradebookCheck{{gg.UID}}">
+                    <input type="checkbox"
+                           class="custom-control-input"
+                           id="gradebookCheck{{gg.UID}}"
+                           [(ngModel)]="gg.checked">
+                    <label class="card custom-control-label point"
+                           for="gradebookCheck{{gg.UID}}">
                         <div>
                             <h6 class="float-right font-weight-light">{{gg.Date}}</h6>
                             <h5 class="card-header ml-2 pl-5 pb-2">
@@ -59,7 +83,10 @@
 
 
     <div class="text-right">
-        <button type="button" class="btn btn-lg btn-info " [disabled]="checkNextButton" (click)="save()">NEXT（Behavior Settings）
+        <button type="button"
+                class="btn btn-lg btn-info "
+                [disabled]="checkNextButton"
+                (click)="save()">NEXT（Behavior Settings）
             <i class="material-icons ml-1">chevron_right</i>
         </button>
     </div>

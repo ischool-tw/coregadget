@@ -59,7 +59,7 @@ export class StudentPickComponent implements OnInit {
 
       // 可點節次。
       this.periodConf = this.config.getPeriod(period);
-      this.periodConf.Absence = [].concat(this.periodConf.Absence) || [];
+      this.periodConf.Absence = [].concat(this.periodConf.Absence || []);
 
       let abs = this.config.getAbsences();
       for (let ab of this.periodConf.Absence) {
@@ -113,12 +113,13 @@ export class StudentPickComponent implements OnInit {
   changeAttendance(stu: StudentCheck) {
 
     if (!this.selectedAbsence) {
-      this.alert.snack('請選擇假別！');
+      this.alert.snack('Type of leave required.');
       return;
     }
 
     if (!stu.acceptChange()) {
-      this.alert.snack('此學生無法調整缺曠。');
+      this.alert.snack('This student has been pre-approved and cannot be modified.');
+      // this.alert.snack('此學生無法調整缺曠。');
       return;
     }
 
@@ -167,7 +168,8 @@ export class StudentPickComponent implements OnInit {
   }
 
   getAttendanceText(stu: StudentCheck) {
-    let value = stu.status ? stu.status.AbsenceType : 'Check';
+    let value = stu.status ? stu.status.AbsenceType : 'Present';
+    // let value = stu.status ? stu.status.AbsenceType : 'Check';
     for (let xx of this.periodConf.Absence)
     {
       if (xx.Name === value)
@@ -206,7 +208,7 @@ export class StudentPickComponent implements OnInit {
   private getSelectedAttendance(stu: Student) {
     if (!stu.Attendance) return;
     const period = this.periodConf.Name;
-    const dateAtts = [].concat(stu.Attendance.Period) as PeriodStatus[];
+    const dateAtts = [].concat(stu.Attendance.Period || []) as PeriodStatus[];
     return dateAtts.find(v => v['@text'] === period);
   }
 
@@ -218,7 +220,7 @@ export class StudentPickComponent implements OnInit {
       items.push(check.getCheckData());
     }
 
-    const dialog = this.alert.waiting("儲存中...");
+    const dialog = this.alert.waiting("Saving...");
 
     try {
       await this.dsa.setRollCall(this.groupInfo.type, this.groupInfo.id, this.periodConf.Name, items);

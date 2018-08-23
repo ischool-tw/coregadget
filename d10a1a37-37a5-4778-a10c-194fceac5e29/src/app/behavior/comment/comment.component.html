@@ -1,28 +1,41 @@
- <!-- Comment Template -->
- <div id="behavior-comment" >
-  <nav aria-label="breadcrumb text-nowrap text-truncate">
-      <ol class="breadcrumb">
-          <li class="breadcrumb-item"[routerLink]="['../main']"> Home ></li>
-          <li class="breadcrumb-item" [routerLink]="['../main']"> Behavior ></li>
-          <li class="breadcrumb-item active" aria-current="page">Comment Template</li>
-      </ol>
-  </nav>
-  <div class="input-group mb-3">
-      <!-- 點到此頁，請預設此 input 是 focus 狀態 -->
-      <input type="text" class="form-control" placeholder="Add Template" [(ngModel)]="addText">
-      <div class="input-group-append">
-          <button class="btn btn-outline-primary" type="button" (click)="add()">ADD</button>
-      </div>
-  </div>
-  <h3 class="my-3">Your Template</h3>
-  <div class="t-list d-md-flex justify-content-between flex-wrap">
-      <div class="alert alert-danger alert-dismissible fade show" *ngFor="let comment of userDefineTemplate">
+<!-- Comment Template -->
+<div id="behavior-comment">
+    <nav aria-label="breadcrumb text-nowrap text-truncate">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <span class="point"
+                      [routerLink]="['/']">Home</span></li>
+            <li class="breadcrumb-item">
+                <span class="point"
+                      [routerLink]="['/behavior']">Behavior</span></li>
+            <li class="breadcrumb-item active"
+                aria-current="page">Comment Template</li>
+        </ol>
+    </nav>
+    <div class="input-group mb-3">
+        <!-- 點到此頁，請預設此 input 是 focus 狀態 -->
+        <input type="text"
+               class="form-control"
+               placeholder="Add Template"
+               [(ngModel)]="addText">
+        <div class="input-group-append">
+            <button class="btn btn-outline-primary"
+                    type="button"
+                    (click)="add()">ADD</button>
+        </div>
+    </div>
+    <h3 class="my-3">Your Template</h3>
+    <div class="t-list d-md-flex justify-content-between flex-wrap">
+        <div class="alert alert-danger alert-dismissible fade show"
+             *ngFor="let comment of userDefineTemplate">
             {{comment.Comment}}
-          <button type="button" class="close" (click)="delete(comment)">
-          <span aria-hidden="true" >&times;</span>
-          </button>
-      </div>
-      <!-- <div class="alert alert-danger alert-dismissible fade show">
+            <button type="button"
+                    class="close"
+                    (click)="delete(comment)">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <!-- <div class="alert alert-danger alert-dismissible fade show">
           Careless and absent - minded in homework
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -34,13 +47,14 @@
           <span aria-hidden="true">&times;</span>
           </button>
       </div> -->
-  </div>
-  <h3 class="my-3">Default Template</h3>
-  <div class="t-list d-md-flex justify-content-between flex-wrap">
-      <div class="alert alert-light" *ngFor="let comment of defaultTemplate">
-          {{comment.Comment}}
-      </div>
-      <!-- <div class="alert alert-light">
+    </div>
+    <h3 class="my-3">Default Template</h3>
+    <div class="t-list d-md-flex justify-content-between flex-wrap">
+        <div class="alert alert-light"
+             *ngFor="let comment of defaultTemplate">
+            {{comment.Comment}}
+        </div>
+        <!-- <div class="alert alert-light">
           Sleeping
       </div>
       <div class="alert alert-light">
@@ -64,5 +78,5 @@
       <div class="alert alert-light">
           Incomplete homework or class assignment
       </div> -->
-  </div>
+    </div>
 </div>

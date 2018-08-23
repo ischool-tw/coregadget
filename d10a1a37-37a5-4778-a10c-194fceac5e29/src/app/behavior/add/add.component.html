@@ -1,49 +1,78 @@
 <!-- 新增 -->
-<div id="behavior-add" >
-  <nav aria-label="breadcrumb text-nowrap text-truncate">
-      <ol class="breadcrumb">
-          <li class="breadcrumb-item" [routerLink]="['../../../main']">Home</li>
-          <li class="breadcrumb-item" [routerLink]="['../../../main']">Behavior</li>
-          <li class="breadcrumb-item active" aria-current="page">{{courseName}}</li>
-          <button class="ml-auto btn btn-dark" [routerLink]="['../../../comment']">Comment Template</button>
-      </ol>
-  </nav>
-  <div class="row">
-      <div class="col-md-4 col-lg-3">
-          <div class="form-group row">
-              <label for="dateLabel" class="col-2 col-form-label">Date</label>
-              <div class="col-10">
-                  <input type="date" class="form-control" id="dateLabel" #currentDate [(ngModel)]="currentDateString" (change)="currentDateChange(currentDate.value)" >
-              </div>
-          </div>
-      </div>
-      <div class="input-group mb-3 col-md-8 col-lg-6">
-          <div class="input-group-prepend">
-              <button class="btn btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >SELECT COMMENT</button>
-              <div class="dropdown-menu"  >
-                  <a class="dropdown-item" href="javascript:;" *ngFor="let data of commentTemplateList" (click)="selectItem(data)">{{data.Comment}}</a>                 
-              </div>
-          </div>
-          <input type="text" class="form-control" aria-label="Text input with dropdown button" placeholder="Comment…" [(ngModel)]="addText" (change)="commentChange()">
-      </div>
-      <div class="col-md-12 col-lg-3">
-          <button class="ml-auto btn btn-info btn-block" disabled={{checkButtonEnable}} [routerLink]="['../list']" (click)="save()" >SAVE （Checked : {{checkCount}}）</button>
-      </div>
-  </div>
-  <div class="st-list d-flex flex-wrap mt-3 mt-lg-1">
-      <div class="card st-check" *ngFor = "let data of studentDataList; let i = index">
-          <input type="checkbox" id="stCheck{{data.ID}}" [(ngModel)]="data.checked" (change)="alert(data)">
-          
-          <label for="stCheck{{data.ID}}">
+<div id="behavior-add">
+    <nav aria-label="breadcrumb text-nowrap text-truncate">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <span class="point"
+                      [routerLink]="['/']">Home</span></li>
+            <li class="breadcrumb-item">
+                <span class="point"
+                      [routerLink]="['/behavior']">Behavior</span></li>
+            <li class="breadcrumb-item active"
+                aria-current="page">{{courseName}}</li>
+            <button class="ml-auto btn btn-dark"
+                    [routerLink]="['/behavior/comment']">Comment Template</button>
+        </ol>
+    </nav>
+    <div class="row">
+        <div class="col-md-4 col-lg-3">
+            <div class="form-group row">
+                <label for="dateLabel"
+                       class="col-2 col-form-label">Date</label>
+                <div class="col-10">
+                    <input type="date"
+                           class="form-control"
+                           id="dateLabel"
+                           #currentDate
+                           [(ngModel)]="currentDateString"
+                           (change)="currentDateChange(currentDate.value)">
+                </div>
+            </div>
+        </div>
+        <div class="input-group mb-3 col-md-8 col-lg-6">
+            <div class="input-group-prepend">
+                <button class="btn btn-outline-primary dropdown-toggle"
+                        type="button"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">SELECT COMMENT</button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item"
+                       href="javascript:;"
+                       *ngFor="let data of commentTemplateList"
+                       (click)="selectItem(data)">{{data.Comment}}</a>
+                </div>
+            </div>
+            <input type="text"
+                   class="form-control"
+                   aria-label="Text input with dropdown button"
+                   placeholder="Comment…"
+                   [(ngModel)]="addText"
+                   (change)="commentChange()">
+        </div>
+        <div class="col-md-12 col-lg-3">
+            <button class="ml-auto btn btn-info btn-block"
+                    disabled={{checkButtonEnable}}
+                    [routerLink]="['../list']"
+                    (click)="save()">SAVE （Checked : {{checkCount}}）</button>
+        </div>
+    </div>
+    <div class="st-list d-flex flex-wrap mt-3 mt-lg-1">
+        <div class="card st-check"
+             *ngFor="let data of studentDataList; let i = index">
+            <input type="checkbox"
+                   id="stCheck{{data.ID}}"
+                   [(ngModel)]="data.checked"
+                   (change)="alert(data)">
+
+            <label for="stCheck{{data.ID}}">
                 <!-- <img src="data:image/png;base64,{{data.StudentPhoto}}"/> -->
-                <img src="{{data.PhotoUrl}}"/>
-              <!-- <img src="assets/img/sample01.png"> -->
-              <div class="card-body py-2 text-truncate">
-                  {{data.Name}}<br>
-                  {{data.StudentNumber}}
-              </div>
-          </label>
-      </div>
-     
-  </div>
+                <img src="{{data.PhotoUrl}}" />
+                <!-- <img src="assets/img/sample01.png"> -->
+                <div class="card-body py-2 text-truncate">
+                    {{data.Name}}<br> {{data.StudentNumber}}
+                </div>
+            </label>
+        </div>
+    </div>
 </div>

@@ -2,8 +2,14 @@
       <div id="weekly-report-add">
           <nav aria-label="breadcrumb text-nowrap text-truncate">
               <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item"><a [routerLink]="['/weekly_report']">Weekly Report</a></li>
+                    <li class="breadcrumb-item">
+                        <span class="point"
+                              [routerLink]="['/']">Home</span>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <span class="point"
+                              [routerLink]="['/weekly_report']">Weekly Report</span>
+                    </li>
                   <li class="breadcrumb-item active" aria-current="page">{{courseName}}</li>
               </ol>
           </nav>

@@ -4,8 +4,12 @@
   <nav aria-label="breadcrumb text-nowrap text-truncate">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
-        <a href="#"
-           [routerLink]="['../../../..']">Attendance（{{today}}）</a>
+        <span class="point"
+              [routerLink]="['/']">Home</span>
+      </li>
+      <li class="breadcrumb-item">
+        <span class="point"
+              [routerLink]="['/attendance']">Attendance</span>
       </li>
       <ng-container *ngIf="!studentChecks; else titleText">
         <li class="breadcrumb-item active"
@@ -13,16 +17,18 @@
       </ng-container>
       <ng-template #titleText>
         <li class="breadcrumb-item active"
-            aria-current="page">{{groupInfo.name}}&nbsp;&nbsp;(Period：{{periodConf?.english_name}})</li>
+            aria-current="page">{{groupInfo.name}}&nbsp;&nbsp;({{today}}：{{periodConf?.english_name}})</li>
       </ng-template>
     </ol>
   </nav>
 
-  <ng-container *ngIf="!studentChecks; else elseTemplate">
-    <div>loading...</div>
+  <ng-container *ngIf="!studentChecks; else elseTemplate">    
+      <div style="position:absolute;top:30%;left: 0px;right: 0px;text-align: center;">
+          loading...
+      </div>
   </ng-container>
   <ng-template #elseTemplate>
-    <div class="d-flex flex-column-reverse flex-sm-row">
+    <div class="d-flex flex-column-reverse flex-sm-row mb-3">
       <div class="btn-group dropdown mr-auto">
         <button [matMenuTriggerFor]="menu"
                 type="button"
@@ -31,7 +37,7 @@
                 aria-haspopup="true"
                 aria-expanded="false">
           <span *ngIf="!selectedAbsence">Type of leave</span>
-          <span *ngIf="selectedAbsence">Leave：{{selectedAbsence_eng}}</span>
+          <span *ngIf="selectedAbsence">{{selectedAbsence_eng}}</span>
         </button>
         <mat-menu #menu="matMenu">
           <div *ngIf="!periodConf">loading...</div>
@@ -40,29 +46,29 @@
                   (click)="selectedAbsenceItem(abb)">{{abb?.english_name}}</button>
         </mat-menu>
       </div>
-      <ng-container [ngTemplateOutlet]="reload"></ng-container>
+      <!-- <ng-container [ngTemplateOutlet]="reload"></ng-container> -->
       <ng-container [ngTemplateOutlet]="save"></ng-container>
     </div>
 
-    <div class="row st-list mt-3">
+    <div class="st-list d-flex flex-wrap mt-3 mt-lg-1">
       <div *ngFor="let student of studentChecks"
            (click)="changeAttendance(student)"
-           class="col-sm-4 col-md-3 mb-3">
-        <div class="card p-3">
-          <img src="{{student.data.PhotoUrl}}" />
-          <div [ngStyle]="getAttendanceStyle(student)"
-               class="ad-status text-truncate">{{getAttendanceText(student)}}</div>
-          <!-- <div class="ad-status text-truncate">{{student.ID}}</div> -->
+           class="card st-check">
+        <img src="{{student.data.PhotoUrl}}" />
+        <div [ngStyle]="getAttendanceStyle(student)"
+             class="ad-status text-truncate">{{getAttendanceText(student)}}</div>
+        <!-- <div class="ad-status text-truncate">{{student.ID}}</div> -->
+        <div class="card-body py-2 text-truncate">
           <h5 class="mb-0 text-truncate">{{student.data?.Name}}</h5>
           <div class="text-gray text-truncate d-flex">{{student.data?.StudentNumber}}
             <span class="ml-auto">{{student.data?.ClassName}}&nbsp;&nbsp;{{student.data?.SeatNo}}</span>
           </div>
         </div>
       </div>
-
     </div>
+
     <div class="text-right">
-      <ng-container [ngTemplateOutlet]="reload"></ng-container>
+      <!-- <ng-container [ngTemplateOutlet]="reload"></ng-container> -->
       <ng-container [ngTemplateOutlet]="save"></ng-container>
     </div>
   </ng-template>
@@ -70,7 +76,7 @@
   <ng-template #save>
     <button (click)="saveRollCall()"
             type="button"
-            class="btn btn-lg btn-info">{{checkSummary? 'Save (' + checkSummary +')': 'Save'}}</button>
+            class="btn btn-lg btn-info">{{checkSummary? 'Submit (' + checkSummary +')': 'Submit'}}</button>
   </ng-template>
 
   <ng-template #reload>

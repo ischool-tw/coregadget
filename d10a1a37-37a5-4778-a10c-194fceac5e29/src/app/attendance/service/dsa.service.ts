@@ -44,8 +44,8 @@ export class DSAService {
 
     // 取得對照
     let itemMap = await this.getAbsencePeriod();
-    // rsp.Config.Absences = [].concat(rsp.Config.Absences) || [];
-    // rsp.Config.Periods = [].concat(rsp.Config.Periods) || [];
+    // rsp.Config.Absences = [].concat(rsp.Config.Absences || []);
+    // rsp.Config.Periods = [].concat(rsp.Config.Periods || []);
 
     // 比對缺曠
     if (rsp.Config.Absences.Absence) {
