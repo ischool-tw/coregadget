@@ -15,8 +15,11 @@ export class ConfigService {
   public async initConfig() {
     try {
       this._config = await this.recall.getGetConfig();
+
+
+      
       return true;
-    } catch(error) {
+    } catch (error) {
       return false;
     }
   }
@@ -81,6 +84,9 @@ export interface AbsenceConf {
 
   /** 顏色代碼。 */
   Color: string;
+
+  english_abbr: string;
+  english_name: string;
 }
 
 /** 節次設定。 */
@@ -94,5 +100,7 @@ export interface PeriodConf {
   /** 集會、一般... */
   Type: string;
 
+  english_name: string;
+  english_type: string;
   Absence: AbsenceConf[];
 }

@@ -10,7 +10,7 @@ import { AppComponent } from './attendance.component';
 import { DebugComponent } from './modal/debug.component';
 import { WaitingComponent } from './modal/waiting.component';
 import { MainComponent } from './attendance/main.component';
-import { StudentComponent } from './attendance/student.component';
+import { StudentPickComponent } from './attendance/student-pick.component';
 import { PeriodChooserComponent } from './modal/period-chooser.component';
 
 @NgModule({
@@ -24,7 +24,7 @@ import { PeriodChooserComponent } from './modal/period-chooser.component';
   declarations: [
     AppComponent,
     MainComponent,
-    StudentComponent,
+    StudentPickComponent,
     DebugComponent,
     WaitingComponent,
     PeriodChooserComponent,

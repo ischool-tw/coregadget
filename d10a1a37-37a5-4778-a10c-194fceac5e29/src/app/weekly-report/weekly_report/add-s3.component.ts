@@ -9,7 +9,7 @@ import { Utils } from 'src/app/util';
 @Component({
   selector: 'app-add-s3',
   templateUrl: './add-s3.component.html',
-  styles: []
+  styleUrls: ['../common.css']
 })
 export class AddS3Component implements OnInit {
   head: string;

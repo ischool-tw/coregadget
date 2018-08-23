@@ -81,7 +81,6 @@ export class AppComponent implements OnInit {
         alertMsg = "IEP學生評量標準尚未填報完成\n請於成績輸入截止前至\"IEP--教師IEP填報\"功能填報" + alertMsg;
         if (window.parent) {
           window.parent.alert(alertMsg);
-          gadget.activeGadget();
         }
         else
           window.alert(alertMsg);

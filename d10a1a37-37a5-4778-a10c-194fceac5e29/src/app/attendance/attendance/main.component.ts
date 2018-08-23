@@ -39,6 +39,19 @@ export class MainComponent implements OnInit {
       this.courses = await this.dsa.getCCItems();
 
       this.suggests = await this.dsa.getSuggestRollCall(this.dsa.getToday());
+      let Periods = this.config.getPeriods();
+    for(const su of this.suggests)
+    {
+      for(const pr of Periods)
+      {
+          if(su.Period === pr.Name)
+          {
+            su.english_period = pr.english_name;
+          }
+      } 
+    }   
+      
+
 
     } catch (error) {
       this.alert.json(error);
@@ -61,7 +74,7 @@ export class MainComponent implements OnInit {
     //   .afterClosed()
     //   .toPromise();
 
-    this.router.navigate(['../pick', 'Course', suggest.CourseID, suggest.Period], {
+    this.router.navigate(['/attendance/pick', 'Course', suggest.CourseID, suggest.Period], {
       queryParams: { DisplayName: suggest.CourseName }
     });
   }

@@ -9,7 +9,7 @@ import { Utils } from 'src/app/util';
 @Component({
   selector: 'app-add-s2',
   templateUrl: './add-s2.component.html',
-  styles: []
+  styleUrls: ['../common.css']
 })
 export class AddS2Component implements OnInit {
   head: string;

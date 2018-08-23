@@ -10,7 +10,7 @@ import { Utils } from 'src/app/util';
 @Component({
   selector: 'app-add-s1',
   templateUrl: './add-s1.component.html',
-  styles: []
+  styleUrls: ['../common.css']
 })
 export class AddS1Component implements OnInit {
 

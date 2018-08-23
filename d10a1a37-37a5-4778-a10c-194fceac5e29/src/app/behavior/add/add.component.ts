@@ -8,7 +8,7 @@ import { BehaviorDataService } from '../behavior-data.service';
 @Component({
   selector: 'app-add',
   templateUrl: './add.component.html',
-  styles: []
+  styleUrls: ['../common.css']
 })
 export class AddComponent implements OnInit {
   head: string;
