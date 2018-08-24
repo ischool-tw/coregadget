@@ -17,7 +17,9 @@ export class AddS3Component implements OnInit {
   loading: boolean;
   error: any;
 
-  checkButtonEnable: boolean = true;
+  checkSaveButtonDisable: boolean = true;
+  checkSendButtonDisable:boolean = true;
+
   studentWeeklyDataS3List: any;
   weeklyReportS3: WeeklyReportEntry;
   beginDate: string = "";
@@ -40,7 +42,8 @@ export class AddS3Component implements OnInit {
   }
 
   async getData() {
-    this.checkButtonEnable = false;
+    this.checkSaveButtonDisable = false;
+    this.checkSendButtonDisable = false;
     this.weeklyReportS3 = this.weeklyData.addWeeklyReportEntry;
     this.studentWeeklyDataS3List = this.weeklyData.studentWeeklyDataList;
     this.beginDate = moment(this.weeklyReportS3.BeginDate, "YYYY-MM-DD").format("YYYY/MM/DD");
@@ -68,9 +71,14 @@ export class AddS3Component implements OnInit {
 
   }
 
+async send(){
+  this.checkSendButtonDisable = true;
+
+}
+
   async save() {
     // console.log(this.studentWeeklyDataS3List);
-    this.checkButtonEnable = true;
+    this.checkSaveButtonDisable = true;
     // 回寫暫存
     this.weeklyData.studentWeeklyDataList = this.studentWeeklyDataS3List;
 

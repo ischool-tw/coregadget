@@ -20,7 +20,7 @@ export class AddS1Component implements OnInit {
   error: any;
   displayGradebook: boolean = false;
   //checkNextButton: string = "disabled";
-  checkNextButton:boolean = true;
+  checkNextButton: boolean = true;
   modeString: string = "Add";
   weeklyDataMain: WeeklyReportEntry;
 
@@ -81,6 +81,26 @@ export class AddS1Component implements OnInit {
         }
       }
 
+      // 處理編輯狀態下已勾選
+      if (this.weeklyData.selectWeeklyReportUID !== '') {
+        // 先設成全部不勾
+        for (const dd of this.canSelectGradeBookList) {
+          dd.checked = false;
+        }
+
+        // 比對成績有資料項勾
+        for (const dd of this.canSelectGradeBookList) {
+          for (const wd of this.weeklyData.selectWeeklyData) {
+            for(const item of wd.GradeBookDataList){
+              if (dd.Assessment === item.Assessment && dd.CustomAssessment === item.CustomAssessment && dd.Subject === item.Subject && dd.Term === item.Term) {
+                dd.checked = true;
+                break;
+            }            
+            }
+          }
+        }
+      }
+
       if (this.gradeBookList.length > 0) {
         this.displayGradebook = true;
       }
@@ -119,7 +139,7 @@ export class AddS1Component implements OnInit {
   }
 
   async setNetButtonEnable(v: boolean) {
-   this.checkNextButton = !v;
+    this.checkNextButton = !v;
     // if (v === true) {
     //   this.checkNextButton = "";
     // } else {
@@ -201,6 +221,22 @@ export class AddS1Component implements OnInit {
       })
       this.weeklyData.addBehavoirList = Utils.array(rsp3, "Response/BehaviorData");
 
+      // 當編輯模式，取得上資料庫存的資料
+      if (this.weeklyData.selectWeeklyReportUID !== '') {
+        const rsp4 = await this.contract.send('weekly.GetWeeklyDataByWeeklyReportUID', {
+          Request: {
+            WeeklyReportUID: this.weeklyData.selectWeeklyReportUID
+          }
+        })
+        this.weeklyData.selectWeeklyData = Utils.array(rsp4, "Response/WeeklyData");
+
+        // 解析資料
+        for (let data of this.weeklyData.selectWeeklyData) {
+          data.BehaviorDataList = [].concat(JSON.parse(data.BehaviorData) || []);
+          data.GradeBookDataList = [].concat(JSON.parse(data.GradeBookData) || []);
+        }
+      }
+
       this.procGradeBookList();
 
     } catch (err) {
@@ -225,7 +261,8 @@ export class AddS1Component implements OnInit {
     this.gradeBookList = this.gradeBookList.filter(v => v.checked === true);
     for (const g1 of this.gradeBookList) {
       for (const sc of this.weeklyData.addGradebookList) {
-        if (sc.CustomAssessment === g1.CustomAssessment && sc.Subject === g1.Subject && sc.term === g1.term) {
+        // 當四層都有
+        if (sc.Assessment === g1.Assessment && sc.CustomAssessment === g1.CustomAssessment && sc.Subject === g1.Subject && sc.term === g1.term) {
           checkedGradeBookList.push(sc);
         }
       }
