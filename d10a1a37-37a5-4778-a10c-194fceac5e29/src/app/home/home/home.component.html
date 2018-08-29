@@ -1,4 +1,5 @@
-<div class="main-menu d-flex flex-wrap justify-content-center">
+<div *ngIf="contract;else Loading"
+     class="main-menu d-flex flex-wrap justify-content-center">
     <div (click)="goGradebook()">
         <img src="assets/img/gradebook.png">
         <div>Gradebook</div>
@@ -16,5 +17,10 @@
         <div>Weekly Report</div>
     </div>
 </div>
+<ng-template #Loading>
+    <div style="position:absolute;top:30%;left: 0px;right: 0px;text-align: center;">
+        loading...
+    </div>
+</ng-template>
 <!-- <button class="ml-auto btn btn-dark m-3" [routerLink]="['/behavior']">Behavior</button>
 <button class="ml-auto btn btn-dark m-3" [routerLink]="['/weekly_report']">Weekly Report</button> -->

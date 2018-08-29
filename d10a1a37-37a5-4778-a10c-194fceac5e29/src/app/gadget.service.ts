@@ -7,6 +7,7 @@ export class GadgetService {
   access_token: string;
   connection: any;
   application: string;
+  authorizationUrl:string;  
 
   constructor(private route: Router, private zone: NgZone) {
 
@@ -52,7 +53,12 @@ export class GadgetService {
       else {
         missingDSNS = true;
       }
+
+      this.authorizationUrl = "https://auth.ischool.com.tw/oauth/authorize.php?client_id=" + clientID + "&response_type=token&redirect_uri=" + redirect_uri + "&application=" + this.application + "&scope=" + this.application + ":kcis&lang=English";
+
       if (vars.token) {
+        var resignUrl = this.authorizationUrl;
+
         this.access_token = vars.token;
         this.connection = dsutil.creatConnection(this.application + "/kcis", {
           "@": ['Type'],
@@ -65,8 +71,8 @@ export class GadgetService {
           //    window.location.assign("https://auth.ischool.com.tw/logout.php?next=" + encodeURIComponent("oauth/authorize.php?client_id=" + clientID + "&response_type=token&redirect_uri=" + redirect_uri + "&scope=" + application + ":kcis"));
 
           //}
-          alert(err.XMLHttpRequest.responseText);
-          window.location.assign("https://auth.ischool.com.tw/logout.php?next=" + encodeURIComponent("oauth/authorize.php?client_id=" + clientID + "&response_type=token&redirect_uri=" + redirect_uri + "&application=" + this.application + "&scope=" + this.application + ":kcis"));
+          alert("Login Failed：\n"+err.XMLHttpRequest.responseText);
+          window.location.assign(resignUrl);
         });
       }
       else {
@@ -85,7 +91,7 @@ export class GadgetService {
     }
     else {
       if (requireSignIn) {
-        window.location.assign("https://auth.ischool.com.tw/oauth/authorize.php?client_id=" + clientID + "&response_type=token&redirect_uri=" + redirect_uri + "&application=" + this.application + "&scope=" + this.application + ":kcis");
+        window.location.assign(this.authorizationUrl);
         return;
       }
     }

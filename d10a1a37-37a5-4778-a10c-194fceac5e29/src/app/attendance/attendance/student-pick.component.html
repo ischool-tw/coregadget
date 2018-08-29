@@ -22,10 +22,10 @@
     </ol>
   </nav>
 
-  <ng-container *ngIf="!studentChecks; else elseTemplate">    
-      <div style="position:absolute;top:30%;left: 0px;right: 0px;text-align: center;">
-          loading...
-      </div>
+  <ng-container *ngIf="!studentChecks; else elseTemplate">
+    <div style="position:absolute;top:30%;left: 0px;right: 0px;text-align: center;">
+      loading...
+    </div>
   </ng-container>
   <ng-template #elseTemplate>
     <div class="d-flex flex-column-reverse flex-sm-row mb-3">
@@ -37,13 +37,13 @@
                 aria-haspopup="true"
                 aria-expanded="false">
           <span *ngIf="!selectedAbsence">Type of leave</span>
-          <span *ngIf="selectedAbsence">{{selectedAbsence_eng}}</span>
+          <span *ngIf="selectedAbsence">{{selectedAbsence_eng || selectedAbsence}}</span>
         </button>
         <mat-menu #menu="matMenu">
           <div *ngIf="!periodConf">loading...</div>
           <button mat-menu-item
                   *ngFor="let abb of periodConf?.Absence"
-                  (click)="selectedAbsenceItem(abb)">{{abb?.english_name}}</button>
+                  (click)="selectedAbsenceItem(abb)">{{abb?.english_name || abb.Name}}</button>
         </mat-menu>
       </div>
       <!-- <ng-container [ngTemplateOutlet]="reload"></ng-container> -->

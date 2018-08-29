@@ -148,15 +148,13 @@ export class StudentPickComponent implements OnInit {
 
     let text: string[] = [];
     for (let k of Array.from(summary)) {
-// text.push(`${k[0]}: ${k[1]}`);
+      // text.push(`${k[0]}: ${k[1]}`);
       // 轉換
       let key = k[0];
       let value = k[1];
 
-      for (let ab of this.periodConf.Absence)
-      {
-        if (ab.Name === key)
-        {
+      for (let ab of this.periodConf.Absence) {
+        if (ab.english_name && ab.Name === key) {
           key = ab.english_name;
         }
       }
@@ -170,10 +168,8 @@ export class StudentPickComponent implements OnInit {
   getAttendanceText(stu: StudentCheck) {
     let value = stu.status ? stu.status.AbsenceType : 'Present';
     // let value = stu.status ? stu.status.AbsenceType : 'Check';
-    for (let xx of this.periodConf.Absence)
-    {
-      if (xx.Name === value)
-      {
+    for (let xx of this.periodConf.Absence) {
+      if (xx.english_name && xx.Name === value) {
         value = xx.english_name;
       }
     }

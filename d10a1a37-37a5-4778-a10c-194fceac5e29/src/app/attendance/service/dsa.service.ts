@@ -31,7 +31,8 @@ export class DSAService {
 
     const rsp = await this.contract.send('attendance.GetCCItems');
 
-    return (rsp && rsp.Items.Item as RollCallRecord[]) || [];
+    // return (rsp && rsp.Items.Item as RollCallRecord[]) || [];
+    return [].concat(rsp && rsp.Items && rsp.Items.Item || []).map(function (item) { return item as RollCallRecord; });
   }
 
   /**
@@ -96,7 +97,8 @@ export class DSAService {
 
     const rsp = await this.contract.send('attendance.GetStudents', req);
 
-    return ((rsp && rsp.Students && rsp.Students.Student) || []) as Student[];
+    // return ((rsp && rsp.Students && rsp.Students.Student) || []) as Student[];
+    return ((rsp && rsp.Students && rsp.Students.Student) || []).map(function (item) { return item as Student; });
   }
 
   // 取得缺曠節次英文對照
@@ -128,7 +130,8 @@ export class DSAService {
       }
     });
 
-    return [].concat((rsp && rsp.list) || []) as SuggestRecord[];
+    // return [].concat((rsp && rsp.list) || []) as SuggestRecord[];
+    return [].concat((rsp && rsp.list) || []).map(function (item) { return item as SuggestRecord; });
   }
 
   /**
