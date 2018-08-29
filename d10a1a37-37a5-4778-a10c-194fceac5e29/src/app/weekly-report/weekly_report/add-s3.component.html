@@ -1,21 +1,36 @@
 <!-- 新增 Step 3.（Preview） -->
 <div id="weekly-report-add-preview">
     <nav aria-label="breadcrumb text-nowrap text-truncate">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <span class="point"
-                      [routerLink]="['/']">Home</span>
-            </li>
-            <li class="breadcrumb-item">
-                <span class="point"
-                      [routerLink]="['/weekly_report']">Weekly Report</span>
-            </li>
-            <li class="breadcrumb-item">{{weeklyReportS3.CourseName}}</li>
-            <!-- <li class="breadcrumb-item" (click) = "behaviorSettings()">Behavior Settings</li> -->
-            <li class="breadcrumb-item">{{modeString}}</li>
-            <li class="breadcrumb-item active"
-                aria-current="page">Preview</li>
+        <div>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <span class="point"
+                          [routerLink]="['/']">Home</span>
+                </li>
+                <li class="breadcrumb-item">
+                    <span class="point"
+                          [routerLink]="['/weekly_report']">Weekly Report</span>
+                </li>
+                <li class="breadcrumb-item">{{weeklyReportS3.CourseName}}</li>
+                <!-- <li class="breadcrumb-item" (click) = "behaviorSettings()">Behavior Settings</li> -->
+                <li class="breadcrumb-item">{{modeString}}</li>
+                <li class="breadcrumb-item active"
+                    aria-current="page">Preview</li>
+           
+                    <span class="text-nowrap  ml-auto">
+            <button type="button"
+                    class="btn btn-lg btn-info"
+                    [disabled]="checkSaveButtonDisable"
+                    (click)="save()">SAVE</button>
+            <label style="width:20px"></label>
+            <button type="button"
+                    class="btn btn-lg btn-info"
+                    [disabled]="checkSendButtonDisable"
+                    (click)="send()">SEND</button>
+        </span>
         </ol>
+        </div>
+
     </nav>
     <div class="row">
         <div class="col-sm-6 col-lg-4"
@@ -42,7 +57,7 @@
                     {{stud.PersonalComment}}
                 </div>
                 <div class="bg-light pt-3 pb-1 px-3 border-top border-bottom"
-                     *ngIf="stud.GradeBookList">
+                     *ngIf="stud.GradeBookList.length > 0">
                     Gradebook
                 </div>
                 <div class="p-3 d-flex"
@@ -72,7 +87,13 @@
     <div class="text-right">
         <button type="button"
                 class="btn btn-lg btn-info"
-                [disabled]="checkButtonEnable"
+                [disabled]="checkSaveButtonDisable"
                 (click)="save()">SAVE</button>
+        <label style="width:20px"></label>
+        <button type="button"
+                class="btn btn-lg btn-info"
+                [disabled]="checkSendButtonDisable"
+                (click)="send()">SEND</button>
     </div>
+
 </div>

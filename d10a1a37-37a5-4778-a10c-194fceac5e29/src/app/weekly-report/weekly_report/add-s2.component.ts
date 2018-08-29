@@ -39,7 +39,30 @@ export class AddS2Component implements OnInit {
     // console.log(this.weeklyReportS2);
     this.studentWeeklyDataS2List = this.weeklyData.studentWeeklyDataList;
 
+    // 當編輯模式取得上次所選
+    if (this.weeklyData.selectWeeklyReportUID !== '') {
+      for (const stud of this.studentWeeklyDataS2List) {
+        let tempStud = this.weeklyData.selectWeeklyData.filter(v => v.ID === stud.ID);
 
+        for(const bb of stud.BehaviorList)
+        {
+          // 先設成 false
+            bb.checked = false;
+            if(tempStud.length > 0)
+            {
+              for(const bd of tempStud[0].BehaviorDataList)
+              {
+                if (bb.UID === bd.UID)
+                {
+                  bb.checked = true;
+                }
+              }
+              stud.PersonalComment = tempStud[0].PersonalComment;
+            }
+         
+        }        
+      }
+    }
   }
 
   async save() {

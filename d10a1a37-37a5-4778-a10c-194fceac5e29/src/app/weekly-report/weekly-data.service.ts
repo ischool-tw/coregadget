@@ -40,4 +40,7 @@ public teacherName:string = "Miranda";
 
   // 在編輯過程中存的uid
   public selectWeeklyReportUID = "";
+
+  // 在編輯過程用到上次資料庫取得資料
+  public selectWeeklyData:any;
 }
