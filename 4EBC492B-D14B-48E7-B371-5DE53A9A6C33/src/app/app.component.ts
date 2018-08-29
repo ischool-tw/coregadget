@@ -73,7 +73,7 @@ export class AppComponent implements OnInit {
           });
         });
         if (missingAlert)
-          alertMsg = alertMsg + "\n\t" + (examRec.Name + "：" + missingAlert)+" 人次";
+          alertMsg = alertMsg + "\n\t" + (examRec.Name + "：" + missingAlert) + " 人次";
       });
       //選一個
       this.setCurrentExam(currentExam || this.examList[0]);
@@ -81,6 +81,7 @@ export class AppComponent implements OnInit {
         alertMsg = "IEP學生評量標準尚未填報完成\n請於成績輸入截止前至\"IEP--教師IEP填報\"功能填報" + alertMsg;
         if (window.parent) {
           window.parent.alert(alertMsg);
+          gadget.activeGadget();
         }
         else
           window.alert(alertMsg);
@@ -156,7 +157,7 @@ export class AppComponent implements OnInit {
         , Value: valList
         , Verify: () => {
           var pass = true;
-          valList.forEach((val) => { pass = pass && (!!val); });
+          valList.forEach((val, index) => { pass = pass && (!!val || index == valList.length - 1); });
           return pass;
         }
       };
@@ -187,7 +188,7 @@ export class AppComponent implements OnInit {
           return;
         }
 
-        if(courseRec.IEPValue.length==0){
+        if (courseRec.IEPValue.length == 0) {
           this.current.Exam.Progress++;
         }
         courseRec.IEPValue = selectItem.Value;
