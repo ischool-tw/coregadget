@@ -5,12 +5,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="js/xmlWriter.js"></script>
+    <!--<script src="js/xmlWriter.js"></script>
     <script src="js/parseXml.js"></script>
     <script src="js/xml2json.js"></script>
     <script src="js/dsutil.js"></script>
-    <script src="js/dsnsLookup.js"></script>
-    <!--<script src="js/gadget.js"></script>
+    <script src="js/dsnsLookup.js"></script>-->
+
+    <script src="js/gadget.js"></script>
     <script>
         init({
             //application: "1admin_debug5",
@@ -30,7 +31,7 @@
                 password: window.prompt('password:')
             }
         });
-    </script>-->
+    </script>
 
     <title>Gradebook</title>
     <link href="css/bootstrap.min.css" rel="stylesheet" />
@@ -78,9 +79,9 @@
 
 
 <body ng-controller="MainCtrl">
-    <div ng-if="!(courseList && studentList)"
+    <div ng-if="!(courseList && studentList) && !haveNoCourse"
          style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
-    <div ng-if="haveNoCourse" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Have no course.</div>
+    <div ng-if="haveNoCourse" style="position:absolute;top:50%;left:50%;margin-top:-40px;margin-left:-50px;">Have no course.</div>
     <div id="gadget" class="my-page" ng-if="true">
         <h1 class="hidden-xs">
             <a href="javascript:void(0)"
@@ -416,7 +417,7 @@
                 <a style="position:absolute;z-index:1;"
                    ng-click="copyView()"
                    class="btn btn-xs btn-link">
-                    <span class="text-muted">Copy</span>
+                    <span class="text-muted">Download</span>
                 </a>
                 <!--檢視table-->
                 <table class="table table-bordered table-striped table-hover text-center"
@@ -481,16 +482,21 @@
                        id="viewTable">
                     <thead>
                         <tr>
-                            <!--<th rowspan="2">ClassName</th>-->
-                            <!--<th rowspan="2">SeatNo</th>-->
-                            <th rowspan="2">StudentNumber</th>
-                            <!--<th rowspan="2">Name</th>-->
-                            <th rowspan="2">Name</th>
+                            <th>ClassName</th>
+                            <th>SeatNo</th>
+                            <th>StudentNumber</th>
+                            <th>ChineseName</th>
+                            <th>EnglishName</th>
                             <th ng-repeat="assessmentRec in AssessmentItem">
                                 {{assessmentRec.Name}}
                             </th>
                         </tr>
                         <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                             <th ng-repeat="assessmentRec in AssessmentItem">
                                 <small ng-if="assessmentRec.Percentage">{{assessmentRec.Percentage}}%</small>
                                 <small ng-if="assessmentRec.Percentage==0">--</small>
@@ -499,11 +505,11 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="stuRec in studentList">
-                            <!--<td>{{stuRec.ClassName}}</td>-->
-                            <!--<td>{{stuRec.SeatNo}}</td>-->
-                            <td>{{stuRec.StudentNumber}}</td>
-                            <!--<td>{{stuRec.Name}}</td>-->
-                            <td>{{stuRec.EnglishName}}</td>
+                            <td style="mso-number-format:\@;">{{stuRec.ClassName}}</td>
+                            <td style="mso-number-format:\@;">{{stuRec.SeatNo}}</td>
+                            <td style="mso-number-format:\@;">{{stuRec.StudentNumber}}</td>
+                            <td style="--mso-number-format:\@;">{{stuRec.Name}}</td>
+                            <td style="--mso-number-format:\@;">{{stuRec.EnglishName}}</td>
                             <td ng-repeat="assessmentRec in AssessmentItem">
                                 <span>
                                     {{stuRec['Val_'+assessmentRec.Key]}}

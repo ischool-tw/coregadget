@@ -525,6 +525,51 @@
             }
 
             $scope.copyView = function () {
+                //http://www.devxperts.net/export-html-table-excel-css/ 這裡抄來的
+
+                var table = "viewTable";
+
+                var uri = 'data:application/vnd.ms-excel;base64,'
+                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+                    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+                    , ifIE = function () {
+                        var isIE11 = navigator.userAgent.indexOf(".NET CLR") > -1;
+                        var isIE11orLess = isIE11 || navigator.appVersion.indexOf("MSIE") != -1;
+                        return isIE11orLess;
+                    }
+
+                if (!table.nodeType) table = document.getElementById(table)
+                var ctx = {
+                    worksheet: 'Gradebook'
+                    , table: table.innerHTML
+                }
+
+                var blob = new Blob([format(template, ctx)]);
+                var blobURL = window.URL.createObjectURL(blob);
+
+                if (ifIE()) {
+                    csvData = table.innerHTML;
+                    if (window.navigator.msSaveBlob) {
+                        var blob = new Blob([format(template, ctx)], {
+                            type: "text/html"
+                        });
+                        navigator.msSaveBlob(blob, '' + name + '.xls');
+                    }
+                }
+                else
+                    window.location.href = uri + base64(format(template, ctx))
+
+
+                return;
+
+
+                var html = '<meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8" /><title>Excel</title>';
+                html += '';
+                html += $("#viewTable").html();
+                window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+
+                return;
                 $("#viewTable").show();
                 var range = document.createRange();
                 var sel = window.getSelection();
@@ -865,7 +910,7 @@
                 $scope.current.ConfigCustomAssessmentItem.AddItem = function () {
                     $scope.current.ConfigCustomAssessmentItem.push({
                         Name: ""
-                        , Date: "" + (new Date().getFullYear()) + "/" + (new Date().getMonth()) + "/" + (new Date().getDate())
+                        , Date: "" + (new Date().getFullYear()) + "/" + (new Date().getMonth() + 1) + "/" + (new Date().getDate())
                         , Weight: "100"
                         , Limit: "100"
                         , Description: ""
