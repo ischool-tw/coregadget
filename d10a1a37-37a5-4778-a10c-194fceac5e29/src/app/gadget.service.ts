@@ -4,10 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Injectable()
 export class GadgetService {
 
-  access_token: string;
   connection: any;
   application: string;
-  authorizationUrl:string;  
+  authorizationUrl: string;
 
   constructor(private route: Router, private zone: NgZone) {
 
@@ -54,24 +53,21 @@ export class GadgetService {
         missingDSNS = true;
       }
 
-      this.authorizationUrl = "https://auth.ischool.com.tw/oauth/authorize.php?client_id=" + clientID + "&response_type=token&redirect_uri=" + redirect_uri + "&application=" + this.application + "&scope=" + this.application + ":kcis&lang=English";
-
-      if (vars.token) {
+      this.authorizationUrl =
+        "https://auth.ischool.com.tw/logout.php?next=" + encodeURIComponent(
+          "/oauth/authorize.php?lang=English"
+          + "&client_id=" + clientID
+          + "&response_type=token&redirect_uri=" + redirect_uri
+          + "&application=" + this.application
+          + "&scope=" + this.application + ":kcis"
+        );
+      if (vars.sessionID) {
         var resignUrl = this.authorizationUrl;
 
-        this.access_token = vars.token;
-        this.connection = dsutil.creatConnection(this.application + "/kcis", {
-          "@": ['Type'],
-          Type: 'PassportAccessToken',
-          AccessToken: this.access_token
-        });
+        this.connection = dsutil.creatConnection(this.application + "/kcis", vars.sessionID);
         this.connection.OnLoginError(function (err) {
-          //if (err.XMLHttpRequest.responseText.indexOf("User doesn't exist") > 0) {
-          //    alert(err.XMLHttpRequest.responseText);
-          //    window.location.assign("https://auth.ischool.com.tw/logout.php?next=" + encodeURIComponent("oauth/authorize.php?client_id=" + clientID + "&response_type=token&redirect_uri=" + redirect_uri + "&scope=" + application + ":kcis"));
-
-          //}
-          alert("Login Failed：\n"+err.XMLHttpRequest.responseText);
+          if (err.message != "SessionID doesn't exist.")
+            alert("Login Failed：\n" + err.XMLHttpRequest.responseText);
           window.location.assign(resignUrl);
         });
       }

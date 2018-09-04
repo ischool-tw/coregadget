@@ -9,10 +9,12 @@ export class AppComponent {
   title = 'app';
   logoutUrl: string;
   constructor(private gadget: GadgetService) {
-    this.logoutUrl = "https://auth.ischool.com.tw/logout.php?next=" + encodeURIComponent(gadget.authorizationUrl);
+    this.logoutUrl = gadget.authorizationUrl;
   }
-  logout() {
+  async logout() {
     window.open('', '_gradebook').close();
+    const contract = await this.gadget.getContract('kcis');
+    const rsp = await contract.send('DS.Base.InvalidateSession',{SessionID: contract.getSessionID});
     window.location.replace(this.logoutUrl);
   }
 }

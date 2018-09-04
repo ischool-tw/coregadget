@@ -31,13 +31,13 @@
                 </div>
                 <div class="col-2 col-md-1 text-nowrap text-center">{{suggest.english_period || suggest.Period}}</div>
                 <div class="col-1 text-center">
-                    <ng-container *ngIf="suggest.Checked">
+                    <ng-container *ngIf="suggest.Checked=='true'">
                         <i class="material-icons"
                            style="color:#33691E">
                             done
                         </i>
                     </ng-container>
-                    <ng-container *ngIf="!suggest.Checked">
+                    <ng-container *ngIf="suggest.Checked!='true'">
                         <i class="material-icons"
                            style="color:#C9C9C9">
                             done

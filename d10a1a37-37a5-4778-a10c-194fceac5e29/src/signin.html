@@ -1,11 +1,19 @@
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
-    <script src="assets/js/xmlWriter.js"></script>
+    <meta charset="utf-8">
+    <title>signin</title>
+</head>
+
+<body>
+    <p style="position: absolute;text-align: center;left:0px;right:0px;top:45%;">loading...</p>
+    <script src="assets/js/gadget.js"></script>
+    <!-- <script src="assets/js/xmlWriter.js"></script>
     <script src="assets/js/parseXml.js"></script>
-    <script src="assets/js/xml2json.js"></script>
+    <script src="assets/js/xml2json.js"></script> -->
     <script src="assets/js/dsutil.js"></script>
-    <script src="assets/js/dsnsLookup.js"></script>
+    <!-- <script src="assets/js/dsnsLookup.js"></script> -->
     <script>
         var vars = {};
         var hashes = window.location.hash.replace(/\#/, "").split('&');
@@ -20,14 +28,21 @@
             var key = search.substring(0, search.indexOf("="));
             vars[key] = search.substring(search.indexOf("=") + 1);
         }
-        // alert(vars["source"] + "?token=" + vars["access_token"] + "#" + vars["route"]);
-        // alert(vars["source"] + "?dsns=" + vars["dsns"] + "&token=" + vars["access_token"] + "#" + vars["route"]);
-        window.location.assign(vars["source"] + "?dsns=" + vars["dsns"] + "&token=" + vars["access_token"] + "#" + vars["route"]);
-    </script>
-</head>
 
-<body>
-    <p style="position: absolute;text-align: center;left:0px;right:0px;top:45%;">loading...</p>
+        var connection = dsutil.creatConnection(vars["dsns"] + "/kcis", {
+            "@": ['Type'],
+            Type: 'PassportAccessToken',
+            AccessToken: vars["access_token"]
+        });
+        connection.OnLoginError(function (err) {
+            alert("Login Failed：\n" + err.XMLHttpRequest.responseText);
+        });
+        connection.ready(function () {
+            window.location.assign(vars["source"] + "?dsns=" + vars["dsns"] + "&sessionID=" + connection.getToken().SessionID + "#" + vars["route"]);
+        });
+
+        // window.location.assign(vars["source"] + "?dsns=" + vars["dsns"] + "&token=" + vars["access_token"] + "#" + vars["route"]);
+    </script>
 </body>
 
 </html>
