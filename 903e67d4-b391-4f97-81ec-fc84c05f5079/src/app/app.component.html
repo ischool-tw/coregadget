@@ -117,7 +117,7 @@
           </td>
           <td *ngFor="let period of periods"
               (click)="setStudentPeroidAbs(stu, period)"
-              title="period"
+              title="{{period.name}}"
               class="setBtn"
               style="position:relative">
             <div *ngIf="stu.leaveList.get(period.name)?.absName != stu.orileaveList.get(period.name)?.absName"
