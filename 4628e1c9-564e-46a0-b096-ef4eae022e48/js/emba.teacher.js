@@ -790,32 +790,36 @@ var CreateTeacher = function() {
             //  登分人數
             var statisticsScoredAmount = 0;
             //  A+登分比例
-            var statisticsAPlusScoredRate = 0;
-            //  A+登分比例人數
+            var statisticsAPlusScoredRate = '0%';
+            //  A+評分比例人數
             var statisticsAPlusScoredRateAmount = 0;
             //  A登分比例
-            var statisticsAScoredRate = 0;
-            //  A登分比例人數
+            var statisticsAScoredRate = '0%';
+            //  A評分比例人數
             var statisticsAScoredRateAmount = 0;
             //  A-登分比例
-            var statisticsAMinusScoredRate = 0;
-            //  A-登分比例人數
+            var statisticsAMinusScoredRate = '0%';
+            //  A-評分比例人數
             var statisticsAMinusScoredRateAmount = 0;
             //  B+登分比例
-            var statisticsBPlusScoredRate = 0;
-            //  B+登分比例人數
+            var statisticsBPlusScoredRate = '0%';
+            //  B+評分比例人數
             var statisticsBPlusScoredRateAmount = 0;
             //  B及以下登分比例
-            var statisticsBScoredRate = 0;
-            //  B及以下登分比例人數
+            var statisticsBScoredRate = '0%';
+            //  B及以下評分比例人數
             var statisticsBScoredRateAmount = 0;
+            //  A+及A 加總登分比例(2018/09 by elvira)
+            var statisticsAPlusAndASumScoredRate = '0%';
+            //  A+及A 加總評分比例人數(2018/09 by elvira)
+            var statisticsAPlusAndASumScoredRateAmount = 0;
             //  A加總登分比例
-            var statisticsASumScoredRate = 0;
-            //  A加總登分比例人數
+            var statisticsASumScoredRate = '0%';
+            //  A加總評分比例人數
             var statisticsASumScoredRateAmount = 0;
             //  B加總登分比例
-            var statisticsBSumScoredRate = 0;
-            //  B加總登分比例人數
+            var statisticsBSumScoredRate = '0%';
+            //  B加總評分比例人數
             var statisticsBSumScoredRateAmount = 0;
             //  A+需減少人數
             var statisticsAPlusReduceAmount = 0;
@@ -841,6 +845,8 @@ var CreateTeacher = function() {
             var statisticsBPlusScoredAmount = 0;
             //  B及以下登分人數
             var statisticsBScoredAmount = 0;
+            //  A+與A登分總人數(2018/09 by elvira)
+            var statisticsAPlusAndASumScoredAmount = 0;
             //  A登分總人數
             var statisticsASumScoredAmount = 0;
             //  B登分總人數
@@ -907,37 +913,75 @@ var CreateTeacher = function() {
             // Math.floor() 取小於這個數的最大整數
             // Math.ceil() 取大於這個數的最小整數
 
+            // A+登分比例值
             var statisticsAPlusScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsAPlusScoredAmount * 1000/statisticsAttendAmount)/10);
+            // A登分比例值
             var statisticsAScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsAScoredAmount * 1000/statisticsAttendAmount)/10);
+            // A-登分比例值
             var statisticsAMinusScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsAMinusScoredAmount * 1000/statisticsAttendAmount)/10);
+            // B+登分比例值
             var statisticsBPlusScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsBPlusScoredAmount * 1000/statisticsAttendAmount)/10);
+            // B登分比例值
             var statisticsBScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsBScoredAmount * 1000/statisticsAttendAmount)/10);
+            // A+與A加總登分比例值(2018/09 by elvira)
+            var statisticsAPlusAndASumScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round((statisticsAPlusScoredAmount + statisticsAScoredAmount) * 1000/statisticsAttendAmount)/10);
+            // A加總登分比例值
             var statisticsASumScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round((statisticsAPlusScoredAmount + statisticsAScoredAmount + statisticsAMinusScoredAmount) * 1000/statisticsAttendAmount)/10);
+            // B加總登分比例
             var statisticsBSumScoredRateNumber = ((statisticsAttendAmount === 0) ? 0 : Math.round((statisticsBPlusScoredAmount + statisticsBScoredAmount) * 1000/statisticsAttendAmount)/10);
 
-            statisticsAPlusScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsAPlusScoredAmount * 1000/statisticsAttendAmount)/10) + "%";
-            statisticsAScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsAScoredAmount * 1000/statisticsAttendAmount)/10) + "%";
-            statisticsAMinusScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsAMinusScoredAmount * 1000/statisticsAttendAmount)/10) + "%";
-            statisticsBPlusScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsBPlusScoredAmount * 1000/statisticsAttendAmount)/10) + "%";
-            statisticsBScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round(statisticsBScoredAmount * 1000/statisticsAttendAmount)/10) + "%";
-            statisticsASumScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round((statisticsAPlusScoredAmount + statisticsAScoredAmount + statisticsAMinusScoredAmount) * 1000/statisticsAttendAmount)/10) + "%";
-            statisticsBSumScoredRate = ((statisticsAttendAmount === 0) ? 0 : Math.round((statisticsBPlusScoredAmount + statisticsBScoredAmount) * 1000/statisticsAttendAmount)/10) + "%";
+            statisticsAPlusScoredRate = statisticsAPlusScoredRateNumber + "%";
+            statisticsAScoredRate = statisticsAScoredRateNumber + "%";
+            statisticsAMinusScoredRate = statisticsAMinusScoredRateNumber + "%";
+            statisticsBPlusScoredRate = statisticsBPlusScoredRateNumber + "%";
+            statisticsBScoredRate = statisticsBScoredRateNumber + "%";
+            statisticsAPlusAndASumScoredRate = statisticsAPlusAndASumScoredRateNumber + "%"; // 2018/09 by elvira
+            statisticsASumScoredRate = statisticsASumScoredRateNumber + "%";
+            statisticsBSumScoredRate = statisticsBSumScoredRateNumber + "%";
+
+            // 登分總人數
+            statisticsAPlusAndASumScoredAmount = statisticsAPlusScoredAmount + statisticsAScoredAmount; // 2018/09 by elvira
             statisticsASumScoredAmount = statisticsAPlusScoredAmount + statisticsAScoredAmount + statisticsAMinusScoredAmount;
             statisticsBSumScoredAmount = statisticsBPlusScoredAmount + statisticsBScoredAmount;
 
-            statisticsAPlusScoredRateAmount = Math.floor(statisticsAttendAmount * 0.25);
-            statisticsAScoredRateAmount = Math.floor(statisticsAttendAmount * 0.4);
-            statisticsAMinusScoredRateAmount = Math.floor(statisticsAttendAmount * 0.25);
+            // 評分比例人數 = 修課人數 * 比例
+            statisticsAPlusScoredRateAmount = Math.floor(statisticsAttendAmount * 0.15);
+            // statisticsAScoredRateAmount = Math.floor(statisticsAttendAmount * 0.4);
+            // statisticsAMinusScoredRateAmount = Math.floor(statisticsAttendAmount * 0.25);
             statisticsBPlusScoredRateAmount = Math.ceil(statisticsAttendAmount * 0.1);
             statisticsBScoredRateAmount = Math.ceil(statisticsAttendAmount * 0.05);
-            statisticsASumScoredRateAmount = Math.floor(statisticsAttendAmount * 0.8);
-            statisticsBSumScoredRateAmount = Math.ceil(statisticsAttendAmount * 0.2);
+            statisticsAPlusAndASumScoredRateAmount = Math.floor(statisticsAttendAmount * 0.5);
+            statisticsASumScoredRateAmount = Math.floor(statisticsAttendAmount * 0.65);
+            statisticsBSumScoredRateAmount = Math.ceil(statisticsAttendAmount * 0.35);
 
+            // A+需減少人數
             statisticsAPlusReduceAmount = ((statisticsAPlusScoredAmount - statisticsAPlusScoredRateAmount) > 0) ? (statisticsAPlusScoredAmount - statisticsAPlusScoredRateAmount) : 0;
-            statisticsAReduceAmount = ((statisticsAScoredAmount - statisticsAScoredRateAmount) > 0) ? (statisticsAScoredAmount - statisticsAScoredRateAmount) : 0;
-            statisticsAMinusReduceAmount = ((statisticsAMinusScoredAmount - statisticsAMinusScoredRateAmount) > 0) ? (statisticsAMinusScoredAmount - statisticsAMinusScoredRateAmount) : 0;
+            // A需減少人數 2018/09 by elvira
+            if ((statisticsAPlusAndASumScoredAmount - statisticsAPlusAndASumScoredRateAmount) > 0) {
+                // A登分上限人數 = A+與A評分比例人數 - (A+評分比例人數 或 A+已登分人數，取最小的值)
+                var statisticsAScoredMaxAmount = statisticsAPlusAndASumScoredRateAmount - Math.min(statisticsAPlusScoredRateAmount, statisticsAPlusScoredAmount);
+                statisticsAReduceAmount = ((statisticsAScoredAmount - statisticsAScoredMaxAmount) > 0) ? (statisticsAScoredAmount - statisticsAScoredMaxAmount) : 0;
+            } else {
+                statisticsAReduceAmount = 0;
+            }
+            // A-需減少人數 2018/09 by elvira
+            if ((statisticsASumScoredAmount - statisticsASumScoredRateAmount) > 0) {
+                // A-登分上限人數 = A+至A-評分比例人數 - (A+評分比例人數 或 A+已登分人數，取最小的值) - A已登分人數
+                var statisticsAMinusScoredMaxAmount = statisticsASumScoredRateAmount - Math.min(statisticsAPlusScoredRateAmount, statisticsAPlusScoredAmount) - statisticsAScoredAmount;
+                if (statisticsAMinusScoredMaxAmount > 0) {
+                    statisticsAMinusReduceAmount = ((statisticsAMinusScoredAmount - statisticsAMinusScoredMaxAmount) > 0) ? (statisticsAMinusScoredAmount - statisticsAMinusScoredMaxAmount) : 0;
+                } else {
+                    statisticsAMinusReduceAmount = 0;
+                }
+            } else {
+                statisticsAMinusReduceAmount = 0;
+            }
+            // statisticsAReduceAmount = ((statisticsAScoredAmount - statisticsAScoredRateAmount) > 0) ? (statisticsAScoredAmount - statisticsAScoredRateAmount) : 0;
+            // statisticsAMinusReduceAmount = ((statisticsAMinusScoredAmount - statisticsAMinusScoredRateAmount) > 0) ? (statisticsAMinusScoredAmount - statisticsAMinusScoredRateAmount) : 0;
+            // 需增加人數
             statisticsBPlusAddAmount = ((statisticsBPlusScoredRateAmount - statisticsBPlusScoredAmount) > 0) ? (statisticsBPlusScoredRateAmount - statisticsBPlusScoredAmount) : 0;
             statisticsBAddAmount = ((statisticsBScoredRateAmount - statisticsBScoredAmount) > 0) ? (statisticsBScoredRateAmount - statisticsBScoredAmount) : 0;
+            // 需增加減少總人數
             statisticsASumReduceAmount = ((statisticsASumScoredAmount - statisticsASumScoredRateAmount) > 0) ? (statisticsASumScoredAmount - statisticsASumScoredRateAmount) : 0;
             statisticsBSumAddAmount = ((statisticsBSumScoredRateAmount - statisticsBSumScoredAmount) > 0) ? (statisticsBSumScoredRateAmount - statisticsBSumScoredAmount) : 0;
 
@@ -949,6 +993,7 @@ var CreateTeacher = function() {
                 'AMinusScoredRate': statisticsAMinusScoredRate,
                 'BPlusScoredRate': statisticsBPlusScoredRate,
                 'BScoredRate': statisticsBScoredRate,
+                'APlusAndASumScoredRate': statisticsAPlusAndASumScoredRate, // 2018/09 by elvira
                 'ASumScoredRate': statisticsASumScoredRate,
                 'BSumScoredRate': statisticsBSumScoredRate,
                 'APlusReduceAmount': statisticsAPlusReduceAmount,
@@ -963,6 +1008,7 @@ var CreateTeacher = function() {
                 'AMinusScoredAmount': statisticsAMinusScoredAmount,
                 'BPlusScoredAmount': statisticsBPlusScoredAmount,
                 'BScoredAmount': statisticsBScoredAmount,
+                'APlusAndASumScoredAmount': statisticsAPlusAndASumScoredAmount, // 2018/09 by elvira
                 'ASumScoredAmount': statisticsASumScoredAmount,
                 'BSumScoredAmount': statisticsBSumScoredAmount,
                 'BSumScoredAmount': statisticsBSumScoredAmount,
@@ -971,6 +1017,7 @@ var CreateTeacher = function() {
                 'AMinusScoredRateNumber': statisticsAMinusScoredRateNumber,
                 'BPlusScoredRateNumber': statisticsBPlusScoredRateNumber,
                 'BScoredRateNumber': statisticsBScoredRateNumber,
+                'APlusAndASumScoredRateNumber': statisticsAPlusAndASumScoredRateNumber, // 2018/09 by elvira
                 'ASumScoredRateNumber': statisticsASumScoredRateNumber,
                 'BSumScoredRateNumber': statisticsBSumScoredRateNumber
             }
@@ -1051,26 +1098,26 @@ var CreateEvent = function() {
             $("#statistics-scored-amount").html(statistics.ScoredAmount);
         }
         // A+登分比例：
-        if (statistics.APlusScoredRateNumber > 25) {
+        if (statistics.APlusScoredRateNumber > 15) {
             $("#statistics-a-plus-scored-rate").html("<font color='red'>" + statistics.APlusScoredRate + "</font>");
             pSelectedCourse.Compliant = false;
         } else {
             $("#statistics-a-plus-scored-rate").html(statistics.APlusScoredRate);
         }
-        // A 登分比例：
-        if (statistics.AScoredRateNumber > 40) {
-            pSelectedCourse.Compliant = false;
-            $("#statistics-a-scored-rate").html("<font color='red'>" + statistics.AScoredRate + "</font>");
-        } else {
-            $("#statistics-a-scored-rate").html(statistics.AScoredRate);
-        }
-        // A-登分比例：
-        if (statistics.AMinusScoredRateNumber > 25) {
-            pSelectedCourse.Compliant = false;
-            $("#statistics-a-minus-scored-rate").html("<font color='red'>" + statistics.AMinusScoredRate + "</font>");
-        } else {
-            $("#statistics-a-minus-scored-rate").html(statistics.AMinusScoredRate);
-        }
+        // // A 登分比例：
+        // if (statistics.AScoredRateNumber > 40) {
+        //     pSelectedCourse.Compliant = false;
+        //     $("#statistics-a-scored-rate").html("<font color='red'>" + statistics.AScoredRate + "</font>");
+        // } else {
+        //     $("#statistics-a-scored-rate").html(statistics.AScoredRate);
+        // }
+        // // A-登分比例：
+        // if (statistics.AMinusScoredRateNumber > 25) {
+        //     pSelectedCourse.Compliant = false;
+        //     $("#statistics-a-minus-scored-rate").html("<font color='red'>" + statistics.AMinusScoredRate + "</font>");
+        // } else {
+        //     $("#statistics-a-minus-scored-rate").html(statistics.AMinusScoredRate);
+        // }
         // B+登分比例：
         if (statistics.BPlusScoredRateNumber < 10) {
             pSelectedCourse.Compliant = false;
@@ -1085,15 +1132,22 @@ var CreateEvent = function() {
         } else {
             $("#statistics-b-scored-rate").html(statistics.BScoredRate);
         }
+        // A+與A 的加總登分比例： // 2018/09 by elvira
+        if (statistics.APlusAndASumScoredRateNumber > 50) {
+            pSelectedCourse.Compliant = false;
+            $("#statistics-a-plus-and-a-sum-scored-rate").html("<font color='red'>" + statistics.APlusAndASumScoredRate + "</font>");
+        } else {
+            $("#statistics-a-plus-and-a-sum-scored-rate").html(statistics.APlusAndASumScoredRate);
+        }
         // A 的加總登分比例：
-        if (statistics.ASumScoredRateNumber > 80) {
+        if (statistics.ASumScoredRateNumber > 65) {
             pSelectedCourse.Compliant = false;
             $("#statistics-a-sum-scored-rate").html("<font color='red'>" + statistics.ASumScoredRate + "</font>");
         } else {
             $("#statistics-a-sum-scored-rate").html(statistics.ASumScoredRate);
         }
         // B 的加總登分比例：
-        if (statistics.BSumScoredRateNumber < 20) {
+        if (statistics.BSumScoredRateNumber < 35) {
             pSelectedCourse.Compliant = false;
             $("#statistics-b-sum-scored-rate").html("<font color='red'>" + statistics.BSumScoredRate + "</font>");
         } else {
@@ -1200,6 +1254,7 @@ var CreateEvent = function() {
         },
 
         ComboBox_DataBind: function(vTeacher) {
+            Event.DisableSaveButtion();
             $('#InputSemester').html(ScoreInputSemester.SchoolYear + " 學年度 " + (ScoreInputSemester.Semester === '0' ? '夏季' : '第' + ScoreInputSemester.Semester) + "學期");
             $('#cboTeacherCourses').html("<option value='0'>- 請選擇課程 -</option>");
             var arrTeacher =[];
@@ -1208,8 +1263,8 @@ var CreateEvent = function() {
             }
             $(arrTeacher).sort(function(a, b) {return (a.SerialNo - b.SerialNo);}).each(function(index, item) {
                 $('#cboTeacherCourses').append("<option value='" + item.CourseID + "'>" + item.CourseTitle + "</option>");
+                if (index === 0) $('#cboTeacherCourses').val(item.CourseID).trigger('change');
             });
-            Event.DisableSaveButtion();
         },
 
         ComboBox_SelectedIndexChanged: function(vCourseID) {
@@ -1519,6 +1574,20 @@ $(document).ready(function() {
     Teacher.Subscribe(Event.ShowInternalError, 'show_internal_error');
     //  Data Model 開始取得資料
     Teacher.Init();
+
+    $(window).bind('scroll resize', function(){
+        if ($(window).height() >= (800)) {
+            var $this = $(this);
+            var $this_Top = $this.scrollTop();
+
+            //當高度小於特定高度時，不固定置頂
+            if($this_Top < (137+142)){ $('#statistics-container').stop().animate({top:"0"}).css({"position": "absolute", "margin-left": "initial", "right": 0}); }
+            if($this_Top > (137+142)){ $('#statistics-container').stop().animate({top:"-142px"}).css({"position": "fixed", "margin-left": 630, "right": "initial"}); }
+        } else {
+            $('#statistics-container').css({"position": "absolute", "top": 0, "right": 0});
+        }
+    }).scroll();
+
 
     //  課程之下拉式選單的值改變時
     $("#cboTeacherCourses").on('change', function() {
