@@ -164,6 +164,110 @@
                                                 </table>
                                             </div>
                                         </div>
+                                        <div id="statistics-container" style="position: fixed; top: 137px; margin-left: 630px; background: white;">
+                                            <table id="statistics-summary" cellpadding="0" cellspacing="0" style="border: 1; text-align:center; width:360px;">
+                                                <tr>
+                                                    <td>課程<br />名稱</td>
+                                                    <td id="statistics-course-name" colspan="4">管理會計&nbsp;05</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>修課<br />人數</td>
+                                                    <td id="statistics-attend-amount" colspan="4"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>登分<br />人數</td>
+                                                    <td id="statistics-scored-amount" colspan="4"></td>
+                                                </tr>
+                                            </table>
+                                            <div style="font-weight: bold; height: 30px; padding-top:6px; font-size: 15px;">核心課程評分分佈比例</div>
+                                            <table id="statistics-rate" cellpadding="0" cellspacing="0" style="border: 1; text-align: center; width:360px;">
+                                                <tr>
+                                                    <td>等第</td>
+                                                    <td style="width:50px;">評分<br />比例</td>
+                                                    <td style="width:80px;" colspan="2">加總<br />比例</td>
+                                                    <td style="width:45px;">登分<br />比例</td>
+                                                    <td style="width:80px;" colspan="2">加總登<br />分比例</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>A+</td>
+                                                    <td>≦15%</td>
+                                                    <td rowspan="2">
+                                                        <div>≦50%</div>
+                                                    </td>
+                                                    <td rowspan="3">
+                                                        <div>≦65％</div>
+                                                    </td>
+                                                    <td id="statistics-a-plus-scored-rate"></td>
+                                                    <td id="statistics-a-plus-and-a-sum-scored-rate" rowspan="2"></td>
+                                                    <td id="statistics-a-sum-scored-rate" rowspan="3"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>A</td>
+                                                    <td>--</td>
+                                                    <!-- <td id="statistics-a-scored-rate"></td> -->
+                                                    <td>--</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>A-</td>
+                                                    <td>--</td>
+                                                    <td>--</td>
+                                                    <!-- <td id="statistics-a-minus-scored-rate"></td> -->
+                                                    <td>--</td>
+                                                    <td>--</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>B+</td>
+                                                    <td>≧10%</td>
+                                                    <td rowspan="2" colspan="2">≧35%</td>
+                                                    <td id="statistics-b-plus-scored-rate"></td>
+                                                    <td id="statistics-b-sum-scored-rate" rowspan="2" colspan="2"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>B及以下</td>
+                                                    <td>≧5%</td>
+                                                    <td id="statistics-b-scored-rate"></td>
+                                                </tr>
+                                            </table>
+                                            <div style="font-weight: bold; height: 30px; padding-top:6px; font-size: 15px;">登分人數調整表</div>
+                                            <table id="statistics-reduce" cellpadding="0" cellspacing="0" style="border: 1; text-align: center; width:360px;">
+                                                <tr>
+                                                    <td>等第</td>
+                                                    <td style="width:60px;">登分<br />人數</td>
+                                                    <td style="width:60px;">需調整<br />人數</td>
+                                                    <td style="width:95px;">登分<br />總人數</td>
+                                                    <td style="width:60px;">需調整<br />總人數</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>A+</td>
+                                                    <td id="statistics-a-plus-scored-amount"></td>
+                                                    <td id="statistics-a-plus-reduce-amount"></td>
+                                                    <td id="statistics-a-sum-scored-amount" rowspan="3"></td>
+                                                    <td id="statistics-a-sum-reduce-amount" rowspan="3"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>A</td>
+                                                    <td id="statistics-a-scored-amount"></td>
+                                                    <td id="statistics-a-reduce-amount"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>A-</td>
+                                                    <td id="statistics-a-minus-scored-amount"></td>
+                                                    <td id="statistics-a-minus-reduce-amount"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>B+</td>
+                                                    <td id="statistics-b-plus-scored-amount"></td>
+                                                    <td id="statistics-b-plus-add-amount"></td>
+                                                    <td id="statistics-b-sum-scored-amount" rowspan="2"></td>
+                                                    <td id="statistics-b-sum-add-amount" rowspan="2"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>B及以下</td>
+                                                    <td id="statistics-b-scored-amount"></td>
+                                                    <td id="statistics-b-add-amount"></td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
 
                                     <div class="print-page">
@@ -272,109 +376,6 @@
                                 </div><!-- /.modal-dialog -->
                             </div>
                             <!-- /.modal -->
-                            <!-- #fixed-ad{
-                          background:#FF0066; color:#FFCC99;
-                          border:4px solid #FF9999; padding:5px;
-                          width:80px; height:120px;
-                          position:fixed; top:100px; right:10px;
-                          _position: absolute; /* position fixed for IE6 */
-                          _top:expression(documentElement.scrollTop+100);
-                          z-index:3;		left:645px;
-                        } -->
-                            <div id="statistics-container" style="position: fixed; top: 137px; margin-left: 635px; _top: expression(documentElement.scrollTop+100); z-index: 3; ">
-                                <table id="statistics-summary" border=1 cellpadding=0 cellspacing=0 style="text-align:center; width:360px;">
-                                    <tr>
-                                        <td>課程<br />名稱</td>
-                                        <td id="statistics-course-name" colspan=4>管理會計&nbsp;05</td>
-                                    </tr>
-                                    <tr>
-                                        <td>修課<br />人數</td>
-                                        <td id="statistics-attend-amount" colspan=4></td>
-                                    </tr>
-                                    <tr>
-                                        <td>登分<br />人數</td>
-                                        <td id="statistics-scored-amount" colspan=4></td>
-                                    </tr>
-                                </table>
-                                <div style="font-weight: bold; height: 30px; padding-top:6px; font-size: 15px;">核心課程評分分佈比例</div>
-                                <table id="statistics-rate" border=1 cellpadding=0 cellspacing=0 style="text-align: center; width:360px;">
-                                    <tr>
-                                        <td>等第</td>
-                                        <td style="width:60px;">評分<br />比例</td>
-                                        <td style="width:60px;">登分<br />比例</td>
-                                        <td style="width:95px;">加總<br />比例</td>
-                                        <td style="width:60px;">加總登<br />分比例</td>
-                                    </tr>
-                                    <tr>
-                                        <td>A+</td>
-                                        <td>≦25%</td>
-                                        <td id="statistics-a-plus-scored-rate"></td>
-                                        <td rowspan=3>不超過80%</td>
-                                        <td id="statistics-a-sum-scored-rate" rowspan=3></td>
-                                    </tr>
-                                    <tr>
-                                        <td>A</td>
-                                        <td>≦40%</td>
-                                        <td id="statistics-a-scored-rate"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>A-</td>
-                                        <td>≦25%</td>
-                                        <td id="statistics-a-minus-scored-rate"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>B+</td>
-                                        <td>≧10%</td>
-                                        <td id="statistics-b-plus-scored-rate"></td>
-                                        <td rowspan=2>至少20%</td>
-                                        <td id="statistics-b-sum-scored-rate" rowspan=2></td>
-                                    </tr>
-                                    <tr>
-                                        <td>B及以下</td>
-                                        <td>≧5%</td>
-                                        <td id="statistics-b-scored-rate"></td>
-                                    </tr>
-                                </table>
-                                <div style="font-weight: bold; height: 30px; padding-top:6px; font-size: 15px;">登分人數調整表</div>
-                                <table id="statistics-reduce" border=1 cellpadding=0 cellspacing=0 style="text-align: center; width:360px;">
-                                    <tr>
-                                        <td>等第</td>
-                                        <td style="width:60px;">登分<br />人數</td>
-                                        <td style="width:60px;">需調整<br />人數</td>
-                                        <td style="width:95px;">登分<br />總人數</td>
-                                        <td style="width:60px;">需調整<br />總人數</td>
-                                    </tr>
-                                    <tr>
-                                        <td>A+</td>
-                                        <td id="statistics-a-plus-scored-amount"></td>
-                                        <td id="statistics-a-plus-reduce-amount"></td>
-                                        <td id="statistics-a-sum-scored-amount" rowspan=3></td>
-                                        <td id="statistics-a-sum-reduce-amount" rowspan=3></td>
-                                    </tr>
-                                    <tr>
-                                        <td>A</td>
-                                        <td id="statistics-a-scored-amount"></td>
-                                        <td id="statistics-a-reduce-amount"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>A-</td>
-                                        <td id="statistics-a-minus-scored-amount"></td>
-                                        <td id="statistics-a-minus-reduce-amount"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>B+</td>
-                                        <td id="statistics-b-plus-scored-amount"></td>
-                                        <td id="statistics-b-plus-add-amount"></td>
-                                        <td id="statistics-b-sum-scored-amount" rowspan=2></td>
-                                        <td id="statistics-b-sum-add-amount" rowspan=2></td>
-                                    </tr>
-                                    <tr>
-                                        <td>B及以下</td>
-                                        <td id="statistics-b-scored-amount"></td>
-                                        <td id="statistics-b-add-amount"></td>
-                                    </tr>
-                                </table>
-                            </div>
                         </div>
                     </div>
                 </div>
