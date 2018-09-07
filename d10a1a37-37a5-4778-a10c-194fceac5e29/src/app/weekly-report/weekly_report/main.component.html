@@ -34,11 +34,15 @@
                 </ng-container>
                 <ng-container *ngIf="cdata.isSend === 'f'">
                     <li class="list-group-item list-group-item-action d-flex"
+                        [routerLink]="['/weekly_report/detail', cdata.UID, data.Name]">
+                        <div class="text-nowrap">{{cdata.BeginDate2}} - {{cdata.EndDate2}}</div>
+                        <div class="mx-3 text-nowrap text-truncate">{{cdata.GeneralComment}}</div>
+                    </li>
+                    <!-- <li class="list-group-item list-group-item-action d-flex"
                         [routerLink]="['/weekly_report/add-s1', data.ID, data.Name, cdata.UID]">
                         <div class="text-nowrap">{{cdata.BeginDate2}} - {{cdata.EndDate2}}</div>
                         <div class="mx-3 text-nowrap text-truncate">{{cdata.GeneralComment}}</div>
-
-                    </li>
+                    </li> -->
                 </ng-container>
             </ng-container>
         </div>

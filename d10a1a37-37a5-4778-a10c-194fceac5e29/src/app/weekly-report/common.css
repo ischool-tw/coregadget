@@ -3,7 +3,8 @@
 ----------------------------------------------------- */
 
 .card {
-	height: calc(100% - 1rem);
+    /* 高度不夠會亂跑 */
+    /* height: calc(100% - 1rem); */
 }
 
 .card.custom-control-label {

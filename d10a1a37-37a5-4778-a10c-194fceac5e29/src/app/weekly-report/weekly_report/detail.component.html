@@ -12,6 +12,19 @@
             </li>
             <li class="breadcrumb-item active"
                 aria-current="page">{{courseName}} ( {{beginDate}} - {{endDate}} )</li>
+
+
+            <span class="text-nowrap  ml-auto">
+                <button type="button"
+                        class="btn btn btn-info"
+                        [disabled]="checkSaveButtonDisable"
+                        (click)="save()">Edit</button>
+                <label style="width:20px"></label>
+                <button type="button"
+                        class="btn btn btn-info"
+                        [disabled]="checkSendButtonDisable"
+                        (click)="send()">Publish</button>
+            </span>
         </ol>
     </nav>
     <div class="row">

@@ -116,25 +116,27 @@ export class AppService {
   }
 
   /**取得班級學生及今天請假狀態 */
-  getClassStudentsLeave(selClass: Class): Rx.Observable<Student[]> {
+  getClassStudentsLeave(selClass: Class, occurDate:string): Rx.Observable<Student[]> {
 
     return this.send({
       contact: "p_kcbs.rollCallBook.teacher",
       service: "_.getStudentAttendance",
-      body: { classId: selClass.classId },
+      body: { classId: selClass.classId , OccurDate:occurDate},
       map: (rsp) => {
         let students = new Array<Student>();
         if (rsp.Student) {
           let stus = [].concat(rsp.Student || []);
           stus.forEach((item) => {
             let leaves: Map<string, Leave> = new Map<string, Leave>();
+            let orileaves: Map<string, Leave> = new Map<string, Leave>();
             if (item.Detail && item.Detail.Attendance && item.Detail.Attendance.Period) {
               let periods: any = [].concat(item.Detail.Attendance.Period || []);
               periods.forEach((p) => {
                 leaves.set(p['@text'], new Leave(p['@text'], p.AbsenceType));
+                orileaves.set(p['@text'], new Leave(p['@text'], p.AbsenceType));
               });
             }
-            students.push(new Student(item.StudentId, item.StudentName, item.SeatNo, leaves));
+            students.push(new Student(item.StudentId, item.StudentName, item.SeatNo, leaves, orileaves));
           });
         }
         return students;
@@ -143,13 +145,14 @@ export class AppService {
   }
 
   /**儲存學生請假狀況 */
-  saveStudentLeave(selClass, data) {
+  saveStudentLeave(selClass, occurDate, data) {
 
     return this.send({
       contact: "p_kcbs.rollCallBook.teacher",
       service: "_.setStudentAttendance",
       body: {
         classId: selClass.classId,
+        OccurDate: occurDate,
         students: { student: data }
       },
       map: (rsp) => {

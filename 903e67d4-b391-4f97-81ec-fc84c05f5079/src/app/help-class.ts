@@ -9,11 +9,12 @@ export class Class {
 
 /**學生 */
 export class Student {
-  constructor(public sid, public name:string, public seatNo:number, public leaveList?: Map<string, Leave>) {
+  constructor(public sid, public name:string, public seatNo:number, public leaveList: Map<string, Leave>, public orileaveList: Map<string, Leave>) {
     this.sid = sid;
     this.name = name;
     this.seatNo = seatNo;
     this.leaveList = leaveList || new Map<string, Leave>();
+    this.orileaveList = orileaveList || new Map<string, Leave>();
   }
 
   setAbsence(periodName: string, absName: string) {    

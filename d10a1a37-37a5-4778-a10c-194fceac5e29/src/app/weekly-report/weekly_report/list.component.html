@@ -33,11 +33,16 @@
             </ng-container>
             <ng-container *ngIf="data.isSend === 'f'">
                 <li class="list-group-item list-group-item-action d-flex"
+                    [routerLink]="['/weekly_report/detail', data.UID, courseName]">
+                    <div class="text-nowrap">{{data.BeginDate2}} - {{data.EndDate2}}</div>
+                    <div class="mx-3 text-nowrap text-truncate">{{data.GeneralComment}}</div>
+                </li>
+                <!-- <li class="list-group-item list-group-item-action d-flex"
                     [routerLink]="['/weekly_report/add-s1', courseID, courseName, data.UID]">
                     <div class="text-nowrap">{{data.BeginDate2}} - {{data.EndDate2}}</div>
                     <div class="mx-3 text-nowrap text-truncate">{{data.GeneralComment}}</div>
 
-                </li>
+                </li> -->
             </ng-container>
         </ng-container>
 

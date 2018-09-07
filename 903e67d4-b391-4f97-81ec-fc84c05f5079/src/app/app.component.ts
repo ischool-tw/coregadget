@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
 import { Class, Student, Absence, Period, Leave } from "./help-class";
 import { AppService } from "./app.service";
 import * as rx from 'rxjs/Rx';
@@ -23,6 +23,11 @@ export class AppComponent implements OnInit {
   /**今天該班點名狀態 */
   completed: boolean;
 
+  currentDate: Date = new Date(new Date().toDateString());
+  todayDate: Date = new Date(new Date().toDateString());
+
+  inputDate: string;
+
   constructor(private appService: AppService, private change: ChangeDetectorRef) {
   }
 
@@ -30,6 +35,7 @@ export class AppComponent implements OnInit {
     // 預設值
     this.currAbs = this.clearAbs;
     this.completed = false;
+    this.inputDate = this.getDateString(this.currentDate);
 
     // 取得假別、節次、老師帶班
     rx.Observable.combineLatest(
@@ -40,33 +46,61 @@ export class AppComponent implements OnInit {
           this.periodMap.set(p.name, p);
         });
         this.classes = z;
-    })
-    .subscribe(() => {
-      // 全部取回後，進行處理
-      if (this.classes && this.classes.length) {
-        // 指定目前班級為第一個班級
-        this.selClass = this.classes[0];
-        // 訂閱班級異動
-        this.classSubject$.subscribe((c) => {
-          rx.Observable.combineLatest(
-            this.appService.getClassStudentsLeave(c), this.appService.getRollcallState(c), (studs, complete) => {
-              this.students = studs;
-              this.completed = complete;
-          })
-          .subscribe();
-        });
-        // 切換班級
-        this.toggleClassDate();
-      }
-    });
+      })
+      .subscribe(() => {
+        // 全部取回後，進行處理
+        if (this.classes && this.classes.length) {
+          // 指定目前班級為第一個班級
+          this.selClass = this.classes[0];
+          // 訂閱班級異動
+          this.classSubject$.subscribe((c) => {
+            rx.Observable.combineLatest(
+              this.appService.getClassStudentsLeave(c, this.getDateString(this.currentDate)), this.appService.getRollcallState(c), (studs, complete) => {
+                this.students = studs;
+                this.completed = complete;
+              })
+              .subscribe();
+          });
+          // 切換班級
+          this.toggleClassDate();
+        }
+      });
+  }
+  getDateString(dateTime: Date): string {
+    return dateTime.getFullYear() + "/" + (dateTime.getMonth() + 1) + "/" + dateTime.getDate();
+  }
+
+  checkDate(input: string) {
+    var d = Date.parse(input);
+    if (d) {
+      this.setCurrentDate(new Date(d));
+    }
+    else {
+      this.inputDate = input;
+    }
+  }
+
+  setCurrentDate(target: Date, shift?: number) {
+    target = new Date(target);
+    if (shift) {
+      target.setDate(target.getDate() + shift);
+    }
+    if (this.getDateString(this.currentDate) != this.getDateString(target)) {
+      this.currentDate = target;
+      this.toggleClassDate();
+    }
+    this.inputDate = this.getDateString(this.currentDate);
   }
 
   /**切換班級或缺曠日期，取得「該日學生缺曠」、「點名完成」狀態 */
-  toggleClassDate() {
+  toggleClassDate(targetClass?: Class) {
+    if (targetClass)
+      this.selClass = targetClass;
     if (this.selClass) {
       this.classSubject$.next(this.selClass);
     }
   }
+
 
   /**假別簡稱 */
   toShort(name: string): string {
@@ -117,9 +151,9 @@ export class AppComponent implements OnInit {
   /**儲存點名結果 */
   saveData() {
     let data = [];
-    
+
     this.students.forEach((s) => {
-      let tmpDetail:string = '';
+      let tmpDetail: string = '';
       s.leaveList.forEach((value, key) => {
         let periodName = s.leaveList.get(key).periodName;
         let periodType = this.periodMap.get(periodName).type;
@@ -133,11 +167,11 @@ export class AppComponent implements OnInit {
       });
     });
 
-    this.appService.saveStudentLeave(this.selClass, data).subscribe(() => {
+    this.appService.saveStudentLeave(this.selClass, this.getDateString(this.currentDate), data).subscribe(() => {
       // 重取缺曠狀態
       this.toggleClassDate();
     });
   }
-  
+
 }
 

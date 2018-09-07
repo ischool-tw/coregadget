@@ -1,57 +1,142 @@
 <div>
-  <h1>線上點名</h1>
+  <h1>導師-線上點名</h1>
   <div>
-  <form class="form-inline">
-      <span>請選擇班級：</span>
-      <div class="form-group">
-        <div class="dropdown">
-          <button class="btn btn-primary dropdown-toggle" type="button" id="dropdowClass" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            {{selClass?.className || '班級'}}
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdowClass">
-            <li *ngFor="let item of classes" (click)="selClass=item"><a href="#">{{item.className}}</a></li>
-          </ul>
+    <div style="margin-top:15px;">
+      <span>日期：</span>
+      <div style="position: relative;display: inline-block;vertical-align: middle;">
+        <div class="input-group input-group-sm"
+             style="width:380px;">
+          <input type="text"
+                 class="form-control"
+                 [ngModel]="inputDate"
+                 (ngModelChange)="checkDate($event)" />
+          <span class="input-group-btn">
+            <button type="button"
+                    class="btn btn-default"
+                    (click)="setCurrentDate(todayDate)"
+                    [ngClass]="{'btn-primary': getDateString(currentDate)==getDateString(todayDate)}">今天
+            </button>
+            <button type="button"
+                    (click)="setCurrentDate(currentDate, -1)"
+                    class="btn btn-default">前一天
+            </button>
+            <button type="button"
+                    (click)="setCurrentDate(currentDate, 1)"
+                    class="btn btn-default">後一天
+            </button>
+            <button type="button"
+                    (click)="setCurrentDate(currentDate, -7)"
+                    class="btn btn-default">上一週
+            </button>
+            <button type="button"
+                    (click)="setCurrentDate(currentDate, 7)"
+                    class="btn btn-default">下一週
+            </button>
+          </span>
         </div>
       </div>
-      <button *ngIf="classes.length > 0" (click)="toggleClassDate()" type="submit" class="btn btn-default" style="margin-left:10px">確定</button>
-      <span *ngIf="selClass" [ngClass]="{'text-success': completed=='t', 'text-warning': completed!='t'}">
-        {{(completed=='t') ? '今日已點名' : '今日尚未點名'}}
-      </span>
-    </form>
+      <span *ngIf="inputDate!=getDateString(currentDate)"
+            class="text-danger">日期格式錯誤</span>
+    </div>
+    <div style="margin-top:15px;">
+      <span>請選擇班級：</span>
+      <div class="btn-group"
+           role="group"
+           aria-label="假別">
+        <button *ngFor="let item of classes"
+                (click)="toggleClassDate(item)"
+                type="button"
+                class="btn btn-sm"
+                [ngClass]="{'btn-primary': selClass==item, 'btn-default': selClass!=item}">{{item.className}}</button>
+      </div>
+    </div>
   </div>
   <div *ngIf="selClass">
     <div style="margin-top:15px;">
-      請選擇假別：
-      <button (click)="currAbs=clearAbs" type="button" class="btn" [ngClass]="{'btn-primary': currAbs==clearAbs, 'btn-default': currAbs!=clearAbs}">清除</button>
-      <div class="btn-group" role="group" aria-label="假別">
-        <button *ngFor="let abs of absences" (click)="currAbs=abs" type="button" class="btn" [ngClass]="{'btn-primary': currAbs==abs, 'btn-default': currAbs!=abs}">{{abs.name}}</button>
+      <span>請選擇假別：</span>
+      <div class="btn-group"
+           role="group"
+           aria-label="假別">
+        <button (click)="currAbs=clearAbs"
+                type="button"
+                class="btn btn-sm"
+                [ngClass]="{'btn-primary': currAbs==clearAbs, 'btn-default': currAbs!=clearAbs}">清除</button>
+        <button *ngFor="let abs of absences"
+                (click)="currAbs=abs"
+                type="button"
+                class="btn btn-sm"
+                [ngClass]="{'btn-primary': currAbs==abs, 'btn-default': currAbs!=abs}">{{abs.name}}</button>
       </div>
     </div>
-
-    <table class="table table-bordered table-hover" style="margin-top: 15px;">
+    <table class="table table-bordered table-hover"
+           style="margin-top: 15px;">
       <thead>
         <tr>
-          <th class="thBorder" style="min-width:110px;">
-            <button (click)="saveData()" type="button" class="btn" [ngClass]="{'btn-success': completed=='t', 'btn-warning': completed!='t'}">
-              {{(completed=='t') ? '再次儲存' : '點名完成'}}
-            </button>
+          <th class="thBorder"
+              style="min-width:110px;">
+            <div *ngIf="getDateString(currentDate)==getDateString(todayDate)">
+              <div class="btn-group">
+                <button (click)="saveData()"
+                        type="button"
+                        class="btn btn-sm"
+                        [ngClass]="{'btn-success': completed=='t', 'btn-warning': completed!='t'}">
+                  {{(completed=='t') ? '儲存變更' : '完成點名'}}
+                </button>
+              </div>
+              <span *ngIf="completed=='t'"
+                    class="text-muted">
+                已點名
+              </span>
+            </div>
+            <div *ngIf="getDateString(currentDate)!=getDateString(todayDate)">
+              <div class="btn-group">
+                <button (click)="saveData()"
+                        type="button"
+                        class="btn btn-sm btn-danger">
+                  儲存變更
+                </button>
+              </div>
+              <span *ngIf="completed=='t'"
+                    class="text-danger">
+                {{getDateString(currentDate)}}
+              </span>
+            </div>
           </th>
-          <th *ngFor="let period of periods" (click)="setAllStudentsAbs(period)" class="setBtn thBorder">
+          <th *ngFor="let period of periods"
+              (click)="setAllStudentsAbs(period)"
+              class="setBtn thBorder text-center">
             {{period.name}}
           </th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let stu of students">
-          <td (click)="setStudentAllPeriodAbs(stu)" class="setBtn">
+          <td (click)="setStudentAllPeriodAbs(stu)"
+              class="setBtn">
             {{stu.seatNo}}. {{stu.name}}
           </td>
-          <td *ngFor="let period of periods" (click)="setStudentPeroidAbs(stu, period)" class="setBtn">
-            {{toShort(stu.leaveList.get(period.name)?.absName)}}
+          <td *ngFor="let period of periods"
+              (click)="setStudentPeroidAbs(stu, period)"
+              title="period"
+              class="setBtn"
+              style="position:relative">
+            <div *ngIf="stu.leaveList.get(period.name)?.absName != stu.orileaveList.get(period.name)?.absName"
+                 style="display:inline-block;background-color:red;position:absolute;left:3px;top:3px;width:5px;height:6px;border-radius:5px;"></div>
+            <span>{{toShort(stu.leaveList.get(period.name)?.absName)}}</span>
           </td>
-        </tr>    
+        </tr>
       </tbody>
+      <thead>
+        <tr>
+          <th class="thBorder">
+          </th>
+          <th *ngFor="let period of periods"
+              (click)="setAllStudentsAbs(period)"
+              class="setBtn thBorder text-center">
+            {{period.name}}
+          </th>
+        </tr>
+      </thead>
     </table>
     <p *ngIf="students.length==0">目前無資料</p>
   </div>
