@@ -98,7 +98,7 @@ export class DSAService {
     const rsp = await this.contract.send('attendance.GetStudents', req);
 
     // return ((rsp && rsp.Students && rsp.Students.Student) || []) as Student[];
-    return ((rsp && rsp.Students && rsp.Students.Student) || []).map(function (item) { return item as Student; });
+    return [].concat((rsp && rsp.Students && rsp.Students.Student) || []).map(function (item) { return item as Student; });
   }
 
   // 取得缺曠節次英文對照
