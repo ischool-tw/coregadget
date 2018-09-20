@@ -1576,13 +1576,18 @@ $(document).ready(function() {
     Teacher.Init();
 
     $(window).bind('scroll resize', function(){
-        if ($(window).height() >= (800)) {
+        // 統計區高度為(580，大概抓 600)
+        if ($(window).height() >= (600)) {
             var $this = $(this);
             var $this_Top = $this.scrollTop();
 
-            //當高度小於特定高度時，不固定置頂
-            if($this_Top < (137+142)){ $('#statistics-container').stop().animate({top:"0"}).css({"position": "absolute", "margin-left": "initial", "right": 0}); }
-            if($this_Top > (137+142)){ $('#statistics-container').stop().animate({top:"-142px"}).css({"position": "fixed", "margin-left": 630, "right": "initial"}); }
+            // 當捲軸與上方差距大於(統計區 top + 統計區第一個 table 的高度) 就浮起
+            // 當高度小於特定高度時，不固定置頂；
+            if($this_Top > (137+142)){
+                $('#statistics-container').stop().animate({top:"-142px"}).css({"position": "fixed", "margin-left": 630, "right": "initial"});
+            } else {
+                $('#statistics-container').stop().animate({top:"0"}).css({"position": "absolute", "margin-left": "initial", "right": 0});
+            }
         } else {
             $('#statistics-container').css({"position": "absolute", "top": 0, "right": 0});
         }
