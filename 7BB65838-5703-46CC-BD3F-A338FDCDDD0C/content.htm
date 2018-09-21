@@ -1199,193 +1199,309 @@
                      style="height:100%;overflow:auto;">
                     <div ng-if="CurrentAction==''">
                         <div ng-if="CurrentStudent.PsychologicalTestsRecord === undefined" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
-                        <div ng-if="CurrentStudent.PsychologicalTestsRecord === '沒有心理測驗紀錄'" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有心理測驗紀錄</div>
+                        <div ng-if="CurrentStudent.PsychologicalTestsRecord === null" class="text-muted" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">沒有心理測驗紀錄</div>
                     </div>
-                    <div ng-if="CurrentStudent.PsychologicalTestsRecord.AptitudeTest" class="col-xs-12" style=" margin-top:20px; ">
-                        <div class=" panel panel-default">
-                            <div class="panel-heading">
-                                <div class="col-xs-12" style="float:inherit;">
-                                    <table class="col-xs-12" style="float:inherit;">
-                                        <tr>
-                                            <td class="text-left">
-                                                <span>新編多元性向測驗測驗結果</span>
-                                            </td>
-                                            <td class="text-right">
-                                                <span>測驗日期:</span>
-                                                <span>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ImplementationDate}}</span>
-                                            </td>
-                                        </tr>
+                    <div ng-if="CurrentStudent.PsychologicalTestsRecord.length"
+                         ng-repeat="psychologicalTestsRecord in CurrentStudent.PsychologicalTestsRecord">
+                        <!-- AptitudeTest -->
+                        <div ng-if="psychologicalTestsRecord.Type=='aptitudeTest'" class="col-xs-12" style=" margin-top:20px; ">
+                            <div class=" panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="col-xs-12" style="float:inherit;">
+                                        <table class="col-xs-12" style="float:inherit;">
+                                            <tr>
+                                                <td class="text-left">
+                                                    <span>新編多元性向測驗測驗結果</span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span>測驗日期:</span>
+                                                    <span>{{psychologicalTestsRecord.ImplementationDate}}</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table table-bordered table-striped table-condensed table-hover">
+                                        <tbody>
+                                            <tr class="active">
+                                                <th class="text-center">領域</th>
+                                                <th class="text-center">原始分數</th>
+                                                <th class="text-center">量表分數</th>
+                                                <th class="text-center">百分等級</th>
+                                            </tr>
+                                        </tbody>
+                                        <tbody class="text-center">
+                                            <tr>
+                                                <td>語文推理</td>
+                                                <td>{{psychologicalTestsRecord.LanguageReasoningOriginalScore}}</td>
+                                                <td>{{psychologicalTestsRecord.LanguageReasoningScaleScore}}</td>
+                                                <td>{{psychologicalTestsRecord.LanguageReasoningPrLevel}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>數字推理</td>
+                                                <td>{{psychologicalTestsRecord.DigitReasoningOriginalScore}}</td>
+                                                <td>{{psychologicalTestsRecord.DigitReasoningScaleScore}}</td>
+                                                <td>{{psychologicalTestsRecord.DigitReasoningPrLevel}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>圖形推理</td>
+                                                <td>{{psychologicalTestsRecord.ImageReasoningOriginalScore}}</td>
+                                                <td>{{psychologicalTestsRecord.ImageReasoningScaleScore}}</td>
+                                                <td>{{psychologicalTestsRecord.ImageReasoningPrLevel}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>機械推理</td>
+                                                <td>{{psychologicalTestsRecord.MechanicalReasoningOriginalScore}}</td>
+                                                <td>{{psychologicalTestsRecord.MechanicalReasoningScaleScore}}</td>
+                                                <td>{{psychologicalTestsRecord.MechanicalReasoningPrLevel}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>空間關係</td>
+                                                <td>{{psychologicalTestsRecord.DimensionRelationOriginalScore}}</td>
+                                                <td>{{psychologicalTestsRecord.DimensionRelationScaleScore}}</td>
+                                                <td>{{psychologicalTestsRecord.DimensionRelationPrLevel}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>中文詞語</td>
+                                                <td>{{psychologicalTestsRecord.ChinesesWordsOriginalScore}}</td>
+                                                <td>{{psychologicalTestsRecord.ChinesesWordsScaleScore}}</td>
+                                                <td>{{psychologicalTestsRecord.ChinesesWordsPrLevel}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>英文詞語</td>
+                                                <td>{{psychologicalTestsRecord.EnglishWordsOriginalScore}}</td>
+                                                <td>{{psychologicalTestsRecord.EnglishWordsScaleScore}}</td>
+                                                <td>{{psychologicalTestsRecord.EnglishWordsPrLevel}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>知覺速度</td>
+                                                <td>{{psychologicalTestsRecord.PerceptionTimeOriginalScore}}</td>
+                                                <td>{{psychologicalTestsRecord.PerceptionTimeScaleScore}}</td>
+                                                <td>{{psychologicalTestsRecord.PerceptionTimePrLevel}}</td>
+
+                                            </tr>
+                                        </tbody>
+                                        <tbody class="text-center">
+                                            <tr class="active">
+                                                <th colspan="2" class="text-center">領域</th>
+                                                <th class="text-center">組合分數</th>
+                                                <th class="text-center">百分等級</th>
+                                            </tr>
+                                        </tbody>
+                                        <tbody class="text-center">
+                                            <tr>
+                                                <td colspan="2">學業性向</td>
+                                                <td>{{psychologicalTestsRecord.LearningAptitudeAssembleScore}}</td>
+                                                <td>{{psychologicalTestsRecord.LearningAptitudePrLevel}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">理工性向</td>
+                                                <td>{{psychologicalTestsRecord.ScienceAptitudeAssembleScore}}</td>
+                                                <td>{{psychologicalTestsRecord.ScienceAptitudePrLevel}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">文科性向</td>
+                                                <td>{{psychologicalTestsRecord.LiteralAptitudeAssembleScore}}</td>
+                                                <td>{{psychologicalTestsRecord.LiteralAptitudePrLevel}}</td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody>
+                                            <tr class="active ">
+                                                <th colspan="2" class="text-center">領域</th>
+                                                <th class="text-center">作答題數</th>
+                                                <th class="text-center">答對題數</th>
+                                            </tr>
+                                        </tbody>
+                                        <tbody class="text-center">
+                                            <tr>
+                                                <td colspan="2">知覺速度</td>
+                                                <td>{{psychologicalTestsRecord.PerceptionTimeCompleteQuizCount}}</td>
+                                                <td>{{psychologicalTestsRecord.PerceptionTimeCorrectQuizCount}}</td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                 </div>
-                            </div>
-                            <div class="panel-body">
-                                <table class="table table-bordered table-striped table-condensed table-hover">
-                                    <tbody>
-                                        <tr class="active">
-                                            <th class="text-center">領域</th>
-                                            <th class="text-center">原始分數</th>
-                                            <th class="text-center">量表分數</th>
-                                            <th class="text-center">百分等級</th>
-                                        </tr>
-                                    </tbody>
-                                    <tbody class="text-center">
-                                        <tr>
-                                            <td>語文推理</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LanguageReasoningOriginalScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LanguageReasoningScaleScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LanguageReasoningPrLevel}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>數字推理</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DigitReasoningOriginalScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DigitReasoningScaleScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DigitReasoningPrLevel}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>圖形推理</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ImageReasoningOriginalScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ImageReasoningScaleScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ImageReasoningPrLevel}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>機械推理</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.MechanicalReasoningOriginalScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.MechanicalReasoningScaleScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.MechanicalReasoningPrLevel}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>空間關係</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DimensionRelationOriginalScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DimensionRelationScaleScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.DimensionRelationPrLevel}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>中文詞語</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ChinesesWordsOriginalScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ChinesesWordsScaleScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ChinesesWordsPrLevel}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>英文詞語</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.EnglishWordsOriginalScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.EnglishWordsScaleScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.EnglishWordsPrLevel}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>知覺速度</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.PerceptionTimeOriginalScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.PerceptionTimeScaleScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.PerceptionTimePrLevel}}</td>
-
-                                        </tr>
-                                    </tbody>
-                                    <tbody class="text-center">
-                                        <tr class="active">
-                                            <th colspan="2" class="text-center">領域</th>
-                                            <th class="text-center">組合分數</th>
-                                            <th class="text-center">百分等級</th>
-                                        </tr>
-                                    </tbody>
-                                    <tbody class="text-center">
-                                        <tr>
-                                            <td colspan="2">學業性向</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LearningAptitudeAssembleScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LearningAptitudePrLevel}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">理工性向</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ScienceAptitudeAssembleScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.ScienceAptitudePrLevel}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">文科性向</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LiteralAptitudeAssembleScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.LiteralAptitudePrLevel}}</td>
-                                        </tr>
-                                    </tbody>
-                                    <tbody>
-                                        <tr class="active ">
-                                            <th colspan="2" class="text-center">領域</th>
-                                            <th class="text-center">作答題數</th>
-                                            <th class="text-center">答對題數</th>
-                                        </tr>
-                                    </tbody>
-                                    <tbody class="text-center">
-                                        <tr>
-                                            <td colspan="2">知覺速度</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.PerceptionTimeCompleteQuizCount}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.AptitudeTest.PerceptionTimeCorrectQuizCount}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
-                    </div>
-                    <div ng-if="CurrentStudent.PsychologicalTestsRecord.InterestTest" class="col-xs-12" style=" margin-top:20px; ">
-                        <div class=" panel panel-default">
-                            <div class="panel-heading">
-                                <div class="col-xs-12" style="float:inherit;">
-                                    <table class="col-xs-12" style="float:inherit;">
-                                        <tr>
-                                            <td class="text-left">
-                                                <span>興趣測驗結果</span>
-                                            </td>
-                                            <td class="text-right">
-                                                <span>測驗日期:</span>
-                                                <span>{{CurrentStudent.PsychologicalTestsRecord.InterestTest.ImplementationDate}}</span>
-                                            </td>
-                                        </tr>
+                        <!-- InterestTest -->
+                        <div ng-if="psychologicalTestsRecord.Type=='interestTest'" class="col-xs-12" style=" margin-top:20px; ">
+                            <div class=" panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="col-xs-12" style="float:inherit;">
+                                        <table class="col-xs-12" style="float:inherit;">
+                                            <tr>
+                                                <td class="text-left">
+                                                    <span>興趣測驗結果</span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span>測驗日期:</span>
+                                                    <span>{{psychologicalTestsRecord.ImplementationDate}}</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table table-bordered table-striped table-condensed table-hover">
+                                        <tbody>
+                                            <tr class="active">
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">實用型R</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">研究型I</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">藝術型A</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">社會型S</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">企業型E</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">事務型C</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">興趣代碼</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">抓週三碼</th>
+                                            </tr>
+                                        </tbody>
+                                        <tbody class="text-center">
+                                            <tr>
+                                                <td>{{psychologicalTestsRecord.RTypeScore}}</td>
+                                                <td>{{psychologicalTestsRecord.ITypeScore}}</td>
+                                                <td>{{psychologicalTestsRecord.ATypeScore}}</td>
+                                                <td>{{psychologicalTestsRecord.STypeScore}}</td>
+                                                <td>{{psychologicalTestsRecord.ETypeScore}}</td>
+                                                <td>{{psychologicalTestsRecord.CTypeScore}}</td>
+                                                <td>{{psychologicalTestsRecord.InterestCode}}</td>
+                                                <td>{{psychologicalTestsRecord.GiftTestFirstCode}}{{psychologicalTestsRecord.GiftTestSecondCode}}{{psychologicalTestsRecord.GiftTestThirdCode}}  </td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody>
+                                            <tr class="active">
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">諧和度</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">一致性</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">區分值</th>
+                                                <th class="text-center" colspan="5" style="width: 75px ;padding-left:0px; padding-right: 0px;">學類興趣 扇形區域</th>
+                                            </tr>
+                                        </tbody>
+                                        <tbody class="text-center">
+                                            <tr>
+                                                <td>{{psychologicalTestsRecord.CoordinateIndex}}</td>
+                                                <td>{{psychologicalTestsRecord.ConsistencyIndex}}</td>
+                                                <td>{{psychologicalTestsRecord.DistinguishingIndex}}</td>
+                                                <td colspan="5">{{psychologicalTestsRecord.SectorArea}}</td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div class="panel-body">
-                                <table class="table table-bordered table-striped table-condensed table-hover">
-                                    <tbody>
-                                        <tr class="active">
-                                            <th class="text-center" style="padding-left:0px; padding-right:0px;">實用型R</th>
-                                            <th class="text-center" style="padding-left:0px; padding-right:0px;">研究型I</th>
-                                            <th class="text-center" style="padding-left:0px; padding-right:0px;">藝術型A</th>
-                                            <th class="text-center" style="padding-left:0px; padding-right:0px;">社會型S</th>
-                                            <th class="text-center" style="padding-left:0px; padding-right:0px;">企業型E</th>
-                                            <th class="text-center" style="padding-left:0px; padding-right:0px;">事務型C</th>       
-                                            <th class="text-center" style="padding-left:0px; padding-right:0px;">興趣代碼</th>
-                                            <th class="text-center" style="padding-left:0px; padding-right:0px;">抓週三碼</th>                                     
-                                        </tr>
-                                    </tbody>
-                                    <tbody class="text-center">
-                                        <tr>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.InterestTest.RTypeScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.InterestTest.ITypeScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.InterestTest.ATypeScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.InterestTest.STypeScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.InterestTest.ETypeScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.InterestTest.CTypeScore}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.InterestTest.InterestCode}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.InterestTest.GiftTestFirstCode}} {{CurrentStudent.PsychologicalTestsRecord.InterestTest.GiftTestSecondCode}}{{CurrentStudent.PsychologicalTestsRecord.InterestTest.GiftTestThirdCode}}  </td>                                                                                
-                                        </tr>                                        
-                                    </tbody>
-                                    <tbody>
-                                        <tr class="active">                                                                                
-                                            <th class="text-center" style="padding-left:0px; padding-right:0px;">諧和度</th>
-                                            <th class="text-center" style="padding-left:0px; padding-right:0px;">一致性</th>
-                                            <th class="text-center" style="padding-left:0px; padding-right:0px;">區分值</th>
-                                            <th class="text-center" colspan="5" style="width: 75px ;padding-left:0px; padding-right: 0px;">學類興趣 扇形區域</th>
-                                        </tr>
-                                    </tbody>
-                                    <tbody class="text-center">
-                                        <tr>                                                                                   
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.InterestTest.CoordinateIndex}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.InterestTest.ConsistencyIndex}}</td>
-                                            <td>{{CurrentStudent.PsychologicalTestsRecord.InterestTest.DistinguishingIndex}}</td>
-                                            <td colspan="5">{{CurrentStudent.PsychologicalTestsRecord.InterestTest.SectorArea}}</td>
-                                        </tr>
-                                    </tbody>                                                            
-                                </table>
+                        </div>
+                        <!-- InterestTest18 -->
+                        <div ng-if="psychologicalTestsRecord.Type=='interestTest18'" class="col-xs-12" style=" margin-top:20px; ">
+                            <div class=" panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="col-xs-12" style="float:inherit;">
+                                        <table class="col-xs-12" style="float:inherit;">
+                                            <tr>
+                                                <td class="text-left">
+                                                    <span>興趣測驗結果</span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span>測驗日期:</span>
+                                                    <span>{{psychologicalTestsRecord.ImplementationDate}}</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table table-bordered table-striped table-condensed table-hover">
+                                        <tbody>
+                                            <tr class="active">
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">實用型R</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">研究型I</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">藝術型A</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">社會型S</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">企業型E</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">事務型C</th>
+                                            </tr>
+                                        </tbody>
+                                        <tbody class="text-center">
+                                            <tr>
+                                                <td>{{psychologicalTestsRecord.RTypeScore}}</td>
+                                                <td>{{psychologicalTestsRecord.ITypeScore}}</td>
+                                                <td>{{psychologicalTestsRecord.ATypeScore}}</td>
+                                                <td>{{psychologicalTestsRecord.STypeScore}}</td>
+                                                <td>{{psychologicalTestsRecord.ETypeScore}}</td>
+                                                <td>{{psychologicalTestsRecord.CTypeScore}}</td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody>
+                                            <tr class="active">
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">興趣代碼</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">抓週三碼</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">諧和度</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;">區分值</th>
+                                                <th class="text-center" style="padding-left:0px; padding-right:0px;" colspan="2"></th>
+                                            </tr>
+                                        </tbody>
+                                        <tbody class="text-center">
+                                            <tr>
+                                                <td>{{psychologicalTestsRecord.InterestCode}}</td>
+                                                <td>{{psychologicalTestsRecord.GiftTestFirstCode}}{{psychologicalTestsRecord.GiftTestSecondCode}}{{psychologicalTestsRecord.GiftTestThirdCode}}  </td>
+                                                <td>{{psychologicalTestsRecord.CoordinateIndex}}</td>
+                                                <td>{{psychologicalTestsRecord.DistinguishingIndex}}</td>
+                                                <td colspan="2"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- MajorinTest -->
+                        <div ng-if="psychologicalTestsRecord.Type=='majorinTest'" class="col-xs-12" style=" margin-top:20px; ">
+                            <div class=" panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="col-xs-12" style="float:inherit;">
+                                        <table class="col-xs-12" style="float:inherit;">
+                                            <tr>
+                                                <td class="text-left">
+                                                    <span>學系探索量表</span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span>測驗日期:</span>
+                                                    <span>{{psychologicalTestsRecord.ImplementationDate}}</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table table-bordered table-condensed table-hover">
+                                        <tbody>
+                                            <tr>
+                                                <th class="text-center col-xs-1 active">1</th>
+                                                <td class="text-left col-xs-3">{{psychologicalTestsRecord.Wish1}}</td>
+                                                <th class="text-center col-xs-1 active">2</th>
+                                                <td class="text-left col-xs-3">{{psychologicalTestsRecord.Wish2}}</td>
+                                                <th class="text-center col-xs-1 active">3</th>
+                                                <td class="text-left col-xs-3">{{psychologicalTestsRecord.Wish3}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-center col-xs-1 active">4</th>
+                                                <td class="text-left col-xs-3">{{psychologicalTestsRecord.Wish4}}</td>
+                                                <th class="text-center col-xs-1 active">5</th>
+                                                <td class="text-left col-xs-3">{{psychologicalTestsRecord.Wish5}}</td>
+                                                <th class="text-center col-xs-1 active">6</th>
+                                                <td class="text-left col-xs-3">{{psychologicalTestsRecord.Wish6}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-center col-xs-1 active">7</th>
+                                                <td class="text-left col-xs-3">{{psychologicalTestsRecord.Wish7}}</td>
+                                                <th class="text-center col-xs-1 active">8</th>
+                                                <td class="text-left col-xs-3">{{psychologicalTestsRecord.Wish8}}</td>
+                                                <th class="text-center col-xs-1 active"></th>
+                                                <td class="text-left col-xs-3"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
