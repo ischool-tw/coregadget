@@ -333,7 +333,7 @@
                                     if (assessmentRec != assessmentAvg) {
                                         var weight = Number(assessmentRec.Weight);
                                         var score = Number(stuRec["Val_" + assessmentRec.Key]);
-                                        if (weight && score) {
+                                        if (weight && (score || (score === 0 && "" + stuRec["Val_" + assessmentRec.Key] != "" ))) {
                                             totalWeight += weight;
                                             weightSum += score * weight;
                                         }
@@ -410,7 +410,7 @@
                                                     if (assessmentRec != assessmentAvg) {
                                                         var weight = Number(assessmentRec.Weight);
                                                         var score = Number(stuRec["Val_" + assessmentRec.Key]);
-                                                        if (weight && score) {
+                                                        if (weight && (score || (score === 0 && "" + stuRec["Val_" + assessmentRec.Key] != "" ))) {
                                                             totalWeight += weight;
                                                             weightSum += score * weight;
                                                         }
@@ -503,18 +503,24 @@
                                     [].concat($scope.studentList || []).forEach(function (stuRec) {
                                         var totalWeight = 0;
                                         var weightSum = 0;
+                                        var hasVal = false;
                                         [].concat(response.CustomAssessmentItem || []).forEach(function (assessmentRec) {
                                             assessmentRec.Key = assessmentRec.TermName + "^_^" + assessmentRec.SubjectName + "^_^" + assessmentRec.AssessmentName + "^_^" + assessmentRec.CustomAssessmentName;
                                             var weight = Number(assessmentRec.Weight);
                                             var score = Number(stuRec["Origin_" + assessmentRec.Key]);
-                                            if (weight && score) {
+                                            if (weight && (score || (score === 0 && "" + stuRec["Origin_" + assessmentRec.Key] != "" ))) {
                                                 totalWeight += weight;
                                                 weightSum += score * weight;
+                                                hasVal = true;
                                             }
                                         });
-                                        if (totalWeight) {
+                                        if (hasVal) {
                                             stuRec["Val_" + assessment.Key] = Math.round(100 * weightSum / (totalWeight || 1)) / 100;
                                         }
+                                        else {
+                                            delete stuRec["Val_" + assessment.Key];
+                                        }
+                                        $scope.calc();
                                     });
                                 });
                             }
@@ -896,26 +902,72 @@
             };
 
             $scope.showCustomAssessmentConfig = function () {
-                $scope.current.ConfigCustomAssessmentItem = [];
-                $scope.AssessmentItem.forEach(function (item) {
-                    if (item.Name && item.Type != "Program")
-                        $scope.current.ConfigCustomAssessmentItem.push(angular.copy(item));
-                });
-                $scope.current.ConfigCustomAssessmentItem.DeleteItem = function (item) {
-                    var index = $scope.current.ConfigCustomAssessmentItem.indexOf(item);
-                    if (index > -1) {
-                        $scope.current.ConfigCustomAssessmentItem.splice(index, 1);
+                $scope.current.ConfigCustomAssessmentItem = {
+                    Item: []
+                    , Mode: "Editor"
+                    , JSONCode: ""
+                    , DeleteItem: function (item) {
+                        var index = $scope.current.ConfigCustomAssessmentItem.Item.indexOf(item);
+                        if (index > -1) {
+                            $scope.current.ConfigCustomAssessmentItem.Item.splice(index, 1);
+                        }
+                    }
+                    , AddItem: function () {
+                        $scope.current.ConfigCustomAssessmentItem.Item.push({
+                            Name: ""
+                            , Date: "" + (new Date().getFullYear()) + "/" + (new Date().getMonth() + 1) + "/" + (new Date().getDate())
+                            , Weight: "100"
+                            , Limit: "100"
+                            , Description: ""
+                        });
+                    }
+                    , JSONMode: function () {
+                        $scope.current.ConfigCustomAssessmentItem.Mode = "JSON";
+                        var jsonList = [];
+                        $scope.current.ConfigCustomAssessmentItem.Item.forEach(function (item) {
+                            jsonList.push({
+                                Name: item.Name
+                                , Date: item.Date
+                                , Weight: item.Weight
+                                , Description: item.Description
+                            });
+                        });
+                        $scope.current.ConfigCustomAssessmentItem.JSONCode = JSON.stringify(jsonList, null, "    ");
+                    }
+                    , CommitJSON: function () {
+                        var jsonParse;
+                        var jsonList = [];
+                        try {
+                            jsonParse = JSON.parse($scope.current.ConfigCustomAssessmentItem.JSONCode);
+                        }
+                        catch{
+                            alert("Syntax Error");
+                            return;
+                        }
+                        if (jsonParse.length || jsonParse.length === 0) {
+                            jsonList = [].concat(jsonParse);
+                        }
+                        else {
+                            alert("Parse Error");
+                            return;
+                        }
+                        $scope.current.ConfigCustomAssessmentItem.Item = [];
+                        jsonList.forEach(function (item) {
+                            $scope.current.ConfigCustomAssessmentItem.Item.push({
+                                Name: item.Name
+                                , Date: item.Date
+                                , Weight: item.Weight
+                                , Limit: "100"
+                                , Description: item.Description
+                            });
+                        });
+                        $scope.current.ConfigCustomAssessmentItem.Mode = "Editor";
                     }
                 };
-                $scope.current.ConfigCustomAssessmentItem.AddItem = function () {
-                    $scope.current.ConfigCustomAssessmentItem.push({
-                        Name: ""
-                        , Date: "" + (new Date().getFullYear()) + "/" + (new Date().getMonth() + 1) + "/" + (new Date().getDate())
-                        , Weight: "100"
-                        , Limit: "100"
-                        , Description: ""
-                    });
-                }
+                $scope.AssessmentItem.forEach(function (item) {
+                    if (item.Name && item.Type != "Program")
+                        $scope.current.ConfigCustomAssessmentItem.Item.push(angular.copy(item));
+                });
                 $('#customAssessmentConfigModal').modal('show');
             };
 
@@ -927,8 +979,26 @@
                     , AssessmentName: $scope.current.Assessment.Name
                     , CustomAssessment: []
                 };
-                $scope.current.ConfigCustomAssessmentItem.forEach(function (item) {
-                    if (item.Name) {
+
+                var namePass = true;
+                var datePass = true;
+                var weightPass = true;
+                $scope.current.ConfigCustomAssessmentItem.Item.forEach(function (item) {
+                    var pass = true;
+                    if (!item.Name) {
+                        namePass = false;
+                        pass = false;
+                    }
+                    if (!item.Date || new Date(item.Date) == "Invalid Date") {
+                        datePass = false;
+                        pass = false;
+                    }
+                    if (!item.Weight || Number.isNaN(+item.Weight)) {
+                        weightPass = false;
+                        pass = false;
+                    }
+
+                    if (pass) {
                         body.CustomAssessment.push({
                             CustomAssessmentName: item.Name
                             , Date: item.Date
@@ -939,23 +1009,33 @@
                         });
                     }
                 });
-
-
-                $scope.connection.send({
-                    service: "gradebook.SetCustomAssessment",
-                    autoRetry: true,
-                    body: body,
-                    result: function (response, error, http) {
-                        if (error) {
-                            alert("gradebook.SetCustomAssessment Error");
-                        } else {
-                            $scope.$apply(function () {
-                                $('#customAssessmentConfigModal').modal('hide');
-                                $scope.setAssessment("CustomAssessment", $scope.current.Assessment);
-                            });
+                if (namePass && datePass && weightPass) {
+                    $scope.connection.send({
+                        service: "gradebook.SetCustomAssessment",
+                        autoRetry: true,
+                        body: body,
+                        result: function (response, error, http) {
+                            if (error) {
+                                alert("gradebook.SetCustomAssessment Error");
+                            } else {
+                                $scope.$apply(function () {
+                                    $('#customAssessmentConfigModal').modal('hide');
+                                    $scope.setAssessment("CustomAssessment", $scope.current.Assessment);
+                                });
+                            }
                         }
-                    }
-                });
+                    });
+                }
+                else {
+                    var errMsg = "";
+                    if (!namePass)
+                        errMsg += (errMsg ? "\n" : "") + "Name is required.";
+                    if (!datePass)
+                        errMsg += (errMsg ? "\n" : "") + "Date is required and must be date format(yyyy/MM/dd).";
+                    if (!weightPass)
+                        errMsg += (errMsg ? "\n" : "") + "Weight is required and must be number.";
+                    alert(errMsg);
+                }
             }
 
             $scope.checkChange = function (next) {

@@ -10,8 +10,7 @@
     <script src="js/xml2json.js"></script>
     <script src="js/dsutil.js"></script>
     <script src="js/dsnsLookup.js"></script>
-
-
+    
     <title>Gradebook</title>
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/font-awesome.min.css" rel="stylesheet" />
@@ -60,7 +59,7 @@
 <body ng-controller="MainCtrl">
     <div ng-if="!(courseList && studentList) && !haveNoCourse"
          style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Loading...</div>
-    <div ng-if="haveNoCourse" style="position:absolute;top:50%;left:50%;margin-top:-20px;margin-left:-50px;">Have no course.</div>
+    <div ng-if="haveNoCourse" style="position:absolute;top:50%;left:50%;margin-top:-40px;margin-left:-50px;">Have no course.</div>
     <div id="gadget" class="my-page" ng-if="true">
         <h1 class="hidden-xs">
             <a href="javascript:void(0)"
@@ -69,12 +68,38 @@
         <div ng-if="courseList">
             <div ng-if="current.AssessmentMode == 'CustomAssessment'"
                  class="pull-right">
-                <div class="btn-group hidden-xs">
+                <div class="btn-group  hidden-xs">
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-wrench" aria-hidden="true"></i>
+                        <span>Tools</span>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-header">Config</li>
+                        <li>
+                            <a ng-click="showCustomAssessmentConfig()"
+                               href="javascript:void(0)">
+                                <i class="fa fa-cog"></i>
+                                Edit Assessment Item
+                            </a>
+                        </li>
+                        <li ng-if="(AssessmentItem | filter : {'Key' : '_'}).length > 1"
+                            class="dropdown-header">Import</li>
+                        <li ng-repeat="assessmentRec in AssessmentItem"
+                            ng-if="assessmentRec.Type == 'Score'">
+                            <a ng-click="showImport(assessmentRec)"
+                               href="javascript:void(0)">
+                                {{assessmentRec.Name}}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!--<div class="btn-group hidden-xs">
                     <a ng-click="showCustomAssessmentConfig()" class="btn btn-default">
                         <i class="fa fa-cog"></i>
                         Config
                     </a>
-                </div>
+                </div>-->
                 <div class="btn-group">
                     <a ng-click="save()" class="btn btn-default" ng-class="{'btn-danger':!checkAllTable()}">
                         <i class="fa fa-floppy-o"></i>
@@ -410,10 +435,18 @@
                             </th>
                             <th ng-repeat="assessmentRec in AssessmentItem"
                                 class="text-center"
-                                style="padding: 6px 4px;overflow: hidden;">
+                                style="padding: 6px 4px;overflow: hidden;position:relative;">
                                 <small style="max-height:80px;overflow:hidden;text-overflow:ellipsis;display: inline-block;">
                                     {{assessmentRec.Name}}
                                 </small>
+                                <a ng-if="current.AssessmentMode == 'CustomAssessment' && ( ( $index == AssessmentItem.length - 1 && assessmentRec.Name ) || ( $index > 0 && !assessmentRec.Name && AssessmentItem[$index - 1].Name ) )"
+                                   ng-click="showCustomAssessmentConfig()"
+                                   title="Edit Assessment Item"
+                                   style="position: absolute;z-index: 1;top: 0px;right: 0px;"
+                                   class="btn btn-link btn-xs"
+                                   href="javascript:void(0)">
+                                    <i class="fa fa-cog text-muted"></i>
+                                </a>
                             </th>
                         </tr>
                         <tr>
@@ -516,7 +549,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <tr style="border-bottom-style: double;">
                             <th class="text-center"
                                 style="padding: 8px 2px;width: 170px;">
                                 Avg.
@@ -612,7 +645,7 @@
             </div>
         </div>
     </div>
-
+    <!-- Edit Assessment Item -->
     <div id="customAssessmentConfigModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="customAssessmentConfigModal">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -622,7 +655,8 @@
                     <h4 class="hidden-xs">{{current.Course.CourseName}} /{{current.Term.Name}} / {{current.Subject.Name}} / {{current.Assessment.Name}}</h4>
                 </div>
                 <div class="modal-body">
-                    <table class="table table-bordered table-striped table-hover text-center"
+                    <table ng-if="current.ConfigCustomAssessmentItem.Mode=='Editor'"
+                           class="table table-bordered table-striped table-hover text-center"
                            style="table-layout:fixed;">
                         <thead>
                             <tr>
@@ -654,7 +688,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="item in current.ConfigCustomAssessmentItem"
+                            <tr ng-repeat="item in current.ConfigCustomAssessmentItem.Item"
                                 style="cursor:pointer;">
                                 <td class="text-center"
                                     style="position:relative; padding:0px">
@@ -724,21 +758,35 @@
                             </tr>
                         </tbody>
                     </table>
+                    <textarea ng-if="current.ConfigCustomAssessmentItem.Mode=='JSON'"
+                              ng-model="current.ConfigCustomAssessmentItem.JSONCode"
+                              style="min-height: 360px;resize: vertical;word-wrap: normal;white-space: nowrap;"
+                              type="text"
+                              class="form-control pg-grade-textbox"></textarea>
                 </div>
 
                 <div class="modal-footer">
-                    <a class="btn btn-default" data-dismiss="modal">
-                        Cancel
+                    <a ng-if="current.ConfigCustomAssessmentItem.Mode=='JSON'"
+                       ng-click="current.ConfigCustomAssessmentItem.CommitJSON()" class="btn btn-link pull-left" ng-class="{'btn-danger':!checkAllTable()}">
+                        Parse JSON
                     </a>
-                    <a ng-click="saveCustomAssessmentConfig()" class="btn btn-default" ng-class="{'btn-danger':!checkAllTable()}">
+                    <a ng-if="current.ConfigCustomAssessmentItem.Mode=='Editor'"
+                       ng-click="current.ConfigCustomAssessmentItem.JSONMode()" class="btn btn-link pull-left" ng-class="{'btn-danger':!checkAllTable()}">
+                        JSON Editor
+                    </a>
+                    <!--<a class="btn btn-default" data-dismiss="modal">
+                        Cancel
+                    </a>-->
+                    <a ng-if="current.ConfigCustomAssessmentItem.Mode=='Editor'"
+                       ng-click="saveCustomAssessmentConfig()" class="btn btn-default" ng-class="{'btn-danger':!checkAllTable()}">
                         <i class="fa fa-floppy-o"></i>
-                        SaveConfig
+                        Save
                     </a>
                 </div>
             </div>
         </div>
     </div>
-
+    <!-- Import -->
     <div id="importModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importModal">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
