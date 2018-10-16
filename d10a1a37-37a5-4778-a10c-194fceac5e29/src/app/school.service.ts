@@ -10,16 +10,23 @@ export class SchoolService {
     ['p.kcbs.hc.edu.tw', { //康橋國小
       title: 'Kang Chiao International School',
       iconUrl: 'assets/img/logo.png',
+      // gadgets: // 空陣列是一個都不顯示，undefined 是顯示全部。
     }],
     ['test.p.kcbs.hc.edu.tw', { //康橋國小測試
       title: 'Kang Chiao International School(測試機)',
       iconUrl: 'assets/img/dev_logo.png',
     }],
-    ['卡爾', {
-      title: '卡爾 Title',
-      iconUrl: 'assets/img/卡爾_logo.png',
+    ['h.karlschool.org', { // 卡爾高中
+      title: 'Karl International Experimental Education Institution',
+      iconUrl: 'assets/img/karl_logo.png',
+      gadgets: ['gradebook', 'attendence']
     }],
-    ['', { // 都找不到會顯示這個。
+    ['j.karlschool.org', { // 卡爾國中
+      title: 'Karl International Experimental Education Institution',
+      iconUrl: 'assets/img/karl_logo.png',
+      gadgets: ['gradebook', 'attendence']
+    }],
+    ['', { // DSNS 都找不到，會顯示這個。
       title: 'Kang Chiao International School(開發)',
       iconUrl: 'assets/img/dev_logo.png',
     }]
@@ -40,7 +47,18 @@ export class SchoolService {
 
 export interface SchoolInfo {
 
+  /**
+   * 學校標題。
+   */
   title: string;
 
+  /**
+   * 學校 Logo
+   */
   iconUrl: string;
+
+  /**
+   * 要顯示的 gadget，不指定就全部顯示，空陣列是全部不顯示...
+   */
+  gadgets?: string[]
 }
