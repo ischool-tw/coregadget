@@ -1,9 +1,9 @@
 <nav class="navbar fixed-top navbar-light bg-white justify-content-between shadow py-3">
   <a class="navbar-brand"
      [routerLink]="['/']">
-    <img src="assets/img/logo.png"
+    <img [src]="school.info.iconUrl"
          class="d-inline-block align-top mr-2"
-         alt=""> Kang Chiao International School
+         alt=""> {{school.info.title}}
   </a>
   <span class="user-name d-none d-sm-block">
     <div class="mr-3 point"

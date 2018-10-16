@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { GadgetService, Contract } from 'src/app/gadget.service';
+import { SchoolService } from './school.service';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +9,9 @@ import { GadgetService, Contract } from 'src/app/gadget.service';
 export class AppComponent {
   title = 'app';
   logoutUrl: string;
-  constructor(private gadget: GadgetService) {
+  constructor(private gadget: GadgetService,
+    public school: SchoolService) {
+
     this.logoutUrl = gadget.authorizationUrl;
   }
   async logout() {
